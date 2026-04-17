@@ -12,6 +12,7 @@ import { info, warn } from './log.js'
 
 import { Asset } from '../asset/asset.js'
 import { Store } from '../asset/store.js'
+import { Image } from '../image/image.js'
 
 
 /*
@@ -373,6 +374,93 @@ export async function getAssets (db, { basePath }) {
   return assets
 }
 
+/*
+ * Creates an optimized copy of a managed project,
+ * converting assets to jpeg or png if they have transparency.
+ */
+export async function optimizeAssets (src, path, appDir, {
+  concurrency = 4,
+  density = 72,
+  overwrite = false
+} = {}) {
+  try {
+    assert(getProjectType(src) === MANAGED, 'source must be a managed project')
+    assert(getProjectType(path) === MANAGED, 'target must be a managed project')
+
+    await checkProjectPath(path, overwrite)
+    info(`optimizing project "${src}" to "${path}"`)
+
+    let srcDbFile = join(src, MANAGED_DB_NAME)
+    let dbFile = join(path, MANAGED_DB_NAME)
+    let store = new Store(join(path, MANAGED_STORE_NAME))
+
+    await makeProjectDir(path, store.name, appDir)
+    await cp(srcDbFile, dbFile, { force: false, errorOnExist: true })
+
+    var db = new Database(dbFile, 'w', {
+      max: 1,
+      journalMode: 'wal'
+    })
+
+    // Assign a new project ID
+    let project = await load(db)
+    let newId = uuid()
+
+    await db.run(
+      ...update('project')
+        .set({ project_id: newId })
+        .where({ project_id: project.id }))
+
+    let assets = await getAssets(db, { basePath: dirname(srcDbFile) })
+
+    info(`optimizing ${assets.length} asset(s)`)
+    await pMap(assets, async ({ id, ...props }) => {
+      let image = await Image.open({ ...props, density })
+
+      try {
+        let optimized = await image.optimize()
+        await store.add(image)
+
+        let updates = { path: relative(path, image.path) }
+        if (optimized) {
+          updates.checksum = image.checksum
+          updates.mimetype = image.mimetype
+          updates.page = 0
+        }
+
+        await db.run(
+          ...update('photos').set(updates).where({ id }))
+
+      } catch (err) {
+        // Fall back to copying the original asset
+        warn({ err, url: image.url }, 'failed to optimize, copying original')
+
+        if (image._original) {
+          image.buffer = image._original.buffer
+          image.path = image._original.path
+          image.protocol = image._original.protocol
+        }
+
+        await image.check()
+
+        if (!image.hasChanged) {
+          await store.add(image)
+          await db.run(
+            ...update('photos')
+              .set({ path: relative(path, image.path) })
+              .where({ id }))
+        }
+      }
+    }, { concurrency })
+
+    return { id: newId }
+
+  } finally {
+    await db?.close()
+  }
+}
+
+
 export async function optimize (db) {
   await db.exec("INSERT INTO fts_notes(fts_notes) VALUES ('optimize')")
   await db.exec("INSERT INTO fts_metadata(fts_metadata) VALUES ('optimize')")
@@ -462,7 +550,7 @@ const projectStats =
   }).from('project').limit(1)
 
 const assetInfo =
-  select('id', 'protocol', 'path', 'checksum')
+  select('id', 'protocol', 'path', 'checksum', 'mimetype', 'page')
     .from('photos')
     .order('protocol, path')
 

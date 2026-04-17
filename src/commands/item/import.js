@@ -5,11 +5,14 @@ import { DuplicateError } from '../../common/error.js'
 import { normalize, eachItem } from '../../common/import.js'
 import { info, warn } from '../../common/log.js'
 import { Image } from '../../image/index.js'
+import {
+  isPdfPortfolio, extractEmbeddedImages
+} from '../../image/pdf-portfolio.js'
 import { fail } from '../../dialog.js'
 import { fromHTML } from '../../editor/serialize.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
-import { ITEM, NAV } from '../../constants/index.js'
+import { ITEM, MIME, NAV } from '../../constants/index.js'
 import win from '../../window.js'
 
 import {
@@ -104,6 +107,8 @@ export class Import extends ImportCommand {
       },
       useLocalTimezone: state.settings.timezone,
       createLists: state.settings.createLists,
+      optimizeOnImport: state.project.isManaged &&
+        (state.project.optimize?.onImport ?? true)
     })))
   }
 
@@ -113,7 +118,8 @@ export class Import extends ImportCommand {
       yield this.progress()
 
       let {
-        basePath, store, density, db, templates, useLocalTimezone
+        basePath, store, density, db, templates, useLocalTimezone,
+        optimizeOnImport
       } = this.options
 
       let { list: activeList } = this.action.payload
@@ -126,19 +132,70 @@ export class Import extends ImportCommand {
         useLocalTimezone
       })
 
-      yield * this.handleDuplicate(image)
+      if (image.mimetype === MIME.PDF &&
+        isPdfPortfolio(image.buffer)) {
+        let imported = yield * this.importFromPdfPortfolio(image)
+        if (imported) return
+      }
+
+      if (!optimizeOnImport) {
+        yield * this.handleDuplicate(image)
+      }
+
       let data = yield * this.getMetadata(image, templates)
-      yield call(store.add, image)
+
+      let pageData = []
+
+      if (optimizeOnImport) {
+        while (!image.done) {
+          let optimized = yield call([image, image.optimize])
+          try {
+            yield * this.handleDuplicate(image)
+            yield call(store.add, image)
+            pageData.push({
+              ...image.toJSON(),
+              ...(optimized ? { page: 0 } : {})
+            })
+          } catch (err) {
+            if (err instanceof DuplicateError) {
+              info(`skipping duplicate page ${image.page + 1} of "${path}"...`)
+              pageData.push(null)
+            } else {
+              throw err
+            }
+          }
+          image.next()
+        }
+
+        if (pageData.every(p => p == null)) {
+          throw new DuplicateError(path)
+        }
+
+        image.rewind()
+      } else {
+        yield call(store.add, image)
+      }
+
+      let photosByPage = new Array(image.numPages).fill(null)
 
       yield call(db.transaction, async tx => {
         item = await mod.item.create(tx, templates.item.id, data.item)
 
         while (!image.done) {
+          let imageData = optimizeOnImport
+            ? pageData[image.page]
+            : image.toJSON()
+
+          if (imageData == null) {
+            image.next()
+            continue
+          }
+
           let photo = await mod.photo.create(tx,
             { basePath, template: templates.photo.id },
             {
               item: item.id,
-              image: image.toJSON(),
+              image: imageData,
               data: data.photo
             })
 
@@ -148,6 +205,7 @@ export class Import extends ImportCommand {
           }
 
           item.photos.push(photo.id)
+          photosByPage[image.page] = photo.id
 
           photos.push({
             ...photo,
@@ -172,7 +230,7 @@ export class Import extends ImportCommand {
         yield fork(ImportCommand.consolidate, {
           cache: this.options.cache,
           image,
-          photos: item.photos
+          photos: photosByPage
         }))
 
     } catch (err) {
@@ -181,6 +239,114 @@ export class Import extends ImportCommand {
       else
         throw err
     }
+  }
+
+  *importFromPdfPortfolio (source) {
+    let {
+      basePath, store, db, templates, useLocalTimezone, optimizeOnImport
+    } = this.options
+
+    let { list: activeList } = this.action.payload
+
+    let embedded = extractEmbeddedImages(source.buffer)
+    if (!embedded.length) return false
+
+    info(`extracting ${embedded.length} embedded file(s) ` +
+      `from pdf portfolio "${source.path}"`)
+
+    let images = []
+    for (let { name, data, mimetype } of embedded) {
+      try {
+        let img = yield call(Image.fromBuffer, {
+          buffer: data,
+          mimetype,
+          filename: name,
+          source,
+          useLocalTimezone
+        })
+        images.push(img)
+      } catch (err) {
+        warn({ err, name }, 'skipping unreadable embedded pdf file')
+      }
+    }
+
+    if (!images.length) return false
+
+    let data = yield * this.getMetadata(images[0], templates)
+    let imageData = new Array(images.length)
+
+    for (let i = 0; i < images.length; i++) {
+      let image = images[i]
+
+      try {
+        if (optimizeOnImport && image.mimetype !== MIME.JPG) {
+          yield call([image, image.optimize])
+        }
+        yield * this.handleDuplicate(image)
+        yield call(store.add, image)
+        imageData[i] = image.toJSON()
+
+      } catch (err) {
+        if (err instanceof DuplicateError) {
+          info(`skipping duplicate "${image.filename}" in "${source.path}"`)
+          imageData[i] = null
+        } else {
+          throw err
+        }
+      }
+    }
+
+    if (imageData.every(d => d == null))
+      throw new DuplicateError(source.path)
+
+    let item
+    let photos = []
+
+    yield call(db.transaction, async tx => {
+      item = await mod.item.create(tx, templates.item.id, data.item)
+
+      for (let i = 0; i < images.length; i++) {
+        if (imageData[i] == null) continue
+
+        let photo = await mod.photo.create(tx,
+          { basePath, template: templates.photo.id },
+          {
+            item: item.id,
+            image: imageData[i],
+            data: data.photo
+          })
+
+        if (activeList && !item.lists.includes(activeList)) {
+          await mod.list.items.add(tx, activeList, [item.id])
+          item.lists.push(activeList)
+        }
+
+        item.photos.push(photo.id)
+        photos.push({ ...photo, consolidating: true })
+      }
+    })
+
+    this.result.push(item.id)
+
+    yield all([
+      put(act.item.insert(item)),
+      put(act.metadata.load([item.id, ...item.photos])),
+      put(act.photo.insert(photos))
+    ])
+
+    let photoIdx = 0
+    for (let i = 0; i < images.length; i++) {
+      if (imageData[i] == null) continue
+
+      this.backlog.push(
+        yield fork(ImportCommand.consolidate, {
+          cache: this.options.cache,
+          image: images[i],
+          photos: [item.photos[photoIdx++]]
+        }))
+    }
+
+    return true
   }
 
   *importFromJSON (data, rel) {

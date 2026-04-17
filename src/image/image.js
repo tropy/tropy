@@ -1,10 +1,11 @@
+import { createHash } from 'node:crypto'
 import { rdjpgcom } from 'rdjpgcom'
 import { Asset } from '../asset/index.js'
 import { exif } from './exif.js'
 import { xmp } from './xmp.js'
 import sharp, { init } from './sharp.js'
 import { debug, warn } from '../common/log.js'
-import { pick, restrict } from '../common/util.js'
+import { pMap, pick, restrict } from '../common/util.js'
 import { rgb } from '../css.js'
 import { IMAGE, MIME } from '../constants/index.js'
 import { exif as exifns } from '../ontology/ns.js'
@@ -79,7 +80,7 @@ export class Image extends Asset {
   }
 
   do (page = this.page, autoOrient = false) {
-    return sharp(this.buffer || this.path, {
+    return sharp(this._original?.buffer || this.buffer || this.path, {
       autoOrient,
       page,
       density: this.density
@@ -100,6 +101,39 @@ export class Image extends Asset {
     this.page = 0
   }
 
+  async optimize () {
+    if (this._original) {
+      Object.assign(this, this._original)
+    } else {
+      this._original = { buffer: this.buffer, path: this.path, protocol: this.protocol, checksum: this.checksum, mimetype: this.mimetype }
+    }
+
+    if (this.mimetype === MIME.JPG)
+      return false
+    if (this.mimetype === MIME.PNG && !this.isOpaque)
+      return false
+
+    let outputBuffer, ext, mimetype
+
+    if (this.isOpaque) {
+      ext = '.jpg'
+      mimetype = MIME.JPG
+      outputBuffer = await this.do().jpeg({ quality: 100 }).toBuffer()
+    } else {
+      ext = '.png'
+      mimetype = MIME.PNG
+      outputBuffer = await this.do().png().toBuffer()
+    }
+
+    this.buffer = outputBuffer
+    this.checksum = createHash('md5').update(outputBuffer).digest('hex')
+    this.path = `${this.checksum}${ext}`
+    this.protocol = 'file'
+    this.mimetype = mimetype
+
+    return true
+  }
+
   async open ({ page, density, useLocalTimezone } = {}) {
     this.meta = null
     this.stats = null
@@ -111,6 +145,34 @@ export class Image extends Asset {
 
     debug('image opened')
     return this
+  }
+
+  static async fromBuffer ({
+    buffer, mimetype, filename, source, useLocalTimezone
+  } = {}) {
+    let image = new Image({
+      path: filename,
+      protocol: 'file',
+      mimetype
+    })
+
+    image.buffer = buffer
+    image.mimetype = mimetype
+    image.filename = filename
+    image.fs = source?.fs ? { ...source.fs, size: buffer.length } : {
+      size: buffer.length,
+      mtime: new Date()
+    }
+    image.checksum = createHash('md5').update(buffer).digest('hex')
+    image.meta = null
+    image.stats = null
+    image.page = 0
+    image.numPages = 1
+
+    await image.parse({ useLocalTimezone })
+
+    debug('image created from buffer')
+    return image
   }
 
   async parse ({ page, density = 72, useLocalTimezone }) {
@@ -155,9 +217,10 @@ export class Image extends Asset {
       await this.analyze(this.do(), page, { timezone })
 
     } else {
-      await Promise.all([
-        ...this.each(this.analyze, { timezone })
-      ])
+      await pMap(
+        this.meta,
+        (_, page) => this.analyze(this.do(page), page, { timezone }),
+        { concurrency: 4 })
     }
   }
 
