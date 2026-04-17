@@ -8,7 +8,7 @@ import { Icon } from '../icons.js'
 
 export function Nav ({ children }) {
   return (
-    <nav className="prefs-nav" tabindex={0}>
+    <nav className="prefs-nav" tabIndex={0}>
       <ul>
         {children}
       </ul>
