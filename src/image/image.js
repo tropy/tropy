@@ -147,6 +147,34 @@ export class Image extends Asset {
     return this
   }
 
+  static async fromBuffer ({
+    buffer, mimetype, filename, source, useLocalTimezone
+  } = {}) {
+    let image = new Image({
+      path: filename,
+      protocol: 'file',
+      mimetype
+    })
+
+    image.buffer = buffer
+    image.mimetype = mimetype
+    image.filename = filename
+    image.fs = source?.fs ? { ...source.fs, size: buffer.length } : {
+      size: buffer.length,
+      mtime: new Date()
+    }
+    image.checksum = createHash('md5').update(buffer).digest('hex')
+    image.meta = null
+    image.stats = null
+    image.page = 0
+    image.numPages = 1
+
+    await image.parse({ useLocalTimezone })
+
+    debug('image created from buffer')
+    return image
+  }
+
   async parse ({ page, density = 72, useLocalTimezone }) {
     await init()
 
