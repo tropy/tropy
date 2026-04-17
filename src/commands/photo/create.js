@@ -2,11 +2,14 @@ import { ImportCommand } from '../import.js'
 import { fail } from '../../dialog.js'
 import * as mod from '../../models/index.js'
 import * as act from '../../actions/index.js'
-import { PHOTO } from '../../constants/index.js'
+import { MIME, PHOTO } from '../../constants/index.js'
 import { DuplicateError } from '../../common/error.js'
 import { info, warn } from '../../common/log.js'
 import { getPhotoTemplate } from '../../selectors/index.js'
 import { Image } from '../../image/image.js'
+import {
+  isPdfPortfolio, extractEmbeddedImages
+} from '../../image/pdf-portfolio.js'
 
 import {
   all,
@@ -84,6 +87,12 @@ export class Create extends ImportCommand {
         density: prefs.density,
         useLocalTimezone: prefs.localtime
       })
+
+      if (image.mimetype === MIME.PDF &&
+        isPdfPortfolio(image.buffer)) {
+        let imported = yield * this.importFromPdfPortfolio(image, progress)
+        if (imported) return
+      }
 
       if (!optimizeOnImport) {
         yield * this.handleDuplicate(image)
@@ -181,6 +190,108 @@ export class Create extends ImportCommand {
       else
         throw err
     }
+  }
+
+  *importFromPdfPortfolio (source, progress) {
+    let {
+      basePath, cache, db, idx, prefs, store, template, optimizeOnImport
+    } = this.options
+    let { item } = this.action.payload
+
+    let embedded = extractEmbeddedImages(source.buffer)
+    if (!embedded.length) return false
+
+    info(`extracting ${embedded.length} embedded file(s) ` +
+      `from pdf portfolio "${source.path}"`)
+
+    let images = []
+    for (let { name, data, mimetype } of embedded) {
+      try {
+        let img = yield call(Image.fromBuffer, {
+          buffer: data,
+          mimetype,
+          filename: name,
+          source,
+          useLocalTimezone: prefs.localtime
+        })
+        images.push(img)
+      } catch (err) {
+        warn({ err, name }, 'skipping unreadable embedded pdf file')
+      }
+    }
+
+    if (!images.length) return false
+
+    let data = this.getImageMetadata('photo', images[0], template, prefs)
+    let imageData = new Array(images.length)
+
+    for (let i = 0; i < images.length; i++) {
+      let image = images[i]
+
+      try {
+        if (optimizeOnImport && image.mimetype !== MIME.JPG) {
+          yield call([image, image.optimize])
+        }
+        yield * this.handleDuplicate(image)
+        yield call(store.add, image)
+        imageData[i] = image.toJSON()
+
+      } catch (err) {
+        if (err instanceof DuplicateError) {
+          info(`skipping duplicate "${image.filename}" in "${source.path}"`)
+          imageData[i] = null
+        } else {
+          throw err
+        }
+      }
+    }
+
+    if (imageData.every(d => d == null))
+      throw new DuplicateError(source.path)
+
+    let ids = []
+    let photos = []
+    let position = idx[0] + progress
+
+    yield call(db.transaction, async tx => {
+      let count = 0
+      for (let i = 0; i < images.length; i++) {
+        if (imageData[i] == null) continue
+
+        let photo = await mod.photo.create(tx,
+          { basePath, template: template.id },
+          {
+            item,
+            image: imageData[i],
+            data,
+            position: position + count++
+          })
+
+        ids.push(photo.id)
+        photos.push({ ...photo, consolidating: true })
+      }
+    })
+
+    yield all([
+      put(act.metadata.load(ids)),
+      put(act.photo.insert(photos)),
+      put(act.item.photos.add({ id: item, photos: ids }, { idx: [position] }))
+    ])
+
+    let photoIdx = 0
+    for (let i = 0; i < images.length; i++) {
+      if (imageData[i] == null) continue
+
+      this.backlog.push(
+        yield fork(ImportCommand.consolidate, {
+          cache,
+          image: images[i],
+          photos: [ids[photoIdx++]]
+        }))
+    }
+
+    this.result.push(...ids)
+    return true
   }
 
   get redo () {
