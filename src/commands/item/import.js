@@ -176,6 +176,8 @@ export class Import extends ImportCommand {
         yield call(store.add, image)
       }
 
+      let photosByPage = new Array(image.numPages).fill(null)
+
       yield call(db.transaction, async tx => {
         item = await mod.item.create(tx, templates.item.id, data.item)
 
@@ -203,6 +205,7 @@ export class Import extends ImportCommand {
           }
 
           item.photos.push(photo.id)
+          photosByPage[image.page] = photo.id
 
           photos.push({
             ...photo,
@@ -227,7 +230,7 @@ export class Import extends ImportCommand {
         yield fork(ImportCommand.consolidate, {
           cache: this.options.cache,
           image,
-          photos: item.photos
+          photos: photosByPage
         }))
 
     } catch (err) {
