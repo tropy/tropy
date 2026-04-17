@@ -470,8 +470,6 @@ $prefs-bg:                            --scheme(var(--light-1),                  
 $prefs-title-color:                   --scheme(os(var(--light-8), unset, rgba(0, 0, 0, 0.8)), os(var(--dark-9), unset, rgb(255, 255, 255)));
 $prefs-border:                        --scheme(var(--light-3),                                var(--dark-1));
 $prefs-pane-toggle-color:             --scheme(var(--light-8),                                var(--dark-8));
-$prefs-pane-toggle-active-color:      --scheme(var(--light-9),                                var(--dark-9));
-$prefs-pane-toggle-active-bg:         --scheme(var(--light-3),                                var(--dark-5));
 $prefs-pane-toggle-active-icon-color: --scheme(var(--light-7),                                var(--dark-8));
 $prefs-titlebar-blurred-bg:           --scheme(os(shade(var(--light-1), 4%), unset, unset),   os(var(--dark-2), unset, unset));
 

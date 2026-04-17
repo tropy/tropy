@@ -8,7 +8,7 @@ import { Icon } from '../icons.js'
 
 export function Nav ({ children }) {
   return (
-    <nav className="prefs-nav">
+    <nav className="prefs-nav" tabindex={0}>
       <ul>
         {children}
       </ul>
@@ -26,19 +26,18 @@ export function NavItem ({ name, icon, isDisabled }) {
 
   return (
     <li>
-      <button
-        className={cx('pane-toggle', 'btn', name, {
+      <div
+        className={cx('pane-toggle', name, {
           active: pane === name
         })}
         name={name}
         disabled={isDisabled}
-        onClick={handleChange}
-        tabIndex={-1}>
+        onClick={handleChange}>
         <Icon name={icon}/>
         <div className="truncate">
           <FormattedMessage id={`prefs.${name}.label`}/>
         </div>
-      </button>
+      </div>
     </li>
   )
 }

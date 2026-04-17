@@ -69,8 +69,11 @@
     border-radius: $border-radius-small;
 
     &.active {
-      color: $prefs-pane-toggle-active-color;
-      background-color: $prefs-pane-toggle-active-bg;
+      @extend %list-active;
+
+      .prefs-nav:focus :is(&) {
+        @extend %list-focus;
+      }
     }
 
     .icon {
