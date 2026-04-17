@@ -32,16 +32,18 @@ export class ImportCommand extends Command {
     while (!image.done) {
       let photo = photos[image.page]
 
-      yield call(cache.consolidate, photo, image, {
-        overwrite
-      })
+      if (photo != null) {
+        yield call(cache.consolidate, photo, image, {
+          overwrite
+        })
 
-      yield put(act.photo.update({
-        id: photo,
-        broken: false,
-        consolidated: Date.now(),
-        consolidating: false
-      }))
+        yield put(act.photo.update({
+          id: photo,
+          broken: false,
+          consolidated: Date.now(),
+          consolidating: false
+        }))
+      }
 
       image.next()
     }
