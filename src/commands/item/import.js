@@ -129,7 +129,10 @@ export class Import extends ImportCommand {
         useLocalTimezone
       })
 
-      yield * this.handleDuplicate(image)
+      if (!optimizeOnImport) {
+        yield * this.handleDuplicate(image)
+      }
+
       let data = yield * this.getMetadata(image, templates)
 
       let pageData = []
@@ -137,12 +140,26 @@ export class Import extends ImportCommand {
       if (optimizeOnImport) {
         while (!image.done) {
           let optimized = yield call([image, image.optimize])
-          yield call(store.add, image)
-          pageData.push({
-            ...image.toJSON(),
-            ...(optimized ? { page: 0 } : {})
-          })
+          try {
+            yield * this.handleDuplicate(image)
+            yield call(store.add, image)
+            pageData.push({
+              ...image.toJSON(),
+              ...(optimized ? { page: 0 } : {})
+            })
+          } catch (err) {
+            if (err instanceof DuplicateError) {
+              info(`skipping duplicate page ${image.page + 1} of "${path}"...`)
+              pageData.push(null)
+            } else {
+              throw err
+            }
+          }
           image.next()
+        }
+
+        if (pageData.every(p => p == null)) {
+          throw new DuplicateError(path)
         }
 
         image.rewind()
@@ -157,6 +174,11 @@ export class Import extends ImportCommand {
           let imageData = optimizeOnImport
             ? pageData[image.page]
             : image.toJSON()
+
+          if (imageData == null) {
+            image.next()
+            continue
+          }
 
           let photo = await mod.photo.create(tx,
             { basePath, template: templates.photo.id },
