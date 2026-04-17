@@ -253,8 +253,7 @@ en:
         label: Optimize assets
         confirm: Optimize
         hint: >-
-          Create an optimized copy of this project,
-          converting all images to WebP format.
+          Create an optimized copy of this project.
         onImport: Optimize photos on import
       watch:
         folder: Watch folder

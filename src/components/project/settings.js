@@ -98,7 +98,7 @@ export const ProjectSettings = React.memo(({
             value={project.optimize?.onImport ?? true}
             onChange={onChange}/>
           <FormElement
-            id="prefs.project.optimize"
+            id="prefs.project.optimize.label"
             isCompact>
             <Button
               className="btn-default btn-block"
