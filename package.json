@@ -130,7 +130,7 @@
   "dependencies": {
     "@babel/cli": "^7.24.8",
     "@babel/plugin-syntax-import-assertions": "^7.17.12",
-    "@cantoo/pdf-lib": "^2.6.5",
+    "pdf-lib": "1.17.1",
     "@inukshuk/exif": "^2.0.0",
     "@koa/router": "^15.1.0",
     "@reduxjs/toolkit": "^2.0.1",
