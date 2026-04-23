@@ -25,6 +25,7 @@ const Subtype = PDFName.of('Subtype')
 const XObject = PDFName.of('XObject')
 const Width = PDFName.of('Width')
 const Height = PDFName.of('Height')
+const Image = PDFName.of('Image')
 const DCTDecode = PDFName.of('DCTDecode')
 
 async function load (buffer) {
@@ -148,318 +149,117 @@ export async function extractPortfolioImages (buffer) {
 
 // -- Page-level raw image extraction ------------------------------------
 
-const DRAWING_OPS = new Set([
-  'Do',
-  'Tj', 'TJ', "'", '"',
-  'm', 'l', 'c', 'v', 'y', 're', 'h',
-  'f', 'F', 'f*', 'S', 's', 'B', 'B*', 'b', 'b*', 'n',
-  'sh',
-  'BI', 'ID', 'EI'
-])
+const cache = new WeakMap()
 
-// Tokenize a PDF content stream. Returns an array of operations, where each
-// op is { operator: string, operands: Array<token> }. Tokens are primitive
-// values (numbers, names with leading '/', or raw strings for other atoms).
-function tokenize (bytes) {
-  let ops = []
-  let operands = []
-  let i = 0
-  let len = bytes.length
+function getImageXObjects (page) {
+  let resources = page.node.Resources()
+  if (!resources) return []
 
-  let isWs = (c) =>
-    c === 0x00 || c === 0x09 || c === 0x0A ||
-    c === 0x0C || c === 0x0D || c === 0x20
-  let isDelim = (c) =>
-    c === 0x28 || c === 0x29 || c === 0x3C || c === 0x3E ||
-    c === 0x5B || c === 0x5D || c === 0x7B || c === 0x7D ||
-    c === 0x2F || c === 0x25
+  let xobjects = resources.lookupMaybe(XObject, PDFDict)
+  if (!xobjects) return []
 
-  let readName = () => {
-    let start = ++i
-    while (i < len && !isWs(bytes[i]) && !isDelim(bytes[i])) i++
-    return '/' + String.fromCharCode(...bytes.subarray(start, i))
+  let images = []
+  for (let [, value] of xobjects.entries()) {
+    if (!(value instanceof PDFStream)) continue
+    if (value.dict.lookup(Subtype) !== Image) continue
+    images.push(value)
   }
-
-  let readNumberOrOp = () => {
-    let start = i
-    while (i < len && !isWs(bytes[i]) && !isDelim(bytes[i])) i++
-    let tok = String.fromCharCode(...bytes.subarray(start, i))
-    if (/^[+-]?(\d+\.?\d*|\.\d+)$/.test(tok)) {
-      return { kind: 'number', value: Number(tok) }
-    }
-    return { kind: 'op', value: tok }
-  }
-
-  let skipString = () => {
-    let depth = 1
-    i++
-    while (i < len && depth > 0) {
-      let c = bytes[i]
-      if (c === 0x5C) { i += 2; continue }
-      if (c === 0x28) depth++
-      else if (c === 0x29) depth--
-      i++
-    }
-  }
-
-  let skipHexString = () => {
-    i++
-    while (i < len && bytes[i] !== 0x3E) i++
-    if (i < len) i++
-  }
-
-  let skipArray = () => {
-    let depth = 1
-    i++
-    while (i < len && depth > 0) {
-      let c = bytes[i]
-      if (c === 0x5B) {
-        depth++
-      } else if (c === 0x5D) {
-        depth--
-      } else if (c === 0x28) {
-        skipString()
-        continue
-      } else if (c === 0x3C) {
-        if (bytes[i + 1] === 0x3C) {
-          skipDict()
-          continue
-        } else {
-          skipHexString()
-          continue
-        }
-      }
-      i++
-    }
-  }
-
-  let skipDict = () => {
-    let depth = 1
-    i += 2
-    while (i < len && depth > 0) {
-      let c = bytes[i]
-      if (c === 0x3C && bytes[i + 1] === 0x3C) { depth++; i += 2; continue }
-      if (c === 0x3E && bytes[i + 1] === 0x3E) { depth--; i += 2; continue }
-      if (c === 0x28) { skipString(); continue }
-      if (c === 0x5B) { skipArray(); continue }
-      i++
-    }
-  }
-
-  let inInlineImage = false
-
-  while (i < len) {
-    let c = bytes[i]
-
-    if (isWs(c)) { i++; continue }
-
-    if (c === 0x25) { // '%' comment
-      while (i < len && bytes[i] !== 0x0A && bytes[i] !== 0x0D) i++
-      continue
-    }
-
-    if (inInlineImage) {
-      // skip past 'EI'
-      if (c === 0x45 && bytes[i + 1] === 0x49 &&
-        (i + 2 >= len || isWs(bytes[i + 2]))) {
-        ops.push({ operator: 'EI', operands: [] })
-        inInlineImage = false
-        i += 2
-      } else {
-        i++
-      }
-      continue
-    }
-
-    if (c === 0x28) { skipString(); operands.push({ kind: 'string' }); continue }
-    if (c === 0x5B) { skipArray(); operands.push({ kind: 'array' }); continue }
-    if (c === 0x3C) {
-      if (bytes[i + 1] === 0x3C) {
-        skipDict()
-        operands.push({ kind: 'dict' })
-      } else {
-        skipHexString()
-        operands.push({ kind: 'hexstring' })
-      }
-      continue
-    }
-
-    if (c === 0x2F) {
-      operands.push({ kind: 'name', value: readName() })
-      continue
-    }
-
-    let tok = readNumberOrOp()
-    if (tok.kind === 'number') {
-      operands.push(tok)
-    } else {
-      ops.push({ operator: tok.value, operands })
-      if (tok.value === 'BI' || tok.value === 'ID') {
-        inInlineImage = true
-      }
-      operands = []
-    }
-  }
-
-  return ops
-}
-
-// Returns true if at most one Do op appears and it's the only drawing op.
-// Also returns the operand (XObject name) and the CTM at the point of the Do.
-function findSingleFullPageXObject (ops) {
-  let ctm = [1, 0, 0, 1, 0, 0]
-  let stack = []
-  let doName = null
-  let doCTM = null
-  let drawingOps = 0
-
-  for (let { operator, operands } of ops) {
-    if (operator === 'q') {
-      stack.push(ctm.slice())
-      continue
-    }
-    if (operator === 'Q') {
-      ctm = stack.pop() || [1, 0, 0, 1, 0, 0]
-      continue
-    }
-    if (operator === 'cm') {
-      if (operands.length >= 6) {
-        let m = operands.slice(-6).map(o => o.value)
-        ctm = multiply(m, ctm)
-      }
-      continue
-    }
-    if (DRAWING_OPS.has(operator)) {
-      drawingOps++
-      if (operator === 'Do' && operands.length > 0) {
-        let name = operands[operands.length - 1]
-        if (name.kind === 'name') {
-          doName = name.value.slice(1)
-          doCTM = ctm.slice()
-        }
-      }
-    }
-  }
-
-  if (drawingOps !== 1 || doName == null) return null
-  return { name: doName, ctm: doCTM }
-}
-
-function multiply (a, b) {
-  // a, b are 6-element CTMs: [a b c d e f] representing
-  // [a b 0; c d 0; e f 1]. Operation is a * b.
-  return [
-    a[0] * b[0] + a[1] * b[2],
-    a[0] * b[1] + a[1] * b[3],
-    a[2] * b[0] + a[3] * b[2],
-    a[2] * b[1] + a[3] * b[3],
-    a[4] * b[0] + a[5] * b[2] + b[4],
-    a[4] * b[1] + a[5] * b[3] + b[5]
-  ]
-}
-
-function renderedSize (ctm) {
-  // The image occupies the unit square [0,1]x[0,1]. After applying CTM,
-  // corners are at (0,0), (a,b), (c,d), (a+c, b+d). The rendered width/height
-  // is the extent along the CTM's basis vectors.
-  let w = Math.hypot(ctm[0], ctm[1])
-  let h = Math.hypot(ctm[2], ctm[3])
-  return { width: w, height: h }
+  return images
 }
 
 function isDCTOnly (filter) {
   if (filter == null) return false
   if (filter instanceof PDFName) return filter === DCTDecode
-  if (filter instanceof PDFArray) {
-    if (filter.size() !== 1) return false
-    let f = filter.lookup(0)
-    return f === DCTDecode
+  if (filter instanceof PDFArray && filter.size() === 1) {
+    return filter.lookup(0) === DCTDecode
   }
   return false
 }
 
-function getContentStreamBytes (page) {
-  let contents = page.node.Contents()
-  if (contents == null) return new Uint8Array(0)
+const MIN_PAGE_DPI = 100
+const ASPECT_TOLERANCE = 0.2
 
-  if (contents instanceof PDFArray) {
-    let parts = []
-    let total = 0
-    for (let i = 0; i < contents.size(); i++) {
-      let s = contents.lookup(i, PDFStream)
-      let bytes = decodedStreamBytes(s)
-      parts.push(bytes)
-      total += bytes.length
-    }
-    let out = new Uint8Array(total)
-    let offset = 0
-    for (let p of parts) { out.set(p, offset); offset += p.length }
-    return out
-  }
+// Returns { stream, dpi } if the page has exactly one image XObject AND
+// that image plausibly fills the page (aspect-ratio match within tolerance,
+// effective DPI above floor). Otherwise null.
+function getPageImage (page) {
+  let images = getImageXObjects(page)
+  if (images.length !== 1) return null
 
-  if (contents instanceof PDFStream) {
-    return decodedStreamBytes(contents)
-  }
+  let { width: mbW, height: mbH } = page.getMediaBox()
+  if (mbW <= 0 || mbH <= 0) return null
 
-  return new Uint8Array(0)
+  let stream = images[0]
+  let pxW = stream.dict.lookup(Width)?.asNumber?.() ?? 0
+  let pxH = stream.dict.lookup(Height)?.asNumber?.() ?? 0
+  if (pxW <= 0 || pxH <= 0) return null
+
+  let imgAspect = pxW / pxH
+  let pageAspect = mbW / mbH
+
+  let directMatch =
+    Math.abs(imgAspect - pageAspect) / pageAspect < ASPECT_TOLERANCE
+  let rotatedMatch =
+    Math.abs(imgAspect - 1 / pageAspect) * pageAspect < ASPECT_TOLERANCE
+
+  if (!directMatch && !rotatedMatch) return null
+
+  let dpi = directMatch
+    ? pxW * 72 / mbW
+    : pxW * 72 / mbH
+
+  if (dpi < MIN_PAGE_DPI) return null
+
+  return { stream, dpi }
 }
 
-function getXObjectStream (page, name) {
-  let resources = page.node.Resources()
-  if (!resources) return null
+function getJpegStream (page) {
+  let pageImage = getPageImage(page)
+  if (!pageImage) return null
+  let { stream } = pageImage
+  if (!(stream instanceof PDFRawStream)) return null
+  if (!isDCTOnly(stream.dict.lookup(Filter))) return null
+  return stream
+}
 
-  let xobjects = resources.lookupMaybe(XObject, PDFDict)
-  if (!xobjects) return null
+function classify (buffer) {
+  let cached = cache.get(buffer)
+  if (cached) return cached
 
-  let stream = xobjects.lookup(PDFName.of(name))
-  return stream instanceof PDFStream ? stream : null
+  let promise = (async () => {
+    let doc = await load(buffer)
+    let pages = doc.getPages()
+    let isJpegCollection = pages.length > 0 &&
+      pages.every(p => getJpegStream(p) != null)
+    return { doc, isJpegCollection }
+  })()
+
+  cache.set(buffer, promise)
+  return promise
 }
 
 // Inspect a single page. Returns one of:
-//   { kind: 'jpeg', data: Buffer }            — raw JPEG bytes to write as-is
-//   { kind: 'raster', dpi: number }           — fall back to Sharp at this DPI
-//   null                                      — fall back to Sharp at default DPI
+//   { kind: 'jpeg', data: Buffer }     — raw JPEG bytes to write as-is
+//   { kind: 'raster', dpi: number }    — fall back to Sharp at this DPI
+//   null                               — fall back to Sharp at default DPI
 export async function inspectPdfPage (buffer, pageIndex) {
   try {
-    let doc = await load(buffer)
+    let { doc, isJpegCollection } = await classify(buffer)
     let pages = doc.getPages()
     if (pageIndex < 0 || pageIndex >= pages.length) return null
 
     let page = pages[pageIndex]
-    let { width: mbW, height: mbH } = page.getMediaBox()
-    if (mbW <= 0 || mbH <= 0) return null
+    let pageImage = getPageImage(page)
+    if (!pageImage) return null
 
-    let ops = tokenize(getContentStreamBytes(page))
-    let found = findSingleFullPageXObject(ops)
-    if (!found) return null
-
-    let xobj = getXObjectStream(page, found.name)
-    if (!xobj) return null
-
-    let dict = xobj.dict
-    if (dict.lookup(Subtype) !== PDFName.of('Image')) return null
-
-    let { width: rW, height: rH } = renderedSize(found.ctm)
-    let coverage = (rW * rH) / (mbW * mbH)
-    if (!(coverage >= 0.98)) return null
-
-    let pixelW = dict.lookup(Width)
-    if (pixelW == null) return null
-    let pxW = pixelW.asNumber?.() ?? Number(pixelW)
-    let pixelH = dict.lookup(Height)
-    let pxH = pixelH?.asNumber?.() ?? Number(pixelH)
-
-    let filter = dict.lookup(Filter)
-    if (isDCTOnly(filter) && xobj instanceof PDFRawStream) {
-      return { kind: 'jpeg', data: Buffer.from(xobj.contents) }
+    if (isJpegCollection) {
+      let stream = getJpegStream(page)
+      if (stream) {
+        return { kind: 'jpeg', data: Buffer.from(stream.contents) }
+      }
     }
 
-    if (pxW > 0 && mbW > 0) {
-      let dpi = pxW / (mbW / 72)
-      return { kind: 'raster', dpi, width: pxW, height: pxH }
-    }
-
-    return null
+    return { kind: 'raster', dpi: pageImage.dpi }
 
   } catch (err) {
     warn({ err, pageIndex }, 'failed to inspect pdf page')
