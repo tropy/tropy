@@ -7,9 +7,7 @@ import { DuplicateError } from '../../common/error.js'
 import { info, warn } from '../../common/log.js'
 import { getPhotoTemplate } from '../../selectors/index.js'
 import { Image } from '../../image/image.js'
-import {
-  isPdfPortfolio, extractEmbeddedImages
-} from '../../image/pdf-portfolio.js'
+import { extractPortfolioImages } from '../../image/pdf.js'
 
 import {
   all,
@@ -88,10 +86,12 @@ export class Create extends ImportCommand {
         useLocalTimezone: prefs.localtime
       })
 
-      if (image.mimetype === MIME.PDF &&
-        isPdfPortfolio(image.buffer)) {
-        let imported = yield * this.importFromPdfPortfolio(image, progress)
-        if (imported) return
+      if (image.mimetype === MIME.PDF) {
+        let embedded = yield call(extractPortfolioImages, image.buffer)
+        if (embedded?.length) {
+          yield * this.importFromPdfPortfolio(image, progress, embedded)
+          return
+        }
       }
 
       if (!optimizeOnImport) {
@@ -195,14 +195,11 @@ export class Create extends ImportCommand {
     }
   }
 
-  *importFromPdfPortfolio (source, progress) {
+  *importFromPdfPortfolio (source, progress, embedded) {
     let {
       basePath, cache, db, idx, prefs, store, template, optimizeOnImport
     } = this.options
     let { item } = this.action.payload
-
-    let embedded = extractEmbeddedImages(source.buffer)
-    if (!embedded.length) return false
 
     info(`extracting ${embedded.length} embedded file(s) ` +
       `from pdf portfolio "${source.path}"`)
@@ -223,7 +220,7 @@ export class Create extends ImportCommand {
       }
     }
 
-    if (!images.length) return false
+    if (!images.length) return
 
     let data = this.getImageMetadata('photo', images[0], template, prefs)
     let imageData = new Array(images.length)
@@ -294,7 +291,6 @@ export class Create extends ImportCommand {
     }
 
     this.result.push(...ids)
-    return true
   }
 
   get redo () {

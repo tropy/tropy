@@ -104,7 +104,8 @@ export default [
       alias({
         entries: {
           depd: join(process.cwd(), 'node_modules/depd'),
-          'readable-stream': 'node:stream'
+          'readable-stream': 'node:stream',
+          pako: join(process.cwd(), 'scripts/pako-shim.js')
         }
       }),
       nodeResolve({
@@ -188,7 +189,8 @@ export default [
       ], { commonjsBugFix: true }),
       alias({
         entries: {
-          'readable-stream': 'node:stream'
+          'readable-stream': 'node:stream',
+          pako: join(process.cwd(), 'scripts/pako-shim.js')
         }
       }),
       replace({

@@ -3,7 +3,8 @@ import { rdjpgcom } from 'rdjpgcom'
 import { Asset } from '../asset/index.js'
 import { exif } from './exif.js'
 import { xmp } from './xmp.js'
-import sharp, { init } from './sharp.js'
+import sharp, { defaults, init } from './sharp.js'
+import { inspectPdfPage } from './pdf.js'
 import { debug, warn } from '../common/log.js'
 import { pMap, pick, restrict } from '../common/util.js'
 import { rgb } from '../css.js'
@@ -115,7 +116,40 @@ export class Image extends Asset {
 
     let outputBuffer, ext, mimetype
 
-    if (this.isOpaque) {
+    if (this.mimetype === MIME.PDF) {
+      let inspection = await inspectPdfPage(this.buffer, this.page)
+
+      if (inspection?.kind === 'jpeg') {
+        outputBuffer = inspection.data
+        ext = '.jpg'
+        mimetype = MIME.JPG
+
+      } else if (inspection?.kind === 'raster') {
+        ext = '.png'
+        mimetype = MIME.PNG
+        let dpi = restrict(
+          Math.round(inspection.dpi),
+          IMAGE.MIN_DENSITY,
+          IMAGE.MAX_DENSITY
+        )
+        outputBuffer = await sharp(this._original.buffer, {
+          ...defaults,
+          page: this.page,
+          density: dpi
+        }).png().toBuffer()
+
+      } else if (this.isOpaque) {
+        ext = '.jpg'
+        mimetype = MIME.JPG
+        outputBuffer = await this.do().jpeg({ quality: 100 }).toBuffer()
+
+      } else {
+        ext = '.png'
+        mimetype = MIME.PNG
+        outputBuffer = await this.do().png().toBuffer()
+      }
+
+    } else if (this.isOpaque) {
       ext = '.jpg'
       mimetype = MIME.JPG
       outputBuffer = await this.do().jpeg({ quality: 100 }).toBuffer()
