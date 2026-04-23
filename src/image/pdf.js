@@ -8,7 +8,7 @@ import {
   PDFStream,
   PDFString,
   decodePDFRawStream
-} from 'pdf-lib'
+} from './pdf-lib.js'
 import { magic } from '../asset/magic.js'
 import { IMAGE } from '../constants/index.js'
 import { warn } from '../common/log.js'
