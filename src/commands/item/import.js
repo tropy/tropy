@@ -5,9 +5,7 @@ import { DuplicateError } from '../../common/error.js'
 import { normalize, eachItem } from '../../common/import.js'
 import { info, warn } from '../../common/log.js'
 import { Image } from '../../image/index.js'
-import {
-  isPdfPortfolio, extractEmbeddedImages
-} from '../../image/pdf-portfolio.js'
+import { extractPortfolioImages } from '../../image/pdf.js'
 import { fail } from '../../dialog.js'
 import { fromHTML } from '../../editor/serialize.js'
 import * as act from '../../actions/index.js'
@@ -132,10 +130,12 @@ export class Import extends ImportCommand {
         useLocalTimezone
       })
 
-      if (image.mimetype === MIME.PDF &&
-        isPdfPortfolio(image.buffer)) {
-        let imported = yield * this.importFromPdfPortfolio(image)
-        if (imported) return
+      if (image.mimetype === MIME.PDF) {
+        let embedded = yield call(extractPortfolioImages, image.buffer)
+        if (embedded?.length) {
+          yield * this.importFromPdfPortfolio(image, embedded)
+          return
+        }
       }
 
       if (!optimizeOnImport) {
@@ -241,15 +241,12 @@ export class Import extends ImportCommand {
     }
   }
 
-  *importFromPdfPortfolio (source) {
+  *importFromPdfPortfolio (source, embedded) {
     let {
       basePath, store, db, templates, useLocalTimezone, optimizeOnImport
     } = this.options
 
     let { list: activeList } = this.action.payload
-
-    let embedded = extractEmbeddedImages(source.buffer)
-    if (!embedded.length) return false
 
     info(`extracting ${embedded.length} embedded file(s) ` +
       `from pdf portfolio "${source.path}"`)
@@ -270,7 +267,7 @@ export class Import extends ImportCommand {
       }
     }
 
-    if (!images.length) return false
+    if (!images.length) return
 
     let data = yield * this.getMetadata(images[0], templates)
     let imageData = new Array(images.length)
@@ -345,8 +342,6 @@ export class Import extends ImportCommand {
           photos: [item.photos[photoIdx++]]
         }))
     }
-
-    return true
   }
 
   *importFromJSON (data, rel) {
