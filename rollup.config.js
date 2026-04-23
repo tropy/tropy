@@ -181,8 +181,7 @@ export default [
       }),
       ignore([
         '@mapbox/node-pre-gyp',
-        '@digitalbazaar/http-client',
-        'pako'
+        '@digitalbazaar/http-client'
       ], { commonjsBugFix: true }),
       alias({
         entries: {
