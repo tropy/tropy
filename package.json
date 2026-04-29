@@ -76,7 +76,7 @@
     "@babel/core": "^7.12.13",
     "@babel/preset-react": "^7.12.13",
     "@electron/notarize": "^3.0.1",
-    "@electron/packager": "^19.0.1",
+    "@electron/packager": "^20.0.0",
     "@eslint/js": "^9.39.4",
     "@img/sharp-libvips-dev": "1.2.4",
     "@img/sharp-libvips-win32-arm64": "1.2.4",
@@ -176,7 +176,7 @@
     "sharp": "0.34.5",
     "sqlite3": "^6.0.1",
     "transducers.js": "^0.3.2",
-    "uuid": "^13.0.0",
+    "uuid": "^14.0.0",
     "winreg": "=1.2.4",
     "write-file-atomic": "^7.0.0"
   }
