@@ -13,6 +13,7 @@ import { info, warn } from './log.js'
 import { Asset } from '../asset/asset.js'
 import { Store } from '../asset/store.js'
 import { Image } from '../image/image.js'
+import photo from '../models/photo.js'
 
 
 /*
@@ -414,6 +415,12 @@ export async function optimizeAssets (src, path, appDir, {
     let assets = await getAssets(db, { basePath: dirname(srcDbFile) })
 
     info(`optimizing ${assets.length} asset(s)`)
+
+    // Legacy projects may have NULL positions for some/all photos. Compact
+    // affected items to dense 1..N (in id order) before optimize so the
+    // resulting copy loads in correct order regardless of query plan.
+    await normalizePositions(db, assets)
+
     await pMap(assets, async ({ id, ...props }) => {
       let image = await Image.open({ ...props, density })
 
@@ -457,6 +464,24 @@ export async function optimizeAssets (src, path, appDir, {
 
   } finally {
     await db?.close()
+  }
+}
+
+async function normalizePositions (db, assets) {
+  let byItem = new Map()
+  for (let asset of assets) {
+    if (!byItem.has(asset.item)) byItem.set(asset.item, [])
+    byItem.get(asset.item).push(asset)
+  }
+
+  for (let [item, rows] of byItem) {
+    if (!rows.some(r => r.position == null)) continue
+    let ids = rows.map(r => r.id).sort((a, b) => a - b)
+    await photo.order(db, item, ids)
+    for (let i = 0; i < ids.length; i++) {
+      let row = rows.find(r => r.id === ids[i])
+      if (row) row.position = i + 1
+    }
   }
 }
 
@@ -550,9 +575,10 @@ const projectStats =
   }).from('project').limit(1)
 
 const assetInfo =
-  select('id', 'protocol', 'path', 'checksum', 'mimetype', 'page')
+  select('id', 'item_id AS item', 'position',
+    'protocol', 'path', 'checksum', 'mimetype', 'page')
     .from('photos')
-    .order('protocol, path')
+    .order('item_id, position, id')
 
 export async function beginProjectAccess (db, user) {
   if (user == null)
