@@ -181,8 +181,6 @@ export class Import extends ImportCommand {
       yield call(db.transaction, async tx => {
         item = await mod.item.create(tx, templates.item.id, data.item)
 
-        let position = 1
-
         while (!image.done) {
           let imageData = optimizeOnImport
             ? pageData[image.page]
@@ -199,7 +197,7 @@ export class Import extends ImportCommand {
               item: item.id,
               image: imageData,
               data: data.photo,
-              position: position++
+              position: image.page + 1
             })
 
           if (activeList) {
@@ -305,8 +303,6 @@ export class Import extends ImportCommand {
     yield call(db.transaction, async tx => {
       item = await mod.item.create(tx, templates.item.id, data.item)
 
-      let position = 1
-
       for (let i = 0; i < images.length; i++) {
         if (imageData[i] == null) continue
 
@@ -316,7 +312,7 @@ export class Import extends ImportCommand {
             item: item.id,
             image: imageData[i],
             data: data.photo,
-            position: position++
+            position: i + 1
           })
 
         if (activeList && !item.lists.includes(activeList)) {
