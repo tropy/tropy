@@ -173,6 +173,12 @@ export default {
           AND ti.deleted IS NULL`, checksum)
   },
 
+  async maxPosition (db, item) {
+    let row = await db.get(
+      'SELECT MAX(position) AS max FROM photos WHERE item_id = ?', item)
+    return row?.max ?? 0
+  },
+
   async move (db, { ids, item }) {
     return db.run(`
       UPDATE photos SET item_id = ?  WHERE id in (${ids.join(',')})`,
