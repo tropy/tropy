@@ -434,6 +434,7 @@ export async function optimizeAssets (src, path, appDir, {
           updates.checksum = image.checksum
           updates.mimetype = image.mimetype
           updates.page = 0
+          updates.size = image.size
         }
 
         await db.run(
