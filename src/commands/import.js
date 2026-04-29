@@ -32,16 +32,18 @@ export class ImportCommand extends Command {
     while (!image.done) {
       let photo = photos[image.page]
 
-      yield call(cache.consolidate, photo, image, {
-        overwrite
-      })
+      if (photo != null) {
+        yield call(cache.consolidate, photo, image, {
+          overwrite
+        })
 
-      yield put(act.photo.update({
-        id: photo,
-        broken: false,
-        consolidated: Date.now(),
-        consolidating: false
-      }))
+        yield put(act.photo.update({
+          id: photo,
+          broken: false,
+          consolidated: Date.now(),
+          consolidating: false
+        }))
+      }
 
       image.next()
     }
@@ -164,8 +166,12 @@ export class ImportCommand extends Command {
       switch (handler) {
         case 'prompt': {
           this.isInteractive = true
+          const name = basename(image._original?.path ?? image.path)
+          const message = image.numPages > 1
+            ? `${name} (page ${image.page + 1})`
+            : name
           const { ok, isChecked } = yield call(prompt, 'dup', {
-            message: basename(image.path)
+            message
           })
 
           if (isChecked) {

@@ -12,6 +12,8 @@ import { info, warn } from './log.js'
 
 import { Asset } from '../asset/asset.js'
 import { Store } from '../asset/store.js'
+import { Image } from '../image/image.js'
+import photo from '../models/photo.js'
 
 
 /*
@@ -373,6 +375,119 @@ export async function getAssets (db, { basePath }) {
   return assets
 }
 
+/*
+ * Creates an optimized copy of a managed project,
+ * converting assets to jpeg or png if they have transparency.
+ */
+export async function optimizeAssets (src, path, appDir, {
+  concurrency = 4,
+  density = 72,
+  overwrite = false,
+  quality = 0.8
+} = {}) {
+  try {
+    assert(getProjectType(src) === MANAGED, 'source must be a managed project')
+    assert(getProjectType(path) === MANAGED, 'target must be a managed project')
+
+    await checkProjectPath(path, overwrite)
+    info(`optimizing project "${src}" to "${path}"`)
+
+    let srcDbFile = join(src, MANAGED_DB_NAME)
+    let dbFile = join(path, MANAGED_DB_NAME)
+    let store = new Store(join(path, MANAGED_STORE_NAME))
+
+    await makeProjectDir(path, store.name, appDir)
+    await cp(srcDbFile, dbFile, { force: false, errorOnExist: true })
+
+    var db = new Database(dbFile, 'w', {
+      max: 1,
+      journalMode: 'wal'
+    })
+
+    // Assign a new project ID
+    let project = await load(db)
+    let newId = uuid()
+
+    await db.run(
+      ...update('project')
+        .set({ project_id: newId })
+        .where({ project_id: project.id }))
+
+    let assets = await getAssets(db, { basePath: dirname(srcDbFile) })
+
+    info(`optimizing ${assets.length} asset(s)`)
+
+    // Legacy projects may have NULL positions for some/all photos. Compact
+    // affected items to dense 1..N (in id order) before optimize so the
+    // resulting copy loads in correct order regardless of query plan.
+    await normalizePositions(db, assets)
+
+    await pMap(assets, async ({ id, ...props }) => {
+      let image = await Image.open({ ...props, density })
+
+      try {
+        let optimized = await image.optimize({ quality })
+        await store.add(image)
+
+        let updates = { path: relative(path, image.path) }
+        if (optimized) {
+          updates.checksum = image.checksum
+          updates.mimetype = image.mimetype
+          updates.page = 0
+          updates.size = image.size
+        }
+
+        await db.run(
+          ...update('photos').set(updates).where({ id }))
+
+      } catch (err) {
+        // Fall back to copying the original asset
+        warn({ err, url: image.url }, 'failed to optimize, copying original')
+
+        if (image._original) {
+          image.buffer = image._original.buffer
+          image.path = image._original.path
+          image.protocol = image._original.protocol
+        }
+
+        await image.check()
+
+        if (!image.hasChanged) {
+          await store.add(image)
+          await db.run(
+            ...update('photos')
+              .set({ path: relative(path, image.path) })
+              .where({ id }))
+        }
+      }
+    }, { concurrency })
+
+    return { id: newId }
+
+  } finally {
+    await db?.close()
+  }
+}
+
+async function normalizePositions (db, assets) {
+  let byItem = new Map()
+  for (let asset of assets) {
+    if (!byItem.has(asset.item)) byItem.set(asset.item, [])
+    byItem.get(asset.item).push(asset)
+  }
+
+  for (let [item, rows] of byItem) {
+    if (!rows.some(r => r.position == null)) continue
+    let ids = rows.map(r => r.id).sort((a, b) => a - b)
+    await photo.order(db, item, ids)
+    for (let i = 0; i < ids.length; i++) {
+      let row = rows.find(r => r.id === ids[i])
+      if (row) row.position = i + 1
+    }
+  }
+}
+
+
 export async function optimize (db) {
   await db.exec("INSERT INTO fts_notes(fts_notes) VALUES ('optimize')")
   await db.exec("INSERT INTO fts_metadata(fts_metadata) VALUES ('optimize')")
@@ -462,9 +577,10 @@ const projectStats =
   }).from('project').limit(1)
 
 const assetInfo =
-  select('id', 'protocol', 'path', 'checksum')
+  select('id', 'item_id AS item', 'position',
+    'protocol', 'path', 'checksum', 'mimetype', 'page')
     .from('photos')
-    .order('protocol, path')
+    .order('item_id, position, id')
 
 export async function beginProjectAccess (db, user) {
   if (user == null)

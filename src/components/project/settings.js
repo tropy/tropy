@@ -1,10 +1,13 @@
 import React from 'react'
 import { ipcRenderer as ipc } from 'electron'
-import { Form, FormField, FormToggle, FormToggleGroup } from '../form.js'
+import {
+  Form, FormElement, FormField, FormSlider, FormToggle, FormToggleGroup
+} from '../form.js'
+import { Button } from '../button.js'
 import { ProjectTypeField } from './type-field.js'
 import { notify } from '../../dialog.js'
 import { BASES, TYPES } from '../../common/project.js'
-import { convert } from '../../slices/project-files.js'
+import { convert, optimize } from '../../slices/project-files.js'
 import { useDispatch } from 'react-redux'
 import { useIntl } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
@@ -19,6 +22,25 @@ export const ProjectSettings = React.memo(({
   let dispatch = useDispatch()
   let intl = useIntl()
   let win = useWindow()
+
+  let handleProjectOptimize = useEvent(async () => {
+    try {
+      win.toggle('busy', true)
+
+      let action = await dispatch(optimize({
+        name: project.name,
+        src: project.path,
+        quality: project.optimize?.quality
+      }))
+
+      if (action?.payload?.path) {
+        await notify('project.optimize')
+        ipc.send('switch-project', action.payload.path, project.path)
+      }
+    } finally {
+      win.toggle('busy', false)
+    }
+  })
 
   let handleProjectConvert = useEvent(async () => {
     try {
@@ -71,6 +93,29 @@ export const ProjectSettings = React.memo(({
         isDisabled={project.isManaged}
         value={TYPES[project.isManaged ? 0 : 1]}
         onConvert={handleProjectConvert}/>
+      {project.isManaged && (
+        <>
+          <hr/>
+          <FormSlider
+            id="prefs.project.optimize.quality"
+            name="optimize.quality"
+            value={project.optimize?.quality}
+            onChange={onChange}/>
+          <FormToggle
+            id="prefs.project.optimize.onImport"
+            name="optimize.onImport"
+            value={project.optimize?.onImport ?? true}
+            onChange={onChange}/>
+          <FormElement isCompact>
+            <Button
+              className="btn-default"
+              text="prefs.project.optimize.confirm"
+              tabIndex={0}
+              isDisabled={project.isReadOnly}
+              onClick={handleProjectOptimize}/>
+          </FormElement>
+        </>
+      )}
       <hr/>
 
       {!project.isManaged && (
