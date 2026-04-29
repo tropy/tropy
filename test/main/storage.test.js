@@ -9,16 +9,6 @@ describe('Storage', () => {
 
     describe('save', () => {
       after(() => (
-        rm(folder.expand('test-a.json'))
-      ))
-
-      it('saves object with given name', async () => {
-        await folder.save('test-a.json', { name: 'a' })
-      })
-    })
-
-    describe('save.sync', () => {
-      after(() => (
         rm(folder.expand('test-c.json'))
       ))
 

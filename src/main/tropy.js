@@ -371,7 +371,7 @@ export class Tropy extends EventEmitter {
 
     if (this.state != null) {
       this.state.lastDefaultPath = dialog.lastDefaultPath
-      this.store.save.sync('state.json', this.state)
+      this.store.save('state.json', this.state)
     }
 
     return this

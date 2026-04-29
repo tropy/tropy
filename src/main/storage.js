@@ -1,19 +1,17 @@
-import { join } from 'path'
-import fs from 'fs'
+import { join } from 'node:path'
+import { readFile } from 'node:fs/promises'
 import write from 'write-file-atomic'
 
 export class Storage {
   constructor (path) {
     this.path = path
-    this.save.sync = (name, object) =>
-      write.sync(this.expand(name), JSON.stringify(object))
   }
 
   async load (name, defaults) {
     try {
       return {
         ...defaults,
-        ...JSON.parse(await fs.promises.readFile(this.expand(name)))
+        ...this.parse(await readFile(this.expand(name)))
       }
     } catch (error) {
       if (defaults != null && error.code === 'ENOENT')
@@ -22,8 +20,14 @@ export class Storage {
     }
   }
 
-  async save (name, object) {
-    return write(this.expand(name), JSON.stringify(object))
+  save (name, object) {
+    return write.sync(this.expand(name), JSON.stringify(object))
+  }
+
+  parse (data) {
+    return JSON.parse(data, (k, v) =>
+      (k === '__proto__') ? undefined : v
+    )
   }
 
   expand (name) {
