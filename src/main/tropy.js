@@ -320,7 +320,14 @@ export class Tropy extends EventEmitter {
 
   async restore () {
     this.state = await this.migrate(
-      await this.store.load('state.json', Tropy.defaults))
+      await this.store.load('state.json', {
+        defaults: Tropy.defaults
+      }))
+
+    this.safe = await this.store.load('safe.json.enc', {
+      defaults: {},
+      secure: true
+    })
 
     await Promise.all([
       this.load(),
@@ -372,6 +379,10 @@ export class Tropy extends EventEmitter {
     if (this.state != null) {
       this.state.lastDefaultPath = dialog.lastDefaultPath
       this.store.save('state.json', this.state)
+    }
+
+    if (this.safe != null) {
+      this.store.save('safe.json.enc', this.safe, { secure: true })
     }
 
     return this
