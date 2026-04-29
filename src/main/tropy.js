@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import { EventEmitter } from 'node:events'
 import { extname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { v1 as uuid } from 'uuid'
+import { randomUUID as uuid } from 'node:crypto'
 
 import {
   app,
