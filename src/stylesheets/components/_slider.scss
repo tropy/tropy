@@ -146,4 +146,78 @@
       display: none;
     }
   }
+
+  // Form-field skin: rectangular control matching .form-control shape,
+  // with a left-anchored value label and a dark "selected" fill.
+  &.slider-form {
+    --zoom: 1;
+    width: 100%;
+    height: $input-height-base;
+    margin: 0;
+    padding: 0;
+    background-color: $input-bg;
+    border: 1px solid $input-border;
+    border-radius: $input-border-radius-small;
+    overflow: hidden;
+    contain: none;
+
+    .draggable {
+      flex: 1 1 auto;
+      align-self: stretch;
+      height: auto;
+    }
+
+    .slider-track {
+      flex: 1 1 0;
+      height: 100%;
+      background-color: transparent;
+      border: 0;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .slider-range {
+      box-sizing: border-box;
+      height: 100%;
+      background-color: --scheme(var(--light-3), var(--dark-5));
+      border: 0;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    &:focus .slider-range {
+      background-color: --scheme(var(--light-3), var(--dark-5));
+    }
+
+    .slider-handle {
+      // Keep in tree so .slider-value (its child) still renders, but hide
+      // it visually and make it position: static so the absolutely-
+      // positioned value below anchors to .slider-track (full bar width)
+      // rather than to the handle's drag position.
+      position: static;
+      width: 0;
+      height: 0;
+      border: 0;
+      background: transparent;
+      margin: 0;
+    }
+
+    .slider-value {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: auto;
+      width: auto;
+      height: 100%;
+      margin: 0;
+      padding: 0 $padding-base-horizontal;
+      font-size: inherit;
+      line-height: calc(#{$input-height-base} - 2px);
+      text-align: left;
+      color: inherit;
+      opacity: 1;
+      transition: none;
+      pointer-events: none;
+    }
+  }
 }

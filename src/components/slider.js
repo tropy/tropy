@@ -36,7 +36,7 @@ export class Slider extends React.PureComponent {
   }
 
   get classes () {
-    return ['slider', `slider-${this.props.size}`, {
+    return ['slider', `slider-${this.props.size}`, this.props.className, {
       disabled: this.isDisabled,
       origin: this.props.origin != null
     }]
@@ -215,10 +215,14 @@ export class Slider extends React.PureComponent {
   }
 
   renderCurrentValue () {
-    return this.props.showCurrentValue && (
+    if (!this.props.showCurrentValue) return null
+
+    let { formatValue, resolution, value } = this.props
+    let rounded = round(value * resolution)
+
+    return (
       <div className="slider-value">
-        {round(this.props.value * this.props.resolution)}
-&thinsp;%
+        {formatValue ? formatValue(rounded) : <>{rounded}&thinsp;%</>}
       </div>
     )
   }
