@@ -102,7 +102,7 @@ export class Image extends Asset {
     this.page = 0
   }
 
-  async optimize () {
+  async optimize ({ quality = 0.8 } = {}) {
     if (this._original) {
       Object.assign(this, this._original)
     } else {
@@ -114,6 +114,7 @@ export class Image extends Asset {
     if (this.mimetype === MIME.PNG && !this.isOpaque)
       return false
 
+    let jpegQuality = restrict(Math.round(quality * 100), 1, 100)
     let outputBuffer, ext, mimetype
 
     if (this.mimetype === MIME.PDF) {
@@ -141,7 +142,7 @@ export class Image extends Asset {
       } else if (this.isOpaque) {
         ext = '.jpg'
         mimetype = MIME.JPG
-        outputBuffer = await this.do().jpeg({ quality: 100 }).toBuffer()
+        outputBuffer = await this.do().jpeg({ quality: jpegQuality }).toBuffer()
 
       } else {
         ext = '.png'
@@ -152,7 +153,7 @@ export class Image extends Asset {
     } else if (this.isOpaque) {
       ext = '.jpg'
       mimetype = MIME.JPG
-      outputBuffer = await this.do().jpeg({ quality: 100 }).toBuffer()
+      outputBuffer = await this.do().jpeg({ quality: jpegQuality }).toBuffer()
     } else {
       ext = '.png'
       mimetype = MIME.PNG

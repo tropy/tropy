@@ -106,7 +106,8 @@ export class Import extends ImportCommand {
       useLocalTimezone: state.settings.timezone,
       createLists: state.settings.createLists,
       optimizeOnImport: state.project.isManaged &&
-        (state.project.optimize?.onImport ?? true)
+        (state.project.optimize?.onImport ?? true),
+      optimizeQuality: state.project.optimize?.quality
     })))
   }
 
@@ -117,7 +118,7 @@ export class Import extends ImportCommand {
 
       let {
         basePath, store, density, db, templates, useLocalTimezone,
-        optimizeOnImport
+        optimizeOnImport, optimizeQuality
       } = this.options
 
       let { list: activeList } = this.action.payload
@@ -148,7 +149,7 @@ export class Import extends ImportCommand {
 
       if (optimizeOnImport) {
         while (!image.done) {
-          let optimized = yield call([image, image.optimize])
+          let optimized = yield call([image, image.optimize], { quality: optimizeQuality })
           try {
             yield * this.handleDuplicate(image)
             yield call(store.add, image)
@@ -244,7 +245,8 @@ export class Import extends ImportCommand {
 
   *importFromPdfPortfolio (source, embedded) {
     let {
-      basePath, store, db, templates, useLocalTimezone, optimizeOnImport
+      basePath, store, db, templates, useLocalTimezone, optimizeOnImport,
+      optimizeQuality
     } = this.options
 
     let { list: activeList } = this.action.payload
@@ -278,7 +280,7 @@ export class Import extends ImportCommand {
 
       try {
         if (optimizeOnImport && image.mimetype !== MIME.JPG) {
-          yield call([image, image.optimize])
+          yield call([image, image.optimize], { quality: optimizeQuality })
         }
         yield * this.handleDuplicate(image)
         yield call(store.add, image)

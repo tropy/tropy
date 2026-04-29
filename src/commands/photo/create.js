@@ -27,6 +27,7 @@ export class Create extends ImportCommand {
       prefs: state.settings,
       optimizeOnImport: state.project.isManaged &&
         (state.project.optimize?.onImport ?? true),
+      optimizeQuality: state.project.optimize?.quality,
       idx: this.action.meta?.idx ||
         [state.items[this.action.payload.item].photos.length]
     })
@@ -76,7 +77,7 @@ export class Create extends ImportCommand {
 
       let {
         basePath, cache, db, idx, prefs, store, template,
-        optimizeOnImport
+        optimizeOnImport, optimizeQuality
       } = this.options
       let { item } = this.action.payload
 
@@ -106,7 +107,7 @@ export class Create extends ImportCommand {
 
       if (optimizeOnImport) {
         while (!image.done) {
-          let optimized = yield call([image, image.optimize])
+          let optimized = yield call([image, image.optimize], { quality: optimizeQuality })
           try {
             yield * this.handleDuplicate(image)
             yield call(store.add, image)
@@ -197,7 +198,8 @@ export class Create extends ImportCommand {
 
   *importFromPdfPortfolio (source, progress, embedded) {
     let {
-      basePath, cache, db, idx, prefs, store, template, optimizeOnImport
+      basePath, cache, db, idx, prefs, store, template, optimizeOnImport,
+      optimizeQuality
     } = this.options
     let { item } = this.action.payload
 
@@ -230,7 +232,7 @@ export class Create extends ImportCommand {
 
       try {
         if (optimizeOnImport && image.mimetype !== MIME.JPG) {
-          yield call([image, image.optimize])
+          yield call([image, image.optimize], { quality: optimizeQuality })
         }
         yield * this.handleDuplicate(image)
         yield call(store.add, image)

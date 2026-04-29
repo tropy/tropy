@@ -250,11 +250,13 @@ en:
             one {1 photo not found; consolidation required.}
             other {# photos not found; consolidation required.}}
       optimize:
-        label: Optimize assets
-        confirm: Optimize
+        confirm: Create Optimized Project
         hint: >-
           Create an optimized copy of this project.
         onImport: Optimize photos on import
+        quality:
+          label: Optimize assets
+          value: "Quality {value} %"
       watch:
         folder: Watch folder
         usePolling: Using file stat polling
