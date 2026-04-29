@@ -15,3 +15,4 @@ _book
 !.github/styles/Vocab/tropy
 vendor/code-sign-tool
 vendor/sharp
+vendor/sqlite3/sqlite-autoconf-*.tar.gz
