@@ -106,7 +106,14 @@ export class Image extends Asset {
     if (this._original) {
       Object.assign(this, this._original)
     } else {
-      this._original = { buffer: this.buffer, path: this.path, protocol: this.protocol, checksum: this.checksum, mimetype: this.mimetype }
+      this._original = {
+        buffer: this.buffer,
+        path: this.path,
+        protocol: this.protocol,
+        checksum: this.checksum,
+        mimetype: this.mimetype,
+        fs: { ...this.fs }
+      }
     }
 
     if (this.mimetype === MIME.JPG)
@@ -165,6 +172,7 @@ export class Image extends Asset {
     this.path = `${this.checksum}${ext}`
     this.protocol = 'file'
     this.mimetype = mimetype
+    this.fs = { ...this.fs, size: outputBuffer.length }
 
     return true
   }
