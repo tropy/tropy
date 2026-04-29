@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import cx from 'classnames'
 import { useEvent } from '../hooks/use-event.js'
@@ -6,6 +6,7 @@ import { set } from '../common/util.js'
 import { Input } from './input.js'
 import { FileSelect } from './file.js'
 import { Select } from './select.js'
+import { Slider } from './slider.js'
 import { SASS } from '../constants/index.js'
 
 export const Form = ({ children, className }) => (
@@ -236,6 +237,41 @@ export const FormToggle = ({
       }/>
   </FormGroup>
 )
+
+export const FormSlider = ({
+  id,
+  isCompact,
+  isDisabled,
+  name,
+  onChange,
+  size = 8,
+  tabIndex = 0,
+  value
+}) => {
+  let intl = useIntl()
+
+  let handleChange = useEvent((next) => {
+    onChange(set({}, name, next))
+  })
+
+  // useCallback instead of useEvent so the ref is populated on the first call
+  let formatValue = useCallback((rounded) =>
+    intl.formatMessage({ id: `${id}.value` }, { value: rounded }),
+  [intl, id])
+
+  return (
+    <FormElement id={`${id}.label`} size={size} isCompact={isCompact}>
+      <Slider
+        className="slider-form"
+        formatValue={formatValue}
+        isDisabled={isDisabled}
+        showCurrentValue
+        tabIndex={tabIndex}
+        value={value}
+        onChange={handleChange}/>
+    </FormElement>
+  )
+}
 
 export const FormToggleGroup = ({
   id,

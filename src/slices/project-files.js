@@ -99,13 +99,14 @@ export const convert = createAsyncThunk(
 
 export const optimize = createAsyncThunk(
   'projectFiles/optimize',
-  async ({ src, name }) => {
+  async ({ src, name, quality }) => {
     try {
       let path = await save.project(TYPES[0], name)
 
       if (path)
         await optimizeAssets(src, path, Resource.base, {
-          overwrite: true
+          overwrite: true,
+          quality
         })
 
       return { path }

@@ -1,6 +1,8 @@
 import React from 'react'
 import { ipcRenderer as ipc } from 'electron'
-import { Form, FormElement, FormField, FormToggle, FormToggleGroup } from '../form.js'
+import {
+  Form, FormElement, FormField, FormSlider, FormToggle, FormToggleGroup
+} from '../form.js'
 import { Button } from '../button.js'
 import { ProjectTypeField } from './type-field.js'
 import { notify } from '../../dialog.js'
@@ -27,7 +29,8 @@ export const ProjectSettings = React.memo(({
 
       let action = await dispatch(optimize({
         name: project.name,
-        src: project.path
+        src: project.path,
+        quality: project.optimize?.quality
       }))
 
       if (action?.payload?.path) {
@@ -92,16 +95,20 @@ export const ProjectSettings = React.memo(({
         onConvert={handleProjectConvert}/>
       {project.isManaged && (
         <>
+          <hr/>
+          <FormSlider
+            id="prefs.project.optimize.quality"
+            name="optimize.quality"
+            value={project.optimize?.quality}
+            onChange={onChange}/>
           <FormToggle
             id="prefs.project.optimize.onImport"
             name="optimize.onImport"
             value={project.optimize?.onImport ?? true}
             onChange={onChange}/>
-          <FormElement
-            id="prefs.project.optimize.label"
-            isCompact>
+          <FormElement isCompact>
             <Button
-              className="btn-default btn-block"
+              className="btn-default"
               text="prefs.project.optimize.confirm"
               tabIndex={0}
               isDisabled={project.isReadOnly}

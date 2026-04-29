@@ -382,7 +382,8 @@ export async function getAssets (db, { basePath }) {
 export async function optimizeAssets (src, path, appDir, {
   concurrency = 4,
   density = 72,
-  overwrite = false
+  overwrite = false,
+  quality = 0.8
 } = {}) {
   try {
     assert(getProjectType(src) === MANAGED, 'source must be a managed project')
@@ -425,7 +426,7 @@ export async function optimizeAssets (src, path, appDir, {
       let image = await Image.open({ ...props, density })
 
       try {
-        let optimized = await image.optimize()
+        let optimized = await image.optimize({ quality })
         await store.add(image)
 
         let updates = { path: relative(path, image.path) }
