@@ -101,7 +101,7 @@ export class Create extends ImportCommand {
       let data = this.getImageMetadata('photo', image, template, prefs)
       let ids = []
       let photos = []
-      let position = idx[0] + progress
+      let insertAt = idx[0] + progress
       let pageData = []
 
       if (optimizeOnImport) {
@@ -137,7 +137,7 @@ export class Create extends ImportCommand {
       let photosByPage = new Array(image.numPages).fill(null)
 
       yield call(db.transaction, async tx => {
-        let count = 0
+        let base = await mod.photo.maxPosition(tx, item)
 
         while (!image.done) {
           let imageData = optimizeOnImport
@@ -155,7 +155,7 @@ export class Create extends ImportCommand {
               item,
               image: imageData,
               data,
-              position: position + count++
+              position: base + image.page + 1
             })
 
           ids.push(photo.id)
@@ -173,7 +173,7 @@ export class Create extends ImportCommand {
       yield all([
         put(act.metadata.load(ids)),
         put(act.photo.insert(photos)),
-        put(act.item.photos.add({ id: item, photos: ids }, { idx: [position] }))
+        put(act.item.photos.add({ id: item, photos: ids }, { idx: [insertAt] }))
       ])
 
       image.rewind()
@@ -251,10 +251,11 @@ export class Create extends ImportCommand {
 
     let ids = []
     let photos = []
-    let position = idx[0] + progress
+    let insertAt = idx[0] + progress
 
     yield call(db.transaction, async tx => {
-      let count = 0
+      let base = await mod.photo.maxPosition(tx, item)
+
       for (let i = 0; i < images.length; i++) {
         if (imageData[i] == null) continue
 
@@ -264,7 +265,7 @@ export class Create extends ImportCommand {
             item,
             image: imageData[i],
             data,
-            position: position + count++
+            position: base + i + 1
           })
 
         ids.push(photo.id)
@@ -275,7 +276,7 @@ export class Create extends ImportCommand {
     yield all([
       put(act.metadata.load(ids)),
       put(act.photo.insert(photos)),
-      put(act.item.photos.add({ id: item, photos: ids }, { idx: [position] }))
+      put(act.item.photos.add({ id: item, photos: ids }, { idx: [insertAt] }))
     ])
 
     let photoIdx = 0
