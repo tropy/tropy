@@ -265,6 +265,7 @@ export const FormSlider = ({
         className="slider-form"
         formatValue={formatValue}
         isDisabled={isDisabled}
+        precision={100}
         showCurrentValue
         tabIndex={tabIndex}
         value={value}
