@@ -291,15 +291,15 @@ export class Tropy extends EventEmitter {
       })
   }
 
-  showAboutWindow () {
-    this.wm.show('about', this.hash, {
+  async showAboutWindow () {
+    await this.wm.show('about', this.hash, {
       title: this.dict.window.about.title,
       parent: this.wm.current(),
       modal: linux
     })
   }
 
-  showPreferencesWindow () {
+  async showPreferencesWindow () {
     let win = this.wm.current()
     let project = this.getProject(win)
 
@@ -311,7 +311,7 @@ export class Tropy extends EventEmitter {
     win?.showInactive()
     win?.moveTop()
 
-    this.wm.show('prefs', args, {
+    await this.wm.show('prefs', args, {
       isExclusive: !darwin,
       title: this.dict.window.prefs.title,
       parent: win
@@ -819,9 +819,9 @@ export class Tropy extends EventEmitter {
       if (win != null) win.webContents.inspectElement(x, y)
     })
 
-    this.on('app:open-preferences', () => {
+    this.on('app:open-preferences', () => (
       this.showPreferencesWindow()
-    })
+    ))
 
     this.on('app:open-license', () => {
       shell.open('https://tropy.org/license')
