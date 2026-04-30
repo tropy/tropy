@@ -32,6 +32,7 @@ import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
 
 import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
+import { AccountService } from './account.js'
 import { Strings } from './res.js'
 import { AppMenu, ContextMenu } from './menu.js'
 import { Storage } from './storage.js'
@@ -80,6 +81,7 @@ export class Tropy extends EventEmitter {
 
     this.opts = opts
 
+    this.account = new AccountService(this)
     this.api = new ApiServer(this)
     this.cache = new Cache(opts.cache || join(opts.data, 'cache'))
     this.ctx = new ContextMenu(this)
@@ -99,6 +101,7 @@ export class Tropy extends EventEmitter {
   async start () {
     await this.restore()
     this.listen()
+    this.account.start()
     this.wm.start()
     await this.api.start()
     // await this.loadDevToolExtensions()
@@ -1011,6 +1014,10 @@ export class Tropy extends EventEmitter {
 
     ipc.on(CONTEXT.SHOW, (event, payload) => {
       this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
+    })
+
+    this.account.on('change', () => {
+      this.persist()
     })
 
     this.wm.on('show-menu', (win, pos) => {
