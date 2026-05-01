@@ -292,6 +292,21 @@ en:
       uninstall: Uninstall
       noInfo: Unknown author
       homepage: More
+    account:
+      label: Tropy Account
+      description: >-
+        Link your Tropy account to use built-in transcriptions
+        and other server-side features.
+      username: Username
+      password: Password
+      link: Link Account
+      unlink: Unlink
+      linked_as: "Linked as {username}"
+  account:
+    link:
+      invalid: Invalid username or password.
+      network: Could not reach the Tropy server.
+      unknown: Something went wrong. Please try again.
   format:
     ppi: Pixels per inch (ppi)
   item:
@@ -457,6 +472,15 @@ en:
           buttons:
             - Cancel
             - Delete
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again
+            to use server-side features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: >-

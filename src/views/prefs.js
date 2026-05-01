@@ -5,7 +5,7 @@ import { Main } from '../components/main.js'
 import { PrefsContainer } from '../components/prefs/container.js'
 import { main } from '../sagas/prefs.js'
 import win from '../window.js'
-import { intl, prefs, project, history, settings } from '../actions/index.js'
+import { account, intl, prefs, project, history, settings } from '../actions/index.js'
 import * as dialog from '../dialog.js'
 
 export const store = create()
@@ -20,6 +20,8 @@ Promise.all([
     if (file != null) {
       store.dispatch(project.open(file))
     }
+
+    store.dispatch(account.status())
 
     createRoot(document.getElementById('main'))
       .render(
