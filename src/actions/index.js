@@ -1,3 +1,4 @@
+export * as account from '../slices/account.js'
 export * as notepad from '../slices/notepad.js'
 export * as prefs from '../slices/prefs.js'
 export * as projectFiles from '../slices/project-files.js'
