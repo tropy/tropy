@@ -1,3 +1,4 @@
+export { default as account } from '../slices/account.js'
 export { default as notepad } from '../slices/notepad.js'
 export { default as projectFiles } from '../slices/project-files.js'
 export { default as prefs } from '../slices/prefs.js'
