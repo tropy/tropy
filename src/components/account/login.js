@@ -1,56 +1,32 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Button } from '../button.js'
-import { Form, FormElement, FormText } from '../form.js'
-import * as act from '../../actions/index.js'
+import { Form, FormElement } from '../form.js'
+import { link } from '../../slices/account.js'
 
 
-export function AccountSettings () {
+export function Login ({ ref }) {
   let dispatch = useDispatch()
   let account = useSelector(state => state.account)
 
   let usernameRef = useRef(null)
   let passwordRef = useRef(null)
 
-  useEffect(() => {
-    dispatch(act.account.status())
-  }, [dispatch])
-
-  let handleLink = useCallback((event) => {
+  let handleSubmit = useCallback((event) => {
     event.preventDefault()
     let username = usernameRef.current?.value?.trim()
     let password = passwordRef.current?.value
     if (!username || !password) return
 
-    dispatch(act.account.link({ username, password }))
-  }, [dispatch])
-
-  let handleUnlink = useCallback(() => {
-    dispatch(act.account.unlink())
+    dispatch(link({ username, password }))
   }, [dispatch])
 
   let isPending = account.status === 'pending'
 
-  if (account.linked) {
-    return (
-      <Form>
-        <FormText
-          id="prefs.account.linked_as"
-          value={account.username}/>
-        <FormElement size={8}>
-          <Button
-            isDefault
-            isDisabled={isPending}
-            text="prefs.account.unlink"
-            onClick={handleUnlink}/>
-        </FormElement>
-      </Form>
-    )
-  }
-
   return (
-    <form className="form-horizontal" onSubmit={handleLink}>
+    <Form ref={ref} onSubmit={handleSubmit}>
+      <figure className="app-icon"/>
       <FormElement size={8}>
         <p className="form-description">
           <FormattedMessage id="prefs.account.description"/>
@@ -99,6 +75,6 @@ export function AccountSettings () {
           </p>
         )}
       </FormElement>
-    </form>
+    </Form>
   )
 }
