@@ -5,7 +5,7 @@ import { ProjectContainer } from '../components/project/container.js'
 import { create } from '../stores/project.js'
 import { main } from '../sagas/project.js'
 import win from '../window.js'
-import { account, idle, intl, project, history, keymap, settings } from '../actions/index.js'
+import { idle, intl, project, history, keymap, settings } from '../actions/index.js'
 import * as dialog from '../dialog.js'
 import Esper from '../esper/index.js'
 
@@ -23,8 +23,6 @@ Promise.all([
     if (file != null) {
       store.dispatch(project.open(file))
     }
-
-    store.dispatch(account.status())
 
     createRoot(document.getElementById('main'))
       .render(
