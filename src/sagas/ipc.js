@@ -3,6 +3,7 @@ import { ipcRenderer } from 'electron'
 import { warn } from '../common/log.js'
 import { getHistory, getAllTags } from '../selectors/index.js'
 import { PROJECT, TAG, HISTORY } from '../constants/index.js'
+import * as actions from '../actions/index.js'
 
 import {
   call,
@@ -62,12 +63,29 @@ function *rsvp (action) {
   }
 }
 
+// Resolve dispatched actions arriving from main.
+// If the action has no `type`, calls corresponding action creator
+// by resolving `name`.
+function resolve (action) {
+  if ('type' in action) return action
+
+  let creator = action.name.split('.').reduce((o, k) => o?.[k], actions)
+  if (typeof creator !== 'function')
+    throw new Error(`unknown ipc action: ${action.name}`)
+
+  return creator(action.payload, action.meta)
+}
+
 function *receive () {
   let dispatches = yield call(channel, 'dispatch')
 
   while (true) {
     let action = yield take(dispatches)
-    yield put(action)
+    try {
+      yield put(resolve(action))
+    } catch (err) {
+      warn({ err, action }, 'failed to resolve dispatched action')
+    }
   }
 }
 
