@@ -9,8 +9,13 @@ import { Select } from './select.js'
 import { Slider } from './slider.js'
 import { SASS } from '../constants/index.js'
 
-export const Form = ({ children, className }) => (
-  <form className={cx('form-horizontal', className)}>
+export const Form = ({
+  children,
+  className,
+  ref,
+  ...props
+}) => (
+  <form ref={ref} className={cx('form-horizontal', className)} {...props}>
     {children}
   </form>
 )
