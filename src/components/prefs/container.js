@@ -5,7 +5,7 @@ import { Nav, NavItem } from './nav.js'
 import { TemplateEditor } from '../template/editor.js'
 import { VocabBrowser } from '../vocab/browser.js'
 import { Pane, Footer } from './pane.js'
-import { AccountSettings } from './account.js'
+import { AccountSettings } from '../account/settings.js'
 import { AppSettings } from '../settings/app.js'
 import { ProjectSettings } from '../project/settings.js'
 import { PluginConfig } from '../plugin/config.js'
@@ -54,15 +54,18 @@ export function PrefsContainer () {
       <div className="prefs-view">
         <Header>
           <Nav>
+            <NavItem name="account" icon="Ghost"/>
             <NavItem name="app" icon="Gear"/>
             <NavItem name="project" icon="Maze" isDisabled={!project?.id}/>
             <NavItem name="template" icon="Document"/>
             <NavItem name="vocab" icon="Book"/>
             <NavItem name="plugins" icon="Plugin"/>
-            <NavItem name="account" icon="Lock"/>
           </Nav>
         </Header>
         <Body>
+          <Pane name="account">
+            <AccountSettings/>
+          </Pane>
           <Pane name="app">
             <AppSettings/>
           </Pane>
@@ -93,9 +96,6 @@ export function PrefsContainer () {
                 text="prefs.plugins.install"
                 onClick={handlePluginInstall}/>
             </Footer>
-          </Pane>
-          <Pane name="account">
-            <AccountSettings/>
           </Pane>
         </Body>
       </div>

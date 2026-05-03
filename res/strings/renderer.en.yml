@@ -293,20 +293,14 @@ en:
       noInfo: Unknown author
       homepage: More
     account:
-      label: Tropy Account
+      label: Account
       description: >-
-        Link your Tropy account to use built-in transcriptions
-        and other server-side features.
+        A Tropy account allows you to use add-on services.
       username: Username
+      email: Email
       password: Password
-      link: Link Account
-      unlink: Unlink
-      linked_as: "Linked as {username}"
-  account:
-    link:
-      invalid: Invalid username or password.
-      network: Could not reach the Tropy server.
-      unknown: Something went wrong. Please try again.
+      link: Sign in
+      unlink: Sign out
   format:
     ppi: Pixels per inch (ppi)
   item:
@@ -700,6 +694,11 @@ en:
       }
 
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        network: Could not reach the Tropy server.
+        unknown: Something went wrong. Please try again.
     cache:
       prune: Failed to optimize project cache.
       purge: Failed to remove old project caches.
