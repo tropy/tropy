@@ -57,6 +57,10 @@ const IGNORE_WARNINGS = {
 
   UNUSED_EXTERNAL_IMPORT: true,
 
+  MODULE_LEVEL_DIRECTIVE: (warning) => [
+    resolve('node_modules/react-intl/index.js'),
+  ].includes(warning.id),
+
   THIS_IS_UNDEFINED: (warning) =>
     (/this && this\.__/).test(warning.frame)
 }
