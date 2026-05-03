@@ -31,6 +31,8 @@ export const feed = (platform === 'win32') ?
   `https://tropy.org/update/${channel}/${platform}/${arch}` :
   `https://tropy.org/update/${channel}/${platform}/${arch}/${version}`
 
+export const authUrl = 'https://accounts.tropy.org'
+
 export {
   author,
   name,

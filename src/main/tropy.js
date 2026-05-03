@@ -32,6 +32,7 @@ import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
 
 import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
+import { AccountService } from './account.js'
 import { Strings } from './res.js'
 import { AppMenu, ContextMenu } from './menu.js'
 import { Storage } from './storage.js'
@@ -80,6 +81,7 @@ export class Tropy extends EventEmitter {
 
     this.opts = opts
 
+    this.account = new AccountService(this)
     this.api = new ApiServer(this)
     this.cache = new Cache(opts.cache || join(opts.data, 'cache'))
     this.ctx = new ContextMenu(this)
@@ -99,6 +101,7 @@ export class Tropy extends EventEmitter {
   async start () {
     await this.restore()
     this.listen()
+    this.account.start()
     this.wm.start()
     await this.api.start()
     // await this.loadDevToolExtensions()
@@ -291,15 +294,15 @@ export class Tropy extends EventEmitter {
       })
   }
 
-  showAboutWindow () {
-    this.wm.show('about', this.hash, {
+  async showAboutWindow () {
+    await this.wm.show('about', this.hash, {
       title: this.dict.window.about.title,
       parent: this.wm.current(),
       modal: linux
     })
   }
 
-  showPreferencesWindow () {
+  async showPreferencesWindow () {
     let win = this.wm.current()
     let project = this.getProject(win)
 
@@ -311,7 +314,7 @@ export class Tropy extends EventEmitter {
     win?.showInactive()
     win?.moveTop()
 
-    this.wm.show('prefs', args, {
+    await this.wm.show('prefs', args, {
       isExclusive: !darwin,
       title: this.dict.window.prefs.title,
       parent: win
@@ -819,9 +822,9 @@ export class Tropy extends EventEmitter {
       if (win != null) win.webContents.inspectElement(x, y)
     })
 
-    this.on('app:open-preferences', () => {
+    this.on('app:open-preferences', () => (
       this.showPreferencesWindow()
-    })
+    ))
 
     this.on('app:open-license', () => {
       shell.open('https://tropy.org/license')
@@ -1011,6 +1014,10 @@ export class Tropy extends EventEmitter {
 
     ipc.on(CONTEXT.SHOW, (event, payload) => {
       this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
+    })
+
+    this.account.on('change', () => {
+      this.persist()
     })
 
     this.wm.on('show-menu', (win, pos) => {

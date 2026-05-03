@@ -1,6 +1,6 @@
 import { resolve } from 'node:path'
 import { URL, pathToFileURL } from 'node:url'
-import { exe, version } from '../common/release.js'
+import { authUrl, exe, version } from '../common/release.js'
 import { Command } from 'commander'
 
 export const program = new Command()
@@ -24,6 +24,7 @@ program
   .option('--cache <path>', 'set cache directory', type.path)
   .option('--logs <path>', 'set log directory', type.path)
   .option('--extensions <path>', 'set chromium extensions directory', type.path)
+  .option('--auth <url>', 'set auth server', authUrl)
 
   // TODO will be obsolete with bundling!
   .option('--env <name>', 'set environment',
