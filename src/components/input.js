@@ -220,6 +220,7 @@ export class Input extends React.PureComponent {
           content={this.state.value}
           isDisabled={!this.props.resize}>
           <input
+            autoComplete="off"
             className={this.props.className}
             dir={this.props.dir}
             disabled={this.props.isDisabled}
@@ -232,6 +233,7 @@ export class Input extends React.PureComponent {
             type={this.props.type}
             max={this.props.max}
             min={this.props.min}
+            name={this.props.name}
             value={this.state.value}
             onBlur={this.handleBlur}
             onChange={this.handleChange}
