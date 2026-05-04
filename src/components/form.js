@@ -138,6 +138,7 @@ export class FormField extends React.PureComponent {
           {...this.props}
           ref={this.input}
           className="form-control"
+          name={this.props.name}
           value={this.props.value || ''}
           onBlur={this.handleBlur}
           onChange={this.handleChange}
