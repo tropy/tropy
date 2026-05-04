@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import cx from 'classnames'
 import { useEvent } from '../hooks/use-event.js'
@@ -248,22 +248,13 @@ export const FormSlider = ({
   tabIndex = 0,
   value
 }) => {
-  let intl = useIntl()
-
   let handleChange = useEvent((next) => {
     onChange(set({}, name, next))
   })
 
-  // useCallback instead of useEvent so the ref is populated on the first call
-  let formatValue = useCallback((rounded) =>
-    intl.formatMessage({ id: `${id}.value` }, { value: rounded }),
-  [intl, id])
-
   return (
     <FormElement id={`${id}.label`} size={size} isCompact={isCompact}>
       <Slider
-        className="slider-form"
-        formatValue={formatValue}
         isDisabled={isDisabled}
         precision={100}
         showCurrentValue
