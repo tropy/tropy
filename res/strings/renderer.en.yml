@@ -304,6 +304,9 @@ en:
       username: Username
       email: Email
       password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
       link: Sign in
       unlink: Sign out
   format:

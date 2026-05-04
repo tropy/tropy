@@ -28,7 +28,7 @@ export class AccountService extends EventEmitter {
     ipcMain.removeHandler('account')
   }
 
-  url (pathname) {
+  url (pathname = '/') {
     return new URL(pathname, this.app.opts.auth)
   }
 
