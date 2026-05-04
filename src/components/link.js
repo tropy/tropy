@@ -14,7 +14,7 @@ export const Link = ({
   if (id != null) {
     url ??= intl.formatMessage({ id: `${id}.url` }, opts)
     text ??= intl.formatMessage({ id: `${id}.title` }, opts)
-    title ??= intl.formatMessage({ id: `${id}.hint` }, opts)
+    // title ??= intl.formatMessage({ id: `${id}.hint` }, opts)
   }
 
   let handleClick = useIpcEvent(null, ['shell', 'open', url])
