@@ -197,8 +197,7 @@ export class Import extends ImportCommand {
             {
               item: item.id,
               image: imageData,
-              data: data.photo,
-              position: image.page + 1
+              data: data.photo
             })
 
           if (activeList) {
@@ -313,8 +312,7 @@ export class Import extends ImportCommand {
           {
             item: item.id,
             image: imageData[i],
-            data: data.photo,
-            position: i + 1
+            data: data.photo
           })
 
         if (activeList && !item.lists.includes(activeList)) {

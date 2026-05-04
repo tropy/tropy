@@ -236,7 +236,7 @@ mod.item = {
             LEFT OUTER JOIN trash USING (id)
           WHERE ${(ids != null) ? `item_id IN (${ids}) AND` : ''}
             deleted IS NULL
-          ORDER BY item_id, position`,
+          ORDER BY item_id, position, id`,
       ({ id, photo }) => {
         if (id in items) items[id].photos.push(photo)
         else items[id] = skel(id, [], [photo])
