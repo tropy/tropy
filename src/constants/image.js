@@ -35,6 +35,7 @@ export default {
     'jpg',
     'jpeg',
     'jp2',
+    'jpf',
     'jpx',
     'j2k',
     'pdf',
