@@ -1,5 +1,54 @@
 import MIME from './mime.js'
 
+const RAW = {
+  EXT: [
+    '3fr',
+    'ari',
+    'arw',
+    'bay',
+    'bmq',
+    'cap',
+    'cine',
+    'cr2',
+    'cr3',
+    'crw',
+    'cs1',
+    'dc2',
+    'dcr',
+    'dng',
+    'erf',
+    'fff',
+    'gpr',
+    'iiq',
+    'k25',
+    'kc2',
+    'kdc',
+    'mdc',
+    'mef',
+    'mos',
+    'mrw',
+    'nef',
+    'nrw',
+    'orf',
+    'pef',
+    'pxn',
+    'qtk',
+    'raf',
+    'raw',
+    'rdc',
+    'rw1',
+    'rw2',
+    'rwl',
+    'rwz',
+    'sr2',
+    'srf',
+    'srw',
+    'sti',
+    'x3f'
+  ],
+  MIN_VIPS: '8.18.0'
+}
+
 const SUPPORTED = {
   [MIME.AVIF]: true,
   [MIME.AVIF_SEQ]: true,
@@ -16,6 +65,7 @@ const SUPPORTED = {
   [MIME.PNG]: true,
   [MIME.PDF]: true,
   [MIME.PS]: true,
+  [MIME.RAW]: true,
   [MIME.SVG]: true,
   [MIME.TIFF]: true,
   [MIME.WEBP]: true
@@ -41,6 +91,7 @@ export default {
     'pdf',
     'png',
     'ps',
+    ...RAW.EXT,
     'svg',
     'tif',
     'tiff',
@@ -62,6 +113,8 @@ export default {
     [MIME.PS]: true,
     [MIME.SVG]: true
   },
+
+  RAW,
 
   SUPPORTED
 }

@@ -19,6 +19,7 @@ export default {
   PDF: 'application/pdf',
   PNG: 'image/png',
   PS: 'application/postscript',
+  RAW: 'image/x-dcraw',
   SVG: 'image/svg+xml',
   TIF: 'image/tiff',
   TIFF: 'image/tiff',
