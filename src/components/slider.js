@@ -36,7 +36,11 @@ export class Slider extends React.PureComponent {
   }
 
   get classes () {
-    return ['slider', `slider-${this.props.size}`, {
+    let type = this.props.type === 'form'
+      ? 'form-control form-slider'
+      : `slider slider-${this.props.size}`
+
+    return [type, {
       disabled: this.isDisabled,
       origin: this.props.origin != null
     }]
@@ -249,13 +253,13 @@ export class Slider extends React.PureComponent {
           stopOnMouseLeave={this.props.stopOnMouseLeave}
           onDrag={this.handleDrag}
           onDragStart={this.handleDragStart}>
-          <div ref={this.track} className="slider-track">
+          <div
+            ref={this.track}
+            className="slider-track"
+            style={{ '--position': position }}>
             <div className="slider-range" style={{ width, left: offset }}/>
-            <div
-              className="slider-handle"
-              style={{ left: position }}>
-              {this.renderCurrentValue()}
-            </div>
+            <div className="slider-handle"></div>
+            {this.renderCurrentValue()}
           </div>
         </Draggable>
         {this.renderMaxButton()}
@@ -270,6 +274,7 @@ export class Slider extends React.PureComponent {
     resolution: 100,
     showCurrentValue: false,
     size: 'md',
+    type: 'default',
     steps: [],
     stopOnMouseLeave: false,
     tabIndex: null,

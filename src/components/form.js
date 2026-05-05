@@ -255,6 +255,7 @@ export const FormSlider = ({
   return (
     <FormElement id={`${id}.label`} size={size} isCompact={isCompact}>
       <Slider
+        type="form"
         isDisabled={isDisabled}
         precision={100}
         showCurrentValue
