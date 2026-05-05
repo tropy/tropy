@@ -94,7 +94,12 @@ export class AccountService extends EventEmitter {
 
   async link ({ username, password }) {
     try {
-      let res = await this.post('/link', { username, password })
+      let res = await this.post('/link', {
+        username,
+        password,
+        device_id: this.app.state.uuid,
+        client_id: 'tropy'
+      })
 
       if (!res.ok) {
         throw new Error(`account.link.${res.status}`)
