@@ -110,6 +110,7 @@ function getSuggestedFilename (state, props) {
     case MIME.JP2:
     case MIME.J2K:
     case MIME.JPX:
+    case MIME.RAW:
       return `${name}.jpg`
     default:
       return `${name}.jpg`
