@@ -99,6 +99,7 @@ export const ProjectSettings = React.memo(({
           <FormSlider
             id="prefs.project.optimize.quality"
             name="optimize.quality"
+            isCompact
             value={project.optimize?.quality}
             onChange={onChange}/>
           <FormToggle
