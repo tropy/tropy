@@ -36,11 +36,7 @@ export class Slider extends React.PureComponent {
   }
 
   get classes () {
-    let type = this.props.type === 'form'
-      ? 'form-control form-slider'
-      : `slider slider-${this.props.size}`
-
-    return [type, {
+    return ['slider', `slider-${this.props.size}`, {
       disabled: this.isDisabled,
       origin: this.props.origin != null
     }]
@@ -274,7 +270,6 @@ export class Slider extends React.PureComponent {
     resolution: 100,
     showCurrentValue: false,
     size: 'md',
-    type: 'default',
     steps: [],
     stopOnMouseLeave: false,
     tabIndex: null,

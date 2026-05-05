@@ -69,7 +69,8 @@ fieldset {
   }
 }
 
-.form-control {
+.form-control,
+.form-group .slider {
   display: block;
   width: 100%;
   height: $input-height-base;
