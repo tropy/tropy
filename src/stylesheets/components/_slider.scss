@@ -1,4 +1,5 @@
 @use "../abstracts/config" as *;
+@use "../partials/forms" as *;
 
 //
 // Slider
@@ -143,56 +144,61 @@
       margin-left: calc(-1 * ($slider-handle-size-sm / 2 + 1px));
     }
   }
-}
 
-.form-slider {
-  overflow: hidden;
+  // Form slider
+  .form-group & {
+    overflow: hidden;
 
-  .draggable {
-    position: absolute;
-    inset: 0;
-  }
-
-  .slider-track {
-    height: 100%;
-    border-left: 2px solid transparent;
-    border-right: 1px solid transparent;
-    position: relative;
-  }
-
-  .slider-range {
-    box-sizing: content-box;
-    height: 100%;
-    background-color: $form-slider-range-bg;
-    border-left: 2px solid transparent;
-    border-right: 1px solid transparent;
-    margin-left: -2px;
-    margin-right: -1px;
-
-    .form-slider:focus :is(&) {
-      background-color: $form-slider-range-focus-bg;
+    * {
+      all: revert;
     }
-  }
 
-  .slider-handle {
-    position: absolute;
-    left: var(--position);
-    top: 0;
-    height: 100%;
-    width: 3px;
-    background-color: transparent;
-    margin-left: -2px;
-
-    .form-slider:focus :is(&) {
-      background-color: $form-slider-handle-bg;
+    .draggable {
+      position: absolute;
+      inset: 0;
     }
-  }
 
-  .slider-value {
-    position: absolute;
-    inset: 0 -1px 0 -2px;
-    display: flex;
-    align-items: center;
-    padding: 0 $padding-base-horizontal;
+    .slider-track {
+      height: 100%;
+      border-left: 2px solid transparent;
+      border-right: 1px solid transparent;
+      position: relative;
+    }
+
+    .slider-range {
+      box-sizing: content-box;
+      height: 100%;
+      background-color: $form-slider-range-bg;
+      border-left: 2px solid transparent;
+      border-right: 1px solid transparent;
+      margin-left: -2px;
+      margin-right: -1px;
+
+      .slider:focus :is(&) {
+        background-color: $form-slider-range-focus-bg;
+      }
+    }
+
+    .slider-handle {
+      position: absolute;
+      left: var(--position);
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background-color: transparent;
+      margin-left: -2px;
+
+      .slider:focus :is(&) {
+        background-color: $form-slider-handle-bg;
+      }
+    }
+
+    .slider-value {
+      position: absolute;
+      inset: 0 -1px 0 -2px;
+      display: flex;
+      align-items: center;
+      padding: 0 $padding-base-horizontal;
+    }
   }
 }
