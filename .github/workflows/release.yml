@@ -149,6 +149,7 @@ jobs:
           SIGN_TOTP: ${{ secrets.WIN_SIGN_TOTP }}
           SIGN_USER: ${{ secrets.WIN_SIGN_USER }}
           SIGN_PASS: ${{ secrets.WIN_SIGN_PASS }}
+          MSIX_PUBLISHER: ${{ secrets.MSIX_PUBLISHER }}
 
       - name: Upload Linux release assets
         if: runner.os == 'Linux'
@@ -188,6 +189,7 @@ jobs:
           artifacts: >-
             dist/*.exe,
             dist/*.nupkg,
+            dist/*.msix,
             dist/*.integrity,
             dist/*-sourcemaps-*.tar.gz
           omitBodyDuringUpdate: true
