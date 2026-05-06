@@ -1,31 +1,45 @@
 import { EventEmitter } from 'node:events'
 import { URL } from 'node:url'
-import { ipcMain } from 'electron'
+import { createRemoteJWKSet } from 'jose/jwks/remote'
+import { jwtVerify } from 'jose/jwt/verify'
+import { AccountError } from '../common/error.js'
 import { debug, info, warn } from '../common/log.js'
+import { TokenSet } from '../common/token-set.js'
+import { ipcActionHandler } from './ipc.js'
+
 
 export class AccountService extends EventEmitter {
+  #removeIpcHandler
+  clientId = 'tropy'
+
   constructor (app) {
     super()
     this.app = app
+    this.jwks = createRemoteJWKSet(this.url('/.well-known/jwks.json'))
   }
 
   start () {
-    ipcMain.handle('account', async (_, cmd, ...args) => {
-      switch (cmd) {
-        case 'link':
-          return this.link(...args)
-        case 'status':
-          return this.status
-        case 'unlink':
-          return this.unlink(...args)
-        default:
-          warn(`account: unknown ipc invocation "${cmd}"`)
-      }
-    })
+    this.#removeIpcHandler =
+      ipcActionHandler('account', (_, cmd, ...args) => {
+        switch (cmd) {
+          case 'link':
+            return this.link(...args)
+          case 'status':
+            return this.status
+          case 'unlink':
+            return this.unlink(...args)
+          case 'accessToken':
+            return this.accessToken(...args)
+          case 'profile':
+            return this.profile(...args)
+          default:
+            throw new Error(`unsupported account command "${cmd}"`)
+        }
+      })
   }
 
   stop () {
-    ipcMain.removeHandler('account')
+    this.#removeIpcHandler?.()
   }
 
   url (pathname = '/') {
@@ -79,7 +93,7 @@ export class AccountService extends EventEmitter {
 
     } catch (err) {
       warn({ err, url }, 'account: request failed')
-      throw err
+      throw new AccountError('network', 'request failed', { cause: err })
     }
   }
 
@@ -87,6 +101,7 @@ export class AccountService extends EventEmitter {
     let { account } = this.app.safe
 
     return {
+      connected: !!this.tokenSet?.fresh,
       linked: account?.token != null,
       username: account?.username
     }
@@ -98,17 +113,21 @@ export class AccountService extends EventEmitter {
         username,
         password,
         device_id: this.app.state.uuid,
-        client_id: 'tropy'
+        client_id: this.clientId
       })
 
+      if (res.status === 401) {
+        throw new AccountError('credentials')
+      }
+
       if (!res.ok) {
-        throw new Error(`account.link.${res.status}`)
+        throw new AccountError(res.status, res.statusText)
       }
 
       let token = (await res.json()).refresh_token
 
       if (!token) {
-        throw new Error('account.link.token-missing')
+        throw new AccountError('token')
       }
 
       this.app.safe.account = {
@@ -122,6 +141,7 @@ export class AccountService extends EventEmitter {
     } catch (err) {
       warn({ err }, `account: failed to link account ${username}`)
       delete this.app.safe.account
+      delete this.tokenSet
       throw err
     } finally {
       this.emit('change')
@@ -130,7 +150,9 @@ export class AccountService extends EventEmitter {
 
   async unlink () {
     let { account } = this.app.safe
+
     delete this.app.safe.account
+    delete this.tokenSet
 
     try {
       if (account?.token) {
@@ -145,6 +167,55 @@ export class AccountService extends EventEmitter {
       if (account != null) {
         this.emit('change')
       }
+    }
+  }
+
+  async refresh () {
+    let { account } = this.app.safe
+
+    if (!account?.token) {
+      throw new AccountError('token')
+    }
+
+    let res = await this.post('/token', {
+      grant_type: 'refresh_token',
+      refresh_token: account.token
+    })
+
+    // TODO if the refresh token is bad, unlink account
+
+    if (!res.ok) {
+      throw new AccountError(res.status, res.statusText)
+    }
+
+    this.tokenSet = new TokenSet(await res.json())
+    this.emit('refresh')
+  }
+
+  async accessToken () {
+    if (!this.tokenSet?.fresh)
+      await this.refresh()
+
+    return this.tokenSet.accessToken
+  }
+
+  async profile () {
+    if (!this.tokenSet?.fresh)
+      await this.refresh()
+
+    try {
+      let { payload } = await jwtVerify(this.tokenSet.idToken, this.jwks, {
+        issuer: this.app.opts.auth,
+        audience: this.clientId
+      })
+
+      return {
+        email: payload.email,
+        username: payload.preferred_username
+      }
+    } catch (err) {
+      warn({ err }, 'account: failed to verify id token')
+      throw new AccountError('id-token')
     }
   }
 }
