@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { ipcRenderer } from 'electron'
+import { IpcError } from '../common/error.js'
 
 // Helper for creating perpare/reducer object for RTK reducers
 export const createMetaReducer = (props, reducer) => ({
@@ -23,6 +24,11 @@ export const createIpcAction = (type, prepare, opts) => {
 
   return createAsyncThunk(type, async (...args) => {
     let arg = await prepare(...args)
-    return ipcRenderer.invoke(channel, cmd, arg)
+    let { error, payload } = await ipcRenderer.invoke(channel, cmd, arg)
+
+    if (error) {
+      throw new IpcError(payload)
+    }
+    return payload
   }, opts)
 }
