@@ -11,7 +11,6 @@ import {
   ipcMain as ipc,
   nativeTheme,
   BrowserWindow,
-  session,
   systemPreferences as prefs
 } from 'electron'
 
@@ -101,7 +100,6 @@ export class Tropy extends EventEmitter {
     this.listen()
     this.wm.start()
     await this.api.start()
-    // await this.loadDevToolExtensions()
     shell.start()
   }
 
@@ -1295,21 +1293,6 @@ export class Tropy extends EventEmitter {
 
   setTags (tags, win = BrowserWindow.getFocusedWindow()) {
     return T.set(win, tags)
-  }
-
-  async loadDevToolExtensions () {
-    try {
-      let extensions = join(this.opts.data, 'extensions')
-
-      for (let id of await fs.promises.readdir(extensions)) {
-        session
-          .defaultSession
-          .loadExtension(join(extensions, id), { allowFileAccess: true })
-      }
-    } catch (err) {
-      if (err.code !== 'ENOENT')
-        warn({ err }, 'failed loading devtool extensions!')
-    }
   }
 
   get dict () {
