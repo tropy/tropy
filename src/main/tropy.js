@@ -1181,7 +1181,7 @@ export class Tropy extends EventEmitter {
   get hash () {
     return {
       api: this.api.status,
-      auth: this.account.url(),
+      auth: this.opts.auth,
       data: this.opts.data,
       debug: this.debug,
       dev: this.dev,
