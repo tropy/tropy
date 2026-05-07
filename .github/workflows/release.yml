@@ -73,7 +73,7 @@ jobs:
       - name: Install NPM modules
         run: npm clean-install --no-progress --ignore-scripts
       - name: Install Electron
-        run: npx electron -v
+        run: npx electron --no-sandbox -v
 
       - name: Install system libvips
         if: runner.os == 'Linux' && matrix.tag == 'shared'
