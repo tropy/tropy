@@ -15,15 +15,15 @@ describe('Storage', () => {
         rm(folder.expand('test-c.json'))
       ))
 
-      it('saves object with given name', () => {
-        folder.save('test-c.json', { name: 'c' })
+      it('saves object with given name', async () => {
+        await folder.save('test-c.json', { name: 'c' })
       })
     })
 
     describe('load', () => {
-      before(() => {
+      before(() => (
         folder.save('test-b.json', { name: 'b' })
-      })
+      ))
 
       after(() => (
         rm(folder.expand('test-b.json'))
@@ -50,26 +50,31 @@ describe('Storage', () => {
     })
 
     describe('secure', () => {
-      const name = 'test.json.enc'
-      const skip = safeStorage.isEncryptionAvailable()
-        ? false
-        : 'safeStorage encryption required'
+      let name = 'test.json.enc'
+      let skip
+
+      before(async () => {
+        skip = await safeStorage.isAsyncEncryptionAvailable()
+          ? false
+          : 'safeStorage encryption required'
+      })
 
       afterEach(async () => {
-        safeStorage.isEncryptionAvailable.mock?.restore()
+        safeStorage.isAsyncEncryptionAvailable.mock?.restore()
         await rm(folder.expand(name), { force: true })
       })
 
       describe('save', () => {
-        it('encrypts and writes when available', { skip }, async () => {
-          folder.save(name, { token: 'abc' }, { secure: true })
+        it('encrypts and writes when available', async (t) => {
+          if (skip) return t.skip(skip)
+          await folder.save(name, { token: 'abc' }, { secure: true })
           let bytes = await readFile(folder.expand(name))
           expect(bytes.toString('utf-8')).not.to.include('abc')
         })
 
         it('does not write when encryption is unavailable', async () => {
-          mock.method(safeStorage, 'isEncryptionAvailable', () => false)
-          folder.save(name, { token: 'abc' }, { secure: true })
+          mock.method(safeStorage, 'isAsyncEncryptionAvailable', async () => false)
+          await folder.save(name, { token: 'abc' }, { secure: true })
 
           await assert.rejects(
             () => access(folder.expand(name)),
@@ -79,17 +84,19 @@ describe('Storage', () => {
       })
 
       describe('load', () => {
-        it('decrypts and merges with defaults', { skip }, async () => {
-          folder.save(name, { token: 'xyz' }, { secure: true })
+        it('decrypts and merges with defaults', async (t) => {
+          if (skip) return t.skip(skip)
+          await folder.save(name, { token: 'xyz' }, { secure: true })
 
           expect(
             await folder.load(name, { defaults, secure: true })
           ).to.eql({ v: 1, token: 'xyz' })
         })
 
-        it('returns defaults when encryption is unavailable', { skip }, async () => {
-          folder.save(name, { token: 'xyz' }, { secure: true })
-          mock.method(safeStorage, 'isEncryptionAvailable', () => false)
+        it('returns defaults when encryption is unavailable', async (t) => {
+          if (skip) return t.skip(skip)
+          await folder.save(name, { token: 'xyz' }, { secure: true })
+          mock.method(safeStorage, 'isAsyncEncryptionAvailable', async () => false)
 
           expect(
             await folder.load(name, { defaults, secure: true })
