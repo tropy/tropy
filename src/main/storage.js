@@ -11,9 +11,12 @@ export class Storage {
 
   async load (name, { defaults, secure = false } = {}) {
     try {
+      let buffer = await readFile(this.expand(name))
+      let data = await this.parse(buffer, { secure })
+
       return {
         ...defaults,
-        ...this.parse(await readFile(this.expand(name)), { secure })
+        ...data
       }
     } catch (error) {
       if (defaults != null && error.code === 'ENOENT')
@@ -23,26 +26,26 @@ export class Storage {
     }
   }
 
-  save (name, data, { secure = false } = {}) {
+  async save (name, data, { secure = false } = {}) {
     let string = JSON.stringify(data)
 
     if (secure) {
-      if (safeStorage.isEncryptionAvailable()) {
-        string = safeStorage.encryptString(string)
+      if (await safeStorage.isAsyncEncryptionAvailable()) {
+        string = await safeStorage.encryptStringAsync(string)
       } else {
-        warn(`storage: no encryption available, ${name} was not saved`)
+        warn(`storage: no encryption available, skip saving ${name}`)
         return
       }
     }
 
-    write.sync(this.expand(name), string)
+    await write(this.expand(name), string)
     trace(`storage: ${name} saved`)
   }
 
-  parse (data, { secure = false } = {}) {
+  async parse (data, { secure = false } = {}) {
     if (secure) {
-      if (safeStorage.isEncryptionAvailable()) {
-        data = safeStorage.decryptString(data)
+      if (await safeStorage.isAsyncEncryptionAvailable()) {
+        data = (await safeStorage.decryptStringAsync(data)).result
       } else {
         warn('storage: no encryption available')
         return

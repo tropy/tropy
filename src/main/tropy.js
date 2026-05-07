@@ -25,7 +25,7 @@ import {
 } from '../common/log.js'
 
 import { darwin, linux } from '../common/os.js'
-import { delay, once } from '../common/util.js'
+import { debounce, delay, once } from '../common/util.js'
 import { channel, product, version } from '../common/release.js'
 import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
@@ -112,6 +112,7 @@ export class Tropy extends EventEmitter {
     this.updater.stop()
     this.plugins.stop()
     this.persist()
+    await this.persist.flush()
   }
 
   async open (...urls) {
@@ -374,20 +375,21 @@ export class Tropy extends EventEmitter {
     return state
   }
 
-  persist () {
+  persist = debounce(async () => {
     info('saving app state')
+    let saving = []
 
     if (this.state != null) {
       this.state.lastDefaultPath = dialog.lastDefaultPath
-      this.store.save('state.json', this.state)
+      saving.push(this.store.save('state.json', this.state))
     }
 
     if (this.safe != null) {
-      this.store.save('safe.json.enc', this.safe, { secure: true })
+      saving.push(this.store.save('safe.json.enc', this.safe, { secure: true }))
     }
 
-    return this
-  }
+    await Promise.all(saving)
+  }, 100)
 
   async print (opts, sender) {
     try {
@@ -1010,9 +1012,7 @@ export class Tropy extends EventEmitter {
       this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
-    this.account.on('change', () => {
-      this.persist()
-    })
+    this.account.on('change', this.persist)
 
     this.wm.on('show-menu', (win, pos) => {
       win.webContents.send('menu', true)

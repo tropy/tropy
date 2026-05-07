@@ -611,7 +611,7 @@ export function debounce (fn, wait) {
 
   function invoke () {
     try {
-      fn.apply(ctx, args)
+      return fn.apply(ctx, args)
     } finally {
       ctx = args = undefined
     }
@@ -633,7 +633,7 @@ export function debounce (fn, wait) {
     if (id !== undefined) {
       clearTimeout(id)
       id = undefined
-      invoke()
+      return invoke()
     }
   }
 
