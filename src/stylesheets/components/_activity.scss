@@ -40,7 +40,7 @@
     border-top-color: $activity-vibrancy-border-color;
   }
 
-  .darwin.is-blurred & { // Safeguard
+  .is-blurred & {
     border-top-color: $activity-blurred-border-color;
   }
 
@@ -77,13 +77,11 @@
       }
 
       &::-webkit-progress-value {
-        @media (prefers-color-scheme: dark) { // Safeguard
-          background-color: $activity-vibrancy-progress-val-bg;
-        }
+        background-color: $activity-vibrancy-progress-val-bg;
       }
     }
 
-    .darwin.is-blurred & { // Safeguard
+    .is-blurred & {
       &::-webkit-progress-bar {
         background-color: $activity-blurred-progress-bar-bg;
       }

@@ -51,7 +51,7 @@
       color: $sidebar-vibrancy-headings-color;
     }
 
-    .darwin.is-blurred & { // Safeguard
+    .is-blurred & {
       color: $sidebar-blurred-headings-color;
 
       @if $platform == linux {
@@ -141,7 +141,7 @@
             background-color: $sidebar-vibrancy-list-active-bg;
           }
 
-          .darwin.is-blurred & { // Safeguard
+          .is-blurred & {
             background-color: $sidebar-blurred-list-active-bg;
           }
 

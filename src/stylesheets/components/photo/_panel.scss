@@ -12,15 +12,11 @@
   .slider {
     .slider-handle {
       .photo-panel:focus-visible:not(:has(li.active)) :is(&) {
-        @media (prefers-color-scheme: light) { // Safeguard
-          background-color: $photo-panel-slider-handle-focus-visible-bg;
-        }
+        background-color: $photo-panel-slider-handle-focus-visible-bg;
       }
 
-      .darwin.is-blurred .item-mode & { // Safeguard
-        @media (prefers-color-scheme: light) { // Safeguard
-          background-color: $photo-panel-slider-handle-blurred-bg-darwin;
-        }
+      .is-blurred .item-mode & {
+        background-color: $photo-panel-slider-handle-blurred-bg;
       }
     }
   }

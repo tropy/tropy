@@ -12,15 +12,8 @@
 
   .titlebar {
     height: zoom($toolbar-frameless-height-sm);
-
-    .darwin &, // Safeguard
-    .linux & {
-      color: $prefs-title-color;
-    }
-
-    .darwin.is-blurred & { // Safeguard
-      background-color: $prefs-titlebar-blurred-bg;
-    }
+    color: $prefs-title-color;
+    background-color: $prefs-titlebar-blurred-bg;
 
     .toolbar-center {
       flex: 1 1 0;

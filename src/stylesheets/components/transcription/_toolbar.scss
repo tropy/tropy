@@ -75,15 +75,11 @@
 
     .btn-icon {
       &:hover {
-        @media (prefers-color-scheme: dark) { // Safeguard
-          background-color: $transcription-btn-icon-hover-bg;
-        }
+        background-color: $transcription-btn-icon-hover-bg;
       }
 
       &.active {
-        @media (prefers-color-scheme: dark) { // Safeguard
-          background-color: $transcription-btn-icon-active-bg;
-        }
+        background-color: $transcription-btn-icon-active-bg;
       }
     }
   }

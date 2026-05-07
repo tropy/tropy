@@ -236,47 +236,47 @@ $project-heading-color: --scheme(var(--light-8),              var(--dark-8));
 $item-count-color:      --scheme(var(--light-5),              var(--dark-6));
 
 // Recent projects
-$recent-projects-view-blurred-opacity:   --scheme(os(unset, unset, 0.4),                       os(unset, unset, 0.4));
-$recent-projects-color:                  --scheme(var(--light-8),                              var(--dark-8));
-$recent-projects-blurred-opacity:        --scheme(os(0.76, unset, unset),                      os(0.55, unset, unset));
-$recent-projects-search-blurred-opacity: --scheme(os(0.8, unset, unset),                       os(0.6, unset, unset));
-$recent-project-hover-bg:                --scheme(var(--light-2),                              tint(var(--dark-4), 4%));
-$recent-project-border:                  --scheme(var(--light-3),                              var(--dark-1));
-$recent-project-blurred-border:          --scheme(os(shade(var(--light-3), 4%), unset, unset), os(shade(var(--dark-1), 4%), unset, unset));
-$maze-color:                             --scheme(var(--light-5),                              var(--dark-6));
-$maze-hover-color:                       --scheme(shade(var(--light-5), 4%),                   tint(var(--dark-6), 2%));
-$maze-blurred-opacity:                   --scheme(os(0.8, unset, unset),                       os(0.6, unset, unset));
-$recent-project-stats-color:             --scheme(var(--light-6),                              var(--dark-7));
-$recent-project-stats-blurred-color:     --scheme(os(shade(var(--light-6), 4%), unset, unset), os(shade(var(--dark-7), 5%), unset, unset));
+$recent-projects-view-blurred-opacity:   --scheme(os(revert-rule, revert-rule, 0.4),                       os(revert-rule, revert-rule, 0.4));
+$recent-projects-color:                  --scheme(var(--light-8),                                          var(--dark-8));
+$recent-projects-blurred-opacity:        --scheme(os(0.76, revert-rule, revert-rule),                      os(0.55, revert-rule, revert-rule));
+$recent-projects-search-blurred-opacity: --scheme(os(0.8, revert-rule, revert-rule),                       os(0.6, revert-rule, revert-rule));
+$recent-project-hover-bg:                --scheme(var(--light-2),                                          tint(var(--dark-4), 4%));
+$recent-project-border:                  --scheme(var(--light-3),                                          var(--dark-1));
+$recent-project-blurred-border:          --scheme(os(shade(var(--light-3), 4%), revert-rule, revert-rule), os(shade(var(--dark-1), 4%), revert-rule, revert-rule));
+$maze-color:                             --scheme(var(--light-5),                                          var(--dark-6));
+$maze-hover-color:                       --scheme(shade(var(--light-5), 4%),                               tint(var(--dark-6), 2%));
+$maze-blurred-opacity:                   --scheme(os(0.8, revert-rule, revert-rule),                       os(0.6, revert-rule, revert-rule));
+$recent-project-stats-color:             --scheme(var(--light-6),                                          var(--dark-7));
+$recent-project-stats-blurred-color:     --scheme(os(shade(var(--light-6), 4%), revert-rule, revert-rule), os(shade(var(--dark-7), 5%), revert-rule, revert-rule));
 
 // New project
 $new-project-form-text-color: --scheme(var(--light-6), var(--dark-7));
 
 // Sidebar
-$sidebar-bg:                           --scheme(var(--light-1),                              var(--dark-4));
-$sidebar-blurred-bg:                   --scheme(shade(var(--light-1), 4%),                   var(--dark-2));
-$sidebar-vibrancy-color:               --scheme(alpha(var(--light-10), 70%),                 alpha(var(--dark-10), 50%)); // ~ default color on solid bg
-$sidebar-vibrancy-list-active-color:   --scheme(alpha(var(--light-10), 83%),                 alpha(var(--dark-10), 64%));
-$sidebar-vibrancy-list-active-bg:      --scheme(alpha(var(--light-10), 10%),                 alpha(var(--dark-10), 7%));
-$sidebar-vibrancy-list-focus-bg:       --scheme(var(--primary-vibrancy),                     var(--primary-vibrancy));
-$sidebar-blurred-list-active-bg:       --scheme(os(shade(var(--light-3), 4%), unset, unset), os(shade(var(--dark-5), 4%), unset, unset));
-$sidebar-text-color:                   --scheme(var(--light-8),                              var(--dark-8));
-$sidebar-headings-color:               --scheme(var(--light-6),                              var(--dark-7));
-$sidebar-vibrancy-headings-color:      --scheme(alpha(var(--light-10), 46%),                 alpha(var(--dark-10), 33%));
-$sidebar-blurred-headings-color:       --scheme(os(shade(var(--light-6), 4%), unset, unset), os(shade(var(--dark-7), 5%), unset, unset));
-$sidebar-vibrancy-icon-color:          --scheme(alpha(var(--light-10), 46%),                 alpha(var(--dark-10), 33%));
-$sidebar-vibrancy-icon-selected-color: --scheme(alpha(var(--light-10), 59%),                 alpha(var(--dark-10), 46%));
-$sidebar-blurred-icon-opacity:         --scheme(os(0.33, unset, unset),                      os(0.33, unset, unset));
-$sidebar-blurred-name-opacity:         --scheme(os(0.76, unset, unset),                      os(0.55, unset, unset));
-$sidebar-blurred-tag-opacity-darwin:   --scheme(0.31,                                        0.34);
-$activity-border-color:                --scheme(var(--light-3),                              var(--dark-1));
-$activity-vibrancy-border-color:       --scheme(alpha(var(--light-10), 10%),                 alpha(var(--dark-0), 33%));
-$activity-blurred-border-color:        --scheme(os(shade(var(--light-3), 4%), unset, unset), os(shade(var(--dark-1), 4%), unset, unset));
-$activity-vibrancy-progress-bar-bg:    --scheme(alpha(var(--light-10), 10%),                 alpha(var(--dark-0), 20%));
-$activity-vibrancy-progress-cancel-bg: --scheme(alpha(var(--light-10), 25%),                 var(--primary-vibrancy));
-$activity-vibrancy-progress-val-bg:    --scheme(unset,                                       alpha(var(--dark-10), 18%));
-$activity-blurred-progress-bar-bg:     --scheme(os(shade(var(--light-3), 4%), unset, unset), os(shade(var(--dark-2), 4%), unset, unset));
-$activity-blurred-progress-val-bg:     --scheme(os(shade(var(--light-5), 4%), unset, unset), os(shade(var(--dark-6), 4%), unset, unset));
+$sidebar-bg:                           --scheme(var(--light-1),                                          var(--dark-4));
+$sidebar-blurred-bg:                   --scheme(shade(var(--light-1), 4%),                               var(--dark-2));
+$sidebar-vibrancy-color:               --scheme(alpha(var(--light-10), 70%),                             alpha(var(--dark-10), 50%)); // ~ default color on solid bg
+$sidebar-vibrancy-list-active-color:   --scheme(alpha(var(--light-10), 83%),                             alpha(var(--dark-10), 64%));
+$sidebar-vibrancy-list-active-bg:      --scheme(alpha(var(--light-10), 10%),                             alpha(var(--dark-10), 7%));
+$sidebar-vibrancy-list-focus-bg:       --scheme(var(--primary-vibrancy),                                 var(--primary-vibrancy));
+$sidebar-blurred-list-active-bg:       --scheme(os(shade(var(--light-3), 4%), revert-rule, revert-rule), os(shade(var(--dark-5), 4%), revert-rule, revert-rule));
+$sidebar-text-color:                   --scheme(var(--light-8),                                          var(--dark-8));
+$sidebar-headings-color:               --scheme(var(--light-6),                                          var(--dark-7));
+$sidebar-vibrancy-headings-color:      --scheme(alpha(var(--light-10), 46%),                             alpha(var(--dark-10), 33%));
+$sidebar-blurred-headings-color:       --scheme(os(shade(var(--light-6), 4%), revert-rule, revert-rule), os(shade(var(--dark-7), 5%), revert-rule, revert-rule));
+$sidebar-vibrancy-icon-color:          --scheme(alpha(var(--light-10), 46%),                             alpha(var(--dark-10), 33%));
+$sidebar-vibrancy-icon-selected-color: --scheme(alpha(var(--light-10), 59%),                             alpha(var(--dark-10), 46%));
+$sidebar-blurred-icon-opacity:         --scheme(os(0.33, revert-rule, revert-rule),                      os(0.33, revert-rule, revert-rule));
+$sidebar-blurred-name-opacity:         --scheme(os(0.76, revert-rule, revert-rule),                      os(0.55, revert-rule, revert-rule));
+$sidebar-blurred-tag-opacity-darwin:   --scheme(0.31,                                                    0.34);
+$activity-border-color:                --scheme(var(--light-3),                                          var(--dark-1));
+$activity-vibrancy-border-color:       --scheme(alpha(var(--light-10), 10%),                             alpha(var(--dark-0), 33%));
+$activity-blurred-border-color:        --scheme(os(shade(var(--light-3), 4%), revert-rule, revert-rule), os(shade(var(--dark-1), 4%), revert-rule, revert-rule));
+$activity-vibrancy-progress-bar-bg:    --scheme(alpha(var(--light-10), 10%),                             alpha(var(--dark-0), 20%));
+$activity-vibrancy-progress-cancel-bg: --scheme(alpha(var(--light-10), 25%),                             var(--primary-vibrancy));
+$activity-vibrancy-progress-val-bg:    --scheme(revert-rule,                                             alpha(var(--dark-10), 18%));
+$activity-blurred-progress-bar-bg:     --scheme(os(shade(var(--light-3), 4%), revert-rule, revert-rule), os(shade(var(--dark-2), 4%), revert-rule, revert-rule));
+$activity-blurred-progress-val-bg:     --scheme(os(shade(var(--light-5), 4%), revert-rule, revert-rule), os(shade(var(--dark-6), 4%), revert-rule, revert-rule));
 
 // Items
 $item-table-header-color:        --scheme(var(--light-8),              var(--dark-8));
@@ -344,15 +344,15 @@ $icon-tag-nested-focus-border:        --scheme(shade(var(--light-5), 4%),   tint
 $icon-tag-vibrancy-border:            --scheme(alpha(var(--light-10), 20%), alpha(var(--dark-10), 20%));
 
 // Photo panel
-$photo-panel-slider-handle-focus-visible-bg:  --scheme(var(--light-1), unset);
-$photo-panel-slider-handle-blurred-bg-darwin: --scheme(var(--light-1), unset);
+$photo-panel-slider-handle-focus-visible-bg:  --scheme(var(--light-1),                               revert-rule);
+$photo-panel-slider-handle-blurred-bg:        --scheme(os(var(--light-1), revert-rule, revert-rule), revert-rule);
 
 // Note list
 $note-list-focus-color:  --scheme(var(--light-0), var(--primary-light));
 $note-list-focus-bg:     --scheme(var(--primary), var(--primary));
 $note-list-active-color: --scheme(var(--light-9), var(--dark-9));
 $note-list-active-bg:    --scheme(var(--light-3), var(--dark-5));
-$note-list-blurred-bg:   --scheme(unset,          shade(var(--dark-5), 4%));
+$note-list-blurred-bg:   --scheme(revert-rule,    shade(var(--dark-5), 4%));
 
 // Editable
 $editable-color:        $text-color;
@@ -425,8 +425,8 @@ $esper-btn-default-active-bg:            --scheme(shade(var(--light-1), 8%),    
 $esper-error-color:                      --scheme(var(--light-8),                        var(--dark-8));
 
 // Transcription
-$transcription-btn-icon-hover-bg:  --scheme(unset,                      var(--dark-3));
-$transcription-btn-icon-active-bg: --scheme(unset,                      var(--dark-5));
+$transcription-btn-icon-hover-bg:  --scheme(revert-rule,                var(--dark-3));
+$transcription-btn-icon-active-bg: --scheme(revert-rule,                var(--dark-5));
 $transcription-state-color:        --scheme(var(--light-8),             var(--dark-8));
 $string-selected-bg:               --scheme(shade(var(--light-1), 14%), var(--dark-5));
 $string-selected-focus-color:      --scheme(var(--light-0),             var(--primary-light));
@@ -466,12 +466,12 @@ $editor-hr-border-color:  --scheme(var(--light-2),            var(--dark-1));
 $line-number-color:       --scheme(var(--light-5),            var(--dark-6));
 
 // Preferences
-$prefs-bg:                            --scheme(var(--light-1),                                var(--dark-4));
-$prefs-title-color:                   --scheme(os(var(--light-8), unset, rgba(0, 0, 0, 0.8)), os(var(--dark-9), unset, rgb(255, 255, 255)));
-$prefs-border:                        --scheme(var(--light-3),                                var(--dark-1));
-$prefs-pane-toggle-color:             --scheme(var(--light-8),                                var(--dark-8));
-$prefs-pane-toggle-active-icon-color: --scheme(var(--light-7),                                var(--dark-8));
-$prefs-titlebar-blurred-bg:           --scheme(os(shade(var(--light-1), 4%), unset, unset),   os(var(--dark-2), unset, unset));
+$prefs-bg:                            --scheme(var(--light-1),                                          var(--dark-4));
+$prefs-title-color:                   --scheme(os(var(--light-8), revert-rule, rgba(0, 0, 0, 0.8)),     os(var(--dark-9), revert-rule, rgb(255, 255, 255)));
+$prefs-border:                        --scheme(var(--light-3),                                          var(--dark-1));
+$prefs-pane-toggle-color:             --scheme(var(--light-8),                                          var(--dark-8));
+$prefs-pane-toggle-active-icon-color: --scheme(var(--light-7),                                          var(--dark-8));
+$prefs-titlebar-blurred-bg:           --scheme(os(shade(var(--light-1), 4%), revert-rule, revert-rule), os(var(--dark-2), revert-rule, revert-rule));
 
 // Vocab
 $vocab-panel-bg:    --scheme(shade(var(--light-1), 4%), tint(var(--dark-4), 2%));
@@ -500,7 +500,7 @@ $flash-close-icon-color: --scheme(var(--primary),             tint(var(--primary
 $flash-shadow-color:     --scheme(alpha(var(--primary), 30%), alpha(var(--primary), 30%));
 
 // Search
-$search-border-color: --scheme(var(--light-2), unset);
+$search-border-color: --scheme(var(--light-2), revert-rule);
 $clear-search-color:  --scheme(var(--light-0), var(--dark-4));
 $search-disabled-bg:  --scheme(var(--light-1), tint(var(--dark-3), 2%));
 
