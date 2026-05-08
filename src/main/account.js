@@ -156,8 +156,9 @@ export class AccountService extends EventEmitter {
 
     try {
       if (account?.token) {
-        return (await this.post('/unlink', {
-          refresh_token: account.token
+        return (await this.post('/revoke', {
+          token: account.token,
+          client_id: this.clientId
         })).ok
       }
 
