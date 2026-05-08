@@ -127,25 +127,30 @@ $input-btn-overlay-focus-color: --scheme(var(--primary), var(--primary-vibrancy)
 $disabled-opacity:              0.5;
 
 // Forms
-$input-color:                            --scheme(var(--light-9),              var(--dark-9));
-$input-bg:                               --scheme(var(--light-0),              var(--dark-3)); // Transparent causes border/box-shadow issue
-$input-overlay-bg:                       --scheme(alpha(var(--light-10), 14%), alpha(var(--dark-10), 14%));
-$input-bg-readonly:                      --scheme(shade(var(--light-1), 4%),   tint(var(--dark-4), 2%));
-$input-overlay-bg-readonly:              --scheme(alpha(var(--light-10), 7%),  alpha(var(--dark-10), 7%));
-$input-border:                           --scheme(var(--light-3),              var(--dark-1));
-$input-overlay-focus-color:              --scheme(var(--primary),              var(--primary-vibrancy));
-$input-color-placeholder:                --scheme(var(--light-5),              var(--dark-6));
-$fieldset-bg:                            --scheme(shade(var(--light-1), 4%),   tint(var(--dark-4), 2%));
-$checkbox-bg:                            --scheme(var(--light-0),              var(--dark-3));
-$checkbox-overlay-disabled-border:       --scheme(alpha(var(--light-10), 7%),  alpha(var(--dark-10), 7%));
-$checkbox-checked-bg:                    --scheme(tint(var(--light-6), 13%),   var(--dark-8));
-$checkbox-overlay-checked-bg:            --scheme(alpha(var(--light-10), 60%), var(--dark-9));
-$checkbox-checked-border:                --scheme(tint(var(--light-6), 13%),   var(--dark-8));
-$checkbox-checked-active-bg:             --scheme(tint(var(--light-6), 8%),    shade(var(--dark-8), 5%));
-$checkbox-overlay-checked-active-bg:     --scheme(alpha(var(--light-10), 65%), shade(var(--dark-10), 19%));
-$checkbox-checked-active-border:         --scheme(tint(var(--light-6), 8%),    shade(var(--dark-8), 5%));
-$checkbox-overlay-checked-active-border: --scheme(shade(var(--light-7), 5%),   shade(var(--dark-10), 19%));
-$tick-color:                             --scheme(var(--light-0),              var(--dark-4));
+$_input-bg-light:                       var(--light-0);
+$_checkbox-checked-bg-light:            tint(var(--light-6), 13%);
+$_checkbox-checked-active-bg-light:     tint(var(--light-6), 8%);
+$_checkbox-checked-active-border-light: tint(var(--light-6), 8%);
+
+$input-color:                            --scheme(var(--light-9),                         var(--dark-9));
+$input-bg:                               --scheme($_input-bg-light,                       var(--dark-3)); // Transparent causes border/box-shadow issue
+$input-overlay-bg:                       --scheme(alpha(var(--light-10), 14%),            alpha(var(--dark-10), 14%));
+$input-bg-readonly:                      --scheme(shade(var(--light-1), 4%),              tint(var(--dark-4), 2%));
+$input-overlay-bg-readonly:              --scheme(alpha(var(--light-10), 7%),             alpha(var(--dark-10), 7%));
+$input-border:                           --scheme(var(--light-3),                         var(--dark-1));
+$input-overlay-focus-color:              --scheme(var(--primary),                         var(--primary-vibrancy));
+$input-color-placeholder:                --scheme(var(--light-5),                         var(--dark-6));
+$fieldset-bg:                            --scheme(shade(var(--light-1), 4%),              tint(var(--dark-4), 2%));
+$checkbox-bg:                            --scheme(var(--light-0),                         var(--dark-3));
+$checkbox-overlay-disabled-border:       --scheme(alpha(var(--light-10), 7%),             alpha(var(--dark-10), 7%));
+$checkbox-checked-bg:                    --scheme($_checkbox-checked-bg-light,            var(--dark-8));
+$checkbox-overlay-checked-bg:            --scheme(alpha(var(--light-10), 60%),            var(--dark-9));
+$checkbox-checked-border:                --scheme($_checkbox-checked-bg-light,            var(--dark-8));
+$checkbox-checked-active-bg:             --scheme($_checkbox-checked-active-bg-light,     shade(var(--dark-8), 5%));
+$checkbox-overlay-checked-active-bg:     --scheme(alpha(var(--light-10), 65%),            shade(var(--dark-10), 19%));
+$checkbox-checked-active-border:         --scheme($_checkbox-checked-active-border-light, shade(var(--dark-8), 5%));
+$checkbox-overlay-checked-active-border: --scheme(shade(var(--light-7), 5%),              shade(var(--dark-10), 19%));
+$tick-color:                             --scheme(var(--light-0),                         var(--dark-4));
 $form-level-shades: (
   level-0-border:                                                     shade(var(--dark-1), 2%),
   level-0-bg:                                                         var(--dark-2),
@@ -279,12 +284,14 @@ $activity-blurred-progress-bar-bg:     --scheme(os(shade(var(--light-3), 4%), re
 $activity-blurred-progress-val-bg:     --scheme(os(shade(var(--light-5), 4%), revert-rule, revert-rule), os(shade(var(--dark-6), 4%), revert-rule, revert-rule));
 
 // Items
+$_item-table-header-border-color-dark: var(--dark-1);
+
 $item-table-header-color:        --scheme(var(--light-8),              var(--dark-8));
 $item-table-header-sort-color:   --scheme(var(--light-9),              var(--dark-9));
 $item-table-header-bg:           --scheme(alpha(var(--light-0), 50%),  alpha(var(--dark-3), 50%));
 $item-table-header-active-bg:    --scheme(var(--light-1),              var(--dark-2));
-$item-table-header-border-color: --scheme(var(--light-2),              var(--dark-1));
-$item-table-column-border-color: --scheme(alpha(var(--light-10), 10%), var(--dark-1)); // Dark: $item-table-header-border-color
+$item-table-header-border-color: --scheme(var(--light-2),              $_item-table-header-border-color-dark);
+$item-table-column-border-color: --scheme(alpha(var(--light-10), 10%), $_item-table-header-border-color-dark);
 $items-odd-bg:                   --scheme(var(--light-1),              var(--dark-4));
 $items-focus-color:              --scheme(var(--light-0),              var(--primary-light));
 $items-focus-bg:                 --scheme(var(--primary),              var(--primary));
@@ -292,9 +299,11 @@ $items-active-color:             --scheme(var(--light-9),              var(--dar
 $items-active-bg:                --scheme(var(--light-3),              var(--dark-5));
 
 // Panel
+$_panel-blurred-bg-darwin-dark: var(--dark-2);
+
 $panel-bg:                           --scheme(var(--light-1),            var(--dark-4));
 $panel-focus-bg:                     --scheme(shade(var(--light-1), 4%), tint(var(--dark-4), 2%));
-$panel-blurred-bg-darwin:            --scheme(shade(var(--light-1), 4%), var(--dark-2));
+$panel-blurred-bg-darwin:            --scheme(shade(var(--light-1), 4%), $_panel-blurred-bg-darwin-dark);
 $panel-header-color:                 --scheme(var(--light-8),            var(--dark-8));
 $panel-separator-color:              --scheme(var(--light-3),            var(--dark-1));
 $panel-nested-focus-separator-color: --scheme(shade(var(--light-3), 4%), tint(var(--dark-1), 2%));
@@ -320,28 +329,34 @@ $tab-nested-focus-selected-bg:           --scheme(shade(var(--light-1), 4%), tin
 $tab-nested-focus-selected-border-color: --scheme(shade(var(--light-3), 4%), tint(var(--dark-1), 2%));
 
 // Metadata
-$label-color:                           --scheme(var(--light-6),            var(--dark-7));
-$template-select-border:                --scheme(var(--light-3),            var(--dark-1));
-$template-select-nested-focus-border:   --scheme(shade(var(--light-3), 4%), tint(var(--dark-1), 2%));
-$template-select-blurred-border-darwin: --scheme(shade(var(--light-3), 4%), shade(var(--dark-1), 4%)); // Light: $template-select-nested-focus-border
-$template-select-bg:                    --scheme(var(--light-1),            var(--dark-4));
-$template-select-nested-focus-bg:       --scheme(shade(var(--light-1), 4%), tint(var(--dark-4), 2%));
-$template-select-blurred-bg-darwin:     --scheme(shade(var(--light-1), 4%), var(--dark-2)); // $template-select-nested-focus-bg, $panel-blurred-bg-darwin
+$_template-select-nested-focus-border-light: shade(var(--light-3), 4%);
+$_template-select-nested-focus-bg-light:     shade(var(--light-1), 4%);
+
+$label-color:                           --scheme(var(--light-6),                              var(--dark-7));
+$template-select-border:                --scheme(var(--light-3),                              var(--dark-1));
+$template-select-nested-focus-border:   --scheme($_template-select-nested-focus-border-light, tint(var(--dark-1), 2%));
+$template-select-blurred-border-darwin: --scheme($_template-select-nested-focus-border-light, shade(var(--dark-1), 4%));
+$template-select-bg:                    --scheme(var(--light-1),                              var(--dark-4));
+$template-select-nested-focus-bg:       --scheme($_template-select-nested-focus-bg-light,     tint(var(--dark-4), 2%));
+$template-select-blurred-bg-darwin:     --scheme($_template-select-nested-focus-bg-light,     $_panel-blurred-bg-darwin-dark);
 
 // Tag list
-$tag-list-active-border:              --scheme(shade(var(--light-5), 10%),  tint(var(--dark-6), 5%));
+$_add-tag-nested-focus-bg-light:           shade(var(--light-1), 4%);
+$_add-tag-nested-focus-border-color-light: shade(var(--light-3), 4%);
+
+$tag-list-active-border:              --scheme(shade(var(--light-5), 10%),                tint(var(--dark-6), 5%));
 $add-tag-default-bg:                  $panel-bg;
-$add-tag-focus-bg:                    --scheme(var(--light-0),              var(--dark-3));
-$add-tag-nested-focus-bg:             --scheme(shade(var(--light-1), 4%),   tint(var(--dark-4), 2%));
-$add-tag-blurred-bg-darwin:           --scheme(shade(var(--light-1), 4%),   var(--dark-2)); // $add-tag-nested-focus-bg, $panel-blurred-bg-darwin
+$add-tag-focus-bg:                    --scheme(var(--light-0),                            var(--dark-3));
+$add-tag-nested-focus-bg:             --scheme($_add-tag-nested-focus-bg-light,           tint(var(--dark-4), 2%));
+$add-tag-blurred-bg-darwin:           --scheme($_add-tag-nested-focus-bg-light,           $_panel-blurred-bg-darwin-dark);
 $add-tag-placeholder-color-default:   $text-color;
-$add-tag-nested-focus-border-color:   --scheme(shade(var(--light-3), 4%),   tint(var(--dark-1), 2%));
-$add-tag-blurred-border-color-darwin: --scheme(shade(var(--light-3), 4%),   shade(var(--dark-1), 4%)); // Light: $add-tag-nested-focus-border-color
-$icon-tag-color:                      --scheme(var(--light-1),              var(--dark-4));
-$icon-tag-nested-focus-color:         --scheme(shade(var(--light-1), 4%),   tint(var(--dark-4), 2%));
-$icon-tag-border:                     --scheme(var(--light-5),              var(--dark-6));
-$icon-tag-nested-focus-border:        --scheme(shade(var(--light-5), 4%),   tint(var(--dark-6), 2%));
-$icon-tag-vibrancy-border:            --scheme(alpha(var(--light-10), 20%), alpha(var(--dark-10), 20%));
+$add-tag-nested-focus-border-color:   --scheme($_add-tag-nested-focus-border-color-light, tint(var(--dark-1), 2%));
+$add-tag-blurred-border-color-darwin: --scheme($_add-tag-nested-focus-border-color-light, shade(var(--dark-1), 4%));
+$icon-tag-color:                      --scheme(var(--light-1),                            var(--dark-4));
+$icon-tag-nested-focus-color:         --scheme(shade(var(--light-1), 4%),                 tint(var(--dark-4), 2%));
+$icon-tag-border:                     --scheme(var(--light-5),                            var(--dark-6));
+$icon-tag-nested-focus-border:        --scheme(shade(var(--light-5), 4%),                 tint(var(--dark-6), 2%));
+$icon-tag-vibrancy-border:            --scheme(alpha(var(--light-10), 20%),               alpha(var(--dark-10), 20%));
 
 // Photo panel
 $photo-panel-slider-handle-focus-visible-bg:  --scheme(var(--light-1),                               revert-rule);
@@ -376,53 +391,59 @@ $btn-icon-active-bg:            --scheme(alpha(var(--light-10), 10%), alpha(var(
 $btn-icon-active-color:         --scheme(var(--light-7),              var(--dark-8));
 
 // Slider
-$slider-track-bg:                       --scheme(var(--light-4), var(--dark-5));
+$_slider-handle-bg-dark:          var(--dark-7);
+$_slider-handle-disabled-bg-dark: var(--dark-5);
+
+$slider-track-bg:                       --scheme(var(--light-4),               var(--dark-5));
 $slider-overlay-track-bg:               --scheme(alpha(var(--light-10),  28%), alpha(var(--dark-10), 22%));
-$slider-overlay-track-focus-bg:         --scheme(alpha(var(--light-10), 20%), alpha(var(--dark-10), 20%));
-$slider-overlay-track-disabled-bg:      --scheme(var(--light-10), var(--dark-10));
-$slider-overlay-track-opacity:          --scheme(0.5, 0.64);
-$slider-overlay-track-focus-opacity:    --scheme(0.7, 0.7);
-$slider-overlay-track-disabled-opacity: --scheme(0.14, 0.14);
-$slider-range-bg:                       --scheme(var(--light-6), var(--dark-6));
-$slider-range-disabled-opacity:         --scheme($disabled-opacity, 0);
-$slider-overlay-range-bg:               --scheme(var(--light-10), var(--dark-10));
-$slider-handle-bg:                      --scheme(var(--light-0), var(--dark-7));
-$slider-overlay-handle-bg:              --scheme(var(--light-10), var(--dark-10));
-$slider-handle-border:                  --scheme(alpha(var(--light-10), 20%), transparent);
-$slider-overlay-handle-border:          --scheme(transparent, transparent);
-$slider-handle-disabled-bg:             --scheme(shade(var(--light-1), 4%), var(--dark-5));
-$slider-value-color:                    --scheme(var(--light-6), var(--dark-8));
-$slider-overlay-value-color:            --scheme(var(--light-10), var(--dark-9));
-$slider-focus-bg:                       --scheme(var(--primary), var(--primary));
-$slider-overlay-focus-bg:               --scheme(var(--primary-overlay), var(--primary-overlay));
+$slider-overlay-track-focus-bg:         --scheme(alpha(var(--light-10), 20%),  alpha(var(--dark-10), 20%));
+$slider-overlay-track-disabled-bg:      --scheme(var(--light-10),              var(--dark-10));
+$slider-overlay-track-opacity:          --scheme(0.5,                          0.64);
+$slider-overlay-track-focus-opacity:    --scheme(0.7,                          0.7);
+$slider-overlay-track-disabled-opacity: --scheme(0.14,                         0.14);
+$slider-range-bg:                       --scheme(var(--light-6),               var(--dark-6));
+$slider-range-disabled-opacity:         --scheme($disabled-opacity,            0);
+$slider-overlay-range-bg:               --scheme(var(--light-10),              var(--dark-10));
+$slider-handle-bg:                      --scheme(var(--light-0),               $_slider-handle-bg-dark);
+$slider-overlay-handle-bg:              --scheme(var(--light-10),              var(--dark-10));
+$slider-handle-border:                  --scheme(alpha(var(--light-10), 20%),  transparent);
+$slider-overlay-handle-border:          --scheme(transparent,                  transparent);
+$slider-handle-disabled-bg:             --scheme(shade(var(--light-1), 4%),    $_slider-handle-disabled-bg-dark);
+$slider-value-color:                    --scheme(var(--light-6),               var(--dark-8));
+$slider-overlay-value-color:            --scheme(var(--light-10),              var(--dark-9));
+$slider-focus-bg:                       --scheme(var(--primary),               var(--primary));
+$slider-overlay-focus-bg:               --scheme(var(--primary-overlay),       var(--primary-overlay));
 
 // Esper
-$esper-bg:                               --scheme(shade(var(--light-1), 4%),             var(--dark-1));
-$esper-overlay-color:                    --scheme(alpha(var(--light-10), 86%),           alpha(var(--dark-10), 69%));
-$esper-shadow:                           --scheme(alpha(var(--light-10), 10%),           alpha(var(--dark-0), 80%));
-$esper-btn-icon-hover-bg:                --scheme(shade(var(--light-1), 9%),             var(--dark-3));
-$esper-btn-icon-active-bg:               --scheme(shade(var(--light-1), 14%),            var(--dark-5));
-$esper-slider-handle-bg:                 --scheme(var(--light-1),                        var(--dark-7)); // Dark: $slider-handle-bg
-$esper-slider-handle-disabled-bg:        --scheme(shade(var(--light-1), 8%),             var(--dark-5)); // Dark: $slide-handle-disabled-bg
-$esper-slider-value-color:               --scheme(var(--light-6),                        var(--dark-7));
-$esper-overlay-bg:                       --scheme(alpha(shade(var(--light-1), 4%), 80%), alpha(var(--dark-1), 80%));
-$esper-toolbar-overlay-btn-hover-bg:     --scheme(alpha(var(--light-10), 5%),            alpha(var(--dark-10), 7%));
-$esper-toolbar-overlay-btn-active-color: --scheme(alpha(var(--light-10), 60%),           alpha(var(--dark-10), 64%));
-$esper-toolbar-overlay-btn-active-bg:    --scheme(alpha(var(--light-10), 11%),           alpha(var(--dark-10), 14%));
-$esper-toolbar-blurred-opacity-darwin:   --scheme(0.3,                                   0.3);
-$esper-overlay-icon-color:               --scheme(alpha(var(--light-10), 50%),           alpha(var(--dark-10), 39%));
-$esper-checkbox-bg:                      --scheme(var(--light-0),                        var(--dark-5)); // Light: $input-bg
-$esper-input-border:                     --scheme(shade(var(--light-2), 10%),            transparent);
-$esper-checkbox-checked-bg:              --scheme(var(--dark-8),                         var(--dark-7)); // Light: $checkbox-checked-bg
-$esper-checkbox-checked-border:          --scheme(tint(var(--light-6), 13%),             var(--dark-7)); // Light: $checkbox-checked-border
-$esper-checkbox-disabled-bg:             --scheme(shade(var(--light-2), 4%),             alpha(var(--dark-5), 50%));
-$esper-checkbox-disabled-border:         --scheme(shade(var(--light-2), 10%),            alpha(var(--dark-5), 50%)); // Light: $esper-input-border
-$esper-checkbox-checked-active-bg:       --scheme(tint(var(--light-6), 8%),              shade(var(--dark-7), 5%)); // Light: $checkbox-checked-active-bg
-$esper-checkbox-checked-active-border:   --scheme(tint(var(--light-6), 8%),              shade(var(--dark-7), 5%)); // Light: $checkbox-checked-active-border
-$esper-btn-default-bg:                   --scheme(shade(var(--light-1), 4%),             var(--dark-3)); // Light: $esper-bg
-$esper-btn-default-border:               --scheme(shade(var(--light-2), 10%),            transparent);
-$esper-btn-default-active-bg:            --scheme(shade(var(--light-1), 8%),             var(--dark-2));
-$esper-error-color:                      --scheme(var(--light-8),                        var(--dark-8));
+$_esper-bg-light:           shade(var(--light-1), 4%);
+$_esper-input-border-light: shade(var(--light-2), 10%);
+
+$esper-bg:                               --scheme($_esper-bg-light,                       var(--dark-1));
+$esper-overlay-color:                    --scheme(alpha(var(--light-10), 86%),            alpha(var(--dark-10), 69%));
+$esper-shadow:                           --scheme(alpha(var(--light-10), 10%),            alpha(var(--dark-0), 80%));
+$esper-btn-icon-hover-bg:                --scheme(shade(var(--light-1), 9%),              var(--dark-3));
+$esper-btn-icon-active-bg:               --scheme(shade(var(--light-1), 14%),             var(--dark-5));
+$esper-slider-handle-bg:                 --scheme(var(--light-1),                         $_slider-handle-bg-dark);
+$esper-slider-handle-disabled-bg:        --scheme(shade(var(--light-1), 8%),              $_slider-handle-disabled-bg-dark);
+$esper-slider-value-color:               --scheme(var(--light-6),                         var(--dark-7));
+$esper-overlay-bg:                       --scheme(alpha(shade(var(--light-1), 4%), 80%),  alpha(var(--dark-1), 80%));
+$esper-toolbar-overlay-btn-hover-bg:     --scheme(alpha(var(--light-10), 5%),             alpha(var(--dark-10), 7%));
+$esper-toolbar-overlay-btn-active-color: --scheme(alpha(var(--light-10), 60%),            alpha(var(--dark-10), 64%));
+$esper-toolbar-overlay-btn-active-bg:    --scheme(alpha(var(--light-10), 11%),            alpha(var(--dark-10), 14%));
+$esper-toolbar-blurred-opacity-darwin:   --scheme(0.3,                                    0.3);
+$esper-overlay-icon-color:               --scheme(alpha(var(--light-10), 50%),            alpha(var(--dark-10), 39%));
+$esper-checkbox-bg:                      --scheme($_input-bg-light,                       var(--dark-5));
+$esper-input-border:                     --scheme($_esper-input-border-light,             transparent);
+$esper-checkbox-checked-bg:              --scheme($_checkbox-checked-bg-light,            var(--dark-7));
+$esper-checkbox-checked-border:          --scheme($_checkbox-checked-bg-light,            var(--dark-7));
+$esper-checkbox-disabled-bg:             --scheme(shade(var(--light-2), 4%),              alpha(var(--dark-5), 50%));
+$esper-checkbox-disabled-border:         --scheme($_esper-input-border-light,             alpha(var(--dark-5), 50%));
+$esper-checkbox-checked-active-bg:       --scheme($_checkbox-checked-active-bg-light,     shade(var(--dark-7), 5%));
+$esper-checkbox-checked-active-border:   --scheme($_checkbox-checked-active-border-light, shade(var(--dark-7), 5%));
+$esper-btn-default-bg:                   --scheme($_esper-bg-light,                       var(--dark-3));
+$esper-btn-default-border:               --scheme(shade(var(--light-2), 10%),             transparent);
+$esper-btn-default-active-bg:            --scheme(shade(var(--light-1), 8%),              var(--dark-2));
+$esper-error-color:                      --scheme(var(--light-8),                         var(--dark-8));
 
 // Transcription
 $transcription-btn-icon-hover-bg:  --scheme(revert-rule,                var(--dark-3));
