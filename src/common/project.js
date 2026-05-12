@@ -12,7 +12,6 @@ import { info, warn } from './log.js'
 
 import { Asset } from '../asset/asset.js'
 import { Store } from '../asset/store.js'
-import { Image } from '../image/image.js'
 
 
 /*
@@ -382,7 +381,8 @@ export async function optimizeAssets (src, path, appDir, {
   concurrency = 4,
   density = 72,
   overwrite = false,
-  quality = 0.8
+  quality = 0.8,
+  processAsset
 } = {}) {
   try {
     assert(getProjectType(src) === MANAGED, 'source must be a managed project')
@@ -418,43 +418,18 @@ export async function optimizeAssets (src, path, appDir, {
     info(`optimizing ${assets.length} asset(s)`)
 
     await pMap(assets, async ({ id, ...props }) => {
-      let image = await Image.open({ ...props, density })
+      let updates = await processAsset({
+        ...props,
+        density,
+        projectPath: path,
+        quality,
+        store
+      })
 
-      try {
-        let optimized = await image.optimize({ quality })
-        await store.add(image)
+      if (updates == null) return
 
-        let updates = { path: relative(path, image.path) }
-        if (optimized) {
-          updates.checksum = image.checksum
-          updates.mimetype = image.mimetype
-          updates.page = 0
-          updates.size = image.size
-        }
-
-        await db.run(
-          ...update('photos').set(updates).where({ id }))
-
-      } catch (err) {
-        // Fall back to copying the original asset
-        warn({ err, url: image.url }, 'failed to optimize, copying original')
-
-        if (image._original) {
-          image.buffer = image._original.buffer
-          image.path = image._original.path
-          image.protocol = image._original.protocol
-        }
-
-        await image.check()
-
-        if (!image.hasChanged) {
-          await store.add(image)
-          await db.run(
-            ...update('photos')
-              .set({ path: relative(path, image.path) })
-              .where({ id }))
-        }
-      }
+      await db.run(
+        ...update('photos').set(updates).where({ id }))
     }, { concurrency })
 
     return { id: newId }
