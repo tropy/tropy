@@ -403,13 +403,14 @@ export async function optimizeAssets (src, path, appDir, {
       journalMode: 'wal'
     })
 
-    // Assign a new project ID
+    // Assign a new project ID and name
     let project = await load(db)
     let newId = uuid()
+    let newName = basename(path, extname(path))
 
     await db.run(
       ...update('project')
-        .set({ project_id: newId })
+        .set({ project_id: newId, name: newName })
         .where({ project_id: project.id }))
 
     let assets = await getAssets(db, { basePath: dirname(srcDbFile) })
