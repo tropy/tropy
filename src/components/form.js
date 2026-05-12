@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import cx from 'classnames'
 import { useEvent } from '../hooks/use-event.js'
@@ -248,9 +248,15 @@ export const FormSlider = ({
   tabIndex = 0,
   value
 }) => {
+  let intl = useIntl()
+
   let handleChange = useEvent((next) => {
     onChange(set({}, name, next))
   })
+
+  let formatValue = useCallback((rounded) =>
+    intl.formatMessage({ id: `${id}.value` }, { value: rounded }),
+  [intl, id])
 
   return (
     <FormElement id={`${id}.label`} size={size} isCompact={isCompact}>
@@ -260,6 +266,7 @@ export const FormSlider = ({
         showCurrentValue
         tabIndex={tabIndex}
         value={value}
+        formatValue={formatValue}
         onChange={handleChange}/>
     </FormElement>
   )
