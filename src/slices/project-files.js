@@ -12,6 +12,7 @@ import {
   optimizeAssets,
   TYPES
 } from '../common/project.js'
+import { optimizeAsset } from '../image/optimize.js'
 
 
 export const create = createAsyncThunk(
@@ -106,7 +107,8 @@ export const optimize = createAsyncThunk(
       if (path)
         await optimizeAssets(src, path, Resource.base, {
           overwrite: true,
-          quality
+          quality,
+          processAsset: optimizeAsset
         })
 
       return { path }
