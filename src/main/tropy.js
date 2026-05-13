@@ -324,6 +324,7 @@ export class Tropy extends EventEmitter {
 
     let args = {
       file: project?.path,
+      recent: this.state.recent,
       ...this.hash
     }
 
