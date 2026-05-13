@@ -34,6 +34,13 @@ en:
         You can set the port via the command line or in the user data directory.
       buttons:
         - "OK"
+    project:
+      url:
+        conflict:
+          message: Cannot open project URL
+          detail: >-
+            Multiple projects use the URL "{slug}".
+            Open project preferences to change one.
   window:
     prefs:
       title: Tropy Preferences
