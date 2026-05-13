@@ -12,6 +12,7 @@ import * as act from '../actions/index.js'
 import { Storage } from '../storage.js'
 import photo from '../models/photo.js'
 import { list, load, optimize, reindex, resolveBasePath, save } from '../common/project.js'
+import { sanitizeSlug } from '../common/slug.js'
 
 
 export class Optimize extends Command {
@@ -124,6 +125,10 @@ export class Save extends Command {
   *exec () {
     let { watch, ...payload } = this.action.payload
     let { db, id } = this.options
+
+    if ('slug' in payload) {
+      payload.slug = payload.slug ? sanitizeSlug(payload.slug) : null
+    }
 
     let { project } = yield select()
     let original = pick(project, Object.keys(payload))
