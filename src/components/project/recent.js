@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEvent } from '../../hooks/use-event.js'
@@ -8,6 +8,7 @@ import { IconXLarge } from '../icons.js'
 import { ProjectFileList } from './file.js'
 import { clear, consolidate, reload } from '../../slices/project-files.js'
 import { match } from '../../collate.js'
+import { sanitizeSlug } from '../../common/slug.js'
 
 
 export const RecentProjects = ({
@@ -18,14 +19,45 @@ export const RecentProjects = ({
 
   let [query, setQuery] = useState('')
 
+  let paths = useMemo(() => files.map(f => f.path), [files])
+
   useEffect(() => {
-    dispatch(reload(files))
-  }, [files, dispatch])
+    dispatch(reload(paths))
+  }, [paths, dispatch])
 
   let projectFiles = useSelector(state => state.projectFiles)
+
+  let slugByPath = useMemo(() => {
+    let map = new Map()
+    for (let entry of files) {
+      map.set(entry.path, entry.slug || sanitizeSlug(entry.name))
+    }
+    return map
+  }, [files])
+
+  let conflicts = useMemo(() => {
+    let counts = new Map()
+    for (let slug of slugByPath.values()) {
+      counts.set(slug, (counts.get(slug) || 0) + 1)
+    }
+    let set = new Set()
+    for (let [path, slug] of slugByPath) {
+      if (counts.get(slug) > 1) set.add(path)
+    }
+    return set
+  }, [slugByPath])
+
   let projects =
     files
-      .map(path => projectFiles[path])
+      .map(entry => {
+        let stats = projectFiles[entry.path]
+        if (!stats) return null
+        return {
+          ...stats,
+          slug: slugByPath.get(entry.path),
+          hasConflict: conflicts.has(entry.path)
+        }
+      })
       .filter(file => file &&
         (!query || match(file.name, query, /\b\p{Alpha}/gu)))
 
