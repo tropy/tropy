@@ -250,7 +250,7 @@ export class Slider extends React.PureComponent {
             {this.props.showCurrentValue && (
               <SliderValue
                 id={this.props.format}
-                value={this.props.value * this.props.resolution}/>
+                value={this.state.value * this.props.resolution}/>
             )}
           </div>
         </Draggable>
