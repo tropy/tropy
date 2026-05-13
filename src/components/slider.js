@@ -1,4 +1,5 @@
 import React from 'react'
+import { FormattedMessage } from 'react-intl'
 import { Button } from './button.js'
 import { Draggable } from './draggable.js'
 import { bounds, borders } from '../dom.js'
@@ -214,18 +215,6 @@ export class Slider extends React.PureComponent {
     }
   }
 
-  renderCurrentValue () {
-    if (!this.props.showCurrentValue) return null
-
-    let { formatValue, resolution, value } = this.props
-
-    return (
-      <div className="slider-value">
-        {formatValue(round(value * resolution))}
-      </div>
-    )
-  }
-
   render () {
     let { origin, delta, isDisabled } = this
 
@@ -258,7 +247,11 @@ export class Slider extends React.PureComponent {
             style={{ '--position': position }}>
             <div className="slider-range" style={{ width, left: offset }}/>
             <div className="slider-handle"></div>
-            {this.renderCurrentValue()}
+            {this.props.showCurrentValue && (
+              <SliderValue
+                id={this.props.format}
+                value={this.props.value * this.props.resolution}/>
+            )}
           </div>
         </Draggable>
         {this.renderMaxButton()}
@@ -267,7 +260,6 @@ export class Slider extends React.PureComponent {
   }
 
   static defaultProps = {
-    formatValue: (rounded) => <>{rounded}&thinsp;%</>,
     min: 0,
     max: 1,
     precision: 1,
@@ -288,5 +280,14 @@ export class Slider extends React.PureComponent {
     })
   }
 }
+
+const SliderValue = ({
+  id = 'slider.value',
+  value
+}) => (
+  <FormattedMessage id={id} values={{ value }}>
+    {txt => (<div className="slider-value">{txt}</div>)}
+  </FormattedMessage>
+)
 
 const pct = (value) => `${100 * value}%`
