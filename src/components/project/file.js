@@ -1,7 +1,14 @@
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
+import { useIpcSend } from '../../hooks/use-ipc.js'
 import { Button } from '../button.js'
-import { IconMaze, IconWarningSm, IconXMedium } from '../icons.js'
+import {
+  IconLink,
+  IconMaze,
+  IconRemoveLink,
+  IconWarningSm,
+  IconXMedium
+} from '../icons.js'
 import { RelativeDate } from '../date.js'
 
 
@@ -12,10 +19,12 @@ export const ProjectFileList = ({
   onSelect
 }) => (
   <ol className="project-files">
-    {files.map(({ name, path, ...stats }) => (
+    {files.map(({ name, path, slug, hasConflict, ...stats }) => (
       <ProjectFile
         key={path}
         name={name}
+        slug={slug}
+        hasConflict={hasConflict}
         onClick={onSelect}
         onConsolidate={onConsolidate}
         onRemove={onRemove}
@@ -32,9 +41,12 @@ export const ProjectFile = ({
   onConsolidate,
   onRemove,
   path,
+  slug,
+  hasConflict,
   stats
 }) => {
   let intl = useIntl()
+  let copyUrl = useIpcSend(['copy-project-url'])
 
   let isMissing = !stats?.lastModified
 
@@ -50,6 +62,11 @@ export const ProjectFile = ({
     onRemove?.(path)
   })
 
+  let handleCopyUrl = useEvent((event) => {
+    event.stopPropagation()
+    copyUrl({ path })
+  })
+
   let hint = intl.formatMessage({
     id: `project.file.${isMissing ? 'missing' : 'open'}`
   }, { path })
@@ -63,7 +80,18 @@ export const ProjectFile = ({
       <div className="flex-col">
         <div className="name">
           <div className="truncate">{name}</div>
+          {hasConflict && (
+            <IconRemoveLink
+              title={intl.formatMessage({ id: 'project.file.conflict' })}/>
+          )}
           {isMissing && <IconWarningSm/>}
+          {!isMissing && slug && (
+            <Button
+              className="copy-url"
+              icon={<IconLink/>}
+              onClick={handleCopyUrl}
+              title="project.file.url"/>
+          )}
         </div>
         <ProjectFileStats {...stats}/>
       </div>
