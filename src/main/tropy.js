@@ -709,6 +709,9 @@ export class Tropy extends EventEmitter {
         act.note.export(target.notes, { target: ':clipboard:' }),
         win))
 
+    this.on('app:copy-project-url', (win) =>
+      this.copyProtocolURL(this.getProject(win)))
+
     this.on('app:copy-item-link', (win, { target }) =>
       this.copyProtocolURL(this.getProject(win), {
         item: target.id,
@@ -996,6 +999,11 @@ export class Tropy extends EventEmitter {
 
     ipc.on('clear-recent-project', (_, project) => {
       this.clearRecentProjects([project.path])
+    })
+
+    ipc.on('copy-project-url', (_, { path }) => {
+      let entry = this.state.recent.find(e => e.path === path)
+      if (entry) this.copyProtocolURL(entry)
     })
 
     ipc.on(FLASH.HIDE, (_, { id, confirm }) => {

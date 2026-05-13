@@ -85,6 +85,8 @@ en:
       open: Open project {path}
       missing: Find missing project {path}
       remove: Remove project from list
+      url: Copy project URL
+      conflict: This project's URL conflicts with another project
     recent:
       search:
         placeholder: Filter projects
