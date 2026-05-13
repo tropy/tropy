@@ -17,6 +17,8 @@ en:
       - label: 'Rename Project'
         command: 'app:rename-project'
         condition: '!isReadOnly'
+      - label: 'Copy Project URL'
+        command: 'app:copy-project-url'
       - label: 'Show Project File…'
         command: 'app:show-project-file'
     lists: &lists
