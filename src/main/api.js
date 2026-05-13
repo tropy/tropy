@@ -12,7 +12,7 @@ export class Server {
   }
 
   current = () => {
-    return this.app.state.recent[0]
+    return this.app.state.recent[0]?.path
   }
 
   dispatch = (type, action) => {
