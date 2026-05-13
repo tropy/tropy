@@ -7,6 +7,7 @@ import { Button } from '../button.js'
 import { ProjectTypeField } from './type-field.js'
 import { notify } from '../../dialog.js'
 import { BASES, TYPES } from '../../common/project.js'
+import { sanitizeSlug } from '../../common/slug.js'
 import { convert, optimize } from '../../slices/project-files.js'
 import { useDispatch } from 'react-redux'
 import { useIntl } from 'react-intl'
@@ -76,6 +77,16 @@ export const ProjectSettings = React.memo(({
         isRequired
         tabIndex={0}
         value={project.name}
+        onChange={onChange}/>
+      <FormField
+        id="prefs.project.url"
+        name="slug"
+        isCompact
+        isReadOnly={project.isReadOnly}
+        type="url"
+        prefix="tropy://project/"
+        placeholder={sanitizeSlug(project.name || '')}
+        value={project.slug || ''}
         onChange={onChange}/>
       <FormField
         id="prefs.project.id"
