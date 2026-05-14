@@ -23,6 +23,31 @@ export class Server {
     this.app.wm.rsvp(type, action)
   )
 
+  rsvpTo = (win, action) => (
+    this.app.wm.rsvpTo(win, action)
+  )
+
+  resolveProject = (slug) => {
+    if (!slug) return null
+
+    let entries = this.app.state.recent.filter(
+      e => this.app.effectiveSlug(e) === slug)
+
+    if (entries.length === 0)
+      return { error: 'not-found' }
+
+    if (entries.length > 1)
+      return { error: 'conflict', paths: entries.map(e => e.path) }
+
+    let win = this.app.wm.find('project',
+      w => this.app.getProject(w)?.path === entries[0].path)
+
+    if (win == null)
+      return { error: 'not-open' }
+
+    return { win, path: entries[0].path }
+  }
+
   get port () {
     return this.app.opts.port || this.app.state.port
   }
@@ -57,7 +82,9 @@ export class Server {
         current: this.current,
         dispatch: this.dispatch,
         log: logger.child({ name: 'api' }),
+        resolveProject: this.resolveProject,
         rsvp: this.rsvp,
+        rsvpTo: this.rsvpTo,
         version: this.app.version
       })
     }
