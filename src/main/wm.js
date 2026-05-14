@@ -227,6 +227,10 @@ export class WindowManager extends EventEmitter {
     return this.windows[type]?.[0]
   }
 
+  find (type, predicate) {
+    return this.windows[type]?.find(predicate)
+  }
+
   each (...args) {
     return this.map(...args), this
   }
@@ -547,6 +551,23 @@ export class WindowManager extends EventEmitter {
       win.webContents.send('dispatch', action)
 
       // TODO reject pending after timeout!
+
+    }).finally(() => { delete this.pending[id] })
+  }
+
+  rsvpTo (win, action) {
+    let id
+
+    return new Promise((resolve, reject) => {
+      id = this.seq.next().value
+
+      if (win == null)
+        return reject(new Error('window not found'))
+
+      action.meta.rsvp = id
+      this.pending[id] = { resolve, reject }
+
+      win.webContents.send('dispatch', action)
 
     }).finally(() => { delete this.pending[id] })
   }

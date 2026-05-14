@@ -1,6 +1,17 @@
 const COMBINING_MARKS = /[̀-ͯ]/g
 
-export const RESERVED_SLUGS = new Set(['current'])
+export const RESERVED_SLUGS = new Set([
+  'current',
+  'import',
+  'items',
+  'photos',
+  'lists',
+  'tags',
+  'data',
+  'notes',
+  'transcriptions',
+  'selections'
+])
 
 export function sanitizeSlug (input) {
   let slug = String(input ?? '')
