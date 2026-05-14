@@ -825,10 +825,6 @@ export class Tropy extends EventEmitter {
       shell.open('https://tropy.org/license')
     })
 
-    this.on('app:donate', () => {
-      shell.open('https://tropy.org/donate')
-    })
-
     this.on('app:search-issues', () => {
       shell.open('https://github.com/tropy/tropy/issues')
     })

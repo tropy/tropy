@@ -69,9 +69,6 @@ it:
       Tropy è progettato da {c2dh} e {rrchnm}, laboratori che sviluppano risorse
       didattiche storiche, mostre digitali e software open source.
     trademark: Il nome Tropy è un marchio registrato di {cds}.
-    donate:
-      title: Donazione a Tropy
-      url: https://tropy.org/donate
     release:
       title: Note di rilascio
       url: https://github.com/tropy/tropy/releases/tag/v{version}

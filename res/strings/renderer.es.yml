@@ -64,9 +64,6 @@ es:
       que desarrollan recursos para la enseñanza de la historia, exposiciones
       digitales, y software de código abierto.
     trademark: El nombre Tropy es una marca registrada de {cds}.
-    donate:
-      title: Donar a Tropy
-      url: https://tropy.org/donate
     release:
       title: Notas de versión
       url: https://github.com/tropy/tropy/releases/tag/v{version}

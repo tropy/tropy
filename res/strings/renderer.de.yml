@@ -70,9 +70,6 @@ de:
       zur Geschichtsvermittlung, digitale Ausstellungen und Open-Source-Software
       entwickelt.
     trademark: Der Name Tropy ist eine geschützte Marke von {cds}.
-    donate:
-      title: An Tropy spenden
-      url: https://tropy.org/donate
     release:
       title: Versionshinweise
       url: https://github.com/tropy/tropy/releases/tag/v{version}

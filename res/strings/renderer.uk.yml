@@ -69,9 +69,6 @@ uk:
       Tropy is designed by the {c2dh} and the {rrchnm}, labs that develop
       historical teaching resources, digital exhibits, and open-source software.
     trademark: Назва Tropy є зареєстрованою торговою маркою {cds}.
-    donate:
-      title: Підтримати Tropy
-      url: https://tropy.org/donate
     release:
       title: Release Notes
       url: https://github.com/tropy/tropy/releases/tag/v{version}
