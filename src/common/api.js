@@ -4,6 +4,7 @@ import Koa from 'koa'
 import Router from '@koa/router'
 import bodyParser from 'koa-bodyparser'
 import act from '../actions/api'
+import { RESERVED_SLUGS } from './slug.js'
 
 const show = (type) =>
   async (ctx) => {
@@ -406,7 +407,15 @@ const project = {
   }
 }
 
-export function create ({ current, dispatch, log, rsvp, version }) {
+export function create ({
+  current,
+  dispatch,
+  log,
+  resolveProject,
+  rsvp,
+  rsvpTo,
+  version
+}) {
   let app = new Koa
   let api = new Router
 
@@ -421,7 +430,45 @@ export function create ({ current, dispatch, log, rsvp, version }) {
   app.context.current = current
   app.context.dispatch = dispatch
   app.context.log = log
-  app.context.rsvp = rsvp
+
+  app.use(async (ctx, next) => {
+    ctx.rsvp = rsvp
+
+    let m = ctx.path.match(/^\/project\/([^/]+)(\/|$)/)
+
+    if (m && !RESERVED_SLUGS.has(m[1])) {
+      let slug = m[1]
+      let resolved = resolveProject(slug)
+
+      switch (resolved?.error) {
+        case 'not-found':
+          ctx.status = 404
+          ctx.body = { error: `unknown project: ${slug}` }
+          return
+        case 'not-open':
+          ctx.status = 404
+          ctx.body = {
+            error: `project "${slug}" is not open`,
+            hint: 'open the project in Tropy first'
+          }
+          return
+        case 'conflict':
+          ctx.status = 409
+          ctx.body = {
+            error: `project "${slug}" is ambiguous`,
+            paths: resolved.paths
+          }
+          return
+      }
+
+      ctx.projectSlug = slug
+      ctx.projectPath = resolved.path
+      ctx.rsvp = (_type, action) => rsvpTo(resolved.win, action)
+      ctx.path = ctx.path.replace(/^\/project\/[^/]+/, '/project')
+    }
+
+    return next()
+  })
 
   api
     .post('/project/import', project.import)
@@ -461,6 +508,14 @@ export function create ({ current, dispatch, log, rsvp, version }) {
 
     .get('/version', (ctx) => {
       ctx.body = { version }
+    })
+    .get('/project{/}', (ctx) => {
+      ctx.body = {
+        project: ctx.projectPath || ctx.current(),
+        slug: ctx.projectSlug,
+        status: 'ok',
+        version
+      }
     })
     .get('/', (ctx) => {
       ctx.body = {
