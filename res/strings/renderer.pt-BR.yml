@@ -51,9 +51,6 @@ pt-BR:
       url: https://www.c2dh.uni.lu
     text: "Tropy é mantido pelo {c2dh}\_ e pelo {rrchnm}, laboratórios que desenvolvem recursos para o ensino de história, exposições digitais e software de código aberto."
     trademark: ' O nome Tropy é uma marca registrada de {cds}.'
-    donate:
-      title: Doações ao Tropy
-      url: https://tropy.org/donate
     release:
       title: Notas da Versão
       url: https://github.com/tropy/tropy/releases/tag/v{version}

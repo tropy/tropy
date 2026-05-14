@@ -70,9 +70,6 @@ ru:
       исторические учебные материалы, цифровые экспонаты и программное
       обеспечение с открытым исходным кодом.
     trademark: Название Tropy является зарегистрированной торговой маркой компании {cds}.
-    donate:
-      title: Пожертвуйте в пользу Tropy
-      url: https://tropy.org/donate
     release:
       title: Примечания к выпуску
       url: https://github.com/tropy/tropy/releases/tag/v{version}

@@ -67,9 +67,6 @@ ja:
       url: https://www.c2dh.uni.lu
     text: Tropyは、歴史教育リソースやデジタル展示、オープンソースソフトウェアの開発ラボである{c2dh}および{rrchnm}によって作成されています。
     trademark: Tropyは{cds}の登録商標です。
-    donate:
-      title: Tropyへ寄付する
-      url: https://tropy.org/donate
     release:
       title: リリースノート
       url: https://github.com/tropy/tropy/releases/tag/v{version}

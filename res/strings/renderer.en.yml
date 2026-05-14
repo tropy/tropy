@@ -70,9 +70,6 @@ en:
         historical teaching resources, digital exhibits, and
         open-source software.
       trademark: The Tropy name is a registered trademark of {cds}.
-      donate:
-        title: Donate to Tropy
-        url: https://tropy.org/donate
       release:
         title: Release Notes
         url: https://github.com/tropy/tropy/releases/tag/v{version}

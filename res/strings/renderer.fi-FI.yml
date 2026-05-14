@@ -64,9 +64,6 @@ fi-FI:
       kehittävät historiallisia opetusresursseja, digitaalisia näyttelyitä ja
       avoimen lähdekoodin ohjelmistoja.
     trademark: Nimi Tropy on {cds}in rekisteröity tavaramerkki.
-    donate:
-      title: Lahjoita Tropylle
-      url: https://tropy.org/donate
     release:
       title: Julkaisutiedot
       url: https://github.com/tropy/tropy/releases/tag/v{version}

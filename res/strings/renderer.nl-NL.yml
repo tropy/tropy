@@ -69,9 +69,6 @@ nl-NL:
       Tropy is ontworpen door {c2dh} en het {rrchnm}, laboratoria die digitale
       leermiddelen, tentoonstellingen en opensourcesoftware ontwikkelen.
     trademark: Tropy is een geregistreerd handelsmerk van {cds}.
-    donate:
-      title: Doneren aan Tropy
-      url: https://tropy.org/donate
     release:
       title: Wijzigingslog
       url: https://github.com/tropy/tropy/releases/tag/v{version}

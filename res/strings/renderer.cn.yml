@@ -67,9 +67,6 @@ cn:
       url: https://www.c2dh.uni.lu
     text: Tropy 由 {c2dh} 和 {rrchnm} 设计，这两个实验室负责开发历史教学资源、数字展品和开源软件。
     trademark: Tropy 名称是 {cds} 的注册商标。
-    donate:
-      title: 捐赠给 Tropy
-      url: https://tropy.org/donate
     release:
       title: 发布笔记
       url: https://github.com/tropy/tropy/releases/tag/v{version}
