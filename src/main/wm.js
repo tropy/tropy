@@ -780,9 +780,15 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  static print (win, opts = {}) {
+  static print (win, {
+    usePrinterDefaultPageSize = true,
+    ...opts
+  } = {}) {
     return new Promise((resolve, reject) => {
-      win.webContents.print(opts, (success, reason) => {
+      win.webContents.print({
+        usePrinterDefaultPageSize,
+        ...opts
+      }, (success, reason) => {
         if (success)
           resolve('successful')
         else
