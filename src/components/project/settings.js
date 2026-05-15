@@ -100,12 +100,12 @@ export const ProjectSettings = React.memo(({
             id="prefs.project.optimize.quality"
             name="optimize.quality"
             isCompact
-            value={project.optimize?.quality}
+            value={project.optimize.quality}
             onChange={onChange}/>
           <FormToggle
             id="prefs.project.optimize.onImport"
             name="optimize.onImport"
-            value={project.optimize?.onImport ?? true}
+            value={project.optimize.onImport}
             onChange={onChange}/>
           <FormElement isCompact>
             <Button

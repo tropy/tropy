@@ -109,7 +109,7 @@ export class Reload extends Command {
 
     let project = yield call(load, db)
     project.watch = Storage.load('project.watch', project.id) || {}
-    project.optimize = Storage.load('project.optimize', project.id) ?? { onImport: true, quality: 0.8 }
+    project.optimize = Storage.load('project.optimize', project.id) ?? {}
 
     if (project.store !== store.root)
       yield call(store.init, project.store)
