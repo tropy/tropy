@@ -58,7 +58,7 @@ export function *open (opts, action) {
     yield fork(handleDatabaseErrors, db, dbErrorActions)
 
     project.watch = Storage.load('project.watch', project.id) || {}
-    project.optimize = Storage.load('project.optimize', project.id) ?? { onImport: true, quality: 0.8 }
+    project.optimize = Storage.load('project.optimize', project.id) ?? {}
 
     let cache = new Cache(ARGS.cache, project.id)
     let store = new Store(project.store)

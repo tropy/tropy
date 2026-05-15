@@ -105,9 +105,8 @@ export class Import extends ImportCommand {
       },
       useLocalTimezone: state.settings.timezone,
       createLists: state.settings.createLists,
-      optimizeOnImport: state.project.isManaged &&
-        (state.project.optimize?.onImport ?? true),
-      optimizeQuality: state.project.optimize?.quality
+      optimizeOnImport: state.project.isManaged && state.project.optimize.onImport,
+      optimizeQuality: state.project.optimize.quality
     })))
   }
 
