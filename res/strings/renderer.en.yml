@@ -14,6 +14,7 @@ en:
         other {# items in this view}}
     search:
       placeholder: Search
+    offline: Some functionality may not be available while Tropy is offline
   panel:
     metadata:
       tab: Metadata
