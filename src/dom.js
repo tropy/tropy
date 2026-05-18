@@ -330,6 +330,10 @@ export function onResolutionChange (callback) {
   }
 }
 
+export function isOnline () {
+  return navigator.onLine !== false
+}
+
 export function distance (e1, e2) {
   let x = e2.clientX - e1.clientX
   let y = e2.clientY - e1.clientY
