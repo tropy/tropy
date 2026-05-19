@@ -1,19 +1,15 @@
 import { useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { useEvent } from '../../hooks/use-event.js'
-import { useOnline } from '../../hooks/use-online.js'
 import { Titlebar, Toolbar, ToolGroup } from '../toolbar.js'
 import { Button } from '../button.js'
-import { Icon } from '../icons.js'
+import { AccountStatus } from '../account/status.js'
 import { Fade } from '../fx.js'
 import { mode } from '../../actions/nav.js'
 
 export const ItemToolbar = ({ isItemMode }) => {
   let dispatch = useDispatch()
-  let online = useOnline()
-
-  let bref = useRef(null)
-  let oref = useRef(null)
+  let nodeRef = useRef(null)
 
   let toggleProjectMode = useEvent(() => {
     dispatch(mode.project())
@@ -23,9 +19,9 @@ export const ItemToolbar = ({ isItemMode }) => {
     <Titlebar>
       <Toolbar.Left>
         <ToolGroup>
-          <Fade nodeRef={bref} in={isItemMode}>
+          <Fade nodeRef={nodeRef} in={isItemMode}>
             <Button
-              ref={bref}
+              ref={nodeRef}
               icon="IconChevron16"
               noFocus
               onClick={toggleProjectMode}/>
@@ -33,12 +29,7 @@ export const ItemToolbar = ({ isItemMode }) => {
         </ToolGroup>
       </Toolbar.Left>
       <Toolbar.Right>
-        <Fade nodeRef={bref} in={!online}>
-          <Icon
-            ref={oref}
-            name="Ghost"
-            title="toolbar.offline"/>
-        </Fade>
+        <AccountStatus/>
       </Toolbar.Right>
     </Titlebar>
   )
