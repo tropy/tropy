@@ -81,7 +81,7 @@ export class Image extends Asset {
   }
 
   do (page = this.page, autoOrient = false) {
-    return sharp(this._original?.buffer || this.buffer || this.path, {
+    return sharp(this.original?.buffer || this.buffer || this.path, {
       autoOrient,
       page,
       density: this.density
@@ -103,10 +103,10 @@ export class Image extends Asset {
   }
 
   async optimize ({ quality = 0.8 } = {}) {
-    if (this._original) {
-      Object.assign(this, this._original)
+    if (this.original) {
+      Object.assign(this, this.original)
     } else {
-      this._original = {
+      this.original = {
         buffer: this.buffer,
         path: this.path,
         protocol: this.protocol,
@@ -140,7 +140,7 @@ export class Image extends Asset {
           IMAGE.MIN_DENSITY,
           IMAGE.MAX_DENSITY
         )
-        outputBuffer = await sharp(this._original.buffer, {
+        outputBuffer = await sharp(this.original.buffer, {
           ...defaults,
           page: this.page,
           density: dpi
@@ -200,8 +200,6 @@ export class Image extends Asset {
     })
 
     image.buffer = buffer
-    image.mimetype = mimetype
-    image.filename = filename
     image.fs = source?.fs ? { ...source.fs, size: buffer.length } : {
       size: buffer.length,
       mtime: new Date()
