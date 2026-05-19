@@ -4,6 +4,20 @@ import { safeStorage } from 'electron'
 import write from 'write-file-atomic'
 import { trace, warn } from '../common/log.js'
 
+const encrypt = async (string) => {
+  if (!(await safeStorage.isAsyncEncryptionAvailable())) {
+    throw new Error('no encryption available')
+  }
+  return await safeStorage.encryptStringAsync(string)
+}
+
+const decrypt = async (data) => {
+  if (!(await safeStorage.isAsyncEncryptionAvailable())) {
+    throw new Error('no encryption available')
+  }
+  return (await safeStorage.decryptStringAsync(data)).result
+}
+
 export class Storage {
   constructor (path) {
     this.path = path
@@ -30,10 +44,10 @@ export class Storage {
     let string = JSON.stringify(data)
 
     if (secure) {
-      if (await safeStorage.isAsyncEncryptionAvailable()) {
-        string = await safeStorage.encryptStringAsync(string)
-      } else {
-        warn(`storage: no encryption available, skip saving ${name}`)
+      try {
+        string = await encrypt(string)
+      } catch (err) {
+        warn({ err }, `storage: encryption failed, skip saving ${name}`)
         return
       }
     }
@@ -44,10 +58,10 @@ export class Storage {
 
   async parse (data, { secure = false } = {}) {
     if (secure) {
-      if (await safeStorage.isAsyncEncryptionAvailable()) {
-        data = (await safeStorage.decryptStringAsync(data)).result
-      } else {
-        warn('storage: no encryption available')
+      try {
+        data = await decrypt(data)
+      } catch (err) {
+        warn({ err }, 'storage: decryption failed, skip parsing data')
         return
       }
     }
