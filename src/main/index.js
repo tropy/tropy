@@ -23,7 +23,7 @@ process.on('unhandledRejection', err => { handleError(err) })
 
 // Set app name and paths as soon as possible!
 app.setName(qualified.product)
-app.setUserAgentFallback(qualified.name)
+app.userAgentFallback(qualified.name)
 
 if (!opts.data) {
   opts.data = join(app.getPath('appData'), exe)
