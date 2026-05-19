@@ -14,7 +14,6 @@ en:
         other {# items in this view}}
     search:
       placeholder: Search
-    offline: Some functionality may not be available while Tropy is offline
   panel:
     metadata:
       tab: Metadata
@@ -718,6 +717,7 @@ en:
         invalid: Invalid username or password.
         network: Could not reach the Tropy server.
         unknown: Something went wrong. Please try again.
+      offline: Tropy is offline.
     cache:
       prune: Failed to optimize project cache.
       purge: Failed to remove old project caches.
