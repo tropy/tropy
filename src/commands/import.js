@@ -167,7 +167,7 @@ export class ImportCommand extends Command {
       switch (handler) {
         case 'prompt': {
           this.isInteractive = true
-          const name = basename(image._original?.path ?? image.path)
+          const name = basename(image.original?.path ?? image.path)
           const message = image.numPages > 1
             ? `${name} (page ${image.page + 1})`
             : name
