@@ -203,54 +203,18 @@ export class Create extends ImportCommand {
     } = this.options
     let { item } = this.action.payload
 
-    info(`extracting ${embedded.length} embedded file(s) ` +
-      `from pdf portfolio "${source.path}"`)
-
-    let images = []
-    for (let { name, data, mimetype } of embedded) {
-      try {
-        let img = yield call(Image.fromBuffer, {
-          buffer: data,
-          mimetype,
-          filename: name,
-          source,
-          useLocalTimezone: prefs.localtime
-        })
-        images.push(img)
-      } catch (err) {
-        warn({ err, name }, 'skipping unreadable embedded pdf file')
-      }
-    }
+    let { images, imageData } = yield * this.prepareEmbeddedImages(
+      source,
+      embedded, {
+        store,
+        useLocalTimezone: prefs.localtime,
+        optimizeOnImport,
+        optimizeQuality
+      })
 
     if (!images.length) return
 
     let data = this.getImageMetadata('photo', images[0], template, prefs)
-    let imageData = new Array(images.length)
-
-    for (let i = 0; i < images.length; i++) {
-      let image = images[i]
-
-      try {
-        if (optimizeOnImport && image.mimetype !== MIME.JPG) {
-          yield call([image, image.optimize], { quality: optimizeQuality })
-        }
-        yield * this.handleDuplicate(image)
-        yield call(store.add, image)
-        imageData[i] = image.toJSON()
-
-      } catch (err) {
-        if (err instanceof DuplicateError) {
-          info(`skipping duplicate "${image.filename}" in "${source.path}"`)
-          imageData[i] = null
-        } else {
-          throw err
-        }
-      }
-    }
-
-    if (imageData.every(d => d == null))
-      throw new DuplicateError(source.path)
-
     let ids = []
     let photos = []
     let insertAt = idx[0] + progress
