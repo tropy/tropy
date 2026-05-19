@@ -409,7 +409,7 @@ export async function optimizeAssets (src, path, appDir, {
 
     await db.run(
       ...update('project')
-        .set({ project_id: newId })
+        .set({ project_id: newId, name: project.name + ' (optimized)' })
         .where({ project_id: project.id }))
 
     let assets = await getAssets(db, { basePath: dirname(srcDbFile) })
