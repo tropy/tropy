@@ -28,10 +28,10 @@ export async function optimizeAsset ({
   } catch (err) {
     warn({ err, url: image.url }, 'failed to optimize, copying original')
 
-    if (image._original) {
-      image.buffer = image._original.buffer
-      image.path = image._original.path
-      image.protocol = image._original.protocol
+    if (image.original) {
+      image.buffer = image.original.buffer
+      image.path = image.original.path
+      image.protocol = image.original.protocol
     }
 
     await image.check()
