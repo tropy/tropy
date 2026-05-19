@@ -1,6 +1,7 @@
 import { basename, extname } from 'node:path'
 import { call, put, select } from 'redux-saga/effects'
 import { DuplicateError } from '../common/error.js'
+import { info, warn } from '../common/log.js'
 import { Command } from './command.js'
 import * as mod from '../models/index.js'
 import * as act from '../actions/index.js'
@@ -8,7 +9,7 @@ import { expand } from '../common/fs.js'
 import { pick } from '../common/util.js'
 import { open, prompt } from '../dialog.js'
 import { Image } from '../image/image.js'
-import { IMAGE } from '../constants/index.js'
+import { IMAGE, MIME } from '../constants/index.js'
 import { dc, dcterms } from '../ontology/ns.js'
 import { date, text } from '../value.js'
 import { getTemplateValues, getTemplateProperties } from '../selectors/index.js'
@@ -185,5 +186,58 @@ export class ImportCommand extends Command {
           throw new DuplicateError(image.path)
       }
     }
+  }
+
+  *prepareEmbeddedImages (source, embedded, {
+    store, useLocalTimezone, optimizeOnImport, optimizeQuality
+  }) {
+    info(`extracting ${embedded.length} embedded file(s) ` +
+      `from pdf portfolio "${source.path}"`)
+
+    let images = []
+    for (let { name, data, mimetype } of embedded) {
+      try {
+        let img = yield call(Image.fromBuffer, {
+          buffer: data,
+          mimetype,
+          filename: name,
+          source,
+          useLocalTimezone
+        })
+        images.push(img)
+      } catch (err) {
+        warn({ err, name }, 'skipping unreadable embedded pdf file')
+      }
+    }
+
+    if (!images.length) return { images, imageData: [] }
+
+    let imageData = new Array(images.length)
+
+    for (let i = 0; i < images.length; i++) {
+      let image = images[i]
+
+      try {
+        if (optimizeOnImport && image.mimetype !== MIME.JPG) {
+          yield call([image, image.optimize], { quality: optimizeQuality })
+        }
+        yield * this.handleDuplicate(image)
+        yield call(store.add, image)
+        imageData[i] = image.toJSON()
+
+      } catch (err) {
+        if (err instanceof DuplicateError) {
+          info(`skipping duplicate "${image.filename}" in "${source.path}"`)
+          imageData[i] = null
+        } else {
+          throw err
+        }
+      }
+    }
+
+    if (imageData.every(d => d == null))
+      throw new DuplicateError(source.path)
+
+    return { images, imageData }
   }
 }
