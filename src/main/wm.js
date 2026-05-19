@@ -535,27 +535,7 @@ export class WindowManager extends EventEmitter {
     this.each(type, win => win.webContents.send(...args))
   }
 
-  rsvp (type, action) {
-    let id
-
-    return new Promise((resolve, reject) => {
-      id = this.seq.next().value
-      let win = this.current(type)
-
-      if (win == null)
-        return reject(new Error(`no ${type} window open`))
-
-      action.meta.rsvp = id
-      this.pending[id] = { resolve, reject }
-
-      win.webContents.send('dispatch', action)
-
-      // TODO reject pending after timeout!
-
-    }).finally(() => { delete this.pending[id] })
-  }
-
-  rsvpTo (win, action) {
+  rsvp (win, action) {
     let id
 
     return new Promise((resolve, reject) => {
@@ -568,6 +548,8 @@ export class WindowManager extends EventEmitter {
       this.pending[id] = { resolve, reject }
 
       win.webContents.send('dispatch', action)
+
+      // TODO reject pending after timeout!
 
     }).finally(() => { delete this.pending[id] })
   }

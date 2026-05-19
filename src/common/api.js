@@ -10,7 +10,7 @@ const show = (type) =>
   async (ctx) => {
     let { params, rsvp } = ctx
 
-    let { payload } = await rsvp('project', act[type].show({
+    let { payload } = await rsvp(act[type].show({
       id: params.id
     }))
 
@@ -29,7 +29,7 @@ const extract = (type) =>
       400,
       'format unknown')
 
-    let { payload } = await rsvp('project', act.photo.extract({
+    let { payload } = await rsvp(act.photo.extract({
       [type]: params.id,
       format: params.format
     }))
@@ -62,7 +62,7 @@ const project = {
 
     assert.ok(file || data, 400, 'missing file/data parameter')
 
-    let { payload } = await rsvp('project', act.import({
+    let { payload } = await rsvp(act.import({
       data,
       files: file,
       list
@@ -76,7 +76,7 @@ const project = {
       let { params, query, rsvp } = ctx
       let { sort = 'item.created', reverse = false } = query
 
-      let { payload } = await rsvp('project', act.item.find({
+      let { payload } = await rsvp(act.item.find({
         tags: query.tag,
         list: params.id,
         sort: { column: sort, asc: !reverse },
@@ -95,7 +95,7 @@ const project = {
 
       assert(request.is('json'), 400, 'missing json data')
 
-      let { payload } = await rsvp('project', act.metadata.save({
+      let { payload } = await rsvp(act.metadata.save({
         id: params.id,
         data: request.body
       }))
@@ -116,7 +116,7 @@ const project = {
       assert.ok(photo || selection, 400,
         'missing photo or selection parameter')
 
-      let { payload } = await rsvp('project', act.note.create({
+      let { payload } = await rsvp(act.note.create({
         language,
         photo: photo ? Number(photo) : null,
         selection: selection ? Number(selection) : null,
@@ -134,7 +134,7 @@ const project = {
       let id = Number(params.id)
       assert.ok(id > 0, 400, 'bad id')
 
-      let { payload } = await rsvp('project', act.note.delete([
+      let { payload } = await rsvp(act.note.delete([
         id
       ]))
 
@@ -154,7 +154,7 @@ const project = {
           400,
           'format unknown')
 
-      let { payload } = await rsvp('project', act.note.show({
+      let { payload } = await rsvp(act.note.show({
         id: params.id,
         format: query.format
       }))
@@ -185,7 +185,7 @@ const project = {
       assert.ok(photo || selection, 400,
         'missing photo or selection parameter')
 
-      let { payload } = await rsvp('project', act.transcription.create({
+      let { payload } = await rsvp(act.transcription.create({
         data,
         text,
         angle,
@@ -214,7 +214,7 @@ const project = {
           400,
           'bad separator')
 
-      let { payload } = await rsvp('project', act.transcription.find({
+      let { payload } = await rsvp(act.transcription.find({
         id: params.id,
         format: query.format,
         separator: query.separator
@@ -242,7 +242,7 @@ const project = {
           400,
           'format unknown')
 
-      let { payload } = await rsvp('project', act.transcription.show({
+      let { payload } = await rsvp(act.transcription.show({
         id: params.id,
         format: query.format
       }))
@@ -267,7 +267,7 @@ const project = {
     async find (ctx) {
       let { params, rsvp } = ctx
 
-      let { payload } = await rsvp('project', act.photo.find({
+      let { payload } = await rsvp(act.photo.find({
         item: params.id
       }))
 
@@ -280,7 +280,7 @@ const project = {
     async raw (ctx) {
       let { params, rsvp } = ctx
 
-      let { payload } = await rsvp('project', act.photo.show({
+      let { payload } = await rsvp(act.photo.show({
         id: params.id
       }))
 
@@ -325,7 +325,7 @@ const project = {
 
       assert.ok(request.body.name, 400, 'missing name parameter')
 
-      let { payload } = await rsvp('project', act.tag.create({
+      let { payload } = await rsvp(act.tag.create({
         name: request.body.name,
         color: request.body.color,
         items: request.body.item
@@ -339,7 +339,7 @@ const project = {
 
       assert.ok(request.body.tag, 400, 'missing tag parameter')
 
-      let { payload } = await rsvp('project', act.tag.delete(request.body.tag))
+      let { payload } = await rsvp(act.tag.delete(request.body.tag))
 
       ctx.body = payload
     },
@@ -349,7 +349,7 @@ const project = {
 
       assert.ok(request.body.tag, 400, 'missing tag parameter')
 
-      let { payload } = await rsvp('project', act.tag.add({
+      let { payload } = await rsvp(act.tag.add({
         id: params.id,
         tags: request.body.tag
       }))
@@ -371,7 +371,7 @@ const project = {
     async find (ctx) {
       let { params, query, rsvp } = ctx
 
-      let { payload } = await rsvp('project', act.tag.find({
+      let { payload } = await rsvp(act.tag.find({
         id: params.id,
         reverse: query.reverse
       }))
@@ -389,7 +389,7 @@ const project = {
     async show (ctx) {
       let { params, query, rsvp } = ctx
 
-      let { payload } = await rsvp('project', act.list.show({
+      let { payload } = await rsvp(act.list.show({
         id: params.id ?? 0,
         expand: query.expand != null && query.expand !== 'false'
       }))
@@ -413,7 +413,6 @@ export function create ({
   log,
   resolveProject,
   rsvp,
-  rsvpTo,
   version
 }) {
   let app = new Koa
@@ -432,40 +431,47 @@ export function create ({
   app.context.log = log
 
   app.use(async (ctx, next) => {
-    ctx.rsvp = rsvp
+    let m = ctx.path.match(/^\/project\/([^/]+)(\/.*|$)/)
 
-    let m = ctx.path.match(/^\/project\/([^/]+)(\/|$)/)
+    if (m == null)
+      return next()
 
-    if (m && !RESERVED_SLUGS.has(m[1])) {
-      let slug = m[1]
-      let resolved = resolveProject(slug)
+    let slug = m[1]
+    let rest = m[2] || ''
 
-      switch (resolved?.error) {
-        case 'not-found':
-          ctx.status = 404
-          ctx.body = { error: `unknown project: ${slug}` }
-          return
-        case 'not-open':
-          ctx.status = 404
-          ctx.body = {
-            error: `project "${slug}" is not open`,
-            hint: 'open the project in Tropy first'
-          }
-          return
-        case 'conflict':
-          ctx.status = 409
-          ctx.body = {
-            error: `project "${slug}" is ambiguous`,
-            paths: resolved.paths
-          }
-          return
-      }
-
-      ctx.projectSlug = slug
-      ctx.projectPath = resolved.path
-      ctx.rsvp = (_type, action) => rsvpTo(resolved.win, action)
-      ctx.path = ctx.path.replace(/^\/project\/[^/]+/, '/project')
+    if (slug !== 'current' && RESERVED_SLUGS.has(slug)) {
+      ctx.status = 308
+      ctx.redirect(`/project/current/${slug}${rest}`)
+      return
     }
+
+    let resolved = resolveProject(slug)
+
+    switch (resolved?.error) {
+      case 'not-found':
+        ctx.status = 404
+        ctx.body = { error: `unknown project: ${slug}` }
+        return
+      case 'not-open':
+        ctx.status = 404
+        ctx.body = {
+          error: `project "${slug}" is not open`,
+          hint: 'open the project in Tropy first'
+        }
+        return
+      case 'conflict':
+        ctx.status = 409
+        ctx.body = {
+          error: `project "${slug}" is ambiguous`,
+          paths: resolved.paths
+        }
+        return
+    }
+
+    ctx.projectSlug = resolved.slug
+    ctx.projectPath = resolved.path
+    ctx.rsvp = (action) => rsvp(resolved.win, action)
+    ctx.path = `/project${rest}`
 
     return next()
   })

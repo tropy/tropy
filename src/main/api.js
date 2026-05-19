@@ -19,16 +19,21 @@ export class Server {
     this.app.wm.current(type).webContents.send('dispatch', action)
   }
 
-  rsvp = (type, action) => (
-    this.app.wm.rsvp(type, action)
-  )
-
-  rsvpTo = (win, action) => (
-    this.app.wm.rsvpTo(win, action)
+  rsvp = (win, action) => (
+    this.app.wm.rsvp(win, action)
   )
 
   resolveProject = (slug) => {
     if (!slug) return null
+
+    if (slug === 'current') {
+      let win = this.app.wm.current('project')
+      if (win == null)
+        return { error: 'not-open' }
+
+      let path = this.app.getProject(win)?.path
+      return { win, path, slug: this.currentSlug(path) }
+    }
 
     let entries = this.app.state.recent.filter(
       e => this.app.effectiveSlug(e) === slug)
@@ -45,7 +50,12 @@ export class Server {
     if (win == null)
       return { error: 'not-open' }
 
-    return { win, path: entries[0].path }
+    return { win, path: entries[0].path, slug }
+  }
+
+  currentSlug = (path) => {
+    let entry = this.app.state.recent.find(e => e.path === path)
+    return this.app.effectiveSlug(entry)
   }
 
   get port () {
@@ -84,7 +94,6 @@ export class Server {
         log: logger.child({ name: 'api' }),
         resolveProject: this.resolveProject,
         rsvp: this.rsvp,
-        rsvpTo: this.rsvpTo,
         version: this.app.version
       })
     }
