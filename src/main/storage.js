@@ -52,7 +52,7 @@ export class Storage {
       }
     }
 
-    await write(this.expand(name), string)
+    write.sync(this.expand(name), string)
     trace(`storage: ${name} saved`)
   }
 
