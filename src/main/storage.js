@@ -12,9 +12,6 @@ const encrypt = async (string) => {
 }
 
 const decrypt = async (data) => {
-  if (!(await safeStorage.isAsyncEncryptionAvailable())) {
-    throw new Error('no encryption available')
-  }
   return (await safeStorage.decryptStringAsync(data)).result
 }
 
