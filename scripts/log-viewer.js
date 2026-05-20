@@ -19,18 +19,9 @@ const end = log =>
 const body = log => {
   if (log.action)
     return `${log.action} ${styleText('dim', meta(log))}`
-  if (log.url)
-    return shorten(log.url, 65) + (
-      (log.status && log.ms) ?
-        ' ' + styleText('dim', `${log.status} Δ${ms(log.ms)}`) : ''
-    )
   else
     return log.msg || log.message || '??'
 }
-
-const shorten = (s, maxLength) =>
-  s.length > maxLength ?
-    `${s.slice(0, maxLength - 2)} …` : s
 
 const INDENT = ' '.repeat(11)
 
