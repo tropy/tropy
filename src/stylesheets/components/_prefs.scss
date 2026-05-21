@@ -13,7 +13,10 @@
   .titlebar {
     height: zoom($toolbar-frameless-height-sm);
     color: $prefs-title-color;
-    background-color: $prefs-titlebar-blurred-bg;
+
+    .is-blurred & {
+      background-color: $prefs-titlebar-blurred-bg;
+    }
 
     .toolbar-center {
       flex: 1 1 0;
