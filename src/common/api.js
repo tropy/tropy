@@ -184,7 +184,7 @@ const project = {
       assert.ok(photo || selection, 400,
         'missing photo or selection parameter')
 
-      let { payload } = await rsvp('project', act.transcriptions.create({
+      let { payload } = await rsvp('project', act.transcription.create({
         data,
         text,
         angle,
