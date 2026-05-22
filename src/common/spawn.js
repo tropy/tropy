@@ -11,16 +11,23 @@ export async function spawn (cmd, args) {
 
     return new Promise((resolve, reject) => {
       let stdout = ''
+      let stderr = ''
 
       child.stdout?.on('data', data => {
         stdout += data
+      })
+
+      child.stderr?.on('data', data => {
+        stderr += data
       })
 
       child.on('close', code => {
         if (code === 0)
           resolve(stdout)
         else
-          reject(new Error(`Command ${cmd} ${args} failed: ${stdout}`))
+          reject(new Error(
+            `Command ${cmd} ${args} failed: ${stderr.trim() || stdout.trim()}`
+          ))
       })
 
       child.on('error', error => {
