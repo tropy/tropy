@@ -1,3 +1,4 @@
+import { env } from 'node:process'
 import { dirname, basename, join } from 'node:path'
 import { spawn } from '../common/spawn.js'
 
@@ -5,8 +6,6 @@ const HKCU = 'HKCU'
 const DEFAULT_VALUE = ''
 const REG_SZ = 'REG_SZ'
 const REG_NONE = 'REG_NONE'
-
-const REG_EXE = join(process.env.windir, 'system32', 'reg.exe')
 
 export class ShellOption {
   constructor (key, parts = [], hive = HKCU) {
@@ -134,5 +133,5 @@ async function reg (cmd, path, ...rest) {
       throw new Error(`unknown reg command: ${cmd}`)
   }
 
-  await spawn(REG_EXE, args)
+  await spawn(join(env.windir, 'system32', 'reg.exe'), args)
 }
