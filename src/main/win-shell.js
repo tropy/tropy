@@ -1,7 +1,12 @@
-import { dirname, basename } from 'node:path'
-import Registry from 'winreg'
+import { dirname, basename, join } from 'node:path'
+import { spawn } from '../common/spawn.js'
 
-const { HKCU, DEFAULT_VALUE, REG_NONE, REG_SZ } = Registry
+const HKCU = 'HKCU'
+const DEFAULT_VALUE = ''
+const REG_SZ = 'REG_SZ'
+const REG_NONE = 'REG_NONE'
+
+const REG_EXE = join(process.env.windir, 'system32', 'reg.exe')
 
 export class ShellOption {
   constructor (key, parts = [], hive = HKCU) {
@@ -11,18 +16,18 @@ export class ShellOption {
   }
 
   async clear () {
-    await exec({ hive: this.hive, key: this.key }, 'destroy')
+    await reg('delete', `${this.hive}${this.key}`)
   }
 
   async register () {
     for (let part of this.parts) {
-      let reg = new Registry({
-        hive: this.hive,
-        key: part.key != null ? `${this.key}\\${part.key}` : this.key
-      })
+      let path = `${this.hive}${this.key}`
 
-      await exec(reg, 'create')
-      await exec(reg, 'set',
+      if (part.key != null) {
+        path += `\\${part.key}`
+      }
+
+      await reg('add', path,
         part.name ?? DEFAULT_VALUE,
         part.type ?? REG_SZ,
         part.value)
@@ -106,18 +111,28 @@ export class ShellOption {
 }
 
 
-function exec (reg, cmd, ...args) {
-  return new Promise((resolve, reject) => {
-    if (!(reg instanceof Registry))
-      reg = new Registry(reg)
+async function reg (cmd, path, ...rest) {
+  let args
 
-    reg[cmd](...args, (e, ...res) => {
-      if (e != null)
-        reject(new Error(
-          `Windows Registry error: ${cmd} ${reg.path} [${args.join(', ')}]: ${e.message}`
-        ))
+  switch (cmd) {
+    case 'delete':
+      args = ['DELETE', path, '/f']
+      break
+    case 'add': {
+      let [name, type, value] = rest
+      args = ['ADD', path]
+
+      if (name === '')
+        args.push('/ve')
       else
-        resolve(...res)
-    })
-  })
+        args.push('/v', name)
+
+      args.push('/t', type, '/d', value, '/f')
+      break
+    }
+    default:
+      throw new Error(`unknown reg command: ${cmd}`)
+  }
+
+  await spawn(REG_EXE, args)
 }

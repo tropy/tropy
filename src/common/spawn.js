@@ -7,7 +7,7 @@ export const exec = promisify(ChildProcess.exec)
 
 export async function spawn (cmd, args) {
   try {
-    let child = ChildProcess.spawn(cmd, args)
+    let child = ChildProcess.spawn(cmd, args, { windowsHide: true })
 
     return new Promise((resolve, reject) => {
       let stdout = ''
