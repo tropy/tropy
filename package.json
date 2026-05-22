@@ -178,6 +178,6 @@
     "sqlite3": "^6.0.1",
     "transducers.js": "^0.3.2",
     "winreg": "=1.2.4",
-    "write-file-atomic": "^7.0.0"
+    "write-file-atomic": "^8.0.0"
   }
 }
