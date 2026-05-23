@@ -61,6 +61,7 @@ describe('Storage', () => {
 
       afterEach(async () => {
         safeStorage.isAsyncEncryptionAvailable.mock?.restore()
+        safeStorage.isEncryptionAvailable.mock?.restore()
         await rm(folder.expand(name), { force: true })
       })
 
@@ -74,6 +75,7 @@ describe('Storage', () => {
 
         it('does not write when encryption is unavailable', async () => {
           mock.method(safeStorage, 'isAsyncEncryptionAvailable', async () => false)
+          mock.method(safeStorage, 'isEncryptionAvailable', () => false)
           await folder.save(name, { token: 'abc' }, { secure: true })
 
           await assert.rejects(
@@ -97,6 +99,7 @@ describe('Storage', () => {
           if (skip) return t.skip(skip)
           await folder.save(name, { token: 'xyz' }, { secure: true })
           mock.method(safeStorage, 'isAsyncEncryptionAvailable', async () => false)
+          mock.method(safeStorage, 'isEncryptionAvailable', () => false)
 
           expect(
             await folder.load(name, { defaults, secure: true })
