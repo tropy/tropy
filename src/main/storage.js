@@ -1,19 +1,8 @@
 import { join } from 'node:path'
 import { readFile } from 'node:fs/promises'
-import { safeStorage } from 'electron'
 import write from 'write-file-atomic'
+import { encrypt, decrypt } from './crypto.js'
 import { trace, warn } from '../common/log.js'
-
-const encrypt = async (string) => {
-  if (!(await safeStorage.isAsyncEncryptionAvailable())) {
-    throw new Error('no encryption available')
-  }
-  return await safeStorage.encryptStringAsync(string)
-}
-
-const decrypt = async (data) => {
-  return (await safeStorage.decryptStringAsync(data)).result
-}
 
 export class Storage {
   constructor (path) {
