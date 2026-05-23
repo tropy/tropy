@@ -84,7 +84,7 @@ function *receive () {
     try {
       yield put(resolve(action))
     } catch (err) {
-      warn({ err, action }, 'failed to resolve dispatched action')
+      warn({ err, payload: action }, 'failed to resolve dispatched action')
     }
   }
 }
