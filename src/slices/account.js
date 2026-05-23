@@ -14,7 +14,6 @@ export const unlink = createIpcAction('account/unlink', {
 })
 
 const initialState = {
-  linked: false,
   username: null,
   status: 'idle',
   error: null

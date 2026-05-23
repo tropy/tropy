@@ -1012,7 +1012,10 @@ export class Tropy extends EventEmitter {
       this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
-    this.account.on('change', this.persist)
+    this.account.on('change', () => {
+      this.wm.broadcast('account', this.account.status)
+      this.persist()
+    })
 
     this.wm.on('show-menu', (win, pos) => {
       win.webContents.send('menu', true)
@@ -1180,6 +1183,7 @@ export class Tropy extends EventEmitter {
 
   get hash () {
     return {
+      account: this.account.status,
       api: this.api.status,
       auth: this.opts.auth,
       data: this.opts.data,
