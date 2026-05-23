@@ -1,9 +1,9 @@
-import { useSelector } from 'react-redux'
+import { useArgs } from '../../hooks/use-args.js'
 import { useOnline } from '../../hooks/use-online.js'
 import { Icon } from '../icons.js'
 
 export const AccountStatus = () => {
-  let account = useSelector(state => state.account)
+  let account = useArgs('account')
   let online = useOnline()
 
   if (!account.linked) {
