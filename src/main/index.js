@@ -214,4 +214,3 @@ function handleError (error, isFatal = false) {
     handleError(err, true)
   }
 }
-
