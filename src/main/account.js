@@ -5,7 +5,7 @@ import { jwtVerify } from 'jose/jwt/verify'
 import { AccountError } from '../common/error.js'
 import { debug, info, warn } from '../common/log.js'
 import { TokenSet } from '../common/token-set.js'
-import { ipcActionHandler } from './ipc.js'
+import { ipcServiceHandler } from './ipc.js'
 
 
 export class AccountService extends EventEmitter {
@@ -20,12 +20,10 @@ export class AccountService extends EventEmitter {
 
   start () {
     this.#removeIpcHandler =
-      ipcActionHandler('account', (_, cmd, ...args) => {
+      ipcServiceHandler('account', (_, cmd, ...args) => {
         switch (cmd) {
           case 'link':
             return this.link(...args)
-          case 'status':
-            return this.status
           case 'unlink':
             return this.unlink(...args)
           case 'accessToken':
@@ -101,9 +99,8 @@ export class AccountService extends EventEmitter {
     let { account } = this.app.safe
 
     return {
-      connected: !!this.tokenSet?.fresh,
-      linked: account?.token != null,
-      username: account?.username
+      lastRefresh: this.tokenSet?.timestamp,
+      linked: account?.token != null
     }
   }
 
@@ -131,8 +128,7 @@ export class AccountService extends EventEmitter {
       }
 
       this.app.safe.account = {
-        token,
-        username
+        token
       }
 
       info(`account: linked to ${username}`)
