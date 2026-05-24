@@ -1,18 +1,22 @@
-import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useCallback, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useArgs } from '../../hooks/use-args.js'
+import { useIpcEventHandler, useIpcSend } from '../../hooks/use-ipc.js'
 import { Button } from '../button.js'
 import { Link } from '../link.js'
-import { Form, FormElement, FormField } from '../form.js'
-import { link } from '../../slices/account.js'
-
+import { Form, FormElement } from '../form.js'
 
 export function Login ({ ref }) {
   let authUrl = useArgs('auth')
 
-  let dispatch = useDispatch()
-  let account = useSelector(state => state.account)
+  let link = useIpcSend(['account', 'link'])
+  let [isPending, setPending] = useState(false)
+  let [error, setError] = useState(null)
+
+  useIpcEventHandler('account/error', (_, payload) => {
+    setError(payload?.code || 'account.link.error')
+    setPending(false)
+  })
 
   let handleSubmit = useCallback((event) => {
     event.preventDefault()
@@ -21,10 +25,10 @@ export function Login ({ ref }) {
     let password = form.password?.value
     if (!username || !password) return
 
-    dispatch(link({ username, password }))
-  }, [dispatch])
-
-  let isPending = account.status === 'pending'
+    setError(null)
+    setPending(true)
+    link({ username, password })
+  }, [link])
 
   return (
     <Form ref={ref} onSubmit={handleSubmit}>
@@ -34,24 +38,31 @@ export function Login ({ ref }) {
           <FormattedMessage id="prefs.account.description"/>
         </p>
       </legend>
-      <FormField
-        id="prefs.account.username"
-        name="username"
-        isCompact
-        isRequired
-        disabled={isPending}
-        tabIndex={0}/>
+      <FormElement id="prefs.account.username" isCompact>
+        <input
+          id="prefs.account.username"
+          className="form-control"
+          name="username"
+          type="text"
+          autoComplete="username"
+          disabled={isPending}
+          required
+          tabIndex={0}/>
+      </FormElement>
       <Link url={`${authUrl}/forgot`}>
         <FormattedMessage id="prefs.account.forgot"/>
       </Link>
-      <FormField
-        id="prefs.account.password"
-        name="password"
-        isCompact
-        isRequired
-        disabled={isPending}
-        tabIndex={0}
-        type="password"/>
+      <FormElement id="prefs.account.password" isCompact>
+        <input
+          id="prefs.account.password"
+          className="form-control"
+          name="password"
+          type="password"
+          autoComplete="current-password"
+          disabled={isPending}
+          required
+          tabIndex={0}/>
+      </FormElement>
       <FormElement size={8}>
         <Button
           isDefault
@@ -59,9 +70,9 @@ export function Login ({ ref }) {
           isDisabled={isPending}
           text="prefs.account.link"
           type="submit"/>
-        {account.error && (
+        {error && (
           <p className="form-description error">
-            <FormattedMessage id={account.error}/>
+            <FormattedMessage id={error}/>
           </p>
         )}
       </FormElement>
