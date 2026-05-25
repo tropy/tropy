@@ -5,7 +5,6 @@ import { fatal } from '../common/log.js'
 import { seq, debounce, throttle, log } from '../middleware/index.js'
 
 import {
-  account,
   activities,
   context,
   edit,
@@ -50,7 +49,6 @@ export const create = () => {
 
   let store = configureStore({
     reducer: {
-      account,
       activities,
       context,
       edit,
