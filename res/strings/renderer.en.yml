@@ -48,6 +48,9 @@ en:
           one {1 Note}
           other {# Notes}}
       create: Add Note
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: Item
     photo: Photo
