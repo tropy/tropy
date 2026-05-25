@@ -47,6 +47,16 @@ export class Database extends EventEmitter {
     }
   }
 
+
+  static async backup (src, dest) {
+    try {
+      var db = new Database(src, 'r', { max: 1 })
+      return await backup(db, dest)
+    } finally {
+      await db?.close()
+    }
+  }
+
   constructor (path = ':memory:', mode = 'w+', { journalMode, ...opts } = {}) {
     debug({ path, mode }, 'init db')
     super({ captureRejections: true })
@@ -282,6 +292,26 @@ export class Database extends EventEmitter {
   async read (path) {
     return this.exec(String(await readFile(path)))
   }
+}
+
+
+export async function backup (db, dest) {
+  let { application_id } = await db.get('PRAGMA application_id')
+  let { user_version } = await db.get('PRAGMA user_version')
+
+  await db.exec(`VACUUM INTO '${dest.replaceAll("'", "''")}'`)
+
+  try {
+    var target = new Database(dest, 'w', { max: 1 })
+
+    await target.exec(`PRAGMA application_id = ${application_id}`)
+    await target.exec(`PRAGMA user_version = ${user_version}`)
+
+  } finally {
+    await target?.close()
+  }
+
+  return dest
 }
 
 
