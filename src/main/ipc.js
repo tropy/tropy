@@ -28,7 +28,7 @@ export function ipcServiceHandler (channel, handler) {
   let onMessage = async (event, command, ...args) => {
     let result = await onInvoke(event, command, ...args)
     if (result.error && !event.sender.isDestroyed()) {
-      event.sender.send(`${channel}/error`, result.payload)
+      event.sender.send(`${channel}/error`, command, result.payload)
     }
   }
 
