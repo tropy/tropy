@@ -396,14 +396,13 @@ export async function optimizeAssets (src, path, appDir, {
     let store = new Store(join(path, MANAGED_STORE_NAME))
 
     await makeProjectDir(path, store.name, appDir)
-    await cp(srcDbFile, dbFile, { force: false, errorOnExist: true })
+    await Database.backup(srcDbFile, dbFile)
 
     var db = new Database(dbFile, 'w', {
       max: 1,
       journalMode: 'wal'
     })
 
-    // Assign a new project ID
     let project = await load(db)
     let newId = uuid()
 
