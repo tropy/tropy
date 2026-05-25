@@ -5,6 +5,7 @@ import { useIpcEventHandler, useIpcSend } from '../../hooks/use-ipc.js'
 import { Button } from '../button.js'
 import { Link } from '../link.js'
 import { Form, FormElement } from '../form.js'
+import { Password } from '../password.js'
 
 export function Login ({ ref }) {
   let authUrl = useArgs('auth')
@@ -13,9 +14,11 @@ export function Login ({ ref }) {
   let [isPending, setPending] = useState(false)
   let [error, setError] = useState(null)
 
-  useIpcEventHandler('account/error', (_, payload) => {
-    setError(payload?.code || 'account.link.error')
-    setPending(false)
+  useIpcEventHandler('account/error', (_, cmd, payload) => {
+    if (cmd === 'link') {
+      setError(payload?.code || 'account.link.error')
+      setPending(false)
+    }
   })
 
   let handleSubmit = useCallback((event) => {
@@ -44,7 +47,7 @@ export function Login ({ ref }) {
           className="form-control"
           name="username"
           type="text"
-          autoComplete="username"
+          autoComplete="none"
           disabled={isPending}
           required
           tabIndex={0}/>
@@ -53,12 +56,11 @@ export function Login ({ ref }) {
         <FormattedMessage id="prefs.account.forgot"/>
       </Link>
       <FormElement id="prefs.account.password" isCompact>
-        <input
+        <Password
           id="prefs.account.password"
           className="form-control"
           name="password"
-          type="password"
-          autoComplete="current-password"
+          autoComplete="off"
           disabled={isPending}
           required
           tabIndex={0}/>
