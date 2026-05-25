@@ -1,6 +1,7 @@
 import assert from 'node:assert'
 import { EventEmitter } from 'node:events'
 import { readFile } from 'node:fs/promises'
+import { randomUUID } from 'node:crypto'
 import { createPool, Pool } from 'generic-pool'
 import { canWrite } from './fs.js'
 import sqlite from './sqlite.js'
@@ -47,11 +48,10 @@ export class Database extends EventEmitter {
     }
   }
 
-
-  static async backup (src, dest) {
+  static async backup (src, dest, opts) {
     try {
       var db = new Database(src, 'r', { max: 1 })
-      return await backup(db, dest)
+      return await db.backup(dest, opts)
     } finally {
       await db?.close()
     }
@@ -292,26 +292,31 @@ export class Database extends EventEmitter {
   async read (path) {
     return this.exec(String(await readFile(path)))
   }
-}
 
+  async backup (dest, { newId = false } = {}) {
+    let { application_id } = await this.get('PRAGMA application_id')
+    let { user_version } = await this.get('PRAGMA user_version')
 
-export async function backup (db, dest) {
-  let { application_id } = await db.get('PRAGMA application_id')
-  let { user_version } = await db.get('PRAGMA user_version')
+    await this.exec(`VACUUM INTO '${dest.replaceAll("'", "''")}'`)
 
-  await db.exec(`VACUUM INTO '${dest.replaceAll("'", "''")}'`)
+    let id
+    try {
+      var target = new Database(dest, 'w', { max: 1 })
 
-  try {
-    var target = new Database(dest, 'w', { max: 1 })
+      await target.exec(`PRAGMA application_id = ${application_id}`)
+      await target.exec(`PRAGMA user_version = ${user_version}`)
 
-    await target.exec(`PRAGMA application_id = ${application_id}`)
-    await target.exec(`PRAGMA user_version = ${user_version}`)
+      if (newId) {
+        id = randomUUID()
+        await target.run('UPDATE project SET project_id = ?', id)
+      }
 
-  } finally {
-    await target?.close()
+    } finally {
+      await target?.close()
+    }
+
+    return { path: dest, id }
   }
-
-  return dest
 }
 
 
