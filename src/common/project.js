@@ -396,20 +396,15 @@ export async function optimizeAssets (src, path, appDir, {
     let store = new Store(join(path, MANAGED_STORE_NAME))
 
     await makeProjectDir(path, store.name, appDir)
-    await Database.backup(srcDbFile, dbFile)
+
+    let { id: newId } = await Database.backup(srcDbFile, dbFile, {
+      newId: true
+    })
 
     var db = new Database(dbFile, 'w', {
       max: 1,
       journalMode: 'wal'
     })
-
-    let project = await load(db)
-    let newId = uuid()
-
-    await db.run(
-      ...update('project')
-        .set({ project_id: newId })
-        .where({ project_id: project.id }))
 
     let assets = await getAssets(db, { basePath: dirname(srcDbFile) })
 
