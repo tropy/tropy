@@ -1,23 +1,12 @@
-import { useCallback, useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useRef } from 'react'
+import { useArgs } from '../../hooks/use-args.js'
 import { Login } from './login.js'
 import { Profile } from './profile.js'
 import { Fade, SwitchTransition } from '../fx.js'
-import { status, unlink } from '../../slices/account.js'
-
 
 export function AccountSettings ({ timeout = 300 }) {
-  let dispatch = useDispatch()
-  let account = useSelector(state => state.account)
+  let account = useArgs('account')
   let nodeRef = useRef(null)
-
-  useEffect(() => {
-    dispatch(status())
-  }, [dispatch])
-
-  let handleUnlink = useCallback(() => {
-    dispatch(unlink())
-  }, [dispatch])
 
   return (
     <SwitchTransition>
@@ -26,10 +15,7 @@ export function AccountSettings ({ timeout = 300 }) {
         nodeRef={nodeRef}
         timeout={timeout}>
         {account.linked ? (
-          <Profile
-            ref={nodeRef}
-            account={account}
-            onUnlink={handleUnlink}/>
+          <Profile ref={nodeRef}/>
         ) : (
           <Login ref={nodeRef}/>
         )}
