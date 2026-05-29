@@ -425,6 +425,10 @@ $slider-value-color:                    --scheme(var(--light-6),               v
 $slider-overlay-value-color:            --scheme(var(--light-10),              var(--dark-9));
 $slider-focus-bg:                       --scheme(var(--primary),               var(--primary));
 $slider-overlay-focus-bg:               --scheme(var(--primary-overlay),       var(--primary-overlay));
+$form-slider-range-bg:                  --scheme(var(--light-3),               var(--dark-5)); // Light: $input-border
+$form-slider-range-focus-bg:            $text-selection-bg;
+$form-slider-handle-bg:                 --scheme(tint(var(--primary), 50%),    alpha(var(--primary), 50%));
+
 
 // Esper
 $_esper-bg-light:           shade(var(--light-1), 4%);
