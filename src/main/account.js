@@ -1,4 +1,5 @@
 import { EventEmitter } from 'node:events'
+import { hostname } from 'node:os'
 import { URL } from 'node:url'
 import { createRemoteJWKSet } from 'jose/jwks/remote'
 import { jwtVerify } from 'jose/jwt/verify'
@@ -110,6 +111,7 @@ export class AccountService extends EventEmitter {
         username,
         password,
         device_id: this.app.state.uuid,
+        device_name: hostname(),
         client_id: this.clientId
       })
 
