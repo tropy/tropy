@@ -54,7 +54,7 @@ export function PrefsContainer () {
       <div className="prefs-view">
         <Header>
           <Nav>
-            <NavItem name="account" icon="Ghost"/>
+            <NavItem name="account" icon="User"/>
             <NavItem name="app" icon="Gear"/>
             <NavItem name="project" icon="Maze" isDisabled={!project?.id}/>
             <NavItem name="template" icon="Document"/>
