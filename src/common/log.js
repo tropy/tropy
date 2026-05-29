@@ -6,7 +6,6 @@ import { version } from './release.js'
 export let logger
 
 const REDACT = [
-  'meta.arg.password',
   'headers.authorization'
 ]
 
