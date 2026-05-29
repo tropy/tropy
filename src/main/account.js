@@ -179,7 +179,16 @@ export class AccountService extends EventEmitter {
       refresh_token: account.token
     })
 
-    // TODO if the refresh token is bad, unlink account
+    if (res.status === 400) {
+      let { error: code } = await res.json()
+
+      if (code === 'invalid_grant') {
+        delete this.app.safe.account
+        delete this.tokenSet
+        this.emit('change')
+        throw new AccountError('token')
+      }
+    }
 
     if (!res.ok) {
       throw new AccountError(res.status, res.statusText)
