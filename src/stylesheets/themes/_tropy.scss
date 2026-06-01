@@ -12,13 +12,25 @@
 // --------------------------------------------------
 
 :root {
-  --primary:          --scheme(#5c93e5,                #395bac);             // Blue
-  --primary-overlay:  --scheme(#1770e5,                #4176f2);             // Blue Overlay
-  --primary-vibrancy: --scheme(#{alpha(#1770e5, 70%)}, #{alpha(#4176f2, 70%)}); // Blue Vibrancy
-  --primary-light:    --scheme(#cedef7,                #cedef7);             // Blue Light
-  --primary-dark:                                      #171b2e;              // Blue Dark
-  --red:              --scheme(#e62e2e,                #e62e2e);
-  --green:            --scheme(#39bf68,                #328e52);             // Dark: 64% of the light theme green + 7% saturation
+  @media (prefers-color-scheme: light) {
+    --primary:          #5c93e5;
+    --primary-overlay:  #1770e5;
+    --primary-vibrancy: #{alpha(#1770e5, 70%)};
+    --primary-light:    #cedef7;
+    --primary-dark:     color-mix(in srgb, #222 60%, var(--primary));
+    --red:              #e62e2e;
+    --green:            #39bf68;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    --primary:          #395bac;                // Blue
+    --primary-overlay:  #4176f2;                // Blue Overlay
+    --primary-vibrancy: #{alpha(#4176f2, 70%)}; // Blue Vibrancy
+    --primary-light:    #cedef7;                // Blue Light
+    --primary-dark:     #171b2e;
+    --red:              #e62e2e;
+    --green:            #328e52;                // Dark: 64% of the light theme green + 7% saturation
+  }
 }
 
 
