@@ -4,7 +4,6 @@ import cx from 'classnames'
 import { useEvent } from '../hooks/use-event.js'
 import { set } from '../common/util.js'
 import { Input } from './input.js'
-import { URLInput } from './url-input.js'
 import { FileSelect } from './file.js'
 import { Select } from './select.js'
 import { SASS } from '../constants/index.js'
@@ -93,8 +92,6 @@ export class FormField extends React.PureComponent {
       case 'file':
       case 'directory':
         return FileSelect
-      case 'url':
-        return URLInput
       default:
         return Input
     }

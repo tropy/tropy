@@ -213,9 +213,9 @@ export class Input extends React.PureComponent {
     return true
   }
 
-  renderContent () {
+  render () {
     return (
-      <>
+      <div className="input-group">
         <AutoResizer
           content={this.state.value}
           isDisabled={!this.props.resize}>
@@ -252,17 +252,6 @@ export class Input extends React.PureComponent {
             query={this.state.query}
             ref={this.completions}/>
         )}
-      </>
-    )
-  }
-
-  render () {
-    if (this.props.noInputGroup)
-      return this.renderContent()
-
-    return (
-      <div className="input-group">
-        {this.renderContent()}
       </div>
     )
   }

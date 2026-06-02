@@ -29,7 +29,7 @@ import { delay, once } from '../common/util.js'
 import { channel, product, version } from '../common/release.js'
 import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
-import { sanitizeSlug } from '../common/slug.js'
+import { protocolURL, sanitizeSlug } from '../common/slug.js'
 
 import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
 import { Strings } from './res.js'
@@ -1128,11 +1128,7 @@ export class Tropy extends EventEmitter {
       slug: project.slug
     })
 
-    let text = (item != null && photo != null) ?
-      `tropy://project/${slug}/items/${item}/${photo}` :
-      `tropy://project/${slug}/`
-
-    clipboard.write({ text })
+    clipboard.write({ text: protocolURL(slug, { item, photo }) })
   }
 
   async handleProtocolRequest (url) {
