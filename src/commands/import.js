@@ -192,7 +192,7 @@ export class ImportCommand extends Command {
     store, useLocalTimezone, optimizeOnImport, optimizeQuality
   }) {
     info(`extracting ${embedded.length} embedded file(s) ` +
-      `from pdf portfolio "${source.path}"`)
+      `from pdf "${source.path}"`)
 
     let images = []
     for (let { name, data, mimetype } of embedded) {

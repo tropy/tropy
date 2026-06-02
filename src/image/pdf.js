@@ -100,7 +100,7 @@ function decodedStreamBytes (stream) {
   return stream.getContents()
 }
 
-export async function extractPortfolioImages (buffer) {
+export async function extractPdfEmbeddedFiles (buffer) {
   try {
     let doc = await load(buffer)
 
@@ -137,7 +137,7 @@ export async function extractPortfolioImages (buffer) {
     return results
 
   } catch (err) {
-    warn({ err }, 'failed to extract pdf portfolio images')
+    warn({ err }, 'failed to extract pdf embedded files')
     return null
   }
 }

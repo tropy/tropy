@@ -5,7 +5,7 @@ import { DuplicateError } from '../../common/error.js'
 import { normalize, eachItem } from '../../common/import.js'
 import { info, warn } from '../../common/log.js'
 import { Image } from '../../image/index.js'
-import { extractPortfolioImages } from '../../image/pdf.js'
+import { extractPdfEmbeddedFiles } from '../../image/pdf.js'
 import { fail } from '../../dialog.js'
 import { fromHTML } from '../../editor/serialize.js'
 import * as act from '../../actions/index.js'
@@ -131,9 +131,9 @@ export class Import extends ImportCommand {
       })
 
       if (image.mimetype === MIME.PDF) {
-        let embedded = yield call(extractPortfolioImages, image.buffer)
+        let embedded = yield call(extractPdfEmbeddedFiles, image.buffer)
         if (embedded?.length) {
-          yield * this.importFromPdfPortfolio(image, embedded)
+          yield * this.importFromPdfEmbeddedFiles(image, embedded)
           return
         }
       }
@@ -241,7 +241,7 @@ export class Import extends ImportCommand {
     }
   }
 
-  *importFromPdfPortfolio (source, embedded) {
+  *importFromPdfEmbeddedFiles (source, embedded) {
     let {
       basePath, store, db, templates, useLocalTimezone, optimizeOnImport,
       optimizeQuality
