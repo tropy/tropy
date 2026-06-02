@@ -27,3 +27,9 @@ export function sanitizeSlug (input) {
 
   return slug
 }
+
+export function protocolURL (slug, { item, photo } = {}) {
+  return (item != null && photo != null) ?
+    `tropy://project/${slug}/items/${item}/${photo}` :
+    `tropy://project/${slug}/`
+}
