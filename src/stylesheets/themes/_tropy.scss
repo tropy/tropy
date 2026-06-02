@@ -550,3 +550,8 @@ $option-active-bg:        --scheme(var(--light-1), var(--dark-4));
 $option-selected-bg:      --scheme(var(--light-2), var(--dark-5));
 $option-no-matches-color: --scheme(var(--light-5), var(--dark-6));
 $option-separator-color:  --scheme(var(--light-2), var(--dark-1));
+
+// Account
+$account-card-bg:       --scheme(shade(var(--light-1), 4%), tint(var(--dark-4), 2%));
+$profile-heading-color: --scheme(var(--light-6), var(--dark-8));
+$profile-border-color:  --scheme(shade(var(--light-3), 4%), var(--dark-1));

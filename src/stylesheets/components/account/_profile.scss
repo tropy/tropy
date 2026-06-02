@@ -1,0 +1,53 @@
+@use "../../abstracts/config" as *;
+
+//
+// Account profile
+// --------------------------------------------------
+
+.account {
+  .profile {
+    font-size: to-rem(16);
+    line-height: 1.5;
+
+    h1 {
+      font-size: to-rem(18);
+      font-weight: 600;
+      text-box: trim-both cap alphabetic;
+      color: $profile-heading-color;
+      margin-bottom: $space-xl;
+    }
+
+    dl {
+      margin: 0;
+    }
+
+    dt {
+      font-weight: 600;
+      text-box: trim-start ex alphabetic;
+    }
+
+    dd {
+      text-box: trim-end ex alphabetic;
+      margin-left: 0;
+
+      & + dt {
+        margin-top: $space-md;
+        padding-top: $space-md;
+        border-top: 1px solid $profile-border-color;
+      }
+    }
+
+    .btn-container {
+      position: absolute;
+      top: $space-lg;
+      right: $space-lg;
+      font-size: to-rem(18);
+      text-box: trim-both cap alphabetic;
+
+      .btn-link {
+        font-size: to-rem(14);
+        padding: 0;
+      }
+    }
+  }
+}

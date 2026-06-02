@@ -44,7 +44,7 @@ export function Profile ({
   }, [ipc])
 
   return (
-    <div ref={ref} className="profile">
+    <div ref={ref} className="card profile">
       <h1><FormattedMessage id="prefs.account.label"/></h1>
       {error ? (
         <>
@@ -58,28 +58,31 @@ export function Profile ({
             onClick={loadProfile}/>
         </>
       ) : (
-        details
-          .filter(name => profile?.[name])
-          .map(name => (
-            <AccountDetail
-              key={name}
-              name={name}
-              value={profile[name]}/>
-          ))
+        <dl>
+          {details
+            .filter(name => profile?.[name])
+            .map(name => (
+              <AccountDetail
+                key={name}
+                name={name}
+                value={profile[name]}/>
+            ))}
+        </dl>
       )}
-      <hr/>
-      <Button
-        isDefault
-        isDisabled={isPending}
-        text="prefs.account.unlink"
-        onClick={handleUnlink}/>
+      <div className="btn-container">
+        <Button
+          isLink
+          isDisabled={isPending}
+          text="prefs.account.unlink"
+          onClick={handleUnlink}/>
+      </div>
     </div>
   )
 }
 
 const AccountDetail = ({ name, value }) => (
-  <div className="account-detail">
-    <label><FormattedMessage id={`prefs.account.${name}`}/></label>
-    <p>{value}</p>
-  </div>
+  <>
+    <dt><FormattedMessage id={`prefs.account.${name}`}/></dt>
+    <dd>{value}</dd>
+  </>
 )

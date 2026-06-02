@@ -73,6 +73,15 @@
   width: 100%;
 }
 
+.btn-link {
+  background-color: transparent;
+  color: $link-color;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .btn-icon {
   display: inline-flex;
   background-color: $btn-icon-bg;
