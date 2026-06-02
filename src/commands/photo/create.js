@@ -7,7 +7,7 @@ import { DuplicateError } from '../../common/error.js'
 import { info, warn } from '../../common/log.js'
 import { getPhotoTemplate } from '../../selectors/index.js'
 import { Image } from '../../image/image.js'
-import { extractPortfolioImages } from '../../image/pdf.js'
+import { extractPdfEmbeddedFiles } from '../../image/pdf.js'
 
 import {
   all,
@@ -88,9 +88,9 @@ export class Create extends ImportCommand {
       })
 
       if (image.mimetype === MIME.PDF) {
-        let embedded = yield call(extractPortfolioImages, image.buffer)
+        let embedded = yield call(extractPdfEmbeddedFiles, image.buffer)
         if (embedded?.length) {
-          yield * this.importFromPdfPortfolio(image, progress, embedded)
+          yield * this.importFromPdfEmbeddedFiles(image, progress, embedded)
           return
         }
       }
@@ -196,7 +196,7 @@ export class Create extends ImportCommand {
     }
   }
 
-  *importFromPdfPortfolio (source, progress, embedded) {
+  *importFromPdfEmbeddedFiles (source, progress, embedded) {
     let {
       basePath, cache, db, idx, prefs, store, template, optimizeOnImport,
       optimizeQuality
