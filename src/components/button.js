@@ -25,6 +25,7 @@ export const Button = React.memo(React.forwardRef(({
   isDefault,
   isDisabled,
   isPrimary,
+  isLink,
   noFocus = false,
   onBlur,
   onClick,
@@ -46,6 +47,7 @@ export const Button = React.memo(React.forwardRef(({
       'btn-default': isDefault,
       'btn-icon': icon != null,
       'btn-primary': isPrimary,
+      'btn-link': isLink,
       disabled: isDisabled
     }),
 
