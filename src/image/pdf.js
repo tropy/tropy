@@ -65,10 +65,6 @@ function collectNameTreeEntries (node, out) {
   }
 }
 
-function isCollection (doc) {
-  return doc.catalog.get(Collection) != null
-}
-
 function getEmbeddedFileStream (fileSpec) {
   if (!(fileSpec instanceof PDFDict)) return null
 
@@ -107,8 +103,6 @@ function decodedStreamBytes (stream) {
 export async function extractPortfolioImages (buffer) {
   try {
     let doc = await load(buffer)
-
-    if (!isCollection(doc)) return null
 
     let names = doc.catalog.lookupMaybe(Names, PDFDict)
     if (!names) return null
