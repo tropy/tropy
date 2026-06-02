@@ -377,7 +377,7 @@ export async function getAssets (db, { basePath }) {
  * Creates an optimized copy of a managed project,
  * converting assets to jpeg or png if they have transparency.
  */
-export async function optimizeAssets (src, path, appDir, {
+export async function optimizeAssets (src, dest, appDir, {
   concurrency = 4,
   density = 72,
   overwrite = false,
@@ -386,22 +386,22 @@ export async function optimizeAssets (src, path, appDir, {
 } = {}) {
   try {
     assert(getProjectType(src) === MANAGED, 'source must be a managed project')
-    assert(getProjectType(path) === MANAGED, 'target must be a managed project')
+    assert(getProjectType(dest) === MANAGED, 'target must be a managed project')
 
-    await checkProjectPath(path, overwrite)
-    info(`optimizing project "${src}" to "${path}"`)
+    await checkProjectPath(dest, overwrite)
+    info(`optimizing project "${src}" to "${dest}"`)
 
     let srcDbFile = join(src, MANAGED_DB_NAME)
-    let dbFile = join(path, MANAGED_DB_NAME)
-    let store = new Store(join(path, MANAGED_STORE_NAME))
+    let destDbFile = join(dest, MANAGED_DB_NAME)
+    let store = new Store(join(dest, MANAGED_STORE_NAME))
 
-    await makeProjectDir(path, store.name, appDir)
+    await makeProjectDir(dest, store.name, appDir)
 
-    let { id: newId } = await Database.backup(srcDbFile, dbFile, {
+    await Database.backup(srcDbFile, destDbFile, {
       newId: true
     })
 
-    var db = new Database(dbFile, 'w', {
+    var db = new Database(destDbFile, 'w', {
       max: 1,
       journalMode: 'wal'
     })
@@ -414,7 +414,7 @@ export async function optimizeAssets (src, path, appDir, {
       let updates = await processAsset({
         ...props,
         density,
-        projectPath: path,
+        projectPath: dest,
         quality,
         store
       })
@@ -425,7 +425,7 @@ export async function optimizeAssets (src, path, appDir, {
         ...update('photos').set(updates).where({ id }))
     }, { concurrency })
 
-    return { id: newId }
+    await db.optimize()
 
   } finally {
     await db?.close()
