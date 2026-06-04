@@ -138,7 +138,7 @@
     "alto-xml": "^1.0.1",
     "chokidar": "^5.0.0",
     "classnames": "^2.2.6",
-    "commander": "^14.0.0",
+    "commander": "^15.0.0",
     "cross-zip": "^4.0.0",
     "edtf": "^4.10.0",
     "generic-pool": "^3.7.1",
