@@ -294,19 +294,22 @@ export class Database extends EventEmitter {
   }
 
   async backup (dest, { newId = false } = {}) {
-    const pragma = await this.seq(async conn => {
-      let application_id = await conn.get('PRAGMA application_id')
-      let user_version = await conn.get('PRAGMA user_version')
-      await conn.run('vacuum into ?', dest)
-      return { ...application_id, ...user_version }
+    let pragma = await this.seq(async conn => {
+      await conn.run('VACUUM INTO ?', dest)
+
+      return Object.assign(
+        await conn.get('PRAGMA application_id'),
+        await conn.get('PRAGMA user_version'))
     })
-    
+
     try {
       var target = new Database(dest, 'w', { max: 1 })
 
       await target.seq(async conn => {
         await conn.configure(pragma)
-        if (newId) await conn.run('UPDATE project SET project_id = ?', randomUUID())
+        if (newId) {
+          await conn.run('UPDATE project SET project_id = ?', randomUUID())
+        }
       })
 
     } finally {
