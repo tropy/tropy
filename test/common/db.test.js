@@ -258,6 +258,54 @@ describe('Database', () => {
       })
     })
 
+    describe('backup', () => {
+      let dst = mktmp('backup.db')
+      let bak
+
+      afterEach(async () => {
+        await bak?.close()
+        await unlink(dst).catch(() => {})
+      })
+
+      it('copies an empty database', async () => {
+        await db.backup(dst)
+        bak = new Database(dst)
+        expect(
+          await bak.get('SELECT COUNT(*) AS count FROM sqlite_schema')
+        ).to.have.property('count', 0)
+      })
+
+      it('copies tables', async () => {
+        await db.seq(async conn => {
+          await conn.run('CREATE TABLE a (b)')
+          await conn.run('INSERT INTO a VALUES (1), (2), (3)')
+        })
+
+        await db.backup(dst)
+        bak = new Database(dst)
+
+        expect(
+          await bak.get('SELECT COUNT(*) AS count FROM a')
+        ).to.have.property('count', 3)
+      })
+
+      it('copies version pragmas', async () => {
+        await db.seq(conn =>
+          conn.configure({
+            application_id: 23,
+            user_version: 5
+          }))
+
+        await db.backup(dst)
+        bak = new Database(dst)
+
+        expect(await bak.get('PRAGMA application_id'))
+          .to.have.property('application_id', 23)
+        expect(await bak.get('PRAGMA user_version'))
+          .to.have.property('user_version', 5)
+      })
+    })
+
     describe('migration', () => {
       let check, commit, rollback
 
