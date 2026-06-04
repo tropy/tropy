@@ -101,6 +101,14 @@ describe('Database', () => {
       })
     })
 
+    describe('get', () => {
+      it('columns as properties', async () => {
+        expect(await db.get('PRAGMA encoding')).to.eql({
+          encoding: 'UTF-8'
+        })
+      })
+    })
+
     describe('exec', () => {
       it('executes arbitrary sql', async () => {
         await db.exec('SELECT * FROM sqlite_schema;')
