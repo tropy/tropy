@@ -57,14 +57,14 @@
   }
 }
 
-.btn-lg {
-  font-size: $font-size-large;
-  height: $input-height-large;
-  padding: 0 $padding-large-horizontal;
+.btn-xl {
+  font-size: to-rem(18);
+  height: $input-height-xl;
+  padding: 0 $padding-xl-horizontal;
   border-radius: $border-radius-base;
 }
 
-.btn-xl {
+.btn-xxl {
   border-radius: $border-radius-large;
 }
 

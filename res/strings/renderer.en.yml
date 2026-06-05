@@ -302,8 +302,7 @@ en:
       homepage: More
     account:
       label: Account
-      description: >-
-        A Tropy account allows you to use add-on services.
+      description: Sign in to your account
       username: Username
       email: Email
       password: Password

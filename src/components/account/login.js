@@ -4,7 +4,7 @@ import { useArgs } from '../../hooks/use-args.js'
 import { useIpcEventHandler, useIpcSend } from '../../hooks/use-ipc.js'
 import { Button } from '../button.js'
 import { Link } from '../link.js'
-import { Form, FormElement } from '../form.js'
+import { FormElement } from '../form.js'
 import { Password } from '../password.js'
 
 export function Login ({ ref }) {
@@ -34,56 +34,57 @@ export function Login ({ ref }) {
   }, [link])
 
   return (
-    <Form ref={ref} onSubmit={handleSubmit}>
-      <figure className="app-icon"/>
-      <legend>
-        <p className="form-description">
-          <FormattedMessage id="prefs.account.description"/>
+    <div className="login">
+      <figure class="tropy-icon"/>
+      <h1><FormattedMessage id="prefs.account.description"/></h1>
+      <form ref={ref} onSubmit={handleSubmit}>
+        <FormElement id="prefs.account.username" isCompact>
+          <input
+            id="prefs.account.username"
+            className="form-control form-control-lg"
+            name="username"
+            type="text"
+            autoComplete="none"
+            disabled={isPending}
+            required
+            tabIndex={0}/>
+        </FormElement>
+        <FormElement id="prefs.account.password" isCompact>
+          <div>
+            <Link url={`${authUrl}/password/forgot`} className="form-link">
+              <FormattedMessage id="prefs.account.forgot"/>
+            </Link>
+          </div>
+          <Password
+            id="prefs.account.password"
+            className="form-control form-control-lg"
+            name="password"
+            autoComplete="off"
+            disabled={isPending}
+            required
+            tabIndex={0}/>
+        </FormElement>
+          <Button
+            isPrimary
+            isBlock
+            size="xl"
+            tabIndex={0}
+            isDisabled={isPending}
+            text="prefs.account.link"
+            type="submit"/>
+          {error && (
+            <p className="form-description error">
+              <FormattedMessage id={error}/>
+            </p>
+          )}
+        <p className="switch">
+          <FormattedMessage id="prefs.account.register.1"/>
+          {' '}
+          <Link url={`${authUrl}/signup`}>
+            <FormattedMessage id="prefs.account.register.2"/>
+          </Link>
         </p>
-      </legend>
-      <FormElement id="prefs.account.username" isCompact>
-        <input
-          id="prefs.account.username"
-          className="form-control"
-          name="username"
-          type="text"
-          autoComplete="none"
-          disabled={isPending}
-          required
-          tabIndex={0}/>
-      </FormElement>
-      <Link url={`${authUrl}/forgot`}>
-        <FormattedMessage id="prefs.account.forgot"/>
-      </Link>
-      <FormElement id="prefs.account.password" isCompact>
-        <Password
-          id="prefs.account.password"
-          className="form-control"
-          name="password"
-          autoComplete="off"
-          disabled={isPending}
-          required
-          tabIndex={0}/>
-      </FormElement>
-      <FormElement size={8}>
-        <Button
-          isDefault
-          isPrimary
-          isDisabled={isPending}
-          text="prefs.account.link"
-          type="submit"/>
-        {error && (
-          <p className="form-description error">
-            <FormattedMessage id={error}/>
-          </p>
-        )}
-      </FormElement>
-      <p>
-        <FormattedMessage id="prefs.account.register.1"/>
-        <Link url={`${authUrl}/signup`}>
-          <FormattedMessage id="prefs.account.register.2"/>
-        </Link>
-      </p>
-    </Form>
+      </form>
+    </div>
   )
 }

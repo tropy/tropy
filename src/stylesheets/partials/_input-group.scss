@@ -35,12 +35,12 @@
       z-index: 3;
     }
 
-    &:not(:last-child) {
+    &:has(.input-group-append) {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }
 
-    &:not(:first-child) {
+    &:has(.input-group-prepend) {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
     }
