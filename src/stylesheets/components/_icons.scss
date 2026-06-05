@@ -95,3 +95,13 @@
     padding: 0;
   }
 }
+
+.tropy-icon {
+  width: 112px;
+  height: 96px;
+  background: icon-url("project/tropy-icon-light.svg") no-repeat 0 0;
+
+  @media (prefers-color-scheme: dark) {
+    background: icon-url("project/tropy-icon-dark.svg") no-repeat 0 0;
+  }
+}

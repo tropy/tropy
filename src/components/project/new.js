@@ -39,14 +39,14 @@ export const NewProject = ({
   return (
     <div className="new-project">
       <Titlebar isOptional/>
-      <figure/>
+      <figure className="tropy-icon"/>
       <h1><FormattedMessage id="project.new.title"/></h1>
       <form onSubmit={handleProjectCreate}>
         <h2><FormattedMessage id="project.new.name"/></h2>
         <FormElement>
           <input
             autoFocus
-            className="form-control input-lg"
+            className="form-control form-control-xl"
             onChange={handleNameChange}
             type="text"
             value={name}/>
@@ -56,7 +56,7 @@ export const NewProject = ({
           <ToggleButtonGroup
             id="project.new.type"
             name="type"
-            size="lg"
+            size="xl"
             options={accept}
             onChange={handleTypeChange}
             value={type}/>
@@ -68,7 +68,7 @@ export const NewProject = ({
           isBlock
           isDisabled={!name}
           isPrimary
-          size="xl"
+          size="xxl"
           tabIndex="0"
           text="project.new.create"
           type="submit"/>
