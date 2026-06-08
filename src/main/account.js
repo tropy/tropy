@@ -5,6 +5,7 @@ import { createRemoteJWKSet } from 'jose/jwks/remote'
 import { jwtVerify } from 'jose/jwt/verify'
 import { AccountError } from '../common/error.js'
 import { debug, info, warn } from '../common/log.js'
+import { authUrl } from '../common/release.js'
 import { TokenSet } from '../common/token-set.js'
 import { ipcServiceHandler } from './ipc.js'
 
@@ -42,7 +43,7 @@ export class AccountService extends EventEmitter {
   }
 
   url (pathname = '/') {
-    return new URL(pathname, this.app.opts.auth)
+    return new URL(pathname, this.app.opts.auth ?? authUrl)
   }
 
   async post (pathname, body, {
@@ -96,7 +97,7 @@ export class AccountService extends EventEmitter {
   }
 
   get status () {
-    let { account } = this.app.safe
+    let account = this.app.safe?.account
 
     return {
       lastRefresh: this.tokenSet?.timestamp,
@@ -128,8 +129,11 @@ export class AccountService extends EventEmitter {
         throw new AccountError('token')
       }
 
-      this.app.safe.account = {
-        token
+      this.app.safe = {
+        ...this.app.safe,
+        account: {
+          token
+        }
       }
 
       info(`account: linked to ${username}`)
@@ -137,7 +141,7 @@ export class AccountService extends EventEmitter {
 
     } catch (err) {
       warn({ err }, `account: failed to link account ${username}`)
-      delete this.app.safe.account
+      delete this.app.safe?.account
       delete this.tokenSet
       throw err
     } finally {
@@ -146,9 +150,9 @@ export class AccountService extends EventEmitter {
   }
 
   async unlink () {
-    let { account } = this.app.safe
+    let account = this.app.safe?.account
 
-    delete this.app.safe.account
+    delete this.app.safe?.account
     delete this.tokenSet
 
     try {
@@ -169,7 +173,7 @@ export class AccountService extends EventEmitter {
   }
 
   async refresh () {
-    let { account } = this.app.safe
+    let account = this.app.safe?.account
 
     if (!account?.token) {
       throw new AccountError('token')
@@ -184,7 +188,7 @@ export class AccountService extends EventEmitter {
       let { error: code } = await res.json()
 
       if (code === 'invalid_grant') {
-        delete this.app.safe.account
+        delete this.app.safe?.account
         delete this.tokenSet
         this.emit('change')
         throw new AccountError('token')

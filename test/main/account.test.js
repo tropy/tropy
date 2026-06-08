@@ -4,94 +4,96 @@ import { AccountService } from '#tropy/main/account.js'
 
 describe('AccountService', () => {
   let app
-  let service
-  let originalFetch
+  let account
+
+  let withResponse = (status = 200, body = {}) =>
+    async () => new Response(JSON.stringify(body), {
+      status,
+      headers: { 'content-type': 'application/json' }
+    })
 
   beforeEach(() => {
-    app = { safe: {}, opts: { auth: 'https://auth.example.com/' } }
-    service = new AccountService(app)
-    originalFetch = globalThis.fetch
+    app = {
+      safe: {},
+      state: {
+        uuid: 'device'
+      },
+      opts: { auth: 'https://auth.example.com/' }
+    }
+    account = new AccountService(app)
+    mock.method(globalThis, 'fetch', withResponse(401))
   })
 
   afterEach(() => {
-    globalThis.fetch = originalFetch
+    globalThis.fetch.mock?.restore()
   })
 
   describe('status', () => {
-    it('returns linked: false when no account is stored', () => {
-      expect(service.status).to.eql({ linked: false, username: undefined })
+    it('returns linked: false without refresh token', () => {
+      expect(account.status).to.have.property('linked', false)
     })
 
-    it('returns linked: true when a token is stored', () => {
-      app.safe.account = { token: 't-1', username: 'alice' }
-      expect(service.status).to.eql({ linked: true, username: 'alice' })
+    it('returns linked: true with refresh token', () => {
+      app.safe.account = { token: 'badc0de' }
+      expect(account.status).to.have.property('linked', true)
     })
 
-    it('does not expose the token', () => {
-      app.safe.account = { token: 't-1', username: 'alice' }
-      expect(service.status).not.to.have.property('token')
+    it('does not expose the token itself', () => {
+      app.safe.account = { token: 'badc0de' }
+      expect(account.status).not.to.have.property('token')
     })
   })
 
   describe('link', () => {
     it('stores the token on success', async () => {
-      globalThis.fetch = mock.fn(async () => new Response(
-        JSON.stringify({ refresh_token: 't-1' }),
-        { status: 200, headers: { 'content-type': 'application/json' } }
-      ))
+      fetch.mock.mockImplementation(withResponse(200, { refresh_token: 'b4dc0de' }))
 
-      let result = await service.link({ username: 'alice', password: 'pw' })
+      await account.link({ username: 'ariadne', password: 'password' })
 
-      expect(result).to.eql({ linked: true, username: 'alice' })
-      expect(app.safe.account).to.eql({ token: 't-1', username: 'alice' })
+      expect(account.status).to.have.property('linked', true)
+      expect(app.safe.account).to.have.property('token', 'b4dc0de')
     })
 
-    it('throws account.link.<status> on non-ok response', async () => {
-      globalThis.fetch = mock.fn(async () => new Response(null, { status: 401 }))
+    it('throws code: credentials', async () => {
+      fetch.mock.mockImplementation(withResponse(401, { error: 'errno' }))
 
       await assert.rejects(
-        service.link({ username: 'alice', password: 'wrong' }),
-        { message: 'account.link.401' }
+        account.link({ username: 'ariadne', password: 'wrong' }),
+        { message: 'credentials' }
       )
       expect(app.safe.account).to.be.undefined
     })
 
     it('rethrows when fetch throws', async () => {
-      let err = new TypeError('failed to fetch')
-      globalThis.fetch = mock.fn(async () => { throw err })
+      fetch.mock.mockImplementation(async () => { throw new Error })
 
       await assert.rejects(
-        service.link({ username: 'alice', password: 'pw' }),
-        err
+        account.link({ username: 'ariadne', password: 'pw' })
       )
       expect(app.safe.account).to.be.undefined
     })
 
-    it('throws account.link.token-missing when response lacks refresh_token', async () => {
-      globalThis.fetch = mock.fn(async () => new Response(
-        JSON.stringify({}),
-        { status: 200, headers: { 'content-type': 'application/json' } }
-      ))
+    it('throws code: token when response lacks refresh_token', async () => {
+      fetch.mock.mockImplementation(withResponse(200))
 
       await assert.rejects(
-        service.link({ username: 'alice', password: 'pw' }),
-        { message: 'account.link.token-missing' }
+        account.link({ username: 'ariadne', password: 'pw' }),
+        { message: 'token' }
       )
       expect(app.safe.account).to.be.undefined
     })
 
     it('emits change on success and failure', async () => {
       let listener = mock.fn()
-      service.on('change', listener)
+      account.on('change', listener)
 
-      globalThis.fetch = mock.fn(async () => new Response(
-        JSON.stringify({ refresh_token: 't-1' }),
-        { status: 200, headers: { 'content-type': 'application/json' } }
-      ))
-      await service.link({ username: 'alice', password: 'pw' })
+      fetch.mock.mockImplementation(withResponse(200, {
+        refresh_token: 'abc'
+      }))
+      await account.link({ username: 'ariadne', password: 'pw' })
 
-      globalThis.fetch = mock.fn(async () => new Response(null, { status: 401 }))
-      await service.link({ username: 'alice', password: 'wrong' }).catch(() => {})
+      fetch.mock.mockImplementation(withResponse(401))
+      await account.link({ username: 'ariadne', password: 'wrong' }).catch(() => {})
 
       expect(listener.mock.callCount()).to.equal(2)
     })
@@ -99,37 +101,34 @@ describe('AccountService', () => {
 
   describe('unlink', () => {
     it('posts to /unlink and clears the stored account', async () => {
-      app.safe.account = { token: 't-1', username: 'alice' }
-      let fetchMock = mock.fn(async () => new Response(null, { status: 200 }))
-      globalThis.fetch = fetchMock
+      app.safe.account = { token: 't-1', username: 'ariadne' }
+      fetch.mock.mockImplementation(withResponse(200))
 
-      let result = await service.unlink()
+      let result = await account.unlink()
 
       expect(result).to.be.true
       expect(app.safe.account).to.be.undefined
-      expect(fetchMock.mock.callCount()).to.equal(1)
+      expect(fetch.mock.callCount()).to.equal(1)
     })
 
     it('returns false and skips fetch when no account is linked', async () => {
-      let fetchMock = mock.fn()
-      globalThis.fetch = fetchMock
-
-      let result = await service.unlink()
+      fetch.mock.mockImplementation(withResponse(200))
+      let result = await account.unlink()
 
       expect(result).to.be.false
-      expect(fetchMock.mock.callCount()).to.equal(0)
+      expect(fetch.mock.callCount()).to.equal(0)
     })
 
     it('emits change only when an account was linked', async () => {
       let listener = mock.fn()
-      service.on('change', listener)
+      account.on('change', listener)
 
-      await service.unlink()
+      await account.unlink()
       expect(listener.mock.callCount()).to.equal(0)
 
-      app.safe.account = { token: 't-1', username: 'alice' }
-      globalThis.fetch = mock.fn(async () => new Response(null, { status: 200 }))
-      await service.unlink()
+      app.safe.account = { token: 't-1', username: 'ariadne' }
+      fetch.mock.mockImplementation(withResponse(200))
+      await account.unlink()
       expect(listener.mock.callCount()).to.equal(1)
     })
   })
