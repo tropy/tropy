@@ -77,7 +77,6 @@ export class AccountService extends EventEmitter {
 
       if (!res.ok) {
         warn({
-          body: await res.text().catch(() => null),
           status: res.status,
           url: res.url
         }, `account: response ${res.status} ${res.statusText}`)
