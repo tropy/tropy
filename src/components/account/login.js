@@ -35,7 +35,7 @@ export function Login ({ ref }) {
 
   return (
     <div className="login">
-      <figure class="tropy-icon"/>
+      <figure className="tropy-icon"/>
       <h1><FormattedMessage id="prefs.account.description"/></h1>
       <form ref={ref} onSubmit={handleSubmit}>
         <FormElement id="prefs.account.username" isCompact>
@@ -64,19 +64,19 @@ export function Login ({ ref }) {
             required
             tabIndex={0}/>
         </FormElement>
-          <Button
-            isPrimary
-            isBlock
-            size="xl"
-            tabIndex={0}
-            isDisabled={isPending}
-            text="prefs.account.link"
-            type="submit"/>
-          {error && (
-            <p className="form-description error">
-              <FormattedMessage id={error}/>
-            </p>
-          )}
+        <Button
+          isPrimary
+          isBlock
+          size="xl"
+          tabIndex={0}
+          isDisabled={isPending}
+          text="prefs.account.link"
+          type="submit"/>
+        {error && (
+          <p className="form-description error">
+            <FormattedMessage id={error}/>
+          </p>
+        )}
         <p className="switch">
           <FormattedMessage id="prefs.account.register.1"/>
           {' '}
