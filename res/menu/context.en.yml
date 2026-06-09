@@ -220,7 +220,7 @@ en:
         submenu: &item-transcribe-submenu
           - label: 'With Tropy'
             command: 'app:transcribe-item'
-            enabled: false
+            condition: 'isAccountLinked'
     item-bulk: &item-bulk
       - label: 'Merge Selected Items'
         command: 'app:merge-item'
@@ -272,7 +272,7 @@ en:
         submenu: &transcribe-submenu
           - label: 'With Tropy'
             command: 'app:transcribe-photo'
-            enabled: false
+            condition: 'isAccountLinked'
       - label: 'Consolidate Photo'
         command: 'app:consolidate-photo'
     photo-rotate: &photo-rotate
