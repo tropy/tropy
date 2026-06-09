@@ -585,6 +585,10 @@ Menu.ItemCompiler = {
 }
 
 Menu.ItemConditions = {
+  isAccountLinked ({ app }) {
+    return app.account.status.linked
+  },
+
   isMultiplePhotos ({ event }) {
     return event?.target?.photos?.length > 1
   },
