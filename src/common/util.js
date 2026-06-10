@@ -99,8 +99,8 @@ pMap.worker = async function (it, mapper, result, errors, ...args) {
 
 export async function attempt (fn, opts = {}, ...args) {
   let {
-    maxBackoff = 600_000,
-    minBackoff = 1000,
+    maxBackoff = 60_000,
+    minBackoff = 25,
     maxRetries = Infinity,
     numRetries = 0,
     signal
