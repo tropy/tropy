@@ -97,6 +97,34 @@ pMap.worker = async function (it, mapper, result, errors, ...args) {
   }
 }
 
+export async function attempt (fn, opts = {}, ...args) {
+  let {
+    maxBackoff = 600_000,
+    minBackoff = 1000,
+    maxRetries = Infinity,
+    numRetries = 0,
+    signal
+  } = opts
+
+  signal?.throwIfAborted()
+
+  try {
+    return await Promise.try(fn, ...args)
+  } catch (err) {
+    if (numRetries >= maxRetries) {
+      throw err
+    }
+
+    let ms = Math.min(minBackoff * (2 ** numRetries), maxBackoff)
+    await delay(ms, undefined, { signal })
+
+    return attempt(fn, {
+      ...opts,
+      numRetries: numRetries + 1
+    }, ...args)
+  }
+}
+
 function toArray (obj) {
   return obj == null ? [] : Array.isArray(obj) ? [...obj] : [obj]
 }
