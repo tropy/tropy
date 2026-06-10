@@ -639,7 +639,7 @@ export class WindowManager extends EventEmitter {
       win.show()
     } else {
       win = await this.open(type, args, { show: 'init', ...opts })
-      await when(win, 'show', 3000)
+      await when(win, 'show', { timeout: 3000 })
     }
     return win
   }
@@ -915,7 +915,7 @@ export function sanitizeWindowBounds (opts = {}, display) {
 }
 
 function setWindowState (win, event, setter = event, ...args) {
-  let p = when(win, event, 2000)
+  let p = when(win, event, { timeout: 2000 })
   win[setter](...args)
   return p
 }
