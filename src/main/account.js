@@ -28,8 +28,8 @@ export class AccountService extends EventEmitter {
             return this.link(...args)
           case 'unlink':
             return this.unlink(...args)
-          case 'accessToken':
-            return this.accessToken(...args)
+          case 'getAccessToken':
+            return this.getAccessToken(...args)
           case 'profile':
             return this.profile(...args)
           default:
@@ -203,11 +203,11 @@ export class AccountService extends EventEmitter {
     this.emit('refresh')
   }
 
-  async accessToken () {
+  async getAccessToken () {
     if (!this.tokenSet?.fresh)
       await this.refresh()
 
-    return this.tokenSet.accessToken
+    return this.tokenSet.toJSON()
   }
 
   async profile () {
