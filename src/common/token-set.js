@@ -19,6 +19,15 @@ export class TokenSet {
     this.idToken = values.id_token
   }
 
+  toJSON () {
+    return {
+      token_type: 'Bearer',
+      expires_in: this.expiresIn,
+      access_token: this.accessToken,
+      id_token: this.idToken
+    }
+  }
+
   get age () {
     return (Date.now() - this.timestamp) / 1000
   }
