@@ -80,7 +80,7 @@ export class Tropy extends EventEmitter {
 
     this.opts = opts
 
-    this.account = new AccountService(this)
+    this.account = new AccountService(this, opts.auth)
     this.api = new ApiServer(this)
     this.cache = new Cache(opts.cache || join(opts.data, 'cache'))
     this.ctx = new ContextMenu(this)
@@ -1185,7 +1185,6 @@ export class Tropy extends EventEmitter {
     return {
       account: this.account.status,
       api: this.api.status,
-      auth: this.opts.auth,
       data: this.opts.data,
       debug: this.debug,
       dev: this.dev,

@@ -8,7 +8,7 @@ import { FormElement } from '../form.js'
 import { Password } from '../password.js'
 
 export function Login ({ ref }) {
-  let authUrl = useArgs('auth')
+  let account = useArgs('account')
 
   let link = useIpcSend(['account', 'link'])
   let [isPending, setPending] = useState(false)
@@ -51,7 +51,7 @@ export function Login ({ ref }) {
         </FormElement>
         <FormElement id="prefs.account.password" isCompact>
           <div>
-            <Link url={`${authUrl}/password/forgot`} className="form-link">
+            <Link url={`${account.url}/password/forgot`} className="form-link">
               <FormattedMessage id="prefs.account.forgot"/>
             </Link>
           </div>
@@ -80,7 +80,7 @@ export function Login ({ ref }) {
         <p className="switch">
           <FormattedMessage id="prefs.account.register.1"/>
           {' '}
-          <Link url={`${authUrl}/signup`}>
+          <Link url={`${account.url}/signup`}>
             <FormattedMessage id="prefs.account.register.2"/>
           </Link>
         </p>
