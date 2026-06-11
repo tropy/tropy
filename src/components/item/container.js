@@ -94,7 +94,8 @@ class Item extends React.PureComponent {
           {...this.getResizableProps()}
           isBuffered
           isRelative
-          skip={settings.maximize !== 'none'}
+          isDisabled={settings.maximize === 'notepad'}
+          isMaximized={settings.maximize === 'esper'}
           value={this.size}
           onChange={this.handleEsperResize}>
           <Esper
