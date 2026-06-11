@@ -17,8 +17,7 @@ describe('AccountService', () => {
       safe: {},
       state: {
         uuid: 'device'
-      },
-      opts: { auth: 'https://auth.example.com/' }
+      }
     }
     account = new AccountService(app)
     mock.method(globalThis, 'fetch', withResponse(401))
