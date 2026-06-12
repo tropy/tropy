@@ -304,6 +304,19 @@ describe('Database', () => {
         expect(await bak.get('PRAGMA user_version'))
           .to.have.property('user_version', 5)
       })
+
+      it('runs the transform callback on the target', async () => {
+        await db.seq(async conn => {
+          await conn.run('CREATE TABLE a (b)')
+          await conn.run('INSERT INTO a VALUES (1)')
+        })
+
+        await db.backup(dst, conn => conn.run('UPDATE a SET b = 2'))
+        bak = new Database(dst)
+
+        expect(await bak.get('SELECT b FROM a'))
+          .to.have.property('b', 2)
+      })
     })
 
     describe('migration', () => {

@@ -397,9 +397,8 @@ export async function optimizeAssets (src, dest, appDir, {
 
     await makeProjectDir(dest, store.name, appDir)
 
-    await Database.backup(srcDbFile, destDbFile, {
-      newId: true
-    })
+    await Database.backup(srcDbFile, destDbFile, conn =>
+      conn.run('UPDATE project SET project_id = ?', uuid()))
 
     var db = new Database(destDbFile, 'w', {
       max: 1,
