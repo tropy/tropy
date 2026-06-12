@@ -1,7 +1,6 @@
 import assert from 'node:assert'
 import { EventEmitter } from 'node:events'
 import { readFile } from 'node:fs/promises'
-import { randomUUID } from 'node:crypto'
 import { createPool, Pool } from 'generic-pool'
 import { canWrite } from './fs.js'
 import sqlite from './sqlite.js'
@@ -48,10 +47,10 @@ export class Database extends EventEmitter {
     }
   }
 
-  static async backup (src, dest, opts) {
+  static async backup (src, dest, callback) {
     try {
       var db = new Database(src, 'r', { max: 1 })
-      return await db.backup(dest, opts)
+      return await db.backup(dest, callback)
     } finally {
       await db?.close()
     }
@@ -293,7 +292,7 @@ export class Database extends EventEmitter {
     return this.exec(String(await readFile(path)))
   }
 
-  async backup (dest, { newId = false } = {}) {
+  async backup (dest, callback) {
     let pragma = await this.seq(async conn => {
       await conn.run('VACUUM INTO ?', dest)
 
@@ -307,8 +306,8 @@ export class Database extends EventEmitter {
 
       await target.seq(async conn => {
         await conn.configure(pragma)
-        if (newId) {
-          await conn.run('UPDATE project SET project_id = ?', randomUUID())
+        if (callback) {
+          await callback(conn)
         }
       })
 
