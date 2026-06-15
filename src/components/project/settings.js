@@ -7,7 +7,6 @@ import { Button } from '../button.js'
 import { ProjectTypeField } from './type-field.js'
 import { notify } from '../../dialog.js'
 import { BASES, TYPES } from '../../common/project.js'
-import { protocolURL } from '../../common/slug.js'
 import { convert, optimize } from '../../slices/project-files.js'
 import { useDispatch } from 'react-redux'
 import { useIntl } from 'react-intl'
@@ -89,7 +88,7 @@ export const ProjectSettings = React.memo(({
         name="url"
         isCompact
         isReadOnly
-        value={protocolURL(project.slug)}/>
+        value={project.url}/>
       <FormField
         id="prefs.project.path"
         name="path"

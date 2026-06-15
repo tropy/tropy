@@ -30,7 +30,7 @@ export const RecentProjects = ({
   let slugByPath = useMemo(() => {
     let map = new Map()
     for (let entry of files) {
-      map.set(entry.path, entry.slug || sanitizeSlug(entry.name))
+      map.set(entry.path, sanitizeSlug(entry.name))
     }
     return map
   }, [files])
