@@ -29,7 +29,7 @@ import { delay, once } from '../common/util.js'
 import { channel, product, version } from '../common/release.js'
 import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
-import { protocolURL, sanitizeSlug } from '../common/slug.js'
+import { protocolURL, urlId } from '../common/url.js'
 
 import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
 import { Strings } from './res.js'
@@ -275,13 +275,13 @@ export class Tropy extends EventEmitter {
     this.emit('app:reload-menu')
   }
 
-  effectiveSlug (entry) {
+  projectURLId (entry) {
     if (!entry) return null
-    return sanitizeSlug(entry.name)
+    return urlId(entry.path)
   }
 
-  resolveSlug (slug) {
-    return this.state.recent.filter(e => this.effectiveSlug(e) === slug)
+  resolveURLId (id) {
+    return this.state.recent.filter(e => this.projectURLId(e) === id)
   }
 
   async import (...args) {
@@ -1123,7 +1123,7 @@ export class Tropy extends EventEmitter {
   copyProtocolURL (project, { item, photo } = {}) {
     if (!project) return
 
-    clipboard.write({ text: protocolURL(project.name, { item, photo }) })
+    clipboard.write({ text: protocolURL(project.path, { item, photo }) })
   }
 
   async handleProtocolRequest (url) {
@@ -1141,13 +1141,13 @@ export class Tropy extends EventEmitter {
         break
 
       case 'project': {
-        // tropy://project(/:slug)/items/:id(/:photo)(/:selection)
-        let [, slug = 'current', type, id, photo] =
+        // tropy://project(/:UrlId)/items/:id(/:photo)(/:selection)
+        let [, projectId = 'current', type, id, photo] =
           url.pathname.split('/')
 
         let win
 
-        if (slug === 'current') {
+        if (projectId === 'current') {
           win = this.wm.current()
 
           if (!win) {
@@ -1160,17 +1160,8 @@ export class Tropy extends EventEmitter {
           }
 
         } else {
-          // Open the most recent on collision
-          let matches = this.resolveSlug(slug)
-          let file = matches[0]?.path
-
-          if (matches.length > 1) {
-            await dialog.warn(this.wm.current(), {
-              message: this.dict.dialog.project.url.conflict.message,
-              detail: this.dict.dialog.project.url.conflict.detail
-                .replace('{slug}', slug)
-            })
-          }
+          // open most recent project with that id
+          let file = this.resolveURLId(projectId)[0]?.path
 
           if (file == null) {
             let files = await dialog.open(this.wm.current(), {

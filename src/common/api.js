@@ -4,7 +4,7 @@ import Koa from 'koa'
 import Router from '@koa/router'
 import bodyParser from 'koa-bodyparser'
 import act from '../actions/api'
-import { RESERVED_SLUGS } from './slug.js'
+import { RESERVED_IDS } from './url.js'
 
 const show = (type) =>
   async (ctx) => {
@@ -436,26 +436,26 @@ export function create ({
     if (m == null)
       return next()
 
-    let slug = m[1]
+    let id = m[1]
     let rest = m[2] || ''
 
-    if (slug !== 'current' && RESERVED_SLUGS.has(slug)) {
+    if (id !== 'current' && RESERVED_IDS.has(id)) {
       ctx.status = 308
-      ctx.redirect(`/project/current/${slug}${rest}`)
+      ctx.redirect(`/project/current/${id}${rest}`)
       return
     }
 
-    let resolved = resolveProject(slug)
+    let resolved = resolveProject(id)
 
     switch (resolved?.error) {
       case 'not-found':
         ctx.status = 404
-        ctx.body = { error: `unknown project: ${slug}` }
+        ctx.body = { error: `unknown project: ${id}` }
         return
       case 'not-open':
         ctx.status = 404
         ctx.body = {
-          error: `project "${slug}" is not open`,
+          error: `project "${id}" is not open`,
           hint: 'open the project in Tropy first'
         }
         return
@@ -463,10 +463,10 @@ export function create ({
 
     if (resolved.ambiguous)
       ctx.set('Warning',
-        `199 - "ambiguous project URL '${slug}'; opened the most recent ` +
+        `199 - "ambiguous project URL '${id}'; opened the most recent ` +
         'match, consider renaming a project"')
 
-    ctx.projectSlug = resolved.slug
+    ctx.projectId = resolved.id
     ctx.projectPath = resolved.path
     ctx.rsvp = (action) => rsvp(resolved.win, action)
     ctx.path = `/project${rest}`
@@ -516,7 +516,7 @@ export function create ({
     .get('/project{/}', (ctx) => {
       ctx.body = {
         project: ctx.projectPath || ctx.current(),
-        slug: ctx.projectSlug,
+        id: ctx.projectId,
         status: 'ok',
         version
       }

@@ -8,7 +8,7 @@ import { IconXLarge } from '../icons.js'
 import { ProjectFileList } from './file.js'
 import { clear, consolidate, reload } from '../../slices/project-files.js'
 import { match } from '../../collate.js'
-import { sanitizeSlug } from '../../common/slug.js'
+import { urlId } from '../../common/url.js'
 
 
 export const RecentProjects = ({
@@ -27,25 +27,25 @@ export const RecentProjects = ({
 
   let projectFiles = useSelector(state => state.projectFiles)
 
-  let slugByPath = useMemo(() => {
+  let idByPath = useMemo(() => {
     let map = new Map()
     for (let entry of files) {
-      map.set(entry.path, sanitizeSlug(entry.name))
+      map.set(entry.path, urlId(entry.path))
     }
     return map
   }, [files])
 
   let conflicts = useMemo(() => {
     let counts = new Map()
-    for (let slug of slugByPath.values()) {
-      counts.set(slug, (counts.get(slug) || 0) + 1)
+    for (let id of idByPath.values()) {
+      counts.set(id, (counts.get(id) || 0) + 1)
     }
     let set = new Set()
-    for (let [path, slug] of slugByPath) {
-      if (counts.get(slug) > 1) set.add(path)
+    for (let [path, id] of idByPath) {
+      if (counts.get(id) > 1) set.add(path)
     }
     return set
-  }, [slugByPath])
+  }, [idByPath])
 
   let projects =
     files
@@ -54,7 +54,7 @@ export const RecentProjects = ({
         if (!stats) return null
         return {
           ...stats,
-          slug: slugByPath.get(entry.path),
+          urlId: idByPath.get(entry.path),
           hasConflict: conflicts.has(entry.path)
         }
       })

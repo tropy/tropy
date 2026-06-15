@@ -34,13 +34,6 @@ en:
         You can set the port via the command line or in the user data directory.
       buttons:
         - "OK"
-    project:
-      url:
-        conflict:
-          message: Ambiguous project URL
-          detail: >-
-            Multiple projects use the URL "{slug}". Opening the most recently
-            used one. Consider renaming a project so each has a unique URL.
   window:
     prefs:
       title: Tropy Preferences

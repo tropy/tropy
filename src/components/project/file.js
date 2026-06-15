@@ -19,11 +19,11 @@ export const ProjectFileList = ({
   onSelect
 }) => (
   <ol className="project-files">
-    {files.map(({ name, path, slug, hasConflict, ...stats }) => (
+    {files.map(({ name, path, urlId, hasConflict, ...stats }) => (
       <ProjectFile
         key={path}
         name={name}
-        slug={slug}
+        urlId={urlId}
         hasConflict={hasConflict}
         onClick={onSelect}
         onConsolidate={onConsolidate}
@@ -41,7 +41,7 @@ export const ProjectFile = ({
   onConsolidate,
   onRemove,
   path,
-  slug,
+  urlId,
   hasConflict,
   stats
 }) => {
@@ -85,7 +85,7 @@ export const ProjectFile = ({
               title={intl.formatMessage({ id: 'project.file.conflict' })}/>
           )}
           {isMissing && <IconWarningSm/>}
-          {!isMissing && slug && (
+          {!isMissing && urlId && (
             <Button
               className="copy-url"
               icon={<IconLink/>}
