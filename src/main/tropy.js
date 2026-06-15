@@ -248,7 +248,7 @@ export class Tropy extends EventEmitter {
       }
 
       this.state.recent = [
-        { path: project.path, name: project.name, slug: project.slug ?? null },
+        { path: project.path, name: project.name },
         ...this.state.recent.filter(f => f.path !== project.path)
       ]
 
@@ -277,7 +277,7 @@ export class Tropy extends EventEmitter {
 
   effectiveSlug (entry) {
     if (!entry) return null
-    return entry.slug || sanitizeSlug(entry.name)
+    return sanitizeSlug(entry.name)
   }
 
   resolveSlug (slug) {
@@ -388,7 +388,7 @@ export class Tropy extends EventEmitter {
 
     state.recent = (state.recent || []).map(entry => (
       typeof entry === 'string' ?
-        { path: entry, name: basename(entry, extname(entry)), slug: null } :
+        { path: entry, name: basename(entry, extname(entry)) } :
         entry
     ))
 
@@ -1123,12 +1123,7 @@ export class Tropy extends EventEmitter {
   copyProtocolURL (project, { item, photo } = {}) {
     if (!project) return
 
-    let slug = this.effectiveSlug({
-      name: project.name,
-      slug: project.slug
-    })
-
-    clipboard.write({ text: protocolURL(slug, { item, photo }) })
+    clipboard.write({ text: protocolURL(project.name, { item, photo }) })
   }
 
   async handleProtocolRequest (url) {
@@ -1165,7 +1160,9 @@ export class Tropy extends EventEmitter {
           }
 
         } else {
+          // Open the most recent on collision
           let matches = this.resolveSlug(slug)
+          let file = matches[0]?.path
 
           if (matches.length > 1) {
             await dialog.warn(this.wm.current(), {
@@ -1173,10 +1170,9 @@ export class Tropy extends EventEmitter {
               detail: this.dict.dialog.project.url.conflict.detail
                 .replace('{slug}', slug)
             })
-            return true
           }
 
-          if (matches.length === 0) {
+          if (file == null) {
             let files = await dialog.open(this.wm.current(), {
               filters: [{
                 name: this.dict.dialog.file.project,
@@ -1185,29 +1181,17 @@ export class Tropy extends EventEmitter {
             })
 
             if (!files?.length) return true
+            file = files[0]
+          }
 
-            let file = files[0]
-            win = this.getProjectWindow(file)
+          win = this.getProjectWindow(file)
 
-            if (!win) {
-              win = await this.showProjectWindow(file, null)
-              await Promise.race([
-                once(this, 'project:opened'),
-                delay(5000)
-              ])
-            }
-
-          } else {
-            let [entry] = matches
-            win = this.getProjectWindow(entry.path)
-
-            if (!win) {
-              win = await this.showProjectWindow(entry.path, null)
-              await Promise.race([
-                once(this, 'project:opened'),
-                delay(5000)
-              ])
-            }
+          if (!win) {
+            win = await this.showProjectWindow(file, null)
+            await Promise.race([
+              once(this, 'project:opened'),
+              delay(5000)
+            ])
           }
         }
 
@@ -1365,11 +1349,8 @@ export class Tropy extends EventEmitter {
         ].join(''))
 
       let entry = this.state.recent?.find(e => e.path === project.path)
-      if (entry &&
-        (entry.name !== project.name ||
-          (entry.slug ?? null) !== (project.slug ?? null))) {
+      if (entry && entry.name !== project.name) {
         entry.name = project.name
-        entry.slug = project.slug ?? null
         this.store.save('state.json', this.state)
         this.wm.broadcast('recent', this.state.recent)
       }

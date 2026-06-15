@@ -35,22 +35,27 @@ export class Server {
       return { win, path, slug: this.currentSlug(path) }
     }
 
-    let entries = this.app.state.recent.filter(
+    // Resolve to the most recent on collision
+    let matches = this.app.state.recent.filter(
       e => this.app.effectiveSlug(e) === slug)
 
-    if (entries.length === 0)
+    if (matches.length === 0)
       return { error: 'not-found' }
 
-    if (entries.length > 1)
-      return { error: 'conflict', paths: entries.map(e => e.path) }
+    let [entry] = matches
 
     let win = this.app.wm.find('project',
-      w => this.app.getProject(w)?.path === entries[0].path)
+      w => this.app.getProject(w)?.path === entry.path)
 
     if (win == null)
       return { error: 'not-open' }
 
-    return { win, path: entries[0].path, slug }
+    return {
+      win,
+      path: entry.path,
+      slug,
+      ambiguous: matches.length > 1
+    }
   }
 
   currentSlug = (path) => {

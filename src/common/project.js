@@ -439,7 +439,7 @@ export const pext = (type) => {
 }
 
 const projectInfo =
-  select({ id: 'project_id' }, 'name', 'base', 'store', 'slug', {
+  select({ id: 'project_id' }, 'name', 'base', 'store', {
     lastAccess:
       select('opened')
         .from('access')
@@ -448,7 +448,7 @@ const projectInfo =
   }).from('project').limit(1)
 
 const projectStats =
-  select({ id: 'project_id' }, 'name', 'slug', {
+  select({ id: 'project_id' }, 'name', {
     items:
       select('count(id)')
         .from('items')
