@@ -37,10 +37,10 @@ en:
     project:
       url:
         conflict:
-          message: Cannot open project URL
+          message: Ambiguous project URL
           detail: >-
-            Multiple projects use the URL "{slug}".
-            Open project preferences to change one.
+            Multiple projects use the URL "{slug}". Opening the most recently
+            used one. Consider renaming a project so each has a unique URL.
   window:
     prefs:
       title: Tropy Preferences

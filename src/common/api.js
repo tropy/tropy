@@ -459,14 +459,12 @@ export function create ({
           hint: 'open the project in Tropy first'
         }
         return
-      case 'conflict':
-        ctx.status = 409
-        ctx.body = {
-          error: `project "${slug}" is ambiguous`,
-          paths: resolved.paths
-        }
-        return
     }
+
+    if (resolved.ambiguous)
+      ctx.set('Warning',
+        `199 - "ambiguous project URL '${slug}'; opened the most recent ` +
+        'match, consider renaming a project"')
 
     ctx.projectSlug = resolved.slug
     ctx.projectPath = resolved.path
