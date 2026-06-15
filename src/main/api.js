@@ -1,5 +1,6 @@
 import { createServer } from 'node:http'
 import { debug, info, logger, warn } from '../common/log.js'
+import { urlId } from '../common/url.js'
 import dialog from './dialog.js'
 
 export class Server {
@@ -23,21 +24,22 @@ export class Server {
     this.app.wm.rsvp(win, action)
   )
 
-  resolveProject = (slug) => {
-    if (!slug) return null
+  resolveProject = (id) => {
+    if (!id) return null
 
-    if (slug === 'current') {
+    if (id === 'current') {
       let win = this.app.wm.current('project')
       if (win == null)
         return { error: 'not-open' }
 
       let path = this.app.getProject(win)?.path
-      return { win, path, slug: this.currentSlug(path) }
+      return { win, path, id: urlId(path) }
     }
 
-    // Resolve to the most recent on collision
+    // Several projects can share a URL id when their files have the same
+    // basename; resolve to the most recent.
     let matches = this.app.state.recent.filter(
-      e => this.app.effectiveSlug(e) === slug)
+      e => this.app.projectURLId(e) === id)
 
     if (matches.length === 0)
       return { error: 'not-found' }
@@ -53,14 +55,9 @@ export class Server {
     return {
       win,
       path: entry.path,
-      slug,
+      id,
       ambiguous: matches.length > 1
     }
-  }
-
-  currentSlug = (path) => {
-    let entry = this.app.state.recent.find(e => e.path === path)
-    return this.app.effectiveSlug(entry)
   }
 
   get port () {
