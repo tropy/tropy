@@ -185,9 +185,9 @@
   },
   "allowScripts": {
     "@parcel/watcher@2.5.6": true,
-    "better-sqlite3@12.10.0": true,
     "electron-winstaller@5.4.0": true,
     "sharp@0.34.5": true,
-    "sqlite3@6.0.1": true
+    "sqlite3@6.0.1": true,
+    "better-sqlite3@12.11.1": true
   }
 }
