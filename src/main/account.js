@@ -17,7 +17,7 @@ export class AccountService extends EventEmitter {
   constructor (app, baseUrl = authUrl) {
     super()
     this.app = app
-    this.#baseUrl = baseUrl
+    this.baseUrl = baseUrl
     this.jwks = createRemoteJWKSet(this.url('/.well-known/jwks.json'))
   }
 
@@ -44,7 +44,7 @@ export class AccountService extends EventEmitter {
   }
 
   url (pathname = '') {
-    return new URL(pathname, this.#baseUrl)
+    return new URL(pathname, this.baseUrl)
   }
 
   async post (pathname, body, {
@@ -103,7 +103,7 @@ export class AccountService extends EventEmitter {
     return {
       lastRefresh: this.tokenSet?.timestamp,
       linked: account?.token != null,
-      url: this.#baseUrl
+      url: this.baseUrl
     }
   }
 
@@ -218,7 +218,7 @@ export class AccountService extends EventEmitter {
 
     try {
       let { payload } = await jwtVerify(this.tokenSet.idToken, this.jwks, {
-        issuer: this.#baseUrl,
+        issuer: this.baseUrl,
         audience: this.clientId
       })
 
