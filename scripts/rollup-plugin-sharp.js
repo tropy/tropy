@@ -5,16 +5,16 @@
 // Replace dynamically computed path to native module with a static one.
 
 import MagicString from 'magic-string'
+import sharp from 'sharp'
 
-const REQUIRE = 'sharp = require(path);'
-const PATHS = /const paths = \[[^\]]+\];/
+const REQUIRE = 'sharp = require(`../src/build/Release/sharp-${runtimePlatform}-${version}.node`);'
 
 export default function sharpRequire ({ platformId }) {
   let transformed = false
   return {
     name: 'sharp-require-patch',
     transform (code, id) {
-      if ((/sharp[\\/]lib[\\/]sharp\.js$/).test(id)) {
+      if ((/sharp[\\/]dist[\\/]sharp\.mjs$/).test(id)) {
         transformed = true
         const requireStatementPos = code.indexOf(REQUIRE)
         if (requireStatementPos < 0) {
@@ -23,26 +23,14 @@ export default function sharpRequire ({ platformId }) {
           )
         }
 
-        const path = `../src/build/Release/sharp-${platformId}.node`
-        const REPLACEMENT = REQUIRE.replace('path', `'${path}'`)
+        const path = `./node/lib/sharp-${platformId}-${sharp.versions.sharp}.node`
+        const REPLACEMENT = `sharp = require('${path}');`
 
         const magicString = new MagicString(code)
         magicString.overwrite(
           requireStatementPos,
           requireStatementPos + REQUIRE.length,
           REPLACEMENT
-        )
-
-        const pathsMatch = PATHS.exec(code)
-
-        if (!pathsMatch) {
-          throw new Error('Could not find sharp require paths')
-        }
-
-        magicString.overwrite(
-          pathsMatch.index,
-          pathsMatch.index + pathsMatch[0].length,
-          `const paths = ['${path}'];`
         )
 
         return {

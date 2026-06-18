@@ -27,6 +27,12 @@ const arch =
   process.arch
 
 const platformId = `${platform}-${arch}`
+
+const sharpNative = {
+  src: `node_modules/sharp/src/build/Release/sharp-${platformId}-*.node`,
+  dest: 'lib/node/lib'
+}
+
 const libvips = []
 
 if (process.env.SHARP_FORCE_GLOBAL_LIBVIPS !== 'true') {
@@ -78,9 +84,6 @@ function ignoreTryCatch (id) {
 
   if (id.startsWith('node:') || builtinModules.includes(id))
     return true
-
-  if (id === '@img/sharp-wasm32/versions')
-    return 'remove'
 
   console.warn(`Removing try/catch require of: ${id}`)
   return 'remove'
@@ -179,7 +182,7 @@ export default [
         }
       },
       copy({
-        targets: libvips,
+        targets: [sharpNative, ...libvips],
         copyOnce: true
       }),
       ignore([
