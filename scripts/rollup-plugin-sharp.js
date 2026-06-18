@@ -1,13 +1,14 @@
-//
-// In the source file:
-// 'sharp/lib/sharp.js'
-//
-// Replace dynamically computed path to native module with a static one.
-
 import MagicString from 'magic-string'
 import sharp from 'sharp'
 
-const REQUIRE = 'sharp = require(`../src/build/Release/sharp-${runtimePlatform}-${version}.node`);'
+const REQUIRE = [
+  'try {',
+  // eslint-disable-next-line no-template-curly-in-string
+  '  sharp = require(`../src/build/Release/sharp-${runtimePlatform}-${version}.node`);',
+  '} catch (err) {',
+  '  errors.push(err);',
+  '}'
+].join('\n')
 
 export default function sharpRequire ({ platformId }) {
   let transformed = false
