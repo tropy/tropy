@@ -6,7 +6,8 @@ import { Titlebar } from '../toolbar.js'
 import { SearchField } from '../search/field.js'
 import { IconXLarge } from '../icons.js'
 import { ProjectFileList } from './file.js'
-import { clear, consolidate, reload } from '../../slices/project-files.js'
+import { consolidate, reload } from '../../slices/project-files.js'
+import * as act from '../../actions/index.js'
 import { match } from '../../collate.js'
 import { urlId } from '../../common/url.js'
 
@@ -69,8 +70,8 @@ export const RecentProjects = ({
       })
   })
 
-  let handleProjectRemove = useEvent(path => {
-    dispatch(clear(path))
+  let handleContextMenu = useEvent((event, target) => {
+    dispatch(act.context.show(event, 'recent', target))
   })
 
   if (!files.length)
@@ -93,7 +94,7 @@ export const RecentProjects = ({
           <ProjectFileList
             files={projects}
             onConsolidate={handleConsolidate}
-            onRemove={handleProjectRemove}
+            onContextMenu={handleContextMenu}
             onSelect={onSelect}/>
         </nav>
       )}

@@ -513,10 +513,18 @@ export class Tropy extends EventEmitter {
     this.on('app:rename-project', (win) =>
       this.dispatch(act.edit.start({ project: { name: true } }), win))
 
-    this.on('app:show-project-file', () => {
-      if (this.state.recent.length > 0) {
-        shell.show(this.state.recent[0].path)
-      }
+    this.on('app:show-project-file', (_, { target } = {}) => {
+      let path = target?.path ?? this.state.recent[0]?.path
+      if (path) shell.show(path)
+    })
+
+    this.on('app:copy-url', (_, { target }) => {
+      let entry = this.state.recent.find(e => e.path === target.path)
+      if (entry) this.copyProtocolURL(entry)
+    })
+
+    this.on('app:remove-recent-project', (_, { target }) => {
+      this.clearRecentProjects([target.path])
     })
 
     this.on('app:center-window', () =>
@@ -999,11 +1007,6 @@ export class Tropy extends EventEmitter {
 
     ipc.on('clear-recent-project', (_, project) => {
       this.clearRecentProjects([project.path])
-    })
-
-    ipc.on('copy-project-url', (_, { path }) => {
-      let entry = this.state.recent.find(e => e.path === path)
-      if (entry) this.copyProtocolURL(entry)
     })
 
     ipc.on(FLASH.HIDE, (_, { id, confirm }) => {

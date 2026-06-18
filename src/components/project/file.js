@@ -1,13 +1,11 @@
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
-import { useIpcSend } from '../../hooks/use-ipc.js'
 import { Button } from '../button.js'
 import {
-  IconLink,
+  IconDotsVertical,
   IconMaze,
   IconRemoveLink,
-  IconWarningSm,
-  IconXMedium
+  IconWarningSm
 } from '../icons.js'
 import { RelativeDate } from '../date.js'
 
@@ -15,19 +13,18 @@ import { RelativeDate } from '../date.js'
 export const ProjectFileList = ({
   files,
   onConsolidate,
-  onRemove,
+  onContextMenu,
   onSelect
 }) => (
   <ol className="project-files">
-    {files.map(({ name, path, urlId, hasConflict, ...stats }) => (
+    {files.map(({ name, path, hasConflict, ...stats }) => (
       <ProjectFile
         key={path}
         name={name}
-        urlId={urlId}
         hasConflict={hasConflict}
         onClick={onSelect}
         onConsolidate={onConsolidate}
-        onRemove={onRemove}
+        onContextMenu={onContextMenu}
         path={path}
         stats={stats}/>
     )
@@ -39,14 +36,12 @@ export const ProjectFile = ({
   name,
   onClick,
   onConsolidate,
-  onRemove,
+  onContextMenu,
   path,
-  urlId,
   hasConflict,
   stats
 }) => {
   let intl = useIntl()
-  let copyUrl = useIpcSend(['copy-project-url'])
 
   let isMissing = !stats?.lastModified
 
@@ -57,14 +52,9 @@ export const ProjectFile = ({
       onClick?.(path)
   })
 
-  let handleRemove = useEvent((event) => {
+  let handleContextMenu = useEvent((event) => {
     event.stopPropagation()
-    onRemove?.(path)
-  })
-
-  let handleCopyUrl = useEvent((event) => {
-    event.stopPropagation()
-    copyUrl({ path })
+    onContextMenu?.(event, { path, isMissing })
   })
 
   let hint = intl.formatMessage({
@@ -75,6 +65,7 @@ export const ProjectFile = ({
     <li
       className="project-file"
       onClick={handleClick}
+      onContextMenu={handleContextMenu}
       title={hint}>
       <IconMaze/>
       <div className="flex-col">
@@ -85,20 +76,14 @@ export const ProjectFile = ({
               title={intl.formatMessage({ id: 'project.file.conflict' })}/>
           )}
           {isMissing && <IconWarningSm/>}
-          {!isMissing && urlId && (
-            <Button
-              className="copy-url"
-              icon={<IconLink/>}
-              onClick={handleCopyUrl}
-              title="project.file.url"/>
-          )}
         </div>
         <ProjectFileStats {...stats}/>
       </div>
       <Button
-        icon={<IconXMedium/>}
-        onClick={handleRemove}
-        title="project.file.remove"/>
+        className="context"
+        icon={<IconDotsVertical/>}
+        onClick={handleContextMenu}
+        title="project.file.options"/>
     </li>
   )
 }

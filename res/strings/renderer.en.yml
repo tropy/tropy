@@ -84,8 +84,7 @@ en:
     file:
       open: Open project {path}
       missing: Find missing project {path}
-      remove: Remove project from list
-      url: Copy project URL
+      options: Project options
       conflict: >-
         Another project shares this URL; opening it always opens the most
         recently used one
