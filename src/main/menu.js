@@ -160,7 +160,7 @@ export class ContextMenu extends Menu {
           ...ContextMenu.scopes[scope]
         ]
 
-        if (scope !== 'default')
+        if (scope !== 'default' && scope !== 'recent')
           settings = ContextMenu.scopes.default.concat(settings)
 
         if (this.app.dev || this.app.debug)
@@ -196,6 +196,8 @@ export class ContextMenu extends Menu {
   const { scopes } = ContextMenu
 
   scopes.default = ['history']
+
+  scopes.recent = ['recent']
 
   scopes.sidebar = ['project', 'lists', 'tags']
   scopes.sidebar.position = 2
