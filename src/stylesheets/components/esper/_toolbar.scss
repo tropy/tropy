@@ -100,13 +100,19 @@
 
     .tool-group {
       > .btn-icon {
-        .frameless & {
-          &:hover {
-            background-color: $esper-btn-icon-hover-bg;
-          }
+        &:hover {
+          background-color: $esper-btn-icon-hover-bg;
+        }
 
-          &.active {
-            background-color: $esper-btn-icon-active-bg;
+        &.active {
+          background-color: $esper-btn-icon-active-bg;
+        }
+
+        &:has(.icon-minimize) {
+          background-color: $icon-color;
+
+          .icon-minimize {
+            color: $esper-bg;
           }
         }
       }
