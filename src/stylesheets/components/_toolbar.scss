@@ -128,6 +128,18 @@
     & + .btn-icon {
       margin-left: zoom(calc($space-min / 2));
     }
+
+    &:has(.icon-minimize) {
+      background-color: $icon-color;
+
+      .icon-minimize {
+        color: $body-bg;
+
+        .btn-icon:active :is(&) {
+          color: $body-bg;
+        }
+      }
+    }
   }
 
   nav {
