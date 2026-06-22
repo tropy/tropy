@@ -146,7 +146,7 @@
     "edtf": "^4.10.0",
     "generic-pool": "^3.7.1",
     "jose": "^6.2.3",
-    "js-yaml": "^4.0.0",
+    "js-yaml": "^5.0.0",
     "jsonld": "^9.0.0",
     "koa": "^3.0.0",
     "koa-bodyparser": "^4.3.0",
@@ -187,6 +187,9 @@
     "electron-winstaller@5.4.0": true,
     "sharp@0.34.5": true,
     "sqlite3@6.0.1": true,
-    "better-sqlite3@12.11.1": true
+    "better-sqlite3@12.11.1": true,
+    "fsevents@2.3.3": true,
+    "fs-xattr@0.3.1": true,
+    "macos-alias@0.2.12": true
   }
 }
