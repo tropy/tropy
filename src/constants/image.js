@@ -45,8 +45,7 @@ const RAW = {
     'srw',
     'sti',
     'x3f'
-  ],
-  MIN_VIPS: '8.18.0'
+  ]
 }
 
 const SUPPORTED = {
@@ -91,11 +90,11 @@ export default {
     'pdf',
     'png',
     'ps',
-    ...RAW.EXT,
     'svg',
     'tif',
     'tiff',
-    'webp'
+    'webp',
+    ...RAW.EXT
   ],
 
   WEB: {
@@ -115,6 +114,5 @@ export default {
   },
 
   RAW,
-
   SUPPORTED
 }

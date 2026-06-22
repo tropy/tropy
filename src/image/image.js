@@ -1,6 +1,5 @@
 import { createHash } from 'node:crypto'
 import { rdjpgcom } from 'rdjpgcom'
-import lt from 'semver/functions/lt.js'
 import { Asset } from '../asset/index.js'
 import { exif } from './exif.js'
 import { xmp } from './xmp.js'
@@ -20,12 +19,14 @@ export class Image extends Asset {
       case MIME.HEIC:
       case MIME.HEIF:
         return 1
-      default:
+      default: {
+        let meta = this.meta?.[this.page]
         return Orientation(
-          this.meta?.[this.page]?.exif?.[exifns.orientation]?.text ||
-          this.meta?.[this.page]?.orientation ||
+          meta?.exif?.[exifns.orientation]?.text ||
+          meta?.orientation ||
           1
         )
+      }
     }
   }
 
@@ -84,11 +85,7 @@ export class Image extends Asset {
   }
 
   do (page = this.page, autoOrient = false) {
-    let input = (this.mimetype === MIME.RAW && !this.isRemote) ?
-      this.path :
-      this.original?.buffer || this.buffer || this.path
-
-    return sharp(input, {
+    return sharp(this.original?.buffer || this.buffer || this.path, {
       autoOrient,
       page,
       density: this.density
@@ -224,19 +221,10 @@ export class Image extends Asset {
   }
 
   async parse ({ page, density = 72, useLocalTimezone }) {
-    let vip = await init()
+    await init()
 
     if (!IMAGE.SUPPORTED[this.mimetype])
       throw new Error(`image type not supported: ${this.mimetype}`)
-
-    if (
-      this.mimetype === MIME.RAW &&
-      lt(vip.versions.vips, IMAGE.RAW.MIN_VIPS)
-    ) {
-      throw new Error(
-        `image type requires libvips ${IMAGE.RAW.MIN_VIPS} or later: ${this.mimetype}`
-      )
-    }
 
     if (IMAGE.SCALABLE[this.mimetype])
       this.density = restrict(density, IMAGE.MIN_DENSITY, IMAGE.MAX_DENSITY)

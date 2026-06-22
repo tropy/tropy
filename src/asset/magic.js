@@ -3,8 +3,6 @@ import IMAGE from '../constants/image.js'
 
 
 export function magic (buffer, ext = '') {
-  let raw = isRAW(ext)
-
   if (buffer != null) {
     if (isJPEG(buffer))
       return MIME.JPEG
@@ -28,14 +26,11 @@ export function magic (buffer, ext = '') {
       return MIME.EPS
     if (isPS(buffer))
       return MIME.PS
-    if (raw)
+    if (IMAGE.RAW.EXT.includes(ext.slice(1).toLowerCase()))
       return MIME.RAW
     if (isTIFF(buffer))
       return MIME.TIFF
   }
-
-  if (raw)
-    return MIME.RAW
 }
 
 const isGIF = (buffer) =>
@@ -66,9 +61,6 @@ const isPS = (buffer) =>
 
 const isEPS = (buffer) =>
   buffer.toString('ascii', 0, 23) === '%!PS-Adobe-3.0 EPSF-3.0'
-
-const isRAW = (ext) =>
-  IMAGE.RAW.EXT.includes(ext.toLowerCase().replace(/^\./, ''))
 
 const isTIFF = (buffer) =>
   check(buffer, [0x49, 0x49, 42, 0]) || check(buffer, [0x4d, 0x4d, 0, 42])
