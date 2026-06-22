@@ -9,7 +9,7 @@ import {
 
 import { join } from 'node:path'
 import process from 'node:process'
-import yaml from 'js-yaml'
+import * as yaml from 'js-yaml'
 import { program } from 'commander'
 
 import { bail, error, say, setLogSymbol, warn } from './util.js'

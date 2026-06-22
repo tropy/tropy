@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import { basename, join } from 'node:path'
 import electron from 'electron'
-import yaml from 'js-yaml'
+import { load } from 'js-yaml'
 import { debug } from '../common/log.js'
 import { flatten } from '../common/util.js'
 
@@ -19,7 +19,7 @@ export class Resource {
   }
 
   static parse (data) {
-    return yaml.load(data)
+    return load(data)
   }
 
   static async open (locale, name, ...args) {
