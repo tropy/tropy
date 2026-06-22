@@ -357,8 +357,11 @@ en:
     - label: '&Edit'
       submenu:
         - *undo
-        - <<: *redo
+        - id: 'redo'
+          label: '&Redo'
           accelerator: 'Control+Y'
+          command: 'app:redo'
+          enabled: false
         - type: 'separator'
         - *cut
         - *copy

@@ -385,7 +385,10 @@ en:
   win32:
     history:
       - *undo
-      - <<: *redo
+      - id: 'redo'
+        label: 'Redo'
+        command: 'app:redo'
+        enabled: false
         accelerator: 'Control+Y'
     project: *project
     lists: *lists
