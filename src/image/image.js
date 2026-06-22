@@ -19,10 +19,14 @@ export class Image extends Asset {
       case MIME.HEIC:
       case MIME.HEIF:
         return 1
-      default:
+      default: {
+        let meta = this.meta?.[this.page]
         return Orientation(
-          this.meta?.[this.page]?.exif?.[exifns.orientation]?.text || 1
+          meta?.exif?.[exifns.orientation]?.text ||
+          meta?.orientation ||
+          1
         )
+      }
     }
   }
 

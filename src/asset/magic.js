@@ -1,4 +1,5 @@
 import MIME from '../constants/mime.js'
+import IMAGE from '../constants/image.js'
 
 
 export function magic (buffer, ext = '') {
@@ -7,8 +8,6 @@ export function magic (buffer, ext = '') {
       return MIME.JPEG
     if (isPNG(buffer))
       return MIME.PNG
-    if (isTIFF(buffer))
-      return MIME.TIFF
     if (isPDF(buffer))
       return MIME.PDF
     if (isGIF(buffer))
@@ -27,6 +26,10 @@ export function magic (buffer, ext = '') {
       return MIME.EPS
     if (isPS(buffer))
       return MIME.PS
+    if (IMAGE.RAW.EXT.includes(ext.slice(1).toLowerCase()))
+      return MIME.RAW
+    if (isTIFF(buffer))
+      return MIME.TIFF
   }
 }
 
