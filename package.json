@@ -127,8 +127,7 @@
     "unzip-crx-3": "^0.2.0"
   },
   "optionalDependencies": {
-    "appdmg": "^0.6.6",
-    "fsevents": "~2.3.2"
+    "appdmg": "^0.6.6"
   },
   "overrides": {
     "yauzl": "^3.3.1"

@@ -79,9 +79,6 @@ function onwarn (warning, warn) {
 }
 
 function ignoreTryCatch (id) {
-  if (id === 'fsevents')
-    return (process.platform === 'darwin') ? false : 'remove'
-
   if (id.startsWith('node:') || builtinModules.includes(id))
     return true
 
