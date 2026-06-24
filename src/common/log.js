@@ -5,6 +5,10 @@ import { version } from './release.js'
 
 export let logger
 
+const REDACT = [
+  'headers.authorization'
+]
+
 const dateTimeFormat = new Intl.DateTimeFormat('en-GB', {
   dateStyle: 'short',
   timeStyle: 'short'
@@ -27,6 +31,7 @@ export function createLogger ({
   dest = 2,
   level,
   name = 'log',
+  redact = REDACT,
   rotate = false,
   debug = process.env.TROPY_DEBUG,
   trace = process.env.TROPY_TRACE
@@ -54,6 +59,7 @@ export function createLogger ({
 
   logger = pino({
     level,
+    redact,
     base: {
       type: process.type,
       name

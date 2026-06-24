@@ -25,12 +25,13 @@ import {
 } from '../common/log.js'
 
 import { darwin, linux } from '../common/os.js'
-import { delay, once } from '../common/util.js'
+import { debounce, delay, once } from '../common/util.js'
 import { channel, product, version } from '../common/release.js'
 import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
 
 import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
+import { AccountService } from './account.js'
 import { Strings } from './res.js'
 import { AppMenu, ContextMenu } from './menu.js'
 import { Storage } from './storage.js'
@@ -79,6 +80,7 @@ export class Tropy extends EventEmitter {
 
     this.opts = opts
 
+    this.account = new AccountService(this, opts.auth)
     this.api = new ApiServer(this)
     this.cache = new Cache(opts.cache || join(opts.data, 'cache'))
     this.ctx = new ContextMenu(this)
@@ -98,6 +100,7 @@ export class Tropy extends EventEmitter {
   async start () {
     await this.restore()
     this.listen()
+    this.account.start()
     this.wm.start()
     await this.api.start()
     shell.start()
@@ -109,6 +112,7 @@ export class Tropy extends EventEmitter {
     this.updater.stop()
     this.plugins.stop()
     this.persist()
+    await this.persist.flush()
   }
 
   async open (...urls) {
@@ -289,15 +293,15 @@ export class Tropy extends EventEmitter {
       })
   }
 
-  showAboutWindow () {
-    this.wm.show('about', this.hash, {
+  async showAboutWindow () {
+    await this.wm.show('about', this.hash, {
       title: this.dict.window.about.title,
       parent: this.wm.current(),
       modal: linux
     })
   }
 
-  showPreferencesWindow () {
+  async showPreferencesWindow () {
     let win = this.wm.current()
     let project = this.getProject(win)
 
@@ -309,7 +313,7 @@ export class Tropy extends EventEmitter {
     win?.showInactive()
     win?.moveTop()
 
-    this.wm.show('prefs', args, {
+    await this.wm.show('prefs', args, {
       isExclusive: !darwin,
       title: this.dict.window.prefs.title,
       parent: win
@@ -371,20 +375,21 @@ export class Tropy extends EventEmitter {
     return state
   }
 
-  persist () {
+  persist = debounce(async () => {
     info('saving app state')
+    let saving = []
 
     if (this.state != null) {
       this.state.lastDefaultPath = dialog.lastDefaultPath
-      this.store.save('state.json', this.state)
+      saving.push(this.store.save('state.json', this.state))
     }
 
     if (this.safe != null) {
-      this.store.save('safe.json.enc', this.safe, { secure: true })
+      saving.push(this.store.save('safe.json.enc', this.safe, { secure: true }))
     }
 
-    return this
-  }
+    await Promise.all(saving)
+  }, 100)
 
   async print (opts, sender) {
     try {
@@ -817,9 +822,9 @@ export class Tropy extends EventEmitter {
       if (win != null) win.webContents.inspectElement(x, y)
     })
 
-    this.on('app:open-preferences', () => {
+    this.on('app:open-preferences', () => (
       this.showPreferencesWindow()
-    })
+    ))
 
     this.on('app:open-license', () => {
       shell.open('https://tropy.org/license')
@@ -1007,6 +1012,11 @@ export class Tropy extends EventEmitter {
       this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
+    this.account.on('change', () => {
+      this.wm.broadcast('account', this.account.status)
+      this.persist()
+    })
+
     this.wm.on('show-menu', (win, pos) => {
       win.webContents.send('menu', true)
       this.menu.popup({
@@ -1173,6 +1183,7 @@ export class Tropy extends EventEmitter {
 
   get hash () {
     return {
+      account: this.account.status,
       api: this.api.status,
       data: this.opts.data,
       debug: this.debug,

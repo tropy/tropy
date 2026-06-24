@@ -98,8 +98,9 @@ $search-width: 200px;
 
 $padding-base-vertical: 2px;
 
-$padding-base-horizontal:  $space-xs;
-$padding-large-horizontal: $space-sm;
+$padding-base-horizontal: $space-xs;
+$padding-lg-horizontal:   10px;
+$padding-xl-horizontal:   $space-sm;
 
 $border-radius-small: 3px;
 $border-radius-base:  4px;
@@ -144,7 +145,8 @@ $btn-disabled-opacity: 0.5;
 // --------------------------------------------------
 
 $input-height-base:         $space-lg + 2 * $shim;
-$input-height-large:        ($space-xl + $space-xs);
+$input-height-lg:           $space-xl;
+$input-height-xl:           ($space-xl + $space-xs);
 $input-border-radius-small: $border-radius-small;
 $checkbox-size:             14px;
 $input-border-width:        const("INPUT.BORDER_WIDTH", "px");

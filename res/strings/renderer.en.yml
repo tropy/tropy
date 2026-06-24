@@ -48,6 +48,9 @@ en:
           one {1 Note}
           other {# Notes}}
       create: Add Note
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: Item
     photo: Photo
@@ -297,6 +300,17 @@ en:
       uninstall: Uninstall
       noInfo: Unknown author
       homepage: More
+    account:
+      label: Account
+      description: Sign in to your account
+      username: Username
+      email: Email
+      password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
+      link: Sign in
+      unlink: Sign out
   format:
     ppi: Pixels per inch (ppi)
   item:
@@ -472,6 +486,15 @@ en:
           buttons:
             - Cancel
             - Delete
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again
+            to use server-side features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: >-
@@ -691,6 +714,12 @@ en:
       }
 
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        network: Could not reach the Tropy server.
+        unknown: Something went wrong. Please try again.
+      offline: Tropy is offline.
     cache:
       prune: Failed to optimize project cache.
       purge: Failed to remove old project caches.

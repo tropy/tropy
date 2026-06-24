@@ -1,7 +1,7 @@
 import { join } from 'node:path'
 import { readFile } from 'node:fs/promises'
-import { safeStorage } from 'electron'
 import write from 'write-file-atomic'
+import { encrypt, decrypt } from './crypto.js'
 import { trace, warn } from '../common/log.js'
 
 export class Storage {
@@ -11,9 +11,12 @@ export class Storage {
 
   async load (name, { defaults, secure = false } = {}) {
     try {
+      let buffer = await readFile(this.expand(name))
+      let data = await this.parse(buffer, { secure })
+
       return {
         ...defaults,
-        ...this.parse(await readFile(this.expand(name)), { secure })
+        ...data
       }
     } catch (error) {
       if (defaults != null && error.code === 'ENOENT')
@@ -23,14 +26,14 @@ export class Storage {
     }
   }
 
-  save (name, data, { secure = false } = {}) {
+  async save (name, data, { secure = false } = {}) {
     let string = JSON.stringify(data)
 
     if (secure) {
-      if (safeStorage.isEncryptionAvailable()) {
-        string = safeStorage.encryptString(string)
-      } else {
-        warn(`storage: no encryption available, ${name} was not saved`)
+      try {
+        string = await encrypt(string)
+      } catch (err) {
+        warn({ err }, `storage: encryption failed, skip saving ${name}`)
         return
       }
     }
@@ -39,12 +42,12 @@ export class Storage {
     trace(`storage: ${name} saved`)
   }
 
-  parse (data, { secure = false } = {}) {
+  async parse (data, { secure = false } = {}) {
     if (secure) {
-      if (safeStorage.isEncryptionAvailable()) {
-        data = safeStorage.decryptString(data)
-      } else {
-        warn('storage: no encryption available')
+      try {
+        data = await decrypt(data)
+      } catch (err) {
+        warn({ err }, 'storage: decryption failed, skip parsing data')
         return
       }
     }

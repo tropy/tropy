@@ -1,0 +1,14 @@
+@use "../../abstracts/config" as *;
+
+//
+// Account pane
+// --------------------------------------------------
+
+.account.pane {
+  .card {
+    background-color: $account-card-bg;
+    padding: $space-lg;
+    border-radius: 10px;
+    position: relative;
+  }
+}

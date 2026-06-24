@@ -22,7 +22,8 @@ process.on('uncaughtException', err => { handleError(err) })
 process.on('unhandledRejection', err => { handleError(err) })
 
 // Set app name and paths as soon as possible!
-app.name = qualified.product
+app.setName(qualified.product)
+app.userAgentFallback = qualified.name
 
 if (!opts.data) {
   opts.data = join(app.getPath('appData'), exe)
@@ -213,4 +214,3 @@ function handleError (error, isFatal = false) {
     handleError(err, true)
   }
 }
-

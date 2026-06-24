@@ -62,6 +62,9 @@ fieldset {
 }
 
 .control-label {
+  display: block;
+  width: fit-content;
+
   .form-horizontal & {
     text-align: right;
     padding-top: 3px;
@@ -69,8 +72,20 @@ fieldset {
   }
 }
 
-.form-control,
-.form-group .slider {
+div:has(> .form-link) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-box: trim-both ex alphabetic;
+}
+
+.form-link {
+  font-size: to-rem(14);
+  display: inline-block;
+}
+
+.form-group .slider,
+.form-control {
   display: block;
   width: 100%;
   height: $input-height-base;
@@ -94,10 +109,17 @@ fieldset {
   }
 }
 
-.input-lg {
+.form-control-lg {
+  font-size: to-rem(14);
+  height: $input-height-lg;
+  padding: 0 $padding-lg-horizontal;
+  border-radius: $border-radius-base;
+}
+
+.form-control-xl {
   font-size: $font-size-large;
-  height: $input-height-large;
-  padding: 0 $padding-large-horizontal;
+  height: $input-height-xl;
+  padding: 0 $padding-xl-horizontal;
   border-radius: $border-radius-base;
 }
 
@@ -277,4 +299,20 @@ fieldset {
   position: absolute;
   clip-path: rect(0 0 0 0);
   pointer-events: none;
+}
+
+.password {
+  position: relative;
+
+  .btn-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-inline: $padding-lg-horizontal;
+    border: 1px solid transparent;
+  }
 }

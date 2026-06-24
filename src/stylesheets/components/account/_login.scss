@@ -1,0 +1,52 @@
+@use "../../abstracts/config" as *;
+
+//
+// Account login
+// --------------------------------------------------
+
+.account {
+  .login {
+    font-size: to-rem(16);
+    max-width: 320px;
+    margin: auto;
+
+    .tropy-icon {
+      margin: ($space-xxl - $space-lg) auto 20px;
+    }
+
+    h1 {
+      font-size: to-rem(24);
+      font-weight: 600;
+      text-align: center;
+      text-box: trim-both ex alphabetic;
+      letter-spacing: -0.005em;
+      margin: 0 auto $space-xl;
+    }
+
+    [class*="col"] {
+      padding: 0;
+      margin: 0;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: $space-lg;
+    }
+
+    .control-label {
+      text-box: trim-both ex alphabetic;
+      margin-bottom: 10px;
+    }
+
+    .btn-xl {
+      font-weight: 600;
+    }
+
+    .switch {
+      font-size: to-rem(14);
+      text-align: center;
+      color: #777; // TODO
+      margin: ($space-lg - 5px) 0 0;
+    }
+  }
+}

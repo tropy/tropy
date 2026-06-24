@@ -3,12 +3,13 @@ import { useDispatch } from 'react-redux'
 import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar, Toolbar, ToolGroup } from '../toolbar.js'
 import { Button } from '../button.js'
+import { AccountStatus } from '../account/status.js'
 import { Fade } from '../fx.js'
 import { mode } from '../../actions/nav.js'
 
 export const ItemToolbar = ({ isItemMode }) => {
   let dispatch = useDispatch()
-  let ref = useRef(null)
+  let nodeRef = useRef(null)
 
   let toggleProjectMode = useEvent(() => {
     dispatch(mode.project())
@@ -18,15 +19,18 @@ export const ItemToolbar = ({ isItemMode }) => {
     <Titlebar>
       <Toolbar.Left>
         <ToolGroup>
-          <Fade nodeRef={ref} in={isItemMode}>
+          <Fade nodeRef={nodeRef} in={isItemMode}>
             <Button
-              ref={ref}
+              ref={nodeRef}
               icon="IconChevron16"
               noFocus
               onClick={toggleProjectMode}/>
           </Fade>
         </ToolGroup>
       </Toolbar.Left>
+      <Toolbar.Right>
+        <AccountStatus/>
+      </Toolbar.Right>
     </Titlebar>
   )
 }

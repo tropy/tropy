@@ -1,3 +1,4 @@
+import { setTimeout as delay } from 'node:timers/promises'
 import { nanoid } from 'nanoid'
 
 export function on (emitter, ...args) {
@@ -29,9 +30,14 @@ export function once (emitter, ...events) {
   ))
 }
 
-export function when (emitter, event, timeout) {
-  return Promise.race([once(emitter, event), delay(timeout)])
+export function when (emitter, event, { timeout, signal }) {
+  return Promise.race([
+    once(emitter, event),
+    delay(timeout, null, { signal })
+  ])
 }
+
+export { delay }
 
 export function empty (obj) {
   return obj == null || Object.keys(obj).length === 0
@@ -88,6 +94,34 @@ pMap.worker = async function (it, mapper, result, errors, ...args) {
     } catch (err) {
       errors.push(err)
     }
+  }
+}
+
+export async function attempt (fn, opts = {}, ...args) {
+  let {
+    maxBackoff = 60_000,
+    minBackoff = 25,
+    maxRetries = Infinity,
+    numRetries = 0,
+    signal
+  } = opts
+
+  signal?.throwIfAborted()
+
+  try {
+    return await Promise.try(fn, ...args)
+  } catch (err) {
+    if (numRetries >= maxRetries) {
+      throw err
+    }
+
+    let ms = Math.min(minBackoff * (2 ** numRetries), maxBackoff)
+    await delay(ms, undefined, { signal })
+
+    return attempt(fn, {
+      ...opts,
+      numRetries: numRetries + 1
+    }, ...args)
   }
 }
 
@@ -415,10 +449,6 @@ export function tautology () {
   return true
 }
 
-export function delay (ms, ...args) {
-  return new Promise(resolve => setTimeout(resolve, ms, ...args))
-}
-
 export function *counter (k = 0) {
   while (true) {
     k = Number.isSafeInteger(k) ? ++k : -k
@@ -606,12 +636,12 @@ export const mergeMap = (a, b) =>
   a.entries().reduce((m, [k, v]) =>
     v ? m.set(k, true) : m, new Map(b))
 
-export function debounce (fn, wait) {
+export function debounce (fn, ms) {
   let id, args, ctx
 
   function invoke () {
     try {
-      fn.apply(ctx, args)
+      return fn.apply(ctx, args)
     } finally {
       ctx = args = undefined
     }
@@ -621,7 +651,7 @@ export function debounce (fn, wait) {
     args = argv
     ctx = this
     clearTimeout(id)
-    id = setTimeout(invoke, wait)
+    id = setTimeout(invoke, ms)
   }
 
   debounced.cancel = () => {
@@ -633,14 +663,14 @@ export function debounce (fn, wait) {
     if (id !== undefined) {
       clearTimeout(id)
       id = undefined
-      invoke()
+      return invoke()
     }
   }
 
   return debounced
 }
 
-export function throttle (fn, wait) {
+export function throttle (fn, ms) {
   let id, args, ctx, lastInvokeTime
 
   function invoke () {
@@ -663,14 +693,14 @@ export function throttle (fn, wait) {
     args = argv
     ctx = this
 
-    if (lastInvokeTime === undefined || now - lastInvokeTime >= wait) {
+    if (lastInvokeTime === undefined || now - lastInvokeTime >= ms) {
       clearTimeout(id)
       id = undefined
       return invoke()
     }
 
     if (id === undefined) {
-      id = setTimeout(timerExpired, wait - (now - lastInvokeTime))
+      id = setTimeout(timerExpired, ms - (now - lastInvokeTime))
     }
   }
 
