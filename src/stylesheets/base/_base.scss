@@ -60,3 +60,14 @@ body {
     background: transparent;
   }
 }
+
+// Workaround for Electron issue #49843
+[title] {
+  position: relative;
+}
+
+[title]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
