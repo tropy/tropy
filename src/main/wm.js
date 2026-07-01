@@ -227,6 +227,10 @@ export class WindowManager extends EventEmitter {
     return this.windows[type]?.[0]
   }
 
+  find (type, predicate) {
+    return this.windows[type]?.find(predicate)
+  }
+
   each (...args) {
     return this.map(...args), this
   }
@@ -531,15 +535,14 @@ export class WindowManager extends EventEmitter {
     this.each(type, win => win.webContents.send(...args))
   }
 
-  rsvp (type, action) {
+  rsvp (win, action) {
     let id
 
     return new Promise((resolve, reject) => {
       id = this.seq.next().value
-      let win = this.current(type)
 
       if (win == null)
-        return reject(new Error(`no ${type} window open`))
+        return reject(new Error('window not found'))
 
       action.meta.rsvp = id
       this.pending[id] = { resolve, reject }

@@ -1,5 +1,6 @@
 import { createServer } from 'node:http'
 import { debug, info, logger, warn } from '../common/log.js'
+import { urlId } from '../common/url.js'
 import dialog from './dialog.js'
 
 export class Server {
@@ -12,16 +13,52 @@ export class Server {
   }
 
   current = () => {
-    return this.app.state.recent[0]
+    return this.app.state.recent[0]?.path
   }
 
   dispatch = (type, action) => {
     this.app.wm.current(type).webContents.send('dispatch', action)
   }
 
-  rsvp = (type, action) => (
-    this.app.wm.rsvp(type, action)
+  rsvp = (win, action) => (
+    this.app.wm.rsvp(win, action)
   )
+
+  resolveProject = (id) => {
+    if (!id) return null
+
+    if (id === 'current') {
+      let win = this.app.wm.current('project')
+      if (win == null)
+        return { error: 'not-open' }
+
+      let path = this.app.getProject(win)?.path
+      return { win, path, id: urlId(path) }
+    }
+
+    // Several projects can share a URL id when their files have the same
+    // basename; resolve to the most recent.
+    let matches = this.app.state.recent.filter(
+      e => this.app.projectURLId(e) === id)
+
+    if (matches.length === 0)
+      return { error: 'not-found' }
+
+    let [entry] = matches
+
+    let win = this.app.wm.find('project',
+      w => this.app.getProject(w)?.path === entry.path)
+
+    if (win == null)
+      return { error: 'not-open' }
+
+    return {
+      win,
+      path: entry.path,
+      id,
+      ambiguous: matches.length > 1
+    }
+  }
 
   get port () {
     return this.app.opts.port || this.app.state.port
@@ -57,6 +94,7 @@ export class Server {
         current: this.current,
         dispatch: this.dispatch,
         log: logger.child({ name: 'api' }),
+        resolveProject: this.resolveProject,
         rsvp: this.rsvp,
         version: this.app.version
       })

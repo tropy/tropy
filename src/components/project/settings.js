@@ -84,6 +84,12 @@ export const ProjectSettings = React.memo(({
         isReadOnly
         value={project.id}/>
       <FormField
+        id="prefs.project.url"
+        name="url"
+        isCompact
+        isReadOnly
+        value={project.url}/>
+      <FormField
         id="prefs.project.path"
         name="path"
         isCompact

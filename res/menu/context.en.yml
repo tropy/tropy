@@ -17,8 +17,19 @@ en:
       - label: 'Rename Project'
         command: 'app:rename-project'
         condition: '!isReadOnly'
+      - label: 'Copy Project URL'
+        command: 'app:copy-project-url'
       - label: 'Show Project File…'
         command: 'app:show-project-file'
+    recent: &recent
+      - label: 'Copy Project Link'
+        command: 'app:copy-url'
+        condition: '!isMissing'
+      - label: 'Show Project File…'
+        command: 'app:show-project-file'
+        condition: '!isMissing'
+      - label: 'Remove Project from List'
+        command: 'app:remove-recent-project'
     lists: &lists
       - label: 'New List'
         command: 'app:create-list'
@@ -353,6 +364,7 @@ en:
       - *undo
       - *redo
     project: *project
+    recent: *recent
     lists: *lists
     list: *list
     tags: *tags
@@ -391,6 +403,7 @@ en:
         enabled: false
         accelerator: 'Control+Y'
     project: *project
+    recent: *recent
     lists: *lists
     list: *list
     tags: *tags

@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import fs from 'node:fs'
 import { EventEmitter } from 'node:events'
-import { extname, join } from 'node:path'
+import { basename, extname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { randomUUID as uuid } from 'node:crypto'
 
@@ -29,6 +29,7 @@ import { delay, once } from '../common/util.js'
 import { channel, product, version } from '../common/release.js'
 import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
+import { protocolURL, urlId } from '../common/url.js'
 
 import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
 import { Strings } from './res.js'
@@ -112,18 +113,22 @@ export class Tropy extends EventEmitter {
   }
 
   async open (...urls) {
+    let handled = false
+
     for (let url of urls) {
       switch (url.protocol) {
         case 'file:':
           await this.showProjectWindow(fileURLToPath(url), null)
           break
         case 'tropy:':
-          await this.handleProtocolRequest(url)
+          handled = (await this.handleProtocolRequest(url)) || handled
           break
         default:
           throw new Error(`protocol not supported: ${url}`)
       }
     }
+
+    if (handled) return
 
     let win = this.wm.current()
     if (win != null)
@@ -151,8 +156,8 @@ export class Tropy extends EventEmitter {
   }
 
   async openMostRecentProject () {
-    let recent = this.state.recent[0]
-    if (fs.existsSync(recent))
+    let recent = this.state.recent[0]?.path
+    if (recent && fs.existsSync(recent))
       return this.showProjectWindow(recent)
 
     return this.showProjectWindow()
@@ -243,12 +248,14 @@ export class Tropy extends EventEmitter {
       }
 
       this.state.recent = [
-        project.path,
-        ...this.state.recent.filter(f => f !== project.path)
+        { path: project.path, name: project.name },
+        ...this.state.recent.filter(f => f.path !== project.path)
       ]
+
+      this.store.save('state.json', this.state)
     }
 
-    this.wm.send('project', 'recent', this.state.recent)
+    this.wm.broadcast('recent', this.state.recent)
 
     this.setHistory(null, win)
     this.setProject(project, win)
@@ -259,12 +266,22 @@ export class Tropy extends EventEmitter {
 
   clearRecentProjects (projects) {
     if (projects)
-      this.state.recent = this.state.recent.filter(f => !projects.includes(f))
+      this.state.recent = this.state.recent.filter(f => !projects.includes(f.path))
     else
       this.state.recent = []
 
-    this.wm.send('project', 'recent', this.state.recent)
+    this.store.save('state.json', this.state)
+    this.wm.broadcast('recent', this.state.recent)
     this.emit('app:reload-menu')
+  }
+
+  projectURLId (entry) {
+    if (!entry) return null
+    return urlId(entry.path)
+  }
+
+  resolveURLId (id) {
+    return this.state.recent.filter(e => this.projectURLId(e) === id)
   }
 
   async import (...args) {
@@ -303,6 +320,7 @@ export class Tropy extends EventEmitter {
 
     let args = {
       file: project?.path,
+      recent: this.state.recent,
       ...this.hash
     }
 
@@ -367,6 +385,12 @@ export class Tropy extends EventEmitter {
 
     if (!(/^(system|dark|light)$/).test(state.theme))
       state.theme = 'system'
+
+    state.recent = (state.recent || []).map(entry => (
+      typeof entry === 'string' ?
+        { path: entry, name: basename(entry, extname(entry)) } :
+        entry
+    ))
 
     return state
   }
@@ -489,10 +513,18 @@ export class Tropy extends EventEmitter {
     this.on('app:rename-project', (win) =>
       this.dispatch(act.edit.start({ project: { name: true } }), win))
 
-    this.on('app:show-project-file', () => {
-      if (this.state.recent.length > 0) {
-        shell.show(this.state.recent[0])
-      }
+    this.on('app:show-project-file', (_, { target } = {}) => {
+      let path = target?.path ?? this.state.recent[0]?.path
+      if (path) shell.show(path)
+    })
+
+    this.on('app:copy-url', (_, { target }) => {
+      let entry = this.state.recent.find(e => e.path === target.path)
+      if (entry) this.copyProtocolURL(entry)
+    })
+
+    this.on('app:remove-recent-project', (_, { target }) => {
+      this.clearRecentProjects([target.path])
     })
 
     this.on('app:center-window', () =>
@@ -684,6 +716,9 @@ export class Tropy extends EventEmitter {
       this.dispatch(
         act.note.export(target.notes, { target: ':clipboard:' }),
         win))
+
+    this.on('app:copy-project-url', (win) =>
+      this.copyProtocolURL(this.getProject(win)))
 
     this.on('app:copy-item-link', (win, { target }) =>
       this.copyProtocolURL(this.getProject(win), {
@@ -1088,12 +1123,10 @@ export class Tropy extends EventEmitter {
     return this
   }
 
-  copyProtocolURL (project, { item, photo }) {
-    let alias = 'current'
+  copyProtocolURL (project, { item, photo } = {}) {
+    if (!project) return
 
-    clipboard.write({
-      text: `tropy://project/${alias}/items/${item}/${photo}`
-    })
+    clipboard.write({ text: protocolURL(project.path, { item, photo }) })
   }
 
   async handleProtocolRequest (url) {
@@ -1111,24 +1144,52 @@ export class Tropy extends EventEmitter {
         break
 
       case 'project': {
-        // tropy://project(/:alias)/items/:id(/:photo)(/:selection)
-        let [, alias = 'current', type, id, photo] =
+        // tropy://project(/:UrlId)/items/:id(/:photo)(/:selection)
+        let [, projectId = 'current', type, id, photo] =
           url.pathname.split('/')
 
-        assert.equal(alias, 'current',
-          `bad request: project alias '${alias}' unknown`)
+        let win
 
-        let win = this.wm.current()
+        if (projectId === 'current') {
+          win = this.wm.current()
 
-        if (!win) {
-          win = await this.openMostRecentProject()
+          if (!win) {
+            win = await this.openMostRecentProject()
 
-          await Promise.race([
-            once(this, 'project:opened'),
-            delay(5000)
-          ])
+            await Promise.race([
+              once(this, 'project:opened'),
+              delay(5000)
+            ])
+          }
+
+        } else {
+          // open most recent project with that id
+          let file = this.resolveURLId(projectId)[0]?.path
+
+          if (file == null) {
+            let files = await dialog.open(this.wm.current(), {
+              filters: [{
+                name: this.dict.dialog.file.project,
+                extensions: ['tpy', 'tropy', 'mtpy']
+              }]
+            })
+
+            if (!files?.length) return true
+            file = files[0]
+          }
+
+          win = this.getProjectWindow(file)
+
+          if (!win) {
+            win = await this.showProjectWindow(file, null)
+            await Promise.race([
+              once(this, 'project:opened'),
+              delay(5000)
+            ])
+          }
         }
 
+        if (!win) break
         win.show()
 
         if (type) {
@@ -1280,6 +1341,13 @@ export class Tropy extends EventEmitter {
           project.name,
           project.isReadOnly ? this.dict.window.project.readOnly : ''
         ].join(''))
+
+      let entry = this.state.recent?.find(e => e.path === project.path)
+      if (entry && entry.name !== project.name) {
+        entry.name = project.name
+        this.store.save('state.json', this.state)
+        this.wm.broadcast('recent', this.state.recent)
+      }
     }
   }
 

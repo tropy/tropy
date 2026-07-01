@@ -84,7 +84,10 @@ en:
     file:
       open: Open project {path}
       missing: Find missing project {path}
-      remove: Remove project from list
+      options: Project options
+      conflict: >-
+        Another project shares this URL; opening it always opens the most
+        recently used one
     recent:
       search:
         placeholder: Filter projects
@@ -235,6 +238,7 @@ en:
           home: Relative to your home directory
       store: Managed folder
       name: Name
+      url: URL
       id: ID
       path: File
       type: Project type

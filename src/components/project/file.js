@@ -1,24 +1,30 @@
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
 import { Button } from '../button.js'
-import { IconMaze, IconWarningSm, IconXMedium } from '../icons.js'
+import {
+  IconDotsVertical,
+  IconMaze,
+  IconRemoveLink,
+  IconWarningSm
+} from '../icons.js'
 import { RelativeDate } from '../date.js'
 
 
 export const ProjectFileList = ({
   files,
   onConsolidate,
-  onRemove,
+  onContextMenu,
   onSelect
 }) => (
   <ol className="project-files">
-    {files.map(({ name, path, ...stats }) => (
+    {files.map(({ name, path, hasConflict, ...stats }) => (
       <ProjectFile
         key={path}
         name={name}
+        hasConflict={hasConflict}
         onClick={onSelect}
         onConsolidate={onConsolidate}
-        onRemove={onRemove}
+        onContextMenu={onContextMenu}
         path={path}
         stats={stats}/>
     )
@@ -30,8 +36,9 @@ export const ProjectFile = ({
   name,
   onClick,
   onConsolidate,
-  onRemove,
+  onContextMenu,
   path,
+  hasConflict,
   stats
 }) => {
   let intl = useIntl()
@@ -45,9 +52,9 @@ export const ProjectFile = ({
       onClick?.(path)
   })
 
-  let handleRemove = useEvent((event) => {
+  let handleContextMenu = useEvent((event) => {
     event.stopPropagation()
-    onRemove?.(path)
+    onContextMenu?.(event, { path, isMissing })
   })
 
   let hint = intl.formatMessage({
@@ -58,19 +65,25 @@ export const ProjectFile = ({
     <li
       className="project-file"
       onClick={handleClick}
+      onContextMenu={handleContextMenu}
       title={hint}>
       <IconMaze/>
       <div className="flex-col">
         <div className="name">
           <div className="truncate">{name}</div>
+          {hasConflict && (
+            <IconRemoveLink
+              title={intl.formatMessage({ id: 'project.file.conflict' })}/>
+          )}
           {isMissing && <IconWarningSm/>}
         </div>
         <ProjectFileStats {...stats}/>
       </div>
       <Button
-        icon={<IconXMedium/>}
-        onClick={handleRemove}
-        title="project.file.remove"/>
+        className="context"
+        icon={<IconDotsVertical/>}
+        onClick={handleContextMenu}
+        title="project.file.options"/>
     </li>
   )
 }

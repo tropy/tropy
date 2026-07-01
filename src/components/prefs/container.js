@@ -9,6 +9,7 @@ import { AppSettings } from '../settings/app.js'
 import { ProjectSettings } from '../project/settings.js'
 import { PluginConfig } from '../plugin/config.js'
 import { useIpcEvent, useIpcSend } from '../../hooks/use-ipc.js'
+import { selectProject } from '../../selectors/project.js'
 import * as act from '../../actions/index.js'
 import { Button } from '../button.js'
 import { IconPlus } from '../icons.js'
@@ -19,7 +20,7 @@ import { Titlebar, Toolbar } from '../toolbar.js'
 export function PrefsContainer () {
   let dispatch = useDispatch()
 
-  let project = useSelector(state => state.project)
+  let project = useSelector(selectProject)
   let handleProjectChange = useCallback((...args) => {
     dispatch(act.project.save(...args))
   }, [dispatch])

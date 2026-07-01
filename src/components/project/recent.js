@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEvent } from '../../hooks/use-event.js'
@@ -6,8 +6,10 @@ import { Titlebar } from '../toolbar.js'
 import { SearchField } from '../search/field.js'
 import { IconXLarge } from '../icons.js'
 import { ProjectFileList } from './file.js'
-import { clear, consolidate, reload } from '../../slices/project-files.js'
+import { consolidate, reload } from '../../slices/project-files.js'
+import * as act from '../../actions/index.js'
 import { match } from '../../collate.js'
+import { urlId } from '../../common/url.js'
 
 
 export const RecentProjects = ({
@@ -18,14 +20,45 @@ export const RecentProjects = ({
 
   let [query, setQuery] = useState('')
 
+  let paths = useMemo(() => files.map(f => f.path), [files])
+
   useEffect(() => {
-    dispatch(reload(files))
-  }, [files, dispatch])
+    dispatch(reload(paths))
+  }, [paths, dispatch])
 
   let projectFiles = useSelector(state => state.projectFiles)
+
+  let idByPath = useMemo(() => {
+    let map = new Map()
+    for (let entry of files) {
+      map.set(entry.path, urlId(entry.path))
+    }
+    return map
+  }, [files])
+
+  let conflicts = useMemo(() => {
+    let counts = new Map()
+    for (let id of idByPath.values()) {
+      counts.set(id, (counts.get(id) || 0) + 1)
+    }
+    let set = new Set()
+    for (let [path, id] of idByPath) {
+      if (counts.get(id) > 1) set.add(path)
+    }
+    return set
+  }, [idByPath])
+
   let projects =
     files
-      .map(path => projectFiles[path])
+      .map(entry => {
+        let stats = projectFiles[entry.path]
+        if (!stats) return null
+        return {
+          ...stats,
+          urlId: idByPath.get(entry.path),
+          hasConflict: conflicts.has(entry.path)
+        }
+      })
       .filter(file => file &&
         (!query || match(file.name, query, /\b\p{Alpha}/gu)))
 
@@ -37,8 +70,8 @@ export const RecentProjects = ({
       })
   })
 
-  let handleProjectRemove = useEvent(path => {
-    dispatch(clear(path))
+  let handleContextMenu = useEvent((event, target) => {
+    dispatch(act.context.show(event, 'recent', target))
   })
 
   if (!files.length)
@@ -61,7 +94,7 @@ export const RecentProjects = ({
           <ProjectFileList
             files={projects}
             onConsolidate={handleConsolidate}
-            onRemove={handleProjectRemove}
+            onContextMenu={handleContextMenu}
             onSelect={onSelect}/>
         </nav>
       )}

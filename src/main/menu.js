@@ -160,7 +160,7 @@ export class ContextMenu extends Menu {
           ...ContextMenu.scopes[scope]
         ]
 
-        if (scope !== 'default')
+        if (scope !== 'default' && scope !== 'recent')
           settings = ContextMenu.scopes.default.concat(settings)
 
         if (this.app.dev || this.app.debug)
@@ -196,6 +196,8 @@ export class ContextMenu extends Menu {
   const { scopes } = ContextMenu
 
   scopes.default = ['history']
+
+  scopes.recent = ['recent']
 
   scopes.sidebar = ['project', 'lists', 'tags']
   scopes.sidebar.position = 2
@@ -368,9 +370,9 @@ Menu.ItemCompiler = {
       item.enabled = true
 
       item.submenu = [
-        ...app.state.recent.map((file, idx) => ({
-          label: `${idx + 1}. ${basename(file)}`,
-          click: () => app.openFile(file)
+        ...app.state.recent.map(({ path }, idx) => ({
+          label: `${idx + 1}. ${basename(path)}`,
+          click: () => app.openFile(path)
         })),
         ...item.submenu
       ]
