@@ -85,7 +85,12 @@ export class Image extends Asset {
   }
 
   do (page = this.page, autoOrient = false) {
-    return sharp(this.original?.buffer || this.buffer || this.path, {
+    // HACK: .NEF files have TIFF headers so libvips requires filename
+    let input = (this.mimetype === MIME.RAW && this.ext.toLowerCase === '.nef')
+      ? this.path
+      : this.original?.buffer || this.buffer || this.path
+
+    return sharp(input, {
       autoOrient,
       page,
       density: this.density
