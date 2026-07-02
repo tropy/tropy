@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import fs from 'node:fs'
 import { EventEmitter } from 'node:events'
-import { basename, extname, join } from 'node:path'
+import { extname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { randomUUID as uuid } from 'node:crypto'
 
@@ -160,7 +160,7 @@ export class Tropy extends EventEmitter {
   }
 
   async openMostRecentProject () {
-    let recent = this.state.recent[0]?.path
+    let recent = this.state.recent[0]
     if (recent && fs.existsSync(recent))
       return this.showProjectWindow(recent)
 
@@ -252,8 +252,8 @@ export class Tropy extends EventEmitter {
       }
 
       this.state.recent = [
-        { path: project.path, name: project.name },
-        ...this.state.recent.filter(f => f.path !== project.path)
+        project.path,
+        ...this.state.recent.filter(f => f !== project.path)
       ]
 
       this.store.save('state.json', this.state)
@@ -270,7 +270,7 @@ export class Tropy extends EventEmitter {
 
   clearRecentProjects (projects) {
     if (projects)
-      this.state.recent = this.state.recent.filter(f => !projects.includes(f.path))
+      this.state.recent = this.state.recent.filter(f => !projects.includes(f))
     else
       this.state.recent = []
 
@@ -279,13 +279,13 @@ export class Tropy extends EventEmitter {
     this.emit('app:reload-menu')
   }
 
-  projectURLId (entry) {
-    if (!entry) return null
-    return urlId(entry.path)
+  projectURLId (path) {
+    if (!path) return null
+    return urlId(path)
   }
 
   resolveURLId (id) {
-    return this.state.recent.filter(e => this.projectURLId(e) === id)
+    return this.state.recent.filter(path => this.projectURLId(path) === id)
   }
 
   async import (...args) {
@@ -389,12 +389,6 @@ export class Tropy extends EventEmitter {
 
     if (!(/^(system|dark|light)$/).test(state.theme))
       state.theme = 'system'
-
-    state.recent = (state.recent || []).map(entry => (
-      typeof entry === 'string' ?
-        { path: entry, name: basename(entry, extname(entry)) } :
-        entry
-    ))
 
     return state
   }
@@ -519,7 +513,7 @@ export class Tropy extends EventEmitter {
       this.dispatch(act.edit.start({ project: { name: true } }), win))
 
     this.on('app:show-project-file', (_, { target } = {}) => {
-      let path = target?.path ?? this.state.recent[0]?.path
+      let path = target?.path ?? this.state.recent[0]
       if (path) shell.show(path)
     })
 
@@ -1347,13 +1341,6 @@ export class Tropy extends EventEmitter {
           project.name,
           project.isReadOnly ? this.dict.window.project.readOnly : ''
         ].join(''))
-
-      let entry = this.state.recent?.find(e => e.path === project.path)
-      if (entry && entry.name !== project.name) {
-        entry.name = project.name
-        this.store.save('state.json', this.state)
-        this.wm.broadcast('recent', this.state.recent)
-      }
     }
   }
 
