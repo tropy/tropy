@@ -20,18 +20,16 @@ export const RecentProjects = ({
 
   let [query, setQuery] = useState('')
 
-  let paths = useMemo(() => files.map(f => f.path), [files])
-
   useEffect(() => {
-    dispatch(reload(paths))
-  }, [paths, dispatch])
+    dispatch(reload(files))
+  }, [files, dispatch])
 
   let projectFiles = useSelector(state => state.projectFiles)
 
   let idByPath = useMemo(() => {
     let map = new Map()
-    for (let entry of files) {
-      map.set(entry.path, urlId(entry.path))
+    for (let path of files) {
+      map.set(path, urlId(path))
     }
     return map
   }, [files])
@@ -50,13 +48,13 @@ export const RecentProjects = ({
 
   let projects =
     files
-      .map(entry => {
-        let stats = projectFiles[entry.path]
+      .map(path => {
+        let stats = projectFiles[path]
         if (!stats) return null
         return {
           ...stats,
-          urlId: idByPath.get(entry.path),
-          hasConflict: conflicts.has(entry.path)
+          urlId: idByPath.get(path),
+          hasConflict: conflicts.has(path)
         }
       })
       .filter(file => file &&

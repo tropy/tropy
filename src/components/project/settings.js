@@ -69,7 +69,7 @@ export const ProjectSettings = React.memo(({
         name="url"
         isCompact
         isReadOnly
-        value={project.url}/>
+        value={url}/>
       <FormField
         id="prefs.project.path"
         name="path"
