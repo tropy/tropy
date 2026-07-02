@@ -519,12 +519,7 @@ export class Tropy extends EventEmitter {
     })
 
     this.on('app:copy-url', (_, { target }) => {
-      let entry = this.state.recent.find(e => e.path === target.path)
-      if (entry) this.copyProtocolURL(entry)
-    })
-
-    this.on('app:remove-recent-project', (_, { target }) => {
-      this.clearRecentProjects([target.path])
+      this.copyProtocolURL(target)
     })
 
     this.on('app:center-window', () =>
@@ -768,8 +763,8 @@ export class Tropy extends EventEmitter {
       }
     })
 
-    this.on('app:clear-recent-projects', () => {
-      this.clearRecentProjects()
+    this.on('app:clear-recent-projects', (_, { target } = {}) => {
+      this.clearRecentProjects(target ? [target.path] : undefined)
     })
 
     this.on('app:switch-theme', (_, theme) => {
