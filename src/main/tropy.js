@@ -255,8 +255,6 @@ export class Tropy extends EventEmitter {
         project.path,
         ...this.state.recent.filter(f => f !== project.path)
       ]
-
-      this.store.save('state.json', this.state)
     }
 
     this.wm.broadcast('recent', this.state.recent)
