@@ -13,7 +13,7 @@ export class Server {
   }
 
   current = () => {
-    return this.app.state.recent[0]?.path
+    return this.app.state.recent[0]
   }
 
   dispatch = (type, action) => {
@@ -39,22 +39,22 @@ export class Server {
     // Several projects can share a URL id when their files have the same
     // basename; resolve to the most recent.
     let matches = this.app.state.recent.filter(
-      e => this.app.projectURLId(e) === id)
+      path => this.app.projectURLId(path) === id)
 
     if (matches.length === 0)
       return { error: 'not-found' }
 
-    let [entry] = matches
+    let [path] = matches
 
     let win = this.app.wm.find('project',
-      w => this.app.getProject(w)?.path === entry.path)
+      w => this.app.getProject(w)?.path === path)
 
     if (win == null)
       return { error: 'not-open' }
 
     return {
       win,
-      path: entry.path,
+      path,
       id,
       ambiguous: matches.length > 1
     }
