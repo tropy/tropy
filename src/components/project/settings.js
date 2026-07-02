@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { ipcRenderer as ipc } from 'electron'
 import {
   Form, FormElement, FormField, FormSlider, FormToggle, FormToggleGroup
@@ -7,6 +7,7 @@ import { Button } from '../button.js'
 import { ProjectTypeField } from './type-field.js'
 import { notify } from '../../dialog.js'
 import { BASES, TYPES } from '../../common/project.js'
+import { protocolURL } from '../../common/url.js'
 import { convert, optimize } from '../../slices/project-files.js'
 import { useDispatch } from 'react-redux'
 import { useIntl } from 'react-intl'
@@ -41,6 +42,8 @@ export const ProjectSettings = React.memo(({
       win.toggle('busy', false)
     }
   })
+  
+  let url = useMemo(() => protocolURL(project.path), [project.path])
 
   let handleProjectConvert = useEvent(async () => {
     try {
