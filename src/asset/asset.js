@@ -1,8 +1,8 @@
-import { createHash } from 'node:crypto'
 import { readFile, stat } from 'node:fs/promises'
 import { basename, extname } from 'node:path'
 import { URL, fileURLToPath, pathToFileURL } from 'node:url'
 import { magic } from './magic.js'
+import { md5 } from '../common/crypto.js'
 import { pick } from '../common/util.js'
 
 
@@ -142,10 +142,7 @@ export class Asset {
         this.buffer = await readFile(this.path)
       }
 
-      let hash = createHash('md5')
-      hash.update(this.buffer)
-      this.checksum = hash.digest('hex')
-
+      this.checksum = md5(this.buffer)
       this.mimetype = magic(this.buffer, this.ext)
 
       return this
