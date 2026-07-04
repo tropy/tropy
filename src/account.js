@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { Buffer } from 'node:buffer'
 import { ipcRenderer } from 'electron'
 import ARGS from './args.js'
+import { HttpError } from './common/error.js'
 import { md5 } from './common/crypto.js'
 import { TokenSet } from './common/token-set.js'
 import { retry } from './common/net.js'
@@ -72,15 +73,13 @@ export async function upload ({ buffer, type }) {
       })
 
       if (!put.ok) {
-        throw new Error(
-          `upload failed: ${put.status} ${await put.text()}`, { cause: put })
+        throw await HttpError.from(put)
       }
 
       return `${checksum}.${type}`
     }
     default:
-      throw new Error(
-        `upload failed: ${res.status} ${await res.text()}`, { cause: res })
+      throw await HttpError.from(res)
   }
 }
 
@@ -97,7 +96,7 @@ export async function transcribe (image, { model = DEFAULT_MODEL } = {}) {
   })
 
   if (!res.ok) {
-    throw new Error(await res.text(), { cause: res })
+    throw await HttpError.from(res)
   }
 
   return res.json()
@@ -111,7 +110,7 @@ export async function getTranscription (jobId) {
   })
 
   if (!res.ok) {
-    throw new Error(await res.text(), { cause: res })
+    throw await HttpError(res)
   }
 
   return res.json()
