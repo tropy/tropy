@@ -5,11 +5,12 @@ import { PHOTO } from '../../constants/index.js'
 import { Cache } from '../../common/cache.js'
 import { warn } from '../../common/log.js'
 import Esper from '../../esper/index.js'
+import { prepare } from '../../image/ocr.js'
+import { getTranscription, isLinked, transcribe } from '../../account.js'
 import { addOrientation } from '../../common/iiif.js'
 import win from '../../window.js'
 import { update } from '../../slices/transcriptions.js'
 import { save } from '../../models/transcription.js'
-
 
 export class Transcribe extends Command {
   *exec () {
@@ -35,25 +36,45 @@ export class Transcribe extends Command {
     let next
 
     try {
+      if (!config.plugin && config.jobId) {
+        let job
 
-      let { buffer, ...raw } = yield call(Esper.instance.extract, src, {
-        ...image,
-        ...rotation
-      })
+        try {
+          job = yield call(getTranscription, config.jobId)
+        } catch (err) {
+          if (err.status === 404 || err.status === 410)
+            throw err
 
-      if (!config.plugin) {
-        throw new Error('not implemented yet')
+          warn({
+            err,
+            transcription: id,
+            job: config.jobId
+          }, 'failed to fetch transcription job status')
+          return
+        }
 
-        // Check if we have a process id already
-        // Otherwise upload to transcription service and set process id
+        updateTranscription(draft, job)
 
       } else {
-        next = yield call(
-          win.plugins.transcribe,
-          config.plugin,
-          draft,
-          { buffer, ...raw }
-        )
+        let pixels = yield call(Esper.instance.extract, src, {
+          ...image,
+          ...rotation
+        })
+        let img = yield call(prepare, pixels)
+
+        if (!config.plugin) {
+          if (!isLinked()) {
+            throw new Error('account not linked')
+          }
+
+          let job = yield call(transcribe, img, {
+            model: config.modelId
+          })
+
+          draft.config.jobId = job.id
+        } else {
+          next = yield call(win.plugins.transcribe, config.plugin, draft, img)
+        }
       }
     } catch (err) {
       warn({
@@ -82,15 +103,31 @@ export class Transcribe extends Command {
   }
 }
 
+Transcribe.register(PHOTO.TRANSCRIBE)
+
 function getTranscriptions (state, props) {
   return props.id.map(id => {
     let tr = state.transcriptions[id]
     let selection = state.selections[tr.parent]
     let photo = state.photos[
-      selection == null ? tr.parent : selection.photo
-    ]
+      selection == null ? tr.parent : selection.photo ]
     return { ...tr, parent: { photo, selection } }
   })
 }
 
-Transcribe.register(PHOTO.TRANSCRIBE)
+function updateTranscription (transcription, job) {
+  switch (job.state) {
+    case 'completed':
+      if (job.output == null)
+        throw new Error('transcription completed without output')
+      transcription.text = job.output.text
+      transcription.data = job.output.alto
+      break
+    case 'created':
+    case 'active':
+    case 'suspended':
+      break
+    default:
+      throw new Error(`unknown transcription job state "${job.state}"`)
+  }
+}
