@@ -6,6 +6,7 @@ import { HttpError } from './common/error.js'
 import { md5 } from './common/crypto.js'
 import { TokenSet } from './common/token-set.js'
 import { retry } from './common/net.js'
+import { debug } from './common/log.js'
 
 const DEFAULT_MODEL = 356425 // TEXT_TITAN
 
@@ -19,8 +20,8 @@ export async function getAccessToken (forceRefresh = false) {
   assert(isLinked(), 'no linked account')
 
   if (forceRefresh || !tokenSet?.fresh) {
-    let values = await ipcRenderer.invoke('account', 'getAccessToken')
-    tokenSet = new TokenSet(values)
+    let { payload } = await ipcRenderer.invoke('account', 'getAccessToken')
+    tokenSet = new TokenSet(payload)
   }
 
   return tokenSet
@@ -28,7 +29,11 @@ export async function getAccessToken (forceRefresh = false) {
 
 export async function request (pathname, options = {}, forceRefresh = false) {
   let { accessToken } = await getAccessToken(forceRefresh)
-  let res = await retry(new URL(pathname, ARGS.account.url), {
+  let url = new URL(pathname, ARGS.account.url)
+
+  debug({ url, options }, 'account service request')
+
+  let res = await retry(url, {
     ...options,
     headers: {
       ...options.headers,
