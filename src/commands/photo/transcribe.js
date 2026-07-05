@@ -56,11 +56,18 @@ export class Transcribe extends Command {
         updateTranscription(draft, job)
 
       } else {
+        let defaults = yield select(state => state.settings.ocr)
+        let { grayscale, resize, quality, model } = { ...defaults, ...config }
+
         let pixels = yield call(Esper.instance.extract, src, {
           ...image,
           ...rotation
         })
-        let img = yield call(prepare, pixels)
+        let img = yield call(prepare, pixels, {
+          grayscale,
+          resize,
+          quality: Math.round(quality * 100)
+        })
 
         if (!config.plugin) {
           if (!isLinked()) {
@@ -68,7 +75,7 @@ export class Transcribe extends Command {
           }
 
           let job = yield call(transcribe, img, {
-            model: config.modelId
+            model
           })
 
           draft.config.jobId = job.id

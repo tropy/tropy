@@ -157,6 +157,12 @@ en:
         notes: Include notes
         onlyNotes: Include only photos with notes
         overflow: Allow content to take up more than one page
+      ocr:
+        grayscale: Convert photos to grayscale
+        resize: Resize large photos
+        quality:
+          label: For Transcriptions
+          value: "Use Photo Quality {value, number, ::percent scale/0.01 .}"
       locale:
         locale: Locale
         locales:
