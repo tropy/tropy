@@ -7,6 +7,7 @@ import { PrintSettings } from './print.js'
 import { InterfaceSettings } from './interface.js'
 import { ImportSettings } from './import.js'
 import { LocaleSettings } from './locale.js'
+import { OCRSettings } from './ocr.js'
 import { StyleSettings } from './style.js'
 import { TemplateSettings } from './template.js'
 import act from '../../actions/settings.js'
@@ -44,6 +45,10 @@ export function AppSettings () {
       <hr/>
       <PrintSettings
         config={settings.print}
+        onChange={handleSettingsUpdate}/>
+      <hr/>
+      <OCRSettings
+        config={settings.ocr}
         onChange={handleSettingsUpdate}/>
       <hr/>
       <DeveloperSettings/>

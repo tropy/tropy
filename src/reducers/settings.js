@@ -23,6 +23,12 @@ const defaults = {
   localtime: true,
   createLists: false,
   maximize: 'none',
+  ocr: {
+    grayscale: false,
+    resize: false,
+    quality: 0.8,
+    model: null
+  },
   tagColor: null,
   templates: {
     item: ITEM.TEMPLATE.DEFAULT,
