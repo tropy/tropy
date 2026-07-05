@@ -92,7 +92,7 @@ export class Transcribe extends Command {
       next = finishDraft(draft)
 
     if (next !== state) {
-      if (status === 0 && (next.text || next.data))
+      if (status === 0 && (next.status || next.text || next.data))
         status = 1
 
       next = { ...next, id, status, modified: new Date }
@@ -118,10 +118,9 @@ function getTranscriptions (state, props) {
 function updateTranscription (transcription, job) {
   switch (job.state) {
     case 'completed':
-      if (job.output == null)
-        throw new Error('transcription completed without output')
-      transcription.text = job.output.text
-      transcription.data = job.output.alto
+      transcription.status = 1
+      transcription.text = job.output?.text
+      transcription.data = job.output?.alto
       break
     case 'created':
     case 'active':
