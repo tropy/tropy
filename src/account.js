@@ -8,7 +8,9 @@ import { TokenSet } from './common/token-set.js'
 import { retry } from './common/net.js'
 import { debug } from './common/log.js'
 
-const DEFAULT_MODEL = 356425 // TEXT_TITAN
+// const TEXT_TITAN = 356425
+const TEXT_TITAN_II = 579509
+const DEFAULT_MODEL = TEXT_TITAN_II
 
 let tokenSet
 
