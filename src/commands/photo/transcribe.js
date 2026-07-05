@@ -124,9 +124,10 @@ function updateTranscription (transcription, job) {
       break
     case 'created':
     case 'active':
+    case 'retry':
     case 'suspended':
       break
     default:
-      throw new Error(`unknown transcription job state "${job.state}"`)
+      throw new Error(`transcription job state "${job.state}"`)
   }
 }
