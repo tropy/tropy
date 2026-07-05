@@ -1,22 +1,40 @@
 import { open } from './sharp.js'
 
-export async function prepare ({ buffer, ...raw }, {
+const MAX_SIZE = 15 * 1024 * 1024
+
+export async function prepare ({ buffer: pixels, ...raw }, {
   grayscale = false,
   quality = 80,
-  resize = false, // TODO
+  resize = false,
   type
 } = {}) {
-  let image = await open(buffer, { raw })
+  let image = await open(pixels, { raw })
 
   if (type == null) {
-    let stats = await image.clone().stats()
-    type = stats.isOpaque ? 'jpeg' : 'png'
+    let { isOpaque } = await image.clone().stats()
+    type = isOpaque ? 'jpeg' : 'png'
   }
 
-  let body = await image
-    .grayscale(grayscale)
-    .toFormat(type, type === 'jpeg' ? { quality } : {})
+  image.grayscale(grayscale)
+
+  let options = (type === 'jpeg') ? { quality } : {}
+
+  let buffer = await image
+    .clone()
+    .toFormat(type, options)
     .toBuffer()
 
-  return { buffer: body, type }
+  if (resize && buffer.length > MAX_SIZE) {
+    let scale = Math.sqrt(MAX_SIZE / buffer.length)
+
+    buffer = await image
+      .resize({
+        width: Math.round(raw.width * scale),
+        withoutEnlargement: true
+      })
+      .toFormat(type, options)
+      .toBuffer()
+  }
+
+  return { buffer, type }
 }
