@@ -25,7 +25,7 @@ const defaults = {
   maximize: 'none',
   ocr: {
     grayscale: false,
-    resize: false,
+    resize: true,
     quality: 0.8,
     model: null
   },
