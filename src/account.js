@@ -90,7 +90,7 @@ export async function upload ({ buffer, type }) {
   }
 }
 
-export async function transcribe (image, { model = DEFAULT_MODEL } = {}) {
+export async function transcribe (image, { model } = {}) {
   let images = [await upload(image)]
 
   let res = await request('/transcription', {
@@ -99,7 +99,9 @@ export async function transcribe (image, { model = DEFAULT_MODEL } = {}) {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ config: { model }, images })
+    body: JSON.stringify({ config: {
+      model: model ?? DEFAULT_MODEL
+    }, images })
   })
 
   if (!res.ok) {
