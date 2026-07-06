@@ -34,14 +34,13 @@ export function OCRSettings ({ config, onChange }) {
           onChange={handleChange}/>
       </FormElement>
       <FormElement
-        id="prefs.app.ocr.model.select"
+        id="prefs.app.ocr.model"
         isCompact>
         <ModelSelect
-          id="prefs.app.ocr.model.select"
+          id="prefs.app.ocr.model"
           name="model"
-          required
           isDisabled={!account?.linked}
-          placeholder="prefs.app.ocr.model.placeholder"
+          isRequired
           value={config.model}
           tabIndex={0}
           onChange={handleChange}/>
