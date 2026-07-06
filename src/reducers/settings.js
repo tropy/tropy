@@ -27,7 +27,7 @@ const defaults = {
     grayscale: false,
     resize: true,
     quality: 0.8,
-    model: null
+    model: 356425
   },
   tagColor: null,
   templates: {

@@ -150,7 +150,8 @@
 
 // Use flexbox only in more complex value/option layouts and let
 // value/option handle the truncation for text nodes and spans
-.resource-select {
+.resource-select,
+.model-select {
   .value,
   .option {
     display: flex;
