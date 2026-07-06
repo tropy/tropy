@@ -124,13 +124,13 @@ export async function remove (db, id) {
 export async function restore (db, id) {
   await db.run(
     ...update('transcriptions')
-      .set({ deleted: false })
+      .set({ deleted: null })
       .where({ transcription_id: id }))
 
   return load(db, id)
 }
 
-export async function prune (db, since = '-1 week') {
+export async function prune (db, since = '-1 day') {
   return db.run(`
     DELETE FROM transcriptions
     WHERE deleted is NOT NULL OR (
@@ -141,7 +141,7 @@ export async function prune (db, since = '-1 week') {
 export async function touch (db, id) {
   await db.run(
     ...update('transcriptions')
-      .set({ modified: Date.now() })
+      .set({ modified: new Date().toISOString() })
       .where({ transcription_id: id }))
 
   return await load(db, id)
