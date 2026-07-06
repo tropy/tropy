@@ -3,6 +3,11 @@ import { debug, info, logger, warn } from '../common/log.js'
 import { urlId } from '../common/url.js'
 import dialog from './dialog.js'
 
+// An error whose status/message Koa exposes in the response.
+function httpError (status, message) {
+  return Object.assign(new Error(message), { status, expose: status < 500 })
+}
+
 export class Server {
   #api
   #pending
@@ -25,12 +30,10 @@ export class Server {
   )
 
   resolveProject = (id) => {
-    if (!id) return null
-
     if (id === 'current') {
       let win = this.app.wm.current('project')
       if (win == null)
-        return { error: 'not-open' }
+        throw httpError(404, 'no project is open')
 
       let path = this.app.getProject(win)?.path
       return { win, path, id: urlId(path) }
@@ -42,7 +45,7 @@ export class Server {
       path => this.app.projectURLId(path) === id)
 
     if (matches.length === 0)
-      return { error: 'not-found' }
+      throw httpError(404, `unknown project: ${id}`)
 
     let [path] = matches
 
@@ -50,7 +53,7 @@ export class Server {
       w => this.app.getProject(w)?.path === path)
 
     if (win == null)
-      return { error: 'not-open' }
+      throw httpError(404, `project "${id}" is not open`)
 
     return {
       win,
