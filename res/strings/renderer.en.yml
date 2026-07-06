@@ -158,6 +158,9 @@ en:
         onlyNotes: Include only photos with notes
         overflow: Allow content to take up more than one page
       ocr:
+        model:
+          select: Default Model
+          placeholder: Choose a Transkribus model…
         grayscale: Convert photos to grayscale
         resize: Resize large photos
         quality:
