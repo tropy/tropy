@@ -44,15 +44,15 @@ export class Restore extends Command {
     let { payload } = this.action
 
     let id = payload.map(tr => tr.id)
-
-    yield call(db.transaction, async tx => {
-      await restore(tx, id)
-    })
+    let transcriptions = yield call(db.transaction, tx => restore(tx, id))
 
     this.undo = slice.remove(id)
     this.redo = slice.restore(payload)
 
-    return payload
+    return payload.map(({ id, idx }) => ({
+      ...transcriptions[id],
+      idx
+    }))
   }
 }
 
