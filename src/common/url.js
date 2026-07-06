@@ -2,19 +2,6 @@ import { basename, extname } from 'node:path'
 
 const COMBINING_MARKS = /[̀-ͯ]/g
 
-export const RESERVED_IDS = new Set([
-  'current',
-  'import',
-  'items',
-  'photos',
-  'lists',
-  'tags',
-  'data',
-  'notes',
-  'transcriptions',
-  'selections'
-])
-
 const sanitize = (input) => {
   let id = String(input ?? '')
     .normalize('NFKD')
@@ -24,10 +11,7 @@ const sanitize = (input) => {
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '')
 
-  if (!id) return 'project'
-  if (RESERVED_IDS.has(id)) return `${id}-project`
-
-  return id
+  return id || 'project'
 }
 
 export function urlId (path) {

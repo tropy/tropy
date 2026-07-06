@@ -4,7 +4,18 @@ import Koa from 'koa'
 import Router from '@koa/router'
 import bodyParser from 'koa-bodyparser'
 import act from '../actions/api'
-import { RESERVED_IDS } from './url.js'
+
+const COLLECTIONS = new Set([
+  'import',
+  'items',
+  'lists',
+  'tags',
+  'data',
+  'notes',
+  'transcriptions',
+  'photos',
+  'selections'
+])
 
 const show = (type) =>
   async (ctx) => {
@@ -430,96 +441,81 @@ export function create ({
   app.context.dispatch = dispatch
   app.context.log = log
 
-  app.use(async (ctx, next) => {
-    let m = ctx.path.match(/^\/project\/([^/]+)(\/.*|$)/)
+  api.param('project', (id, ctx, next) => {
+    let { win, path, id: resolved, ambiguous } = resolveProject(id)
 
-    if (m == null)
-      return next()
-
-    let id = m[1]
-    let rest = m[2] || ''
-
-    if (id !== 'current' && RESERVED_IDS.has(id)) {
-      ctx.status = 308
-      ctx.redirect(`/project/current/${id}${rest}`)
-      return
-    }
-
-    let resolved = resolveProject(id)
-
-    switch (resolved?.error) {
-      case 'not-found':
-        ctx.status = 404
-        ctx.body = { error: `unknown project: ${id}` }
-        return
-      case 'not-open':
-        ctx.status = 404
-        ctx.body = {
-          error: `project "${id}" is not open`,
-          hint: 'open the project in Tropy first'
-        }
-        return
-    }
-
-    if (resolved.ambiguous)
+    if (ambiguous)
       ctx.set('Warning',
         `199 - "ambiguous project URL '${id}'; opened the most recent ` +
         'match, consider renaming a project"')
 
-    ctx.projectId = resolved.id
-    ctx.projectPath = resolved.path
-    ctx.rsvp = (action) => rsvp(resolved.win, action)
-    ctx.path = `/project${rest}`
+    ctx.projectId = resolved
+    ctx.projectPath = path
+    ctx.rsvp = (action) => rsvp(win, action)
 
     return next()
   })
 
-  api
-    .post('/project/import', project.import)
-
-    .get('/project/items', project.items.find)
-    .get('/project/items/:id', project.items.show)
-    .get('/project/items/:id/photos', project.photos.find)
-    .get('/project/items/:id/tags', project.tags.find)
-    .get('/project/items/:id/transcriptions', project.transcriptions.find)
-    .post('/project/items/:id/tags', project.tags.add)
-    .delete('/project/items/:id/tags', project.tags.remove)
-
-    .get('/project/lists/:id/items', project.items.find)
-    .get('/project/lists{/:id}', project.lists.show)
-
-    .post('/project/tags', project.tags.create)
-    .delete('/project/tags', project.tags.delete)
-    .get('/project/tags', project.tags.find)
-    .get('/project/tags/:id', project.tags.show)
-
-    .post('/project/data/:id', project.data.save)
-    .get('/project/data/:id', project.data.show)
-
-    .get('/project/notes/:id', project.notes.show)
-    .post('/project/notes', project.notes.create)
-    .delete('/project/notes/:id', project.notes.delete)
-
-    .get('/project/transcriptions/:id', project.transcriptions.show)
-    .post('/project/transcriptions', project.transcriptions.create)
-
-    .get('/project/photos/:id', project.photos.show)
-    .get('/project/photos/:id/raw', project.photos.raw)
-    .get('/project/photos/:id/file.:format', project.photos.extract)
-
-    .get('/project/selections/:id', project.selections.show)
-    .get('/project/selections/:id/file.:format', project.selections.extract)
-
-    .get('/version', (ctx) => {
-      ctx.body = { version }
+  // Redirect legacy URLs (e.g. /project/items) to the
+  // current project. Registered before the :project routes so
+  // /project/items redirects instead of resolving.
+  for (let collection of COLLECTIONS) {
+    api.all(`/project/${collection}{/*rest}`, (ctx) => {
+      let rest = ctx.params.rest ? `/${ctx.params.rest.join('/')}` : ''
+      ctx.status = 308
+      ctx.redirect(`/project/current/${collection}${rest}`)
     })
-    .get('/project{/}', (ctx) => {
+  }
+
+  api
+    .post('/project/:project/import', project.import)
+
+    .get('/project/:project/items', project.items.find)
+    .get('/project/:project/items/:id', project.items.show)
+    .get('/project/:project/items/:id/photos', project.photos.find)
+    .get('/project/:project/items/:id/tags', project.tags.find)
+    .get('/project/:project/items/:id/transcriptions',
+      project.transcriptions.find)
+    .post('/project/:project/items/:id/tags', project.tags.add)
+    .delete('/project/:project/items/:id/tags', project.tags.remove)
+
+    .get('/project/:project/lists/:id/items', project.items.find)
+    .get('/project/:project/lists{/:id}', project.lists.show)
+
+    .post('/project/:project/tags', project.tags.create)
+    .delete('/project/:project/tags', project.tags.delete)
+    .get('/project/:project/tags', project.tags.find)
+    .get('/project/:project/tags/:id', project.tags.show)
+
+    .post('/project/:project/data/:id', project.data.save)
+    .get('/project/:project/data/:id', project.data.show)
+
+    .get('/project/:project/notes/:id', project.notes.show)
+    .post('/project/:project/notes', project.notes.create)
+    .delete('/project/:project/notes/:id', project.notes.delete)
+
+    .get('/project/:project/transcriptions/:id', project.transcriptions.show)
+    .post('/project/:project/transcriptions', project.transcriptions.create)
+
+    .get('/project/:project/photos/:id', project.photos.show)
+    .get('/project/:project/photos/:id/raw', project.photos.raw)
+    .get('/project/:project/photos/:id/file.:format', project.photos.extract)
+
+    .get('/project/:project/selections/:id', project.selections.show)
+    .get('/project/:project/selections/:id/file.:format',
+      project.selections.extract)
+
+    .get('/project/:project{/}', (ctx) => {
       ctx.body = {
         project: ctx.projectPath || ctx.current(),
         id: ctx.projectId,
         status: 'ok',
         version
       }
+    })
+
+    .get('/version', (ctx) => {
+      ctx.body = { version }
     })
     .get('/', (ctx) => {
       ctx.body = {

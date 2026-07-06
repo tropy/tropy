@@ -1,4 +1,4 @@
-import { protocolURL, urlId, RESERVED_IDS } from '#tropy/common/url.js'
+import { protocolURL, urlId } from '#tropy/common/url.js'
 
 describe('url', () => {
   describe('urlId', () => {
@@ -20,12 +20,6 @@ describe('url', () => {
       expect(urlId('')).to.equal('project')
       expect(urlId(null)).to.equal('project')
       expect(urlId('/x/!!!.tpy')).to.equal('project')
-    })
-
-    it('disambiguates ids reserved by routes', () => {
-      for (let reserved of RESERVED_IDS) {
-        expect(urlId(`/x/${reserved}.tpy`)).to.equal(`${reserved}-project`)
-      }
     })
   })
 
