@@ -40,7 +40,8 @@ export class Transcribe extends Command {
         let job
 
         try {
-          job = yield call(getTranscription, config.jobId)
+          job = yield call(getTranscription, config.jobId,
+            this.action.meta.poll ? { maxRetries: 0 } : {})
         } catch (err) {
           if (err.status === 404 || err.status === 410)
             throw err
