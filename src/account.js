@@ -111,15 +111,17 @@ export async function transcribe (image, { model } = {}) {
   return res.json()
 }
 
-export async function getTranscription (jobId) {
+export async function getTranscription (jobId, options = {}) {
   let res = await request(`/transcription/${jobId}`, {
+    ...options,
     headers: {
-      Accept: 'application/json'
+      Accept: 'application/json',
+      ...options.headers
     }
   })
 
   if (!res.ok) {
-    throw await HttpError(res)
+    throw await HttpError.from(res)
   }
 
   return res.json()
