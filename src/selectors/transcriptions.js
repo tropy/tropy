@@ -1,3 +1,5 @@
+import { createSelector } from '@reduxjs/toolkit'
+
 export const getTranscriptionIds = (state, { id }) =>
   (state.photos[id] ?? state.selections[id])?.transcriptions
 
@@ -19,6 +21,13 @@ export const getActiveTranscription = (state, props) => {
 
   return transcriptions?.sort(byModifiedDate).at(-1)
 }
+
+export const getPendingTranscriptions = createSelector(
+  (state) => state.transcriptions,
+  (transcriptions) =>
+    Object
+      .values(transcriptions)
+      .filter(tr => !tr.config?.plugin && tr.config?.jobId && tr.status === 0))
 
 export const getItemTranscriptions = (state, props) => {
   let transcriptions = []
