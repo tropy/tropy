@@ -12,6 +12,8 @@ import win from '../../window.js'
 import { update } from '../../slices/transcriptions.js'
 import { save } from '../../models/transcription.js'
 
+const PENDING = new Set()
+
 export class Transcribe extends Command {
   *exec () {
     let { payload } = this.action
@@ -23,90 +25,101 @@ export class Transcribe extends Command {
   }
 
   handleTranscription = function* (transcription, self) {
-    let { cache, db } = self.options
+    let { id } = transcription
 
-    let { id, config, data, text, status } = transcription
-    let { photo, selection } = transcription.parent
-    let image = selection || photo
-    let src = Cache.url(cache.root, 'full', photo)
+    if (PENDING.has(id))
+      return
 
-    let rotation = addOrientation(image, photo)
-    let state = { config, data, text, ...rotation }
-    let draft = createDraft(state)
-    let next
+    PENDING.add(id)
 
     try {
-      if (!config.plugin && config.jobId) {
-        let job
+      let { cache, db } = self.options
 
-        try {
-          job = yield call(getTranscription, config.jobId,
-            this.action.meta.poll ? { maxRetries: 0 } : {})
-        } catch (err) {
-          if (err.status === 404 || err.status === 410)
-            throw err
+      let { config, data, text, status } = transcription
+      let { photo, selection } = transcription.parent
+      let image = selection || photo
+      let src = Cache.url(cache.root, 'full', photo)
 
-          warn({
-            err,
-            transcription: id,
-            job: config.jobId
-          }, 'failed to fetch transcription job status')
-          return
-        }
+      let rotation = addOrientation(image, photo)
+      let state = { config, data, text, ...rotation }
+      let draft = createDraft(state)
+      let next
 
-        updateTranscription(draft, job)
+      try {
+        if (!config.plugin && config.jobId) {
+          let job
 
-      } else {
-        let defaults = yield select(state => state.settings.ocr)
-        let { grayscale, resize, quality, model } = { ...defaults, ...config }
+          try {
+            job = yield call(getTranscription, config.jobId,
+              self.action.meta.poll ? { maxRetries: 0 } : {})
+          } catch (err) {
+            if (err.status === 404 || err.status === 410)
+              throw err
 
-        let pixels = yield call(Esper.instance.extract, src, {
-          ...image,
-          ...rotation
-        })
-        let img = yield call(prepare, pixels, {
-          grayscale,
-          resize,
-          quality: Math.round(quality * 100)
-        })
-
-        if (!config.plugin) {
-          if (!isLinked()) {
-            throw new Error('account not linked')
+            warn({
+              err,
+              transcription: id,
+              job: config.jobId
+            }, 'failed to fetch transcription job status')
+            return
           }
 
-          let job = yield call(transcribe, img, {
-            model
+          updateTranscription(draft, job)
+
+        } else {
+          let defaults = yield select(state => state.settings.ocr)
+          let { grayscale, resize, quality, model } = { ...defaults, ...config }
+
+          let pixels = yield call(Esper.instance.extract, src, {
+            ...image,
+            ...rotation
+          })
+          let img = yield call(prepare, pixels, {
+            grayscale,
+            resize,
+            quality: Math.round(quality * 100)
           })
 
-          draft.config.jobId = job.id
-        } else {
-          next = yield call(win.plugins.transcribe, config.plugin, draft, img)
+          if (!config.plugin) {
+            if (!isLinked()) {
+              throw new Error('account not linked')
+            }
+
+            let job = yield call(transcribe, img, {
+              model
+            })
+
+            draft.config.jobId = job.id
+          } else {
+            next = yield call(win.plugins.transcribe, config.plugin, draft, img)
+          }
         }
+      } catch (err) {
+        warn({
+          err,
+          image: src,
+          transcription: id
+        }, 'transcription failed')
+
+        next = null
+        status = -1
+        draft.config.error = err.stack
       }
-    } catch (err) {
-      warn({
-        err,
-        image: src,
-        transcription: id
-      }, 'transcription failed')
 
-      next = null
-      status = -1
-      draft.config.error = err.stack
-    }
+      if (!next)
+        next = finishDraft(draft)
 
-    if (!next)
-      next = finishDraft(draft)
+      if (next !== state) {
+        if (status === 0 && (next.status || next.text || next.data))
+          status = 1
 
-    if (next !== state) {
-      if (status === 0 && (next.status || next.text || next.data))
-        status = 1
+        next = { ...next, id, status, modified: new Date }
 
-      next = { ...next, id, status, modified: new Date }
-
-      yield call(save, db, next)
-      yield put(update(next))
+        yield call(save, db, next)
+        yield put(update(next))
+      }
+    } finally {
+      PENDING.delete(id)
     }
   }
 }
