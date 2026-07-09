@@ -29,7 +29,10 @@ export async function getAccessToken (forceRefresh = false) {
   return tokenSet
 }
 
-export async function request (pathname, options = {}, forceRefresh = false) {
+export async function request (pathname, options = {}, {
+  forceRefresh = false,
+  throwHttpError = true
+} = {}) {
   let { accessToken } = await getAccessToken(forceRefresh)
   let url = new URL(pathname, ARGS.account.url)
 
@@ -44,10 +47,27 @@ export async function request (pathname, options = {}, forceRefresh = false) {
   })
 
   if (!forceRefresh && (res.status === 401 || res.status === 403)) {
-    return request(pathname, options, true)
+    return request(pathname, options, {
+      forceRefresh: true,
+      throwHttpError
+    })
+  }
+
+  if (throwHttpError && !res.ok) {
+    throw await HttpError.from(res)
   }
 
   return res
+}
+
+export async function jsonRequest (pathname, options = {}, ...args) {
+  return (await request(pathname, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Accept: 'application/json'
+    }
+  }, ...args)).json()
 }
 
 export async function upload ({ buffer, type }) {
@@ -93,36 +113,24 @@ export async function upload ({ buffer, type }) {
 export async function transcribe (image, { model } = {}) {
   let images = [await upload(image)]
 
-  let res = await request('/transcription', {
+  return jsonRequest('/transcription', {
     method: 'POST',
     headers: {
-      'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ config: {
-      model: model ?? DEFAULT_MODEL
-    }, images })
+    body: JSON.stringify({
+      config: {
+        model: model ?? DEFAULT_MODEL
+      },
+      images
+    })
   })
-
-  if (!res.ok) {
-    throw await HttpError.from(res)
-  }
-
-  return res.json()
 }
 
-export async function getTranscription (jobId, options = {}) {
-  let res = await request(`/transcription/${jobId}`, {
-    ...options,
-    headers: {
-      Accept: 'application/json',
-      ...options.headers
-    }
-  })
+export async function getTranscription (jobId, ...args) {
+  return jsonRequest(`/transcription/${jobId}`, ...args)
+}
 
-  if (!res.ok) {
-    throw await HttpError.from(res)
-  }
-
-  return res.json()
+export async function usage (...args) {
+  return jsonRequest('/usage', ...args)
 }
