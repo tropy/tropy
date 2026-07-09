@@ -96,7 +96,7 @@
     "chai": "^6.0.1",
     "chai-dom": "^1.8.2",
     "detect-libc": "^2.0.1",
-    "electron": "^42.0.0",
+    "electron": "^43.1.0",
     "electron-winstaller": "^5.0.0",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.5",
@@ -183,12 +183,12 @@
   },
   "allowScripts": {
     "@parcel/watcher@2.5.6": true,
-    "electron-winstaller@5.4.0": true,
     "sharp@0.34.5": true,
     "sqlite3@6.0.1": true,
     "better-sqlite3@12.11.1": true,
     "fsevents@2.3.3": true,
     "fs-xattr@0.3.1": true,
-    "macos-alias@0.2.12": true
+    "macos-alias@0.2.12": true,
+    "electron-winstaller@5.4.4": true
   }
 }
