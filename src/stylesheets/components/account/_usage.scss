@@ -1,0 +1,64 @@
+@use "../../abstracts/config" as *;
+
+//
+// Account usage
+// --------------------------------------------------
+
+.account {
+  .usage {
+    margin-top: $space-lg;
+
+    h1 {
+      font-size: to-rem(18);
+      font-weight: 600;
+      text-box: trim-both cap alphabetic;
+      color: $profile-heading-color;
+      margin-bottom: $space-lg;
+    }
+
+    h2 {
+      font-size: to-rem(14);
+      font-weight: 600;
+      text-box: trim-both cap alphabetic;
+      margin-bottom: $space-md;
+    }
+
+    progress {
+      display: block;
+      width: 100%;
+
+      &:indeterminate::-webkit-progress-bar {
+        background:
+          linear-gradient(
+            90deg,
+            transparent,
+            $progress-bar-color,
+            transparent) no-repeat,
+          $progress-bar-bg;
+        background-size: 30% 100%;
+        animation: usage-placeholder 1.5s ease-in-out infinite;
+      }
+
+      .is-blurred & {
+        &::-webkit-progress-bar {
+          background-color: $activity-blurred-progress-bar-bg;
+        }
+
+        &::-webkit-progress-value {
+          background-color: $activity-blurred-progress-val-bg;
+        }
+      }
+    }
+
+    .legend {
+      font-size: to-rem(13);
+      color: $muted-text-color;
+      margin: 0;
+    }
+  }
+}
+
+@keyframes usage-placeholder {
+  0% { background-position: -30% 0; }
+  100% { background-position: 130% 0; }
+}
