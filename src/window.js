@@ -12,6 +12,7 @@ import * as dialog from './dialog.js'
 import * as json from './common/json.js'
 import * as sharp from './image/sharp.js'
 import { WindowControls } from './window-controls.js'
+import { resetAccessToken } from './account.js'
 
 import {
   $$,
@@ -192,6 +193,7 @@ export class Window extends EventEmitter {
         this.setArgs({ api })
       })
       .on('account', (_, account) => {
+        resetAccessToken()
         this.setArgs({ account })
       })
       .on('scrollbars', (_, scrollbars) => {

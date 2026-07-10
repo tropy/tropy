@@ -18,6 +18,10 @@ export function isLinked () {
   return ARGS.account.linked === true
 }
 
+export function resetAccessToken () {
+  tokenSet = undefined
+}
+
 export async function getAccessToken (forceRefresh = false) {
   assert(isLinked(), 'no linked account')
 
