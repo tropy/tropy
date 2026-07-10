@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { prompt } from '../../dialog.js'
 import { useIpc } from '../../hooks/use-ipc.js'
 import { Button } from '../button.js'
+import { Usage } from './usage.js'
 
 export function Profile ({
   details = ['username', 'email'],
@@ -44,38 +45,41 @@ export function Profile ({
   }, [ipc])
 
   return (
-    <div ref={ref} className="card profile">
-      <h1><FormattedMessage id="prefs.account.label"/></h1>
-      {error ? (
-        <>
-          <p className="error">
-            <FormattedMessage id={error}/>
-          </p>
+    <div ref={ref}>
+      <div className="card profile">
+        <h1><FormattedMessage id="prefs.account.label"/></h1>
+        {error ? (
+          <>
+            <p className="error">
+              <FormattedMessage id={error}/>
+            </p>
+            <Button
+              isDefault
+              isDisabled={isPending}
+              text="prefs.account.retry"
+              onClick={loadProfile}/>
+          </>
+        ) : (
+          <dl>
+            {details
+              .filter(name => profile?.[name])
+              .map(name => (
+                <AccountDetail
+                  key={name}
+                  name={name}
+                  value={profile[name]}/>
+              ))}
+          </dl>
+        )}
+        <div className="btn-container">
           <Button
-            isDefault
+            isLink
             isDisabled={isPending}
-            text="prefs.account.retry"
-            onClick={loadProfile}/>
-        </>
-      ) : (
-        <dl>
-          {details
-            .filter(name => profile?.[name])
-            .map(name => (
-              <AccountDetail
-                key={name}
-                name={name}
-                value={profile[name]}/>
-            ))}
-        </dl>
-      )}
-      <div className="btn-container">
-        <Button
-          isLink
-          isDisabled={isPending}
-          text="prefs.account.unlink"
-          onClick={handleUnlink}/>
+            text="prefs.account.unlink"
+            onClick={handleUnlink}/>
+        </div>
       </div>
+      {!error && <Usage/>}
     </div>
   )
 }
