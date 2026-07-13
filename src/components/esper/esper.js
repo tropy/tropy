@@ -664,6 +664,7 @@ export class Esper extends React.Component {
     return (
       <EsperContainer
         className={cx(this.tool, {
+          'maximized': this.props.isMaximized,
           'read-only': this.props.isReadOnly,
           'texture-missing': this.state.isTextureMissing,
           'panel-visible': this.props.isPanelVisible,

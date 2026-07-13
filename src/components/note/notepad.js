@@ -6,10 +6,12 @@ import { Editor } from '../editor/index.js'
 import { toText } from '../../editor/serialize.js'
 import TABS from '../../constants/tabs.js'
 import actions from '../../actions/note.js'
+import cx from 'classnames'
 
 export const NotePad = ({
   hasTitlebar,
   isDisabled,
+  isMaximized,
   isReadOnly,
   keymap,
   note,
@@ -71,7 +73,11 @@ export const NotePad = ({
 
 
   return (
-    <section className="note-pad">
+    <section
+      className={cx('note-pad', {
+        maximized: isMaximized
+      })}
+      inert={isDisabled}>
       <Editor
         ref={editor}
         state={note?.state}
