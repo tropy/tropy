@@ -71,7 +71,7 @@ jobs:
         run: sudo apt install libfuse2t64
 
       - name: Install NPM modules
-        run: npm clean-install --no-progress --ignore-scripts
+        run: npm clean-install --no-progress
       - name: Install Electron
         run: npx electron --no-sandbox -v
 
