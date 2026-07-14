@@ -188,8 +188,7 @@ jobs:
           artifacts: >-
             dist/*.exe,
             dist/*.nupkg,
-            dist/*.integrity,
-            dist/*-sourcemaps-*.tar.gz
+            dist/*.integrity
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
           prerelease: true

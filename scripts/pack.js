@@ -70,7 +70,7 @@ program
         args = ({
           darwin: ['dmg', '7z', 'sourcemaps'],
           linux: ['bz2', 'AppImage', 'sourcemaps'],
-          win32: ['squirrel', 'sourcemaps']
+          win32: ['squirrel']
         })[opts.platform]
       }
 
