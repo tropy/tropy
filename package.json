@@ -129,9 +129,6 @@
   "optionalDependencies": {
     "appdmg": "^0.6.6"
   },
-  "overrides": {
-    "yauzl": "^3.3.1"
-  },
   "dependencies": {
     "@inukshuk/exif": "^2.0.0",
     "@koa/router": "^15.1.0",
