@@ -370,9 +370,9 @@ Menu.ItemCompiler = {
       item.enabled = true
 
       item.submenu = [
-        ...app.state.recent.map(({ path }, idx) => ({
-          label: `${idx + 1}. ${basename(path)}`,
-          click: () => app.openFile(path)
+        ...app.state.recent.map((file, idx) => ({
+          label: `${idx + 1}. ${basename(file)}`,
+          click: () => app.openFile(file)
         })),
         ...item.submenu
       ]
