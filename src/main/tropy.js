@@ -253,7 +253,7 @@ export class Tropy extends EventEmitter {
       ]
     }
 
-    this.wm.broadcast('recent', this.state.recent)
+    this.wm.send('project', 'recent', this.state.recent)
 
     this.setHistory(null, win)
     this.setProject(project, win)
@@ -269,7 +269,7 @@ export class Tropy extends EventEmitter {
       this.state.recent = []
 
     this.store.save('state.json', this.state)
-    this.wm.broadcast('recent', this.state.recent)
+    this.wm.send('project', 'recent', this.state.recent)
     this.emit('app:reload-menu')
   }
 
@@ -318,7 +318,6 @@ export class Tropy extends EventEmitter {
 
     let args = {
       file: project?.path,
-      recent: this.state.recent,
       ...this.hash
     }
 
