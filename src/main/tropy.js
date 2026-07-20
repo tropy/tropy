@@ -268,7 +268,6 @@ export class Tropy extends EventEmitter {
     else
       this.state.recent = []
 
-    this.store.save('state.json', this.state)
     this.wm.send('project', 'recent', this.state.recent)
     this.emit('app:reload-menu')
   }
