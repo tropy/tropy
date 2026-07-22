@@ -1,63 +1,62 @@
+import { parseArgs } from 'node:util'
 import { resolve } from 'node:path'
 import { URL, pathToFileURL } from 'node:url'
-import { authUrl, exe, version } from '../common/release.js'
-import { Command } from 'commander'
+import { authUrl } from '../common/release.js'
 
-export const program = new Command()
 
-const type = {
-  path (value) { return resolve(value) },
-  float (value) { return parseFloat(value) },
-  int (value) { return parseInt(value, 10) }
+const options = {
+  data: { type: 'string' },
+  cache: { type: 'string' },
+  logs: { type: 'string' },
+  extensions: { type: 'string' },
+  auth: { type: 'string', default: authUrl },
+  
+  // TODO will be obsolete with bundling!
+  env: { type: 'string', default: process.env.NODE_ENV || 'production' },
+  app: { type: 'string' },
+  
+  scale: { type: 'string' },
+
+  'auto-updates': { type: 'boolean', default: true },
+  'context-isolation': { type: 'boolean', default: true },
+
+  'renderer-preference': { type: 'string', short: 'R' },
+
+  'disable-hardware-acceleration': { type: 'boolean', default: !!process.env.TROPY_DISABLE_HARDWARE_ACCELERATION },
+  
+  verbose: { type: 'boolean', default: !!process.env.TROPY_DEBUG },
+  trace: { type: 'boolean', default: !!process.env.TROPY_TRACE },
+  port: { type: 'string', short: 'p' }
 }
 
-program
-  .name(exe)
-  .argument('[args]')
-  .version(version)
+export function parse (argv = process.argv.slice(1)) {  
+  const { values, positionals } = parseArgs({ 
+    args: argv, 
+    options, 
+    strict: false, // TODO remove when squirrel is not used anymore!
+    allowNegative: true, 
+    allowPositionals: true, 
+  })
 
-  // TODO remove when squirrel is not used anymore!
-  .allowUnknownOption()
-  .allowExcessArguments()
+  if (values.data != null) values.data = resolve(values.data)
+  if (values.cache != null) values.cache = resolve(values.cache)
+  if (values.logs != null) values.logs = resolve(values.logs)
+  if (values.extensions != null) values.extensions = resolve(values.extensions)
+  if (values.scale != null) values.scale = parseFloat(values.scale)
+  if (values.port != null) values.port = parseInt(values.port, 10)
 
-  .option('--data <path>', 'set data directory', type.path)
-  .option('--cache <path>', 'set cache directory', type.path)
-  .option('--logs <path>', 'set log directory', type.path)
-  .option('--extensions <path>', 'set chromium extensions directory', type.path)
-  .option('--auth <url>', 'set auth server', authUrl)
-
-  // TODO will be obsolete with bundling!
-  .option('--env <name>', 'set environment',
-    process.env.NODE_ENV || 'production')
-  .option('--app <path>', 'reserved for internal development')
-
-  .option('--scale <factor>', 'set the device scale factor', type.float)
-
-  .option('--no-auto-updates', 'disable automatic updates')
-  .option('--no-context-isolation', 'disable context isolation')
-
-  .option('-R, --renderer-preference <type>',
-    'set the preferred render api')
-
-  .option(
-    '--disable-hardware-acceleration',
-    'disable hardware acceleration',
-    !!process.env.TROPY_DISABLE_HARDWARE_ACCELERATION
-  )
-
-  .option('--verbose', 'set debug flag', !!process.env.TROPY_DEBUG)
-  .option('--trace', 'set trace flag', !!process.env.TROPY_TRACE)
-
-  .option('-p, --port <number>', 'set API listening port', type.int)
-
-
-export function parse (argv = process.argv.slice(1)) {
-  program.parse(argv, { from: 'user' })
-
+  const opts = {
+    autoUpdates: values['auto-updates'],
+    contextIsolation: values['context-isolation'],
+    rendererPreference: values['renderer-preference'],
+    disableHardwareAcceleration: values['disable-hardware-acceleration'],
+    ...values
+  }
+  
   return {
-    opts: program.opts(),
-    args: program.args
-      // TODO remove with allowUnknownOption!
+    opts,
+    args: positionals
+      // TODO remove with strict:false!
       .filter(arg => !(
         arg.startsWith('-') ||
         arg.startsWith('data:') ||
