@@ -6,7 +6,6 @@ import { qualified } from '#tropy/common/release.js'
 describe('main process', () => {
   const tropy = Tropy.instance
   const argv = process.argv
-  const env = process.env.NODE_ENV
 
   let mocks = {}
 
@@ -31,7 +30,6 @@ describe('main process', () => {
   after(() => {
     Tropy.instance = tropy
     process.argv = argv
-    process.env.NODE_ENV = env
     for (let m of Object.values(mocks)) m.mock.restore()
   })
 

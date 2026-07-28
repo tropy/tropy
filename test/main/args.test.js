@@ -1,18 +1,18 @@
-import { env, cwd, platform } from 'node:process'
+import { cwd, platform } from 'node:process'
 import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parse, argToURL } from '#tropy/main/args.js'
 
 describe('args', () => {
   describe('parse', () => {
-    it('falls back to node env', () => {
+    it('defaults --dev to false', () => {
       expect(parse([]).opts)
-        .to.have.property('env', env.NODE_ENV)
+        .to.have.property('dev', false)
     })
 
-    it('sets --env', () => {
-      expect(parse(['--env', 'development']).opts)
-        .to.have.property('env', 'development')
+    it('sets --dev', () => {
+      expect(parse(['--dev']).opts)
+        .to.have.property('dev', true)
     })
 
     it('parses --scale as float', () => {
@@ -31,7 +31,7 @@ describe('args', () => {
     })
 
     it('filters out flags from args', () => {
-      expect(parse(['--env', 'test', 'file.tpy']).args)
+      expect(parse(['--dev', 'file.tpy']).args)
         .to.have.length(1)
     })
 
@@ -107,12 +107,12 @@ describe('args', () => {
       it('parses an electron-style dev launch argv', () => {
         let { opts, args } = parse([
           '--app', '.',
-          '--env', 'development',
+          '--dev',
           '--no-sandbox',
           '/tmp/a.tpy'
         ])
 
-        expect(opts).to.have.property('env', 'development')
+        expect(opts).to.have.property('dev', true)
         expect(opts).to.have.property('app', '.')
         expect(args).to.have.length(1)
       })

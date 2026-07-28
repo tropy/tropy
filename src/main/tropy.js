@@ -89,7 +89,7 @@ export class Tropy extends EventEmitter {
     this.projects = new Map()
     this.store = new Storage(opts.data)
     this.updater = new Updater({
-      enable: process.env.NODE_ENV === 'production' && opts.autoUpdates
+      enable: app.isPackaged && opts.autoUpdates
     })
 
     this.wm = new WindowManager({
@@ -1315,7 +1315,7 @@ export class Tropy extends EventEmitter {
   }
 
   get dev () {
-    return channel === 'alpha' || process.env.NODE_ENV === 'development'
+    return channel === 'alpha' || this.opts.dev
   }
 
   get debug () {

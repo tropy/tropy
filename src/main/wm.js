@@ -420,7 +420,6 @@ export class WindowManager extends EventEmitter {
   async open (type, args, opts = {}) {
     let props = {
       app: Resource.base,
-      env: process.env.NODE_ENV,
       documents: getPath('documents', 'home'),
       pictures: getPath('pictures', 'home'),
       theme: 'light',

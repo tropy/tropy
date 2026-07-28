@@ -16,8 +16,6 @@ enableCompileCache()
 const START = process.getCreationTime() || Date.now()
 const { args, opts } = parse()
 
-process.env.NODE_ENV = opts.env
-
 process.on('uncaughtException', err => { handleError(err) })
 process.on('unhandledRejection', err => { handleError(err) })
 

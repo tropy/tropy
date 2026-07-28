@@ -34,24 +34,11 @@ export function createLogger ({
   redact = REDACT,
   rotate = false,
   debug = process.env.TROPY_DEBUG,
-  trace = process.env.TROPY_TRACE
+  trace = process.env.TROPY_TRACE,
+  test = process.env.NODE_ENV === 'test'
 } = {}) {
 
-  if (!level && trace) level = 'trace'
-  if (!level && debug) level = 'debug'
-
-  switch (process.env.NODE_ENV) {
-    case 'production':
-      level = level || 'info'
-      break
-    case 'development':
-      level = level || 'debug'
-      break
-    case 'test':
-      level = level || 'error'
-      dest = 2
-      break
-  }
+  level ??= (trace) ? 'trace' : (debug) ? 'debug' : (test) ? 'error' : 'info'
 
   if (rotate && typeof dest === 'string') {
     logRotate(dest)
