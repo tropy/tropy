@@ -1,5 +1,4 @@
 import { Container, Graphics } from 'pixi.js'
-import { BLANK } from '../common/util.js'
 import { ESPER } from '../constants/index.js'
 import { move, normalize } from './util.js'
 
@@ -21,12 +20,11 @@ export class TextLayer extends Container {
   }
 
   sync (props, state) {
-    let tool = state.quicktool || props.tool
     let document = state.text
     let offset = props.selection
 
     this.clear()
-    this.visible = this.isVisible(document, tool)
+    this.visible = this.isVisible(document)
 
     if (document) {
       // TODO rotation
@@ -36,10 +34,7 @@ export class TextLayer extends Container {
     }
   }
 
-  update ({ selection } = BLANK, textSelection) {
-    if (selection)
-      selection = normalize(selection)
-
+  update (dragState, textSelection) {
     for (let child of this.children) {
       child.update(textSelection)
     }
@@ -72,11 +67,14 @@ export class TextBox extends Graphics {
   }
 
   update (selection) {
-    this.clear()
+    let selected = !!selection?.get(this.node)
+    if (selected === this.selected)
+      return
 
+    this.clear()
     let { x, y, width, height } = this.data
 
-    if (!width || !height || !selection?.get(this.node))
+    if (!width || !height || !selected)
       return
 
     this
