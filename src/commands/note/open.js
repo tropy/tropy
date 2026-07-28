@@ -7,8 +7,8 @@ import { emit } from '../../dom.js'
 
 export class Open extends Command {
   *exec () {
-    let { id = null, photo, selection } = this.action.payload
-    let item
+    let { id = null } = this.action.payload
+    let item, photo, selection
 
     if (id != null) {
       ({ item, photo, selection } = yield select(getNoteParent, { id }))
