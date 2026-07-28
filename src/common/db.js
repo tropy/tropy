@@ -425,8 +425,8 @@ export class Connection {
       await this.exec('ROLLBACK TRANSACTION')
       return this
 
-    } catch (err) {
-      throw new AggregateError([err, ...errors])
+    } catch (cause) {
+      throw new AggregateError(errors, 'rollback transaction failed', { cause })
     }
   }
 
