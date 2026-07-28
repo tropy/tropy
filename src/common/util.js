@@ -450,10 +450,7 @@ export function tautology () {
 }
 
 export function *counter (k = 0) {
-  while (true) {
-    k = Number.isSafeInteger(k) ? ++k : -k
-    yield k
-  }
+  while (true) yield ++k
 }
 
 export function titlecase (string) {
