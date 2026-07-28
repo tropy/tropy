@@ -167,7 +167,7 @@ export class Input extends React.PureComponent {
   }
 
   handleCompletionsKeyDown (event) {
-    let opt = null
+    let opt
     let completions = this.completions.current
 
     if (!completions?.isVisible)
