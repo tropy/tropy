@@ -1,12 +1,8 @@
 import { createServer } from 'node:http'
 import { debug, info, logger, warn } from '../common/log.js'
+import { HttpError } from '../common/error.js'
 import { urlId } from '../common/url.js'
 import dialog from './dialog.js'
-
-// An error whose status/message Koa exposes in the response.
-function httpError (status, message) {
-  return Object.assign(new Error(message), { status, expose: status < 500 })
-}
 
 export class Server {
   #api
@@ -33,7 +29,9 @@ export class Server {
     if (id === 'current') {
       let win = this.app.wm.current('project')
       if (win == null)
-        throw httpError(404, 'no project is open')
+        throw Object.assign(
+          new HttpError({ status: 404, body: 'no project is open' }),
+          { expose: true })
 
       let path = this.app.getProject(win)?.path
       return { win, path, id: urlId(path) }
@@ -45,7 +43,9 @@ export class Server {
       path => this.app.projectURLId(path) === id)
 
     if (matches.length === 0)
-      throw httpError(404, `unknown project: ${id}`)
+      throw Object.assign(
+        new HttpError({ status: 404, body: `unknown project: ${id}` }),
+        { expose: true })
 
     let [path] = matches
 
@@ -53,7 +53,9 @@ export class Server {
       w => this.app.getProject(w)?.path === path)
 
     if (win == null)
-      throw httpError(404, `project "${id}" is not open`)
+      throw Object.assign(
+        new HttpError({ status: 404, body: `project "${id}" is not open` }),
+        { expose: true })
 
     return {
       win,
