@@ -5,18 +5,6 @@ import Router from '@koa/router'
 import bodyParser from 'koa-bodyparser'
 import act from '../actions/api'
 
-const COLLECTIONS = new Set([
-  'import',
-  'items',
-  'lists',
-  'tags',
-  'data',
-  'notes',
-  'transcriptions',
-  'photos',
-  'selections'
-])
-
 const show = (type) =>
   async (ctx) => {
     let { params, rsvp } = ctx
@@ -459,7 +447,17 @@ export function create ({
   // Redirect legacy URLs (e.g. /project/items) to the
   // current project. Registered before the :project routes so
   // /project/items redirects instead of resolving.
-  for (let collection of COLLECTIONS) {
+  for (let collection of [
+    'import',
+    'items',
+    'lists',
+    'tags',
+    'data',
+    'notes',
+    'transcriptions',
+    'photos',
+    'selections'
+  ]) {
     api.all(`/project/${collection}{/*rest}`, (ctx) => {
       let rest = ctx.params.rest ? `/${ctx.params.rest.join('/')}` : ''
       ctx.status = 308
