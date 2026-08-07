@@ -49,8 +49,8 @@ export class Server {
 
     let [path] = matches
 
-    let win = this.app.wm.find('project',
-      w => this.app.getProject(w)?.path === path)
+    let win = this.app.wm.values('project')
+      .find(w => this.app.getProject(w)?.path === path)
 
     if (win == null)
       throw Object.assign(
