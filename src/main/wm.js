@@ -227,10 +227,6 @@ export class WindowManager extends EventEmitter {
     return this.windows[type]?.[0]
   }
 
-  find (type, predicate) {
-    return this.windows[type]?.find(predicate)
-  }
-
   each (...args) {
     return this.map(...args), this
   }
