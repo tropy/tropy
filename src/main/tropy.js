@@ -117,7 +117,13 @@ export class Tropy extends EventEmitter {
   }
 
   async open (...urls) {
-    let handled = false
+    if (urls.length === 0) {
+      let win = this.wm.current()
+      if (win != null)
+        return win.show()
+      else
+        return this.openMostRecentProject()
+    }
 
     for (let url of urls) {
       switch (url.protocol) {
@@ -125,20 +131,12 @@ export class Tropy extends EventEmitter {
           await this.showProjectWindow(fileURLToPath(url), null)
           break
         case 'tropy:':
-          handled = (await this.handleProtocolRequest(url)) || handled
+          await this.handleProtocolRequest(url)
           break
         default:
           throw new Error(`protocol not supported: ${url}`)
       }
     }
-
-    if (handled) return
-
-    let win = this.wm.current()
-    if (win != null)
-      return win.show()
-    else
-      return this.openMostRecentProject()
   }
 
   async openFile (...files) {
@@ -1161,7 +1159,7 @@ export class Tropy extends EventEmitter {
               }]
             })
 
-            if (!files?.length) return true
+            if (!files?.length) return
             file = files[0]
           }
 
