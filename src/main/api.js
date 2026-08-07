@@ -39,8 +39,7 @@ export class Server {
 
     // Several projects can share a URL id when their files have the same
     // basename; resolve to the most recent.
-    let matches = this.app.state.recent.filter(
-      path => this.app.projectURLId(path) === id)
+    let matches = this.app.state.recent.filter(f => urlId(f) === id)
 
     if (matches.length === 0)
       throw Object.assign(

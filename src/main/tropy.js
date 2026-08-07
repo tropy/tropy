@@ -276,15 +276,6 @@ export class Tropy extends EventEmitter {
     this.emit('app:reload-menu')
   }
 
-  projectURLId (path) {
-    if (!path) return null
-    return urlId(path)
-  }
-
-  resolveURLId (id) {
-    return this.state.recent.filter(path => this.projectURLId(path) === id)
-  }
-
   async import (...args) {
     if (this.getProject())
       return this.dispatch(act.item.import(...args), this.wm.current())
@@ -1159,7 +1150,8 @@ export class Tropy extends EventEmitter {
 
         } else {
           // open most recent project with that id
-          let file = this.resolveURLId(projectId)[0]?.path
+          let file = this.state.recent.find(
+            path => urlId(path) === projectId)
 
           if (file == null) {
             let files = await dialog.open(this.wm.current(), {
