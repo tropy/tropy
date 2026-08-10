@@ -1,8 +1,30 @@
 import { empty, list, pick } from '../common/util.js'
 import { props } from '../common/export.js'
 import { into, select } from '../common/query.js'
+import image from './image.js'
 import metadata from './metadata.js'
+import note from './note.js'
 import subject from './subject.js'
+import * as transcription from './transcription.js'
+
+async function loadIds (db, photos) {
+  let ids = {}
+
+  await db.each(
+    ...select('id', 'photo_id')
+      .from('selections')
+      .outer.join('trash', { using: 'id' })
+      .where({ photo_id: photos, deleted: null })
+      .order('position'),
+    ({ id, photo_id: photo }) => {
+      if (photo in ids)
+        ids[photo].push(id)
+      else
+        ids[photo] = [id]
+    })
+
+  return ids
+}
 
 async function load (db, ids) {
   let selections = {}
@@ -80,6 +102,7 @@ async function load (db, ids) {
 
 export default {
   load,
+  loadIds,
 
   async create (db, {
     template,
@@ -108,6 +131,29 @@ export default {
     }
 
     return (await load(db, [id]))[id]
+  },
+
+  async copy (db, { source, target: photo }) {
+    let { id } = await subject.dup(db, source)
+
+    await image.copy(db, { source, target: id })
+
+    await db.run(`
+      INSERT INTO selections (id, photo_id, position, x, y)
+        SELECT ?, ?, position, x, y
+          FROM selections
+          WHERE id = ?`, id, photo, source)
+
+    await metadata.copy(db, { source, target: id })
+
+    let notes = await note.copy(db, { source, target: id })
+    let transcriptions = await transcription.copy(db, { source, target: id })
+
+    return {
+      selection: (await load(db, [id]))[id],
+      notes,
+      transcriptions
+    }
   },
 
   async order (db, photo, selections, offset = 0) {
