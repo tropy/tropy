@@ -769,6 +769,7 @@ export class Esper extends React.Component {
                 id={this.state.id}/>
             )}>
             <Transcription
+              key={transcription.id}
               config={transcription.config}
               data={this.state.text}
               onSelect={this.setTextSelection}
