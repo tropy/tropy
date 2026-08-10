@@ -33,6 +33,20 @@ export async function create (db, {
   return (await load(db, id))[id]
 }
 
+export async function copy (db, { source, target }) {
+  let copies = await db.all(`
+    INSERT INTO transcriptions (
+        id, config, data, text, status, angle, mirror, created, modified)
+      SELECT ?, config, data, text, status, angle, mirror, created, modified
+        FROM transcriptions
+        WHERE id = ? AND deleted IS NULL
+      RETURNING transcription_id AS "id"`, target, source)
+
+  return (copies.length)
+    ? Object.values(await load(db, copies.map(tr => tr.id)))
+    : []
+}
+
 export async function load (db, id) {
   let transcriptions = {}
 
