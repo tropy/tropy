@@ -1,65 +1,57 @@
 import assert from 'node:assert'
 import { all, call, put, select } from 'redux-saga/effects'
-import { ImportCommand } from '../import.js'
+import { Command } from '../command.js'
 import { fail } from '../../dialog.js'
 import * as mod from '../../models/index.js'
 import * as act from '../../actions/index.js'
 import { PHOTO } from '../../constants/index.js'
-import { Image } from '../../image/image.js'
 import { warn } from '../../common/log.js'
-import { blank, pluck, splice } from '../../common/util.js'
+import { blank, splice } from '../../common/util.js'
 
 
-export class Duplicate extends ImportCommand {
+export class Duplicate extends Command {
   *exec () {
-    let { cache, db } = this.options
-    let { payload } = this.action
+    let { db } = this.options
+    let { meta, payload } = this.action
     let { item } = payload
+    let { deep = true } = meta
 
     assert(!blank(payload.photos), 'missing photos')
 
-    let [basePath, order, originals, data, settings] = yield select(state => [
+    let [basePath, order] = yield select(state => [
       state.project.basePath,
-      state.items[item].photos,
-      pluck(state.photos, payload.photos),
-      pluck(state.metadata, payload.photos),
-      state.settings
+      state.items[item].photos
     ])
 
     let idx = [order.indexOf(payload.photos[0]) + 1]
-    let total = originals.length
+    let total = payload.photos.length
     let photos = []
 
     for (let i = 0; i < total; ++i) {
-      let { density, template, path, page, protocol } = originals[i]
+      let source = payload.photos[i]
 
       try {
-        let image = yield call([Image, Image.open], {
-          density: density || settings.density,
-          path,
-          page,
-          protocol
-        })
+        let { photo, notes, selections, transcriptions } = yield call(
+          db.transaction, tx =>
+            mod.photo.dup(tx, source, { basePath, deep }))
 
-        let photo = yield call(db.transaction, tx =>
-          mod.photo.create(tx, { basePath, template }, {
-            item,
-            image: image.toJSON(),
-            data: data[i]
-          }))
-
-        yield put(act.metadata.load([photo.id]))
+        yield put(act.metadata.load([
+          photo.id,
+          ...selections.map(s => s.id)
+        ]))
 
         yield all([
+          put(act.note.insert(notes)),
+          put(act.transcriptions.insert(transcriptions)),
+          put(act.selection.insert(selections)),
           put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
           put(act.activity.update(this.action, { total, progress: i + 1 }))
         ])
 
         photos.push(photo.id)
-        yield call(cache.consolidate, photo.id, image)
 
       } catch (err) {
-        warn({ err }, `failed to duplicate "${path}"`)
+        warn({ err }, `failed to duplicate photo ${source}`)
         fail(err, this.action.type)
       }
     }

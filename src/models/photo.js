@@ -1,7 +1,11 @@
 import assert from 'node:assert'
 import { relative, resolve } from 'node:path'
+import image from './image.js'
 import metadata from './metadata.js'
+import note from './note.js'
+import selection from './selection.js'
 import subject from './subject.js'
+import * as transcription from './transcription.js'
 import { into, select, update } from '../common/query.js'
 import { normalize } from '../common/os.js'
 import { blank, empty, pick, pMap } from '../common/util.js'
@@ -10,6 +14,11 @@ import { props } from '../common/export.js'
 const skel = (id, selections = [], notes = [], transcriptions = []) => ({
   id, selections, notes, transcriptions
 })
+
+const COLUMNS = [
+  ...props.photo.filter(col => col !== 'template'),
+  'position'
+].join(', ')
 
 async function load (db, ids, { basePath } = {}) {
   let photos = {}
@@ -62,20 +71,14 @@ async function load (db, ids, { basePath } = {}) {
       }
     ),
 
-    db.each(
-      ...select('id', 'photo_id')
-        .from('selections')
-        .outer.join('trash', { using: 'id' })
-        .where({ photo_id: ids, deleted: null })
-        .order('photo_id')
-        .order('position'),
-      ({ id: sid, photo_id: id }) => {
+    selection.loadIds(db, ids).then(selections => {
+      for (let id in selections) {
         if (id in photos)
-          photos[id].selections.push(sid)
+          photos[id].selections.push(...selections[id])
         else
-          photos[id] = skel(id, [sid])
+          photos[id] = skel(Number(id), selections[id])
       }
-    ),
+    }),
 
     db.each(
       ...select('id', 'note_id')
@@ -137,6 +140,44 @@ export default {
     ])
 
     return (await load(db, [id], { basePath }))[id]
+  },
+
+  async dup (db, id, { basePath, deep = true } = {}) {
+    let { id: target } = await subject.dup(db, id)
+
+    await image.copy(db, { source: id, target })
+
+    await db.run(`
+      INSERT INTO photos (id, item_id, ${COLUMNS})
+        SELECT ?, item_id, ${COLUMNS}
+          FROM photos
+          WHERE id = ?`, target, id)
+
+    await metadata.copy(db, { source: id, target })
+
+    let notes = []
+    let selections = []
+    let transcriptions = []
+
+    if (deep) {
+      notes = await note.copy(db, { source: id, target })
+      transcriptions = await transcription.copy(db, { source: id, target })
+
+      for (let source of (await selection.loadIds(db, id))[id] ?? []) {
+        let copy = await selection.copy(db, { source, target })
+
+        selections.push(copy.selection)
+        notes.push(...copy.notes)
+        transcriptions.push(...copy.transcriptions)
+      }
+    }
+
+    return {
+      photo: (await load(db, [target], { basePath }))[target],
+      notes,
+      selections,
+      transcriptions
+    }
   },
 
   async save (db, { id, timestamp, ...data }, { basePath } = {}) {
