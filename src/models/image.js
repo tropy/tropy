@@ -4,7 +4,17 @@ import { props } from '../common/export.js'
 import { select, update } from '../common/query.js'
 import { empty, pick } from '../common/util.js'
 
+const COLUMNS = props.image.join(', ')
+
 export default {
+  copy (db, { source, target }) {
+    return db.run(`
+      INSERT INTO images (id, ${COLUMNS})
+        SELECT ?, ${COLUMNS}
+          FROM images
+          WHERE id = ?`, target, source)
+  },
+
   async rotate (db, { id, by }) {
     by = Number(by)
 
