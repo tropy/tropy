@@ -640,11 +640,9 @@ export function debounce (fn, ms) {
   let id, args, ctx
 
   function invoke () {
-    try {
-      return fn.apply(ctx, args)
-    } finally {
-      ctx = args = undefined
-    }
+    let [c, a] = [ctx, args]
+    id = ctx = args = undefined
+    return fn.apply(c, a)
   }
 
   function debounced (...argv) {

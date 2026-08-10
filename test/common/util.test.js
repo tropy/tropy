@@ -552,6 +552,17 @@ describe('util', () => {
       debounced.flush()
       expect(fn.mock.callCount()).to.equal(0)
     })
+
+    it('flush is a no-op after the timer has fired', () => {
+      let fn = mock.fn()
+      let debounced = util.debounce(fn, 100)
+
+      debounced('x')
+      mock.timers.tick(100)
+      debounced.flush()
+
+      expect(fn.mock.callCount()).to.equal(1)
+    })
   })
 
   describe('throttle', () => {
