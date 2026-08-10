@@ -21,12 +21,11 @@ export class SelectionLayer extends Container {
       this.children[i].update(scale)
     }
 
-    if (selection)
-      selection = normalize(selection)
+    let liveSelection = (selection && tool === ESPER.TOOL.SELECT)
+      ? normalize(selection)
+      : BLANK
 
-    if (tool === ESPER.TOOL.SELECT) {
-      this.children[i].update(scale, selection, 'live')
-    }
+    this.children[i].update(scale, liveSelection, 'live')
   }
 
   destroy () {

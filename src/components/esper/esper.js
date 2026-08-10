@@ -221,6 +221,7 @@ export class Esper extends React.Component {
           this.state.text !== prevState.text
         ) {
           this.esper.current.photo?.sync(this.props, this.state)
+          this.esper.current.resume()
         }
       }
     }
