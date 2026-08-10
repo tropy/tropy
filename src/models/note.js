@@ -57,6 +57,19 @@ export default {
     return (await load(db, [id]))[id]
   },
 
+  async copy (db, { source, target }) {
+    let copies = await db.all(`
+      INSERT INTO notes (id, text, state, language, created, modified)
+        SELECT ?, text, state, language, created, modified
+          FROM notes
+          WHERE id = ? AND deleted IS NULL
+        RETURNING note_id`, target, source)
+
+    return (copies.length)
+      ? Object.values(await load(db, copies.map(n => n.note_id)))
+      : []
+  },
+
   async save (db, { id, state, text, modified = new Date }) {
     assert(id != null, 'missing id')
     assert(state != null, 'missing state')
