@@ -3,6 +3,11 @@ import { FormattedMessage } from 'react-intl'
 import { Alto } from './alto.js'
 import { TranscriptionError } from './error.js'
 import { Icon } from '../icons.js'
+import { bounds } from '../../dom.js'
+
+const isVisible = (rect, box) => (
+  rect.top < box.bottom && rect.bottom > box.top
+)
 
 
 export const Transcription = ({
@@ -30,27 +35,20 @@ export const Transcription = ({
     if (!added.length)
       return
 
-    let box = container.current.getBoundingClientRect()
-    let above = null
-    let below = null
+    let box = bounds(container.current)
+    let first = bounds(added[0])
+    let last = added.length > 1 ? bounds(added.at(-1)) : first
 
-    for (let node of added) {
-      let { top, bottom } = node.getBoundingClientRect()
-
-      if (top < box.bottom && bottom > box.top)
-        return
-
-      if (bottom <= box.top)
-        above ??= node
-      else
-        below = node
-    }
-
-    // Selection grew in both directions, as in select all: stay put!
-    if (above && below)
+    if (isVisible(first, box) || isVisible(last, box))
       return
 
-    (above ?? below).scrollIntoView({ block: 'nearest' })
+    let isAbove = first.bottom <= box.top
+
+    // Selection grew in both directions, as in select all: stay put!
+    if (isAbove !== (last.bottom <= box.top))
+      return
+
+    added.at(isAbove ? 0 : -1).scrollIntoView({ block: 'nearest' })
   }, [selection])
 
   let content
