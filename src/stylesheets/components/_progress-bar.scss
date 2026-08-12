@@ -4,18 +4,102 @@
 // Progress bar
 // --------------------------------------------------
 
+// Needed for smooth animation
+@property --alpha {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
 progress {
-  flex: 1 1 0;
   -webkit-appearance: none;
+  display: block;
+  width: 100%;
   height: $progress-bar-height;
+  container-type: size;
 
   &::-webkit-progress-bar {
     background: $progress-bar-bg;
-    border-radius: calc($progress-bar-height / 2);
+    border-radius: 99em;
+    overflow: hidden;
+    position: relative;
   }
 
   &::-webkit-progress-value {
-    background: $progress-bar-color;
-    border-radius: calc($progress-bar-height / 2);
+    background-color: $progress-bar-color;
+    border-radius: 99em;
+
+    .is-blurred & {
+      background-color: $progress-bar-blurred-color;
+    }
+  }
+
+  @keyframes indeterminate {
+    0% {
+      --alpha: 0%;
+      --direction: to right;
+      animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+      left: auto;
+      right: calc(100cqw - 100cqh);
+      transform: none;
+      min-width: 100cqw;
+      visibility: visible;
+    }
+
+    1% {
+      --alpha: 0%;
+      min-width: 100cqw;
+    }
+
+    50% {
+      --alpha: 100%;
+      --direction: to right;
+      left: auto;
+      right: 0;
+      transform: none;
+      min-width: 100cqh;
+    }
+
+
+    50% { // stylelint-disable-line keyframe-block-no-duplicate-selectors
+      --alpha: 0%;
+      --direction: to left;
+      animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+      right: auto;
+      transform: translateX(calc(100cqw - 100cqh));
+      min-width: 100cqw;
+    }
+
+    51% {
+      --alpha: 0%;
+      min-width: 100cqw;
+    }
+
+    100% {
+      --alpha: 100%;
+      --direction: to left;
+      transform: translateX(0);
+      min-width: 100cqh;
+    }
+  }
+
+  &:indeterminate::-webkit-progress-value {
+    --color: #{$progress-bar-color};
+    position: absolute;
+    inline-size: 0% !important;
+    background: linear-gradient(
+      var(--direction),
+      color-mix(
+        in srgb,
+        var(--color) var(--alpha),
+        transparent
+      ), var(--color)
+    );
+    animation: 2s indeterminate 0.5s infinite;
+    visibility: hidden;
+
+    .is-blurred & {
+      --color: #{$progress-bar-blurred-color};
+    }
   }
 }

@@ -10,5 +10,21 @@
     padding: $space-lg;
     border-radius: 10px;
     position: relative;
+
+    & + .card {
+      margin-top: $space-sm;
+    }
+
+    h1 {
+      font-size: to-rem(18);
+      font-weight: 600;
+      text-box: trim-both cap alphabetic;
+      color: $profile-heading-color;
+      margin-bottom: $space-xl;
+
+      &:only-child {
+        margin-bottom: 0;
+      }
+    }
   }
 }

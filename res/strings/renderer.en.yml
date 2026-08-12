@@ -322,6 +322,7 @@ en:
         label: Usage
         transcriptions:
           label: Transcriptions
+          loading: Loading…
           limit: >-
             {delta, plural,
               =0 {No transcriptions remaining. Resets {reset}.}

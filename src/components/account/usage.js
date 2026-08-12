@@ -22,14 +22,20 @@ export function Usage () {
   return (
     <div className="card usage">
       <h1><FormattedMessage id="prefs.account.usage.label"/></h1>
-      <h2><FormattedMessage id="prefs.account.usage.transcriptions.label"/></h2>
+      <p class="key">
+        {data && `${data.total} `}
+        <FormattedMessage id="prefs.account.usage.transcriptions.label"/>
+      </p>
       {hasLimit ? (
-        <progress value={data.total} max={data.limit}/>
+        <progress
+          aria-describedby="progress-description"
+          value={data.total}
+          max={data.limit}/>
       ) : (
-        <progress/>
+        <progress aria-describedby="progress-description"/>
       )}
-      {data && (
-        <p className="legend">
+      {data ? (
+        <p className="progress-description" id="progress-description">
           {hasLimit ? (
             <FormattedMessage
               id="prefs.account.usage.transcriptions.limit"
@@ -54,6 +60,10 @@ export function Usage () {
                 )
               }}/>
           )}
+        </p>
+      ) : (
+        <p className="progress-description">
+          <FormattedMessage id="prefs.account.usage.transcriptions.loading"/>
         </p>
       )}
     </div>

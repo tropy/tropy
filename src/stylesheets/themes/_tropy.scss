@@ -484,10 +484,11 @@ $thumbnail-color: --scheme(alpha(var(--light-6), 50%), alpha(var(--dark-7), 50%)
 $thumbnail-bg:    --scheme(shade(var(--light-3), 5%),  tint(var(--dark-5), 5%));
 
 // Progress bar
-$progress-bar-bg:       --scheme(var(--light-3), var(--dark-2));
-$progress-bar-color:    --scheme(var(--primary), var(--primary));
-$progress-cancel-color: --scheme(var(--light-1), var(--dark-4));
-$progress-cancel-bg:    --scheme(var(--light-6), var(--dark-7));
+$progress-bar-bg:             --scheme(var(--light-3), var(--dark-2));
+$progress-bar-color:          --scheme(var(--primary), var(--primary));
+$progress-bar-blurred-color:  --scheme(var(--light-5), var(--dark-6));
+$progress-cancel-color:       --scheme(var(--light-1), var(--dark-4));
+$progress-cancel-bg:          --scheme(var(--light-6), var(--dark-7));
 
 // Editor
 $editor-toolbar-border:                 --scheme(var(--light-2), var(--dark-1));

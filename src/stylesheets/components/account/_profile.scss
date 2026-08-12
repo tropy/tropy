@@ -9,12 +9,10 @@
     font-size: to-rem(16);
     line-height: 1.5;
 
-    h1 {
-      font-size: to-rem(18);
-      font-weight: 600;
-      text-box: trim-both cap alphabetic;
-      color: $profile-heading-color;
-      margin-bottom: $space-xl;
+    &:not(:has(dt)) {
+      h1 {
+        margin-bottom: 0 !important;
+      }
     }
 
     dl {
