@@ -22,7 +22,7 @@ export function Usage () {
   return (
     <div className="card usage">
       <h1><FormattedMessage id="prefs.account.usage.label"/></h1>
-      <p class="key">
+      <p className="key">
         {data && `${data.total} `}
         <FormattedMessage id="prefs.account.usage.transcriptions.label"/>
       </p>
