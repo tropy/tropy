@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDragHandler } from '../../hooks/use-drag-handler.js'
@@ -29,6 +29,7 @@ const select = (document, string, { cursor, selection, modifier }) => {
 export const Alto = React.memo(({
   document,
   onSelect,
+  onSelected,
   outline = 'none',
   selection
 }) => {
@@ -142,9 +143,10 @@ export const Alto = React.memo(({
               {line.strings().map((string, sidx) => (
                 <String
                   key={sidx}
-                  isSelected={selection?.get(string)}
+                  isSelected={!!selection?.get(string)}
                   onMouseDown={handleMouseDown}
                   onMouseEnter={isDragging ? handleMouseEnter : null}
+                  onSelected={onSelected}
                   value={string}/>
               )).toArray()}
             </Line>
@@ -190,16 +192,27 @@ export const Line = ({
   </div>
 )
 
-export const String = ({
+export const String = React.memo(({
   isSelected = false,
   onMouseDown,
   onMouseEnter,
+  onSelected,
   value
-}) => (
-  <div
-    className={cx('string', { selected: isSelected })}
-    onMouseDown={(event) => { onMouseDown(event, value) }}
-    onMouseEnter={(event) => { onMouseEnter?.(event, value) }}>
-    {value.CONTENT}
-  </div>
-)
+}) => {
+  let dom = useRef()
+
+  useLayoutEffect(() => {
+    if (isSelected)
+      onSelected?.(dom.current)
+  }, [isSelected, onSelected])
+
+  return (
+    <div
+      ref={dom}
+      className={cx('string', { selected: isSelected })}
+      onMouseDown={(event) => { onMouseDown(event, value) }}
+      onMouseEnter={(event) => { onMouseEnter?.(event, value) }}>
+      {value.CONTENT}
+    </div>
+  )
+})
