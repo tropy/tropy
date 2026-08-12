@@ -46,6 +46,7 @@ en:
         - r
       copy:
         - CmdOrCtrl+c
+      selectAll: CmdOrCtrl+a
     Sidebar: &Sidebar
       next: ArrowDown
       prev: ArrowUp

@@ -293,7 +293,13 @@ export class Esper extends React.Component {
   }, 75)
 
   copyTextSelection () {
-    copy({ text: this.state.text?.toPlainText(this.state.textSelection) })
+    let text = this.state.text?.toPlainText(this.state.textSelection)
+    if (text) {
+      copy({ text })
+      return true
+    } else {
+      return false
+    }
   }
 
   handleChange = (esper) => {
@@ -471,7 +477,11 @@ export class Esper extends React.Component {
     } else {
       switch (match(this.props.keymap, event)) {
         case 'copy':
-          this.copyTextSelection()
+          if (!this.copyTextSelection()) return
+          break
+        case 'selectAll':
+          if (!this.state.text) return
+          this.setTextSelection(this.state.text.select(true))
           break
         case 'zoomIn':
           this.handleZoomIn()
