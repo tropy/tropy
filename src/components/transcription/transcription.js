@@ -6,7 +6,7 @@ import { Icon } from '../icons.js'
 import { bounds } from '../../dom.js'
 
 const isVisible = (rect, box) => (
-  rect.top < box.bottom && rect.bottom > box.top
+  rect.top >= box.top && rect.bottom <= box.bottom
 )
 
 

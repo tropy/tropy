@@ -37,7 +37,6 @@
     padding: calc(1ch / 6 + 0.25ch);
     border: 1px solid transparent;
     border-radius: 4px;
-    scroll-margin-block: 1lh; // Look ahead when scrolling into view
 
     &.selected {
       background-color: $string-selected-bg;
