@@ -14,4 +14,9 @@
   .side-by-side:not(.esper-maximized) .text-overlay-full & {
     grid-column: 1 / -1;
   }
+
+  pre {
+    user-select: text;
+    cursor: text;
+  }
 }

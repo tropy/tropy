@@ -11,6 +11,10 @@ const isClickOutside = (
   classes = ['alto-document', 'start-line', 'end-line']
 ) => classes.some((name) => has(node, name))
 
+const clearNativeSelection = () => {
+  document.getSelection()?.removeAllRanges()
+}
+
 const select = (document, string, { cursor, selection, modifier }) => {
   switch (modifier) {
     case 'SHIFT':
@@ -33,6 +37,8 @@ export const Alto = React.memo(({
   let [isDragging, setDragging] = useState(false)
 
   let handleClickOutside = useEvent((event) => {
+    clearNativeSelection()
+
     if (!isDragging && isClickOutside(event.target)) {
       onSelect(new Map)
       drag.current = {}
@@ -71,6 +77,8 @@ export const Alto = React.memo(({
         setDragging(true)
     },
     onDragStop (event, wasCancelled) {
+      clearNativeSelection()
+
       if (isDragging) {
         if (wasCancelled) {
           onSelect(drag.current.selection || new Map)

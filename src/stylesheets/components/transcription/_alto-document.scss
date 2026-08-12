@@ -13,6 +13,15 @@
   height: fit-content; // Stretch container
   min-height: 100cqh; // Stretch container
 
+  // Enable but hide native selection (for auto-scroll)
+  user-select: text;
+
+  &::selection,
+  ::selection {
+    background-color: transparent;
+    color: inherit;
+  }
+
   .text-line {
     display: flex;
   }
@@ -28,6 +37,7 @@
     padding: calc(1ch / 6 + 0.25ch);
     border: 1px solid transparent;
     border-radius: 4px;
+    scroll-margin-block: 1lh; // Look ahead when scrolling into view
 
     &.selected {
       background-color: $string-selected-bg;
