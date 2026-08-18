@@ -65,6 +65,7 @@ export class HttpError extends Error {
 
   constructor ({
     body,
+    expose = true,
     status,
     statusText,
     type,
@@ -80,6 +81,7 @@ export class HttpError extends Error {
     this.detail = detail
     this.status = problem?.status || status
     this.url = url
+    this.expose = expose
 
     this.code = (STATUS_CODES[this.status] || 'Unknown')
       .toUpperCase()
