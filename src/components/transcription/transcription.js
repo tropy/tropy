@@ -1,13 +1,8 @@
-import { useCallback, useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Alto } from './alto.js'
 import { TranscriptionError } from './error.js'
 import { Icon } from '../icons.js'
-import { bounds } from '../../dom.js'
-
-const isVisible = (rect, box) => (
-  rect.top >= box.top && rect.bottom <= box.bottom
-)
 
 
 export const Transcription = ({
@@ -20,35 +15,35 @@ export const Transcription = ({
   text
 }) => {
   let container = useRef()
-  let batch = useRef([])
+  let previous = useRef()
 
-  let handleSelected = useCallback((node) => {
-    batch.current.push(node)
-  }, [])
-
+  // Follows the growing edge of the selection: the selected strings are
+  // marked in the DOM already, so the first and last of them is all we
+  // need. Scrolling into view is a no-op while they are visible.
   useLayoutEffect(() => {
-    // LayoutEffect fires after selection update,
-    // so batch.current is all newly selected strings in latest render!
-    let added = batch.current
-    batch.current = []
+    let nodes = container.current.querySelectorAll('.string.selected')
+    let head = nodes[0]
+    let tail = nodes[nodes.length - 1]
 
-    if (!added.length)
+    let extent = previous.current
+
+    previous.current = (head == null) ? null : {
+      head: Number(head.dataset.idx),
+      tail: Number(tail.dataset.idx)
+    }
+
+    if (head == null || extent == null)
       return
 
-    let box = bounds(container.current)
-    let first = bounds(added[0])
-    let last = added.length > 1 ? bounds(added.at(-1)) : first
-
-    if (isVisible(first, box) || isVisible(last, box))
-      return
-
-    let isAbove = first.bottom <= box.top
+    let grewUp = previous.current.head < extent.head
+    let grewDown = previous.current.tail > extent.tail
 
     // Selection grew in both directions, as in select all: stay put!
-    if (isAbove !== (last.bottom <= box.top))
+    if (grewUp === grewDown)
       return
 
-    added.at(isAbove ? 0 : -1).scrollIntoView({ block: 'nearest' })
+    let node = grewUp ? head : tail
+    node.scrollIntoView({ block: 'nearest' })
   }, [selection])
 
   let content
@@ -71,7 +66,6 @@ export const Transcription = ({
       <Alto
         document={data}
         onSelect={onSelect}
-        onSelected={handleSelected}
         selection={selection}/>
     )
 

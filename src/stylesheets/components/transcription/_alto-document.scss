@@ -13,7 +13,7 @@
   height: fit-content; // Stretch container
   min-height: 100cqh; // Stretch container
 
-  // Enable but hide native selection (for auto-scroll)
+  // Enable but hide native selection
   user-select: text;
 
   &::selection,
@@ -24,11 +24,18 @@
 
   .text-line {
     display: flex;
-  }
 
-  .start-line {
-    flex: 0 0 auto;
-    width: calc(100px - 0.45ch); // Stretch container
+    &::before {
+      content: "";
+      flex: 0 0 auto;
+      width: calc(100px - 0.45ch); // Stretch container
+    }
+
+    &::after {
+      content: "";
+      flex: 1 0 auto;
+      width: calc(10cqw - 0.45ch); // Stretch container
+    }
   }
 
   .string {
@@ -46,11 +53,6 @@
         background-color: $string-selected-focus-bg;
       }
     }
-  }
-
-  .end-line {
-    flex: 1 0 auto;
-    width: calc(10cqw - 0.45ch); // Stretch container
   }
 
   // Debugging
