@@ -29,9 +29,7 @@ export class Server {
     if (id === 'current') {
       let win = this.app.wm.current('project')
       if (win == null)
-        throw Object.assign(
-          new HttpError({ status: 404, body: 'no project is open' }),
-          { expose: true })
+        throw new HttpError({ status: 404, body: 'no project is open' })
 
       let path = this.app.getProject(win)?.path
       return { win, path, id: urlId(path) }
@@ -42,9 +40,7 @@ export class Server {
     let matches = this.app.state.recent.filter(f => urlId(f) === id)
 
     if (matches.length === 0)
-      throw Object.assign(
-        new HttpError({ status: 404, body: `unknown project: ${id}` }),
-        { expose: true })
+      throw new HttpError({ status: 404, body: `unknown project: ${id}` })
 
     let [path] = matches
 
@@ -52,9 +48,7 @@ export class Server {
       .find(w => this.app.getProject(w)?.path === path)
 
     if (win == null)
-      throw Object.assign(
-        new HttpError({ status: 404, body: `project "${id}" is not open` }),
-        { expose: true })
+      throw new HttpError({ status: 404, body: `project "${id}" is not open` })
 
     return {
       win,
