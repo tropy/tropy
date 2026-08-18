@@ -1,152 +1,130 @@
-import React, { useLayoutEffect, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import cx from 'classnames'
-import { useEvent } from '../../hooks/use-event.js'
-import { useDragHandler } from '../../hooks/use-drag-handler.js'
-import { isMeta } from '../../keymap.js'
-import { bounds, has } from '../../dom.js'
-import { flipMap, mergeMap } from '../../common/util.js'
+import { useEventHandler } from '../../hooks/use-event-handler.js'
 
-const isClickOutside = (
-  node,
-  classes = ['alto-document', 'start-line', 'end-line']
-) => classes.some((name) => has(node, name))
+// Returns the next (dir > 0) or previous string element, starting at
+// node, but never one of its descendants.
+const step = (root, node, dir) => {
+  let walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT, {
+    acceptNode: (n) => n.classList.contains('string') ?
+      NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP
+  })
 
-const clearNativeSelection = () => {
-  document.getSelection()?.removeAllRanges()
+  walker.currentNode = node
+
+  if (dir < 0)
+    return walker.previousNode()
+
+  // Subtle: nextNode() descends into node, but the boundary we resolve
+  // lies behind it, so skip its subtree!
+  let next = walker.nextNode()
+  while (next != null && node.contains(next)) next = walker.nextNode()
+
+  return next
 }
 
-const select = (document, string, { cursor, selection, modifier }) => {
-  switch (modifier) {
-    case 'SHIFT':
-      return mergeMap(document.range(string, cursor), selection)
-    case 'FLIP':
-      return flipMap(document.range(string, cursor), selection)
-    default:
-      return document.range(string, cursor)
+// Returns the first (dir > 0) or last string element inside node.
+const edge = (node, dir) => {
+  let all = node.querySelectorAll?.('.string')
+  return all?.length ? all[dir > 0 ? 0 : all.length - 1] : null
+}
+
+// Resolves a range boundary to the string element it selects, looking
+// forwards (dir > 0) for the range's start and backwards for its end.
+const boundary = (root, container, offset, dir) => {
+  if (!root.contains(container))
+    return edge(root, dir)
+
+  // Boundaries inside a string select it, at any offset.
+  let inside = (container.nodeType === Node.TEXT_NODE ?
+    container.parentElement : container)?.closest('.string')
+
+  if (inside != null)
+    return inside
+
+  let node = container.childNodes[dir > 0 ? offset : offset - 1]
+
+  if (node == null)
+    return step(root, container, dir)
+
+  if (node.nodeType === Node.ELEMENT_NODE) {
+    if (node.classList.contains('string'))
+      return node
+
+    let string = edge(node, dir)
+    if (string != null)
+      return string
   }
+
+  return step(root, node, dir)
+}
+
+// Returns the indices of the first and last string element covered by
+// the current native text selection.
+const selectedRange = (root) => {
+  let selection = document.getSelection()
+
+  if (!selection?.rangeCount || selection.isCollapsed)
+    return []
+
+  let range = selection.getRangeAt(0)
+
+  if (!range.intersectsNode(root))
+    return []
+
+  let head = boundary(root, range.startContainer, range.startOffset, 1)
+  let tail = boundary(root, range.endContainer, range.endOffset, -1)
+
+  if (head == null || tail == null)
+    return []
+
+  let idx = Number(head.dataset.idx)
+  let jdx = Number(tail.dataset.idx)
+
+  // The selection lies entirely between two strings.
+  return (idx > jdx) ? [] : [idx, jdx]
 }
 
 export const Alto = React.memo(({
-  document,
+  document: alto,
   onSelect,
-  onSelected,
   outline = 'none',
   selection
 }) => {
-  let drag = useRef({})
+  let dom = useRef()
+  let previous = useRef({})
 
-  let [isDragging, setDragging] = useState(false)
+  useEventHandler(document, 'selectionchange', () => {
+    let [head, tail] = selectedRange(dom.current)
 
-  let handleClickOutside = useEvent((event) => {
-    clearNativeSelection()
-
-    if (!isDragging && isClickOutside(event.target)) {
-      onSelect(new Map)
-      drag.current = {}
-    }
-  })
-
-  let handleMouseDown = useDragHandler({
-    onDragStart (event, target) {
-      setDragging(false)
-      let { current } = drag
-
-      current.origin = bounds(event.target)
-      current.target = target
-
-      let prevModifier = current.modifier
-      current.modifier = event.shiftKey ? 'SHIFT' : isMeta(event) ? 'FLIP' : null
-
-      if (current.modifier === 'SHIFT') {
-        if (prevModifier == null)
-          current.selection = null
-      } else {
-        current.selection = selection
-      }
-
-      if (Array.isArray(target))
-        return
-
-      if (current.modifier !== 'SHIFT') {
-        current.cursor = target
-      }
-
-      onSelect(select(document, target, current))
-    },
-    onDrag () {
-      if (!isDragging)
-        setDragging(true)
-    },
-    onDragStop (event, wasCancelled) {
-      clearNativeSelection()
-
-      if (isDragging) {
-        if (wasCancelled) {
-          onSelect(drag.current.selection || new Map)
-          drag.current = {}
-        }
-
-        // Stop potential click outside handling!
-        event?.stopPropagation()
-        setDragging(false)
-      }
-    }
-  })
-
-  let handleMouseEnterLine = useEvent((event, strings) => {
-    let { origin, target } = drag.current
-
-    if (Array.isArray(target)) {
-      if (strings[0] === target[0] && strings[1] === target[1])
-        return
-    } else {
-      if (strings.includes(target))
-        return
-    }
-
-    let isForward = event.clientY > origin.bottom ||
-      (event.clientY >= origin.top && event.clientX >= origin.left)
-
-    let string = strings[isForward ? 0 : 1]
-    if (string)
-      handleMouseEnter(event, string)
-  })
-
-  let handleMouseEnter = useEvent((event, string) => {
-    if (!string)
+    if (head === previous.current.head &&
+      tail === previous.current.tail &&
+      selection === previous.current.selection)
       return
 
-    let { current } = drag
+    let next = (head == null) ?
+      new Map :
+      alto.range(alto.getStringAt(head), alto.getStringAt(tail))
 
-    if (Array.isArray(current.target)) {
-      let isForward = event.clientY > current.origin.bottom ||
-        (event.clientY >= current.origin.top && event.clientX >= current.origin.left)
-
-      current.cursor = current.target[isForward ? 1 : 0]
-    }
-
-    onSelect(select(document, string, current))
+    previous.current = { head, tail, selection: next }
+    onSelect(next)
   })
+
+  let idx = 0
 
   return (
     <section
-      className={cx('alto-document', `outline-${outline}`)}
-      onMouseUp={handleClickOutside}>
-      {document.blocks().map((block, bidx) => (
+      ref={dom}
+      className={cx('alto-document', `outline-${outline}`)}>
+      {alto.blocks().map((block, bidx) => (
         <TextBlock key={bidx}>
           {block.lines().map((line, lidx) => (
-            <Line
-              key={lidx}
-              onMouseDown={handleMouseDown}
-              onMouseEnter={isDragging ? handleMouseEnterLine : null}
-              value={line}>
+            <Line key={lidx}>
               {line.strings().map((string, sidx) => (
                 <String
                   key={sidx}
+                  idx={idx++}
                   isSelected={!!selection?.get(string)}
-                  onMouseDown={handleMouseDown}
-                  onMouseEnter={isDragging ? handleMouseEnter : null}
-                  onSelected={onSelected}
                   value={string}/>
               )).toArray()}
             </Line>
@@ -163,56 +141,20 @@ export const TextBlock = ({ children }) => (
   </div>
 )
 
-const lhs = (line) => ([
-  line.previous()?.last(),
-  line.first()
-])
-
-const rhs = (line) => ([
-  line.last(),
-  line.next()?.first(),
-])
-
-export const Line = ({
-  children,
-  value,
-  onMouseDown,
-  onMouseEnter
-}) => (
+export const Line = ({ children }) => (
   <div className="text-line">
-    <div
-      className="start-line"
-      onMouseDown={(event) => { onMouseDown(event, lhs(value)) }}
-      onMouseEnter={(event) => { onMouseEnter?.(event, lhs(value)) }}/>
     {children}
-    <div
-      className="end-line"
-      onMouseDown={(event) => { onMouseDown(event, rhs(value)) }}
-      onMouseEnter={(event) => { onMouseEnter?.(event, rhs(value)) }}/>
   </div>
 )
 
 export const String = React.memo(({
+  idx,
   isSelected = false,
-  onMouseDown,
-  onMouseEnter,
-  onSelected,
   value
-}) => {
-  let dom = useRef()
-
-  useLayoutEffect(() => {
-    if (isSelected)
-      onSelected?.(dom.current)
-  }, [isSelected, onSelected])
-
-  return (
-    <div
-      ref={dom}
-      className={cx('string', { selected: isSelected })}
-      onMouseDown={(event) => { onMouseDown(event, value) }}
-      onMouseEnter={(event) => { onMouseEnter?.(event, value) }}>
-      {value.CONTENT}
-    </div>
-  )
-})
+}) => (
+  <div
+    className={cx('string', { selected: isSelected })}
+    data-idx={idx}>
+    {value.CONTENT}
+  </div>
+))
