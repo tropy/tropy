@@ -32,6 +32,9 @@ export class Server {
         throw new HttpError({ status: 404, body: 'no project is open' })
 
       let path = this.app.getProject(win)?.path
+      if (path == null)
+        throw new HttpError({ status: 404, body: 'no project is open' })
+
       return { win, path, id: urlId(path) }
     }
 
