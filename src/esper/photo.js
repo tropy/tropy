@@ -109,6 +109,25 @@ export class Photo extends Container {
       new Rectangle(0, 0, height, width)
   }
 
+  // Returns the screen bounds of a rectangle in local coordinates,
+  // taking rotation and mirroring into account.
+  getScreenBounds ({ x, y, width, height }) {
+    // Subtle: skip the transform update after the first corner only!
+    let [a, b, c, d] = [
+      this.toGlobal({ x, y }, undefined, false),
+      this.toGlobal({ x: x + width, y }, undefined, true),
+      this.toGlobal({ x, y: y + height }, undefined, true),
+      this.toGlobal({ x: x + width, y: y + height }, undefined, true)
+    ]
+
+    return {
+      left: Math.min(a.x, b.x, c.x, d.x),
+      right: Math.max(a.x, b.x, c.x, d.x),
+      top: Math.min(a.y, b.y, c.y, d.y),
+      bottom: Math.max(a.y, b.y, c.y, d.y)
+    }
+  }
+
   getPanLimits (screen, ...args) {
     let { width, height } = this.getBoundsProjection(...args)
 

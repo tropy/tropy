@@ -95,7 +95,8 @@ export const Alto = React.memo(({
   let previous = useRef({})
 
   useEventHandler(document, 'selectionchange', () => {
-    let [head, tail] = selectedRange(dom.current)
+    let range = selectedRange(dom.current)
+    let [head, tail] = range
 
     if (head === previous.current.head &&
       tail === previous.current.tail &&
@@ -107,7 +108,7 @@ export const Alto = React.memo(({
       alto.range(alto.getStringAt(head), alto.getStringAt(tail))
 
     previous.current = { head, tail, selection: next }
-    onSelect(next)
+    onSelect(next, range)
   })
 
   let idx = 0
