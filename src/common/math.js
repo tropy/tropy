@@ -43,8 +43,18 @@ export function rotate (deg, by) {
   return (360 + ((deg + by) % 360)) % 360
 }
 
-export function contains (rect, p) {
-  return !(
-    p.x < rect.left || p.x > rect.right || p.y < rect.top || p.y > rect.bottom
+export function contains (rect, {
+  x,
+  y,
+  width = 0,
+  height = 0,
+  left = x,
+  top = y,
+  right = x + width,
+  bottom = y + height
+}) {
+  return (
+    left >= rect.left && right <= rect.right &&
+    top >= rect.top && bottom <= rect.bottom
   )
 }
