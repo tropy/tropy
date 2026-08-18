@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { ipcRenderer as ipc } from 'electron'
 import {
   Form, FormElement, FormField, FormSlider, FormToggle, FormToggleGroup
@@ -42,8 +42,6 @@ export const ProjectSettings = React.memo(({
       win.toggle('busy', false)
     }
   })
-  
-  let url = useMemo(() => protocolURL(project.path), [project.path])
 
   let handleProjectConvert = useEvent(async () => {
     try {
@@ -91,7 +89,7 @@ export const ProjectSettings = React.memo(({
         name="url"
         isCompact
         isReadOnly
-        value={url}/>
+        value={protocolURL(project.path)}/>
       <FormField
         id="prefs.project.path"
         name="path"
