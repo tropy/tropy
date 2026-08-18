@@ -65,6 +65,26 @@ export function move (pos, { x = 0, y = 0 } = {}) {
   return pos
 }
 
+// Subtle: text coordinates are relative to the photo selection!
+// Returns null for strings without coordinates.
+export const textBounds = (node, offset) => {
+  let bounds = node.bounds()
+
+  if (bounds == null)
+    return null
+
+  bounds = normalize(bounds)
+
+  return offset ? move(bounds, offset) : bounds
+}
+
+export const inset = ({ x, y, width, height }, padding = 0) => ({
+  left: x + padding,
+  top: y + padding,
+  right: x + width - padding,
+  bottom: y + height - padding
+})
+
 export function clamp ({ x, y, width, height }, bounds) {
   if (x < 0) {
     width += x

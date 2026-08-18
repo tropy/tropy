@@ -1,6 +1,6 @@
 import { Container, Graphics } from 'pixi.js'
 import { ESPER } from '../constants/index.js'
-import { move, normalize } from './util.js'
+import { textBounds } from './util.js'
 
 
 export class TextLayer extends Container {
@@ -59,11 +59,7 @@ export class TextBox extends Graphics {
 
   sync (node, offset) {
     this.node = node
-    this.data = normalize(node.bounds())
-
-    if (offset) {
-      move(this.data, offset)
-    }
+    this.data = textBounds(node, offset)
   }
 
   update (selection) {
@@ -71,10 +67,15 @@ export class TextBox extends Graphics {
     if (selected === this.selected)
       return
 
+    this.selected = selected
     this.clear()
+
+    if (!selected || this.data == null)
+      return
+
     let { x, y, width, height } = this.data
 
-    if (!width || !height || !selected)
+    if (!width || !height)
       return
 
     this

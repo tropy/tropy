@@ -15,10 +15,11 @@ import { Transcription } from '../transcription/transcription.js'
 import { TranscriptionPanel } from '../transcription/panel.js'
 import { flipMap, mergeMap, pick, restrict } from '../../common/util.js'
 import { Cache } from '../../common/cache.js'
-import { isHorizontal, rotate, round } from '../../common/math.js'
+import { expansion, isHorizontal, rotate, round } from '../../common/math.js'
 import { addOrientation, subOrientation } from '../../common/iiif.js'
 import { match } from '../../keymap.js'
 import { getResolution } from '../../dom.js'
+import { textBounds } from '../../esper/util.js'
 import { ESPER, SASS } from '../../constants/index.js'
 import memoize from 'memoize-one'
 import { Document } from 'alto-xml'
@@ -266,8 +267,30 @@ export class Esper extends React.Component {
     }
   }
 
-  setTextSelection = (textSelection) => {
+  // Subtle: textRange is the head/tail string index of the selection,
+  // if it is contiguous. Selections made on the canvas are not, so it
+  // is cleared unless the caller passes one in!
+  setTextSelection = (textSelection, textRange = []) => {
+    this.textRange = textRange
     this.setState({ textSelection })
+  }
+
+  // Subtle: when text is selected in the transcription, we may have to
+  // pan the view to follow the growing edge of the selection!
+  handleTranscriptionSelect = (textSelection, textRange) => {
+    let dir = expansion(textRange, this.textRange)
+
+    this.setTextSelection(textSelection, textRange)
+
+    if (dir === 0)
+      return
+
+    let string = this.state.text?.getStringAt(
+      (dir < 0) ? textRange[0] : textRange[1])
+
+    if (string != null)
+      this.esper.current.panIntoView(
+        textBounds(string, this.props.selection))
   }
 
   handleTextSelection = throttle(({ x, y, width, height }, modifier, base) => {
@@ -782,7 +805,7 @@ export class Esper extends React.Component {
               key={transcription.id}
               config={transcription.config}
               data={this.state.text}
-              onSelect={this.setTextSelection}
+              onSelect={this.handleTranscriptionSelect}
               selection={this.state.textSelection}
               status={transcription.status}
               text={transcription.text}/>

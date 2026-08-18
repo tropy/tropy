@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { Alto } from './alto.js'
 import { TranscriptionError } from './error.js'
 import { Icon } from '../icons.js'
+import { expansion } from '../../common/math.js'
 
 
 export const Transcription = ({
@@ -25,24 +26,16 @@ export const Transcription = ({
     let head = nodes[0]
     let tail = nodes[nodes.length - 1]
 
-    let extent = previous.current
+    let range = (head == null) ? [] :
+      [Number(head.dataset.idx), Number(tail.dataset.idx)]
 
-    previous.current = (head == null) ? null : {
-      head: Number(head.dataset.idx),
-      tail: Number(tail.dataset.idx)
-    }
+    let dir = expansion(range, previous.current)
+    previous.current = range
 
-    if (head == null || extent == null)
+    if (dir === 0)
       return
 
-    let grewUp = previous.current.head < extent.head
-    let grewDown = previous.current.tail > extent.tail
-
-    // Selection grew in both directions, as in select all: stay put!
-    if (grewUp === grewDown)
-      return
-
-    let node = grewUp ? head : tail
+    let node = (dir < 0) ? head : tail
     node.scrollIntoView({ block: 'nearest' })
   }, [selection])
 

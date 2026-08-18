@@ -12,7 +12,9 @@ import {
   remove
 } from '../dom.js'
 import { debug, error, info, warn } from '../common/log.js'
-import { isClockwise, isHorizontal, deg, rad } from '../common/math.js'
+import {
+  isClockwise, isHorizontal, contains, deg, rad, shift
+} from '../common/math.js'
 import { delay, restrict } from '../common/util.js'
 import { Photo, FILTERS } from './photo.js'
 import { Selection } from './selection.js'
@@ -28,6 +30,7 @@ import {
   constrain,
   coords,
   equal,
+  inset,
   isDoubleClickSupported,
   normalize,
   setScaleMode
@@ -35,6 +38,8 @@ import {
 
 const {
   FADE_DURATION,
+  PAN_DURATION,
+  PAN_PADDING,
   SYNC_DURATION,
   ZOOM_PINCH_BOOST,
   ZOOM_WHEEL_FACTOR,
@@ -457,6 +462,32 @@ export default class Esper extends EventEmitter {
 
   getPanLimits (...args) {
     return this.photo.getPanLimits(this.app.screen, ...args)
+  }
+
+  // Pans the view to bring the given rectangle, in photo coordinates,
+  // into view. Does nothing if it is visible already; centers it if it
+  // does not fit.
+  panIntoView (rect, {
+    duration = PAN_DURATION,
+    padding = PAN_PADDING
+  } = {}) {
+    if (this.photo == null || rect == null)
+      return
+
+    let view = inset(this.app.screen, padding)
+    let bounds = this.photo.getScreenBounds(rect)
+
+    if (contains(view, bounds))
+      return
+
+    let { left, top, right, bottom } = bounds
+
+    this.move({
+      x: Math.floor(
+        this.photo.x + shift([left, right], [view.left, view.right])),
+      y: Math.floor(
+        this.photo.y + shift([top, bottom], [view.top, view.bottom]))
+    }, { duration })
   }
 
   getDefaultPosition ({ x, y, mode }) {
