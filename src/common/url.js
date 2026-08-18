@@ -1,22 +1,16 @@
 import { basename, extname } from 'node:path'
 
-const COMBINING_MARKS = /[̀-ͯ]/g
-
-const sanitize = (input) => {
-  let id = String(input ?? '')
+const sanitize = (input) =>
+  String(input ?? '')
     .normalize('NFKD')
-    .replace(COMBINING_MARKS, '')
+    .replace(/\p{M}+/gu, '')
     .toLowerCase()
-    .replace(/[^a-z0-9-]+/g, '-')
-    .replace(/-+/g, '-')
+    .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
-
-  return id || 'project'
-}
 
 export function urlId (path) {
   let file = String(path ?? '')
-  return sanitize(basename(file, extname(file)))
+  return sanitize(basename(file, extname(file))) || 'project'
 }
 
 export function protocolURL (path, { item, photo } = {}) {
