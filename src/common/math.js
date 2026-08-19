@@ -51,17 +51,6 @@ export function expansion ([a, b] = [], [c, d] = []) {
   return (b > d ? 1 : 0) - (a < c ? 1 : 0)
 }
 
-// Invariant: a <= b and c <= d
-export function shift ([a, b], [c, d]) {
-  if (b - a > d - c)
-    return (c + d) / 2 - (a + b) / 2
-
-  if (a < c) return c - a
-  if (b > d) return d - b
-
-  return 0
-}
-
 export function contains (rect, {
   x,
   y,
