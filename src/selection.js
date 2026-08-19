@@ -47,3 +47,13 @@ export function isSelected (s, items) {
     items.find(it => s.includes(it)) :
     s.includes(items)
 }
+
+// Returns the edge of the range which has grown,
+// compared to the previous range:
+// -1 for head, 1 for tail, 0 for neither or both.
+export function growingEdge ([head, tail] = [], [prevHead, prevTail] = []) {
+  if (head == null) return 0
+  if (prevHead == null) return 1
+
+  return (tail > prevTail ? 1 : 0) - (head < prevHead ? 1 : 0)
+}

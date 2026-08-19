@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { Alto } from './alto.js'
 import { TranscriptionError } from './error.js'
 import { Icon } from '../icons.js'
-import { expansion } from '../../common/math.js'
+import { growingEdge } from '../../selection.js'
 
 
 export const Transcription = ({
@@ -29,13 +29,13 @@ export const Transcription = ({
     let range = (head == null) ? [] :
       [Number(head.dataset.idx), Number(tail.dataset.idx)]
 
-    let dir = expansion(range, previous.current)
+    let edge = growingEdge(range, previous.current)
     previous.current = range
 
-    if (dir === 0)
+    if (edge === 0)
       return
 
-    let node = (dir < 0) ? head : tail
+    let node = (edge < 0) ? head : tail
     node.scrollIntoView({ block: 'nearest' })
   }, [selection])
 
