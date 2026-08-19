@@ -153,9 +153,12 @@ export const String = React.memo(({
   isSelected = false,
   value
 }) => (
-  <div
-    className={cx('string', { selected: isSelected })}
-    data-idx={idx}>
-    {value.CONTENT}
-  </div>
+  <>
+    <div
+      className={cx('string', { selected: isSelected })}
+      data-idx={idx}>
+      {value.CONTENT}
+    </div>
+    {' '}
+  </>
 ))
