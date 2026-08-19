@@ -103,7 +103,7 @@ export const textBounds = (node, offset) => {
 export const inset = ({ x, y, width, height }, p = 0) => {
   let padding = (typeof p === 'number')
     ? { top: p, bottom: p, left: p, right: p }
-    : p
+    : { top: 0, bottom: 0, left: 0, right: 0, ...p }
 
   return {
     left: x + padding.left,
