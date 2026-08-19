@@ -1,4 +1,4 @@
-import { protocolURL, urlId } from '#tropy/common/url.js'
+import { protocolURL, urlId } from '#tropy/common/util.js'
 
 describe('url', () => {
   describe('urlId', () => {
