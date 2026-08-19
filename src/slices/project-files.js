@@ -126,7 +126,7 @@ const projectFiles = createSlice({
   reducers: {
     clear: {
       reducer (state, { payload }) {
-        delete state[payload]
+        delete state[payload.path]
       },
       prepare: (path) => ({
         payload: { path },
