@@ -1,3 +1,4 @@
+import { basename, extname } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
 import { nanoid } from 'nanoid'
 
@@ -713,6 +714,20 @@ export function throttle (fn, ms) {
   }
 
   return throttled
+}
+
+export function urlId (path) {
+  let file = String(path ?? '')
+  return encodeURIComponent(
+    basename(file, extname(file)).toWellFormed().normalize())
+}
+
+export function protocolURL (path, { item, photo } = {}) {
+  let id = urlId(path)
+
+  return (item != null && photo != null) ?
+    `tropy://project/${id}/items/${item}/${photo}` :
+    `tropy://project/${id}/`
 }
 
 export const BLANK = Object.freeze(Object.create(null))

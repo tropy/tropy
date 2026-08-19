@@ -1,7 +1,7 @@
 import { createServer } from 'node:http'
 import { debug, info, logger, warn } from '../common/log.js'
 import { HttpError } from '../common/error.js'
-import { urlId } from '../common/url.js'
+import { urlId } from '../common/util.js'
 import dialog from './dialog.js'
 
 export class Server {

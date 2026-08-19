@@ -29,7 +29,7 @@ import { debounce, delay, once } from '../common/util.js'
 import { channel, product, version } from '../common/release.js'
 import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
-import { protocolURL, urlId } from '../common/url.js'
+import { protocolURL, urlId } from '../common/util.js'
 
 import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
 import { AccountService } from './account.js'
