@@ -100,12 +100,18 @@ export const textBounds = (node, offset) => {
   return offset ? move(bounds, offset) : bounds
 }
 
-export const inset = ({ x, y, width, height }, padding = 0) => ({
-  left: x + padding,
-  top: y + padding,
-  right: x + width - padding,
-  bottom: y + height - padding
-})
+export const inset = ({ x, y, width, height }, p = 0) => {
+  let padding = (typeof p === 'number')
+    ? { top: p, bottom: p, left: p, right: p }
+    : p
+
+  return {
+    left: x + padding.left,
+    top: y + padding.top,
+    right: x + width - padding.right,
+    bottom: y + height - padding.bottom
+  }
+}
 
 export function clamp ({ x, y, width, height }, bounds) {
   if (x < 0) {
