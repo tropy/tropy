@@ -1,4 +1,4 @@
-import { contains, expansion, round } from '#tropy/common/math.js'
+import { contains, round } from '#tropy/common/math.js'
 
 describe('math', () => {
   describe('contains', () => {
@@ -26,36 +26,6 @@ describe('math', () => {
         .to.be.true
       expect(contains(rect, { x: 20, y: 85, width: 10, height: 10 }))
         .to.be.false
-    })
-  })
-
-  describe('expansion', () => {
-    it('expands upwards without a previous interval', () => {
-      expect(expansion([3, 5])).to.equal(1)
-      expect(expansion([3, 5], [])).to.equal(1)
-    })
-
-    it('does not expand without an interval', () => {
-      expect(expansion()).to.equal(0)
-      expect(expansion([])).to.equal(0)
-      expect(expansion([], [3, 5])).to.equal(0)
-    })
-
-    it('expands towards the lower end', () => {
-      expect(expansion([1, 5], [3, 5])).to.equal(-1)
-    })
-
-    it('expands towards the upper end', () => {
-      expect(expansion([3, 7], [3, 5])).to.equal(1)
-    })
-
-    it('cancels out if both ends expanded, as in select all', () => {
-      expect(expansion([1, 7], [3, 5])).to.equal(0)
-    })
-
-    it('does not expand when unchanged or shrinking', () => {
-      expect(expansion([3, 5], [3, 5])).to.equal(0)
-      expect(expansion([4, 4], [3, 5])).to.equal(0)
     })
   })
 

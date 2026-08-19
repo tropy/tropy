@@ -43,14 +43,6 @@ export function rotate (deg, by) {
   return (360 + ((deg + by) % 360)) % 360
 }
 
-// Invariant: a <= b and c <= d
-export function expansion ([a, b] = [], [c, d] = []) {
-  if (a == null) return 0
-  if (c == null) return 1
-
-  return (b > d ? 1 : 0) - (a < c ? 1 : 0)
-}
-
 export function contains (rect, {
   x,
   y,

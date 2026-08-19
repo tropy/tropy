@@ -15,7 +15,8 @@ import { Transcription } from '../transcription/transcription.js'
 import { TranscriptionPanel } from '../transcription/panel.js'
 import { flipMap, mergeMap, pick, restrict } from '../../common/util.js'
 import { Cache } from '../../common/cache.js'
-import { expansion, isHorizontal, rotate, round } from '../../common/math.js'
+import { isHorizontal, rotate, round } from '../../common/math.js'
+import { growingEdge } from '../../selection.js'
 import { addOrientation, subOrientation } from '../../common/iiif.js'
 import { match } from '../../keymap.js'
 import { getResolution } from '../../dom.js'
@@ -279,15 +280,15 @@ export class Esper extends React.Component {
   // Subtle: when text is selected in the transcription, we may have to
   // pan the view to follow the growing edge of the selection!
   handleTranscriptionSelect = (textSelection, textRange) => {
-    let dir = expansion(textRange, this.textRange)
+    let edge = growingEdge(textRange, this.textRange)
 
     this.setTextSelection(textSelection, textRange)
 
-    if (dir === 0)
+    if (edge === 0)
       return
 
     let string = this.state.text?.getStringAt(
-      (dir < 0) ? textRange[0] : textRange[1])
+      (edge < 0) ? textRange[0] : textRange[1])
 
     if (string != null)
       this.esper.current.reveal(
