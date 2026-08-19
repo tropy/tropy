@@ -38,6 +38,7 @@ const {
   PAN_DURATION,
   PAN_STEP_SIZE,
   ROTATE_DURATION,
+  TOOLBAR,
   ZOOM_DURATION,
   ZOOM_STEP_SIZE,
   ZOOM_PRECISION
@@ -290,7 +291,9 @@ export class Esper extends React.Component {
 
     if (string != null)
       this.esper.current.reveal(
-        textBounds(string, this.props.selection))
+        textBounds(string, this.props.selection), {
+          padding: this.props.hasOverlayToolbar ? { top: TOOLBAR } : 0
+        })
   }
 
   handleTextSelection = throttle(({ x, y, width, height }, modifier, base) => {
