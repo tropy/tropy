@@ -289,7 +289,7 @@ export class Esper extends React.Component {
       (dir < 0) ? textRange[0] : textRange[1])
 
     if (string != null)
-      this.esper.current.panIntoView(
+      this.esper.current.reveal(
         textBounds(string, this.props.selection))
   }
 

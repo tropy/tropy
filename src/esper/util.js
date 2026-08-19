@@ -65,6 +65,28 @@ export function move (pos, { x = 0, y = 0 } = {}) {
   return pos
 }
 
+// Returns the position which brings the given rectangle into view,
+// moving by the minimal amount; rectangles which do not fit will be
+// centered. Snaps to whole pixels, because we don't round on render.
+export function intoView ({ x, y }, { left, top, right, bottom }, view) {
+  return {
+    x: Math.round(x + shift([left, right], [view.left, view.right])),
+    y: Math.round(y + shift([top, bottom], [view.top, view.bottom]))
+  }
+}
+
+// Returns the offset which brings the interval [a, b] into [c, d].
+// Invariant: a <= b and c <= d
+function shift ([a, b], [c, d]) {
+  if (b - a > d - c)
+    return (c + d) / 2 - (a + b) / 2
+
+  if (a < c) return c - a
+  if (b > d) return d - b
+
+  return 0
+}
+
 // Subtle: text coordinates are relative to the photo selection!
 // Returns null for strings without coordinates.
 export const textBounds = (node, offset) => {

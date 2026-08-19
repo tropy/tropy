@@ -13,7 +13,7 @@ import {
 } from '../dom.js'
 import { debug, error, info, warn } from '../common/log.js'
 import {
-  isClockwise, isHorizontal, contains, deg, rad, shift
+  isClockwise, isHorizontal, contains, deg, rad
 } from '../common/math.js'
 import { delay, restrict } from '../common/util.js'
 import { Photo, FILTERS } from './photo.js'
@@ -31,6 +31,7 @@ import {
   coords,
   equal,
   inset,
+  intoView,
   isDoubleClickSupported,
   normalize,
   setScaleMode
@@ -39,7 +40,6 @@ import {
 const {
   FADE_DURATION,
   PAN_DURATION,
-  PAN_PADDING,
   SYNC_DURATION,
   ZOOM_PINCH_BOOST,
   ZOOM_WHEEL_FACTOR,
@@ -464,12 +464,11 @@ export default class Esper extends EventEmitter {
     return this.photo.getPanLimits(this.app.screen, ...args)
   }
 
-  // Pans the view to bring the given rectangle, in photo coordinates,
-  // into view. Does nothing if it is visible already; centers it if it
-  // does not fit.
-  panIntoView (rect, {
+  // Pans the view to reveal rectangle (photo coordinates).
+  // Does nothing if it is visible already; centers it if it does not fit.
+  reveal (rect, {
     duration = PAN_DURATION,
-    padding = PAN_PADDING
+    padding = 0
   } = {}) {
     if (this.photo == null || rect == null)
       return
@@ -477,17 +476,8 @@ export default class Esper extends EventEmitter {
     let view = inset(this.app.screen, padding)
     let bounds = this.photo.getScreenBounds(rect)
 
-    if (contains(view, bounds))
-      return
-
-    let { left, top, right, bottom } = bounds
-
-    this.move({
-      x: Math.floor(
-        this.photo.x + shift([left, right], [view.left, view.right])),
-      y: Math.floor(
-        this.photo.y + shift([top, bottom], [view.top, view.bottom]))
-    }, { duration })
+    if (!contains(view, bounds))
+      this.move(intoView(this.photo, bounds, view), { duration })
   }
 
   getDefaultPosition ({ x, y, mode }) {
