@@ -15,8 +15,19 @@ ru:
       - label: Переименовать проект
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Показать файл проекта…
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Показать файл проекта…
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Новый список
         command: app:create-list
@@ -366,7 +377,7 @@ ru:
         submenu:
           - label: С Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     item-bulk:
       - label: Объединить выбранные элементы
         command: app:merge-item
@@ -426,7 +437,7 @@ ru:
         submenu:
           - label: С Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Объединить фото
         command: app:consolidate-photo
     photo-rotate:
@@ -517,8 +528,19 @@ ru:
       - label: Переименовать проект
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Показать файл проекта…
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Показать файл проекта…
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Новый список
         command: app:create-list
@@ -930,7 +952,7 @@ ru:
         submenu:
           - label: С Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: Новое поле...
         command: app:create-field
@@ -972,7 +994,7 @@ ru:
         submenu:
           - label: С Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Объединить фото
         command: app:consolidate-photo
     photo-rotate:
@@ -1019,8 +1041,19 @@ ru:
       - label: Переименовать проект
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Показать файл проекта…
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Показать файл проекта…
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Новый список
         command: app:create-list
@@ -1432,7 +1465,7 @@ ru:
         submenu:
           - label: С Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: Новое поле...
         command: app:create-field
@@ -1474,7 +1507,7 @@ ru:
         submenu:
           - label: С Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Объединить фото
         command: app:consolidate-photo
     photo-rotate:

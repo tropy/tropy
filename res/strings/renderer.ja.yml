@@ -48,6 +48,9 @@ ja:
         one {1つのノート}
         other {# のノート}}
       create: ノートを追加
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: アイテム
     photo: 写真
@@ -81,6 +84,10 @@ ja:
     file:
       open: '{path}のプロジェクトを開く'
       missing: '{path}のプロジェクトを探す'
+      options: Project options
+      conflict: >-
+        Non-unique project URLs will open the most recent project. Consider
+        renaming one of the project files.
       remove: リストからプロジェクトを削除する
     recent:
       search:
@@ -150,6 +157,13 @@ ja:
         notes: ノートを含める
         onlyNotes: ノートのある写真だけ含める
         overflow: コンテンツが複数ページに表示されることを許可する
+      ocr:
+        model: Default model
+        grayscale: Convert images to grayscale
+        resize: Resize large images
+        quality:
+          label: For Transcriptions
+          value: Use image quality {value, number, ::percent scale/0.01 .}
       locale:
         locale: ローカル
         locales:
@@ -232,6 +246,7 @@ ja:
           <None>: 絶対パスを利用
       store: 管理フォルダ
       name: 名前
+      url: URL
       id: ID
       path: ファイル
       type: プロジェクトタイプ
@@ -243,6 +258,13 @@ ja:
           =0 {すべての写真が反映済みです。}
           one {1件の写真が見つかりませんでした。反映が必要です。}
           other {# 件の写真が見つかりませんでした。反映が必要です。}}
+      optimize:
+        confirm: Create Optimized Project
+        hint: Create an optimized copy of this project.
+        onImport: Optimize photos on import
+        quality:
+          label: Optimize assets
+          value: Quality {value, number, ::percent scale/0.01 .}
       watch:
         folder: ウォッチフォルダ
         usePolling: ファイル状態を確認中
@@ -286,6 +308,31 @@ ja:
       uninstall: アンインストール
       noInfo: 作者不明
       homepage: More
+    account:
+      label: Account
+      description: Sign in to your account
+      username: Username
+      email: Email
+      password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
+      link: Sign in
+      unlink: Sign out
+      usage:
+        label: Usage
+        transcriptions:
+          label: Transcriptions
+          loading: Loading…
+          limit: |-
+            {delta, plural,
+              =0 {No transcriptions remaining. Resets {reset}.}
+              other {# of {limit} transcriptions remaining. Resets {reset}.}}
+          total: |-
+            {total, plural,
+              =0 {No transcriptions since {since}.}
+              one {1 transcription since {since}.}
+              other {# transcriptions since {since}.}}
   format:
     ppi: 1インチあたりのピクセル数（ppi）
   item:
@@ -308,6 +355,8 @@ ja:
   settings:
     maximize: Maximize this view
     unmaximize: Restore previous view size
+  slider:
+    value: '{value, number, ::percent scale/0.01 .}'
   esper:
     tool:
       pan: パンツール
@@ -396,6 +445,13 @@ ja:
             プロジェクトは正常に変換され、保存されました。Tropyはこれから元のプロジェクトファイルを閉じ、変換後のプロジェクトを新しいウィンドウで開きます。
           buttons:
             - OK
+        optimize:
+          title: Optimization complete
+          message: >-
+            Your optimized project copy has been saved. Tropy will now open the
+            optimized project in a new window.
+          buttons:
+            - OK
     error:
       title: Error
       buttons:
@@ -438,6 +494,15 @@ ja:
           buttons:
             - キャンセル
             - 削除
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again to use server-side
+            features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: このIDを持つテンプレートが既にオントロジーデータベースに存在しています。既存のテンプレートを上書きしますか？
@@ -652,12 +717,19 @@ ja:
         other {Transcription}
       }
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        network: Could not reach the Tropy server.
+        unknown: Something went wrong. Please try again.
+      offline: Tropy is offline.
     cache:
       prune: プロジェクトのキャッシュの最適化に失敗しました
       purge: 古いプロジェクトのキャッシュの削除に失敗しました
     project:
       created: プロジェクトの作成に失敗しました
       convert: プロジェクトの変換に失敗しました
+      optimize: Project optimization failed.
     item:
       export: アイテムのエクスポートに失敗しました
       merge: アイテムの統合に失敗しました

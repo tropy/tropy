@@ -32,6 +32,9 @@ pt-BR:
     note:
       title: '{count, plural, =0 {Nenhuma Nota} one {1 Nota} other {# Notas}}'
       create: Adicionar Nota
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: Item
     photo: Foto
@@ -65,6 +68,10 @@ pt-BR:
     file:
       open: Abrir Projeto {path}
       missing: Encontrar projeto perdido {path}
+      options: Project options
+      conflict: >-
+        Non-unique project URLs will open the most recent project. Consider
+        renaming one of the project files.
       remove: Remover projeto da lista
     recent:
       search:
@@ -124,6 +131,13 @@ pt-BR:
         notes: Incluir notas
         onlyNotes: Incluir apenas fotos com notas.
         overflow: Permitir que o conteúdo ocupe mais do que uma página
+      ocr:
+        model: Default model
+        grayscale: Convert images to grayscale
+        resize: Resize large images
+        quality:
+          label: For Transcriptions
+          value: Use image quality {value, number, ::percent scale/0.01 .}
       locale:
         locale: Idioma
         locales:
@@ -206,6 +220,7 @@ pt-BR:
           <None>: Usar caminhos absolutos
       store: Pasta Gerenciada
       name: Nome
+      url: URL
       id: ID
       path: Arquivo
       type: Tipo de projeto
@@ -219,6 +234,13 @@ pt-BR:
           one {1 foto não encontrada; consolidação necessária.}
 
           other {# fotos não encontradas; consolidação necessária.}}
+      optimize:
+        confirm: Create Optimized Project
+        hint: Create an optimized copy of this project.
+        onImport: Optimize photos on import
+        quality:
+          label: Optimize assets
+          value: Quality {value, number, ::percent scale/0.01 .}
       watch:
         folder: Pasta Monitorada
         usePolling: Usando pesquisa de estatísticas de arquivo
@@ -252,6 +274,31 @@ pt-BR:
       uninstall: Desinstalar
       noInfo: Autor desconhecido
       homepage: Mais
+    account:
+      label: Account
+      description: Sign in to your account
+      username: Username
+      email: Email
+      password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
+      link: Sign in
+      unlink: Sign out
+      usage:
+        label: Usage
+        transcriptions:
+          label: Transcriptions
+          loading: Loading…
+          limit: |-
+            {delta, plural,
+              =0 {No transcriptions remaining. Resets {reset}.}
+              other {# of {limit} transcriptions remaining. Resets {reset}.}}
+          total: |-
+            {total, plural,
+              =0 {No transcriptions since {since}.}
+              one {1 transcription since {since}.}
+              other {# transcriptions since {since}.}}
   format:
     ppi: Pixels por polegada (ppi)
   item:
@@ -274,6 +321,8 @@ pt-BR:
   settings:
     maximize: ' Maximizar esta visualização'
     unmaximize: Restaurar visualização anterior
+  slider:
+    value: '{value, number, ::percent scale/0.01 .}'
   esper:
     tool:
       pan: Ferramenta de Deslizamento
@@ -364,6 +413,13 @@ pt-BR:
             nova janela.
           buttons:
             - OK
+        optimize:
+          title: Optimization complete
+          message: >-
+            Your optimized project copy has been saved. Tropy will now open the
+            optimized project in a new window.
+          buttons:
+            - OK
     error:
       title: Erro
       buttons:
@@ -414,6 +470,15 @@ pt-BR:
           buttons:
             - Cancelar
             - Apagar
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again to use server-side
+            features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: >-
@@ -622,12 +687,19 @@ pt-BR:
       other {Transcrição}
       }
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        network: Could not reach the Tropy server.
+        unknown: Something went wrong. Please try again.
+      offline: Tropy is offline.
     cache:
       prune: Falha ao otimizar cache do projeto.
       purge: Falha ao remover caches de projeto antigos.
     project:
       created: Falha ao criar o projeto.
       convert: Falha na conversão do projeto.
+      optimize: Project optimization failed.
     item:
       export: Falha ao exportar itens.
       merge: Falha ao combinar itens.

@@ -15,8 +15,19 @@ nl-NL:
       - label: Projectnaam wĳzigen
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Projectbestand tonen…
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Projectbestand tonen…
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Nieuwe lijst
         command: app:create-list
@@ -366,7 +377,7 @@ nl-NL:
         submenu:
           - label: Met Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     item-bulk:
       - label: Selectie samenvoegen
         command: app:merge-item
@@ -426,7 +437,7 @@ nl-NL:
         submenu:
           - label: Met Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Foto samenvoegen
         command: app:consolidate-photo
     photo-rotate:
@@ -517,8 +528,19 @@ nl-NL:
       - label: Projectnaam wĳzigen
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Projectbestand tonen…
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Projectbestand tonen…
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Nieuwe lijst
         command: app:create-list
@@ -930,7 +952,7 @@ nl-NL:
         submenu:
           - label: Met Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: Nieuw veld…
         command: app:create-field
@@ -972,7 +994,7 @@ nl-NL:
         submenu:
           - label: Met Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Foto samenvoegen
         command: app:consolidate-photo
     photo-rotate:
@@ -1019,8 +1041,19 @@ nl-NL:
       - label: Projectnaam wĳzigen
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Projectbestand tonen…
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Projectbestand tonen…
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Nieuwe lijst
         command: app:create-list
@@ -1432,7 +1465,7 @@ nl-NL:
         submenu:
           - label: Met Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: Nieuw veld…
         command: app:create-field
@@ -1474,7 +1507,7 @@ nl-NL:
         submenu:
           - label: Met Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Foto samenvoegen
         command: app:consolidate-photo
     photo-rotate:

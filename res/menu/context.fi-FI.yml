@@ -15,8 +15,19 @@ fi-FI:
       - label: Nimeä projekti uudelleen
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Näytä projektitiedosto…
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Näytä projektitiedosto…
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Uusi lista
         command: app:create-list
@@ -366,7 +377,7 @@ fi-FI:
         submenu:
           - label: Tropylla
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     item-bulk:
       - label: Yhdistä valitut tietueet
         command: app:merge-item
@@ -426,7 +437,7 @@ fi-FI:
         submenu:
           - label: Tropylla
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Konsolidoi kuva
         command: app:consolidate-photo
     photo-rotate:
@@ -517,8 +528,19 @@ fi-FI:
       - label: Nimeä projekti uudelleen
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Näytä projektitiedosto…
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Näytä projektitiedosto…
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Uusi lista
         command: app:create-list
@@ -930,7 +952,7 @@ fi-FI:
         submenu:
           - label: Tropylla
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: Uusi kenttä…
         command: app:create-field
@@ -972,7 +994,7 @@ fi-FI:
         submenu:
           - label: Tropylla
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Konsolidoi kuva
         command: app:consolidate-photo
     photo-rotate:
@@ -1019,8 +1041,19 @@ fi-FI:
       - label: Nimeä projekti uudelleen
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Näytä projektitiedosto…
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Näytä projektitiedosto…
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Uusi lista
         command: app:create-list
@@ -1432,7 +1465,7 @@ fi-FI:
         submenu:
           - label: Tropylla
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: Uusi kenttä…
         command: app:create-field
@@ -1474,7 +1507,7 @@ fi-FI:
         submenu:
           - label: Tropylla
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Konsolidoi kuva
         command: app:consolidate-photo
     photo-rotate:

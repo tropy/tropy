@@ -15,8 +15,19 @@ es:
       - label: Renombrar proyecto
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: Mostrar el archivo del proyecto …
+      - label: Copy Project URL
+        command: app:copy-project-url
+      - label: Mostrar el archivo de proyecto …
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Mostrar el archivo de proyecto …
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Nueva lista
         command: app:create-list
@@ -366,7 +377,7 @@ es:
         submenu:
           - label: With Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     item-bulk:
       - label: Fusionar los objetos seleccionados
         command: app:merge-item
@@ -426,7 +437,7 @@ es:
         submenu:
           - label: With Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Consolidar foto
         command: app:consolidate-photo
     photo-rotate:
@@ -517,8 +528,19 @@ es:
       - label: Renombrar proyecto
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Mostrar el archivo de proyecto …
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Mostrar el archivo de proyecto …
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Nueva lista
         command: app:create-list
@@ -930,7 +952,7 @@ es:
         submenu:
           - label: With Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: Nuevo campo …
         command: app:create-field
@@ -972,7 +994,7 @@ es:
         submenu:
           - label: With Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Consolidar foto
         command: app:consolidate-photo
     photo-rotate:
@@ -1019,8 +1041,19 @@ es:
       - label: Renombrar proyecto
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: Mostrar el archivo del proyecto
+      - label: Copy Project URL
+        command: app:copy-project-url
+      - label: Mostrar el archivo de proyecto …
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Mostrar el archivo de proyecto …
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Nueva lista
         command: app:create-list
@@ -1432,7 +1465,7 @@ es:
         submenu:
           - label: With Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: Nuevo campo …
         command: app:create-field
@@ -1474,7 +1507,7 @@ es:
         submenu:
           - label: With Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Consolidar foto
         command: app:consolidate-photo
     photo-rotate:

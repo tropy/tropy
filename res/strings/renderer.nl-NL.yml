@@ -48,6 +48,9 @@ nl-NL:
         one {1 aantekening}
         other {# aantekeningen}}
       create: Aantekening toevoegen
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: Item
     photo: Foto
@@ -83,6 +86,10 @@ nl-NL:
     file:
       open: Project openen ({path})
       missing: Zoeken naar ontbrekend project ({path})
+      options: Project options
+      conflict: >-
+        Non-unique project URLs will open the most recent project. Consider
+        renaming one of the project files.
       remove: Project verwijderen van lijst
     recent:
       search:
@@ -153,6 +160,13 @@ nl-NL:
         notes: Inclusief aantekeningen
         onlyNotes: Alleen foto's met aantekeningen
         overflow: Inhoud verdelen over meer dan één pagina
+      ocr:
+        model: Default model
+        grayscale: Convert images to grayscale
+        resize: Resize large images
+        quality:
+          label: For Transcriptions
+          value: Use image quality {value, number, ::percent scale/0.01 .}
       locale:
         locale: Taal
         locales:
@@ -235,6 +249,7 @@ nl-NL:
           <None>: Met behulp van directe locaties
       store: Beheerde map
       name: Naam
+      url: URL
       id: Id
       path: Bestand
       type: Soort project
@@ -246,6 +261,13 @@ nl-NL:
           =0 {Alle foto's zijn samengevoegd.}
           one {1 foto is niet aangetroffen - samenvoegen is vereist.}
           other {# foto's zijn niet aangetroffen - samenvoegen is vereist.}}
+      optimize:
+        confirm: Create Optimized Project
+        hint: Create an optimized copy of this project.
+        onImport: Optimize photos on import
+        quality:
+          label: Optimize assets
+          value: Quality {value, number, ::percent scale/0.01 .}
       watch:
         folder: Map bijhouden
         usePolling: Bestandsstatistieken bijhouden
@@ -289,6 +311,31 @@ nl-NL:
       uninstall: Verwijderen
       noInfo: Onbekende maker
       homepage: Meer
+    account:
+      label: Account
+      description: Sign in to your account
+      username: Username
+      email: Email
+      password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
+      link: Sign in
+      unlink: Sign out
+      usage:
+        label: Usage
+        transcriptions:
+          label: Transcriptions
+          loading: Loading…
+          limit: |-
+            {delta, plural,
+              =0 {No transcriptions remaining. Resets {reset}.}
+              other {# of {limit} transcriptions remaining. Resets {reset}.}}
+          total: |-
+            {total, plural,
+              =0 {No transcriptions since {since}.}
+              one {1 transcription since {since}.}
+              other {# transcriptions since {since}.}}
   format:
     ppi: Aantal pixels per inch (ppi)
   item:
@@ -311,6 +358,8 @@ nl-NL:
   settings:
     maximize: Weergave maximaliseren
     unmaximize: Vorige weergave herstellen
+  slider:
+    value: '{value, number, ::percent scale/0.01 .}'
   esper:
     tool:
       pan: Meetrekgereedschap
@@ -400,6 +449,13 @@ nl-NL:
             project wordt gesloten en het geconverteerde geopend.
           buttons:
             - Oké
+        optimize:
+          title: Optimization complete
+          message: >-
+            Your optimized project copy has been saved. Tropy will now open the
+            optimized project in a new window.
+          buttons:
+            - Oké
     error:
       title: Foutmelding
       buttons:
@@ -450,6 +506,15 @@ nl-NL:
           buttons:
             - Annuleren
             - Verwijderen
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again to use server-side
+            features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: >-
@@ -686,12 +751,19 @@ nl-NL:
       other {Transcription}
       }
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        network: Could not reach the Tropy server.
+        unknown: Something went wrong. Please try again.
+      offline: Tropy is offline.
     cache:
       prune: De projectcache kan niet worden geoptimaliseerd.
       purge: De oude projectcaches kunnen niet worden gewist.
     project:
       created: Het project kan niet worden aangemaakt.
       convert: Het project kan niet worden geconverteerd.
+      optimize: Project optimization failed.
     item:
       export: De items kunnen niet worden geëxporteerd.
       merge: De items kunnen niet worden samengevoegd.

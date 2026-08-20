@@ -48,6 +48,9 @@ uk:
           one {1 Note}
           other {# Notes}}
       create: Додати нотатку
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: Елемент
     photo: Фото
@@ -83,7 +86,10 @@ uk:
     file:
       open: Відкрити проєкт {шлях}
       missing: Find missing project {path}
-      remove: Remove project from list
+      options: Project options
+      conflict: >-
+        Non-unique project URLs will open the most recent project. Consider
+        renaming one of the project files.
     recent:
       search:
         placeholder: Фільтрувати проєкти
@@ -154,6 +160,13 @@ uk:
         notes: Include notes
         onlyNotes: Include only photos with notes
         overflow: Allow content to take up more than one page
+      ocr:
+        model: Default model
+        grayscale: Convert images to grayscale
+        resize: Resize large images
+        quality:
+          label: For Transcriptions
+          value: Use image quality {value, number, ::percent scale/0.01 .}
       locale:
         locale: Locale
         locales:
@@ -235,6 +248,7 @@ uk:
           home: Relative to your home directory
       store: Managed folder
       name: Заголовок
+      url: URL
       id: ID
       path: Файл
       type: Тип проєкту
@@ -246,6 +260,13 @@ uk:
             =0 {All photos consolidated.}
             one {1 photo not found; consolidation required.}
             other {# photos not found; consolidation required.}}
+      optimize:
+        confirm: Create Optimized Project
+        hint: Create an optimized copy of this project.
+        onImport: Optimize photos on import
+        quality:
+          label: Optimize assets
+          value: Quality {value, number, ::percent scale/0.01 .}
       watch:
         folder: Watch folder
         usePolling: Using file stat polling
@@ -289,6 +310,31 @@ uk:
       uninstall: Деінсталювати
       noInfo: Невідомий автор
       homepage: More
+    account:
+      label: Account
+      description: Sign in to your account
+      username: Username
+      email: Email
+      password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
+      link: Sign in
+      unlink: Sign out
+      usage:
+        label: Usage
+        transcriptions:
+          label: Transcriptions
+          loading: Loading…
+          limit: |-
+            {delta, plural,
+              =0 {No transcriptions remaining. Resets {reset}.}
+              other {# of {limit} transcriptions remaining. Resets {reset}.}}
+          total: |-
+            {total, plural,
+              =0 {No transcriptions since {since}.}
+              one {1 transcription since {since}.}
+              other {# transcriptions since {since}.}}
   format:
     ppi: Pixels per inch (ppi)
   item:
@@ -311,6 +357,8 @@ uk:
   settings:
     maximize: Maximize this view
     unmaximize: Restore previous view size
+  slider:
+    value: '{value, number, ::percent scale/0.01 .}'
   esper:
     tool:
       pan: Перемістити
@@ -401,6 +449,13 @@ uk:
             new window.
           buttons:
             - OK
+        optimize:
+          title: Optimization complete
+          message: >-
+            Your optimized project copy has been saved. Tropy will now open the
+            optimized project in a new window.
+          buttons:
+            - OK
     error:
       title: Error
       buttons:
@@ -451,6 +506,15 @@ uk:
           buttons:
             - Cancel
             - Delete
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again to use server-side
+            features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: >-
@@ -667,12 +731,19 @@ uk:
         other {Transcription}
       }
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        network: Could not reach the Tropy server.
+        unknown: Something went wrong. Please try again.
+      offline: Tropy is offline.
     cache:
       prune: Не вдалося оптимізувати кеш проєкту.
       purge: Не вдалося видалити старий кеш проєкту.
     project:
       created: Не вдалося створити проєкт.
       convert: Не вдалося перетворити проєкт.
+      optimize: Project optimization failed.
     item:
       export: Failed to export items.
       merge: Не вдалося об'єднати елементи.

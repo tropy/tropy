@@ -42,6 +42,9 @@ fi-FI:
         one {1 muistiinpano}
         other {# muistiinpanoa}}
       create: Lisää muistiinpano
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: Tietue
     photo: Kuva
@@ -78,6 +81,10 @@ fi-FI:
     file:
       open: Avaa projekti {path}
       missing: Löydä puuttuva projekti {path}
+      options: Project options
+      conflict: >-
+        Non-unique project URLs will open the most recent project. Consider
+        renaming one of the project files.
       remove: Poista projekti listalta
     recent:
       search:
@@ -148,6 +155,13 @@ fi-FI:
         notes: Sisällytä muistiinpanot
         onlyNotes: Sisällytä vain kuvat, joissa on muistiinpanoja
         overflow: Salli sisällön viedä enemmän kuin yksi sivu
+      ocr:
+        model: Default model
+        grayscale: Convert images to grayscale
+        resize: Resize large images
+        quality:
+          label: For Transcriptions
+          value: Use image quality {value, number, ::percent scale/0.01 .}
       locale:
         locale: Maa-asetusto
         locales:
@@ -230,6 +244,7 @@ fi-FI:
           <None>: Käyttäen absoluuttisia polkuja
       store: Hallittu kansio
       name: Nimi
+      url: URL
       id: ID
       path: Tiedosto
       type: Projektin tyyppi
@@ -241,6 +256,13 @@ fi-FI:
             =0 {All photos consolidated.}
             one {1 photo not found; consolidation required.}
             other {# photos not found; consolidation required.}}
+      optimize:
+        confirm: Create Optimized Project
+        hint: Create an optimized copy of this project.
+        onImport: Optimize photos on import
+        quality:
+          label: Optimize assets
+          value: Quality {value, number, ::percent scale/0.01 .}
       watch:
         folder: Tarkkaile kansiota
         usePolling: Käyttäen tiedostojen stat-tilastokyselyä
@@ -274,6 +296,31 @@ fi-FI:
       uninstall: Poista asennus
       noInfo: Tuntematon tekijä
       homepage: More
+    account:
+      label: Account
+      description: Sign in to your account
+      username: Username
+      email: Email
+      password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
+      link: Sign in
+      unlink: Sign out
+      usage:
+        label: Usage
+        transcriptions:
+          label: Transcriptions
+          loading: Loading…
+          limit: |-
+            {delta, plural,
+              =0 {No transcriptions remaining. Resets {reset}.}
+              other {# of {limit} transcriptions remaining. Resets {reset}.}}
+          total: |-
+            {total, plural,
+              =0 {No transcriptions since {since}.}
+              one {1 transcription since {since}.}
+              other {# transcriptions since {since}.}}
   format:
     ppi: Pikseleitä tuumaa kohti (ppi)
   item:
@@ -296,6 +343,8 @@ fi-FI:
   settings:
     maximize: Suurenna tämä näkymä
     unmaximize: Palauta aiempi näkymän koko
+  slider:
+    value: '{value, number, ::percent scale/0.01 .}'
   esper:
     tool:
       pan: Panorointityökalu
@@ -386,6 +435,13 @@ fi-FI:
             uuteen ikkunaan.
           buttons:
             - OK
+        optimize:
+          title: Optimization complete
+          message: >-
+            Your optimized project copy has been saved. Tropy will now open the
+            optimized project in a new window.
+          buttons:
+            - OK
     error:
       title: Virhe
       buttons:
@@ -434,6 +490,15 @@ fi-FI:
           buttons:
             - Peruuta
             - Poista
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again to use server-side
+            features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: >-
@@ -647,12 +712,19 @@ fi-FI:
         other {Transcription}
       }
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        network: Could not reach the Tropy server.
+        unknown: Something went wrong. Please try again.
+      offline: Tropy is offline.
     cache:
       prune: Projektin välimuistin optimointi epäonnistui.
       purge: Projektin vanhojen välimuistien poistaminen epäonnistui.
     project:
       created: Projektin luominen epäonnistui.
       convert: Projektin muuntaminen epäonnistui.
+      optimize: Project optimization failed.
     item:
       export: Tietueiden vieminen epäonnistui.
       merge: Tietueiden yhdistäminen epäonnistui.

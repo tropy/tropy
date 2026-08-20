@@ -1,11 +1,11 @@
 cn:
   linux:
-    - label: 文件
+    - label: 文件(&F)
       id: file
       submenu:
         - label: 新建
           submenu:
-            - label: 库
+            - label: 项目
               command: app:create-project
               accelerator: CmdOrCtrl+Shift+P
             - label: 图组
@@ -88,26 +88,26 @@ cn:
         - label: 退出 %name
           accelerator: CmdOrCtrl+Q
           role: quit
-    - label: 编辑
+    - label: 编辑(&E)
       submenu:
         - id: undo
-          label: 撤销
+          label: 撤销(&U)
           accelerator: CmdOrCtrl+Z
           command: app:undo
           enabled: false
         - id: redo
-          label: 重做
+          label: 重做(&R)
           accelerator: Shift+CmdOrCtrl+Z
           command: app:redo
           enabled: false
         - type: separator
-        - label: 剪切
+        - label: 剪切(&T)
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: 复制
+        - label: 复制(&C)
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: 粘贴
+        - label: 粘贴(&P)
           accelerator: CmdOrCtrl+V
           role: paste
         - label: 粘贴并匹配样式
@@ -119,14 +119,14 @@ cn:
         - label: 首选项...
           accelerator: Shift+Control+S
           command: app:open-preferences
-    - label: 视图
+    - label: 视图(&V)
       submenu:
-        - label: 重新加载
+        - label: 重新加载(&R)
           accelerator: CmdOrCtrl+R
           command: app:reload
           window: '*'
         - type: separator
-        - label: 隐藏菜单栏
+        - label: 隐藏菜单栏(&M)
           command: app:toggle-menu-bar
           window: '*'
         - label: 移动到中心
@@ -144,7 +144,7 @@ cn:
           command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: 全屏
+        - label: 全屏(&F)
           role: togglefullscreen
           window: '*'
         - type: separator
@@ -155,9 +155,9 @@ cn:
     - label: 开发
       id: dev
       submenu:
-        - label: 重新加载样式
+        - label: 重新加载样式(&S)
           command: win:refresh
-        - label: 切换开发者工具
+        - label: 切换开发者工具(&D)
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
@@ -167,7 +167,7 @@ cn:
           command: app:optimize-cache
         - label: 优化数据库
           command: app:optimize-project
-        - label: Optimize Asset Folder
+        - label: 优化资源文件夹
           command: app:prune-project
           condition: isProjectManaged
         - label: 重新索引项目数据库
@@ -324,23 +324,23 @@ cn:
     - label: 编辑
       submenu:
         - id: undo
-          label: 撤销
+          label: 撤销(&U)
           accelerator: CmdOrCtrl+Z
           command: app:undo
           enabled: false
         - id: redo
-          label: 重做
+          label: 重做(&R)
           accelerator: Shift+CmdOrCtrl+Z
           command: app:redo
           enabled: false
         - type: separator
-        - label: 剪切
+        - label: 剪切(&T)
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: 复制
+        - label: 复制(&C)
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: 粘贴
+        - label: 粘贴(&P)
           accelerator: CmdOrCtrl+V
           role: paste
         - label: 粘贴并匹配样式
@@ -350,7 +350,7 @@ cn:
           role: selectAll
     - label: 视图
       submenu:
-        - label: 重新加载
+        - label: 重新加载(&R)
           accelerator: CmdOrCtrl+R
           command: app:reload
           window: '*'
@@ -365,7 +365,7 @@ cn:
           command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: 全屏
+        - label: 全屏(&F)
           role: togglefullscreen
           window: '*'
     - label: 窗口
@@ -394,9 +394,9 @@ cn:
     - label: 高级
       id: dev
       submenu:
-        - label: 重新加载样式
+        - label: 重新加载样式(&S)
           command: win:refresh
-        - label: 切换开发者工具
+        - label: 切换开发者工具(&D)
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
@@ -406,7 +406,7 @@ cn:
           command: app:optimize-cache
         - label: 优化数据库
           command: app:optimize-project
-        - label: Optimize Asset Folder
+        - label: 优化资源文件夹
           command: app:prune-project
           condition: isProjectManaged
         - label: 重新索引项目数据库
@@ -458,7 +458,7 @@ cn:
           enabled: false
           visible: false
   win32:
-    - label: 文件
+    - label: 文件(&F)
       id: file
       submenu:
         - label: 新建
@@ -546,26 +546,26 @@ cn:
         - label: 退出 %name
           accelerator: CmdOrCtrl+Q
           role: quit
-    - label: 编辑
+    - label: 编辑(&E)
       submenu:
         - id: undo
-          label: 撤销
+          label: 撤销(&U)
           accelerator: CmdOrCtrl+Z
           command: app:undo
           enabled: false
         - id: redo
-          label: 重做
+          label: 重做(&R)
           accelerator: Control+Y
           command: app:redo
           enabled: false
         - type: separator
-        - label: 剪切
+        - label: 剪切(&T)
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: 复制
+        - label: 复制(&C)
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: 粘贴
+        - label: 粘贴(&P)
           accelerator: CmdOrCtrl+V
           role: paste
         - label: 粘贴并匹配样式
@@ -574,14 +574,14 @@ cn:
         - label: 首选项...
           accelerator: Shift+Control+S
           command: app:open-preferences
-    - label: 视图
+    - label: 视图(&V)
       submenu:
-        - label: 重新加载
+        - label: 重新加载(&R)
           accelerator: CmdOrCtrl+R
           command: app:reload
           window: '*'
         - type: separator
-        - label: 切换菜单栏
+        - label: 隐藏菜单栏(&M)
           command: app:toggle-menu-bar
           window: '*'
         - label: 移动到中心
@@ -599,7 +599,7 @@ cn:
           command: app:zoom-out
           accelerator: CmdOrCtrl+-
         - type: separator
-        - label: 全屏
+        - label: 全屏(&F)
           role: togglefullscreen
           window: '*'
         - type: separator
@@ -610,9 +610,9 @@ cn:
     - label: 开发
       id: dev
       submenu:
-        - label: 重新加载样式
+        - label: 重新加载样式(&S)
           command: win:refresh
-        - label: 切换开发者工具
+        - label: 切换开发者工具(&D)
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
@@ -622,7 +622,7 @@ cn:
           command: app:optimize-cache
         - label: 优化项目数据库
           command: app:optimize-project
-        - label: Optimize Asset Folder
+        - label: 优化资源文件夹
           command: app:prune-project
           condition: isProjectManaged
         - label: 重新索引项目数据库

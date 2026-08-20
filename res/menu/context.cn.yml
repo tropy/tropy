@@ -15,16 +15,27 @@ cn:
       - label: 重命名库
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: 显示库所在位置
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: 显示库所在位置
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: 新建列表
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
-      - label: Export Lists …
+      - label: 导出列表 …
         command: app:export-lists
-      - label: Import Lists …
+      - label: 导入列表 …
         command: app:import-lists
     list:
       - label: 重命名文件夹
@@ -366,7 +377,7 @@ cn:
         submenu:
           - label: 使用 Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     item-bulk:
       - label: 合并所选图组
         command: app:merge-item
@@ -426,7 +437,7 @@ cn:
         submenu:
           - label: 使用 Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: 检查图片
         command: app:consolidate-photo
     photo-rotate:
@@ -466,13 +477,13 @@ cn:
           - label: 左右
             id: side-by-side
             type: checkbox
-      - label: Maximize View
+      - label: 最大化视图
         id: maximize-view
         submenu:
-          - label: Image
+          - label: 图像
             id: esper
             type: checkbox
-          - label: Notepad
+          - label: 记事本
             type: checkbox
             id: notepad
           - type: separator
@@ -517,16 +528,27 @@ cn:
       - label: 重命名库
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: 显示库所在位置
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: 显示库所在位置
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: 新建列表
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
-      - label: Export Lists …
+      - label: 导出列表 …
         command: app:export-lists
-      - label: Import Lists …
+      - label: 导入列表 …
         command: app:import-lists
     list:
       - label: 重命名列表
@@ -904,13 +926,13 @@ cn:
           - label: 左右
             id: side-by-side
             type: checkbox
-      - label: Maximize View
+      - label: 最大化视图
         id: maximize-view
         submenu:
-          - label: Image
+          - label: 图像
             id: esper
             type: checkbox
-          - label: Notepad
+          - label: 记事本
             type: checkbox
             id: notepad
           - type: separator
@@ -930,7 +952,7 @@ cn:
         submenu:
           - label: 使用 Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: 新建字段…
         command: app:create-field
@@ -972,7 +994,7 @@ cn:
         submenu:
           - label: 使用 Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: 检查图片
         command: app:consolidate-photo
     photo-rotate:
@@ -1019,16 +1041,27 @@ cn:
       - label: 重命名库
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: 显示库所在位置
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: 显示库所在位置
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: 新建列表
         command: app:create-list
         condition: '!isReadOnly'
         accelerator: CmdOrCtrl+Shift+L
-      - label: Export Lists …
+      - label: 导出列表 …
         command: app:export-lists
-      - label: Import Lists …
+      - label: 导入列表 …
         command: app:import-lists
     list:
       - label: 重命名列表
@@ -1406,13 +1439,13 @@ cn:
           - label: 左右
             id: side-by-side
             type: checkbox
-      - label: Maximize View
+      - label: 最大化视图
         id: maximize-view
         submenu:
-          - label: Image
+          - label: 图像
             id: esper
             type: checkbox
-          - label: Notepad
+          - label: 记事本
             type: checkbox
             id: notepad
           - type: separator
@@ -1432,7 +1465,7 @@ cn:
         submenu:
           - label: 使用 Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: 新建字段…
         command: app:create-field
@@ -1474,7 +1507,7 @@ cn:
         submenu:
           - label: 使用 Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: 检查图片
         command: app:consolidate-photo
     photo-rotate:

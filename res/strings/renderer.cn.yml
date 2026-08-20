@@ -48,6 +48,9 @@ cn:
         one {1 个笔记}
         other {# 个笔记}}
       create: 添加笔记
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: 项目
     photo: 图片
@@ -81,6 +84,10 @@ cn:
     file:
       open: 打开库 {path}
       missing: 查找丢失的项目 {path}
+      options: Project options
+      conflict: >-
+        Non-unique project URLs will open the most recent project. Consider
+        renaming one of the project files.
       remove: 从列表中移除项目
     recent:
       search:
@@ -147,6 +154,13 @@ cn:
         notes: 包含笔记
         onlyNotes: 仅包含带有注释的照片
         overflow: 允许内容占用多于一页
+      ocr:
+        model: Default model
+        grayscale: Convert images to grayscale
+        resize: Resize large images
+        quality:
+          label: For Transcriptions
+          value: Use image quality {value, number, ::percent scale/0.01 .}
       locale:
         locale: 默认
         locales:
@@ -154,14 +168,14 @@ cn:
           de: Deutsch
           en: English
           es: Español
-          fi-FI: Suomi
+          fi-FI: 芬兰语
           fr: Français
           it: Italiano
           ja: 日本語
           nl-NL: 荷兰语
           pt: Português
           pt-BR: 巴西葡萄牙语
-          ru: русский
+          ru: 俄语
           uk: 乌克兰语
       templates:
         label: 默认模板
@@ -172,9 +186,9 @@ cn:
         label: 导入文件命名为
         force: 覆盖嵌入的照片元数据
       debug: 启用开发者模式
-      api: Enable Developer API
+      api: 启用开发者 API
       localtime: 假设 Exif 时间戳使用本地时区
-      createLists: Recreate lists
+      createLists: 重新创建列表
       dup:
         label: 导入设置
         option:
@@ -229,6 +243,7 @@ cn:
           <None>: 使用绝对路径
       store: 托管文件夹
       name: 名称
+      url: URL
       id: ID
       path: 文件
       type: 项目类型
@@ -240,6 +255,13 @@ cn:
           =0 {所有照片已合并。}
           one {未找到 1 张照片；需要合并。}
           other {未找到 # 张照片；需要合并。}}
+      optimize:
+        confirm: Create Optimized Project
+        hint: Create an optimized copy of this project.
+        onImport: Optimize photos on import
+        quality:
+          label: Optimize assets
+          value: Quality {value, number, ::percent scale/0.01 .}
       watch:
         folder: 监视文件夹
         usePolling: 使用文件统计
@@ -283,6 +305,31 @@ cn:
       uninstall: 卸载插件
       noInfo: 未知作者
       homepage: 更多
+    account:
+      label: Account
+      description: Sign in to your account
+      username: Username
+      email: Email
+      password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
+      link: Sign in
+      unlink: Sign out
+      usage:
+        label: Usage
+        transcriptions:
+          label: Transcriptions
+          loading: Loading…
+          limit: |-
+            {delta, plural,
+              =0 {No transcriptions remaining. Resets {reset}.}
+              other {# of {limit} transcriptions remaining. Resets {reset}.}}
+          total: |-
+            {total, plural,
+              =0 {No transcriptions since {since}.}
+              one {1 transcription since {since}.}
+              other {# transcriptions since {since}.}}
   format:
     ppi: 每英寸像素（ppi）
   item:
@@ -305,6 +352,8 @@ cn:
   settings:
     maximize: 最大化视图
     unmaximize: 恢复之前的视图大小
+  slider:
+    value: '{value, number, ::percent scale/0.01 .}'
   esper:
     tool:
       pan: 平移工具
@@ -392,6 +441,13 @@ cn:
           message: 您的项目已成功转换并保存。现在，Tropy 将关闭原始项目文件，并在新窗口中打开转换后的项目。
           buttons:
             - 确定
+        optimize:
+          title: Optimization complete
+          message: >-
+            Your optimized project copy has been saved. Tropy will now open the
+            optimized project in a new window.
+          buttons:
+            - 确定
     error:
       title: 错误
       buttons:
@@ -413,12 +469,11 @@ cn:
             - 是
       project:
         prune:
-          message: >-
-            {count, plural,
-              one {One orphaned file was found.}
-              other {{count} orphaned files were found.}}
-            See the log file for the full list. Do you want to delete all
-            orphaned files now? This action cannot be undone.
+          message: |-
+            {count, plural,，
+            一个{找到一个孤立文件。}
+            其他 {{count} 个孤立文件。}}
+            请查看日志文件以获取完整列表。是否立即删除所有孤立文件？此操作无法撤销。
           buttons:
             - 取消
             - 删除
@@ -434,6 +489,15 @@ cn:
           buttons:
             - 取消
             - 删除
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again to use server-side
+            features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: 本体数据库中已经存在具有此id的模板。是否要覆盖现有模板?
@@ -639,21 +703,28 @@ cn:
       sinkListItem: 缩进
       liftListItem: 撤销缩进
   transcription:
-    error: Transcription failed
-    retry: Try Again
+    error: 转录失败
+    retry: 重试
     pending: 正在转录…
     title: |-
       {name, select,
-        true {{name}}
-        other {Transcription}
+      true {{name}}
+      other {Transcription}
       }
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        network: Could not reach the Tropy server.
+        unknown: Something went wrong. Please try again.
+      offline: Tropy is offline.
     cache:
       prune: 优化缓存失败。
       purge: 未能删除旧的缓存。
     project:
       created: 库创建失败。
       convert: 项目转换失败。
+      optimize: Project optimization failed.
     item:
       export: 无法导出文件。
       merge: 无法合并图组。

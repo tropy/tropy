@@ -15,8 +15,19 @@ ja:
       - label: プロジェクト名を変更
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: プロジェクトファイルを開く
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: プロジェクトファイルを開く
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: 新規リスト
         command: app:create-list
@@ -366,7 +377,7 @@ ja:
         submenu:
           - label: With Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     item-bulk:
       - label: 選択したアイテムを統合
         command: app:merge-item
@@ -426,7 +437,7 @@ ja:
         submenu:
           - label: With Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: オリジナル写真の修整結果を反映する
         command: app:consolidate-photo
     photo-rotate:
@@ -517,8 +528,19 @@ ja:
       - label: プロジェクト名を変更
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: プロジェクトファイルを開く
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: プロジェクトファイルを開く
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: 新規リスト
         command: app:create-list
@@ -930,7 +952,7 @@ ja:
         submenu:
           - label: With Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: 新規フィールド
         command: app:create-field
@@ -972,7 +994,7 @@ ja:
         submenu:
           - label: With Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: オリジナル写真の修整結果を反映する
         command: app:consolidate-photo
     photo-rotate:
@@ -1019,8 +1041,19 @@ ja:
       - label: プロジェクト名を変更
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: プロジェクトファイルを開く
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: プロジェクトファイルを開く
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: 新規リスト
         command: app:create-list
@@ -1432,7 +1465,7 @@ ja:
         submenu:
           - label: With Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: 新規フィールド
         command: app:create-field
@@ -1474,7 +1507,7 @@ ja:
         submenu:
           - label: With Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: オリジナル写真の修整結果を反映する
         command: app:consolidate-photo
     photo-rotate:
