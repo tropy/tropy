@@ -124,16 +124,6 @@ const projectFiles = createSlice({
   initialState: {},
 
   reducers: {
-    clear: {
-      reducer (state, { payload }) {
-        delete state[payload.path]
-      },
-      prepare: (path) => ({
-        payload: { path },
-        meta: { ipc: 'clear-recent-project' }
-      })
-    },
-
     restore (state, { payload }) {
       Object.assign(state, payload)
     }
@@ -142,6 +132,12 @@ const projectFiles = createSlice({
   extraReducers (builder) {
     builder
       .addCase(reload.fulfilled, (state, { payload }) => {
+        let paths = new Set(payload.map(file => file.path))
+
+        for (let path in state) {
+          if (!paths.has(path)) delete state[path]
+        }
+
         for (let file of payload) {
           state[file.path] = file
         }
@@ -155,7 +151,6 @@ const projectFiles = createSlice({
 })
 
 export const {
-  clear,
   restore
 } = projectFiles.actions
 
