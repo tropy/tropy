@@ -25,11 +25,10 @@ import {
 } from '../common/log.js'
 
 import { darwin, linux } from '../common/os.js'
-import { debounce, delay, once } from '../common/util.js'
 import { channel, product, version } from '../common/release.js'
 import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
-import { protocolURL, urlId } from '../common/util.js'
+import { debounce, delay, once, protocolURL, urlId } from '../common/util.js'
 
 import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
 import { AccountService } from './account.js'
