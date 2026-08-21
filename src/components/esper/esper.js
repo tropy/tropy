@@ -13,7 +13,7 @@ import { EsperOverlay } from './overlay.js'
 import { EsperView } from './view.js'
 import { Transcription } from '../transcription/transcription.js'
 import { TranscriptionPanel } from '../transcription/panel.js'
-import { flipMap, mergeMap, pick, restrict } from '../../common/util.js'
+import { pick, restrict } from '../../common/util.js'
 import { Cache } from '../../common/cache.js'
 import { isHorizontal, rotate, round } from '../../common/math.js'
 import { growingEdge } from '../../selection.js'
@@ -297,20 +297,11 @@ export class Esper extends React.Component {
         })
   }
 
-  handleTextSelection = throttle((textSelection, modifier, base) => {
+  handleTextSelection = (textSelection) => {
     if (this.state.text) {
-      switch (modifier) {
-        case 'SHIFT':
-          textSelection = mergeMap(textSelection, base)
-          break
-        case 'META':
-          textSelection = flipMap(textSelection, base)
-          break
-      }
-
       this.setTextSelection(textSelection)
     }
-  }, 75)
+  }
 
   copyTextSelection () {
     let text = this.state.text?.toPlainText(this.state.textSelection)
