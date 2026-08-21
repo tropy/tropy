@@ -297,15 +297,8 @@ export class Esper extends React.Component {
         })
   }
 
-  handleTextSelection = throttle(({ x, y, width, height }, modifier, base) => {
+  handleTextSelection = throttle((textSelection, modifier, base) => {
     if (this.state.text) {
-      if (this.props.selection) {
-        x -= this.props.selection.x
-        y -= this.props.selection.y
-      }
-
-      let textSelection = this.state.text.select({ x, y, width, height })
-
       switch (modifier) {
         case 'SHIFT':
           textSelection = mergeMap(textSelection, base)
