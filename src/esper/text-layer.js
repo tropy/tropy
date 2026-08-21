@@ -37,7 +37,7 @@ export class TextLayer extends Container {
     }
   }
 
-  update (dragState, textSelection) {
+  update (textSelection) {
     for (let child of this.children) {
       child.update(textSelection)
     }

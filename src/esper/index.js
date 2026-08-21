@@ -1,7 +1,21 @@
 import { EventEmitter } from 'node:events'
 import { Application, RenderTexture, Ticker } from 'pixi.js'
 import TWEEN from '@tweenjs/tween.js'
-import { debounce } from '../common/util.js'
+import { debug, error, info, warn } from '../common/log.js'
+import { Photo, FILTERS } from './photo.js'
+import { Selection } from './selection.js'
+import { Loader } from './loader.js'
+import { ESPER, SASS } from '../constants/index.js'
+import ARGS from '../args.js'
+import { isMeta } from '../keymap.js'
+
+import {
+  isClockwise, isHorizontal, contains, deg, rad
+} from '../common/math.js'
+import {
+  debounce, delay, flipMap, mergeMap, restrict, throttle
+} from '../common/util.js'
+
 import {
   append,
   createDragHandler,
@@ -11,17 +25,6 @@ import {
   getResolution,
   remove
 } from '../dom.js'
-import { debug, error, info, warn } from '../common/log.js'
-import {
-  isClockwise, isHorizontal, contains, deg, rad
-} from '../common/math.js'
-import { delay, restrict } from '../common/util.js'
-import { Photo, FILTERS } from './photo.js'
-import { Selection } from './selection.js'
-import { Loader } from './loader.js'
-import { ESPER, SASS } from '../constants/index.js'
-import ARGS from '../args.js'
-import { isMeta } from '../keymap.js'
 
 import {
   addCursorStyle,
@@ -39,7 +42,6 @@ import {
 
 const {
   FADE_DURATION,
-  PAN_DURATION,
   SYNC_DURATION,
   ZOOM_PINCH_BOOST,
   ZOOM_WHEEL_FACTOR,
@@ -68,6 +70,8 @@ export default class Esper extends EventEmitter {
 
   #lastClickTime = 0
   #isInitialized = false
+
+  textSelection = null
 
   constructor () {
     super()
@@ -406,7 +410,8 @@ export default class Esper extends EventEmitter {
       for (let tween of this.tweens)
         tween.update(now)
 
-      this.photo?.update(this.drag.current, this.textSelection)
+      let drag = this.drag.current
+      this.photo?.update(drag, drag?.textSelection ?? this.textSelection)
 
     } catch (err) {
       this.halt()
@@ -751,7 +756,8 @@ export default class Esper extends EventEmitter {
       data,
       modifier,
       target,
-      textSelection: this.textSelection,
+      base: this.textSelection,
+      textSelection: null,
       tool,
       origin: {
         pos: { x: target.x, y: target.y },
@@ -822,7 +828,9 @@ export default class Esper extends EventEmitter {
   }
 
   handleSelectMove () {
-    let { data, imageBounds, modifier, target, selection, textSelection, tool } = this.drag.current
+    let {
+      base, data, imageBounds, modifier, target, selection, tool
+    } = this.drag.current
     let { x, y } = data.getLocalPosition(target)
 
     selection.width = x - selection.x
@@ -833,18 +841,21 @@ export default class Esper extends EventEmitter {
         this.selectText(
           clamp(normalize(selection, true), imageBounds),
           modifier,
-          textSelection)
+          base)
         break
     }
   }
 
   handleSelectStop () {
-    let { imageBounds, modifier, selection, textSelection, tool } = this.drag.current
+    let { base, imageBounds, modifier, selection, tool } = this.drag.current
     selection = clamp(normalize(selection, true), imageBounds)
 
     switch (tool) {
       case ESPER.TOOL.ARROW:
-        this.selectText(selection, modifier, textSelection)
+        this.selectText(selection, modifier, base)
+        // Subtle: update selection ahead of time!
+        this.textSelection = this.drag.current.textSelection
+        this.commitTextSelection.flush()
         break
       case ESPER.TOOL.SELECT:
         if (selection.width && selection.height)
@@ -853,12 +864,24 @@ export default class Esper extends EventEmitter {
     }
   }
 
+  commitTextSelection = throttle((selection) => {
+    this.emit('select-text', selection)
+  }, 75)
+
   selectText (rect, modifier, base) {
-    this.emit(
-      'select-text',
-      this.photo.textLayer.select(rect),
-      modifier,
-      base)
+    let selection = this.photo.textLayer.select(rect)
+
+    switch (modifier) {
+      case 'SHIFT':
+        selection = mergeMap(selection, base)
+        break
+      case 'META':
+        selection = flipMap(selection, base)
+        break
+    }
+
+    this.drag.current.textSelection = selection
+    this.commitTextSelection(selection)
   }
 
   handleWheel = (event) => {

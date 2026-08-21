@@ -284,7 +284,7 @@ export class Photo extends Container {
     }
 
     if (this.textLayer.visible) {
-      this.textLayer.update(dragState, textSelection)
+      this.textLayer.update(textSelection)
     }
   }
 }
