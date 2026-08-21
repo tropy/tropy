@@ -467,7 +467,7 @@ export default class Esper extends EventEmitter {
   // Pans the view to reveal rectangle (photo coordinates).
   // Does nothing if it is visible already; centers it if it does not fit.
   reveal (rect, {
-    duration = PAN_DURATION,
+    duration,
     padding = 0
   } = {}) {
     if (this.photo == null || rect == null)
