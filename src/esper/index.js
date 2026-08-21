@@ -830,8 +830,7 @@ export default class Esper extends EventEmitter {
 
     switch (tool) {
       case ESPER.TOOL.ARROW:
-        this.emit(
-          'select-text',
+        this.selectText(
           clamp(normalize(selection, true), imageBounds),
           modifier,
           textSelection)
@@ -845,13 +844,21 @@ export default class Esper extends EventEmitter {
 
     switch (tool) {
       case ESPER.TOOL.ARROW:
-        this.emit('select-text', selection, modifier, textSelection)
+        this.selectText(selection, modifier, textSelection)
         break
       case ESPER.TOOL.SELECT:
         if (selection.width && selection.height)
           this.emit('selection-create', selection)
         break
     }
+  }
+
+  selectText (rect, modifier, base) {
+    this.emit(
+      'select-text',
+      this.photo.textLayer.select(rect),
+      modifier,
+      base)
   }
 
   handleWheel = (event) => {

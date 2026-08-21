@@ -100,6 +100,36 @@ export const textBounds = (node, offset) => {
   return offset ? move(bounds, offset) : bounds
 }
 
+export const intersects = (
+  { x: ax, y: ay, width: aw = 0, height: ah = 0 },
+  { x: bx, y: by, width: bw = 0, height: bh = 0 }
+) => (
+  ax <= bx + bw && bx <= ax + aw &&
+  ay <= by + bh && by <= ay + ah
+)
+
+export function union (a, b) {
+  if (a == null) return b
+  if (b == null) return a
+
+  let x = Math.min(a.x, b.x)
+  let y = Math.min(a.y, b.y)
+
+  return {
+    x,
+    y,
+    width: Math.max(a.x + a.width, b.x + b.width) - x,
+    height: Math.max(a.y + a.height, b.y + b.height) - y
+  }
+}
+
+// Returns a point's offset from the center of a rectangle,
+// scaled by its size, as a measure for overlapping string bounds.
+export const centerOffset = ({ x, y }, rect) => ({
+  dx: (x - (rect.x + rect.width / 2)) / (rect.width / 2 || 1),
+  dy: (y - (rect.y + rect.height / 2)) / (rect.height / 2 || 1)
+})
+
 export const inset = ({ x, y, width, height }, p = 0) => {
   let padding = (typeof p === 'number')
     ? { top: p, bottom: p, left: p, right: p }
