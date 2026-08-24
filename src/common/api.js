@@ -115,6 +115,16 @@ const project = {
     show: show('item')
   },
 
+  nav: {
+    async show (ctx) {
+      let { rsvp } = ctx
+
+      let { payload } = await rsvp(act.nav.show({}))
+
+      ctx.body = payload
+    }
+  },
+
   data: {
     async save (ctx) {
       let { assert, params, request, rsvp } = ctx
@@ -505,6 +515,8 @@ export function create ({
     .delete('/project/:project/items/:id/tags', project.tags.remove)
     .post('/project/:project/items/merge', project.items.merge)
     .post('/project/:project/items/:id/explode', project.items.explode)
+
+    .get('/project/:project/nav', project.nav.show)
 
     .get('/project/:project/lists/:id/items', project.items.find)
     .get('/project/:project/lists{/:id}', project.lists.show)

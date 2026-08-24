@@ -75,6 +75,19 @@ export default {
     }
   },
 
+  nav: {
+    show (payload, meta) {
+      return {
+        type: API.NAV.SHOW,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    }
+  },
+
   metadata: {
     save ({ id, ...payload }, meta) {
       return {

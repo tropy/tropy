@@ -4,6 +4,10 @@ export default {
     SHOW: 'api.item.show'
   },
 
+  NAV: {
+    SHOW: 'api.nav.show'
+  },
+
   PHOTO: {
     EXTRACT: 'api.photo.extract',
     FIND: 'api.photo.find',
