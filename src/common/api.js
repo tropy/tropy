@@ -5,6 +5,11 @@ import Router from '@koa/router'
 import bodyParser from 'koa-bodyparser'
 import act from '../actions/api'
 
+// Beyond qs's arrayLimit, repeated parameters are parsed into an object
+// keyed by index instead of an array, which quietly breaks every route
+// taking a list: an item's photos, the items to merge, an item's tags.
+const ARRAY_LIMIT = 1000
+
 const show = (type) =>
   async (ctx) => {
     let { params, rsvp } = ctx
@@ -566,7 +571,7 @@ export function create ({
 
   app
     .use(logging)
-    .use(bodyParser())
+    .use(bodyParser({ queryString: { arrayLimit: ARRAY_LIMIT } }))
     .use(api.routes())
     .use(api.allowedMethods())
 
