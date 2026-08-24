@@ -1,4 +1,4 @@
-import { call, select } from 'redux-saga/effects'
+import { call, put, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { Document } from 'alto-xml'
 import { API } from '../../constants/index.js'
@@ -13,7 +13,7 @@ export class TranscriptionCreate extends Command {
     let { db } = this.options
     let { data, text, angle, mirror, photo, selection } = this.action.payload
 
-    if (photo == null) {
+    if (photo == null && selection == null) {
       ({ photo, selection } = yield select(state => state.nav))
     }
 
@@ -27,6 +27,8 @@ export class TranscriptionCreate extends Command {
     let transcriptions = yield call(db.transaction, async tx =>
       Promise.all(parents.map(parent =>
         create(tx, { angle, mirror, data, parent, text }))))
+
+    yield put(slice.insert(transcriptions))
 
     this.undo = slice.remove(
       transcriptions.map(tr => tr.id))

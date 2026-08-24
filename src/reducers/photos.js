@@ -34,6 +34,8 @@ export function photos (state = {}, { type, payload, error, meta }) {
 
     case tr.create.type:
       return tr.nested.create(state, { payload, meta, error })
+    case tr.insert.type:
+      return tr.nested.insert(state, { payload })
     case tr.remove.type:
       return tr.nested.remove(state, { payload, meta, error })
     case tr.restore.type:

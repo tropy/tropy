@@ -56,6 +56,18 @@ export const nested = {
       })
   },
 
+  insert (state, { payload }) {
+    return createNextState(state, draft => {
+      for (let tr of payload) {
+        let parent = draft[tr.parent]
+
+        if (parent != null && !parent.transcriptions.includes(tr.id))
+          parent.transcriptions.push(tr.id)
+      }
+      return draft
+    })
+  },
+
   remove (state, { payload, meta, error }) {
     return (!meta.done || error) ?
       state : createNextState(state, draft => {
