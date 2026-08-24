@@ -22,6 +22,12 @@ export class Explode extends Command {
     let moves = {}
 
     if (payload.items == null) {
+      // Photos are moved onto duplicates of their own item, so a photo
+      // that belongs elsewhere would be detached from its item silently.
+      assert(
+        photos.every(id => item.photos.includes(id)),
+        'photos must belong to the item')
+
       yield call(db.transaction, async tx => {
         for (let photo of photos) {
           let dup = await mod.item.dup(tx, item.id)

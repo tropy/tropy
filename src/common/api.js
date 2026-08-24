@@ -71,6 +71,33 @@ const project = {
   },
 
   items: {
+    async explode (ctx) {
+      let { assert, params, request, rsvp } = ctx
+      let { photo } = request.body
+
+      assert.ok(photo, 400, 'missing photo parameter')
+
+      let { payload } = await rsvp(act.item.explode({
+        id: params.id,
+        photos: photo
+      }))
+
+      ctx.body = {
+        item: Object.values(payload).map(({ id, photos }) => ({ id, photos }))
+      }
+    },
+
+    async merge (ctx) {
+      let { assert, request, rsvp } = ctx
+      let { item } = request.body
+
+      assert.ok(item, 400, 'missing item parameter')
+
+      let { payload } = await rsvp(act.item.merge(item))
+
+      ctx.body = payload
+    },
+
     async find (ctx) {
       let { params, query, rsvp } = ctx
       let { sort = 'item.created', reverse = false } = query
@@ -476,6 +503,8 @@ export function create ({
       project.transcriptions.find)
     .post('/project/:project/items/:id/tags', project.tags.add)
     .delete('/project/:project/items/:id/tags', project.tags.remove)
+    .post('/project/:project/items/merge', project.items.merge)
+    .post('/project/:project/items/:id/explode', project.items.explode)
 
     .get('/project/:project/lists/:id/items', project.items.find)
     .get('/project/:project/lists{/:id}', project.lists.show)
