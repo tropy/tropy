@@ -34,12 +34,45 @@ const {
   which
 } = shelljs
 
-async function integrity (path, algo = 'sha256') {
+const APPIMAGETOOL = {
+  url: 'https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-x86_64.AppImage',
+  sha256: 'ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0'
+}
+
+const APPIMAGE_RUNTIME = {
+  url: 'https://github.com/AppImage/type2-runtime/releases/download/20251108/runtime-x86_64',
+  sha256: '2fca8b443c92510f1483a883f60061ad09b46b978b2631c807cd873a47ec260d'
+}
+
+async function checksum (path, algo = 'sha256') {
   let hash = createHash(algo)
   hash.update(await readFile(path))
-  let checksum = [algo, hash.digest('hex')].join('|')
-  await writeFile(`${path}.integrity`, checksum, { encoding: 'utf-8' })
-  return checksum
+  return hash.digest('hex')
+}
+
+async function integrity (path, algo = 'sha256') {
+  let value = [algo, await checksum(path, algo)].join('|')
+  await writeFile(`${path}.integrity`, value, { encoding: 'utf-8' })
+  return value
+}
+
+async function download ({ url, sha256 }, path) {
+  if (test('-f', path) && await checksum(path) === sha256)
+    return path
+
+  say(`downloading ${url}`)
+
+  let res = await fetch(url)
+  check(res.ok, `failed to download ${url}: ${res.status} ${res.statusText}`)
+
+  await writeFile(path, new Uint8Array(await res.arrayBuffer()))
+
+  let actual = await checksum(path)
+  check(actual === sha256, `checksum mismatch for ${url}: ${actual}`)
+
+  chmod('a+x', path)
+
+  return path
 }
 
 program
@@ -122,43 +155,53 @@ const exports = {
     return [output]
   },
 
-  AppImage ({ app, arch, out, silent, tag }) {
+  async AppImage ({ app, arch, out, silent, tag }) {
     check(arch === 'x64', 'must build for x64')
 
     let output = join(out, `${[product, version, tag].filter(x => x).join('-')}-x86_64.AppImage`)
-    let AIK = 'https://github.com/AppImage/AppImageKit/releases/download/continuous'
     let AppDir = join(out, `${product}-${version}.AppDir`)
-    let appimagetool = join(import.meta.dirname, 'appimagetool')
 
-    if (!test('-f', appimagetool)) {
-      check(which('curl'), 'missing dependency: curl')
-      exec(`curl -L -o "${appimagetool}" ${AIK}/appimagetool-x86_64.AppImage`, {
-        silent
-      })
-      chmod('a+x', appimagetool)
-    }
+    let appimagetool = await download(
+      APPIMAGETOOL, join(import.meta.dirname, 'appimagetool'))
+    let runtime = await download(
+      APPIMAGE_RUNTIME, join(import.meta.dirname, 'appimage-runtime'))
 
     rm('-f', output)
     rm('-rf', AppDir)
 
-    cp('-r', app, AppDir)
-    mkdir('-p', `${AppDir}/usr/share`)
-    mv(`${AppDir}/resources/icons`, `${AppDir}/usr/share/icons`)
-    mv(`${AppDir}/resources/mime`, `${AppDir}/usr/share/mime`)
+    try {
+      cp('-r', app, AppDir)
+      mkdir('-p', `${AppDir}/usr/share`)
+      mv(`${AppDir}/resources/icons`, `${AppDir}/usr/share/icons`)
+      mv(`${AppDir}/resources/mime`, `${AppDir}/usr/share/mime`)
 
-    let png = `usr/share/icons/hicolor/512x512/apps/${qualified.appId}.png`
-    let svg = `usr/share/icons/hicolor/scalable/apps/${qualified.appId}.svg`
+      let png = `usr/share/icons/hicolor/512x512/apps/${qualified.appId}.png`
+      let svg = `usr/share/icons/hicolor/scalable/apps/${qualified.appId}.svg`
 
-    cd(AppDir)
-    ln('-s', qualified.name, 'AppRun')
-    ln('-s', png, '.DirIcon')
-    ln('-s', svg, `${qualified.appId}.svg`)
-    cd('-')
+      cd(AppDir)
+      ln('-s', qualified.name, 'AppRun')
+      ln('-s', png, '.DirIcon')
+      ln('-s', svg, `${qualified.appId}.svg`)
+      cd('-')
 
-    exec(`"${appimagetool}" -n -v ${AppDir} ${output}`, { silent })
-    chmod('a+x', output)
+      let { code, stderr } = exec(
+        `"${appimagetool}" -n -v --runtime-file "${runtime}" "${AppDir}" "${output}"`, {
+          silent,
+          env: {
+            ...process.env,
+            ARCH: 'x86_64',
+            APPIMAGE_EXTRACT_AND_RUN: '1'
+          }
+        })
 
-    rm('-rf', AppDir)
+      if (code !== 0)
+        throw new Error(`appimagetool failed with code ${code}: ${stderr}`)
+
+      chmod('a+x', output)
+
+    } finally {
+      rm('-rf', AppDir)
+    }
 
     return [output]
   },
