@@ -34,14 +34,37 @@ const {
   which
 } = shelljs
 
+const ARCH = {
+  x64: 'x86_64',
+  arm64: 'aarch64'
+}
+
+const APPIMAGETOOL_RELEASE =
+  'https://github.com/AppImage/appimagetool/releases/download/1.9.1'
+
+const APPIMAGE_RUNTIME_RELEASE =
+  'https://github.com/AppImage/type2-runtime/releases/download/20251108'
+
 const APPIMAGETOOL = {
-  url: 'https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-x86_64.AppImage',
-  sha256: 'ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0'
+  x86_64: {
+    url: `${APPIMAGETOOL_RELEASE}/appimagetool-x86_64.AppImage`,
+    sha256: 'ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0'
+  },
+  aarch64: {
+    url: `${APPIMAGETOOL_RELEASE}/appimagetool-aarch64.AppImage`,
+    sha256: 'f0837e7448a0c1e4e650a93bb3e85802546e60654ef287576f46c71c126a9158'
+  }
 }
 
 const APPIMAGE_RUNTIME = {
-  url: 'https://github.com/AppImage/type2-runtime/releases/download/20251108/runtime-x86_64',
-  sha256: '2fca8b443c92510f1483a883f60061ad09b46b978b2631c807cd873a47ec260d'
+  x86_64: {
+    url: `${APPIMAGE_RUNTIME_RELEASE}/runtime-x86_64`,
+    sha256: '2fca8b443c92510f1483a883f60061ad09b46b978b2631c807cd873a47ec260d'
+  },
+  aarch64: {
+    url: `${APPIMAGE_RUNTIME_RELEASE}/runtime-aarch64`,
+    sha256: '00cbdfcf917cc6c0ff6d3347d59e0ca1f7f45a6df1a428a0d6d8a78664d87444'
+  }
 }
 
 async function checksum (path, algo = 'sha256') {
@@ -73,6 +96,23 @@ async function download ({ url, sha256 }, path) {
   chmod('a+x', path)
 
   return path
+}
+
+// Update information for AppImageUpdate.
+// Stable releases use the releases/latest endpoint;
+// Beta uses most recent pre-release instead,
+// because we never clear that flag for them.
+function appImageUpdateInfo (arch, tag) {
+  let variant = tag ? `-${tag}-${arch}` : `[0-9]-${arch}`
+
+  switch (channel) {
+    case 'latest':
+      return `gh-releases-zsync|tropy|tropy|latest|*${variant}.AppImage.zsync`
+    case 'beta':
+      return `gh-releases-zsync|tropy|tropy|latest-pre|*-beta.*${variant}.AppImage.zsync`
+    default:
+      return null
+  }
 }
 
 program
@@ -155,18 +195,21 @@ const exports = {
     return [output]
   },
 
-  async AppImage ({ app, arch, out, silent, tag }) {
-    check(arch === 'x64', 'must build for x64')
+  async AppImage ({ app, arch: nodeArch, out, silent, tag }) {
+    let arch = ARCH[nodeArch]
+    check(arch, `unsupported arch: ${nodeArch}`)
 
-    let output = join(out, `${[product, version, tag].filter(x => x).join('-')}-x86_64.AppImage`)
+    let name = `${[product, version, tag].filter(x => x).join('-')}-${arch}`
+    let output = join(out, `${name}.AppImage`)
     let AppDir = join(out, `${product}-${version}.AppDir`)
+    let updateInfo = appImageUpdateInfo(arch, tag)
 
     let appimagetool = await download(
-      APPIMAGETOOL, join(import.meta.dirname, 'appimagetool'))
+      APPIMAGETOOL[arch], join(import.meta.dirname, `appimagetool-${arch}`))
     let runtime = await download(
-      APPIMAGE_RUNTIME, join(import.meta.dirname, 'appimage-runtime'))
+      APPIMAGE_RUNTIME[arch], join(import.meta.dirname, `appimage-runtime-${arch}`))
 
-    rm('-f', output)
+    rm('-f', output, `${output}.zsync`)
     rm('-rf', AppDir)
 
     try {
@@ -193,15 +236,26 @@ const exports = {
       ln('-s', svg, `${qualified.appId}.svg`)
       cd('-')
 
-      let { code, stderr } = exec(
-        `"${appimagetool}" -n -v --runtime-file "${runtime}" "${AppDir}" "${output}"`, {
-          silent,
-          env: {
-            ...process.env,
-            ARCH: 'x86_64',
-            APPIMAGE_EXTRACT_AND_RUN: '1'
-          }
-        })
+      let cmd = [
+        `"${appimagetool}"`,
+        '-n',
+        '-v',
+        `--runtime-file "${runtime}"`
+      ]
+
+      if (updateInfo)
+        cmd.push(`-u "${updateInfo}"`)
+
+      cmd.push(`"${AppDir}"`, `"${output}"`)
+
+      let { code, stderr } = exec(cmd.join(' '), {
+        silent,
+        env: {
+          ...process.env,
+          ARCH: arch,
+          APPIMAGE_EXTRACT_AND_RUN: '1'
+        }
+      })
 
       if (code !== 0)
         throw new Error(`appimagetool failed with code ${code}: ${stderr}`)
@@ -212,7 +266,11 @@ const exports = {
       rm('-rf', AppDir)
     }
 
-    return [output]
+    if (!updateInfo)
+      return [output]
+
+    check(test('-f', `${output}.zsync`), 'missing zsync file: install zsync')
+    return [output, `${output}.zsync`]
   },
 
   '7z' ({ app, arch, out, platform, silent }) {
