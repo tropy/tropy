@@ -53,10 +53,11 @@ In the following instructions, change `/opt/tropy` to your preferred location.
 
    cp -r /opt/tropy/resources/mime ~/.local/share/
 
-5. Copy the file `.desktop` and `.metainfo.xml` file:
+5. Copy the `.desktop` and `.metainfo.xml` files
+   (e.g. `org.tropy.Tropy.desktop`):
 
-   cp /opt/tropy/org.tropy.Tropy.desktop ~/.local/share/applications/
-   cp /opt/tropy/org.tropy.Tropy.metainfo.xml ~/.local/share/metainfo/
+   cp /opt/tropy/org.tropy.Tropy*.desktop ~/.local/share/applications/
+   cp /opt/tropy/org.tropy.Tropy*.metainfo.xml ~/.local/share/metainfo/
 
 6. And update MIME cache database:
 

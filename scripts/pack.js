@@ -171,9 +171,16 @@ const exports = {
 
     try {
       cp('-r', app, AppDir)
-      mkdir('-p', `${AppDir}/usr/share`)
+      mkdir('-p',
+        `${AppDir}/usr/share/applications`,
+        `${AppDir}/usr/share/metainfo`)
       mv(`${AppDir}/resources/icons`, `${AppDir}/usr/share/icons`)
       mv(`${AppDir}/resources/mime`, `${AppDir}/usr/share/mime`)
+
+      cp(`${AppDir}/${qualified.appId}.desktop`,
+        `${AppDir}/usr/share/applications`)
+      cp(`${AppDir}/${qualified.appId}.metainfo.xml`,
+        `${AppDir}/usr/share/metainfo`)
 
       cp(join(ROOT, 'res', 'linux', 'AppRun'), join(AppDir, 'AppRun'))
       chmod('755', join(AppDir, 'AppRun'))
