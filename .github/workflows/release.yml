@@ -63,6 +63,10 @@ jobs:
       - name: Install requirements for node-gyp
         run: pip install setuptools
 
+      - name: Install zsync
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y zsync
+
       - name: Install NPM modules
         run: npm clean-install --no-progress
       - name: Install Electron
@@ -152,6 +156,7 @@ jobs:
             dist/*.bz2,
             dist/*.integrity,
             dist/*.AppImage,
+            dist/*.zsync,
             dist/*-sourcemaps-*.tar.gz
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
