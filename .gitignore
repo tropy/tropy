@@ -8,8 +8,8 @@ npm-debug.log
 db/*.db
 *.tpy
 .vimrc
-scripts/appimagetool
-scripts/appimage-runtime
+scripts/appimagetool-*
+scripts/appimage-runtime-*
 scripts/stats.mjs
 _book
 .github/styles/*
