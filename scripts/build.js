@@ -104,9 +104,8 @@ program
             `${resources}/mime/packages/${appId}.xml`)
 
           say('copy metainfo.xml')
-          await copyFile(
-            `${ROOT}/res/linux/org.tropy.Tropy.metainfo.xml`,
-            `${dest}/${appId}.metainfo.xml`)
+          await writeFile(
+            `${dest}/${qualified.appId}.metainfo.xml`, await metainfo())
 
           say('copy INSTALL instructions')
           await copyFile(`${ROOT}/res/linux/INSTALL`, `${dest}/INSTALL`)
@@ -363,6 +362,31 @@ Exec=${exe} %U
 Icon=${icon}
 MimeType=${mimetypes.join(';')};
 Categories=Graphics;Viewer;Photography;OCR;`
+}
+
+function substitute (xml, from, to) {
+  if (!xml.includes(from))
+    throw new Error(`metainfo.xml: pattern not found: ${from}`)
+  return xml.replaceAll(from, to)
+}
+
+export async function metainfo () {
+  let xml = await readFile(
+    `${ROOT}/res/linux/${appId}.metainfo.xml`, 'utf-8')
+
+  xml = substitute(xml,
+    `<id>${appId}</id>`,
+    `<id>${qualified.appId}</id>`)
+
+  xml = substitute(xml,
+    `<launchable type="desktop-id">${appId}.desktop</launchable>`,
+    `<launchable type="desktop-id">${qualified.appId}.desktop</launchable>`)
+
+  xml = substitute(xml,
+    `<binary>${name}</binary>`,
+    `<binary>${qualified.name}</binary>`)
+
+  return xml
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
