@@ -22,6 +22,8 @@ jobs:
         include:
           - image: ubuntu-latest
             arch: x64
+          - image: ubuntu-24.04-arm
+            arch: arm64
           - image: ubuntu-latest
             arch: x64
             tag: 'libvips'
@@ -101,7 +103,7 @@ jobs:
         run: xvfb-run npm run coverage
 
       - name: Send coverage report to Coveralls
-        if: runner.os == 'Linux' && !matrix.tag
+        if: runner.os == 'Linux' && matrix.arch == 'x64' && !matrix.tag
         continue-on-error: true
         uses: coverallsapp/github-action@v2
         with:
