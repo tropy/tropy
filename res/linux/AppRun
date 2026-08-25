@@ -1,0 +1,36 @@
+#!/bin/sh
+# Tropy AppImage entry point, copied into the AppDir by scripts/pack.js
+HERE="$(cd "${0%/*}" && echo "$PWD")"
+
+export XDG_DATA_DIRS="${HERE}/usr/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+
+# The executable name depends on the release channel,
+# so we read it off the desktop file instead of hard-coding it here.
+EXE="$(sed -n 's/^Exec=\([^ ]*\).*/\1/p' "${HERE}"/*.desktop 2>/dev/null | head -n 1)"
+
+if [ -z "$EXE" ] || [ ! -x "${HERE}/${EXE}" ]; then
+  echo "$0: cannot determine executable" >&2
+  exit 1
+fi
+
+sysctl_value () {
+  [ -r "$1" ] && cat "$1"
+}
+
+# AppImages are mounted nosuid, so Chromium's SUID sandbox helper
+# cannot be used and it falls back to unprivileged user namespaces.
+# Where those are unavailable Tropy would not start at all,
+# so disable the sandbox instead.
+userns_restricted () {
+  [ "$(sysctl_value /proc/sys/kernel/apparmor_restrict_unprivileged_userns)" = 1 ] && return 0
+  [ "$(sysctl_value /proc/sys/kernel/unprivileged_userns_clone)" = 0 ] && return 0
+  [ "$(sysctl_value /proc/sys/user/max_user_namespaces)" = 0 ] && return 0
+  return 1
+}
+
+if userns_restricted; then
+  echo "$0: unprivileged user namespaces unavailable, starting without sandbox" >&2
+  exec "${HERE}/${EXE}" --no-sandbox "$@"
+else
+  exec "${HERE}/${EXE}" "$@"
+fi
