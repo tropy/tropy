@@ -63,13 +63,6 @@ jobs:
       - name: Install requirements for node-gyp
         run: pip install setuptools
 
-      - name: Fix AppImage on Ubuntu 22.04
-        if: matrix.image == 'ubuntu-22.04'
-        run: sudo apt install libfuse2
-      - name: Fix AppImage on Ubuntu 24.04
-        if: matrix.image == 'ubuntu-24.04'
-        run: sudo apt install libfuse2t64
-
       - name: Install NPM modules
         run: npm clean-install --no-progress
       - name: Install Electron
