@@ -17,6 +17,19 @@ the regular version is linked against a bundled libvips build
 and the 'shared' version is linked against the system libvips.
 To use the latter, a compatible version of libvips is required.
 
+The AppImage is self-contained and does not require libfuse2.
+Make it executable, then run it:
+
+    chmod a+x Tropy-*.AppImage
+    ./Tropy-*.AppImage
+
+Because AppImages are mounted `nosuid`,
+the SETUID sandbox described below cannot be used
+and Tropy relies on unprivileged user namespaces instead.
+Where those are unavailable, Tropy prints a warning
+and starts with the `--no-sandbox` flag;
+see the Sandbox section on how to enable them.
+
 Tarball
 -------
 The Tropy Linux tarball is a binary release.
@@ -75,6 +88,9 @@ Sandbox
 =======
 Tropy requires your kernel to be configured with the options
 `CONFIG_USER_NS` and `sysctl kernel.unprivileged_userns_clone=1`.
+On Ubuntu 23.10 and later, unprivileged user namespaces are restricted
+by AppArmor unless
+`sysctl kernel.apparmor_restrict_unprivileged_userns=0`.
 
 As a fallback, you can `sudo chown root chrome-sandbox` and
 `chmod 4755 chrome-sandbox` to use the SETUID sandbox instead,

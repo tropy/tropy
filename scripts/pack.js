@@ -175,11 +175,13 @@ const exports = {
       mv(`${AppDir}/resources/icons`, `${AppDir}/usr/share/icons`)
       mv(`${AppDir}/resources/mime`, `${AppDir}/usr/share/mime`)
 
+      cp(join(ROOT, 'res', 'linux', 'AppRun'), join(AppDir, 'AppRun'))
+      chmod('755', join(AppDir, 'AppRun'))
+
       let png = `usr/share/icons/hicolor/512x512/apps/${qualified.appId}.png`
       let svg = `usr/share/icons/hicolor/scalable/apps/${qualified.appId}.svg`
 
       cd(AppDir)
-      ln('-s', qualified.name, 'AppRun')
       ln('-s', png, '.DirIcon')
       ln('-s', svg, `${qualified.appId}.svg`)
       cd('-')
