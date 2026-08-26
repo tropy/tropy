@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  One block of two lines of two words each, without coordinates.
+-->
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v4#">
+  <Layout>
+    <Page>
+      <PrintSpace>
+        <TextBlock>
+          <TextLine>
+            <String CONTENT="one"/>
+            <SP/>
+            <String CONTENT="two"/>
+          </TextLine>
+          <TextLine>
+            <String CONTENT="three"/>
+            <SP/>
+            <String CONTENT="four"/>
+          </TextLine>
+        </TextBlock>
+      </PrintSpace>
+    </Page>
+  </Layout>
+</alto>
