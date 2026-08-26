@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The words of the first line straddle the second line's only word:
+  the nearer line has nothing to offer at x 40!
+
+    one:   x  0-20   two: x 60-80  (y  0-20)
+    three: x 30-50                 (y 15-35)
+-->
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v4#">
+  <Layout>
+    <Page WIDTH="100" HEIGHT="100">
+      <PrintSpace>
+        <TextBlock>
+          <TextLine>
+            <String CONTENT="one" HPOS="0" VPOS="0" WIDTH="20" HEIGHT="20"/>
+            <String CONTENT="two" HPOS="60" VPOS="0" WIDTH="20" HEIGHT="20"/>
+          </TextLine>
+          <TextLine>
+            <String CONTENT="three" HPOS="30" VPOS="15" WIDTH="20" HEIGHT="20"/>
+          </TextLine>
+        </TextBlock>
+      </PrintSpace>
+    </Page>
+  </Layout>
+</alto>

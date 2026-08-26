@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Two lines of two strings each. Both the strings of each line and the
+  lines themselves overlap, as they do in the wild, even though ALTO
+  documents traditionally do not overlap:
+
+    one:   x  0-50   two:  x 45-100  (y  0-20)
+    three: x  0-50   four: x 45-100  (y 15-35)
+-->
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v4#">
+  <Layout>
+    <Page WIDTH="100" HEIGHT="35">
+      <PrintSpace HPOS="0" VPOS="0" WIDTH="100" HEIGHT="35">
+        <TextBlock HPOS="0" VPOS="0" WIDTH="100" HEIGHT="35">
+          <TextLine HPOS="0" VPOS="0" WIDTH="100" HEIGHT="20">
+            <String CONTENT="one" HPOS="0" VPOS="0" WIDTH="50" HEIGHT="20"/>
+            <SP WIDTH="0"/>
+            <String CONTENT="two" HPOS="45" VPOS="0" WIDTH="55" HEIGHT="20"/>
+          </TextLine>
+          <TextLine HPOS="0" VPOS="15" WIDTH="100" HEIGHT="20">
+            <String CONTENT="three" HPOS="0" VPOS="15" WIDTH="50" HEIGHT="20"/>
+            <SP WIDTH="0"/>
+            <String CONTENT="four" HPOS="45" VPOS="15" WIDTH="55" HEIGHT="20"/>
+          </TextLine>
+        </TextBlock>
+      </PrintSpace>
+    </Page>
+  </Layout>
+</alto>
