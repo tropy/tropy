@@ -45,8 +45,8 @@ const {
   ZOOM_PRECISION
 } = SASS.ESPER
 
-const parseAltoDocument = memoize((data) => (
-  Document.parse(data)
+const parseAltoDocument = memoize((data, width, height, angle, mirror) => (
+  Document.parse(data).setTransform({ width, height, angle, mirror })
 ))
 
 
@@ -78,7 +78,14 @@ export class Esper extends React.Component {
   static getDerivedStateFromProps (props, prevState) {
     let id
     let src
-    let text = parseAltoDocument(props.transcription?.data)
+    let image = Esper.getDerivedImageStateFromProps(props)
+
+    let text = parseAltoDocument(
+      props.transcription?.data,
+      image.width,
+      image.height,
+      props.transcription?.angle,
+      props.transcription?.mirror)
 
     if (props.photo && !props.photo.pending) {
       id = props.selection?.id ?? props.photo.id
@@ -97,7 +104,7 @@ export class Esper extends React.Component {
         id,
         src,
         zoom: props.zoom || prevState.zoom,
-        ...Esper.getDerivedImageStateFromProps(props)
+        ...image
       }
   }
 

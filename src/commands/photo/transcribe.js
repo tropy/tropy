@@ -40,13 +40,19 @@ export class Transcribe extends Command {
       let image = selection || photo
       let src = Cache.url(cache.root, 'full', photo)
 
+      let isPolling = !config.plugin && !!config.jobId
       let rotation = addOrientation(image, photo)
-      let state = { config, data, text, ...rotation }
+
+      // Subtle: add rotation only when rendering not when polling!
+      let state = isPolling
+        ? { config, data, text }
+        : { config, data, text, ...rotation }
+
       let draft = createDraft(state)
       let next
 
       try {
-        if (!config.plugin && config.jobId) {
+        if (isPolling) {
           let job
 
           try {
@@ -113,7 +119,16 @@ export class Transcribe extends Command {
         if (status === 0 && (next.status || next.text || next.data))
           status = 1
 
-        next = { ...next, id, status, modified: new Date }
+        next = {
+          ...next,
+          id,
+          status,
+          modified: new Date
+        }
+
+        if (!isPolling) {
+          Object.assign(next, rotation)
+        }
 
         yield call(save, db, next)
         yield put(update(next))
