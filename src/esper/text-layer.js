@@ -26,11 +26,7 @@ export class TextLayer extends Container {
 
       // TODO rotation
       for (let block of alto.blocks()) {
-        this.addChild(new TextGroup(
-          Array.from(block.lines(), (line) => new TextGroup(
-            Array.from(line.strings(), (string) => new TextBox(string, offset))
-          ))
-        ))
+        this.addChild(new TextBlock(block, offset))
       }
     } else {
       this.visible = false
@@ -81,7 +77,7 @@ export class TextLayer extends Container {
       // before comparing lines,
       // or a line covering the point without any of its
       // strings covering it would shadow the line below!
-      let candidate = getString(line, point)
+      let candidate = line.getStringAt(point)
 
       if (candidate == null)
         continue
@@ -111,48 +107,70 @@ export class TextLayer extends Container {
   }
 }
 
-const getString = (line, point) => {
-  let string = null
-  let min = Infinity
 
-  for (let box of line.children) {
-    if (box.data == null || !intersects(point, box.data))
-      continue
-
-    let { dx, dy } = centerOffset(point, box.data)
-    let d = dx * dx + dy * dy
-
-    if (d < min) {
-      min = d
-      string = box.node
-    }
-  }
-
-  return string
-}
-
-
-// A block or line of text; groups its children and covers them.
-export class TextGroup extends Container {
-  constructor (children) {
+export class TextBlock extends Container {
+  constructor (node, offset) {
     super()
-
-    for (let child of children)
-      this.addChild(child)
-
-    this.data = children.reduce((bounds, child) =>
-      union(bounds, child.data), null)
+    this.sync(node, offset)
   }
 
   destroy () {
+    this.node = null
     this.data = null
     super.destroy({ children: true })
+  }
+
+  sync (node, offset) {
+    this.node = node
+    this.data = null
+
+    for (let line of node.lines()) {
+      let child = new TextLine(line, offset)
+      this.addChild(child)
+      this.data = union(this.data, child.data)
+    }
   }
 
   update (selection) {
     for (let child of this.children) {
       child.update(selection)
     }
+  }
+}
+
+
+export class TextLine extends TextBlock {
+  sync (node, offset) {
+    this.node = node
+    this.data = null
+
+    for (let string of node.strings()) {
+      let child = new TextBox(string, offset)
+      this.addChild(child)
+      this.data = union(this.data, child.data)
+    }
+  }
+
+  // Returns the string covering the given point;
+  // with ALTO overlaps, we pick the one the point lies deepest inside.
+  getStringAt (point) {
+    let string = null
+    let min = Infinity
+
+    for (let box of this.children) {
+      if (box.data == null || !intersects(point, box.data))
+        continue
+
+      let { dx, dy } = centerOffset(point, box.data)
+      let d = dx * dx + dy * dy
+
+      if (d < min) {
+        min = d
+        string = box.node
+      }
+    }
+
+    return string
   }
 }
 
