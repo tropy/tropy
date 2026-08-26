@@ -87,6 +87,41 @@ describe('Alto', () => {
     expect(onSelect.mock.calls[1].arguments[0]).to.be.empty
   })
 
+  it('selects the whole word when clicking into a string', async () => {
+    let { onSelect, strings } = setup()
+
+    // Clicking places a collapsed caret inside the string.
+    let range = document.createRange()
+    range.setStart(strings[1].firstChild, 1)
+    range.collapse(true)
+
+    let selection = document.getSelection()
+    selection.removeAllRanges()
+    selection.addRange(range)
+
+    await setImmediate()
+    expect(onSelect.mock.calls[0].arguments[0]).to.be.empty
+
+    strings[1].dispatchEvent(new MouseEvent('click', { bubbles: true }))
+
+    await setImmediate()
+    expect(content(onSelect.mock.calls[1].arguments[0]))
+      .to.eql(['two'])
+  })
+
+  it('keeps the selection when clicking after a drag', async () => {
+    let { onSelect, strings } = setup()
+
+    await selectRange(strings[0], strings[1])
+    strings[1].dispatchEvent(new MouseEvent('click', { bubbles: true }))
+
+    await setImmediate()
+
+    expect(onSelect.mock.calls).to.have.length(1)
+    expect(content(onSelect.mock.calls[0].arguments[0]))
+      .to.eql(['one', 'two'])
+  })
+
   it('ignores selections outside of the document', async () => {
     let { onSelect } = setup()
 

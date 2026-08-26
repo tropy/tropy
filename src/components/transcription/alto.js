@@ -29,6 +29,15 @@ const edge = (node, dir) => {
   return all?.length ? all[dir > 0 ? 0 : all.length - 1] : null
 }
 
+// Returns the string element containing node, if any.
+const stringAt = (root, node) => {
+  if (node == null || !root.contains(node))
+    return null
+
+  return (node.nodeType === Node.TEXT_NODE ?
+    node.parentElement : node)?.closest('.string')
+}
+
 // Resolves a range boundary to the string element it selects, looking
 // forwards (dir > 0) for the range's start and backwards for its end.
 const boundary = (root, container, offset, dir) => {
@@ -36,8 +45,7 @@ const boundary = (root, container, offset, dir) => {
     return edge(root, dir)
 
   // Boundaries inside a string select it, at any offset.
-  let inside = (container.nodeType === Node.TEXT_NODE ?
-    container.parentElement : container)?.closest('.string')
+  let inside = stringAt(root, container)
 
   if (inside != null)
     return inside
@@ -85,6 +93,20 @@ const selectedRange = (root) => {
   return (idx > jdx) ? [] : [idx, jdx]
 }
 
+// Expands a collapsed selection to the string it was placed in, so that
+// clicking into a word selects it, like double-clicking does natively.
+const selectWord = (root) => {
+  let selection = document.getSelection()
+
+  if (!selection?.isCollapsed)
+    return
+
+  let string = stringAt(root, selection.anchorNode)
+
+  if (string != null)
+    selection.selectAllChildren(string)
+}
+
 export const Alto = React.memo(({
   document: alto,
   onSelect,
@@ -116,7 +138,8 @@ export const Alto = React.memo(({
   return (
     <section
       ref={dom}
-      className={cx('alto-document', `outline-${outline}`)}>
+      className={cx('alto-document', `outline-${outline}`)}
+      onClick={() => selectWord(dom.current)}>
       {alto.blocks().map((block, bidx) => (
         <TextBlock key={bidx}>
           {block.lines().map((line, lidx) => (
