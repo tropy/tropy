@@ -1,33 +1,10 @@
 import { mock } from 'node:test'
-import { Document } from 'alto-xml'
+import { setImmediate } from 'node:timers/promises'
 import { render } from '../../support/react.js'
 import { Alto } from '#tropy/components/transcription/alto.js'
 
-const ALTO = `<?xml version="1.0" encoding="UTF-8"?>
-<alto>
-  <Layout>
-    <Page>
-      <PrintSpace>
-        <TextBlock>
-          <TextLine>
-            <String CONTENT="one"/>
-            <String CONTENT="two"/>
-          </TextLine>
-          <TextLine>
-            <String CONTENT="three"/>
-            <String CONTENT="four"/>
-          </TextLine>
-        </TextBlock>
-      </PrintSpace>
-    </Page>
-  </Layout>
-</alto>`
-
-// Native selection changes are dispatched asynchronously!
-const nextTick = () => new Promise(resolve => { setTimeout(resolve, 0) })
-
 const setup = () => {
-  let alto = Document.parse(ALTO)
+  let alto = F.alto('plain')
   let onSelect = mock.fn()
 
   let { $$ } = render(
@@ -49,7 +26,8 @@ const selectRange = async (head, tail) => {
   selection.removeAllRanges()
   selection.addRange(range)
 
-  await nextTick()
+  // Subtle: native selection changes are dispatched asynchronously!
+  await setImmediate()
 }
 
 const content = (selection) =>
@@ -90,7 +68,7 @@ describe('Alto', () => {
     selection.removeAllRanges()
     selection.addRange(range)
 
-    await nextTick()
+    await setImmediate()
 
     expect(content(onSelect.mock.calls[0].arguments[0]))
       .to.eql(['two', 'three'])
@@ -104,7 +82,7 @@ describe('Alto', () => {
       .to.eql(['two'])
 
     document.getSelection().collapseToStart()
-    await nextTick()
+    await setImmediate()
 
     expect(onSelect.mock.calls[1].arguments[0]).to.be.empty
   })
@@ -124,7 +102,7 @@ describe('Alto', () => {
       selection.removeAllRanges()
       selection.addRange(range)
 
-      await nextTick()
+      await setImmediate()
 
       expect(onSelect.mock.calls[0].arguments[0]).to.be.empty
 
