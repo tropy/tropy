@@ -25,7 +25,6 @@ export class TextLayer extends Container {
     if (alto) {
       this.visible = true
 
-      // TODO rotation
       for (let block of alto.blocks()) {
         this.addChild(new TextBlock(block, offset))
       }

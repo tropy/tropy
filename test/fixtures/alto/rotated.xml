@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  A 100x40 image transcribed while it was rotated by 90 degrees: the
+  page runs bottom to top, so the words are, in image coordinates:
+
+    one: x 10-30 (y 5-13)
+    two: x 40-70 (y 5-13)
+-->
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v4#">
+  <Layout>
+    <Page WIDTH="40" HEIGHT="100">
+      <PrintSpace>
+        <TextBlock>
+          <TextLine>
+            <String CONTENT="one" HPOS="27" VPOS="10" WIDTH="8" HEIGHT="20"/>
+            <String CONTENT="two" HPOS="27" VPOS="40" WIDTH="8" HEIGHT="30"/>
+          </TextLine>
+        </TextBlock>
+      </PrintSpace>
+    </Page>
+  </Layout>
+</alto>

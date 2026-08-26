@@ -61,6 +61,24 @@ describe('esper/TextLayer', () => {
         .to.eql(['cell', 'nested', 'plain'])
     })
 
+    // Subtle: the layer knows nothing about rotation; the document
+    // maps its own coordinates onto the image we display!
+    it('draws a rotated transcription in image coordinates', () => {
+      let alto = F.alto('rotated')
+      alto.setTransform({ width: 100, height: 40, angle: 90 })
+
+      setup(alto)
+
+      expect(text.children[0].children[0].children.map(box => box.data))
+        .to.eql([
+          { x: 10, y: 5, width: 20, height: 8 },
+          { x: 40, y: 5, width: 30, height: 8 }
+        ])
+
+      expect(selected(rect(15, 8))).to.eql(['one'])
+      expect(selected(rect(50, 8))).to.eql(['two'])
+    })
+
     it('is empty without a document', () => {
       setup(undefined)
 
