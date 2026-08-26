@@ -828,9 +828,7 @@ export default class Esper extends EventEmitter {
   }
 
   handleSelectMove () {
-    let {
-      base, data, imageBounds, modifier, target, selection, tool
-    } = this.drag.current
+    let { data, imageBounds, target, selection, tool } = this.drag.current
     let { x, y } = data.getLocalPosition(target)
 
     selection.width = x - selection.x
@@ -838,21 +836,18 @@ export default class Esper extends EventEmitter {
 
     switch (tool) {
       case ESPER.TOOL.ARROW:
-        this.selectText(
-          clamp(normalize(selection, true), imageBounds),
-          modifier,
-          base)
+        this.selectText(clamp(normalize(selection, true), imageBounds))
         break
     }
   }
 
   handleSelectStop () {
-    let { base, imageBounds, modifier, selection, tool } = this.drag.current
+    let { imageBounds, selection, tool } = this.drag.current
     selection = clamp(normalize(selection, true), imageBounds)
 
     switch (tool) {
       case ESPER.TOOL.ARROW:
-        this.selectText(selection, modifier, base)
+        this.selectText(selection)
         // Subtle: update selection ahead of time!
         this.textSelection = this.drag.current.textSelection
         this.commitTextSelection.flush()
@@ -868,8 +863,13 @@ export default class Esper extends EventEmitter {
     this.emit('select-text', selection)
   }, 75)
 
-  selectText (rect, modifier, base) {
-    let selection = this.photo.textLayer.select(rect)
+  selectText (rect) {
+    let { base, modifier, selection: origin } = this.drag.current
+
+    let selection = this.photo.textLayer.select(rect, {
+      x: origin.x,
+      y: origin.y
+    })
 
     switch (modifier) {
       case 'SHIFT':

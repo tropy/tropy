@@ -1,5 +1,5 @@
 import {
-  centerOffset, inset, intersects, intoView, textBounds, union
+  centerOffset, covers, inset, intersects, intoView, textBounds, union
 } from '#tropy/esper/util.js'
 
 describe('esper/util', () => {
@@ -106,6 +106,33 @@ describe('esper/util', () => {
     it('treats rectangles without extent as points', () => {
       expect(intersects({ x: 15, y: 15 }, rect)).to.be.true
       expect(intersects({ x: 25, y: 15 }, rect)).to.be.false
+    })
+  })
+
+  describe('covers', () => {
+    const box = { x: 0, y: 0, width: 50, height: 20 }
+
+    it('accepts rectangles covering half of each axis', () => {
+      expect(covers({ x: 0, y: 0, width: 25, height: 10 }, box)).to.be.true
+      expect(covers({ x: 30, y: 0, width: 50, height: 10 }, box)).to.be.false
+      expect(covers({ x: 0, y: 15, width: 50, height: 20 }, box)).to.be.false
+    })
+
+    it('accepts rectangles drawn inside the box', () => {
+      expect(covers({ x: 20, y: 5, width: 4, height: 4 }, box)).to.be.true
+    })
+
+    it('rejects rectangles which merely graze the box', () => {
+      expect(covers({ x: 49, y: 0, width: 31, height: 10 }, box)).to.be.false
+    })
+
+    it('rejects disjoint rectangles', () => {
+      expect(covers({ x: 60, y: 0, width: 10, height: 10 }, box)).to.be.false
+    })
+
+    it('falls back to intersection on axes without extent', () => {
+      expect(covers({ x: 49, y: 0, width: 0, height: 10 }, box)).to.be.true
+      expect(covers({ x: 51, y: 0, width: 0, height: 10 }, box)).to.be.false
     })
   })
 

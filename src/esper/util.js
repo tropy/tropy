@@ -100,13 +100,16 @@ export const textBounds = (node, offset) => {
   return offset ? move(bounds, offset) : bounds
 }
 
-export const intersects = (
-  { x: ax, y: ay, width: aw = 0, height: ah = 0 },
-  { x: bx, y: by, width: bw = 0, height: bh = 0 }
-) => (
-  ax <= bx + bw && bx <= ax + aw &&
-  ay <= by + bh && by <= ay + ah
-)
+// True if rectangle covers given fraction of the box on both axes.
+export const covers = (rect, box, fraction = 0.5) =>
+  spans(rect.x, rect.width, box.x, box.width, fraction) &&
+  spans(rect.y, rect.height, box.y, box.height, fraction)
+
+export const intersects = (a, b) =>
+  covers(a, b, 0)
+
+const spans = (a, aw = 0, b, bw = 0, fraction) =>
+  Math.min(a + aw, b + bw) - Math.max(a, b) >= Math.min(aw, bw) * fraction
 
 export function union (a, b) {
   if (a == null) return b
