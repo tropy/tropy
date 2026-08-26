@@ -1,14 +1,15 @@
 import { Container, Graphics } from 'pixi.js'
 import { ESPER } from '../constants/index.js'
-import { centerOffset, intersects, textBounds, union } from './util.js'
+import {
+  centerOffset, covers, intersects, textBounds, union
+} from './util.js'
 
 
 export class TextLayer extends Container {
   clear () {
-    if (this.children.length)
-      for (let block of this.removeChildren()) {
-        block.destroy()
-      }
+    for (let block of this.removeChildren()) {
+      block.destroy()
+    }
   }
 
   destroy () {
@@ -39,7 +40,7 @@ export class TextLayer extends Container {
     }
   }
 
-  select (rect) {
+  select (rect, anchor) {
     let selection = new Map
 
     if (rect == null)
@@ -54,9 +55,16 @@ export class TextLayer extends Container {
       return selection
     }
 
+    if (anchor != null) {
+      let string = this.getStringAt(anchor)
+
+      if (string != null)
+        selection.set(string, true)
+    }
+
     for (let line of this.lines(rect))
       for (let box of line.children) {
-        if (box.data != null && intersects(rect, box.data))
+        if (box.data != null && covers(rect, box.data))
           selection.set(box.node, true)
       }
 
@@ -64,8 +72,7 @@ export class TextLayer extends Container {
   }
 
   // Returns the single string covering the given point.
-  // Where several do, the boxes in the ALTO overlap:
-  // we resolve the ambiguity along one axis at a time,
+  // With ALTO overlaps, we resolve the ambiguity along one axis at a time,
   // by horizontal position within each line,
   // then by vertical proximity between the candidate lines.
   getStringAt (point) {
@@ -73,17 +80,11 @@ export class TextLayer extends Container {
     let min = Infinity
 
     for (let line of this.lines(point)) {
-      // Subtle: pick the best string of each line
-      // before comparing lines,
-      // or a line covering the point without any of its
-      // strings covering it would shadow the line below!
       let candidate = line.getStringAt(point)
-
       if (candidate == null)
         continue
 
-      let { dy } = centerOffset(point, line.data)
-      dy = Math.abs(dy)
+      let dy = Math.abs(centerOffset(point, line.data).dy)
 
       if (dy < min) {
         min = dy
@@ -203,13 +204,10 @@ export class TextBox extends Graphics {
     this.selected = selected
     this.clear()
 
-    if (!selected || this.data == null)
+    if (!selected || !this.data?.width || !this.data?.height)
       return
 
     let { x, y, width, height } = this.data
-
-    if (!width || !height)
-      return
 
     this
       .rect(x, y, width, height)
