@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Two blocks of one word each, far apart:
+
+    near: x   0-10  (y   0-10)
+    far:  x 100-110 (y 100-110)
+-->
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v4#">
+  <Layout>
+    <Page WIDTH="200" HEIGHT="200">
+      <PrintSpace>
+        <TextBlock>
+          <TextLine>
+            <String CONTENT="near" HPOS="0" VPOS="0" WIDTH="10" HEIGHT="10"/>
+          </TextLine>
+        </TextBlock>
+        <TextBlock>
+          <TextLine>
+            <String CONTENT="far" HPOS="100" VPOS="100" WIDTH="10" HEIGHT="10"/>
+          </TextLine>
+        </TextBlock>
+      </PrintSpace>
+    </Page>
+  </Layout>
+</alto>

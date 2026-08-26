@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ALTO nests text blocks inside composed blocks (tables, adverts, ...),
+  arbitrarily deep; alto-xml flattens these away for us.
+
+    cell:   x 0-40 (y  0-20)
+    nested: x 0-40 (y 30-50)
+    plain:  x 0-40 (y 60-80)
+-->
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v4#">
+  <Layout>
+    <Page WIDTH="100" HEIGHT="100">
+      <PrintSpace>
+        <ComposedBlock TYPE="table" HPOS="0" VPOS="0" WIDTH="40" HEIGHT="50">
+          <TextBlock>
+            <TextLine>
+              <String CONTENT="cell" HPOS="0" VPOS="0" WIDTH="40" HEIGHT="20"/>
+            </TextLine>
+          </TextBlock>
+          <ComposedBlock HPOS="0" VPOS="30" WIDTH="40" HEIGHT="20">
+            <TextBlock>
+              <TextLine>
+                <String CONTENT="nested" HPOS="0" VPOS="30" WIDTH="40" HEIGHT="20"/>
+              </TextLine>
+            </TextBlock>
+          </ComposedBlock>
+        </ComposedBlock>
+        <TextBlock>
+          <TextLine>
+            <String CONTENT="plain" HPOS="0" VPOS="60" WIDTH="40" HEIGHT="20"/>
+          </TextLine>
+        </TextBlock>
+      </PrintSpace>
+    </Page>
+  </Layout>
+</alto>

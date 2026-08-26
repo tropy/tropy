@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  A block without lines, a line without strings, and a string without
+  coordinates: none of them can be drawn or hit.
+
+    here: x 0-10 (y 0-10)
+-->
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v4#">
+  <Layout>
+    <Page WIDTH="100" HEIGHT="100">
+      <PrintSpace>
+        <TextBlock/>
+        <TextBlock>
+          <TextLine/>
+          <TextLine HPOS="0" VPOS="0" WIDTH="10" HEIGHT="10">
+            <String CONTENT="none"/>
+            <String CONTENT="here" HPOS="0" VPOS="0" WIDTH="10" HEIGHT="10"/>
+          </TextLine>
+        </TextBlock>
+      </PrintSpace>
+    </Page>
+  </Layout>
+</alto>
