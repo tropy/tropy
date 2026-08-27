@@ -38,9 +38,12 @@ export class Server {
       return { win, path, id: urlId(path) }
     }
 
+    // mimic urlId() treatment
+    let encoded = encodeURIComponent(id.toWellFormed().normalize())
+
     // Several projects can share a URL id when their files have the same
     // basename; resolve to the most recent.
-    let matches = this.app.state.recent.filter(f => urlId(f) === id)
+    let matches = this.app.state.recent.filter(f => urlId(f) === encoded)
 
     if (matches.length === 0)
       throw new HttpError({ status: 404, body: `unknown project: ${id}` })
@@ -56,7 +59,7 @@ export class Server {
     return {
       win,
       path,
-      id,
+      id: encoded,
       ambiguous: matches.length > 1
     }
   }
