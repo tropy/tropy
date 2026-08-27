@@ -644,9 +644,7 @@ describe('util', () => {
       expect(fn.mock.calls[1].arguments).to.eql(['b'])
     })
   })
-})
 
-describe('url', () => {
   describe('urlId', () => {
     it('derives the id from the file basename', () => {
       expect(util.urlId('/path/to/My Project.tpy')).to.equal('My%20Project')
