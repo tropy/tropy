@@ -250,6 +250,7 @@ const exports = {
 
       let { code, stderr } = exec(cmd.join(' '), {
         silent,
+        cwd: out,
         env: {
           ...process.env,
           ARCH: arch,
@@ -269,7 +270,7 @@ const exports = {
     if (!updateInfo)
       return [output]
 
-    check(test('-f', `${output}.zsync`), 'missing zsync file: install zsync')
+    check(test('-f', `${output}.zsync`), `missing ${output}.zsync`)
     return [output, `${output}.zsync`]
   },
 
