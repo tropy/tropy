@@ -178,13 +178,12 @@
     "redux-saga": "^1.1.3",
     "sanitize-filename": "^1.6.3",
     "semver": "^7.3.4",
-    "sharp": "^0.35.1",
+    "sharp": "0.35.3",
     "sqlite3": "^6.0.1",
     "transducers.js": "^0.3.2",
     "write-file-atomic": "^8.0.0"
   },
   "allowScripts": {
-    "sharp@0.34.5": true,
     "sqlite3@6.0.1": true,
     "better-sqlite3@12.11.1": true,
     "fsevents@2.3.3": true,
