@@ -87,54 +87,56 @@ class Item extends React.PureComponent {
       <div
         className={cx(
           'item-container',
-          settings.layout,
-          `${settings.maximize}-maximized`
+          settings.layout
         )}
         onContextMenu={this.handleContextMenu}>
-        {settings.maximize !== 'notepad' && (
-          <Resizable
-            {...this.getResizableProps()}
-            isBuffered
-            isRelative
-            skip={settings.maximize === 'esper'}
-            value={this.size}
-            onChange={this.handleEsperResize}>
-            <Esper
-              {...this.props.view}
-              cache={this.props.cache}
-              mode={this.props.view.mode || settings.zoomMode}
-              hasOverlayToolbar={this.hasOverlayToolbars}
-              hasSideBySideLayout={this.hasSideBySideLayout}
-              invertScroll={settings.invertScroll}
-              invertZoom={settings.invertZoom}
-              isDisabled={this.props.isDisabled || !this.props.photo}
-              isReadOnly={this.props.isDisabled || this.props.isReadOnly}
-              isPanelVisible={this.props.esper.panel}
-              keymap={this.props.keymap.Esper}
-              photo={this.props.photo}
-              selection={this.props.selection}
-              selections={this.props.selections}
-              tool={this.props.esper.tool}
-              transcription={this.props.transcription}
-              overlay={this.props.esper.overlay}
-              overlayPanel={this.props.esper.overlayPanel}
-              onContextMenu={this.handleContextMenu}
-              onChange={this.handleEsperChange}
-              onMaximize={this.handleMaximize}
-              onPhotoError={this.props.onPhotoError}
-              onSelect={this.props.onPhotoSelect}
-              onSelectionCreate={this.props.onSelectionCreate}/>
-          </Resizable>
-        )}
-        {settings.maximize !== 'esper' && (
-          <NotePad
-            note={this.props.note}
-            hasTitlebar={this.hasSideBySideLayout || settings.maximize === 'notepad'}
-            isDisabled={this.props.isDisabled || !this.props.photo}
+        <Resizable
+          {...this.getResizableProps()}
+          isBuffered
+          isRelative
+          isDisabled={settings.maximize === 'notepad'}
+          isMaximized={settings.maximize === 'esper'}
+          value={this.size}
+          onChange={this.handleEsperResize}>
+          <Esper
+            {...this.props.view}
+            cache={this.props.cache}
+            mode={this.props.view.mode || settings.zoomMode}
+            hasOverlayToolbar={this.hasOverlayToolbars}
+            hasSideBySideLayout={this.hasSideBySideLayout}
+            invertScroll={settings.invertScroll}
+            invertZoom={settings.invertZoom}
+            isDisabled={
+              this.props.isDisabled || !this.props.photo || settings.maximize === 'notepad'
+            }
+            isMaximized={settings.maximize === 'esper'}
             isReadOnly={this.props.isDisabled || this.props.isReadOnly}
-            keymap={this.props.keymap.NotePad}
-            onContextMenu={this.handleContextMenu}/>
-        )}
+            isPanelVisible={this.props.esper.panel}
+            keymap={this.props.keymap.Esper}
+            photo={this.props.photo}
+            selection={this.props.selection}
+            selections={this.props.selections}
+            tool={this.props.esper.tool}
+            transcription={this.props.transcription}
+            overlay={this.props.esper.overlay}
+            overlayPanel={this.props.esper.overlayPanel}
+            onContextMenu={this.handleContextMenu}
+            onChange={this.handleEsperChange}
+            onMaximize={this.handleMaximize}
+            onPhotoError={this.props.onPhotoError}
+            onSelect={this.props.onPhotoSelect}
+            onSelectionCreate={this.props.onSelectionCreate}/>
+        </Resizable>
+        <NotePad
+          note={this.props.note}
+          hasTitlebar={this.hasSideBySideLayout || settings.maximize === 'notepad'}
+          isMaximized={settings.maximize === 'notepad'}
+          isDisabled={
+            this.props.isDisabled || !this.props.photo || settings.maximize === 'esper'
+          }
+          isReadOnly={this.props.isDisabled || this.props.isReadOnly}
+          keymap={this.props.keymap.NotePad}
+          onContextMenu={this.handleContextMenu}/>
       </div>
     )
   }

@@ -38,6 +38,7 @@ export const EsperContainer = React.forwardRef(({
         mouseover,
         'overlay-mode': hasOverlayToolbar
       })}
+      inert={isDisabled}
       onMouseDown={handleMouseDown}
       ref={onMount}
       tabIndex={isDisabled ? -1 : tabIndex}>

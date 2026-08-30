@@ -32,6 +32,7 @@ export class Resizable extends React.Component {
   get classes () {
     return ['resizable', this.props.className, {
       disabled: this.props.isDisabled,
+      maximized: this.props.isMaximized,
       resizing: this.state.isResizing
     }]
   }
@@ -172,7 +173,7 @@ export class Resizable extends React.Component {
   }
 
   renderHandle () {
-    return this.props.isDisabled ? null : (
+    return (this.props.isDisabled || this.props.isMaximized) ? null : (
       <Draggable
         onDragStart={this.handleDragStart}
         onDrag={this.handleDrag}
@@ -196,10 +197,11 @@ export class Resizable extends React.Component {
   }
 
   static defaultProps = {
+    isMaximized: false,
     min: 0,
     node: 'div',
-    skip: false,
     onChange: noop,
-    onResize: noop
+    onResize: noop,
+    skip: false
   }
 }
