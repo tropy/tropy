@@ -38,7 +38,7 @@ export class Export extends Command {
             copy({ html: data, text: data })
           else
             copy({
-              html: mapNotes(notes, 'html', format, settings.export.note),
+              html: mapNotes(notes, 'html', settings.export.note),
               text: data
             })
           break
@@ -77,7 +77,7 @@ function mapNotes (notes, format, opts) {
 
 function formatFor (target, opts) {
   if (target === ':clipboard:')
-    return opts.copy
+    return opts.copyFormat
 
   switch (extname(target)) {
     case '.json':
