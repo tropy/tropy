@@ -1109,7 +1109,9 @@ export class Tropy extends EventEmitter {
   copyProtocolURL (project, { item, photo } = {}) {
     if (!project) return
 
-    clipboard.write({ text: protocolURL(project.path, { item, photo }) })
+    clipboard
+      .writeText(protocolURL(project.path, { item, photo }))
+      .catch(err => warn({ err }, 'failed to copy protocol url'))
   }
 
   async handleProtocolRequest (url) {
@@ -1207,7 +1209,9 @@ export class Tropy extends EventEmitter {
       .then(({ response }) => {
         switch (response) {
           case 1:
-            clipboard.write({ text: crashReport(e) })
+            clipboard
+              .writeText(crashReport(e))
+              .catch(err => warn({ err }, 'failed to copy crash report'))
             break
           case 2:
             shell.show(this.log)

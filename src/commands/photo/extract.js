@@ -46,7 +46,7 @@ export class Extract extends Command {
       switch (target) {
         case ':clipboard:': {
           let png = yield call(toBuffer, 'png', buffer, { raw })
-          copy({ image: png })
+          copy({ image: png, type: MIME.PNG })
           break
         }
         case ':plugin:': {

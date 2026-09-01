@@ -10,7 +10,7 @@ import { debug, error, trace, warn } from '../common/log.js'
 import { darwin, linux, win32 } from '../common/os.js'
 import { channel } from '../common/release.js'
 import { Resource, Icon, View } from './res.js'
-import { SASS } from '../constants/index.js'
+import { MIME, SASS } from '../constants/index.js'
 
 import {
   array,
@@ -25,8 +25,8 @@ import {
   app,
   BrowserWindow,
   clipboard,
+  ClipboardItem,
   ipcMain as ipc,
-  nativeImage,
   nativeTheme,
   screen,
   systemPreferences as prefs
@@ -356,14 +356,25 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  handleClipboard (method, data) {
-    switch (method) {
-      case 'write':
-        if (data.image)
-          clipboard.writeImage(nativeImage.createFromBuffer(data.image))
-        else
-          clipboard.write(data)
-        break
+  async handleClipboard (method, data) {
+    try {
+      switch (method) {
+        case 'write': {
+          let item = {}
+
+          if (data.text != null)
+            item[MIME.TEXT] = data.text
+          if (data.html != null)
+            item[MIME.HTML] = data.html
+          if (data.image != null)
+            item[data.type] = new Blob([data.image], { type: data.type })
+
+          await clipboard.write([new ClipboardItem(item)])
+          break
+        }
+      }
+    } catch (err) {
+      warn({ err }, `failed to ${method} clipboard`)
     }
   }
 

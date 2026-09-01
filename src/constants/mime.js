@@ -8,6 +8,7 @@ export default {
   GIF: 'image/gif',
   HEIC: 'image/heic',
   HEIF: 'image/heif',
+  HTML: 'text/html',
   JPG: 'image/jpeg',
   JPEG: 'image/jpeg',
   JP2: 'image/jp2',
@@ -19,6 +20,7 @@ export default {
   PS: 'application/postscript',
   RAW: 'image/x-dcraw',
   SVG: 'image/svg+xml',
+  TEXT: 'text/plain',
   TIF: 'image/tiff',
   TIFF: 'image/tiff',
   WEBP: 'image/webp'
