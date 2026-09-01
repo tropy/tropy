@@ -16,6 +16,7 @@ export default {
   JP2: 'image/jp2',
   J2K: 'image/jpeg2000',
   JPX: 'image/jpx',
+  JXL: 'image/jxl',
   PDF: 'application/pdf',
   PNG: 'image/png',
   PS: 'application/postscript',
