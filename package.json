@@ -97,7 +97,7 @@
     "chai-dom": "^1.8.2",
     "commander": "^15.0.0",
     "detect-libc": "^2.0.1",
-    "electron": "^43.1.0",
+    "electron": "^44.1.0",
     "electron-winstaller": "^5.0.0",
     "eslint": "^10.8.0",
     "eslint-plugin-react": "^7.37.5",
