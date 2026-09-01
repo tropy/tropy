@@ -20,7 +20,7 @@ export function magic (buffer, ext = '') {
       return MIME.AVIF
     if (isHEIC(buffer))
       return MIME.HEIC
-    if (isJP2(buffer) || (/^\.j(p2|px|2k)$/i).test(ext))
+    if (isJP2(buffer) || (/^\.j(p2|px|2k|2c)$/i).test(ext))
       return MIME.JP2
     if (isJXL(buffer))
       return MIME.JXL
@@ -50,7 +50,8 @@ const isJPEG = (buffer) =>
 const isJP2 = (buffer) =>
   check(buffer, [
     0x00, 0x00, 0x00, 0x0C, 0x6A, 0x50, 0x20, 0x20, 0x0D, 0x0A, 0x87, 0x0A
-  ])
+  ]) ||
+  check(buffer, [0xFF, 0x4F, 0xFF, 0x51])
 
 const isJXL = (buffer) =>
   check(buffer, [0xFF, 0x0A]) ||
