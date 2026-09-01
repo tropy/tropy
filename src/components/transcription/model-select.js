@@ -30,6 +30,7 @@ export const MODELS = [
   { id: 37855, name: 'Noscemus GM 5', languages: ['deu', 'grc', 'lat'] },
   { id: 35861, name: 'German Combined M1', languages: ['deu'] },
   { id: 55158, name: 'The Swedish Lion I', languages: ['swe'] },
+  { id: 44949, name: 'General Portuguese M1', languages: ['por'] },
 ]
 
 export const ModelSelect = ({
