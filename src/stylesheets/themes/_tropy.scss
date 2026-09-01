@@ -51,15 +51,15 @@
   --light-10: #000;    // Black
 
   --dark-0:  #000;     // Black
-  --dark-1:  #212121;  // 87% Border search field, Esper bg
-  --dark-2:  #292929;  // 84% Inactive tab, tile expansion
-  --dark-3:  #2f2f2f;  // 82% Body
-  --dark-4:  #333;     // 80% Sidebar bg, panel bg
+  --dark-1:  #1c1c1c;  // 89% Border search field
+  --dark-2:  #242424;  // 86% Inactive tab, tile expansion (Esper bg 87%)
+  --dark-3:  #292929;  // 84% Body
+  --dark-4:  #2e2e2e;  // 82% Sidebar bg, panel bg
   --dark-5:  #404040;  // 75% Active state bg/border, slider track
-  --dark-6:  #555;     // Panel heading color, slider range
-  --dark-7:  #777;     // Icon color, sidebar headings
-  --dark-8:  #999;     // Softened text, active icon
-  --dark-9:  #bbb;     // Text color
+  --dark-6:  #777;     // Panel heading color, slider range
+  --dark-7:  #999;     // Icon color, sidebar headings
+  --dark-8:  #bbb;     // Softened text, active icon
+  --dark-9:  #ddd;     // Text color
   --dark-10: #fff;     // White
 }
 
@@ -333,8 +333,8 @@ $tab-color:                              --scheme(var(--light-7),            tin
 $tab-bg:                                 --scheme(var(--light-2),            var(--dark-2));
 $tab-selected-color:                     --scheme(var(--light-9),            var(--dark-9));
 $tab-selected-bg:                        --scheme(var(--light-1),            var(--dark-4));
-$tab-selected-border-color:              --scheme(var(--light-3),            var(--dark-1));
-$tab-active-bg:                          --scheme(var(--light-3),            var(--dark-1));
+$tab-selected-border-color:              --scheme(var(--light-3),            tint(var(--dark-1), 2%));
+$tab-active-bg:                          --scheme(var(--light-3),            tint(var(--dark-1), 2%));
 $tab-active-border-color:                $tab-active-bg;
 $tab-nested-focus-bg:                    --scheme(var(--light-3),            var(--dark-2));
 $tab-nested-focus-selected-bg:           --scheme(shade(var(--light-1), 4%), tint(var(--dark-4), 2%));
@@ -345,7 +345,7 @@ $_template-select-nested-focus-border-light: shade(var(--light-3), 4%);
 $_template-select-nested-focus-bg-light:     shade(var(--light-1), 4%);
 
 $label-color:                           --scheme(var(--light-6),                              var(--dark-7));
-$template-select-border:                --scheme(var(--light-3),                              var(--dark-1));
+$template-select-border:                --scheme(var(--light-3),                              tint(var(--dark-1), 2%));
 $template-select-nested-focus-border:   --scheme($_template-select-nested-focus-border-light, tint(var(--dark-1), 2%));
 $template-select-blurred-border-darwin: --scheme($_template-select-nested-focus-border-light, shade(var(--dark-1), 4%));
 $template-select-bg:                    --scheme(var(--light-1),                              var(--dark-4));
@@ -434,9 +434,9 @@ $form-slider-handle-bg:                 --scheme(tint(var(--primary), 50%),    a
 $_esper-bg-light:           shade(var(--light-1), 4%);
 $_esper-input-border-light: shade(var(--light-2), 10%);
 
-$esper-bg:                               --scheme($_esper-bg-light,                       var(--dark-1));
+$esper-bg:                               --scheme($_esper-bg-light,                       shade(var(--dark-2), 5%)); // #222
 $esper-overlay-color:                    --scheme(alpha(var(--light-10), 86%),            alpha(var(--dark-10), 69%));
-$esper-shadow:                           --scheme(alpha(var(--light-10), 10%),            alpha(var(--dark-0), 80%));
+$esper-shadow:                           --scheme(alpha(var(--light-10), 10%),            alpha(var(--dark-0), 100%));
 $esper-btn-icon-hover-bg:                --scheme(shade(var(--light-1), 9%),              var(--dark-3));
 $esper-btn-icon-active-bg:               --scheme(shade(var(--light-1), 14%),             var(--dark-5));
 $esper-slider-handle-bg:                 --scheme(var(--light-1),                         $_slider-handle-bg-dark);
@@ -456,7 +456,7 @@ $esper-checkbox-disabled-bg:             --scheme(shade(var(--light-2), 4%),    
 $esper-checkbox-disabled-border:         --scheme($_esper-input-border-light,             alpha(var(--dark-5), 50%));
 $esper-checkbox-checked-active-bg:       --scheme($_checkbox-checked-active-bg-light,     shade(var(--dark-7), 5%));
 $esper-checkbox-checked-active-border:   --scheme($_checkbox-checked-active-border-light, shade(var(--dark-7), 5%));
-$esper-btn-default-bg:                   --scheme($_esper-bg-light,                       var(--dark-3));
+$esper-btn-default-bg:                   --scheme($_esper-bg-light,                       tint(var(--dark-2), 6%));
 $esper-btn-default-border:               --scheme(shade(var(--light-2), 10%),             transparent);
 $esper-btn-default-active-bg:            --scheme(shade(var(--light-1), 8%),              var(--dark-2));
 $esper-error-color:                      --scheme(var(--light-8),                         var(--dark-8));
