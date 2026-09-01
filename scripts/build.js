@@ -18,6 +18,7 @@ import { program } from 'commander'
 import { packager } from '@electron/packager'
 import { minimatch } from 'minimatch'
 import { ROOT, ICONS, error, say, setLogSymbol } from './util.js'
+import IMAGE from '../src/constants/image.js'
 import * as legal from './legal.js'
 
 import {
@@ -348,6 +349,7 @@ export function desktop ({
     'application/vnd.tropy.mtpy',
     'application/vnd.tropy.tpy',
     'application/vnd.tropy.ttp',
+    ...IMAGE.ASSOCIATIONS,
     'x-scheme-handler/tropy'
   ]
 } = {}) {

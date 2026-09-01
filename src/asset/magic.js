@@ -16,11 +16,11 @@ export function magic (buffer, ext = '') {
       return MIME.SVG
     if (isWebP(buffer))
       return MIME.WEBP
-    if (isAVIF(buffer) || ext.toLowerCase() === '.avif')
+    if (isAVIF(buffer) || AVIF.EXT.test(ext))
       return MIME.AVIF
     if (isHEIC(buffer))
       return MIME.HEIC
-    if (isJP2(buffer) || (/^\.j(p2|px|2k|2c)$/i).test(ext))
+    if (isJP2(buffer) || JP2.EXT.test(ext))
       return MIME.JP2
     if (isJXL(buffer))
       return MIME.JXL
@@ -42,7 +42,7 @@ const isHEIC = (buffer) =>
   (/^ftyp((hei|hev)[cms]|heix|mif1)$/).test(buffer.toString('ascii', 4, 12))
 
 const isAVIF = (buffer) =>
-  (/^ftyp(avif)$/).test(buffer.toString('ascii', 4, 12))
+  (/^ftyp(avif|avis)$/).test(buffer.toString('ascii', 4, 12))
 
 const isJPEG = (buffer) =>
   check(buffer, [0xFF, 0xD8, 0xFF])
@@ -84,6 +84,14 @@ const isSVG = (buffer) =>
 
 const check = (buffer, bytes, offset = 0) =>
   buffer.slice(offset, offset + bytes.length).compare(Buffer.from(bytes)) === 0
+
+const AVIF = {
+  EXT: /^\.avifs?$/i
+}
+
+const JP2 = {
+  EXT: /^\.(jp2|jpg2|jpf|jpx|j2k|j2c|jpc)$/i
+}
 
 const SVG = {
 
