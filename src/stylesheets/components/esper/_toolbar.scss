@@ -109,11 +109,7 @@
         }
 
         &:has(.icon-minimize) {
-          background-color: $icon-color;
-
-          .icon-minimize {
-            color: $esper-bg;
-          }
+          background-color: transparent;
         }
       }
 
@@ -194,6 +190,10 @@
             .icon {
               color: $esper-toolbar-overlay-btn-active-color;
             }
+          }
+
+          &:has(.icon-minimize) {
+            background-color: transparent;
           }
         }
 

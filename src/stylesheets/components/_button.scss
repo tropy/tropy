@@ -86,6 +86,7 @@
   display: inline-flex;
   background-color: $btn-icon-bg;
   padding: $btn-icon-padding;
+  overflow: hidden;
 
   .icon {
     .btn-icon:active :is(&),

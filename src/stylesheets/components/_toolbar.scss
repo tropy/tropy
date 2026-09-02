@@ -130,15 +130,7 @@
     }
 
     &:has(.icon-minimize) {
-      background-color: $icon-color;
-
-      .icon-minimize {
-        color: $body-bg;
-
-        .btn-icon:active :is(&) {
-          color: $body-bg;
-        }
-      }
+      background-color: transparent;
     }
   }
 
