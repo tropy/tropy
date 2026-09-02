@@ -334,7 +334,7 @@ $tab-bg:                                 --scheme(var(--light-2),            var
 $tab-selected-color:                     --scheme(var(--light-9),            var(--dark-9));
 $tab-selected-bg:                        --scheme(var(--light-1),            var(--dark-4));
 $tab-selected-border-color:              --scheme(var(--light-3),            tint(var(--dark-1), 2%));
-$tab-active-bg:                          --scheme(var(--light-3),            tint(var(--dark-1), 2%));
+$tab-active-bg:                          --scheme(var(--light-3),            var(--dark-1));
 $tab-active-border-color:                $tab-active-bg;
 $tab-nested-focus-bg:                    --scheme(var(--light-3),            var(--dark-2));
 $tab-nested-focus-selected-bg:           --scheme(shade(var(--light-1), 4%), tint(var(--dark-4), 2%));
