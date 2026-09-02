@@ -10,7 +10,7 @@ export function useEventHandler (
   target,
   name,
   callback,
-  passive = true,
+  passive = false,
   capture = false) {
 
   let handler = useEvent(callback)
