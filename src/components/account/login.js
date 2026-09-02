@@ -50,7 +50,7 @@ export function Login ({ ref }) {
             tabIndex={0}/>
         </FormElement>
         <FormElement id="prefs.account.password" isCompact>
-          <div>
+          <div className="form-link-container">
             <Link url={`${account.url}/password/forgot`} className="form-link">
               <FormattedMessage id="prefs.account.forgot"/>
             </Link>

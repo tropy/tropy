@@ -72,7 +72,7 @@ fieldset {
   }
 }
 
-div:has(> .form-link) {
+.form-link-container {
   position: absolute;
   top: 0;
   right: 0;
