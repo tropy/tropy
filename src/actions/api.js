@@ -77,7 +77,7 @@ export default {
   note: {
     create (payload, meta) {
       return {
-        type: API.NOTE.CREATE,
+        type: NOTE.CREATE,
         payload,
         meta: {
           cmd: 'project',

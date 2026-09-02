@@ -1,4 +1,4 @@
-import { API, NOTE, PROJECT } from '../constants/index.js'
+import { NOTE, PROJECT } from '../constants/index.js'
 import { insert } from './util.js'
 
 const init = {}
@@ -9,7 +9,6 @@ export function notes (state = init, { type, payload, error, meta }) {
     case PROJECT.OPEN:
       return { ...init }
 
-    case API.NOTE.CREATE:
     case NOTE.CREATE:
     case NOTE.LOAD:
     case NOTE.RESTORE:

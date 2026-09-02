@@ -11,7 +11,7 @@ import { fromHTML } from '../../editor/serialize.js'
 export class Create extends Command {
   *exec () {
     let { db } = this.options
-    let { state, text, photo, selection } = this.action.payload
+    let { html, state, text, photo, selection } = this.action.payload
 
     if (photo == null) {
       ({ photo, selection } = yield select(({ nav }) => nav))
@@ -21,7 +21,7 @@ export class Create extends Command {
     let id = (selection != null) ? selection : photo
 
     if (state == null) {
-      ({ state, text } = fromHTML(text))
+      ({ state, text } = fromHTML(html ?? text))
     }
 
     let note = yield call(db.transaction, tx =>

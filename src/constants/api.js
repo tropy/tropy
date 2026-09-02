@@ -20,7 +20,6 @@ export default {
   },
 
   NOTE: {
-    CREATE: 'api.note.create',
     SHOW: 'api.note.show'
   },
 
