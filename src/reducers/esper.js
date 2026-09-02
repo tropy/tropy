@@ -2,7 +2,8 @@ import { merge } from '../common/util.js'
 import { ESPER } from '../constants/index.js'
 
 const init = {
-  view: {}
+  view: {},
+  text: {}
 }
 
 export function esper (state = init, { type, payload }) {
