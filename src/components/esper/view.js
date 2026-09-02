@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useImperativeHandle } from 'react'
+import React, { useEffect, useImperativeHandle, useLayoutEffect, useRef }
+  from 'react'
 import Esper from '../../esper/index.js'
 import { useResizeObserver } from '../../hooks/use-resize-observer.js'
 
@@ -19,16 +20,17 @@ export const EsperView = React.forwardRef(({
   textSelection
 }, ref) => {
 
-  let handleResize = useResizeObserver(onResize)
+  let dom = useRef()
 
-  let onMount = useCallback((node) => {
-    if (node) {
-      Esper.instance.mount(node)
-    } else {
+  useLayoutEffect(() => {
+    Esper.instance.mount(dom.current)
+
+    return () => {
       Esper.instance.unmount()
     }
-    handleResize(node)
-  }, [handleResize])
+  }, [])
+
+  useResizeObserver(dom, onResize)
 
   useImperativeHandle(ref, () => (Esper.instance), [])
 
@@ -80,7 +82,7 @@ export const EsperView = React.forwardRef(({
 
   return (
     <div className="esper-view-container">
-      <div ref={onMount} className="esper-view"/>
+      <div ref={dom} className="esper-view"/>
       {children}
     </div>
   )
