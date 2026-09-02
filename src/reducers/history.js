@@ -1,8 +1,16 @@
 import { HISTORY } from '../constants/index.js'
 
 
+function target ({ payload }) {
+  return payload.id ?? payload.item ?? payload.photo
+}
+
 function canMerge (a, b) {
-  return a.type === b.type && a.payload.id === b.payload.id
+  if (a.type !== b.type)
+    return false
+
+  let id = target(a)
+  return id != null && id === target(b)
 }
 
 export function history (state = { past: [], future: [] }, {
