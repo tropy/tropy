@@ -1,4 +1,4 @@
-import { API, ITEM, METADATA, NOTE, TAG } from '../constants/index.js'
+import { API, ITEM, METADATA, NOTE, PHOTO, TAG } from '../constants/index.js'
 import { array } from '../common/util.js'
 
 export default {
@@ -148,12 +148,17 @@ export default {
 
 
   photo: {
-    extract (payload, meta) {
+    extract ({ photo, selection, format }, meta) {
       return {
-        type: API.PHOTO.EXTRACT,
-        payload,
+        type: PHOTO.EXTRACT,
+        payload: {
+          id: photo,
+          selection
+        },
         meta: {
           cmd: 'project',
+          target: ':buffer:',
+          format,
           ...meta
         }
       }

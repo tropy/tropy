@@ -19,16 +19,23 @@ export class Extract extends Command {
     try {
       let { cache } = this.options
       let { meta, payload } = this.action
-      var { target, plugin } = meta
+      var { format = 'png', target, plugin } = meta
 
       if (plugin)
         target = ':plugin:'
 
-      let [photo, selection, filename] = yield select(state => ([
-        state.photos[payload.id],
-        state.selections[payload.selection],
-        getSuggestedFilename(state, payload)
-      ]))
+      let { photo, selection, filename } = yield select(state => {
+        let selection = state.selections[payload.selection]
+
+        return {
+          selection,
+          photo: state.photos[payload.id ?? selection?.photo],
+          filename: target ? null : getSuggestedFilename(state, payload)
+        }
+      })
+
+      if (photo == null)
+        return
 
       if (!target)
         target = yield call(save.image, { filename })
@@ -44,6 +51,10 @@ export class Extract extends Command {
       })
 
       switch (target) {
+        case ':buffer:': {
+          let data = yield call(toBuffer, format, buffer, { raw })
+          return { data, format }
+        }
         case ':clipboard:': {
           let png = yield call(toBuffer, 'png', buffer, { raw })
           copy({ image: png, type: MIME.PNG })
@@ -72,6 +83,10 @@ export class Extract extends Command {
 
     } catch (err) {
       warn({ err }, `failed to extract image #${image?.id} to ${target}`)
+
+      if (target === ':buffer:')
+        throw err
+
       fail(err, this.action.type)
     }
   }

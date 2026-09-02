@@ -1,51 +1,7 @@
-import { call, select } from 'redux-saga/effects'
+import { select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { API } from '../../constants/index.js'
-import { Cache } from '../../common/cache.js'
-import { Rotation } from '../../common/iiif.js'
 import { pluck } from '../../common/util.js'
-import Esper from '../../esper/index.js'
-import { toBuffer } from '../../image/sharp.js'
-
-
-export class PhotoExtract extends Command {
-  *exec () {
-    let { cache } = this.options
-    let { payload } = this.action
-
-    let { photos, selections } = yield select()
-    let photo, selection
-
-    if (payload.selection) {
-      selection = selections[payload.selection]
-      if (selection == null) return
-      photo = photos[selection.photo]
-
-    } else {
-      photo = photos[payload.photo]
-    }
-
-    if (photo == null) return
-
-    let image = selection || photo
-    let src = Cache.url(cache.root, 'full', photo)
-
-    let { buffer, ...raw } = yield call(Esper.instance.extract, src, {
-      ...image,
-      ...Rotation.addExifOrientation(image, photo).toJSON()
-    })
-
-    let format = payload.format || 'png'
-    let data = yield call(toBuffer, format, buffer, { raw })
-
-    return {
-      data,
-      format
-    }
-  }
-}
-
-PhotoExtract.register(API.PHOTO.EXTRACT)
 
 
 export class PhotoFind extends Command {

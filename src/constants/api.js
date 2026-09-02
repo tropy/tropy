@@ -5,7 +5,6 @@ export default {
   },
 
   PHOTO: {
-    EXTRACT: 'api.photo.extract',
     FIND: 'api.photo.find',
     SHOW: 'api.photo.show'
   },
