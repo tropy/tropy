@@ -359,7 +359,7 @@ const project = {
     async remove (ctx) {
       let { params, request, rsvp } = ctx
 
-      let { payload } = await rsvp('project',
+      let { payload } = await rsvp(
         request.body.tag ?
           act.tag.remove({ id: params.id, tags: request.body.tag }) :
           act.tag.clear({ id: params.id }))
@@ -439,7 +439,10 @@ export function create ({
 
     ctx.projectId = resolved
     ctx.projectPath = path
-    ctx.rsvp = (action) => rsvp(win, action)
+    ctx.rsvp = (action) => rsvp(win, {
+      ...action,
+      meta: { ...action.meta, silent: true }
+    })
 
     return next()
   })

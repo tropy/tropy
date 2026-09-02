@@ -80,7 +80,7 @@ export class Import extends ImportCommand {
         } catch (err) {
           warn({ err }, `failed to import "${file}"`)
 
-          if (++failures < maxFail) {
+          if (++failures < maxFail && !this.action.meta.silent) {
             fail(err, this.action.type)
           }
         }

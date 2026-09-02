@@ -29,7 +29,7 @@ export function *exec (options, action) {
 
     if (cmd.isReversible)
       yield put(history.tick(cmd.history))
-    if (cmd.error)
+    if (cmd.error && !action.meta.silent)
       fail(cmd.error, action.type)
     if (cmd.duration > TOO_LONG)
       warn(`SLOW: ${cmd}`)
