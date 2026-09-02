@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import { useEvent } from './use-event.js'
 
 // Observes the node of the given ref, reporting changes of its content
@@ -10,7 +10,7 @@ export function useResizeObserver (ref, onResize) {
   let handler = useEvent(onResize)
   let isEnabled = onResize != null
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isEnabled || ref.current == null)
       return
 
