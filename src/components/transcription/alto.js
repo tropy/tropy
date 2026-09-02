@@ -1,6 +1,7 @@
-import React, { useRef } from 'react'
+import React, { useLayoutEffect, useRef } from 'react'
 import cx from 'classnames'
 import { useEventHandler } from '../../hooks/use-event-handler.js'
+import { growingEdge } from '../../selection.js'
 
 // Returns the next (dir > 0) or previous string element, starting at
 // node, but never one of its descendants.
@@ -107,13 +108,32 @@ const selectWord = (root) => {
     selection.selectAllChildren(string)
 }
 
-export const Alto = React.memo(({
-  document: alto,
-  onSelect,
-  outline = 'none',
-  selection
-}) => {
-  let dom = useRef()
+const useRevealSelection = (dom, selection) => {
+  let previous = useRef()
+
+  useLayoutEffect(() => {
+    let nodes = dom.current.querySelectorAll('.string.selected')
+    let head = nodes[0]
+    let tail = nodes[nodes.length - 1]
+
+    let range = (head == null)
+      ? []
+      : [Number(head.dataset.idx), Number(tail.dataset.idx)]
+
+    let growing = growingEdge(range, previous.current)
+    previous.current = range
+
+    if (growing === 0)
+      return
+
+    let node = (growing < 0) ? head : tail
+    node.scrollIntoView({ block: 'nearest' })
+  }, [dom, selection])
+}
+
+// Reports the strings covered by the native text selection,
+// unless we have reported them already.
+const useNativeSelection = (dom, alto, selection, onSelect) => {
   let previous = useRef({})
 
   useEventHandler(document, 'selectionchange', () => {
@@ -132,6 +152,18 @@ export const Alto = React.memo(({
     previous.current = { head, tail, selection: next }
     onSelect(next, range)
   })
+}
+
+export const Alto = React.memo(({
+  document: alto,
+  onSelect,
+  outline = 'none',
+  selection
+}) => {
+  let dom = useRef()
+
+  useRevealSelection(dom, selection)
+  useNativeSelection(dom, alto, selection, onSelect)
 
   let idx = 0
 
