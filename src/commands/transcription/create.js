@@ -7,7 +7,9 @@ import * as slice from '../../slices/transcriptions.js'
 export class Create extends Command {
   *exec () {
     let { db } = this.options
-    let { config, data, text, photo, selection } = this.action.payload
+    let {
+      angle, config, data, mirror, photo, selection, text
+    } = this.action.payload
     let { plugin } = this.action.meta
 
     if (photo == null) {
@@ -33,7 +35,7 @@ export class Create extends Command {
 
     let transcriptions = yield call(db.transaction, async tx =>
       Promise.all(parents.map(parent =>
-        create(tx, { config, data, parent, text }))))
+        create(tx, { angle, config, data, mirror, parent, text }))))
 
     this.undo = slice.remove(
       transcriptions.map(tr => tr.id))

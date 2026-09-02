@@ -11,7 +11,6 @@ export default {
   },
 
   TRANSCRIPTION: {
-    CREATE: 'api.transcription.create',
     FIND: 'api.transcription.find',
     SHOW: 'api.transcription.show'
   },

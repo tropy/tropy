@@ -114,10 +114,9 @@ export default {
   transcription: {
     create (payload, meta) {
       return {
-        type: API.TRANSCRIPTION.CREATE,
+        name: 'transcriptions.create',
         payload,
         meta: {
-          cmd: 'project',
           history: 'add',
           ...meta
         }

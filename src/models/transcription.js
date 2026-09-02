@@ -13,7 +13,7 @@ export async function create (db, {
   angle = 0,
   mirror = false
 }) {
-  let status = (text) ? 1 : 0
+  let status = (text || data) ? 1 : 0
 
   if (data instanceof Node)
     data = serialize(data)
