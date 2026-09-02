@@ -1,4 +1,4 @@
-import { ITEM, PROJECT, LIST, METADATA } from '../constants/index.js'
+import { ITEM, PROJECT, LIST, METADATA, PHOTO } from '../constants/index.js'
 import { into, map } from 'transducers.js'
 
 import {
@@ -76,6 +76,17 @@ function itemsReducer (state = {}, { type, payload, meta, error }) {
         }
       })), items)
     }
+
+    case PHOTO.ORDER:
+      return (!meta.done || error) ?
+        state : {
+          ...state,
+          [payload.id]: {
+            ...state[payload.id],
+            ...payload,
+            modified: new Date(meta.was)
+          }
+        }
 
     case METADATA.SAVE:
     case METADATA.RESTORE:
