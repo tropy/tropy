@@ -1,131 +1,165 @@
-import React from 'react'
+import { useImperativeHandle, useLayoutEffect, useRef } from 'react'
 import cx from 'classnames'
-import { debounce, throttle } from '../../common/util.js'
+import { debounce } from '../../common/util.js'
 import { on, off } from '../../dom.js'
+import { useEvent } from '../../hooks/use-event.js'
+import { useResizeObserver } from '../../hooks/use-resize-observer.js'
 
-export class ScrollContainer extends React.Component {
-  container = React.createRef()
 
-  #didSync = false
+const useScrollHandler = (dom, {
+  onScroll,
+  onScrollStart,
+  onScrollStop,
+  peer
+}) => {
+  let didSync = useRef(false)
+  let isScrolling = useRef(false)
+  let stop = useRef()
 
-  #RO = new ResizeObserver(([e]) => {
-    this.handleResize(e.contentRect)
+  // Subtle: adjusting the scroll position triggers a scroll event,
+  // so we flag it, or else we would echo it back to the peer container!
+  let sync = useEvent((y, x) => {
+    let node = dom.current
+
+    if (y != null && y !== node.scrollTop) {
+      didSync.current = true
+      node.scrollTop = y
+    }
+
+    if (x != null && x !== node.scrollLeft) {
+      didSync.current = true
+      node.scrollLeft = x
+    }
   })
 
-  state = {
-    isScrolling: false
-  }
+  let handleScrollStop = useEvent(() => {
+    isScrolling.current = false
+    onScrollStop?.()
+  })
 
-  componentDidMount () {
-    if (this.props.onResize)
-      this.#RO.observe(this.container.current)
+  let hasEdges = onScrollStart != null || onScrollStop != null
 
-    if (this.props.onScroll || this.props.sync)
-      on(this.container.current, 'scroll', this.handleScroll)
-  }
-
-  componentWillUnmount () {
-    this.#RO.unobserve(this.container.current)
-    this.#RO.disconnect()
-
-    off(this.container.current, 'scroll', this.handleScroll)
-    this.handleScrollStop.cancel()
-  }
-
-  get bounds () {
-    let { clientWidth, clientHeight } = this.container.current
-
-    return {
-      width: clientWidth,
-      height: clientHeight
-    }
-  }
-
-  get isScrolling () {
-    return this.state.isScrolling
-  }
-
-  get scrollTop () {
-    return this.container.current.scrollTop
-  }
-
-  get scrollLeft () {
-    return this.container.current.scrollLeft
-  }
-
-  focus () {
-    this.container.current.focus()
-  }
-
-  scroll (y, x) {
-    if (y != null)
-      this.container.current.scrollTop = y
-    if (x != null)
-      this.container.current.scrollLeft = x
-  }
-
-  sync (y, x) {
-    if (y != null && y !== this.container.current.scrollTop) {
-      this.#didSync = true
-      this.container.current.scrollTop = y
-    }
-    if (x != null && x !== this.container.current.scrollLeft) {
-      this.#didSync = true
-      this.container.current.scrollLeft = x
-    }
-  }
-
-  scrollBy (y, x) {
-    this.scroll(
-      y != null ? this.scrollTop + y : null,
-      x != null ? this.scrollLeft + x : null
-    )
-  }
-
-  handleClick = (event) => {
-    if (event.target === this.container.current)
-      this.props.onClick()
-  }
-
-  handleResize = throttle((rect) => {
-    this.props.onResize(rect)
-  }, 15)
-
-  handleScroll = (event) => {
-    if (!this.state.isScrolling) {
-      this.setState({ isScrolling: true })
-      this.props.onScrollStart?.(event)
+  let handleScroll = useEvent((event) => {
+    if (hasEdges && !isScrolling.current) {
+      isScrolling.current = true
+      onScrollStart?.(event)
     }
 
-    this.props.onScroll?.(event)
+    onScroll?.(event)
 
-    if (this.props.sync?.current && !this.#didSync) {
-      this.props.sync.current.sync(null, this.scrollLeft)
+    if (peer?.current && !didSync.current)
+      peer.current.sync(null, dom.current.scrollLeft)
+
+    didSync.current = false
+
+    // Subtle: this restarts the timer on every single event, so we
+    // track the end of scrolling only if anyone is listening!
+    if (hasEdges)
+      stop.current()
+  })
+
+  let isEnabled = !!(onScroll || peer) || hasEdges
+
+  useLayoutEffect(() => {
+    if (!isEnabled)
+      return
+
+    let node = dom.current
+
+    if (hasEdges)
+      stop.current = debounce(handleScrollStop, 150)
+
+    on(node, 'scroll', handleScroll)
+
+    return () => {
+      off(node, 'scroll', handleScroll)
+
+      stop.current?.flush()
+      stop.current = null
     }
+  }, [dom, isEnabled, hasEdges, handleScroll, handleScrollStop])
 
-    this.#didSync = false
-    this.handleScrollStop()
-  }
+  return sync
+}
 
-  handleScrollStop = debounce(() => {
-    this.setState({ isScrolling: false })
-    this.props.onScrollStop?.()
-  }, 150)
 
-  render () {
-    return (
-      <div
-        ref={this.container}
-        className={cx('scroll-container', this.props.className, {
-          scrolling: this.state.isScrolling
-        })}
-        onBlur={this.props.onBlur}
-        onClick={this.props.onClick && this.handleClick}
-        onFocus={this.props.onFocus}
-        onKeyDown={this.props.tabIndex && this.props.onKeyDown}
-        tabIndex={this.props.tabIndex ?? -1}>
-        {this.props.children}
-      </div>
-    )
-  }
+export const ScrollContainer = ({
+  children,
+  className,
+  onBlur,
+  onClick,
+  onFocus,
+  onKeyDown,
+  onResize,
+  onScroll,
+  onScrollStart,
+  onScrollStop,
+  ref,
+  sync,
+  tabIndex
+}) => {
+  let dom = useRef()
+
+  useResizeObserver(dom, onResize)
+
+  let syncScroll = useScrollHandler(dom, {
+    onScroll,
+    onScrollStart,
+    onScrollStop,
+    peer: sync
+  })
+
+  useImperativeHandle(ref, () => ({
+    get bounds () {
+      let { clientWidth, clientHeight } = dom.current
+
+      return {
+        width: clientWidth,
+        height: clientHeight
+      }
+    },
+
+    get scrollTop () {
+      return dom.current.scrollTop
+    },
+
+    get scrollLeft () {
+      return dom.current.scrollLeft
+    },
+
+    focus () {
+      dom.current.focus()
+    },
+
+    scroll (y, x) {
+      if (y != null)
+        dom.current.scrollTop = y
+      if (x != null)
+        dom.current.scrollLeft = x
+    },
+
+    scrollBy (y, x) {
+      this.scroll(
+        y != null ? this.scrollTop + y : null,
+        x != null ? this.scrollLeft + x : null
+      )
+    },
+
+    sync: syncScroll
+  }), [syncScroll])
+
+  return (
+    <div
+      ref={dom}
+      className={cx('scroll-container', className)}
+      onBlur={onBlur}
+      onClick={onClick && ((event) => {
+        if (event.target === dom.current) onClick()
+      })}
+      onFocus={onFocus}
+      onKeyDown={tabIndex != null ? onKeyDown : null}
+      tabIndex={tabIndex ?? -1}>
+      {children}
+    </div>
+  )
 }

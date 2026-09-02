@@ -445,6 +445,7 @@ export class Scroll extends React.Component {
     return (
       <ScrollContainer
         ref={this.container}
+        className={this.state.isScrolling ? 'scrolling' : null}
         sync={this.props.sync}
         onClick={this.props.onClick}
         onKeyDown={this.handleKeyDown}
