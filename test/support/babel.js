@@ -9,6 +9,7 @@ if (process.type === 'renderer') {
   let globs = [
     'src/{components,views,hooks}/**/*.js',
     'test/components/**/*.js',
+    'test/hooks/**/*.js',
     'test/support/react.js'
   ]
 

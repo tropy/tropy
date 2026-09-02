@@ -2,6 +2,9 @@ import { useEffect } from 'react'
 import { useEvent } from './use-event.js'
 import { on, off } from '../common/util.js'
 
+const resolve = (target) =>
+  (target != null && 'current' in target) ? target.current : target
+
 
 export function useEventHandler (
   target,
@@ -13,11 +16,13 @@ export function useEventHandler (
   let handler = useEvent(callback)
 
   useEffect(() => {
-    if (name) {
-      on(target, name, handler, { capture, passive })
+    let node = resolve(target)
+
+    if (node && name) {
+      on(node, name, handler, { capture, passive })
 
       return () => {
-        off(target, name, handler, { capture, passive })
+        off(node, name, handler, { capture, passive })
       }
     }
   }, [target, name, handler, passive, capture])
