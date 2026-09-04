@@ -383,8 +383,8 @@ $note-list-blurred-bg:   --scheme(var(--light-3), shade(var(--dark-5), 4%)); // 
 
 // Editable
 $editable-color:        $text-color;
-$editable-bg:           --scheme(var(--light-0),              var(--dark-3));
-$editable-border-color: --scheme(alpha(var(--light-10), 10%), alpha(var(--dark-10), 5%));
+$editable-bg:           --scheme(var(--light-0), var(--dark-3));
+$editable-border-color: --scheme(var(--primary), var(--primary));
 
 // Button
 $btn-default-color:             --scheme(var(--light-9),              var(--dark-9));
