@@ -5,6 +5,11 @@ import Router from '@koa/router'
 import bodyParser from 'koa-bodyparser'
 import act from '../actions/api'
 
+// Beyond qs's arrayLimit, repeated parameters are parsed into an object
+// keyed by index instead of an array, which quietly breaks every route
+// taking a list: an item's photos, the items to merge, an item's tags.
+const ARRAY_LIMIT = 1000
+
 const show = (type) =>
   async (ctx) => {
     let { params, rsvp } = ctx
@@ -71,6 +76,33 @@ const project = {
   },
 
   items: {
+    async explode (ctx) {
+      let { assert, params, request, rsvp } = ctx
+      let { photo } = request.body
+
+      assert.ok(photo, 400, 'missing photo parameter')
+
+      let { payload } = await rsvp(act.item.explode({
+        id: params.id,
+        photos: photo
+      }))
+
+      ctx.body = {
+        item: Object.values(payload).map(({ id, photos }) => ({ id, photos }))
+      }
+    },
+
+    async merge (ctx) {
+      let { assert, request, rsvp } = ctx
+      let { item } = request.body
+
+      assert.ok(item, 400, 'missing item parameter')
+
+      let { payload } = await rsvp(act.item.merge(item))
+
+      ctx.body = payload
+    },
+
     async find (ctx) {
       let { params, query, rsvp } = ctx
       let { sort = 'item.created', reverse = false } = query
@@ -86,6 +118,16 @@ const project = {
     },
 
     show: show('item')
+  },
+
+  nav: {
+    async show (ctx) {
+      let { rsvp } = ctx
+
+      let { payload } = await rsvp(act.nav.show({}))
+
+      ctx.body = payload
+    }
   },
 
   data: {
@@ -479,6 +521,10 @@ export function create ({
       project.transcriptions.find)
     .post('/project/:project/items/:id/tags', project.tags.add)
     .delete('/project/:project/items/:id/tags', project.tags.remove)
+    .post('/project/:project/items/merge', project.items.merge)
+    .post('/project/:project/items/:id/explode', project.items.explode)
+
+    .get('/project/:project/nav', project.nav.show)
 
     .get('/project/:project/lists/:id/items', project.items.find)
     .get('/project/:project/lists{/:id}', project.lists.show)
@@ -528,7 +574,7 @@ export function create ({
 
   app
     .use(logging)
-    .use(bodyParser())
+    .use(bodyParser({ queryString: { arrayLimit: ARRAY_LIMIT } }))
     .use(api.routes())
     .use(api.allowedMethods())
 
