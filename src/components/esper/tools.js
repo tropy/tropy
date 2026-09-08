@@ -175,31 +175,35 @@ export const Layout = ({
     )
 
   return (
-    <ToolGroup>
-      <ToolButton
-        current={overlay}
-        defaultValue={ESPER.OVERLAY.NONE}
-        icon="IconTranscriptionLarge"
-        isDisabled={isDisabled}
-        isHidden={channel === 'latest'}
-        name="overlay"
-        onChange={onChange}
-        title="esper.overlay.full"
-        value={ESPER.OVERLAY.FULL}/>
-      <ToolButton
-        current={overlay}
-        defaultValue={ESPER.OVERLAY.NONE}
-        icon="IconTranscriptionSplitView"
-        isDisabled={isDisabled}
-        isHidden={channel === 'latest'}
-        name="overlay"
-        onChange={onChange}
-        title="esper.overlay.split"
-        value={ESPER.OVERLAY.SPLIT}/>
-      {altButtons}
-      <MaximizeButton
-        isDisabled={isDisabled}
-        name="esper"/>
-    </ToolGroup>
+    <>
+      <ToolGroup>
+        <ToolButton
+          current={overlay}
+          defaultValue={ESPER.OVERLAY.NONE}
+          icon="IconTranscriptionLarge"
+          isDisabled={isDisabled}
+          isHidden={channel === 'latest'}
+          name="overlay"
+          onChange={onChange}
+          title="esper.overlay.full"
+          value={ESPER.OVERLAY.FULL}/>
+        <ToolButton
+          current={overlay}
+          defaultValue={ESPER.OVERLAY.NONE}
+          icon="IconTranscriptionSplitView"
+          isDisabled={isDisabled}
+          isHidden={channel === 'latest'}
+          name="overlay"
+          onChange={onChange}
+          title="esper.overlay.split"
+          value={ESPER.OVERLAY.SPLIT}/>
+        {altButtons}
+      </ToolGroup>
+      <ToolGroup>
+        <MaximizeButton
+          isDisabled={isDisabled}
+          name="esper"/>
+      </ToolGroup>
+    </>
   )
 }
