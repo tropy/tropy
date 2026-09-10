@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import { once } from 'node:events'
 import { join } from 'node:path'
@@ -62,6 +63,42 @@ describe('WindowManager', () => {
         })
       })
     }
+
+    describe('window state persistence', {
+      timeout: env.CI ? 20000 : 2000
+    }, () => {
+      let openWindow = (opts) =>
+        wm.open('about', {
+          plugins: plugins.root,
+          log: join(app.getPath('userData'), 'wm-test-persistence.log'),
+          data: app.getPath('userData')
+        }, opts)
+
+      after(() => BrowserWindow.clearPersistedState('test:wm'))
+
+      it('records the persistence name on the window', async () => {
+        let win = await openWindow({
+          name: 'test:wm',
+          windowStatePersistence: true
+        })
+
+        expect(win.persistenceName).to.equal('test:wm')
+
+        await assert.rejects(() => openWindow({
+          name: 'test:wm',
+          windowStatePersistence: true
+        }))
+
+        await wm.close('about')
+        expect(win.isDestroyed()).to.be.true
+      })
+
+      it('has no persistence name by default', async () => {
+        let win = await openWindow()
+        expect(win.persistenceName).to.be.undefined
+        await wm.close('about')
+      })
+    })
 
     describe('unload lifecycle', {
       timeout: env.CI ? 20000 : 2000

@@ -154,6 +154,9 @@ export class WindowManager extends EventEmitter {
 
       var win = new BrowserWindow(sanitizeWindowBounds(opts))
 
+      if (opts.name)
+        win.persistenceName = opts.name
+
       if (opts.fixedSize) {
         this.setFixedSize(win, true, opts.fixedSize)
       }
