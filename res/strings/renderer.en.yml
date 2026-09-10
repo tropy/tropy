@@ -728,6 +728,11 @@ en:
       right: Align Right
       sinkListItem: Sink list item
       liftListItem: Lift list item
+    search:
+      placeholder: Find in note…
+      previous: Previous match
+      next: Next match
+      close: Close
   transcription:
     error: Transcription failed
     retry: Try Again
