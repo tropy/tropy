@@ -24,10 +24,6 @@
     pointer-events: none;
   }
 
-  .frameless & {
-    -webkit-app-region: no-drag;
-  }
-
   &.min-width {
     min-width: 80px;
   }

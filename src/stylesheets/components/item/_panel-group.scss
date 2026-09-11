@@ -9,25 +9,4 @@
     position: relative;
     z-index: 2;
   }
-
-  .tabs {
-    transition: border-radius 0.1s ease;
-
-    .panel.closed :is(&) {
-      border-radius: 0;
-    }
-
-    .tab {
-      transition: border-color 0.1s ease, border-radius 0.1s ease;
-
-      .panel.closed :is(&) {
-        border-radius: 0;
-        margin: 0;
-
-        &.active {
-          box-shadow: none;
-        }
-      }
-    }
-  }
 }

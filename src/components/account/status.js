@@ -16,6 +16,6 @@ export const AccountStatus = () => {
     return null
   }
   return (
-    <Icon name="Ghost" title="error.account.offline"/>
+    <Icon name="WifiWarning" title="error.account.offline"/>
   )
 }

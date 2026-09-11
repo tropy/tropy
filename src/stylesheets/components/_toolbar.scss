@@ -24,6 +24,11 @@
       -webkit-app-region: drag;
       height: zoom($toolbar-frameless-height);
       padding: 0 zoom($default-spacing-x);
+
+      .btn,
+      .icon {
+        -webkit-app-region: no-drag;
+      }
     }
 
     .frameless.is-blurred & {
