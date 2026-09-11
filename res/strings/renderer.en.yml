@@ -324,6 +324,11 @@ en:
       unlink: Sign out
       usage:
         label: Usage
+        window:
+          hourly: Hourly
+          daily: Daily
+          weekly: Weekly
+          monthly: Monthly
         transcriptions:
           label: Transcriptions
           loading: Loading…

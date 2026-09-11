@@ -15,8 +15,21 @@
       margin-bottom: $space-md;
     }
 
+    .meter:not(:last-child) {
+      margin-bottom: $space-md;
+    }
+
+    .window {
+      text-box: trim-both ex alphabetic;
+      margin-bottom: $space-sm;
+    }
+
     progress {
       height: $space-xs;
+
+      &.unscaled::-webkit-progress-value {
+        background-color: $progress-bar-blurred-color;
+      }
     }
 
     .progress-description {
