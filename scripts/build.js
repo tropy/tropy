@@ -16,6 +16,7 @@ import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { program } from 'commander'
 import { packager } from '@electron/packager'
+import { flipFuses, FuseVersion, FuseV1Options } from '@electron/fuses'
 import { minimatch } from 'minimatch'
 import { ROOT, ICONS, error, say, setLogSymbol } from './util.js'
 import IMAGE from '../src/constants/image.js'
@@ -82,10 +83,6 @@ program
         mergeMacSigningOptions(opts, args)
       }
 
-      if (!args.asar) {
-        opts.asar = false
-      }
-
       let [dest] = await packager(opts)
 
       switch (opts.platform) {
@@ -129,7 +126,12 @@ program
   })
 
 
-export function configure ({ arch, platform, out = join(ROOT, 'dist') }) {
+export function configure ({
+  arch,
+  platform,
+  asar = true,
+  out = join(ROOT, 'dist')
+}) {
   // NB: the patterns must include (sub-)directories!
   const INCLUDE = [
     '/db{,/{migrate,schema}{,/**/*}}',
@@ -204,7 +206,8 @@ export function configure ({ arch, platform, out = join(ROOT, 'dist') }) {
     junk: true,
     afterCopy: [
       addExtraMetadata,
-      addLicense
+      addLicense,
+      setFuses(asar)
     ],
     appVersion: version,
     appBundleId: qualified.appId.toLowerCase(),
@@ -220,7 +223,7 @@ export function configure ({ arch, platform, out = join(ROOT, 'dist') }) {
       CompanyName: author,
       ProductName: qualified.product
     },
-    asar: {
+    asar: asar && {
       unpack: `**/{${[
         'lib/node/**/*',
         'lib/sharp-libvips-*/**/*',
@@ -261,6 +264,44 @@ async function addLicense ({ buildPath }) {
   let deps = await legal.loadDependencies()
   let licenses = legal.compileThirdPartyNotices(deps, { format: 'txt' })
   await writeFile(join(buildPath, 'LICENSE.third-party.txt'), licenses)
+}
+
+function electronBinary (buildPath, platform) {
+  switch (platform) {
+    case 'darwin':
+    case 'mas':
+      // <staging>/Electron.app/Contents/Resources/app
+      return join(buildPath, '..', '..', '..')
+    case 'win32':
+      // <staging>/resources/app
+      return join(buildPath, '..', '..', 'electron.exe')
+    default:
+      return join(buildPath, '..', '..', 'electron')
+  }
+}
+
+// NB: fuses must be flipped before code-signing!
+function setFuses (asar) {
+  return async ({ buildPath, platform, arch }) => {
+    say('flipping electron fuses')
+
+    await flipFuses(electronBinary(buildPath, platform), {
+      version: FuseVersion.V1,
+      resetAdHocDarwinSignature: platform === 'darwin' && arch === 'arm64',
+
+      [FuseV1Options.RunAsNode]: false,
+      [FuseV1Options.EnableCookieEncryption]: true,
+      [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
+      [FuseV1Options.EnableNodeCliInspectArguments]: false,
+      [FuseV1Options.OnlyLoadAppFromAsar]: asar,
+
+      [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]:
+        asar && platform !== 'linux',
+
+      // TODO flip after switch to custom protocol for loading views and styles!
+      [FuseV1Options.GrantFileProtocolExtraPrivileges]: true
+    })
+  }
 }
 
 async function copyLicense (dest) {
