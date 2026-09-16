@@ -23,9 +23,6 @@ export function Usage () {
   return (
     <div className="card usage">
       <h1><FormattedMessage id="prefs.account.usage.label"/></h1>
-      <p className="key">
-        <FormattedMessage id="prefs.account.usage.transcriptions.label"/>
-      </p>
       {data?.length ? (
         data.map(({ key, limit, reset, since, total }) => (
           <UsageMeter
@@ -59,6 +56,8 @@ const UsageMeter = ({ id, limit, reset, scale, since, total }) => (
       <FormattedMessage
         id={`prefs.account.usage.window.${id}`}
         defaultMessage={id}/>
+      {' '}
+      <FormattedMessage id="prefs.account.usage.transcriptions.label"/>
     </p>
     <progress
       aria-describedby={`usage-${id}`}

@@ -330,7 +330,7 @@ en:
           weekly: Weekly
           monthly: Monthly
         transcriptions:
-          label: Transcriptions
+          label: transcriptions
           loading: Loading…
           limit: >-
             {delta, plural,

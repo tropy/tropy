@@ -9,19 +9,16 @@
     font-size: to-rem(16);
     line-height: 1.5;
 
-    .key {
-      font-weight: 600;
-      text-box: trim-both ex alphabetic;
-      margin-bottom: $space-md;
-    }
-
-    .meter:not(:last-child) {
-      margin-bottom: $space-md;
+    .meter {
+      & + .meter {
+        margin-top: $space-md;
+        border-top: 1px solid $profile-border-color;
+      }
     }
 
     .window {
+      font-weight: 600;
       text-box: trim-both ex alphabetic;
-      margin-bottom: $space-sm;
     }
 
     progress {
