@@ -95,6 +95,14 @@ export default [
   },
 
   {
+    files: ['scripts/*.js'],
+    rules: {
+      'no-console': 0
+    }
+  },
+
+
+  {
     files: ['test/wdio/**/*.js'],
     languageOptions: {
       globals: {
