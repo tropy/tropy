@@ -22,7 +22,9 @@ export function Usage () {
 
   return (
     <div className="card usage">
-      <h1><FormattedMessage id="prefs.account.usage.label"/></h1>
+      <header>
+        <h1><FormattedMessage id="prefs.account.usage.label"/></h1>
+      </header>
       {data?.length ? (
         data.map(({ key, limit, reset, since, total }) => (
           <UsageMeter
