@@ -20,7 +20,10 @@ export function Profile ({
       let { error, payload } = await ipc.invoke('account', 'profile')
 
       if (error) {
-        setError(payload?.code || 'account.profile.error')
+        setError({
+          message: payload?.message || 'error.account.profile.unknown',
+          type: payload?.type || 'error'
+        })
       } else {
         setError(null)
         setProfile(payload)
@@ -45,42 +48,47 @@ export function Profile ({
   }, [ipc])
 
   return (
-    <div ref={ref}>
-      <div className="card profile">
-        <h1><FormattedMessage id="prefs.account.label"/></h1>
-        {error ? (
-          <>
-            <p className="error">
-              <FormattedMessage id={error}/>
+    <>
+      {error && (
+        <ul className="messages">
+          <li className={`card message ${error.type}`}>
+            <p>
+              <FormattedMessage id={error.message}/>
             </p>
             <Button
-              isDefault
+              isLink
               isDisabled={isPending}
               text="prefs.account.retry"
               onClick={loadProfile}/>
-          </>
-        ) : (
-          <dl>
-            {details
-              .filter(name => profile?.[name])
-              .map(name => (
-                <AccountDetail
-                  key={name}
-                  name={name}
-                  value={profile[name]}/>
-              ))}
-          </dl>
-        )}
-        <div className="btn-container">
-          <Button
-            isLink
-            isDisabled={isPending}
-            text="prefs.account.unlink"
-            onClick={handleUnlink}/>
+          </li>
+        </ul>
+      )}
+      <div ref={ref}>
+        <div className="card profile">
+          <header>
+            <h1><FormattedMessage id="prefs.account.label"/></h1>
+            <Button
+              isLink
+              isDisabled={isPending}
+              text="prefs.account.unlink"
+              onClick={handleUnlink}/>
+          </header>
+          {!error && (
+            <dl>
+              {details
+                .filter(name => profile?.[name])
+                .map(name => (
+                  <AccountDetail
+                    key={name}
+                    name={name}
+                    value={profile[name]}/>
+                ))}
+            </dl>
+          )}
         </div>
+        {!error && <Usage/>}
       </div>
-      {!error && <Usage/>}
-    </div>
+    </>
   )
 }
 

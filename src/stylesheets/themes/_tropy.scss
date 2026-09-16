@@ -19,6 +19,7 @@
     --primary-light:    #cedef7;
     --primary-dark:     color-mix(in srgb, #222 60%, var(--primary));
     --red:              #e62e2e;
+    --orange:           #ff8c19;
     --green:            #39bf68;
   }
 
@@ -29,6 +30,7 @@
     --primary-light:    #cedef7;                // Blue Light
     --primary-dark:     #171b2e;
     --red:              #e62e2e;
+    --orange:           #ff8c19;
     --green:            #328e52;                // Dark: 64% of the light theme green + 7% saturation
   }
 }
@@ -553,6 +555,12 @@ $option-no-matches-color: --scheme(var(--light-5), var(--dark-6));
 $option-separator-color:  --scheme(var(--light-2), var(--dark-1));
 
 // Account
+$account-info-color:    --scheme(var(--primary),            tint(var(--primary), 14%));
+$account-info-bg:       --scheme(tint(var(--primary), 82%), alpha(var(--primary), 14%));
+$account-warning-color: --scheme(shade(var(--orange), 8%),  shade(var(--orange), 8%));
+$account-warning-bg:    --scheme(tint(var(--orange), 78%),  alpha(var(--orange), 5%));
+$account-error-color:   --scheme(shade(var(--red), 8%),     shade(var(--red), 8%));
+$account-error-bg:      --scheme(tint(var(--red), 87%),     alpha(var(--red), 10%));
 $account-card-bg:       --scheme(shade(var(--light-1), 4%), tint(var(--dark-4), 2%));
-$profile-heading-color: --scheme(var(--light-6), var(--dark-8));
+$profile-heading-color: --scheme(var(--light-6),            var(--dark-8));
 $profile-border-color:  --scheme(shade(var(--light-3), 4%), var(--dark-1));

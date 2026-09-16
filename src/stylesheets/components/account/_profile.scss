@@ -5,12 +5,63 @@
 // --------------------------------------------------
 
 .account {
+  .btn-link {
+    font-size: to-rem(14);
+    text-box: trim-both cap alphabetic;
+    padding: 0;
+    margin-left: auto;
+  }
+
+  .messages {
+    margin-bottom: $space-sm;
+  }
+
+  .message {
+    display: flex;
+    align-items: center;
+    font-size: $font-size-large;
+    font-weight: 600;
+    padding: $space-lg;
+
+    &.info {
+      color: $account-info-color;
+      background-color: $account-info-bg;
+      border: 1px solid $account-info-color;
+    }
+
+    &.warning {
+      color: $account-warning-color;
+      background-color: $account-warning-bg;
+      border: 1px solid $account-warning-color;
+    }
+
+    &.error {
+      color: $account-error-color;
+      background-color: $account-error-bg;
+      border: 1px solid $account-error-color;
+    }
+
+    p {
+      text-box: trim-both cap alphabetic;
+      padding-right: $space-md;
+      margin: 0;
+    }
+
+    .btn-link {
+      color: currentColor;
+    }
+
+    & + .message {
+      margin-top: $space-sm;
+    }
+  }
+
   .profile {
     font-size: to-rem(16);
     line-height: 1.5;
 
     &:not(:has(dt)) {
-      h1 {
+      header {
         margin-bottom: 0 !important;
       }
     }
@@ -32,19 +83,6 @@
         margin-top: $space-md;
         padding-top: $space-md;
         border-top: 1px solid $profile-border-color;
-      }
-    }
-
-    .btn-container {
-      position: absolute;
-      top: $space-lg;
-      right: $space-lg;
-      font-size: to-rem(18);
-      text-box: trim-both cap alphabetic;
-
-      .btn-link {
-        font-size: to-rem(14);
-        padding: 0;
       }
     }
   }

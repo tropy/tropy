@@ -322,6 +322,7 @@ en:
       register.2: Sign up
       link: Sign in
       unlink: Sign out
+      retry: Retry
       usage:
         label: Usage
         window:
@@ -747,9 +748,14 @@ en:
     account:
       link:
         invalid: Invalid username or password.
-        network: Could not reach the Tropy server.
         unknown: Something went wrong. Please try again.
+      network: Could not reach the Tropy server.
       offline: Tropy is offline.
+      profile:
+        token: Your session has expired. Please sign in again.
+        http: Something went wrong. Please try again.
+        id_token: Something went wrong. Please try again.
+        unknown: Something went wrong. Please try again.
     cache:
       prune: Failed to optimize project cache.
       purge: Failed to remove old project caches.

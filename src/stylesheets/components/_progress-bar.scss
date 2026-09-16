@@ -90,7 +90,7 @@ progress {
     background: linear-gradient(
       var(--direction),
       color-mix(
-        in srgb,
+        in sRGB,
         var(--color) var(--alpha),
         transparent
       ), var(--color)
