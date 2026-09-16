@@ -18,7 +18,11 @@
 
     .window {
       font-weight: 600;
-      text-box: trim-both ex alphabetic;
+      text-box: trim-both cap alphabetic;
+
+      header + .meter :is(&) {
+        text-box: trim-both ex alphabetic;
+      }
     }
 
     progress {

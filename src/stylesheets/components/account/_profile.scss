@@ -72,7 +72,11 @@
 
     dt {
       font-weight: 600;
-      text-box: trim-start ex alphabetic;
+      text-box: trim-start cap alphabetic;
+
+      &:first-child {
+        text-box: trim-start ex alphabetic;
+      }
     }
 
     dd {
