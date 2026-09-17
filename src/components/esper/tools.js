@@ -131,6 +131,23 @@ export const Zoom = ({
   )
 }
 
+export const FontSize = ({
+  isDisabled
+}) => (
+  <ToolGroup>
+    <Button
+      icon="IconASmall"
+      isDisabled={isDisabled}
+      noFocus
+      title="esper.overlay.fontSize.decrease"/>
+    <Button
+      icon="IconALarge"
+      isDisabled={isDisabled}
+      noFocus
+      title="esper.overlay.fontSize.increase"/>
+  </ToolGroup>
+)
+
 export const Layout = ({
   isAltLayout = false,
   isDisabled,

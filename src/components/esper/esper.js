@@ -780,14 +780,20 @@ export class Esper extends React.Component {
             mode={overlay}
             hasTitlebar={hasSideBySideLayout || !isOverlaySplit}
             toolbar={(
-              <Toolbar.Right>
-                <ToolGroup.Layout
-                  isAltLayout={!hasSideBySideLayout && isOverlaySplit}
-                  isDisabled={isDisabled}
-                  onChange={this.handleChange}
-                  overlay={overlay}
-                  overlayPanel={overlayPanel}/>
-              </Toolbar.Right>
+              <>
+                <Toolbar.Left>
+                  <ToolGroup.FontSize
+                    isDisabled={isDisabled}/>
+                </Toolbar.Left>
+                <Toolbar.Right>
+                  <ToolGroup.Layout
+                    isAltLayout={!hasSideBySideLayout && isOverlaySplit}
+                    isDisabled={isDisabled}
+                    onChange={this.handleChange}
+                    overlay={overlay}
+                    overlayPanel={overlayPanel}/>
+                </Toolbar.Right>
+              </>
             )}
             isPanelVisible={overlayPanel}
             panel={(

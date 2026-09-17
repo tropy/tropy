@@ -142,6 +142,15 @@ export const IconWarningSm = i('WarningSm', (
 
 /* 16 x 16 */
 
+export const IconALarge = i('ALarge', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M11.396,15L13.54,15L9.125,1L6.875,1L2.46,15L4.498,15L5.623,11.139L10.28,11.139L11.396,15ZM7.922,3.241L7.99,3.241L9.805,9.499L6.098,9.499L7.922,3.241Z"/>
+    </g>
+  </svg>
+))
+
+
 export const IconAlignCenter = i('AlignCenter', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
@@ -162,6 +171,14 @@ export const IconAlignRight = i('AlignRight', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
       <path d="M3,14H15v1H3ZM1,12H15V11H1ZM3,9H15V8H3ZM1,6H15V5H1ZM3,3H15V2H3Z"/>
+    </g>
+  </svg>
+))
+
+export const IconASmall = i('ASmall', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M6.936,3C5.922,6.333 4.908,9.667 3.894,13L5.717,13C5.944,12.155 6.172,11.309 6.399,10.464L9.473,10.464C9.697,11.309 9.921,12.155 10.145,13L12.106,13C11.092,9.667 10.078,6.333 9.064,3L6.936,3ZM9.091,9.029L6.784,9.029C7.157,7.638 7.53,6.248 7.903,4.857L7.983,4.857C8.352,6.248 8.722,7.638 9.091,9.029Z"/>
     </g>
   </svg>
 ))

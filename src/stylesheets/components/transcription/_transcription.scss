@@ -9,14 +9,26 @@
   grid-column: 1 / 2;
   display: flex;
   overflow: auto;
+  font-family: $font-family-monospace;
+  font-size: var(--font-size, #{$editor-font-size});
+
+  // Enable but hide native selection
+  user-select: text;
+
+  &::selection,
+  ::selection {
+    background-color: rgb(0, 0, 0, 0.002); // Transparent causes antialiasing glitch
+    color: inherit;
+  }
 
   .side-by-side .text-overlay-split &,
   .side-by-side:not(.esper-maximized) .text-overlay-full & {
     grid-column: 1 / -1;
   }
 
+  // Plain text fallback
   pre {
-    user-select: text;
     cursor: text;
+    line-height: $editor-line-height;
   }
 }

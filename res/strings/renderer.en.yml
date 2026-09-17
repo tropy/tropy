@@ -381,6 +381,9 @@ en:
       full: Show full text overlay
       split: Show split-view text overlay
       panel: Toggle transcription version history
+      fontSize:
+        decrease: Decrease font size
+        increase: Increase font size
     panel:
       negative: Invert colors
       revert: Revert to Original

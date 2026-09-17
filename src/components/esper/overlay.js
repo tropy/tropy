@@ -38,9 +38,11 @@ export const EsperOverlay = ({
       onChange={handleResize}
       skip={mode === ESPER.OVERLAY.FULL}
       value={height}>
-      <div className={cx('esper-overlay', mode, {
-        'transcription-panel-visible': isPanelVisible
-      })}>
+      <div
+        className={cx('esper-overlay', mode, {
+          'transcription-panel-visible': isPanelVisible
+        })}
+        style={{ '--font-size': '18px' }}>
         {React.createElement(hasTitlebar ? Titlebar : Toolbar, {}, toolbar)}
         {children}
         {panel}
