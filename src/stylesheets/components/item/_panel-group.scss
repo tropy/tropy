@@ -8,5 +8,22 @@
   .panel-group-header {
     position: relative;
     z-index: 2;
+
+    .item-panel-group:has(.item-panel:focus-visible) :is(&) {
+      background-color: $panel-focus-bg;
+    }
+
+    .is-blurred .item-mode & {
+      @if $platform == darwin {
+        background-color: $panel-blurred-bg-darwin;
+      }
+    }
+
+    .toolbar-right {
+      .project-mode:not(.item-mode-enter-active) &,
+      .project-mode-enter-active & {
+        @include window-controls-spacing;
+      }
+    }
   }
 }
