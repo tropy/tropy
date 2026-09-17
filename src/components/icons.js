@@ -131,6 +131,14 @@ export const IconTranscriptionFailedOverlay = i('TranscriptionFailedOverlay', (
   </svg>
 ))
 
+export const IconTranscriptionSmall = i('TranscriptionFailedOverlay', (
+  <svg width="12" height="12" viewBox="0 0 12 12">
+    <g className="line" fill="currentColor">
+      <path d="M7,10L9,10L9,11L4,11L4,10L6,10L6,2L3,2L3,4L2,4L2,1L11,1L11,4L10,4L10,2L7,2L7,10Z"/>
+    </g>
+  </svg>
+))
+
 export const IconWarningSm = i('WarningSm', (
   <svg width="12" height="12">
     <g className="line" fill="currentColor">

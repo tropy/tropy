@@ -40,6 +40,7 @@ en:
           one {1 Photo}
           other {# Photos}}
       create: Add Photos
+      transcribe: Transcribe Photo
       selection: Selection
     note:
       title: >-
