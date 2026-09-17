@@ -11,6 +11,10 @@
     .item-panel.closed :is(&) {
       padding: 0;
     }
+
+    .icon-hangtag {
+      margin-right: $space-xs - 3px;
+    }
   }
 
   .tabs {
