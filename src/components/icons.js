@@ -885,8 +885,13 @@ export const IconWarningExtraLarge = i('WarningExtraLarge', (
 ))
 
 export const IconTranscriptionExtraLarge = i('TranscriptionExtraLarge', (
-  <svg width="80" height="80">
-    <path className="line" fill="currentColor" d="M65,10c2.757,0,5,2.243,5,5v50c0,2.757-2.243,5-5,5H15c-2.757,0-5-2.243-5-5V15c0-2.757,2.243-5,5-5h50M65,5H15c-5.523,0-10,4.477-10,10v50c0,5.523,4.477,10,10,10h50c5.523,0,10-4.477,10-10V15c0-5.523-4.477-10-10-10h0ZM22,20v10h3.5l.8-4.8,1.2-1.2h9.5v31l-1.2,1.2-4.8.8v3h18v-3l-4.8-.8-1.2-1.2v-31h9.5l1.2,1.2.8,4.8h3.5v-10H22Z"/>
+  <svg width="80" height="80" viewBox="0 0 80 80">
+    <defs>
+      <clipPath id="clip">
+        <path className="clip" d="M80 0 L0 0 L0 80 L80 80 L80 0 L65 10 L65 70 L15 70 L15 10 L65 10 Z"/>
+      </clipPath>
+    </defs>
+    <path className="line" fill="currentColor" clipPath="url(#clip)" d="M65,10c2.757,0,5,2.243,5,5v50c0,2.757-2.243,5-5,5H15c-2.757,0-5-2.243-5-5V15c0-2.757,2.243-5,5-5h50M65,5H15c-5.523,0-10,4.477-10,10v50c0,5.523,4.477,10,10,10h50c5.523,0,10-4.477,10-10V15c0-5.523-4.477-10-10-10h0ZM22,20v10h3.5l.8-4.8,1.2-1.2h9.5v31l-1.2,1.2-4.8.8v3h18v-3l-4.8-.8-1.2-1.2v-31h9.5l1.2,1.2.8,4.8h3.5v-10H22Z"/>
   </svg>
 ))
 

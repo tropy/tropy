@@ -28,28 +28,19 @@
 
       @keyframes clipping {
         0%, 100% {
-          clip-path: polygon(
-            80px 0, 0 0, 0 80px, 80px 80px, 80px 0,
-            65px 10px, 65px 70px, 15px 70px, 15px 10px, 65px 10px
-          );
+          d: path("M80 0 L0 0 L0 80 L80 80 L80 0 L65 10 L65 70 L15 70 L15 10 L65 10 Z");
         }
 
         49% {
-          clip-path: polygon(
-            80px 0, 0 0, 0 80px, 80px 80px, 80px 0,
-            65px 70px, 65px 70px, 15px 70px, 15px 70px, 65px 70px
-          );
+          d: path("M80 0 L0 0 L0 80 L80 80 L80 0 L65 70 L65 70 L15 70 L15 70 L65 70 Z");
         }
 
         50% {
-          clip-path: polygon(
-            80px 0, 0 0, 0 80px, 80px 80px, 80px 0,
-            65px 10px, 65px 10px, 15px 10px, 15px 10px, 65px 10px
-          );
+          d: path("M80 0 L0 0 L0 80 L80 80 L80 0 L65 10 L65 10 L15 10 L15 10 L65 10 Z");
         }
       }
 
-      svg {
+      .clip {
         animation: clipping 2s linear infinite;
       }
 
