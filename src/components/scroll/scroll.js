@@ -339,6 +339,15 @@ export class Scroll extends React.Component {
         offset += expansionPadding
     }
 
+    // Subtle: skip state update if no change
+    // Remove check when we switch to useState!
+    if (
+      offset === this.state.offset &&
+      row === this.state.row &&
+      numRowsAbove === this.state.numRowsAbove &&
+      expRowPosition === this.state.expRowPosition
+    ) return
+
     this.setState({
       offset,
       row,
