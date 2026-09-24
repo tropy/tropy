@@ -20,6 +20,35 @@ export default {
   },
 
   item: {
+    explode ({ id, photos }, meta) {
+      return {
+        type: ITEM.EXPLODE,
+        payload: {
+          id: Number(id),
+          photos: array(photos).map(Number)
+        },
+        meta: {
+          cmd: 'project',
+          history: 'add',
+          search: true,
+          ...meta
+        }
+      }
+    },
+
+    merge (payload, meta) {
+      return {
+        type: ITEM.MERGE,
+        payload: array(payload).map(Number),
+        meta: {
+          cmd: 'project',
+          history: 'add',
+          search: true,
+          ...meta
+        }
+      }
+    },
+
     find ({ tags, ...payload }, meta) {
       return {
         type: API.ITEM.FIND,
@@ -37,6 +66,19 @@ export default {
     show (payload, meta) {
       return {
         type: API.ITEM.SHOW,
+        payload,
+        meta: {
+          cmd: 'project',
+          ...meta
+        }
+      }
+    }
+  },
+
+  nav: {
+    show (payload, meta) {
+      return {
+        type: API.NAV.SHOW,
         payload,
         meta: {
           cmd: 'project',
