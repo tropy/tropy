@@ -15,14 +15,6 @@
   contain: strict;
   timeline-scope: --item-table-scroll-x;
 
-  @keyframes sync-item-table-scroll-x {
-    to {
-      transform: translateX(
-        calc(-1 * max(0px, var(--item-min-width) - var(--item-scrollport-width, 0px)))
-      );
-    }
-  }
-
   .metadata-head,
   .td {
     padding: 0;
@@ -47,28 +39,38 @@
   }
 
   > .scroll-container {
+    height: $item-table-header-height;
     overflow: hidden;
+    container-type: size;
+  }
+
+  @keyframes sync-item-table-scroll-x {
+    to {
+      transform: translateX(
+        calc(-1 * max(
+          0px,
+          var(--item-min-width) - 100cqw + var(--scrollbar-compensation)
+        ))
+      );
+    }
   }
 
   .table-head {
+    --scrollbar-compensation: 0px;
+
     display: grid;
     grid-template-columns: var(--item-template-columns);
     color: $item-table-header-color;
     height: $item-table-header-height;
-    border: {
-      top: 1px solid $item-table-header-border-color;
-      bottom: 1px solid $item-table-header-border-color;
-    }
-    overflow: hidden;
+    border-block: 1px solid $item-table-header-border-color;
     min-width: var(--item-min-width);
-
-    animation-name: sync-item-table-scroll-x;
-    animation-duration: auto;
-    animation-timing-function: linear;
-    animation-fill-mode: both;
+    animation: sync-item-table-scroll-x auto linear both;
     animation-timeline: --item-table-scroll-x;
+    overflow: hidden;
 
     .scrollbar-style-old-school & {
+      --scrollbar-compensation: #{$scrollbar-size};
+
       width: calc(100% - #{$default-spacing-x});
       min-width: calc(var(--item-min-width) + #{$scrollbar-size});
     }

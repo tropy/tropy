@@ -19,7 +19,7 @@ const any = (src) => { for (let key in src) return key }
 export class ItemTable extends ItemIterator {
   constructor (props) {
     super(props)
-    this.state = { scrollportWidth: 0, ...this.getColumnState(props) }
+    this.state = { ...this.getColumnState(props) }
   }
 
   componentDidUpdate () {
@@ -243,11 +243,6 @@ export class ItemTable extends ItemIterator {
       this.container.current.scrollBy(deltaY)
   }
 
-  handleBodyResize = ({ width }) => {
-    if (width !== this.state.scrollportWidth)
-      this.setState({ scrollportWidth: width })
-  }
-
   setColumnOffset (offset = 0, column = 'drag') {
     this.table.style.setProperty(`--${column}-offset`, `${offset}px`)
   }
@@ -269,7 +264,6 @@ export class ItemTable extends ItemIterator {
           tabIndex={this.tabIndex}
           onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}
-          onResize={this.handleBodyResize}
           onSelect={this.handleSelectItem}>
           {this.renderTableRow}
         </Scroll>
@@ -317,7 +311,6 @@ export class ItemTable extends ItemIterator {
         })}
         style={{
           '--item-min-width': this.state.minWidth + 'px',
-          '--item-scrollport-width': this.state.scrollportWidth + 'px',
           '--item-template-columns': this.getTemplateColumns()
         }}>
         <ScrollContainer onWheel={this.handleHeadWheel}>
