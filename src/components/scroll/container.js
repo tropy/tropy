@@ -1,7 +1,7 @@
 import { useImperativeHandle, useLayoutEffect, useRef } from 'react'
 import cx from 'classnames'
-import { debounce } from '../../common/util.js'
 import { on, off } from '../../dom.js'
+import { useDebounce } from '../../hooks/use-debounce.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useResizeObserver } from '../../hooks/use-resize-observer.js'
 
@@ -9,77 +9,39 @@ import { useResizeObserver } from '../../hooks/use-resize-observer.js'
 const useScrollHandler = (dom, {
   onScroll,
   onScrollStart,
-  onScrollStop,
-  peer
+  onScrollStop
 }) => {
-  let didSync = useRef(false)
   let isScrolling = useRef(false)
-  let stop = useRef()
+  let isEnabled = !!(onScroll || onScrollStart || onScrollStop)
 
-  // Subtle: adjusting the scroll position triggers a scroll event,
-  // so we flag it, or else we would echo it back to the peer container!
-  let sync = useEvent((y, x) => {
-    let node = dom.current
-
-    if (y != null && y !== node.scrollTop) {
-      didSync.current = true
-      node.scrollTop = y
+  let handleScrollStop = useDebounce(() => {
+    if (isScrolling.current) {
+      isScrolling.current = false
+      onScrollStop?.()
     }
-
-    if (x != null && x !== node.scrollLeft) {
-      didSync.current = true
-      node.scrollLeft = x
-    }
-  })
-
-  let handleScrollStop = useEvent(() => {
-    isScrolling.current = false
-    onScrollStop?.()
-  })
-
-  let hasEdges = onScrollStart != null || onScrollStop != null
+  }, { wait: 150 })
 
   let handleScroll = useEvent((event) => {
-    if (hasEdges && !isScrolling.current) {
+    if (!isScrolling.current) {
       isScrolling.current = true
       onScrollStart?.(event)
     }
 
     onScroll?.(event)
-
-    if (peer?.current && !didSync.current)
-      peer.current.sync(null, dom.current.scrollLeft)
-
-    didSync.current = false
-
-    // Subtle: this restarts the timer on every single event, so we
-    // track the end of scrolling only if anyone is listening!
-    if (hasEdges)
-      stop.current()
+    handleScrollStop()
   })
-
-  let isEnabled = !!(onScroll || peer) || hasEdges
 
   useLayoutEffect(() => {
     if (!isEnabled)
       return
 
     let node = dom.current
-
-    if (hasEdges)
-      stop.current = debounce(handleScrollStop, 150)
-
     on(node, 'scroll', handleScroll)
 
     return () => {
       off(node, 'scroll', handleScroll)
-
-      stop.current?.flush()
-      stop.current = null
     }
-  }, [dom, isEnabled, hasEdges, handleScroll, handleScrollStop])
-
-  return sync
+  }, [dom, isEnabled, handleScroll, handleScrollStop])
 }
 
 
@@ -94,70 +56,33 @@ export const ScrollContainer = ({
   onScroll,
   onScrollStart,
   onScrollStop,
+  onWheel,
   ref,
-  sync,
   tabIndex
 }) => {
   let dom = useRef()
 
   useResizeObserver(dom, onResize)
 
-  let syncScroll = useScrollHandler(dom, {
+  useScrollHandler(dom, {
     onScroll,
     onScrollStart,
-    onScrollStop,
-    peer: sync
+    onScrollStop
   })
 
-  useImperativeHandle(ref, () => ({
-    get bounds () {
-      let { clientWidth, clientHeight } = dom.current
-
-      return {
-        width: clientWidth,
-        height: clientHeight
-      }
-    },
-
-    get scrollTop () {
-      return dom.current.scrollTop
-    },
-
-    get scrollLeft () {
-      return dom.current.scrollLeft
-    },
-
-    focus () {
-      dom.current.focus()
-    },
-
-    scroll (y, x) {
-      if (y != null)
-        dom.current.scrollTop = y
-      if (x != null)
-        dom.current.scrollLeft = x
-    },
-
-    scrollBy (y, x) {
-      this.scroll(
-        y != null ? this.scrollTop + y : null,
-        x != null ? this.scrollLeft + x : null
-      )
-    },
-
-    sync: syncScroll
-  }), [syncScroll])
+  useImperativeHandle(ref, () => dom.current, [])
 
   return (
     <div
       ref={dom}
       className={cx('scroll-container', className)}
       onBlur={onBlur}
-      onClick={onClick && ((event) => {
-        if (event.target === dom.current) onClick()
-      })}
+      onClick={(event) => {
+        if (event.target === dom.current) onClick?.(event)
+      }}
       onFocus={onFocus}
       onKeyDown={tabIndex != null ? onKeyDown : null}
+      onWheel={onWheel}
       tabIndex={tabIndex ?? -1}>
       {children}
     </div>

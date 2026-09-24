@@ -26,10 +26,6 @@ export class Scroll extends React.Component {
     expRowPosition: 0
   }
 
-  componentDidMount () {
-    this.handleResize(this.container.current.bounds)
-  }
-
   componentWillUnmount () {
     cancelAnimationFrame(this.#scrollCallback.current)
   }
@@ -296,6 +292,7 @@ export class Scroll extends React.Component {
     this.setState({ width, height }, () => {
       this.handleScroll()
     })
+    this.props.onResize?.({ width, height })
   }
 
   handleScrollStart = () => {
@@ -368,12 +365,12 @@ export class Scroll extends React.Component {
     }
   }
 
-  scroll (...args) {
-    this.container.current.scroll(...args)
+  scroll (top, left) {
+    this.container.current.scrollTo({ top, left })
   }
 
-  scrollBy (...args) {
-    this.container.current.scrollBy(...args)
+  scrollBy (top, left) {
+    this.container.current.scrollBy({ top, left })
   }
 
   scrollPageDown () {
@@ -430,10 +427,6 @@ export class Scroll extends React.Component {
     this.scroll(offset)
   }
 
-  sync (...args) {
-    this.container.current.sync(...args)
-  }
-
   render () {
     this.layout = this.getComputedLayout(
       this.props.items,
@@ -455,7 +448,6 @@ export class Scroll extends React.Component {
       <ScrollContainer
         ref={this.container}
         className={this.state.isScrolling ? 'scrolling' : null}
-        sync={this.props.sync}
         onClick={this.props.onClick}
         onKeyDown={this.handleKeyDown}
         onResize={this.handleResize}

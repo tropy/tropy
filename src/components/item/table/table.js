@@ -1,4 +1,3 @@
-import React from 'react'
 import { Scroll, ScrollContainer } from '../../scroll/index.js'
 import { ItemIterator } from '../iterator.js'
 import { TableRow } from './row.js'
@@ -18,11 +17,9 @@ const { COLUMN, ROW } = SASS
 const any = (src) => { for (let key in src) return key }
 
 export class ItemTable extends ItemIterator {
-  headContainer = React.createRef()
-
   constructor (props) {
     super(props)
-    this.state = this.getColumnState(props)
+    this.state = { scrollportWidth: 0, ...this.getColumnState(props) }
   }
 
   componentDidUpdate () {
@@ -239,8 +236,19 @@ export class ItemTable extends ItemIterator {
     this.props.onColumnRemove({ id })
   }
 
-  handleNativeScroll = (event) => {
-    this.headContainer.current.scroll(null, event.target.scrollLeft)
+  handleHeadWheel = ({ deltaX, deltaY }) => {
+    // Subtle: the head does not scroll itself, so we forward wheel
+    // gestures over it to the body. Trackpad gestures are rarely
+    // straight, so we scroll only along the dominant axis.
+    if (Math.abs(deltaX) > Math.abs(deltaY))
+      this.container.current.scrollBy(null, deltaX)
+    else
+      this.container.current.scrollBy(deltaY)
+  }
+
+  handleBodyResize = ({ width }) => {
+    if (width !== this.state.scrollportWidth)
+      this.setState({ scrollportWidth: width })
   }
 
   setColumnOffset (offset = 0, column = 'drag') {
@@ -256,7 +264,6 @@ export class ItemTable extends ItemIterator {
       <div className={cx(this.classes)}>
         <Scroll
           ref={this.container}
-          sync={this.headContainer}
           tag="div"
           autoselect
           cursor={this.head()}
@@ -265,6 +272,7 @@ export class ItemTable extends ItemIterator {
           tabIndex={this.tabIndex}
           onClick={this.handleClickOutside}
           onKeyDown={this.handleKeyDown}
+          onResize={this.handleBodyResize}
           onSelect={this.handleSelectItem}>
           {this.renderTableRow}
         </Scroll>
@@ -312,11 +320,10 @@ export class ItemTable extends ItemIterator {
         })}
         style={{
           '--item-min-width': this.state.minWidth + 'px',
+          '--item-scrollport-width': this.state.scrollportWidth + 'px',
           '--item-template-columns': this.getTemplateColumns()
         }}>
-        <ScrollContainer
-          ref={this.headContainer}
-          sync={this.container}>
+        <ScrollContainer onWheel={this.handleHeadWheel}>
           <TableHead
             columns={this.state.columns}
             colwidth={this.state.colwidth}

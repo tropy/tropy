@@ -17,7 +17,7 @@ const useScrollOffset = (container, id) => {
 
   useLayoutEffect(() => {
     if (offset.current != null)
-      container.current.scroll(offset.current.top, offset.current.left)
+      container.current.scrollTo(offset.current)
   }, [container])
 
   return useEvent(() => {
