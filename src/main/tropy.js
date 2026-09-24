@@ -209,11 +209,25 @@ export class Tropy extends EventEmitter {
         }
       }
 
+      let persistence
+
+      if (file) {
+        let name = `project:${urlId(file)}`
+
+        let taken = this.wm
+          .map('project')
+          .some(w => w.persistenceName === name)
+
+        if (!taken)
+          persistence = { name, windowStatePersistence: true }
+      }
+
       return this.wm.open('project', args, {
         show: 'init',
         title: 'Tropy',
         fixedSize,
-        ...bounds
+        ...bounds,
+        ...persistence
       })
 
     } else {
