@@ -9,6 +9,7 @@ export class Popup extends React.Component {
     super(props)
     this.root = $('#popup-root')
     this.dom = element('div')
+    this.dom.popover = 'manual'
     toggle(this.dom, 'popup-container', true)
   }
 
@@ -16,6 +17,7 @@ export class Popup extends React.Component {
     on(window, 'resize', this.handleResize)
     this.clip()
     append(this.dom, this.root)
+    this.dom.showPopover()
     toggle(document.documentElement, 'popup-open', true)
     if (this.props.autofocus) this.focus()
   }
