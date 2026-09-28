@@ -237,9 +237,6 @@ export class ItemTable extends ItemIterator {
   }
 
   handleHeadWheel = ({ deltaX, deltaY }) => {
-    // Subtle: the head does not scroll itself, so we forward wheel
-    // gestures over it to the body. Trackpad gestures are rarely
-    // straight, so we scroll only along the dominant axis.
     if (Math.abs(deltaX) > Math.abs(deltaY))
       this.container.current.scrollBy(null, deltaX)
     else
