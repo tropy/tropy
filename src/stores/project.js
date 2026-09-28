@@ -7,6 +7,7 @@ import { seq, debounce, throttle, log } from '../middleware/index.js'
 import {
   activities,
   context,
+  dialog,
   edit,
   esper,
   flash,
@@ -51,6 +52,7 @@ export const create = () => {
     reducer: {
       activities,
       context,
+      dialog,
       edit,
       esper,
       flash,
