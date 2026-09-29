@@ -8,6 +8,7 @@ import React, {
 
 import cx from 'classnames'
 import { EditorToolbar } from './toolbar.js'
+import { EditorSearch } from './search.js'
 import { EditorView } from './view.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDerivedState } from '../../hooks/use-derived-state.js'
@@ -38,6 +39,7 @@ export const Editor = React.forwardRef(({
   let view = useRef()
 
   let [hasViewFocus, setViewFocus] = useState(false)
+  let [isSearchOpen, setSearchOpen] = useState(false)
 
   let pendingCreation = useRef()
 
@@ -84,6 +86,11 @@ export const Editor = React.forwardRef(({
     }
   })
 
+  let handleSearchClose = useEvent(() => {
+    setSearchOpen(false)
+    view.current?.focus()
+  })
+
   let handleKeyDown = useEvent((_, event) => {
     if (isDisabled)
       return false
@@ -93,6 +100,18 @@ export const Editor = React.forwardRef(({
     switch (action) {
       case null:
         return
+      case 'find':
+        setSearchOpen(true)
+        break
+      case 'clearSelection':
+        // Prefer closing the find bar over the default clearSelection
+        // behavior, so a single Escape gets you out of search first.
+        if (isSearchOpen) {
+          handleSearchClose()
+          break
+        }
+        if (!exec(action)) return
+        break
       case 'addLink':
         toolbar.current.handleLinkButtonClick()
         break
@@ -143,6 +162,10 @@ export const Editor = React.forwardRef(({
         link={link}
         marks={marks}
         onCommand={handleCommand}/>
+      <EditorSearch
+        isOpen={isSearchOpen}
+        view={view.current}
+        onClose={handleSearchClose}/>
       <EditorView
         ref={view}
         state={state}
