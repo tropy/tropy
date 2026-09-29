@@ -6,7 +6,6 @@ import { PrefsContainer } from '../components/prefs/container.js'
 import { main } from '../sagas/prefs.js'
 import win from '../window.js'
 import { intl, prefs, project, history, settings } from '../actions/index.js'
-import * as dialog from '../dialog.js'
 
 export const store = create()
 export const tasks = store.saga.run(main)
@@ -29,8 +28,6 @@ Promise.all([
       )
   })
 
-dialog.start(store)
-
 win.on('app.undo', () => {
   store.dispatch(history.undo())
 })
@@ -46,5 +43,5 @@ win.on('settings.update', (opts) => {
 
 win.unloaders.push(() => (
   store.dispatch(prefs.close()),
-  tasks.toPromise().finally(() => dialog.stop())
+  tasks.toPromise()
 ))

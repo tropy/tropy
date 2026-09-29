@@ -6,7 +6,6 @@ import { create } from '../stores/project.js'
 import { main } from '../sagas/project.js'
 import win from '../window.js'
 import { idle, intl, project, history, keymap, settings } from '../actions/index.js'
-import * as dialog from '../dialog.js'
 import Esper from '../esper/index.js'
 
 export const store = create()
@@ -33,8 +32,6 @@ Promise.all([
       )
   })
 
-dialog.start(store)
-
 win.on('app.undo', () => {
   store.dispatch(history.undo())
 })
@@ -53,5 +50,5 @@ win.on('idle', ({ type, time }) => {
 
 win.unloaders.push(() => (
   store.dispatch(project.close()),
-  tasks.toPromise().finally(() => dialog.stop())
+  tasks.toPromise()
 ))

@@ -9,6 +9,7 @@ import { debounce, delay } from './common/util.js'
 import ARGS, { update } from './args.js'
 import { StyleSheet } from './res.js'
 import * as dialog from './dialog.js'
+import { createDialogService } from './dialog.js'
 import * as json from './common/json.js'
 import * as sharp from './image/sharp.js'
 import { WindowControls } from './window-controls.js'
@@ -48,12 +49,13 @@ export class Window extends EventEmitter {
     window: this
   })
 
+  dialog
+  store
   unloaders = []
 
   state = {
     isDragging: false
   }
-
 
   constructor () {
     if (instance) {
@@ -107,7 +109,11 @@ export class Window extends EventEmitter {
 
   async load () {
     let { store } = await import(`./views/${this.type}.js`)
+
     this.store = store
+    this.dialog = createDialogService(store)
+    this.unloaders.push(this.dialog.stop)
+
     this.send('ready')
     this.toggle('ready')
   }

@@ -1,4 +1,4 @@
-import assert from 'node:assert'
+import assert from 'node:assert/strict'
 import { extname, dirname } from 'node:path'
 import { ipcRenderer as ipc } from 'electron'
 import { IntlMessageFormat } from 'intl-messageformat'
@@ -10,54 +10,76 @@ import { pext } from './common/project.js'
 import IMAGE from './constants/image.js'
 import { darwin } from './common/os.js'
 
-let seq
-let pending
-let STORE
+let instance
+export { instance as default }
+
+export function createDialogService (store) {
+  assert(instance == null, 'dialog service already initialized')
+  instance = new DialogService(store)
+  instance.start()
+  return instance
+}
+
+export class DialogService {
+  #seq = counter()
+  #pending = {}
+
+  constructor (store) {
+    this.store = store
+  }
+
+  start () {
+    ipc.on('dialog', this.#handleIpcMessage)
+  }
+
+  stop = () => {
+    ipc.removeListener('dialog', this.#handleIpcMessage)
+  }
+
+  #handleIpcMessage = (_, { id, payload, error }) => {
+    try {
+      this.#pending[id][error ? 'reject' : 'resolve'](payload)
+    } catch (err) {
+      warn(`failed to resolve dialog #${id}: ${err.message}`)
+    }
+  }
+
+  localize (...args) {
+    return get(this.store.getState(), ['intl', 'messages', ...args])
+  }
+
+  show (type, { ...options } = {}) {
+    let { promise, resolve, reject } = Promise.withResolvers()
+    let { value: id } = this.#seq.next()
+    let cleanup = () => { delete this.#pending[id] }
+
+    this.#pending[id] = { resolve, reject }
+    promise.then(cleanup, cleanup)
+
+    try {
+      ipc.send('wm', 'dialog', { id, type, options })
+    } catch (err) {
+      reject(err)
+    }
+
+    return promise
+  }
+}
 
 function t (...args) {
-  return get(STORE.getState(), ['intl', 'messages', ...args])
+  return instance.localize(...args)
 }
 
 function f (message, ...opts) {
   return new IntlMessageFormat(message, ARGS.locale).format(...opts)
 }
 
-function start (store) {
-  assert(seq == null, 'already initialized')
-
-  seq = counter()
-  pending = {}
-  STORE = store
-
-  ipc.on('dialog', onClosed)
-}
-
-function stop () {
-  ipc.removeListener('dialog', onClosed)
-  seq = null
-  pending = null
-}
-
-function onClosed (_, { id, payload, error }) {
-  try {
-    pending[id][error ? 'reject' : 'resolve'](payload)
-  } catch (error) {
-    warn(`failed to resolve dialog #${id}: ${error.message}`)
-  } finally {
-    delete pending[id]
+async function show (type, { message, values, ...opts } = {}) {
+  if (message) {
+    message = f(message, values)
   }
-}
 
-function show (type, options = {}) {
-  return new Promise((resolve, reject) => {
-    let id = seq.next().value
-    if (options.message) {
-      options.message = f(options.message, options.values)
-      options.values = null
-    }
-    ipc.send('wm', 'dialog', { id, type, options })
-    pending[id] = { resolve, reject }
-  })
+  return instance.show(type, { message, ...opts })
 }
 
 function notify (id, opts) {
@@ -286,7 +308,5 @@ export {
   open,
   prompt,
   save,
-  show,
-  start,
-  stop
+  show
 }
