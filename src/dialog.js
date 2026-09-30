@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { EventEmitter } from 'node:events'
 import { extname, dirname } from 'node:path'
 import { ipcRenderer as ipc } from 'electron'
 import { IntlMessageFormat } from 'intl-messageformat'
@@ -20,12 +21,64 @@ export function createDialogService (store) {
   return instance
 }
 
-export class DialogService {
+export class DialogService extends EventEmitter {
   #seq = counter()
-  #pending = {}
+  #pending = new Map()
+  #isLayerAttached = false
+
+  modals = Object.create(null)
 
   constructor (store) {
+    super()
     this.store = store
+  }
+
+  #handleIpcMessage = (_, { id, payload, error }) => {
+    this.#settle(id, error ? 'reject' : 'resolve', payload)
+  }
+
+  #settle (id, method, payload) {
+    let dialog = this.#pending.get(id)
+
+    if (!dialog) {
+      warn(`failed to settle dialog #${id}: not pending`)
+      return
+    }
+
+    this.#pending.delete(id)
+
+    if (dialog.isModal)
+      this.emit('change')
+
+    dialog[method](payload)
+  }
+
+  register (type, component) {
+    this.modals[type] = component
+
+    return () => {
+      if (this.modals[type] !== component)
+        return
+
+      delete this.modals[type]
+
+      this.#pending.values().forEach(dialog => {
+        if (dialog.isModal && dialog.type === type)
+          this.close(dialog.id)
+      })
+    }
+  }
+
+  attach () {
+    this.#isLayerAttached = true
+
+    return () => {
+      this.#isLayerAttached = false
+
+      this.#pending.values().forEach(dialog => {
+        if (dialog.isModal) this.close(dialog.id)
+      })
+    }
   }
 
   start () {
@@ -34,32 +87,57 @@ export class DialogService {
 
   stop = () => {
     ipc.removeListener('dialog', this.#handleIpcMessage)
+    this.clear()
   }
 
-  #handleIpcMessage = (_, { id, payload, error }) => {
-    try {
-      this.#pending[id][error ? 'reject' : 'resolve'](payload)
-    } catch (err) {
-      warn(`failed to resolve dialog #${id}: ${err.message}`)
-    }
+  close (id, result) {
+    this.#settle(id, 'resolve', result)
+  }
+
+  clear () {
+    this.#pending.values().forEach(dialog => {
+      this.close(dialog.id)
+    })
+  }
+
+  get current () {
+    return this.#pending.values().find(dialog => dialog.isModal)
+  }
+
+  canShowAsModal (type) {
+    return this.#isLayerAttached && (type in this.modals)
   }
 
   localize (...args) {
     return get(this.store.getState(), ['intl', 'messages', ...args])
   }
 
-  show (type, { ...options } = {}) {
+  show (type, { signal, ...options } = {}) {
+    if (signal?.aborted)
+      return Promise.resolve()
+
     let { promise, resolve, reject } = Promise.withResolvers()
     let { value: id } = this.#seq.next()
-    let cleanup = () => { delete this.#pending[id] }
+    let isModal = this.canShowAsModal(type)
 
-    this.#pending[id] = { resolve, reject }
-    promise.then(cleanup, cleanup)
+    this.#pending.set(id, { id, type, options, isModal, resolve, reject })
+
+    if (signal) {
+      let close = () => { this.close(id) }
+      let cleanup = () => { signal.removeEventListener('abort', close) }
+
+      signal.addEventListener('abort', close, { once: true })
+      promise.then(cleanup, cleanup)
+    }
 
     try {
-      ipc.send('wm', 'dialog', { id, type, options })
+      if (isModal) {
+        this.emit('change')
+      } else {
+        ipc.send('wm', 'dialog', { id, type, options })
+      }
     } catch (err) {
-      reject(err)
+      this.#settle(id, 'reject', err)
     }
 
     return promise
@@ -82,7 +160,7 @@ async function show (type, { message, values, ...opts } = {}) {
   return instance.show(type, { message, ...opts })
 }
 
-function notify (id, opts) {
+async function notify (id, opts) {
   return show('message-box', {
     type: 'info',
     ...t('dialog', 'notify', ...id.split('.')),
@@ -90,7 +168,7 @@ function notify (id, opts) {
   })
 }
 
-function fail (e, code = e.code, detail) {
+async function fail (e, code = e.code, detail) {
   let message = t(`error.${code}`) || e.message
 
   return show('message-box', {
@@ -98,7 +176,7 @@ function fail (e, code = e.code, detail) {
     ...t('dialog', 'error'),
     message,
     detail: detail || e.stack
-  }).then(({ response }) => {
+  }).then(({ response } = {}) => {
     switch (response) {
       case 1:
         copy({ text: crashReport(e, message) })
@@ -123,11 +201,13 @@ async function prompt (id, {
     cancelId,
     checkboxChecked: isChecked,
     ...opts
-  })
+  }) ?? {}
+
+  let cancel = response == null || response === cancelId
 
   return {
-    ok: response !== cancelId,
-    cancel: response === cancelId,
+    ok: !cancel,
+    cancel,
     isChecked: checked
   }
 }

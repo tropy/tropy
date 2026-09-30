@@ -30,7 +30,7 @@ const Dialog = {
     return Dialog.show('save', win, opts)
   },
 
-  show (type, win, opts) {
+  async show (type, win, opts) {
     switch (type) {
       case 'save':
         return dialog

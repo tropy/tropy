@@ -1,4 +1,3 @@
-export { default as dialog } from '../slices/dialog.js'
 export { default as notepad } from '../slices/notepad.js'
 export { default as projectFiles } from '../slices/project-files.js'
 export { default as prefs } from '../slices/prefs.js'

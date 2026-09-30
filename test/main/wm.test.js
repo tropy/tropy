@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import { mock } from 'node:test'
 import { once } from 'node:events'
 import { join } from 'node:path'
 import { env } from 'node:process'
@@ -136,6 +137,25 @@ describe('WindowManager', () => {
         expect(wm.has('about')).to.be.false
         expect(win.isDestroyed()).to.be.true
       })
+    })
+  })
+
+  describe('handleShowDialog', () => {
+    it('replies with an error for unknown dialog types', async () => {
+      let { promise, resolve } = Promise.withResolvers()
+      let win = { webContents: { send: mock.fn(resolve) } }
+
+      new WindowManager().handleShowDialog(win, { id: 1, type: 'unknown' })
+
+      await promise
+      expect(win.webContents.send.mock.calls[0].arguments).to.eql([
+        'dialog',
+        {
+          error: true,
+          id: 1,
+          payload: { message: 'unknown dialog type: unknown' }
+        }
+      ])
     })
   })
 })
