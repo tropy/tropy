@@ -4,6 +4,7 @@ import cx from 'classnames'
 export const Modal = ({
   children,
   className,
+  closedBy,
   onClose
 }) => {
   let dom = useRef()
@@ -44,6 +45,7 @@ export const Modal = ({
     <dialog
       ref={dom}
       className={cx('modal', className)}
+      closedby={closedBy}
       onSubmit={handleSubmit}
       onClose={handleClose}>
       {isOpen && children}
