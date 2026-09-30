@@ -165,14 +165,14 @@ export class Tropy extends EventEmitter {
   }
 
   async showOpenDialog (win = this.wm.current()) {
-    let files = await dialog.open(win, {
+    let { cancel, value: files } = await dialog.open(win, {
       filters: [{
         name: this.dict.dialog.file.project,
         extensions: ['tpy', 'tropy', 'mtpy']
       }]
     })
 
-    if (files) {
+    if (!cancel) {
       await this.showProjectWindow(files[0], win)
     }
   }
@@ -425,7 +425,7 @@ export class Tropy extends EventEmitter {
       ])
 
       if (opts.pdf) {
-        let path = await dialog.save(sender, {
+        let { value: path } = await dialog.save(sender, {
           filters: [{
             name: this.dict.dialog.file.pdf,
             extensions: ['pdf']
@@ -1063,8 +1063,8 @@ export class Tropy extends EventEmitter {
     this.wm.on('unresponsive', (_, win) => {
       dialog
         .warn(win, this.dict.dialog.unresponsive)
-        .then(res => {
-          switch (res) {
+        .then(({ value }) => {
+          switch (value) {
             case 0: return win.destroy()
           }
         })
@@ -1073,8 +1073,8 @@ export class Tropy extends EventEmitter {
     this.wm.on('crashed', (_, win) => {
       dialog
         .warn(win, this.dict.dialog.crashed)
-        .then(({ response }) => {
-          switch (response) {
+        .then(({ value }) => {
+          switch (value) {
             case 0:
               win.destroy()
               break
@@ -1153,14 +1153,14 @@ export class Tropy extends EventEmitter {
             path => urlId(path) === projectId)
 
           if (file == null) {
-            let files = await dialog.open(this.wm.current(), {
+            let { cancel, value: files } = await dialog.open(this.wm.current(), {
               filters: [{
                 name: this.dict.dialog.file.project,
                 extensions: ['tpy', 'tropy', 'mtpy']
               }]
             })
 
-            if (!files?.length) return
+            if (cancel) return
             file = files[0]
           }
 
@@ -1206,8 +1206,8 @@ export class Tropy extends EventEmitter {
         ...this.dict.dialog.unhandled,
         detail: e.stack
       })
-      .then(({ response }) => {
-        switch (response) {
+      .then(({ value }) => {
+        switch (value) {
           case 1:
             clipboard
               .writeText(crashReport(e))

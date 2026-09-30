@@ -12,6 +12,8 @@ describe('DialogService', () => {
     .filter(([channel, type]) => channel === 'wm' && type === 'dialog')
     .map(([,, dialog]) => dialog)
 
+  const CANCEL = { cancel: true }
+
   let reply = (id, payload, error) =>
     ipc.emit('dialog', {}, { id, payload, error })
 
@@ -37,8 +39,9 @@ describe('DialogService', () => {
       let [{ id, options }] = sent()
       expect(options).to.eql({ a: 1 })
 
-      reply(id, 'ok')
-      expect(await result).to.equal('ok')
+      let ok = { cancel: false, value: 'ok', data: null }
+      reply(id, ok)
+      expect(await result).to.eql(ok)
     })
 
     it('falls back to ipc for unregistered types', () => {
@@ -101,6 +104,26 @@ describe('DialogService', () => {
     })
   })
 
+  describe('close', () => {
+    it('cancels any type of dialog without a result', async () => {
+      service.register('test', () => null)
+      service.attach()
+
+      let results = [
+        service.show('test'),
+        service.show('message-box', { cancelId: 1, checkboxChecked: true }),
+        service.show('file'),
+        service.show('save')
+      ]
+
+      for (let { id } of sent()) service.close(id)
+      service.close(service.current.id)
+
+      expect(await Promise.all(results))
+        .to.eql([CANCEL, CANCEL, CANCEL, CANCEL])
+    })
+  })
+
   describe('signal', () => {
     it('cancels queued modals on abort', async () => {
       service.register('test', () => null)
@@ -111,7 +134,7 @@ describe('DialogService', () => {
 
       ctrl.abort()
       expect(service.current).to.be.undefined
-      expect(await result).to.be.undefined
+      expect(await result).to.eql(CANCEL)
     })
 
     it('cancels native dialogs on abort', async () => {
@@ -120,15 +143,15 @@ describe('DialogService', () => {
       let [{ id }] = sent()
 
       ctrl.abort()
-      expect(await result).to.be.undefined
+      expect(await result).to.eql(CANCEL)
 
       reply(id, 'late')
-      expect(await result).to.be.undefined
+      expect(await result).to.eql(CANCEL)
     })
 
     it('does not show dialogs for aborted signals', async () => {
       expect(await service.show('test', { signal: AbortSignal.abort() }))
-        .to.be.undefined
+        .to.eql(CANCEL)
       expect(sent()).to.have.length(0)
     })
   })
@@ -146,7 +169,7 @@ describe('DialogService', () => {
 
       service.clear()
       expect(service.current).to.be.undefined
-      expect(await Promise.all(results)).to.eql([undefined, undefined, undefined])
+      expect(await Promise.all(results)).to.eql([CANCEL, CANCEL, CANCEL])
     })
 
     it('cancels queued modals on detach', async () => {
@@ -156,7 +179,7 @@ describe('DialogService', () => {
 
       detach()
       expect(service.current).to.be.undefined
-      expect(await result).to.be.undefined
+      expect(await result).to.eql(CANCEL)
       expect(service.canShowAsModal('test')).to.be.false
     })
 
@@ -167,7 +190,7 @@ describe('DialogService', () => {
 
       unregister()
       expect(service.current).to.be.undefined
-      expect(await result).to.be.undefined
+      expect(await result).to.eql(CANCEL)
       expect(service.canShowAsModal('test')).to.be.false
     })
   })

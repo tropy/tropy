@@ -34,10 +34,10 @@ export class DialogService extends EventEmitter {
   }
 
   #handleIpcMessage = (_, { id, payload, error }) => {
-    this.#settle(id, error ? 'reject' : 'resolve', payload)
+    this.#remove(id)?.[error ? 'reject' : 'resolve'](payload)
   }
 
-  #settle (id, method, payload) {
+  #remove (id) {
     let dialog = this.#pending.get(id)
 
     if (!dialog) {
@@ -50,7 +50,7 @@ export class DialogService extends EventEmitter {
     if (dialog.isModal)
       this.emit('change')
 
-    dialog[method](payload)
+    return dialog
   }
 
   register (type, component) {
@@ -90,8 +90,8 @@ export class DialogService extends EventEmitter {
     this.clear()
   }
 
-  close (id, result) {
-    this.#settle(id, 'resolve', result)
+  close (id, result = { cancel: true }) {
+    this.#remove(id)?.resolve(result)
   }
 
   clear () {
@@ -114,7 +114,7 @@ export class DialogService extends EventEmitter {
 
   show (type, { signal, ...options } = {}) {
     if (signal?.aborted)
-      return Promise.resolve()
+      return Promise.resolve({ cancel: true })
 
     let { promise, resolve, reject } = Promise.withResolvers()
     let { value: id } = this.#seq.next()
@@ -137,7 +137,7 @@ export class DialogService extends EventEmitter {
         ipc.send('wm', 'dialog', { id, type, options })
       }
     } catch (err) {
-      this.#settle(id, 'reject', err)
+      this.#remove(id)?.reject(err)
     }
 
     return promise
@@ -176,8 +176,8 @@ async function fail (e, code = e.code, detail) {
     ...t('dialog', 'error'),
     message,
     detail: detail || e.stack
-  }).then(({ response } = {}) => {
-    switch (response) {
+  }).then(({ value }) => {
+    switch (value) {
       case 1:
         copy({ text: crashReport(e, message) })
         break
@@ -194,30 +194,28 @@ async function prompt (id, {
   isChecked = false,
   ...opts
 } = {}) {
-  let { response, checked } = await show('message-box', {
+  let { cancel, data } = await show('message-box', {
     ...t('dialog', 'prompt', ...id.split('.')),
     type: 'question',
     defaultId,
     cancelId,
     checkboxChecked: isChecked,
     ...opts
-  }) ?? {}
-
-  let cancel = response == null || response === cancelId
+  })
 
   return {
     ok: !cancel,
     cancel,
-    isChecked: checked
+    isChecked: data?.checked ?? false
   }
 }
 
-function save (opts) {
-  return show('save', opts)
+async function save (opts) {
+  return (await show('save', opts)).value
 }
 
-function open (opts) {
-  return show('file', opts)
+async function open (opts) {
+  return (await show('file', opts)).value ?? []
 }
 
 open.images = (opts) => open({

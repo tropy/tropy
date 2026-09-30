@@ -32,38 +32,60 @@ const Dialog = {
 
   async show (type, win, opts) {
     switch (type) {
-      case 'save':
-        return dialog
-          .showSaveDialog(win, {
-            defaultPath:
-              join(opts.defaultPath || defaultPath || '', opts.filename || ''),
-            properties: ['createDirectory'],
-            ...opts
-          })
-          .then(({ filePath }) => {
-            if (filePath) {
-              defaultPath = dirname(filePath)
-            }
-            return filePath
-          })
+      case 'save': {
+        let { canceled, filePath } = await dialog.showSaveDialog(win, {
+          defaultPath:
+            join(opts.defaultPath || defaultPath || '', opts.filename || ''),
+          properties: ['createDirectory'],
+          ...opts
+        })
 
-      case 'file':
-        return dialog
-          .showOpenDialog(win, { defaultPath, ...opts })
-          .then(({ filePaths }) => {
-            if (filePaths && filePaths.length) {
-              defaultPath = dirname(filePaths[0])
-            }
-            return filePaths
-          })
+        if (canceled || !filePath)
+          return {
+            cancel: true,
+            value: null,
+            data: null
+          }
 
-      case 'message-box':
-        return dialog
-          .showMessageBox(win, { buttons: ['OK'], ...opts })
-          .then(p => ({
-            response: p.response,
-            checked: p.checkboxChecked
-          }))
+        defaultPath = dirname(filePath)
+        return {
+          cancel: false,
+          value: filePath,
+          data: null
+        }
+      }
+
+      case 'file': {
+        let { canceled, filePaths } = await dialog.showOpenDialog(win, {
+          defaultPath,
+          ...opts
+        })
+
+        if (canceled || !filePaths?.length)
+          return { cancel: true, value: [], data: null }
+
+        defaultPath = dirname(filePaths[0])
+        return {
+          cancel: false,
+          value: filePaths,
+          data: null
+        }
+      }
+
+      case 'message-box': {
+        let { response, checkboxChecked } = await dialog.showMessageBox(win, {
+          buttons: ['OK'],
+          ...opts
+        })
+
+        return {
+          cancel: response === (opts.cancelId ?? 0),
+          value: response,
+          data: {
+            checked: checkboxChecked
+          }
+        }
+      }
 
       default:
         throw new Error(`unknown dialog type: ${type}`)
