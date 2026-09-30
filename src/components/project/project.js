@@ -8,6 +8,7 @@ import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useGlobalKeys } from '../../hooks/use-global-keys.js'
 import { ProjectView } from './view.js'
 import { ItemView } from '../item/view.js'
+import { ModalLayer } from '../modal-layer.js'
 import { DragLayer } from '../drag-layer.js'
 import { MODE } from '../../constants/nav.js'
 import * as act from '../../actions/index.js'
@@ -100,6 +101,7 @@ export const Project = React.forwardRef(({
         onPanelResize={handlePanelResize}/>
 
       <DragLayer/>
+      <ModalLayer/>
       <div className="cover">
         <IconTropyLarge/>
       </div>

@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react'
 import cx from 'classnames'
 
-export const Dialog = ({
+export const Modal = ({
   children,
   className,
   onClose
@@ -25,7 +25,7 @@ export const Dialog = ({
   return (
     <dialog
       ref={dom}
-      className={cx('dialog', className)}
+      className={cx('modal', className)}
       onClose={handleClose}>
       {children}
     </dialog>
