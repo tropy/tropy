@@ -27,10 +27,10 @@ export function useDragDropNode (dom, {
   depth = 0,
   icon,
   indent = 0,
+  isDisabled = false,
   isDraggingParent,
   isExpanded,
   isLastChild,
-  isReadOnly = false,
   minDropDepth = 0,
   node,
   onDrop,
@@ -98,11 +98,11 @@ export function useDragDropNode (dom, {
   })
 
   let canDragNode = useEvent(() => {
-    return !isReadOnly
+    return !isDisabled
   })
 
   let canDropNode = useEvent(() => {
-    return !(isDraggingParent || isDragging)
+    return !(isDisabled || isDraggingParent || isDragging)
   })
 
   let createDragItem = useEvent(() => ({
