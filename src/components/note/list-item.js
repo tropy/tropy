@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import cx from 'classnames'
 import { useClickHandler } from '../../hooks/use-click-handler.js'
 import { useEvent } from '../../hooks/use-event.js'
+import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
 
 export const NoteListItem = ({
   note,
@@ -13,10 +14,7 @@ export const NoteListItem = ({
 
   let dom = useRef()
 
-  useEffect(() => {
-    if (isSelected)
-      dom.current.scrollIntoViewIfNeeded(false)
-  }, [isSelected])
+  useScrollIntoView(dom, { when: isSelected, center: false })
 
   let handleContextMenu = useEvent((event) => {
     if (!isSelected) onSelect(note)

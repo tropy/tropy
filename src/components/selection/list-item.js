@@ -1,9 +1,10 @@
-import { memo, useEffect, useRef } from 'react'
+import { memo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { useIntl } from 'react-intl'
 import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
 import { useClickHandler } from '../../hooks/use-click-handler.js'
 import { useEvent } from '../../hooks/use-event.js'
+import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
 import { Editable } from '../editable.js'
 import { Thumbnail } from '../photo/thumbnail.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
@@ -46,10 +47,7 @@ export const SelectionListItem = memo(({
       onDrop
     })
 
-  useEffect(() => {
-    if (isActive)
-      container.current?.scrollIntoViewIfNeeded()
-  }, [isActive])
+  useScrollIntoView(container, { when: isActive })
 
   let handleMouseDown = useEvent(() => {
     hasFocusChanged.current = testFocusChange()

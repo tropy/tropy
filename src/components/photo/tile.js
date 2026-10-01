@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from 'react'
+import { memo, useRef } from 'react'
 import cx from 'classnames'
 import { Thumbnail } from './thumbnail.js'
 import { Icon } from '../icons.js'
@@ -7,6 +7,7 @@ import { Button } from '../button.js'
 import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
 import { useClickHandler } from '../../hooks/use-click-handler.js'
 import { useEvent } from '../../hooks/use-event.js'
+import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
 import { pick } from '../../common/util.js'
 
 export const PhotoTile = memo(({
@@ -39,10 +40,7 @@ export const PhotoTile = memo(({
       onDrop: onDropPhoto
     })
 
-  useEffect(() => {
-    if (isSelected)
-      container.current?.scrollIntoViewIfNeeded()
-  }, [isSelected])
+  useScrollIntoView(container, { when: isSelected })
 
   let select = useEvent(() => {
     if (!(isSelected && selection == null))

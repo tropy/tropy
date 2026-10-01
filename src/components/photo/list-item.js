@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from 'react'
+import { memo, useRef } from 'react'
 import cx from 'classnames'
 import { Editable } from '../editable.js'
 import { Thumbnail } from './thumbnail.js'
@@ -9,6 +9,7 @@ import { TranscriptionIcon } from '../transcription/icon.js'
 import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
 import { useClickHandler } from '../../hooks/use-click-handler.js'
 import { useEvent } from '../../hooks/use-event.js'
+import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
 import { pick, pluck } from '../../common/util.js'
 import { testFocusChange } from '../../dom.js'
 import { TYPE } from '../../constants/index.js'
@@ -54,10 +55,7 @@ export const PhotoListItem = memo(({
       onDrop: onDropPhoto
     })
 
-  useEffect(() => {
-    if (isSelected)
-      container.current?.scrollIntoViewIfNeeded()
-  }, [isSelected])
+  useScrollIntoView(container, { when: isSelected })
 
   let select = useEvent(() => {
     if (!isActive)

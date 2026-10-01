@@ -1,7 +1,8 @@
-import { memo, useEffect, useRef } from 'react'
+import { memo, useRef } from 'react'
 import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
 import { useClickHandler } from '../../hooks/use-click-handler.js'
 import { useEvent } from '../../hooks/use-event.js'
+import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
 import { Thumbnail } from '../photo/thumbnail.js'
 import { pick } from '../../common/util.js'
 import cx from 'classnames'
@@ -34,10 +35,7 @@ export const SelectionTile = memo(({
       onDrop
     })
 
-  useEffect(() => {
-    if (isActive)
-      container.current?.scrollIntoViewIfNeeded()
-  }, [isActive])
+  useScrollIntoView(container, { when: isActive })
 
   let handleClick = useClickHandler({
     onClick: () => onSelect(selection),
