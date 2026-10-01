@@ -6,7 +6,10 @@ import { Editable } from '../editable.js'
 
 
 export function ProjectName (props) {
-  let [{ canDrop, isOver }, drop] = useDropPhotoFiles(props)
+  let [{ canDrop, isOver }, drop] = useDropPhotoFiles({
+    onDrop: props.onDrop,
+    isDisabled: props.isReadOnly
+  })
 
   return (
     <li

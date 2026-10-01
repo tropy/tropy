@@ -79,7 +79,7 @@ export const ProjectView = ({
 
   let [{ canDrop }, drop] = useDropPhotoFiles({
     onDrop: handleItemImport,
-    isReadOnly
+    isDisabled: isReadOnly
   })
 
 

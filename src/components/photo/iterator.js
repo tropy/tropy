@@ -206,7 +206,7 @@ export class PhotoIterator extends React.Component {
       })
 
       let [file, dropFile] = useDropPhotoFiles({
-        isReadOnly: !canCreate,
+        isDisabled: !canCreate,
         onDrop: onCreate
       })
 

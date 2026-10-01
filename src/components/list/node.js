@@ -74,12 +74,12 @@ export const ListNode = memo(({
   })
 
   let [di, dropItems] = useDropItems({
-    isReadOnly,
+    isDisabled: isReadOnly,
     onDrop: handleDropItems
   })
 
   let [df, dropFiles] = useDropPhotoFiles({
-    isReadOnly,
+    isDisabled: isReadOnly,
     onDrop: handleDropFiles
   })
 
