@@ -16,12 +16,18 @@ export function useDragDropSortable (element, {
   let [offset, setOffset] = useState(null)
   let canDrag = useEvent(() => !isDisabled)
 
+  let handleCanDrop = useEvent((item, monitor) =>
+    !isDisabled && (canDrop == null || canDrop(item, monitor)))
+
   let item = useEvent(() => ({
     ...createDragItem(),
     adj: getAdjacent()
   }))
 
   let handleHover = useEvent((item, monitor) => {
+    if (!monitor.canDrop())
+      return setOffset(null)
+
     let { top, left, width, height } = bounds(element.current)
     let { x, y } = monitor.getClientOffset()
 
@@ -61,13 +67,14 @@ export function useDragDropSortable (element, {
     })
   }, [])
 
-  let [{ isOver }, drop] = useDrop(() => ({
+  let [props, drop] = useDrop(() => ({
     accept: type,
-    canDrop,
+    canDrop: handleCanDrop,
     hover: handleHover,
     drop: handleDrop,
     collect: (monitor) => ({
-      isOver: monitor.isOver()
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
     })
   }), [])
 
@@ -75,13 +82,13 @@ export function useDragDropSortable (element, {
     preview(getEmptyImage())
   }, [preview])
 
-  let direction = (isOver && offset != null)
+  let direction = (props.isOver && offset != null)
     ? (offset ? 'after' : 'before')
     : null
 
   return [{
+    ...props,
     isDragging,
-    isOver,
     direction
   }, isDisabled ? element : drag(drop(element))]
 }

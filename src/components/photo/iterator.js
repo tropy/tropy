@@ -201,7 +201,7 @@ export class PhotoIterator extends React.Component {
         onSort({ item, photos: order })
       })
 
-      let canDropPhoto = useEvent(() => photos.length > 1)
+      let canDropPhoto = useEvent((item) => item.id !== photos.at(-1)?.id)
 
       let [photo, dropPhoto] = useDropOutside({
         type: DND.PHOTO,
@@ -219,7 +219,7 @@ export class PhotoIterator extends React.Component {
         <Iterator
           {...props}
           connectDropTarget={(element) => dropPhoto(dropFile(element))}
-          isOver={photo.isOver && photos.length > 1}
+          isOver={photo.isOver && photo.canDrop}
           isOverFile={file.isOver && file.canDrop}
           onDropPhoto={handleDropPhoto}/>
       )
