@@ -39,7 +39,7 @@ export const MetadataField = React.memo(({
     }, { cut: dropEffect === 'move' }))
   })
 
-  let [{ isOver }, dnd] = useDragDropMetadata({
+  let [{ canDrop, isOver }, dnd] = useDragDropMetadata({
     id,
     isDisabled: isDisabled || isStatic || isEditing,
     isMixed,
@@ -85,7 +85,7 @@ export const MetadataField = React.memo(({
       className={cx('metadata-field', {
         extra: isExtra,
         mixed: isMixed,
-        over: isOver,
+        over: isOver && canDrop,
         static: isStatic,
         clickable: onClick != null
       })}
