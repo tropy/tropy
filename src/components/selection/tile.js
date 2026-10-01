@@ -24,7 +24,7 @@ export const SelectionTile = memo(({
 }) => {
   let container = useRef()
 
-  let [{ isDragging, isOver, direction }, dnd] =
+  let [{ canDrop, isDragging, isOver, direction }, dnd] =
     useDragDropSelection(container, {
       selection,
       photo,
@@ -59,7 +59,7 @@ export const SelectionTile = memo(({
         active: isActive,
         dragging: isDragging,
         last: isLast,
-        over: isOver,
+        over: isOver && canDrop,
         selection: true,
         tile: true,
         [direction]: direction

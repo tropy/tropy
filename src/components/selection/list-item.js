@@ -36,7 +36,7 @@ export const SelectionListItem = memo(({
   let hasFocusChanged = useRef()
   let intl = useIntl()
 
-  let [{ isDragging, isOver, direction }, dnd] =
+  let [{ canDrop, isDragging, isOver, direction }, dnd] =
     useDragDropSelection(container, {
       selection,
       photo,
@@ -107,7 +107,7 @@ export const SelectionListItem = memo(({
         active: isActive,
         dragging: isDragging,
         last: isLast,
-        over: isOver,
+        over: isOver && canDrop,
         [direction]: direction
       })}
       onContextMenu={handleContextMenu}

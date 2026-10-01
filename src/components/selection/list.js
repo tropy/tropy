@@ -54,12 +54,14 @@ export const SelectionList = memo(({
   let getAdjacent = useEvent((selection) =>
     adjacent(selections, selection).map(s => s?.id))
 
-  let canDrop = useEvent((item) =>
-    photo.id === item.photo)
+  let canDropSelection = useEvent((item) =>
+    isSortable &&
+    photo.id === item.photo &&
+    item.id !== photo.selections.at(-1))
 
-  let [{ isOver }, drop] = useDropOutside({
+  let [{ canDrop, isOver }, drop] = useDropOutside({
     type: DND.SELECTION,
-    canDrop,
+    canDrop: canDropSelection,
     items: photo.selections,
     onDrop: handleDropSelection
   })
@@ -67,7 +69,7 @@ export const SelectionList = memo(({
   return (
     <ul
       ref={isSortable ? drop(container) : container}
-      className={cx('selection-list', { over: isOver })}>
+      className={cx('selection-list', { over: isOver && canDrop })}>
       {selections.map((selection, index) => (
         <SelectionListItem
           key={selection.id}

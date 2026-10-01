@@ -99,12 +99,14 @@ export const SelectionGrid = memo(({
     }
   })
 
-  let canDrop = useEvent((item) =>
-    photo.id === item.photo)
+  let canDropSelection = useEvent((item) =>
+    isSortable &&
+    photo.id === item.photo &&
+    item.id !== photo.selections.at(-1))
 
-  let [{ isOver }, drop] = useDropOutside({
+  let [{ canDrop, isOver }, drop] = useDropOutside({
     type: DND.SELECTION,
-    canDrop,
+    canDrop: canDropSelection,
     items: photo.selections,
     onDrop: handleDropSelection
   })
@@ -112,7 +114,7 @@ export const SelectionGrid = memo(({
   return (
     <ul
       ref={isSortable ? drop(container) : container}
-      className={cx('selection-grid', { over: isOver })}
+      className={cx('selection-grid', { over: isOver && canDrop })}
       style={style}
       tabIndex={TABS.SelectionGrid}
       onBlur={onBlur}
