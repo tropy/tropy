@@ -12,6 +12,10 @@ class PhotoList extends PhotoIterator {
     return ['photo-list', super.classes]
   }
 
+  get isVertical () {
+    return true
+  }
+
   isEditing (photo) {
     return this.props.edit.photo === photo.id
   }
