@@ -39,7 +39,6 @@ export class ItemTable extends ItemIterator {
 
   get classes () {
     return ['table-body', {
-      'drop-target': !this.props.isReadOnly,
       over: this.props.isOver
     }]
   }

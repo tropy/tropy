@@ -25,7 +25,6 @@ export class PhotoIterable extends React.PureComponent {
 
   get classes () {
     return ['photo', {
-      'drop-target': this.props.isSortable,
       over: this.props.isOver,
       dragging: this.props.isDragging,
       expanded: this.props.isExpanded,

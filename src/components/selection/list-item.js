@@ -108,7 +108,6 @@ export const SelectionListItem = memo(({
       className={cx('selection', {
         active: isActive,
         dragging: isDragging,
-        'drop-target': isSortable,
         last: isLast,
         over: isOver,
         [direction]: direction

@@ -60,7 +60,6 @@ export const SelectionTile = memo(({
       className={cx({
         active: isActive,
         dragging: isDragging,
-        'drop-target': isSortable,
         last: isLast,
         over: isOver,
         selection: true,

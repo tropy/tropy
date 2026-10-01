@@ -12,7 +12,6 @@ export class ItemIterable extends React.PureComponent {
   get classes () {
     return {
       item: true,
-      'drop-target': !this.props.isReadOnly,
       active: this.props.isSelected,
       over: this.props.isOver && this.props.canDrop,
       dragging: this.props.isDragging

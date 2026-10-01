@@ -21,7 +21,6 @@ export class ItemGrid extends ItemIterator {
     return this.connect(
       <div
         className={cx('item-grid', {
-          'drop-target': !this.props.isReadOnly,
           over: this.props.isOver
         })}
         data-size={this.props.size}>
