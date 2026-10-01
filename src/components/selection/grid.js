@@ -58,7 +58,7 @@ export const SelectionGrid = memo(({
   })
 
   let getAdjacent = useEvent((selection) =>
-    adjacent(selections, selection).map(s => s.id))
+    adjacent(selections, selection).map(s => s?.id))
 
   let { current, next, prev } = useNavKeys(selections, active)
 

@@ -52,7 +52,7 @@ export const SelectionList = memo(({
   })
 
   let getAdjacent = useEvent((selection) =>
-    adjacent(selections, selection).map(s => s.id))
+    adjacent(selections, selection).map(s => s?.id))
 
   let canDrop = useEvent((item) =>
     photo.id === item.photo)
