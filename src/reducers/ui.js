@@ -5,6 +5,7 @@ const INIT = {
   esper: {
     height: 50,
     width: 50,
+    fontSize: 18,
     overlay: ESPER.OVERLAY.NONE,
     overlayPanel: false,
     split: 50,

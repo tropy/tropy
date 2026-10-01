@@ -684,7 +684,7 @@ export class Esper extends React.Component {
 
   render () {
     let { isDisabled } = this
-    let { hasSideBySideLayout, overlay, overlayPanel, transcription } = this.props
+    let { hasSideBySideLayout, overlay, transcription } = this.props
 
     let isOverlayVisible =
       overlay && transcription != null
@@ -778,24 +778,7 @@ export class Esper extends React.Component {
         {isOverlayVisible && (
           <EsperOverlay
             mode={overlay}
-            hasTitlebar={hasSideBySideLayout || !isOverlaySplit}
-            toolbar={(
-              <>
-                <Toolbar.Left>
-                  <ToolGroup.FontSize
-                    isDisabled={isDisabled}/>
-                </Toolbar.Left>
-                <Toolbar.Right>
-                  <ToolGroup.Layout
-                    isAltLayout={!hasSideBySideLayout && isOverlaySplit}
-                    isDisabled={isDisabled}
-                    onChange={this.handleChange}
-                    overlay={overlay}
-                    overlayPanel={overlayPanel}/>
-                </Toolbar.Right>
-              </>
-            )}
-            isPanelVisible={overlayPanel}
+            isDisabled={isDisabled}
             panel={(
               <TranscriptionPanel
                 active={transcription.id}

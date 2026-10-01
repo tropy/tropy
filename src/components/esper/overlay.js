@@ -4,6 +4,7 @@ import cx from 'classnames'
 import { useEvent } from '../../hooks/use-event.js'
 import { Resizable } from '../resizable.js'
 import { Titlebar, Toolbar } from '../toolbar.js'
+import { FontSize, Layout } from './tools.js'
 import { ESPER, ITEM, SASS } from '../../constants/index.js'
 import ui from '../../actions/ui.js'
 
@@ -11,21 +12,32 @@ const { MIN_WIDTH, MIN_HEIGHT } = SASS.ESPER
 
 export const EsperOverlay = ({
   children,
-  hasTitlebar,
-  isPanelVisible = false,
+  isDisabled,
   mode,
-  panel,
-  toolbar
+  panel
 }) => {
   let dispatch = useDispatch()
   let height = useSelector(state => state.ui.esper.split)
+  let fontSize = useSelector(state => state.ui.esper.fontSize)
+  let isPanelVisible = useSelector(state => state.ui.esper.overlayPanel)
   let layout = useSelector(state => state.settings.layout)
 
-  let handleResize = useEvent((split) => {
-    dispatch(ui.update({ esper: { split } }))
+  let isSideBySide = layout === ITEM.LAYOUT.SIDE_BY_SIDE
+  let isSplit = mode === ESPER.OVERLAY.SPLIT
+
+  let handleChange = useEvent((esper) => {
+    dispatch(ui.update({ esper }))
   })
 
-  let [edge, min] = (layout === ITEM.LAYOUT.SIDE_BY_SIDE) ?
+  let handleResize = useEvent((split) => {
+    handleChange({ split })
+  })
+
+  let handleFontSizeChange = useEvent((fontSize) => {
+    handleChange({ fontSize })
+  })
+
+  let [edge, min] = isSideBySide ?
       ['left', MIN_WIDTH] : ['top', MIN_HEIGHT]
 
   return (
@@ -42,8 +54,22 @@ export const EsperOverlay = ({
         className={cx('esper-overlay', mode, {
           'transcription-panel-visible': isPanelVisible
         })}
-        style={{ '--font-size': '18px' }}>
-        {React.createElement(hasTitlebar ? Titlebar : Toolbar, {}, toolbar)}
+        style={{ '--font-size': `${fontSize}px` }}>
+        {React.createElement(isSideBySide || !isSplit ? Titlebar : Toolbar, {},
+          <Toolbar.Left>
+            <FontSize
+              current={fontSize}
+              isDisabled={isDisabled}
+              onChange={handleFontSizeChange}/>
+          </Toolbar.Left>,
+          <Toolbar.Right>
+            <Layout
+              isAltLayout={!isSideBySide && isSplit}
+              isDisabled={isDisabled}
+              onChange={handleChange}
+              overlay={mode}
+              overlayPanel={isPanelVisible}/>
+          </Toolbar.Right>)}
         {children}
         {panel}
       </div>
