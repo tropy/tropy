@@ -4,9 +4,7 @@ import {
   DndProvider,
   useDragLayer,
   useDrag,
-  useDrop,
-  DragSource,
-  DropTarget
+  useDrop
 } from 'react-dnd'
 
 import {
@@ -68,8 +66,6 @@ export {
   useDragLayer,
   useDrag,
   useDrop,
-  DragSource,
-  DropTarget,
   HTML5Backend as ElectronBackend,
   getDroppedFiles,
   getEmptyImage,
