@@ -1,5 +1,8 @@
 import React from 'react'
-import { DND, DropTarget, getDroppedFiles, hasPhotoFiles } from '../dnd.js'
+import { DND } from '../dnd.js'
+import { useDropOutside } from '../../hooks/use-drop-outside.js'
+import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
+import { useEvent } from '../../hooks/use-event.js'
 import { adjacent, move, noop } from '../../common/util.js'
 import { on, off } from '../../dom.js'
 import { TABS } from '../../constants/index.js'
@@ -120,15 +123,6 @@ export class PhotoIterator extends React.Component {
     }
   }
 
-  handleDropPhoto = ({ id, to, offset }) => {
-    const { onSort, photos } = this.props
-
-    const item = photos[0].item
-    const order = move(photos.map(photo => photo.id), id, to, offset)
-
-    onSort({ item, photos: order })
-  }
-
   handleExtract = ({ id, selection }, meta = {}) => {
     this.props.onExtract({ id, selection }, meta)
   }
@@ -169,7 +163,7 @@ export class PhotoIterator extends React.Component {
       getAdjacent: this.getAdjacent,
       onContextMenu: this.props.onContextMenu,
       onContract: this.contract,
-      onDropPhoto: this.handleDropPhoto,
+      onDropPhoto: this.props.onDropPhoto,
       onConsolidate: this.props.onConsolidate,
       onExpand: this.expand,
       onItemOpen: this.handleItemOpen,
@@ -195,73 +189,45 @@ export class PhotoIterator extends React.Component {
 
 
   static asDropTarget () {
-    return DropTarget(
-      [DND.PHOTO, DND.FILE, DND.URL],
-      DropTargetSpec,
-      DropTargetCollect
-    )(this)
+    let Iterator = this
+
+    return function PhotoIteratorContainer (props) {
+      let { canCreate, photos, onCreate, onSort } = props
+
+      let handleDropPhoto = useEvent(({ id, to, offset }) => {
+        let item = photos[0].item
+        let order = move(photos.map(photo => photo.id), id, to, offset)
+
+        onSort({ item, photos: order })
+      })
+
+      let canDropPhoto = useEvent(() => photos.length > 1)
+
+      let [photo, dropPhoto] = useDropOutside({
+        type: DND.PHOTO,
+        canDrop: canDropPhoto,
+        items: photos.map(p => p.id),
+        onDrop: handleDropPhoto
+      })
+
+      let [file, dropFile] = useDropPhotoFiles({
+        isReadOnly: !canCreate,
+        onDrop: onCreate
+      })
+
+      return (
+        <Iterator
+          {...props}
+          connectDropTarget={(element) => dropPhoto(dropFile(element))}
+          isOver={photo.isOver && photos.length > 1}
+          isOverFile={file.isOver && file.canDrop}
+          onDropPhoto={handleDropPhoto}/>
+      )
+    }
   }
 
   static defaultProps = {
     expanded: [],
     onBlur: noop
-  }
-}
-
-const DropTargetSpec = {
-  drop ({ photos, onCreate }, monitor) {
-    if (monitor.didDrop())
-      return
-
-    let item = monitor.getItem()
-
-    switch (monitor.getItemType()) {
-      case DND.PHOTO: {
-        let to = photos.at(-1).id
-
-        if (item.id !== to) {
-          return {
-            id: item.id,
-            to,
-            offset: 1
-          }
-        }
-        break
-      }
-      case DND.FILE:
-      case DND.URL: {
-        let files = getDroppedFiles(item)
-        if (files) {
-          onCreate(files)
-          return files
-        }
-        break
-      }
-    }
-  },
-
-  canDrop ({ canCreate, photos }, monitor) {
-    switch (monitor.getItemType()) {
-      case DND.PHOTO:
-        return photos.length > 1
-      case DND.FILE:
-        return canCreate && hasPhotoFiles(monitor.getItem())
-      case DND.URL:
-        return canCreate
-      default:
-        return false
-    }
-  }
-}
-
-const DropTargetCollect = (connect, monitor) => {
-  let isOver = monitor.isOver({ shallow: true }) && monitor.canDrop()
-  let type = monitor.getItemType()
-
-  return {
-    connectDropTarget: connect.dropTarget(),
-    isOver: isOver && type === DND.PHOTO,
-    isOverFile: isOver &&
-      (type === DND.FILE || type === DND.URL)
   }
 }
