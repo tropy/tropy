@@ -33,10 +33,6 @@ export class PhotoIterator extends React.Component {
     return this.container.current.current
   }
 
-  get isSortable () {
-    return !this.props.isDisabled && this.props.photos?.length > 1
-  }
-
   get tabIndex () {
     return this.props.photos.length > 0 ? TABS[this.constructor.name] : null
   }
@@ -158,7 +154,6 @@ export class PhotoIterator extends React.Component {
       isExpandable: this.isExpandable(photo),
       isItemOpen: this.props.isItemOpen,
       isSelected: this.isSelected(photo),
-      isSortable: this.isSortable,
       isVertical: this.isVertical,
       getAdjacent: this.getAdjacent,
       onContextMenu: this.props.onContextMenu,
