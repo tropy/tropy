@@ -1,19 +1,3 @@
-import React from 'react'
-
-export function pure (WrappedComponent) {
-  return class extends React.PureComponent {
-    static displayName = `pure(${WrappedComponent.name})`
-
-    static get WrappedComponent () {
-      return WrappedComponent
-    }
-
-    render () {
-      return React.createElement(WrappedComponent, this.props)
-    }
-  }
-}
-
 export function createClickHandler ({
   onClick,
   onSingleClick,
