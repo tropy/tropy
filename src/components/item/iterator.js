@@ -47,12 +47,12 @@ export class ItemIterator extends React.Component {
   // is because the worst case for weird/sparse selections is
   // not worth the price!
   after () {
-    let next = this.props.items[this.container.current.next()]
+    let next = this.container.current?.next()
     return (next == null || this.isSelected(next)) ? null : next
   }
 
   before () {
-    let prev = this.props.items[this.container.current.prev()]
+    let prev = this.container.current?.prev()
     return (prev == null || this.isSelected(prev)) ? null : prev
   }
 
@@ -159,8 +159,9 @@ export class ItemIterator extends React.Component {
         break
       case 'delete':
         if (!this.props.isReadOnly) {
+          let { selection } = this.props
           this.select(this.after() || this.before())
-          this.handleItemDelete(this.props.selection)
+          this.handleItemDelete(selection)
         }
         break
       case 'all':

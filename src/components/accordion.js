@@ -73,6 +73,8 @@ export class Accordion extends React.Component {
 
 
 export class AccordionGroup extends React.Component {
+  container = React.createRef()
+
   state = {
     active: null,
     open: []
@@ -86,7 +88,7 @@ export class AccordionGroup extends React.Component {
     return id != null && id === this.state.active
   }
 
-  isOpen (id = this.state.open) {
+  isOpen (id = this.state.active) {
     return id != null && this.state.open.includes(id)
   }
 
@@ -115,7 +117,7 @@ export class AccordionGroup extends React.Component {
     this.setState({ active: this.getPrev(k) })
   }
 
-  close (id = this.state.open) {
+  close (id = this.state.active) {
     if (this.isOpen(id)) {
       this.setState({
         active: id,

@@ -218,6 +218,10 @@ en:
       contract:
         - ArrowLeft
         - Escape
+      copyPhoto:
+        - CmdOrCtrl+Shift+C
+      extract:
+        - CmdOrCtrl+Shift+X
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
     SelectionGrid:

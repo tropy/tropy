@@ -89,7 +89,7 @@ export const ListNode = memo(({
   let handleContextMenu = useEvent((event) => {
     if (!isEditing) {
       if (!isSelected) {
-        onClick(list)
+        onClick(list.id)
       }
       onContextMenu(event, 'list', {
         id: list.id
