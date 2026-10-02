@@ -1,6 +1,6 @@
 import React from 'react'
 import { match, isMeta as meta } from '../../keymap.js'
-import { indexOf } from '../../common/collection.js'
+import { indexOf } from '../../common/sequence.js'
 import { blank, get } from '../../common/util.js'
 import { on, off } from '../../dom.js'
 import { seq, compose, map, cat, keep } from 'transducers.js'

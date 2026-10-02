@@ -1,4 +1,4 @@
-import { indexOf, sanitize } from '../common/collection.js'
+import { indexOf, sanitize } from '../common/sequence.js'
 
 export function useNavKeys (items, active) {
   let next = (offset = 1) => {

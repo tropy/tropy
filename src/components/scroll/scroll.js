@@ -5,7 +5,7 @@ import { ScrollContainer } from './container.js'
 import { getExpandedRows, getExpandedRowsAbove } from './expansion.js'
 import { Viewport } from './viewport.js'
 import { restrict } from '../../common/util.js'
-import { indexOf, sanitize } from '../../common/collection.js'
+import { indexOf, sanitize } from '../../common/sequence.js'
 import memoize from 'memoize-one'
 
 
