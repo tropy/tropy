@@ -2,6 +2,7 @@ import React from 'react'
 import { match, isMeta as meta } from '../../keymap.js'
 import { indexOf } from '../../common/sequence.js'
 import { blank, get } from '../../common/util.js'
+import { getSelectionChange } from '../../selection.js'
 import { on, off } from '../../dom.js'
 import { seq, compose, map, cat, keep } from 'transducers.js'
 import { TABS } from '../../constants/index.js'
@@ -67,14 +68,6 @@ export class ItemIterator extends React.Component {
 
   isSelected ({ id }) {
     return this.props.selection.includes(id)
-  }
-
-  isRangeSelected (items) {
-    return items.every(id => this.props.selection.includes(id))
-  }
-
-  get hasMultiSelection () {
-    return this.props.selection.length > 1
   }
 
   clearSelection () {
@@ -204,43 +197,19 @@ export class ItemIterator extends React.Component {
     })
   }
 
-  range ({ from = this.head(), to } = {}) {
-    let { items } = this.props
-
-    from = (from == null) ? 0 : indexOf(items, from)
-    to = (to == null) ? items.length - 1 : indexOf(items, to)
-
-    return (from > to) ?
-      items.slice(to, from + 1).reverse() :
-      items.slice(from, to + 1)
-  }
-
   select = (item, { isMeta, isRange, throttle } = {}) => {
     if (item == null || !this.props.items.length) return
-    let mod, items
 
-    switch (true) {
-      case isRange:
-        mod = 'merge'
-        items = this.range({ to: item.id }).map(it => it.id)
-        if (this.isRangeSelected(items)) {
-          mod = 'subtract'
-          if (items[0] !== item.id) items.unshift(items.pop())
-        }
-        break
+    let change = getSelectionChange(
+      this.props.selection,
+      this.props.items,
+      item.id,
+      { isMeta, isRange })
 
-      case isMeta:
-        mod = this.isSelected(item) ? 'remove' : 'append'
-        items = [item.id]
-        break
-
-      default:
-        if (!this.hasMultiSelection && this.isSelected(item)) return
-        mod = 'replace'
-        items = [item.id]
+    if (change != null) {
+      let [items, mod] = change
+      this.props.onSelect({ items: items.map(it => it.id) }, mod, { throttle })
     }
-
-    this.props.onSelect({ items }, mod, { throttle })
   }
 
   preview ({ id, photos }) {

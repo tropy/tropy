@@ -1,3 +1,5 @@
+import { indexOf, matches, range } from './common/sequence.js'
+
 export function select (s, items, mod = 'replace') {
   switch (mod) {
     case 'replace':
@@ -16,6 +18,47 @@ export function select (s, items, mod = 'replace') {
       throw new Error(`unknown selection mode: "${mod}"`)
 
   }
+}
+
+// Returns the elements of `seq` and the selection mode for selecting
+// `id`, or null if the selection would not change or `id` is not in
+// `seq`. Ranges extend from the selection's head (its last id) or,
+// without a selection, from the start; `id` becomes the new head. If
+// the head is not in `seq`, only `id` is selected.
+export function getSelectionChange (selection, seq, id, {
+  isMeta,
+  isRange
+} = {}) {
+  let element = seq[indexOf(seq, id)]
+
+  if (element == null)
+    return null
+
+  let isSelected = (it) => selection.some(s => matches(it, s))
+
+  if (isRange) {
+    let head = selection.at(-1)
+
+    if (head != null && indexOf(seq, head) < 0)
+      return [[element], 'replace']
+
+    let elements = range(seq, head, id)
+
+    if (!elements.every(isSelected))
+      return [elements, 'merge']
+
+    // Subtract keeps the first element selected as the new head.
+    if (elements[0] !== element) elements.unshift(elements.pop())
+    return [elements, 'subtract']
+  }
+
+  if (isMeta)
+    return [[element], isSelected(element) ? 'remove' : 'append']
+
+  if (selection.length === 1 && matches(element, selection[0]))
+    return null
+
+  return [[element], 'replace']
 }
 
 export function clear () {

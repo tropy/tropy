@@ -1,30 +1,44 @@
+// Sequence elements match either by identity or via `id` property.
+export const matches = (it, id) => it === id || it.id === id
+
 export const indexOf = (seq, id) => {
   if (id == null)
     return -1
   else
     return (seq.idx != null)
       ? seq.idx[id] ?? -1
-      : seq.findIndex(it => it === id || it.id === id)
+      : seq.findIndex(it => matches(it, id))
 }
 
-export const sanitize = (len, index, restrict = 'bounds') => {
-  if (index >= 0 && index < len)
-    return index
+// Returns all elements `from` `to` inclusive, in order.
+// Missing anchors default to start/end of sequence.
+export const range = (seq, from, to) => {
+  from = indexOf(seq, from)
+  to = indexOf(seq, to)
 
+  if (from < 0) from = 0
+  if (to < 0) to = seq.length - 1
+
+  return (from > to) ?
+    seq.slice(to, from + 1).reverse() :
+    seq.slice(from, to + 1)
+}
+
+export const sanitize = (length, index, restrict = 'bounds') => {
+  if (index >= 0 && index < length)
+    return index
   switch (restrict) {
     case 'wrap':
-      index = index % len
-      return (index < 0) ? index + len : index
-
+      index = index % length
+      return (index < 0) ? index + length : index
     case 'bounds':
-      return (index < 0) ? 0 : len - 1
-
+      return (index < 0) ? 0 : length - 1
     default:
       return null
   }
 }
 
-// Seek element of `seq` by following nav `cmd` from `id` element.
+// Seek element by following nav `cmd` from `id` element.
 export const seek = (seq, id, cmd, options) =>
   seekFrom(seq, indexOf(seq, id), cmd, options)
 
