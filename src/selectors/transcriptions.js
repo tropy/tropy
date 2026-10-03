@@ -9,7 +9,7 @@ export const getTranscriptions = (state, props) =>
 const byModifiedDate = (a, b) => {
   if (a.modified < b.modified)
     return -1
-  if (a.modifed > b.modified)
+  if (a.modified > b.modified)
     return 1
   return 0
 }
