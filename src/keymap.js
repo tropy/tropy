@@ -82,6 +82,14 @@ export function match (map, event) {
   return null
 }
 
+export const getModifiers = (event) => ({
+  altKey: event.altKey,
+  ctrlKey: event.ctrlKey,
+  metaKey: event.metaKey,
+  shiftKey: event.shiftKey,
+  repeat: event.repeat
+})
+
 export function isMeta (event) {
   return (!darwin && event.ctrlKey) || (darwin && event.metaKey)
 }
