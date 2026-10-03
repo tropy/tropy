@@ -1,48 +1,52 @@
-import { getCursorCommand } from '#tropy/keymap.js'
+import { CursorKeyMap } from '#tropy/keymap.js'
+import { Cursor } from '#tropy/common/sequence.js'
 
-describe('getCursorCommand', () => {
-  let cmd = (key, mods = {}, options) =>
-    getCursorCommand({ key, ...mods }, options)
+describe('CursorKeyMap', () => {
+  let seq = ['a', 'b', 'c']
+
+  let match = (key, mods = {}, { layout, scrollKeys, id = 'b' } = {}) =>
+    new CursorKeyMap(new Cursor(seq, id, { layout }), { scrollKeys })
+      .match({ key, ...mods })
 
   it('maps arrows to cursor commands', () => {
-    expect(cmd('ArrowUp')).to.equal('up')
-    expect(cmd('ArrowDown')).to.equal('down')
-    expect(cmd('ArrowUp', { altKey: true })).to.equal('first')
-    expect(cmd('ArrowDown', { altKey: true })).to.equal('last')
+    expect(match('ArrowUp')).to.equal('up')
+    expect(match('ArrowDown')).to.equal('down')
+    expect(match('ArrowUp', { altKey: true })).to.equal('first')
+    expect(match('ArrowDown', { altKey: true })).to.equal('last')
   })
 
-  it('maps left/right to collapse/expand in lists', () => {
-    expect(cmd('ArrowLeft')).to.equal('collapse')
-    expect(cmd('ArrowRight')).to.equal('expand')
-    expect(cmd('ArrowLeft', { altKey: true })).to.be.null
+  it('ignores left/right in lists', () => {
+    expect(match('ArrowLeft')).to.be.null
+    expect(match('ArrowRight', { altKey: true })).to.be.null
   })
 
   it('maps left/right to row moves in grids', () => {
     let grid = { layout: 'grid' }
-    expect(cmd('ArrowLeft', {}, grid)).to.equal('prev')
-    expect(cmd('ArrowRight', {}, grid)).to.equal('next')
-    expect(cmd('ArrowLeft', { altKey: true }, grid)).to.equal('start')
-    expect(cmd('ArrowRight', { altKey: true }, grid)).to.equal('end')
+    expect(match('ArrowLeft', {}, grid)).to.equal('prev')
+    expect(match('ArrowRight', {}, grid)).to.equal('next')
+    expect(match('ArrowLeft', { altKey: true }, grid)).to.equal('start')
+    expect(match('ArrowRight', { altKey: true }, grid)).to.equal('end')
   })
 
   it('ignores other modifiers', () => {
-    expect(cmd('ArrowDown', { shiftKey: true, ctrlKey: true, metaKey: true }))
+    expect(match('ArrowDown', { shiftKey: true, ctrlKey: true, metaKey: true }))
       .to.equal('down')
   })
 
   it('maps scroll keys only when selecting', () => {
-    expect(cmd('Home')).to.be.null
-    expect(cmd('PageDown')).to.be.null
+    expect(match('Home')).to.be.null
+    expect(match('PageDown')).to.be.null
 
     let select = { scrollKeys: 'select' }
-    expect(cmd('Home', {}, select)).to.equal('first')
-    expect(cmd('End', {}, select)).to.equal('last')
-    expect(cmd('PageUp', {}, select)).to.equal('pageUp')
-    expect(cmd('PageDown', {}, select)).to.equal('pageDown')
+    expect(match('Home', {}, select)).to.equal('first')
+    expect(match('End', {}, select)).to.equal('last')
+    expect(match('PageUp', {}, select)).to.equal('pageUp')
+    expect(match('PageDown', {}, select)).to.equal('pageDown')
   })
 
   it('ignores other keys', () => {
-    expect(cmd('Enter')).to.be.null
-    expect(cmd('a')).to.be.null
+    expect(match('Enter')).to.be.null
+    expect(match('a')).to.be.null
   })
+
 })

@@ -86,32 +86,38 @@ export function isMeta (event) {
   return (!darwin && event.ctrlKey) || (darwin && event.metaKey)
 }
 
-export function getCursorCommand (event, {
-  layout = 'list',
-  scrollKeys = 'scroll'
-} = {}) {
-  let { altKey, key } = event
+export class CursorKeyMap {
+  constructor (cursor, { scrollKeys = 'scroll' } = {}) {
+    this.cursor = cursor
+    this.scrollKeys = scrollKeys
+  }
 
-  switch (key) {
-    case 'ArrowUp':
-      return altKey ? 'first' : 'up'
-    case 'ArrowDown':
-      return altKey ? 'last' : 'down'
-    case 'ArrowLeft':
-      if (layout === 'grid') return altKey ? 'start' : 'prev'
-      return altKey ? null : 'collapse'
-    case 'ArrowRight':
-      if (layout === 'grid') return altKey ? 'end' : 'next'
-      return altKey ? null : 'expand'
-    case 'Home':
-      return (scrollKeys === 'select') ? 'first' : null
-    case 'End':
-      return (scrollKeys === 'select') ? 'last' : null
-    case 'PageUp':
-      return (scrollKeys === 'select') ? 'pageUp' : null
-    case 'PageDown':
-      return (scrollKeys === 'select') ? 'pageDown' : null
-    default:
-      return null
+  get layout () {
+    return this.cursor.options?.layout ?? 'list'
+  }
+
+  match ({ altKey, key }) {
+    switch (key) {
+      case 'ArrowUp':
+        return altKey ? 'first' : 'up'
+      case 'ArrowDown':
+        return altKey ? 'last' : 'down'
+      case 'ArrowLeft':
+        if (this.layout !== 'grid') return null
+        return altKey ? 'start' : 'prev'
+      case 'ArrowRight':
+        if (this.layout !== 'grid') return null
+        return altKey ? 'end' : 'next'
+      case 'Home':
+        return (this.scrollKeys === 'select') ? 'first' : null
+      case 'End':
+        return (this.scrollKeys === 'select') ? 'last' : null
+      case 'PageUp':
+        return (this.scrollKeys === 'select') ? 'pageUp' : null
+      case 'PageDown':
+        return (this.scrollKeys === 'select') ? 'pageDown' : null
+      default:
+        return null
+    }
   }
 }
