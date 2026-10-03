@@ -1,4 +1,4 @@
-import { indexOf, matches, range } from './common/sequence.js'
+import { indexOf, matches, range } from './sequence.js'
 
 export function select (s, items, mod = 'replace') {
   switch (mod) {

@@ -1,4 +1,4 @@
-import { getSelectionChange, growingEdge } from '#tropy/selection.js'
+import { getSelectionChange, growingEdge } from '#tropy/common/selection.js'
 
 describe('selection', () => {
   describe('growingEdge', () => {
