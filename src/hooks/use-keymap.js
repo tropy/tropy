@@ -5,15 +5,21 @@ export function useKeyDown (keymap, handlers) {
   return useEvent((event) => {
     let cmd = keymap?.match(event)
 
-    if (!(cmd in handlers))
+    let handler = (typeof handlers === 'function') ?
+      handlers :
+      handlers?.[cmd]
+
+    if (cmd == null || typeof handler !== 'function')
+      return
+
+    // Handlers return false to leave the event unhandled.
+    if (handler(event, cmd) === false)
       return
 
     event.preventDefault()
     event.stopPropagation()
 
     event.nativeEvent?.stopImmediatePropagation()
-
-    handlers[cmd](event)
   })
 }
 
