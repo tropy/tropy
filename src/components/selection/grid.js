@@ -4,9 +4,9 @@ import { DND } from '../dnd.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDropOutside } from '../../hooks/use-drop-outside.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
-import { useNavKeys } from '../../hooks/use-nav-keys.js'
 import { SelectionTile } from './tile.js'
 import { adjacent, move } from '../../common/util.js'
+import { Cursor } from '../../common/sequence.js'
 import { TABS } from '../../constants/index.js'
 import cx from 'classnames'
 
@@ -60,35 +60,35 @@ export const SelectionGrid = memo(({
   let getAdjacent = useEvent((selection) =>
     adjacent(selections, selection).map(s => s?.id))
 
-  let { current, next, prev } = useNavKeys(selections, active)
+  let cursor = new Cursor(selections, active, { columns: cols })
 
   let handleKeyDown = useKeyMap('SelectionGrid', {
     left () {
-      select(prev())
+      select(cursor.prev())
     },
     right () {
-      select(next())
+      select(cursor.next())
     },
     up () {
-      select(prev(cols))
+      select(cursor.up())
     },
     down () {
-      select(next(cols))
+      select(cursor.down())
     },
     first () {
-      select(selections[0])
+      select(cursor.first())
     },
     last () {
-      select(selections.at(-1))
+      select(cursor.last())
     },
     open () {
-      open(current())
+      open(cursor.current())
     },
     delete () {
-      let c = current()
-      if (c != null) {
-        onDelete({ id: photo.id, selection: c.id })
-        select(next() || prev())
+      if (cursor.current()) {
+        onDelete({ id: photo.id, selection: active })
+        let [prev, next] = cursor.adjacent()
+        select(next ?? prev)
       }
     },
     rotateLeft () {

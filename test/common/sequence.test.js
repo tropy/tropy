@@ -1,6 +1,13 @@
-import { seek } from '#tropy/common/sequence.js'
+import { Cursor, indexOf, seek } from '#tropy/common/sequence.js'
 
 describe('sequence', () => {
+  describe('indexOf', () => {
+    it('does not match missing ids', () => {
+      expect(indexOf(['a', 'b'], undefined)).to.equal(-1)
+      expect(indexOf(['a', 'b'], null)).to.equal(-1)
+    })
+  })
+
   describe('seek', () => {
     let list = ['a', 'b', 'c', 'd', 'e']
 
@@ -84,6 +91,36 @@ describe('sequence', () => {
     it('fails on unknown commands', () => {
       expect(() => seek(list, 'a', 'sideways')).to.throw()
       expect(() => seek(list, null, 'sideways')).to.throw()
+    })
+  })
+
+  describe('Cursor', () => {
+    let grid = ['a', 'b', 'c', 'd', 'e']
+
+    it('returns the index of the element', () => {
+      expect(new Cursor(grid, 'b').index).to.equal(1)
+      expect(new Cursor(grid, 'x').index).to.equal(-1)
+      expect(new Cursor(grid, null).index).to.equal(-1)
+    })
+
+    it('returns the current element', () => {
+      expect(new Cursor(grid, 'b').current()).to.equal('b')
+      expect(new Cursor(grid, 'x').current()).to.be.null
+      expect(new Cursor(grid, null).current()).to.be.null
+    })
+
+    it('returns the adjacent elements', () => {
+      expect(new Cursor(grid, 'c').adjacent()).to.eql(['b', 'd'])
+      expect(new Cursor(grid, 'a').adjacent()).to.eql([null, 'b'])
+      expect(new Cursor(grid, 'e').adjacent()).to.eql(['d', null])
+      expect(new Cursor(grid, 'x').adjacent()).to.eql([null, null])
+    })
+
+    it('seeks with the bound options', () => {
+      let cursor = new Cursor(grid, 'e', { columns: 3 })
+      expect(cursor.up()).to.equal('b')
+      expect(cursor.next()).to.equal('e')
+      expect(cursor.seek('next', { restrict: 'none' })).to.be.null
     })
   })
 })

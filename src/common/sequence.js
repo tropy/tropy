@@ -1,7 +1,11 @@
-export const indexOf = (seq, id) =>
-  (seq.idx != null)
-    ? seq.idx[id] ?? -1
-    : seq.findIndex(it => it === id || it.id === id)
+export const indexOf = (seq, id) => {
+  if (id == null)
+    return -1
+  else
+    return (seq.idx != null)
+      ? seq.idx[id] ?? -1
+      : seq.findIndex(it => it === id || it.id === id)
+}
 
 export const sanitize = (len, index, restrict = 'bounds') => {
   if (index >= 0 && index < len)
@@ -20,14 +24,15 @@ export const sanitize = (len, index, restrict = 'bounds') => {
   }
 }
 
-// Returns the element of `seq` that a navigation command leads to
-export const seek = (seq, cursor, cmd, options) => {
+// Seek element of `seq` by following nav `cmd` from `id` element.
+export const seek = (seq, id, cmd, options) =>
+  seekFrom(seq, indexOf(seq, id), cmd, options)
+
+const seekFrom = (seq, index, cmd, options) => {
   let { length } = seq
 
   if (length === 0)
     return null
-
-  let index = (cursor == null) ? -1 : indexOf(seq, cursor)
 
   index = (index < 0) ?
     getFirstIndex(length, cmd) :
@@ -93,4 +98,50 @@ const getNextIndex = (length, index, cmd, {
     default:
       throw new Error(`unknown seek command: "${cmd}"`)
   }
+}
+
+export class Cursor {
+  #index
+
+  constructor (seq, id, options) {
+    this.seq = seq
+    this.id = id
+    this.options = options
+  }
+
+  get index () {
+    if (this.#index == null)
+      this.#index = indexOf(this.seq, this.id)
+
+    return this.#index
+  }
+
+  current () {
+    return this.seq[this.index] ?? null
+  }
+
+  // Returns the previous and next elements in the sequence.
+  adjacent () {
+    let { index, seq } = this
+
+    if (index < 0)
+      return [null, null]
+
+    return [seq[index - 1] ?? null, seq[index + 1] ?? null]
+  }
+
+  seek (cmd, options) {
+    return seekFrom(this.seq, this.index, cmd, { ...this.options, ...options })
+  }
+
+  next () { return this.seek('next') }
+  prev () { return this.seek('prev') }
+  up () { return this.seek('up') }
+  down () { return this.seek('down') }
+  start () { return this.seek('start') }
+  end () { return this.seek('end') }
+  first () { return this.seek('first') }
+  last () { return this.seek('last') }
+  pageUp () { return this.seek('pageUp') }
+  pageDown () { return this.seek('pageDown') }
 }
