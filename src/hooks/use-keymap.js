@@ -1,12 +1,9 @@
 import { useSelector } from 'react-redux'
 import { useEvent } from './use-event.js'
-import { match } from '../keymap.js'
 
-export function useKeyMap (name, handlers) {
-  let keymap = useSelector(state => state.keymap[name])
-
+export function useKeyDown (keymap, handlers) {
   return useEvent((event) => {
-    let cmd = match(keymap, event)
+    let cmd = keymap?.match(event)
 
     if (!(cmd in handlers))
       return
@@ -18,4 +15,8 @@ export function useKeyMap (name, handlers) {
 
     handlers[cmd](event)
   })
+}
+
+export function useKeyMap (name, handlers) {
+  return useKeyDown(useSelector(state => state.keymap[name]), handlers)
 }
