@@ -782,7 +782,7 @@ export class Esper extends React.Component {
             panel={(
               <TranscriptionPanel
                 active={transcription.id}
-                isDisabled={isDisabled}
+                isDisabled={isDisabled || this.props.isReadOnly}
                 id={this.state.id}/>
             )}>
             <Transcription

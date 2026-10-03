@@ -61,7 +61,7 @@ en:
       open: Enter
       edit: F2
       clear: Escape
-      delete:
+      delete: &delete
         - Backspace
         - Delete
       rotateLeft: &rotateLeft
@@ -170,6 +170,8 @@ en:
         - CmdOrCtrl+Shift+Z
         - CmdOrCtrl+Shift+z
         - CmdOrCtrl+y
+    TranscriptionPanel: &TranscriptionPanel
+      delete: *delete
     TagList: &TagList
       up: ArrowUp
       down: ArrowDown
@@ -243,4 +245,5 @@ en:
     NoteList: *NoteList
     NotePad: *NotePad
     TagList: *TagList
+    TranscriptionPanel: *TranscriptionPanel
   win32: *linux

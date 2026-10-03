@@ -1,29 +1,82 @@
+import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { TranscriptionMetadata } from './metadata.js'
+import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
+import { useKeyMap } from '../../hooks/use-keymap.js'
+import { useEvent } from '../../hooks/use-event.js'
+import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
+import { Cursor } from '../../common/sequence.js'
 import { getTranscriptions } from '../../selectors/index.js'
-import { activate } from '../../slices/transcriptions.js'
+import { activate, remove } from '../../slices/transcriptions.js'
 import cx from 'classnames'
 
 export const TranscriptionPanel = ({
   active,
   id,
+  isDisabled
 }) => {
   let dispatch = useDispatch()
   let transcriptions = useSelector(state => getTranscriptions(state, { id }))
+  let cursor = new Cursor(transcriptions, active)
+
+  let handleActivate = useEvent((tr) => {
+    if (tr.id !== active)
+      dispatch(activate(tr.id))
+  })
+
+  let handleDelete = useEvent(() => {
+    if (cursor.current() == null)
+      return false
+
+    let [prev, next] = cursor.adjacent()
+    dispatch(remove([active], { history: 'add' }))
+
+    if (next ?? prev)
+      dispatch(activate((next ?? prev).id))
+  })
+
+  let { onKeyDown } = useCursorKeys(cursor, {
+    scrollKeys: 'select',
+    onMove: handleActivate,
+    onKeyDown: useKeyMap('TranscriptionPanel', {
+      delete: !isDisabled && handleDelete
+    })
+  })
 
   return (
-    <div className="transcription-panel" tabIndex={-1}>
+    <div
+      className="transcription-panel"
+      tabIndex={-1}
+      onKeyDown={onKeyDown}>
       <ol className="transcription-versions">
         {transcriptions.map(tr => (
-          <li
+          <TranscriptionVersion
             key={tr.id}
-            className={cx('version', { active: tr.id === active })}>
-            <TranscriptionMetadata
-              created={tr.created}
-              onMouseDown={() => dispatch(activate(tr.id))}/>
-          </li>
+            isActive={tr.id === active}
+            onActivate={handleActivate}
+            transcription={tr}/>
         ))}
       </ol>
     </div>
+  )
+}
+
+const TranscriptionVersion = ({
+  isActive,
+  onActivate,
+  transcription
+}) => {
+  let dom = useRef()
+
+  useScrollIntoView(dom, { when: isActive, center: false })
+
+  return (
+    <li
+      ref={dom}
+      className={cx('version', { active: isActive })}>
+      <TranscriptionMetadata
+        created={transcription.created}
+        onMouseDown={() => onActivate(transcription)}/>
+    </li>
   )
 }
