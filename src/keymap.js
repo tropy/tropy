@@ -85,3 +85,33 @@ export function match (map, event) {
 export function isMeta (event) {
   return (!darwin && event.ctrlKey) || (darwin && event.metaKey)
 }
+
+export function getCursorCommand (event, {
+  layout = 'list',
+  scrollKeys = 'scroll'
+} = {}) {
+  let { altKey, key } = event
+
+  switch (key) {
+    case 'ArrowUp':
+      return altKey ? 'first' : 'up'
+    case 'ArrowDown':
+      return altKey ? 'last' : 'down'
+    case 'ArrowLeft':
+      if (layout === 'grid') return altKey ? 'start' : 'prev'
+      return altKey ? null : 'collapse'
+    case 'ArrowRight':
+      if (layout === 'grid') return altKey ? 'end' : 'next'
+      return altKey ? null : 'expand'
+    case 'Home':
+      return (scrollKeys === 'select') ? 'first' : null
+    case 'End':
+      return (scrollKeys === 'select') ? 'last' : null
+    case 'PageUp':
+      return (scrollKeys === 'select') ? 'pageUp' : null
+    case 'PageDown':
+      return (scrollKeys === 'select') ? 'pageDown' : null
+    default:
+      return null
+  }
+}
