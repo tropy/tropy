@@ -3,7 +3,8 @@ import { DND } from '../dnd.js'
 import { useDropOutside } from '../../hooks/use-drop-outside.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { adjacent, move, noop } from '../../common/util.js'
+import { move, noop } from '../../common/util.js'
+import { adjacent } from '../../common/sequence.js'
 import { on, off } from '../../dom.js'
 import { TABS } from '../../constants/index.js'
 
@@ -143,7 +144,7 @@ export class PhotoIterator extends React.Component {
   }
 
   getAdjacent = (photo) => {
-    return adjacent(this.props.photos, photo).map(p => p?.id)
+    return adjacent(this.props.photos, photo.id).map(p => p?.id)
   }
 
   getIterableProps (photo) {

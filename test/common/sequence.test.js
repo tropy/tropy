@@ -1,10 +1,21 @@
-import { Cursor, indexOf, range, seek } from '#tropy/common/sequence.js'
+import { Cursor, adjacent, indexOf, range, seek } from '#tropy/common/sequence.js'
 
 describe('sequence', () => {
   describe('indexOf', () => {
     it('does not match missing ids', () => {
       expect(indexOf(['a', 'b'], undefined)).to.equal(-1)
       expect(indexOf(['a', 'b'], null)).to.equal(-1)
+    })
+  })
+
+  describe('adjacent', () => {
+    let seq = ['a', 'b', 'c']
+
+    it('returns the previous and next elements', () => {
+      expect(adjacent(seq, 'b')).to.eql(['a', 'c'])
+      expect(adjacent(seq, 'a')).to.eql([null, 'b'])
+      expect(adjacent(seq, 'c')).to.eql(['b', null])
+      expect(adjacent(seq, 'x')).to.eql([null, null])
     })
   })
 

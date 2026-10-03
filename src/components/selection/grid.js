@@ -5,8 +5,8 @@ import { useEvent } from '../../hooks/use-event.js'
 import { useDropOutside } from '../../hooks/use-drop-outside.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 import { SelectionTile } from './tile.js'
-import { adjacent, move } from '../../common/util.js'
-import { Cursor } from '../../common/sequence.js'
+import { move } from '../../common/util.js'
+import { Cursor, adjacent } from '../../common/sequence.js'
 import { TABS } from '../../constants/index.js'
 import cx from 'classnames'
 
@@ -58,7 +58,7 @@ export const SelectionGrid = memo(({
   })
 
   let getAdjacent = useEvent((selection) =>
-    adjacent(selections, selection).map(s => s?.id))
+    adjacent(selections, selection.id).map(s => s?.id))
 
   let cursor = new Cursor(selections, active, { columns: cols })
 

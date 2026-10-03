@@ -38,6 +38,15 @@ export const sanitize = (length, index, restrict = 'bounds') => {
   }
 }
 
+// Returns the previous and next elements of the `id` element.
+export const adjacent = (seq, id) =>
+  adjacentAt(seq, indexOf(seq, id))
+
+const adjacentAt = (seq, index) =>
+  (index < 0) ?
+    [null, null] :
+    [seq[index - 1] ?? null, seq[index + 1] ?? null]
+
 // Seek element by following nav `cmd` from `id` element.
 export const seek = (seq, id, cmd, options) =>
   seekFrom(seq, indexOf(seq, id), cmd, options)
@@ -134,14 +143,8 @@ export class Cursor {
     return this.seq[this.index] ?? null
   }
 
-  // Returns the previous and next elements in the sequence.
   adjacent () {
-    let { index, seq } = this
-
-    if (index < 0)
-      return [null, null]
-
-    return [seq[index - 1] ?? null, seq[index + 1] ?? null]
+    return adjacentAt(this.seq, this.index)
   }
 
   seek (cmd, options) {

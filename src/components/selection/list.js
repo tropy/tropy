@@ -4,7 +4,8 @@ import { DND } from '../dnd.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDropOutside } from '../../hooks/use-drop-outside.js'
 import { SelectionListItem } from './list-item.js'
-import { adjacent, move } from '../../common/util.js'
+import { move } from '../../common/util.js'
+import { adjacent } from '../../common/sequence.js'
 import { dc } from '../../ontology/ns.js'
 import cx from 'classnames'
 
@@ -52,7 +53,7 @@ export const SelectionList = memo(({
   })
 
   let getAdjacent = useEvent((selection) =>
-    adjacent(selections, selection).map(s => s?.id))
+    adjacent(selections, selection.id).map(s => s?.id))
 
   let canDropSelection = useEvent((item) =>
     isSortable &&
