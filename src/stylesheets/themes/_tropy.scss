@@ -250,7 +250,7 @@ $toolbar-blurred-opacity: os(0.5, 0.5, 0.5);
 // Project
 $no-project-bg:         --scheme(var(--light-1),              var(--dark-4));
 $no-project-blurred-bg: --scheme(shade(var(--light-1), 4%),   var(--dark-2));
-$project-darken-color:  --scheme(alpha(var(--light-10), 10%), shade(var(--dark-0), 20%));
+$project-darken-color:  --scheme(alpha(var(--light-10), 10%), alpha(var(--dark-0), 20%));
 $project-heading-color: --scheme(var(--light-8),              var(--dark-8));
 $item-count-color:      --scheme(var(--light-5),              var(--dark-6));
 
