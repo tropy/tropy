@@ -23,8 +23,9 @@
   }
 
   .detail {
-    &:has(+ footer) {
-      text-box: trim-end cap alphabetic;
-    }
+    max-height: 20lh;
+    overflow: auto;
+    padding-right: $modal-padding;
+    margin-right: -$modal-padding;
   }
 }
