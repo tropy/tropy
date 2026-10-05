@@ -564,3 +564,9 @@ $account-error-bg:      --scheme(tint(var(--red), 87%),     alpha(var(--red), 10
 $account-card-bg:       --scheme(shade(var(--light-1), 4%), tint(var(--dark-4), 2%));
 $profile-heading-color: --scheme(var(--light-6),            var(--dark-8));
 $profile-border-color:  --scheme(shade(var(--light-3), 4%), var(--dark-1));
+
+// Modal
+$modal-bg:           --scheme(var(--light-1),             var(--dark-4));
+$modal-backdrop-bg:  --scheme(alpha(var(--light-5), 70%), alpha(var(--dark-1), 70%));
+$modal-shadow-1:     --scheme(rgba(0, 0, 0, 0.25),        rgba(0, 0, 0, 0.75));
+$modal-shadow-2:     --scheme(rgba(0, 0, 0, 0.02),        rgba(0, 0, 0, 0.08));

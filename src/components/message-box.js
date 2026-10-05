@@ -39,17 +39,17 @@ export const MessageBox = ({
             {checkboxLabel}
           </label>
         )}
-        <div className="btn-container">
+        <footer>
           {buttons.map((label, idx) => (
             <button
               key={idx}
-              className={cx('btn', idx === defaultId ? 'btn-primary' : 'btn-default')}
+              className={cx('btn min-width', idx === defaultId ? 'btn-primary' : 'btn-default')}
               autoFocus={idx === defaultId}
               value={idx}>
               {label}
             </button>
           ))}
-        </div>
+        </footer>
       </form>
     </Modal>
   )
