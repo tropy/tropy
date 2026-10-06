@@ -147,6 +147,11 @@ export class Cursor {
     return adjacentAt(this.seq, this.index)
   }
 
+  successor () {
+    let [prev, next] = this.adjacent()
+    return next ?? prev
+  }
+
   seek (cmd, options) {
     return seekFrom(this.seq, this.index, cmd, { ...this.options, ...options })
   }

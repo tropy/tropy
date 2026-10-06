@@ -143,6 +143,12 @@ describe('sequence', () => {
       expect(new Cursor(grid, 'x').adjacent()).to.eql([null, null])
     })
 
+    it('returns the successor', () => {
+      expect(new Cursor(grid, 'c').successor()).to.equal('d')
+      expect(new Cursor(grid, 'e').successor()).to.equal('d')
+      expect(new Cursor(['a'], 'a').successor()).to.be.null
+    })
+
     it('seeks with the bound options', () => {
       let cursor = new Cursor(grid, 'e', { columns: 3 })
       expect(cursor.up()).to.equal('b')
