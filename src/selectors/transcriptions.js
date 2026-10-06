@@ -6,21 +6,13 @@ export const getTranscriptionIds = (state, { id }) =>
 export const getTranscriptions = (state, props) =>
   getTranscriptionIds(state, props)?.map(id => state.transcriptions[id])
 
-const byModifiedDate = (a, b) => {
-  if (a.modified < b.modified)
-    return -1
-  if (a.modified > b.modified)
-    return 1
-  return 0
-}
-
-export const getActiveTranscription = (state, props) => {
-  let transcriptions = getTranscriptions(state, {
+// The active transcription is the most recently modified one
+export const getActiveTranscription = (state, props) =>
+  getTranscriptions(state, {
     id: props?.id ?? state.nav.selection ?? state.nav.photo
-  })
-
-  return transcriptions?.sort(byModifiedDate).at(-1)
-}
+  })?.reduce((active, tr) =>
+    (active == null || tr.modified >= active.modified) ? tr : active,
+  undefined)
 
 export const getPendingTranscriptions = createSelector(
   (state) => state.transcriptions,
