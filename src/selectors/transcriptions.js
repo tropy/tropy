@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
+import { Cursor } from '../common/sequence.js'
 
 export const getTranscriptionIds = (state, { id }) =>
   (state.photos[id] ?? state.selections[id])?.transcriptions
@@ -13,6 +14,19 @@ export const getActiveTranscription = (state, props) =>
   })?.reduce((active, tr) =>
     (active == null || tr.modified >= active.modified) ? tr : active,
   undefined)
+
+export function getTranscriptionSuccessor (state, ids) {
+  let id = state.transcriptions[ids[0]]?.parent
+  let active = getActiveTranscription(state, { id })?.id
+
+  if (!ids.includes(active))
+    return null
+
+  let seq = getTranscriptionIds(state, { id })
+    .filter(tr => tr === active || !ids.includes(tr))
+
+  return new Cursor(seq, active).successor()
+}
 
 export const getPendingTranscriptions = createSelector(
   (state) => state.transcriptions,

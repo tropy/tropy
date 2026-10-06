@@ -75,10 +75,8 @@ export const SelectionGrid = memo(({
       delete () {
         // Subtle: always handled, so that the key does not bubble
         // up to the photo grid and delete the photo instead.
-        if (cursor.current() != null) {
+        if (cursor.current() != null)
           onDelete({ id: photo.id, selection: cursor.id })
-          select(cursor.successor())
-        }
       },
       rotateLeft () {
         onRotate(-90)

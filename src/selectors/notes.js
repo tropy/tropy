@@ -44,7 +44,7 @@ const isSibling = (note, other) =>
   other.photo === note.photo &&
   other.selection === note.selection
 
-export const getNextNoteSelection = memo(
+export const getNoteSuccessor = memo(
   getSelectedNoteId,
   getVisibleNotes,
   (id, notes) => {

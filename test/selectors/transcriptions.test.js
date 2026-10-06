@@ -1,4 +1,7 @@
-import { getActiveTranscription } from '#tropy/selectors/index.js'
+import {
+  getActiveTranscription,
+  getTranscriptionSuccessor
+} from '#tropy/selectors/index.js'
 
 describe('Transcription Selectors', () => {
   describe('getActiveTranscription', () => {
@@ -24,6 +27,28 @@ describe('Transcription Selectors', () => {
 
     it('returns nothing without transcriptions', () => {
       expect(getActiveTranscription(state([]), { id: 2 })).to.be.undefined
+    })
+  })
+
+  describe('getTranscriptionSuccessor', () => {
+    let state = {
+      photos: { 1: { id: 1, transcriptions: [10, 11, 12] } },
+      selections: {},
+      transcriptions: {
+        10: { id: 10, parent: 1, modified: 'a' },
+        11: { id: 11, parent: 1, modified: 'c' },
+        12: { id: 12, parent: 1, modified: 'b' }
+      }
+    }
+
+    it('returns the next transcription if the active one is removed', () => {
+      expect(getTranscriptionSuccessor(state, [11])).to.equal(12)
+      expect(getTranscriptionSuccessor(state, [11, 12])).to.equal(10)
+    })
+
+    it('returns nothing if the active one is kept or the last', () => {
+      expect(getTranscriptionSuccessor(state, [10])).to.be.null
+      expect(getTranscriptionSuccessor(state, [10, 11, 12])).to.be.null
     })
   })
 })

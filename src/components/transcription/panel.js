@@ -30,11 +30,7 @@ export const TranscriptionPanel = ({
     if (cursor.current() == null)
       return false
 
-    let successor = cursor.successor()
     dispatch(remove([cursor.id], { history: 'add' }))
-
-    if (successor != null)
-      dispatch(activate(successor.id))
   })
 
   let onKeyDown = useCursorKeys(cursor, {
