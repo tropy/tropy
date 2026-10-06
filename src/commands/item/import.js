@@ -199,7 +199,7 @@ export class Import extends ImportCommand {
               data: data.photo
             })
 
-          if (activeList) {
+          if (activeList && !item.lists.includes(activeList)) {
             await mod.list.items.add(tx, activeList, [item.id])
             item.lists.push(activeList)
           }
