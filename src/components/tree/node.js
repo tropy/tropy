@@ -13,14 +13,13 @@ export const Node = ({
   onCollapse,
   onExpand,
   onSave,
-  parent,
   ...props
 }) => {
   isEditing = isEditing || id == null
   let isExpandable = onExpand && onCollapse
 
   let handleChange = useEvent((newName) => {
-    onSave({ id, parent, name: newName })
+    onSave(newName)
   })
 
   let handleClick = useEvent(() => {

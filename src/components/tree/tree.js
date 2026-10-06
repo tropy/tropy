@@ -60,9 +60,8 @@ export const Tree = ({
       <Collapse tagName="li" in={edit?.id == null && edit?.parent === root.id}>
         <Node
           className="new-node"
-          parent={edit?.parent}
           onCancel={onEditCancel}
-          onSave={onSave}/>
+          onSave={(name) => onSave({ parent: edit?.parent, name })}/>
       </Collapse>
     )}
   </ol>

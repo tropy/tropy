@@ -53,6 +53,10 @@ export const ListNode = memo(({
     onDropItems({ list: list.id, items })
   })
 
+  let handleSave = useEvent((name) => {
+    onSave({ id: list.id, name })
+  })
+
   let handleDropFiles = useEvent((files) => {
     onDropFiles({ list: list.id, ...files })
   })
@@ -120,7 +124,7 @@ export const ListNode = memo(({
         onCollapse={onCollapse}
         onContextMenu={handleContextMenu}
         onExpand={onExpand}
-        onSave={onSave}/>
+        onSave={handleSave}/>
       <Collapse in={isExpanded}>
         {children(isDragging)}
       </Collapse>
