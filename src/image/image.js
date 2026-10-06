@@ -142,18 +142,26 @@ export class Image extends Asset {
         mimetype = MIME.JPG
 
       } else if (inspection?.kind === 'raster') {
-        ext = '.png'
-        mimetype = MIME.PNG
         let dpi = restrict(
           Math.round(inspection.dpi),
           IMAGE.MIN_DENSITY,
           IMAGE.MAX_DENSITY
         )
-        outputBuffer = await sharp(this.original.buffer, {
+        let raster = sharp(this.original.buffer, {
           ...defaults,
           page: this.page,
           density: dpi
-        }).png().toBuffer()
+        })
+
+        if (this.isOpaque) {
+          ext = '.jpg'
+          mimetype = MIME.JPG
+          outputBuffer = await raster.jpeg({ quality: jpegQuality }).toBuffer()
+        } else {
+          ext = '.png'
+          mimetype = MIME.PNG
+          outputBuffer = await raster.png().toBuffer()
+        }
 
       } else if (this.isOpaque) {
         ext = '.jpg'
