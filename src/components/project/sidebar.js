@@ -172,6 +172,10 @@ class ProjectSidebar extends React.PureComponent {
     this.props.onSelect({ list: -1 }, { throttle: true })
   }
 
+  handleProjectDropFiles = (files) => {
+    this.props.onItemImport({ ...files, list: null })
+  }
+
   handleTrashDropItems = (items) => {
     this.props.onItemDelete(items.map(it => it.id))
   }
@@ -256,7 +260,7 @@ class ProjectSidebar extends React.PureComponent {
                     onChange={this.handleChange}
                     onClick={this.handleClick}
                     onEditCancel={this.props.onEditCancel}
-                    onDrop={this.props.onItemImport}/>
+                    onDrop={this.handleProjectDropFiles}/>
                 </ol>
               </nav>
 
