@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { TranscriptionMetadata } from './metadata.js'
 import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
@@ -16,7 +16,9 @@ export const TranscriptionPanel = ({
   isDisabled
 }) => {
   let dispatch = useDispatch()
-  let transcriptions = useSelector(state => getTranscriptions(state, { id }))
+  let transcriptions = useSelector(
+    state => getTranscriptions(state, { id }),
+    shallowEqual)
   let cursor = new Cursor(transcriptions, active)
 
   let handleActivate = useEvent((tr) => {
@@ -28,14 +30,14 @@ export const TranscriptionPanel = ({
     if (cursor.current() == null)
       return false
 
-    let [prev, next] = cursor.adjacent()
-    dispatch(remove([active], { history: 'add' }))
+    let successor = cursor.successor()
+    dispatch(remove([cursor.id], { history: 'add' }))
 
-    if (next ?? prev)
-      dispatch(activate((next ?? prev).id))
+    if (successor != null)
+      dispatch(activate(successor.id))
   })
 
-  let { onKeyDown } = useCursorKeys(cursor, {
+  let onKeyDown = useCursorKeys(cursor, {
     scrollKeys: 'select',
     onMove: handleActivate,
     onKeyDown: useKeyMap('TranscriptionPanel', {
