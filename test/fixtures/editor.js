@@ -19,7 +19,7 @@ state = state.apply(
     offset + url.length,
     schema.marks.link.create({ href: url })))
 
-export default {
+export {
   schema,
   state,
   url,

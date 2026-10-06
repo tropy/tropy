@@ -2,7 +2,7 @@ import N3 from 'n3'
 import { toN3 } from '#tropy/ontology/vocabulary.js'
 
 describe('Export Vocabularies', () => {
-  const { vocab, ontology } = F.require('export.js')
+  const { vocab, ontology } = F.require('export')
   describe('toN3', () => {
     let output
 
