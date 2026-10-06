@@ -2,6 +2,7 @@ import { createSelector as memo } from 'reselect'
 import { seq, compose, cat, map, keep } from 'transducers.js'
 import { getVisiblePhotos } from './photos.js'
 import { getVisibleSelections } from './selections.js'
+import { Cursor } from '../common/sequence.js'
 
 const getNotes = ({ notes }) => notes
 const getSelectedNoteId = ({ nav }) => nav.note
@@ -38,30 +39,23 @@ export const getVisibleNotes = memo(
     ))
 )
 
+const isSibling = (note, other) =>
+  other != null &&
+  other.photo === note.photo &&
+  other.selection === note.selection
+
 export const getNextNoteSelection = memo(
   getSelectedNoteId,
   getVisibleNotes,
   (id, notes) => {
-    let idx = notes.findIndex(note => note.id === id)
+    let cursor = new Cursor(notes, id)
+    let note = cursor.current()
+    let [prev, next] = cursor.adjacent()
 
-    if (idx === -1 || notes.length <= 1)
-      return null
+    if (isSibling(note, next)) return next
+    if (isSibling(note, prev)) return prev
 
-    let prev = notes[idx - 1]
-    let cursor = notes[idx]
-    let next = notes[idx + 1]
-
-    if (prev == null)
-      return next
-    if (next == null)
-      return prev
-
-    if (next.photo === cursor.photo && next.selection === cursor.selection)
-      return next
-    if (prev.photo === cursor.photo && prev.selection === cursor.selection)
-      return prev
-
-    return next
+    return next ?? prev
   }
 )
 
