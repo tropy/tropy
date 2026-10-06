@@ -7,7 +7,7 @@ describe('useCursorKeys', () => {
   let onMove = mock.fn()
 
   let List = ({ cursor, ...options }) => {
-    let { onKeyDown } = useCursorKeys(cursor, { onMove, ...options })
+    let onKeyDown = useCursorKeys(cursor, { onMove, ...options })
     return <ul tabIndex={-1} onKeyDown={onKeyDown}/>
   }
 
@@ -82,6 +82,22 @@ describe('useCursorKeys', () => {
   it('does not handle cursor keys in empty sequences', () => {
     let node = setup({ cursor: new Cursor([], null) })
     expect(press(node, 'ArrowDown')).to.be.false
+  })
+
+  it('handles but does not report staying put', () => {
+    let node = setup({ cursor: new Cursor(seq, 'c') })
+    expect(press(node, 'ArrowDown')).to.be.true
+    expect(onMove.mock.callCount()).to.equal(0)
+  })
+
+  it('does not handle cursor keys if onMove declines', () => {
+    let node = setup({
+      cursor: new Cursor(seq, 'b'),
+      onMove: (_, { ctrlKey }) => (ctrlKey ? false : undefined)
+    })
+
+    expect(press(node, 'ArrowDown', { ctrlKey: true })).to.be.false
+    expect(press(node, 'ArrowDown')).to.be.true
   })
 
   it('does not handle cursor keys without a target', () => {

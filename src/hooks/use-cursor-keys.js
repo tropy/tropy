@@ -1,37 +1,33 @@
 import { useEvent } from './use-event.js'
 import { useKeyDown } from './use-keymap.js'
-import { CursorKeyMap, getModifiers } from '../keymap.js'
+import { CursorKeyMap, getKeyState } from '../keymap.js'
 
 export function useCursorKeys (cursor, {
   onKeyDown,
   onMove,
   scrollKeys = 'scroll'
 } = {}) {
-  let move = useEvent((cmd, modifiers) => {
-    let target = cursor.seek(cmd)
-
-    if (target != null)
-      onMove(target, { cmd, ...modifiers })
-
-    return target
-  })
-
-  let keymap = new CursorKeyMap(cursor, { scrollKeys })
-
   let handleCursorKeys = useKeyDown(
-    keymap,
-    onMove && ((event, cmd) =>
-      move(cmd, getModifiers(event)) != null))
+    new CursorKeyMap(cursor, { scrollKeys }),
+    onMove && ((event, cmd) => {
+      let target = cursor.seek(cmd)
 
-  let handleKeyDown = useEvent((event) => {
+      // No target means the key/command was not handled
+      if (target == null)
+        return false
+
+      // Target, but no move, means the key/command was handled
+      if (target === cursor.current())
+        return true
+
+      // Cursor moved, but onMove() can still decline by returning false
+      return onMove(target, { cmd, ...getKeyState(event) }) !== false
+    }))
+
+  return useEvent((event) => {
     onKeyDown?.(event)
 
     if (!event.defaultPrevented)
       handleCursorKeys(event)
   })
-
-  return {
-    onKeyDown: handleKeyDown,
-    move
-  }
 }
