@@ -4,6 +4,7 @@ import { DND } from '../dnd.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDropOutside } from '../../hooks/use-drop-outside.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
+import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
 import { SelectionTile } from './tile.js'
 import { move } from '../../common/util.js'
 import { Cursor, adjacent } from '../../common/sequence.js'
@@ -60,43 +61,32 @@ export const SelectionGrid = memo(({
   let getAdjacent = useEvent((selection) =>
     adjacent(selections, selection.id).map(s => s?.id))
 
-  let cursor = new Cursor(selections, active, { columns: cols })
+  let cursor = new Cursor(selections, active, {
+    layout: 'grid',
+    columns: cols
+  })
 
-  let handleKeyDown = useKeyMap('SelectionGrid', {
-    left () {
-      select(cursor.prev())
-    },
-    right () {
-      select(cursor.next())
-    },
-    up () {
-      select(cursor.up())
-    },
-    down () {
-      select(cursor.down())
-    },
-    first () {
-      select(cursor.first())
-    },
-    last () {
-      select(cursor.last())
-    },
-    open () {
-      open(cursor.current())
-    },
-    delete () {
-      if (cursor.current()) {
-        onDelete({ id: photo.id, selection: active })
-        let [prev, next] = cursor.adjacent()
-        select(next ?? prev)
+  let onKeyDown = useCursorKeys(cursor, {
+    onMove: select,
+    onKeyDown: useKeyMap('SelectionGrid', {
+      open () {
+        open(cursor.current())
+      },
+      delete () {
+        // Subtle: always handled, so that the key does not bubble
+        // up to the photo grid and delete the photo instead.
+        if (cursor.current() != null) {
+          onDelete({ id: photo.id, selection: cursor.id })
+          select(cursor.successor())
+        }
+      },
+      rotateLeft () {
+        onRotate(-90)
+      },
+      rotateRight () {
+        onRotate(90)
       }
-    },
-    rotateLeft () {
-      onRotate(-90)
-    },
-    rotateRight () {
-      onRotate(90)
-    }
+    })
   })
 
   let canDropSelection = useEvent((item) =>
@@ -118,7 +108,7 @@ export const SelectionGrid = memo(({
       style={style}
       tabIndex={TABS.SelectionGrid}
       onBlur={onBlur}
-      onKeyDown={handleKeyDown}>
+      onKeyDown={onKeyDown}>
       {selections.map((selection, index) => (
         <SelectionTile
           key={selection.id}
