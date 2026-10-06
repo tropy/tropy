@@ -70,7 +70,7 @@ const TranscriptionVersion = ({
 }) => {
   let dom = useRef()
 
-  useScrollIntoView(dom, { when: isActive, center: false })
+  useScrollIntoView(dom, { when: isActive })
 
   return (
     <li

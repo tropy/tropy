@@ -14,7 +14,7 @@ export const NoteListItem = ({
 
   let dom = useRef()
 
-  useScrollIntoView(dom, { when: isSelected, center: false })
+  useScrollIntoView(dom, { when: isSelected })
 
   let handleContextMenu = useEvent((event) => {
     if (!isSelected) onSelect(note)
