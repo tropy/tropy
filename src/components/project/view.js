@@ -62,7 +62,7 @@ export const ProjectView = ({
   })
 
   let handleItemImport = useEvent((data = {}) => {
-    dispatch(act.item.import({ ...data, list }))
+    dispatch(act.item.import({ list, ...data }))
   })
 
   let handleSort = useEvent((opts) => {
