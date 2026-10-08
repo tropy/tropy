@@ -9,11 +9,12 @@
   grid-column: 1 / 2;
   display: flex;
   overflow: auto;
-  font-family: $font-family-monospace;
   font-size: var(--font-size, #{$editor-font-size});
 
-  // Enable but hide native selection
-  user-select: text;
+  .side-by-side .text-overlay-split &,
+  .side-by-side:not(.esper-maximized) .text-overlay-full & {
+    grid-column: 1 / -1;
+  }
 
   &::selection,
   ::selection {
@@ -21,9 +22,10 @@
     color: inherit;
   }
 
-  .side-by-side .text-overlay-split &,
-  .side-by-side:not(.esper-maximized) .text-overlay-full & {
-    grid-column: 1 / -1;
+  .alto-document,
+  pre {
+    font-family: $font-family-monospace;
+    user-select: text; // Enable but hide native selection
   }
 
   // Plain text fallback
