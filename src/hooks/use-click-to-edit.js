@@ -9,14 +9,14 @@ import { hasModifiers } from '../keymap.js'
 //  - click didn't cause focus change
 //  - and is a single click
 
-export function useClickToEdit (handler, { isSelected }) {
+export function useClickToEdit ({ isDisabled, isSelected, onEdit, value }) {
   let wasSelected = useRef(false)
 
   let single = useSingleClick((event) => {
-    if (handler) handler(event)
+    if (!isDisabled) onEdit(value, event)
   })
 
-  let focus = useFocusClick(handler && ((event, { hasFocusChanged }) => {
+  let focus = useFocusClick(!isDisabled && ((event, { hasFocusChanged }) => {
     if (wasSelected.current && !hasFocusChanged && !hasModifiers(event))
       single.onClick(event)
   }))

@@ -7,7 +7,12 @@ describe('useClickToEdit', () => {
 
   let List = ({ isDisabled, isSelected }) => (
     <ul tabIndex={-1}>
-      <li {...useClickToEdit(!isDisabled && handler, { isSelected })}/>
+      <li {...useClickToEdit({
+        isDisabled,
+        isSelected,
+        onEdit: handler,
+        value: 'value'
+      })}/>
     </ul>
   )
 
@@ -44,6 +49,7 @@ describe('useClickToEdit', () => {
 
     mock.timers.tick(350)
     expect(handler.mock.callCount()).to.equal(1)
+    expect(handler.mock.calls[0].arguments[0]).to.equal('value')
   })
 
   it('ignores the click that selected the item', () => {
