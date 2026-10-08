@@ -37,24 +37,37 @@ describe('useClickToSelect', () => {
 
   it('selects selected items on click only', () => {
     let node = setup({ isSelected: true })
-    fireEvent.mouseDown(node)
+    fireEvent.mouseDown(node, { detail: 1 })
     expect(onSelect.mock.callCount()).to.equal(0)
 
-    fireEvent.click(node)
+    fireEvent.click(node, { detail: 1 })
+    expect(onSelect.mock.callCount()).to.equal(1)
+  })
+
+  it('selects once on a double click', () => {
+    let { container, rerender } = render(<Item isSelected={false}/>)
+    let node = container.firstChild
+
+    fireEvent.mouseDown(node, { detail: 1, metaKey: true })
+    rerender(<Item isSelected/>)
+    fireEvent.click(node, { detail: 1, metaKey: true })
+    fireEvent.mouseDown(node, { detail: 2, metaKey: true })
+    fireEvent.click(node, { detail: 2, metaKey: true })
+
     expect(onSelect.mock.callCount()).to.equal(1)
   })
 
   it('selects once when the press selected the item', () => {
     let node = setup({ isSelected: false })
-    fireEvent.mouseDown(node)
-    fireEvent.click(node)
+    fireEvent.mouseDown(node, { detail: 1 })
+    fireEvent.click(node, { detail: 1 })
     expect(onSelect.mock.callCount()).to.equal(1)
   })
 
   it('can be disabled', () => {
     let node = setup({ isDisabled: true, isSelected: true })
-    fireEvent.mouseDown(node)
-    fireEvent.click(node)
+    fireEvent.mouseDown(node, { detail: 1 })
+    fireEvent.click(node, { detail: 1 })
     expect(onSelect.mock.callCount()).to.equal(0)
   })
 })
