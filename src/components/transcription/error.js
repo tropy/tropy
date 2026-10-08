@@ -8,7 +8,7 @@ export const TranscriptionError = ({ config }) => {
   let dispatch = useDispatch()
 
   return (
-    <div className="error">
+    <div className="state error">
       <Icon name="TranscriptionFailedExtraLarge"/>
       <FormattedMessage id="transcription.error" tagName="p"/>
       <Button

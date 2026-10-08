@@ -45,9 +45,13 @@ const {
   ZOOM_PRECISION
 } = SASS.ESPER
 
-const parseAltoDocument = memoize((data, width, height, angle, mirror) => (
-  Document.parse(data).setTransform({ width, height, angle, mirror })
-))
+const parseAltoDocument = memoize((data, width, height, angle, mirror) => {
+  let doc = Document.parse(data)
+
+  return (doc.strings().next().done) ?
+    null :
+    doc.setTransform({ width, height, angle, mirror })
+})
 
 
 export class Esper extends React.Component {

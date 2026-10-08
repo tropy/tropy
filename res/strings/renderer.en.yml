@@ -741,6 +741,7 @@ en:
     error: Transcription failed
     retry: Try Again
     pending: Transcription pending…
+    empty: No text recognized
     title: >-
       {name, select,
         true {{name}}
