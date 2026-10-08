@@ -1,5 +1,4 @@
 import { useRef } from 'react'
-import { useEvent } from './use-event.js'
 import { useFocusClick } from './use-focus-click.js'
 import { useSingleClick } from './use-single-click.js'
 import { hasModifiers } from '../keymap.js'
@@ -21,12 +20,12 @@ export function useClickToEdit ({ isDisabled, isSelected, onEdit, value }) {
       single.onClick(event)
   }))
 
-  let handleMouseDown = useEvent((event) => {
+  let handleMouseDown = (event) => {
     // Subtle: selection usually happens on mouse-down!
     wasSelected.current = isSelected
     focus.onMouseDown(event)
     single.onMouseDown(event)
-  })
+  }
 
   return {
     onClick: focus.onClick,

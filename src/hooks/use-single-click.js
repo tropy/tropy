@@ -9,7 +9,7 @@ export function useSingleClick (handler, { delay = 350 } = {}) {
     timeout.current = null
   })
 
-  let handleClick = useEvent((event) => {
+  let handleClick = (event) => {
     cancel()
 
     if (event.detail === 1) {
@@ -18,7 +18,7 @@ export function useSingleClick (handler, { delay = 350 } = {}) {
         handler(event)
       }, delay)
     }
-  })
+  }
 
   useEffect(() => cancel, [cancel])
 

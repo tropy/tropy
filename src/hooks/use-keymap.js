@@ -1,8 +1,7 @@
 import { useSelector } from 'react-redux'
-import { useEvent } from './use-event.js'
 
 export function useKeyDown (keymap, handlers) {
-  return useEvent((event) => {
+  return (event) => {
     let cmd = keymap?.match(event)
 
     let handler = (typeof handlers === 'function') ?
@@ -20,7 +19,7 @@ export function useKeyDown (keymap, handlers) {
     event.stopPropagation()
 
     event.nativeEvent?.stopImmediatePropagation()
-  })
+  }
 }
 
 export function useKeyMap (name, handlers) {

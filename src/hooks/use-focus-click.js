@@ -1,16 +1,15 @@
 import { useRef } from 'react'
-import { useEvent } from './use-event.js'
 
 export function useFocusClick (handler) {
   let activeElement = useRef(null)
   let hadFocus = useRef(false)
 
-  let handleMouseDown = useEvent((event) => {
+  let handleMouseDown = (event) => {
     activeElement.current = new WeakRef(document.activeElement)
     hadFocus.current = event.currentTarget.contains(document.activeElement)
-  })
+  }
 
-  let handleClick = useEvent((event) => {
+  let handleClick = (event) => {
     if (!handler) return
 
     let isPointer = event.detail > 0
@@ -22,7 +21,7 @@ export function useFocusClick (handler) {
       hasFocusChanged: isPointer &&
         activeElement.current?.deref() !== document.activeElement
     })
-  })
+  }
 
   return {
     onClick: handleClick,

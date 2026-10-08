@@ -1,4 +1,3 @@
-import { useEvent } from './use-event.js'
 import { useKeyDown } from './use-keymap.js'
 import { CursorKeyMap, getKeyState } from '../keymap.js'
 
@@ -24,10 +23,10 @@ export function useCursorKeys (cursor, {
       return onMove(target, { cmd, ...getKeyState(event) }) !== false
     }))
 
-  return useEvent((event) => {
+  return (event) => {
     onKeyDown?.(event)
 
     if (!event.defaultPrevented)
       handleCursorKeys(event)
-  })
+  }
 }
