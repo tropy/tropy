@@ -11,9 +11,11 @@ export function useFocusClick (handler) {
   })
 
   let handleClick = useEvent((event) => {
+    if (!handler) return
+
     let isPointer = event.detail > 0
 
-    handler?.(event, {
+    handler(event, {
       hadFocus: isPointer
         ? hadFocus.current
         : event.currentTarget.contains(document.activeElement),

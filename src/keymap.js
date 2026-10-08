@@ -82,6 +82,9 @@ export function match (map, event) {
   return null
 }
 
+export const hasModifiers = (event) =>
+  event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
+
 export const getKeyState = (event) => ({
   altKey: event.altKey,
   ctrlKey: event.ctrlKey,

@@ -5,11 +5,11 @@ import { useFocusClick } from '#tropy/hooks/use-focus-click.js'
 describe('useFocusClick', () => {
   let handler = mock.fn()
 
-  let List = ({ isItemFocusable }) => (
+  let List = ({ isDisabled, isItemFocusable }) => (
     <ul tabIndex={-1}>
       <li
         tabIndex={isItemFocusable ? -1 : undefined}
-        {...useFocusClick(handler)}/>
+        {...useFocusClick(!isDisabled && handler)}/>
     </ul>
   )
 
@@ -71,6 +71,12 @@ describe('useFocusClick', () => {
     item.focus()
     fireEvent.click(item, { detail: 0 })
     expect(report()).to.eql({ hadFocus: true, hasFocusChanged: false })
+  })
+
+  it('can be disabled', () => {
+    let [list, item] = setup({ isDisabled: true })
+    press(item, list)
+    expect(handler.mock.callCount()).to.equal(0)
   })
 
   it('ignores aborted presses', () => {
