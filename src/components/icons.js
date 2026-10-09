@@ -9,7 +9,7 @@ export function Icon ({ name, ...props }) {
   return React.createElement(icons[name], props)
 }
 
-export function IconContainer ({ children, className, name, title }) {
+export function IconContainer ({ children, className, name, style, title }) {
   let intl = useIntl()
 
   if (title)
@@ -18,6 +18,7 @@ export function IconContainer ({ children, className, name, title }) {
   return (
     <span
       className={cx('icon', `icon-${lispcase(name)}`, className)}
+      style={style}
       title={title}>
       {children}
     </span>
@@ -25,10 +26,11 @@ export function IconContainer ({ children, className, name, title }) {
 }
 
 function i (name, svg) {
-  let IconComponent = React.memo(({ className, title }) => (
+  let IconComponent = React.memo(({ className, style, title }) => (
     <IconContainer
       className={className}
       name={name}
+      style={style}
       title={title}>
       {svg}
     </IconContainer>
@@ -694,6 +696,12 @@ export const IconSplit = i('Split', (
   </svg>
 ))
 
+export const IconStatus = i('Status', (
+  <svg width="16" height="16" viewBox="0 0 16 16" overflow="visible">
+    <circle fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" pathLength="100" strokeDasharray="var(--progress, 75) 100" transform="rotate(-90 8.5 7.5)" cx="8.5" cy="7.5" r="7.75"/>
+  </svg>
+))
+
 export const IconSub = i('Sub', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
@@ -746,6 +754,15 @@ export const IconTranscriptionFailed = i('TranscriptionFailed', (
     <g className="line" fill="currentColor">
       <path d="M14,2a1,1,0,0,1,1,1V13a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2H14m0-1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V3a2,2,0,0,0-2-2ZM9.348,8l2.576-2.576a.6.6,0,0,0-.848-.848L8.5,7.152,5.924,4.576a.6.6,0,0,0-.848.848L7.652,8,5.076,10.576a.6.6,0,1,0,.848.848L8.5,8.848l2.576,2.576a.6.6,0,0,0,.848-.848Z"/>
     </g>
+  </svg>
+))
+
+export const IconTranscriptionStatus = i('TranscriptionStatus', (
+  <svg width="16" height="16" viewBox="0 0 16 16" overflow="visible">
+    <g className="line" fill="currentColor">
+      <path d="M9,11h2v1H6V11H8V5H6V7H5V4h7V7H11V5H9Z"/>
+    </g>
+    <circle fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" pathLength="100" strokeDasharray="var(--progress, 100) 100" cx="8.5" cy="7.5" r="7.75"/>
   </svg>
 ))
 

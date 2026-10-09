@@ -24,6 +24,12 @@
       .project-mode-enter-active & {
         @include window-controls-spacing;
       }
+
+      .icon {
+        & + .icon {
+          margin-left: $space-sm;
+        }
+      }
     }
   }
 }

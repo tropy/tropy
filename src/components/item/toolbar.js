@@ -6,6 +6,7 @@ import { Button } from '../button.js'
 import { AccountStatus } from '../account/status.js'
 import { Fade } from '../fx.js'
 import { mode } from '../../actions/nav.js'
+import { Icon } from '../icons.js'
 
 export const ItemToolbar = ({ isItemMode }) => {
   let dispatch = useDispatch()
@@ -29,6 +30,8 @@ export const ItemToolbar = ({ isItemMode }) => {
         </ToolGroup>
       </Toolbar.Left>
       <Toolbar.Right>
+        <Icon name="Status" style={{ '--indeterminate': 'true' }}/>
+        <Icon name="TranscriptionStatus" style={{ '--progress': 75 }}/>
         <AccountStatus/>
       </Toolbar.Right>
     </Titlebar>
