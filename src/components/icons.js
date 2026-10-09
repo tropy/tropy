@@ -762,7 +762,7 @@ export const IconTranscriptionStatus = i('TranscriptionStatus', (
     <g className="line" fill="currentColor">
       <path d="M9,11h2v1H6V11H8V5H6V7H5V4h7V7H11V5H9Z"/>
     </g>
-    <circle fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" pathLength="100" strokeDasharray="var(--progress, 100) 100" cx="8.5" cy="7.5" r="7.75"/>
+    <circle fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" pathLength="100" strokeDasharray="var(--progress, 75) 100" cx="8.5" cy="7.5" r="7.75"/>
   </svg>
 ))
 
