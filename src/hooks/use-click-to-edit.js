@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { useEvent } from './use-event.js'
 import { useFocusClick } from './use-focus-click.js'
 import { useSingleClick } from './use-single-click.js'
 import { hasModifiers } from '../keymap.js'
@@ -11,9 +12,10 @@ import { hasModifiers } from '../keymap.js'
 export function useClickToEdit ({ isDisabled, isSelected, onEdit, value }) {
   let wasSelected = useRef(false)
 
-  let single = useSingleClick((event) => {
-    if (!isDisabled) onEdit(value, event)
-  })
+  let single = useSingleClick(useEvent((event) => {
+    // Subtle: check conditions again after the delay!
+    if (!isDisabled && isSelected) onEdit(value, event)
+  }))
 
   let focus = useFocusClick(!isDisabled && ((event, { hasFocusChanged }) => {
     if (wasSelected.current && !hasFocusChanged && !hasModifiers(event))

@@ -69,6 +69,16 @@ describe('useClickToEdit', () => {
     expect(handler.mock.callCount()).to.equal(0)
   })
 
+  it('ignores the click if the item is deselected during the delay', () => {
+    let dom = setup()
+    dom.list.focus()
+    press(dom)
+    dom.rerender(<List isSelected={false}/>)
+    mock.timers.tick(350)
+
+    expect(handler.mock.callCount()).to.equal(0)
+  })
+
   it('ignores clicks with modifiers', () => {
     let dom = setup()
     dom.list.focus()
