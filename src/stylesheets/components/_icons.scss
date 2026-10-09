@@ -77,8 +77,8 @@
   margin: -2px; // Special treat 20 x 20 arrow icon
 }
 
-// Status icons
-.icon {
+.icon-status,
+.icon-transcription-status {
   circle {
     transform-box: fill-box;
     transform-origin: center;
