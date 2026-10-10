@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Scroll } from '../scroll/index.js'
 import { NoteListItem } from './list-item.js'
 import { TABS, SASS } from '../../constants/index.js'
@@ -18,7 +19,8 @@ export const NoteList = ({
   selection,
   tabIndex = TABS.NoteList
 }) => {
-  let cursor = new Cursor(notes, selection?.id)
+  let [layout, setLayout] = useState()
+  let cursor = new Cursor(notes, selection?.id, layout)
 
   let handleSelect = useEvent((note, { repeat } = {}) => {
     if (!(note == null || note.id === selection?.id))
@@ -39,6 +41,7 @@ export const NoteList = ({
   }
 
   let handleKeyDown = useCursorKeys(cursor, {
+    scrollKeys: 'select',
     onMove: handleSelect,
     onKeyDown: useKeyMap('NoteList', {
       open () {
@@ -62,6 +65,7 @@ export const NoteList = ({
         items={notes}
         itemHeight={rowHeight}
         tabIndex={tabIndex}
+        onLayoutChange={setLayout}
         onKeyDown={handleKeyDown}>
         {(note) => (
           <NoteListItem

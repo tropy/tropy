@@ -30,10 +30,30 @@ export class Scroll extends React.Component {
     cancelAnimationFrame(this.#scrollCallback.current)
   }
 
-  componentDidUpdate ({ cursor, itemHeight }) {
+  componentDidUpdate ({ cursor, itemHeight, itemWidth }, { height, width }) {
     if (cursor !== this.props.cursor ||
       itemHeight !== this.props.itemHeight)
       this.scrollIntoView()
+
+    if (height !== this.state.height ||
+      width !== this.state.width ||
+      itemHeight !== this.props.itemHeight ||
+      itemWidth !== this.props.itemWidth)
+      this.reportLayout()
+  }
+
+  // Reports the layout as options for cursors over the items:
+  // list or grid, the number of columns,
+  // and the page size in items (fully visible rows times columns).
+  reportLayout () {
+    let { columns, isGrid } = this.layout
+    let rows = Math.floor(this.state.height / this.props.itemHeight)
+
+    this.props.onLayoutChange?.({
+      layout: isGrid ? 'grid' : 'list',
+      columns,
+      pageSize: columns * Math.max(rows, 1)
+    })
   }
 
   get tabIndex () {

@@ -1,5 +1,5 @@
 import { mock } from 'node:test'
-import { fireEvent } from '@testing-library/react'
+import { fireEvent, waitFor } from '@testing-library/react'
 import { render, inWindowContext } from '../../support/react.js'
 import { NoteList } from '#tropy/components/note/list.js'
 
@@ -42,5 +42,31 @@ describe('NoteList', () => {
       { note: 2, photo: 1, selection: undefined },
       { throttle: true }
     ])
+  })
+
+  it('selects a page of notes with page keys', async () => {
+    let style = document.createElement('style')
+    style.textContent = '.note-list .scroll-container { height: 50px }'
+    document.head.appendChild(style)
+
+    let many = Array.from({ length: 20 }, (_, i) =>
+      ({ id: i + 1, photo: 1, text: `${i + 1}` }))
+    let onSelect = mock.fn()
+
+    let { $ } = render(
+      <NoteList
+        notes={many}
+        rowHeight={10}
+        selection={many[0]}
+        onSelect={onSelect}/>,
+      inWindowContext)
+
+    // The page size is known once the container size is observed.
+    await waitFor(() => {
+      fireEvent.keyDown($('.scroll-container'), { key: 'PageDown' })
+      expect(onSelect.mock.calls.at(-1).arguments[0]).to.include({ note: 6 })
+    })
+
+    style.remove()
   })
 })
