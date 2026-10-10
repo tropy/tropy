@@ -3,7 +3,7 @@ import { useEvent } from './use-event.js'
 import { getEmptyImage, useDrag, useDrop } from '../components/dnd.js'
 import { bounds } from '../dom.js'
 
-export function useDragDropSortable (element, {
+export function useSortableElement (element, {
   id,
   type,
   canDrop,

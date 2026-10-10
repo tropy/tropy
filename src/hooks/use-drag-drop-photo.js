@@ -1,5 +1,5 @@
 import { useEvent } from './use-event.js'
-import { useDragDropSortable } from './use-drag-drop-sortable.js'
+import { useSortableElement } from './use-sortable-element.js'
 import { DND, useDrop } from '../components/dnd.js'
 import { pick } from '../common/util.js'
 import { Thumbnail } from '../components/photo/thumbnail.js'
@@ -17,7 +17,7 @@ export function useDragDropPhoto (dom, {
     item: photo.item
   }))
 
-  return useDragDropSortable(dom, {
+  return useSortableElement(dom, {
     id: photo.id,
     type: DND.PHOTO,
     createDragItem,
