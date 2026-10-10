@@ -45,7 +45,6 @@ export const TranscriptionPanel = ({
   }
 
   let onKeyDown = useCursorKeys(cursor, {
-    scrollKeys: 'select',
     onMove: handleActivate,
     onKeyDown: useKeyMap('TranscriptionPanel', {
       delete: !isDisabled && handleDelete
