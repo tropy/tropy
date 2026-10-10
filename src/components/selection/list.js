@@ -2,10 +2,8 @@ import { memo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { useDropOutside } from '../../hooks/use-drop-outside.js'
+import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { SelectionListItem } from './list-item.js'
-import { move } from '../../common/util.js'
-import { adjacent } from '../../common/sequence.js'
 import { dc } from '../../ontology/ns.js'
 import cx from 'classnames'
 
@@ -26,10 +24,13 @@ export const SelectionList = memo(({
   let edit = useSelector(state => state.edit.selection)
 
   let container = useRef()
-  let isSortable = !isDisabled && selections.length > 1
 
-  let handleDropSelection = useEvent(({ id, to, offset }) => {
-    onSort({ photo: photo.id, selections: move(photo.selections, id, to, offset) })
+  let sortable = useSortableSequence({
+    type: DND.SELECTION,
+    canDrop: (item) => item.photo === photo.id,
+    isDisabled,
+    items: photo.selections,
+    onSort: (selections) => onSort({ photo: photo.id, selections })
   })
 
   let select = useEvent((selection) => {
@@ -60,38 +61,25 @@ export const SelectionList = memo(({
     onContextMenu(event, photo, selection.id)
   })
 
-  let getAdjacent = useEvent((selection) =>
-    adjacent(selections, selection.id).map(s => s?.id))
-
-  let canDropSelection = useEvent((item) =>
-    isSortable &&
-    photo.id === item.photo &&
-    item.id !== photo.selections.at(-1))
-
-  let [{ canDrop, isOver }, drop] = useDropOutside({
-    type: DND.SELECTION,
-    canDrop: canDropSelection,
-    items: photo.selections,
-    onDrop: handleDropSelection
-  })
-
   return (
     <ul
-      ref={isSortable ? drop(container) : container}
-      className={cx('selection-list', { over: isOver && canDrop })}>
+      ref={sortable.isSortable ? sortable.drop(container) : container}
+      className={cx('selection-list', {
+        over: sortable.isOver && sortable.canDrop
+      })}>
       {selections.map((selection, index) => (
         <SelectionListItem
           key={selection.id}
-          getAdjacent={getAdjacent}
+          getAdjacent={sortable.getAdjacent}
           isActive={active === selection.id}
           isDisabled={isDisabled}
           isEditing={edit === selection.id}
           isItemOpen={isItemOpen}
           isLast={index === selections.length - 1}
-          isSortable={isSortable}
+          isSortable={sortable.isSortable}
           onChange={onChange}
           onContextMenu={handleContextMenu}
-          onDrop={handleDropSelection}
+          onDrop={sortable.onDrop}
           onEdit={handleEdit}
           onEditCancel={onEditCancel}
           onItemOpen={open}

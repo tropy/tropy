@@ -2,12 +2,11 @@ import { memo, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { useDropOutside } from '../../hooks/use-drop-outside.js'
+import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
 import { SelectionTile } from './tile.js'
-import { move } from '../../common/util.js'
-import { Cursor, adjacent } from '../../common/sequence.js'
+import { Cursor } from '../../common/sequence.js'
 import { TABS } from '../../constants/index.js'
 import cx from 'classnames'
 
@@ -28,14 +27,17 @@ export const SelectionGrid = memo(({
   let active = useSelector(state => state.nav.selection)
 
   let container = useRef()
-  let isSortable = !isDisabled && selections.length > 1
 
   let style = useMemo(() => ({
     gridTemplateColumns: `repeat(${cols}, ${cols}fr)`
   }), [cols])
 
-  let handleDropSelection = useEvent(({ id, to, offset }) => {
-    onSort({ photo: photo.id, selections: move(photo.selections, id, to, offset) })
+  let sortable = useSortableSequence({
+    type: DND.SELECTION,
+    canDrop: (item) => item.photo === photo.id,
+    isDisabled,
+    items: photo.selections,
+    onSort: (selections) => onSort({ photo: photo.id, selections })
   })
 
   let select = useEvent((selection) => {
@@ -61,9 +63,6 @@ export const SelectionGrid = memo(({
   let handleContextMenu = useEvent((event, selection) => {
     onContextMenu(event, photo, selection.id)
   })
-
-  let getAdjacent = useEvent((selection) =>
-    adjacent(selections, selection.id).map(s => s?.id))
 
   let cursor = new Cursor(selections, active, {
     layout: 'grid',
@@ -91,22 +90,12 @@ export const SelectionGrid = memo(({
     })
   })
 
-  let canDropSelection = useEvent((item) =>
-    isSortable &&
-    photo.id === item.photo &&
-    item.id !== photo.selections.at(-1))
-
-  let [{ canDrop, isOver }, drop] = useDropOutside({
-    type: DND.SELECTION,
-    canDrop: canDropSelection,
-    items: photo.selections,
-    onDrop: handleDropSelection
-  })
-
   return (
     <ul
-      ref={isSortable ? drop(container) : container}
-      className={cx('selection-grid', { over: isOver && canDrop })}
+      ref={sortable.isSortable ? sortable.drop(container) : container}
+      className={cx('selection-grid', {
+        over: sortable.isOver && sortable.canDrop
+      })}
       style={style}
       tabIndex={TABS.SelectionGrid}
       onBlur={onBlur}
@@ -114,14 +103,14 @@ export const SelectionGrid = memo(({
       {selections.map((selection, index) => (
         <SelectionTile
           key={selection.id}
-          getAdjacent={getAdjacent}
+          getAdjacent={sortable.getAdjacent}
           isActive={active === selection.id}
           isDisabled={isDisabled}
           isLast={index === selections.length - 1}
-          isSortable={isSortable}
+          isSortable={sortable.isSortable}
           isVertical={!(cols > 1)}
           onContextMenu={handleContextMenu}
-          onDrop={handleDropSelection}
+          onDrop={sortable.onDrop}
           onItemOpen={open}
           onSelect={select}
           photo={photo}

@@ -1,10 +1,8 @@
 import React from 'react'
 import { DND } from '../dnd.js'
-import { useDropOutside } from '../../hooks/use-drop-outside.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
-import { useEvent } from '../../hooks/use-event.js'
-import { move, noop, pick } from '../../common/util.js'
-import { adjacent } from '../../common/sequence.js'
+import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
+import { noop, pick } from '../../common/util.js'
 import { on, off } from '../../dom.js'
 import { TABS } from '../../constants/index.js'
 
@@ -164,10 +162,6 @@ export class PhotoIterator extends React.Component {
       this.rotate(by, this.props.current)
   }
 
-  getAdjacent = (photo) => {
-    return adjacent(this.props.photos, photo.id).map(p => p?.id)
-  }
-
   getIterableProps (photo) {
     return {
       photo,
@@ -177,7 +171,7 @@ export class PhotoIterator extends React.Component {
       isItemOpen: this.props.isItemOpen,
       isSelected: this.isSelected(photo),
       isVertical: this.isVertical,
-      getAdjacent: this.getAdjacent,
+      getAdjacent: this.props.getAdjacent,
       onConsolidate: this.handleConsolidate,
       onContextMenu: this.handleContextMenu,
       onDropPhoto: this.props.onDropPhoto,
@@ -208,22 +202,13 @@ export class PhotoIterator extends React.Component {
     let Iterator = this
 
     return function PhotoIteratorContainer (props) {
-      let { canCreate, photos, onCreate, onSort } = props
+      let { canCreate, isDisabled, photos, onCreate, onSort } = props
 
-      let handleDropPhoto = useEvent(({ id, to, offset }) => {
-        let item = photos[0].item
-        let order = move(photos.map(photo => photo.id), id, to, offset)
-
-        onSort({ item, photos: order })
-      })
-
-      let canDropPhoto = useEvent((item) => item.id !== photos.at(-1)?.id)
-
-      let [photo, dropPhoto] = useDropOutside({
+      let sortable = useSortableSequence({
         type: DND.PHOTO,
-        canDrop: canDropPhoto,
-        items: photos.map(p => p.id),
-        onDrop: handleDropPhoto
+        isDisabled,
+        items: photos.map(photo => photo.id),
+        onSort: (order) => onSort({ item: photos[0].item, photos: order })
       })
 
       let [file, dropFile] = useDropPhotoFiles({
@@ -234,10 +219,11 @@ export class PhotoIterator extends React.Component {
       return (
         <Iterator
           {...props}
-          connectDropTarget={(element) => dropPhoto(dropFile(element))}
-          isOver={photo.isOver && photo.canDrop}
+          connectDropTarget={(element) => sortable.drop(dropFile(element))}
+          getAdjacent={sortable.getAdjacent}
+          isOver={sortable.isOver && sortable.canDrop}
           isOverFile={file.isOver && file.canDrop}
-          onDropPhoto={handleDropPhoto}/>
+          onDropPhoto={sortable.onDrop}/>
       )
     }
   }
