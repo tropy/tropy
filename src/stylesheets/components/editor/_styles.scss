@@ -86,6 +86,16 @@ body {
   }
 }
 
+.search-match {
+  background: #ffe066;
+  border-radius: 2px;
+  color: #1a1a1a;
+
+  &.active {
+    background: #ff9800;
+  }
+}
+
 .ProseMirror { /* stylelint-disable-line selector-class-pattern */
   flex: 1 1 auto;
   overflow-wrap: break-word;

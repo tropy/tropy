@@ -120,6 +120,7 @@ en:
         - Backspace
         - Delete
     NotePad: &NotePad
+      find: CmdOrCtrl+f
       break: Enter
       br:
         - Shift+Enter
