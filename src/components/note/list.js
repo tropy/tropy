@@ -29,6 +29,15 @@ export const NoteList = ({
       }, { throttle: repeat })
   })
 
+  let handleContextMenu = (event, note) => {
+    onContextMenu?.(event, 'note', {
+      notes: [note.id],
+      item: note.item,
+      photo: note.photo,
+      selection: note.selection
+    })
+  }
+
   let handleKeyDown = useCursorKeys(cursor, {
     onMove: handleSelect,
     onKeyDown: useKeyMap('NoteList', {
@@ -59,7 +68,7 @@ export const NoteList = ({
             key={note.id}
             isSelected={note.id === selection?.id}
             note={note.id === selection?.id ? selection : note}
-            onContextMenu={onContextMenu}
+            onContextMenu={handleContextMenu}
             onOpen={onOpen}
             onSelect={handleSelect}/>
         )}
