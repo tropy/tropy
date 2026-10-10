@@ -7,11 +7,10 @@ import { Icon } from '../icons.js'
 import { Button } from '../button.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
 import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
-import { useClickHandler } from '../../hooks/use-click-handler.js'
+import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
 import { pick, pluck } from '../../common/util.js'
-import { testFocusChange } from '../../dom.js'
 import { TYPE } from '../../constants/index.js'
 
 export const PhotoListItem = memo(({
@@ -27,14 +26,13 @@ export const PhotoListItem = memo(({
   onChange,
   onConsolidate,
   onContextMenu,
-  onContract,
   onDropPhoto,
   onEdit,
   onEditCancel,
-  onExpand,
   onItemOpen,
   onSelect,
   onSelectionSort,
+  onToggle,
   photo,
   selection,
   selections,
@@ -42,7 +40,6 @@ export const PhotoListItem = memo(({
   title
 }) => {
   let container = useRef()
-  let hasFocusChanged = useRef()
 
   let isActive = isSelected && selection == null
 
@@ -57,34 +54,13 @@ export const PhotoListItem = memo(({
 
   useScrollIntoView(container, { when: isSelected })
 
-  let select = useEvent(() => {
-    if (!isActive)
-      onSelect(photo)
-  })
-
-  let edit = useEvent(() => {
-    if (!(isDisabled || isDragging))
-      onEdit(photo)
-  })
-
-  let handleMouseDown = useEvent(() => {
-    hasFocusChanged.current = testFocusChange()
-  })
-
-  let handleClick = useClickHandler({
-    onClick () {
-      select()
-      return !isActive || hasFocusChanged.current?.()
-    },
-
-    onSingleClick: edit,
-
-    onDoubleClick () {
-      if (!isItemOpen)
-        onItemOpen(photo)
-      else
-        edit()
-    }
+  // Read-only (isDisabled here) blocks editing, not selection.
+  let sequenceClicks = useSequenceClicks({
+    isSelected: isActive,
+    onDoubleClick: isItemOpen ? (!isDisabled && onEdit) : onItemOpen,
+    onSelect,
+    onSelectedClick: !isDisabled && onEdit,
+    value: photo
   })
 
   let handleChange = useEvent((text) => {
@@ -98,27 +74,21 @@ export const PhotoListItem = memo(({
     onEditCancel()
   })
 
-  let handleContextMenu = useEvent((event) => {
-    select()
-    onContextMenu(
-      event,
-      isDisabled ? 'photo-read-only' : 'photo',
-      pick(photo, ['id', 'item', 'path', 'protocol']))
-  })
-
-  let handleConsolidate = useEvent((event) => {
-    event?.stopPropagation()
-    onConsolidate([photo.id], { force: true, prompt: true })
-  })
-
-  let handleTwistyButtonClick = useEvent((event) => {
+  // TODO: buttons must stop the mouse-down, too, or the
+  // item selects on press (see chaining in ITERATOR-PLAN.md).
+  let stopPropagation = (event) => {
     event.stopPropagation()
+  }
 
-    if (isExpanded)
-      onContract(photo)
-    else
-      onExpand(photo)
-  })
+  let handleConsolidate = (event) => {
+    event.stopPropagation()
+    onConsolidate(photo)
+  }
+
+  let handleToggle = (event) => {
+    event.stopPropagation()
+    onToggle(photo)
+  }
 
   return (
     <li
@@ -133,15 +103,15 @@ export const PhotoListItem = memo(({
       })}>
       <div
         className="photo-container"
-        onClick={handleClick}
-        onContextMenu={handleContextMenu}
-        onMouseDown={handleMouseDown}>
+        onContextMenu={(event) => onContextMenu(event, photo)}
+        {...sequenceClicks}>
         {isExpandable && (
           <Button
             noFocus
             icon={<Icon name="Chevron9"/>}
             className="disclosure"
-            onClick={handleTwistyButtonClick}/>
+            onClick={handleToggle}
+            onMouseDown={stopPropagation}/>
         )}
         <div className="thumbnail-container">
           <Thumbnail
@@ -162,7 +132,8 @@ export const PhotoListItem = memo(({
             <Button
               icon={<Icon name="Warning"/>}
               title="photo.consolidate"
-              onClick={handleConsolidate}/>
+              onClick={handleConsolidate}
+              onMouseDown={stopPropagation}/>
           )}
           {isExpandable && <Icon name="Selection"/>}
           <TranscriptionIcon id={photo.transcriptions?.at(-1)}/>

@@ -58,6 +58,10 @@ export const SelectionGrid = memo(({
     }
   })
 
+  let handleContextMenu = useEvent((event, selection) => {
+    onContextMenu(event, photo, selection.id)
+  })
+
   let getAdjacent = useEvent((selection) =>
     adjacent(selections, selection.id).map(s => s?.id))
 
@@ -116,7 +120,7 @@ export const SelectionGrid = memo(({
           isLast={index === selections.length - 1}
           isSortable={isSortable}
           isVertical={!(cols > 1)}
-          onContextMenu={onContextMenu}
+          onContextMenu={handleContextMenu}
           onDrop={handleDropSelection}
           onItemOpen={open}
           onSelect={select}

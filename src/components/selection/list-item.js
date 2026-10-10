@@ -2,14 +2,13 @@ import { memo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { useIntl } from 'react-intl'
 import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
-import { useClickHandler } from '../../hooks/use-click-handler.js'
+import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
 import { Editable } from '../editable.js'
 import { Thumbnail } from '../photo/thumbnail.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
 import { pick } from '../../common/util.js'
-import { testFocusChange } from '../../dom.js'
 import cx from 'classnames'
 
 export const SelectionListItem = memo(({
@@ -33,7 +32,6 @@ export const SelectionListItem = memo(({
   title
 }) => {
   let container = useRef()
-  let hasFocusChanged = useRef()
   let intl = useIntl()
 
   let [{ canDrop, isDragging, isOver, direction }, dnd] =
@@ -49,29 +47,13 @@ export const SelectionListItem = memo(({
 
   useScrollIntoView(container, { when: isActive })
 
-  let handleMouseDown = useEvent(() => {
-    hasFocusChanged.current = testFocusChange()
-  })
-
-  let handleClick = useClickHandler({
-    onClick () {
-      onSelect(selection)
-      return !isActive || hasFocusChanged.current?.()
-    },
-
-    onSingleClick () {
-      if (!(isDisabled || isDragging)) {
-        onEdit({ selection: selection.id })
-      }
-    },
-
-    onDoubleClick () {
-      if (!isItemOpen)
-        onItemOpen(selection)
-      else if (!(isDisabled || isDragging)) {
-        onEdit({ selection: selection.id })
-      }
-    }
+  // Read-only (isDisabled here) blocks editing, not selection.
+  let sequenceClicks = useSequenceClicks({
+    isSelected: isActive,
+    onDoubleClick: isItemOpen ? (!isDisabled && onEdit) : onItemOpen,
+    onSelect,
+    onSelectedClick: !isDisabled && onEdit,
+    value: selection
   })
 
   let handleChange = useEvent((text) => {
@@ -82,16 +64,6 @@ export const SelectionListItem = memo(({
       }
     })
     onEditCancel()
-  })
-
-  let handleContextMenu = useEvent((event) => {
-    onSelect(selection)
-    onContextMenu(
-      event,
-      isDisabled ? 'selection-read-only' : 'selection',
-      pick(photo, ['id', 'item', 'path', 'protocol'], {
-        selection: selection.id
-      }))
   })
 
   let titleText = useSelector(state =>
@@ -110,9 +82,8 @@ export const SelectionListItem = memo(({
         over: isOver && canDrop,
         [direction]: direction
       })}
-      onContextMenu={handleContextMenu}
-      onClick={handleClick}
-      onMouseDown={handleMouseDown}>
+      onContextMenu={(event) => onContextMenu(event, selection)}
+      {...sequenceClicks}>
       <div className="thumbnail-container">
         <Thumbnail
           {...pick(selection, Thumbnail.keys)}

@@ -5,9 +5,8 @@ import { Icon } from '../icons.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
 import { Button } from '../button.js'
 import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
-import { useClickHandler } from '../../hooks/use-click-handler.js'
-import { useEvent } from '../../hooks/use-event.js'
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
+import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
 import { pick } from '../../common/util.js'
 
 export const PhotoTile = memo(({
@@ -20,11 +19,10 @@ export const PhotoTile = memo(({
   isVertical,
   onConsolidate,
   onContextMenu,
-  onContract,
   onDropPhoto,
-  onExpand,
   onItemOpen,
   onSelect,
+  onToggle,
   photo,
   selection,
   size = 512
@@ -42,36 +40,12 @@ export const PhotoTile = memo(({
 
   useScrollIntoView(container, { when: isSelected })
 
-  let select = useEvent(() => {
-    if (!(isSelected && selection == null))
-      onSelect(photo)
-  })
-
-  let handleClick = useClickHandler({
-    onClick: select,
-    onDoubleClick: () => onItemOpen(photo)
-  })
-
-  let handleContextMenu = useEvent((event) => {
-    select()
-    onContextMenu(
-      event,
-      isDisabled ? 'photo-read-only' : 'photo',
-      pick(photo, ['id', 'item', 'path', 'protocol']))
-  })
-
-  let handleConsolidate = useEvent((event) => {
-    event?.stopPropagation()
-    onConsolidate([photo.id], { force: true, prompt: true })
-  })
-
-  let handleExpansionToggle = useEvent((event) => {
-    event?.stopPropagation()
-
-    if (isExpanded)
-      onContract(photo)
-    else
-      onExpand(photo)
+  // Read-only (isDisabled here) does not block selection.
+  let sequenceClicks = useSequenceClicks({
+    isSelected: isSelected && selection == null,
+    onDoubleClick: onItemOpen,
+    onSelect,
+    value: photo
   })
 
   return (
@@ -90,20 +64,20 @@ export const PhotoTile = memo(({
         <Thumbnail
           {...pick(photo, Thumbnail.keys)}
           size={size}
-          onClick={handleClick}
-          onContextMenu={handleContextMenu}/>
+          onContextMenu={(event) => onContextMenu(event, photo)}
+          {...sequenceClicks}/>
         {photo.broken && (
           <Button
             icon={<Icon name="WarningOverlay"/>}
             className="warning"
             title="photo.consolidate"
-            onClick={handleConsolidate}/>
+            onClick={() => onConsolidate(photo)}/>
         )}
         <div className="icon-container">
           {isExpandable && (
             <Button
               icon={<Icon name="SelectionOverlay"/>}
-              onClick={handleExpansionToggle}/>
+              onClick={() => onToggle(photo)}/>
           )}
           <TranscriptionIcon
             id={photo.transcriptions?.at(-1)}

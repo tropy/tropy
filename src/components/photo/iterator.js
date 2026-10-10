@@ -3,7 +3,7 @@ import { DND } from '../dnd.js'
 import { useDropOutside } from '../../hooks/use-drop-outside.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { move, noop } from '../../common/util.js'
+import { move, noop, pick } from '../../common/util.js'
 import { adjacent } from '../../common/sequence.js'
 import { on, off } from '../../dom.js'
 import { TABS } from '../../constants/index.js'
@@ -99,6 +99,27 @@ export class PhotoIterator extends React.Component {
     return false
   }
 
+  toggle = (photo) => {
+    if (this.isExpanded(photo))
+      this.contract(photo)
+    else
+      this.expand(photo)
+  }
+
+  handleConsolidate = (photo) => {
+    this.props.onConsolidate([photo.id], { force: true, prompt: true })
+  }
+
+  handleContextMenu = (event, photo, selection) => {
+    let scope = (selection == null) ? 'photo' : 'selection'
+
+    this.props.onContextMenu(
+      event,
+      this.props.isDisabled ? `${scope}-read-only` : scope,
+      pick(photo, ['id', 'item', 'path', 'protocol'],
+        (selection == null) ? {} : { selection }))
+  }
+
   handleItemOpen = (photo) => {
     if (this.props.isItemOpen) {
       return this.expand(photo)
@@ -157,13 +178,12 @@ export class PhotoIterator extends React.Component {
       isSelected: this.isSelected(photo),
       isVertical: this.isVertical,
       getAdjacent: this.getAdjacent,
-      onContextMenu: this.props.onContextMenu,
-      onContract: this.contract,
+      onConsolidate: this.handleConsolidate,
+      onContextMenu: this.handleContextMenu,
       onDropPhoto: this.props.onDropPhoto,
-      onConsolidate: this.props.onConsolidate,
-      onExpand: this.expand,
       onItemOpen: this.handleItemOpen,
-      onSelect: this.handleSelectPhoto
+      onSelect: this.handleSelectPhoto,
+      onToggle: this.toggle
     }
   }
 

@@ -52,6 +52,14 @@ export const SelectionList = memo(({
     }
   })
 
+  let handleEdit = useEvent((selection) => {
+    onEdit({ selection: selection.id })
+  })
+
+  let handleContextMenu = useEvent((event, selection) => {
+    onContextMenu(event, photo, selection.id)
+  })
+
   let getAdjacent = useEvent((selection) =>
     adjacent(selections, selection.id).map(s => s?.id))
 
@@ -82,9 +90,9 @@ export const SelectionList = memo(({
           isLast={index === selections.length - 1}
           isSortable={isSortable}
           onChange={onChange}
-          onContextMenu={onContextMenu}
+          onContextMenu={handleContextMenu}
           onDrop={handleDropSelection}
-          onEdit={onEdit}
+          onEdit={handleEdit}
           onEditCancel={onEditCancel}
           onItemOpen={open}
           onSelect={select}
