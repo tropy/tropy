@@ -2,14 +2,11 @@ import { FormattedDate, FormattedMessage } from 'react-intl'
 
 export const TranscriptionMetadata = ({
   created,
-  name,
-  onMouseDown
+  name
 }) => {
 
   return (
-    <div
-      className="transcription-metadata"
-      onMouseDown={onMouseDown}>
+    <div className="transcription-metadata">
       <FormattedMessage
         id="transcription.title"
         tagName="div"

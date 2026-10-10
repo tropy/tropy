@@ -5,9 +5,11 @@ import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
+import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
 import { Cursor } from '../../common/sequence.js'
 import { getTranscriptions } from '../../selectors/index.js'
 import { activate, remove } from '../../slices/transcriptions.js'
+import * as act from '../../actions/index.js'
 import cx from 'classnames'
 
 export const TranscriptionPanel = ({
@@ -33,6 +35,15 @@ export const TranscriptionPanel = ({
     dispatch(remove([cursor.id], { history: 'add' }))
   })
 
+  let handleContextMenu = (event, tr) => {
+    event.stopPropagation()
+    dispatch(act.context.show(event, 'transcription', {
+      id: tr.id,
+      hasAlto: !!tr.data,
+      isReadOnly: isDisabled
+    }))
+  }
+
   let onKeyDown = useCursorKeys(cursor, {
     scrollKeys: 'select',
     onMove: handleActivate,
@@ -52,6 +63,7 @@ export const TranscriptionPanel = ({
             key={tr.id}
             isActive={tr.id === active}
             onActivate={handleActivate}
+            onContextMenu={handleContextMenu}
             transcription={tr}/>
         ))}
       </ol>
@@ -62,19 +74,26 @@ export const TranscriptionPanel = ({
 const TranscriptionVersion = ({
   isActive,
   onActivate,
+  onContextMenu,
   transcription
 }) => {
   let dom = useRef()
 
   useScrollIntoView(dom, { when: isActive })
 
+  let sequenceClicks = useSequenceClicks({
+    isSelected: isActive,
+    onSelect: onActivate,
+    value: transcription
+  })
+
   return (
     <li
       ref={dom}
-      className={cx('version', { active: isActive })}>
-      <TranscriptionMetadata
-        created={transcription.created}
-        onMouseDown={() => onActivate(transcription)}/>
+      className={cx('version', { active: isActive })}
+      onContextMenu={(event) => onContextMenu(event, transcription)}
+      {...sequenceClicks}>
+      <TranscriptionMetadata created={transcription.created}/>
     </li>
   )
 }
