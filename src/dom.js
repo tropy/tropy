@@ -140,10 +140,6 @@ export function borders (node) {
   }
 }
 
-export function hasFocus (node) {
-  return document.activeElement === node
-}
-
 export function testFocusChange () {
   let wasActiveElement = document.activeElement
   let t = setTimeout(() => { wasActiveElement = null }, 500)

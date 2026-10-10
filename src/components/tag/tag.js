@@ -5,8 +5,8 @@ import { IconPlusCircles } from '../icons.js'
 import { TagColor } from '../colors.js'
 import { isMeta } from '../../keymap.js'
 import { noop, toId } from '../../common/util.js'
-import { hasFocus } from '../../dom.js'
 import { useDropItems } from '../../hooks/use-drag-drop-items.js'
+import { useFocusClick } from '../../hooks/use-focus-click.js'
 
 
 export const NewTag = ({
@@ -66,7 +66,13 @@ export const Tag = React.memo(({
     onChange({ name }, tag.id)
   }, [tag, onChange])
 
-  let handleClick = (event) => {
+  let focusClick = useFocusClick(onFocusClick && ((event, { hadFocus }) => {
+    if (hadFocus) onFocusClick(tag)
+  }))
+
+  let handleMouseDown = (event) => {
+    focusClick.onMouseDown(event)
+
     if (event.button > 0) return
 
     let mod = isSelected ?
@@ -74,10 +80,6 @@ export const Tag = React.memo(({
         (isMeta(event) ? 'merge' : 'replace')
 
     onSelect(tag.id, { mod })
-
-    if (hasFocus(container.current)) {
-      onFocusClick?.(tag)
-    }
   }
 
   let handleContextMenu = (event) => {
@@ -98,7 +100,8 @@ export const Tag = React.memo(({
       })}
       tabIndex={-1}
       onContextMenu={isEditing ? null : handleContextMenu}
-      onMouseDown={isEditing ? null : handleClick}
+      onClick={isEditing ? null : focusClick.onClick}
+      onMouseDown={isEditing ? null : handleMouseDown}
       onKeyDown={isEditing ? null : handleKeyDown}>
       <TagColor color={tag.color}/>
       <div className="name">
