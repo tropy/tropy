@@ -1,161 +1,163 @@
-import { ItemIterable } from '../iterable.js'
-import { TableCell } from './cell.js'
-import { get, pick } from '../../../common/util.js'
-import { NAV, TYPE } from '../../../constants/index.js'
+import { memo, useRef } from 'react'
 import cx from 'classnames'
+import { TableCell } from './cell.js'
+import { useDragDropItem } from '../../../hooks/use-drag-drop-items.js'
+import { useItemClickHandler } from '../../../hooks/use-item-click-handler.js'
+import { useEvent } from '../../../hooks/use-event.js'
+import { get } from '../../../common/util.js'
+import { NAV, TYPE } from '../../../constants/index.js'
 
-class TableRow extends ItemIterable {
-  isDragging (idx) {
-    return idx === this.props.drag
-  }
+const isItemColumn = (id) => {
+  let idx = id.search(/^item\./)
+  return -1 === idx ? false : id.slice(5)
+}
 
-  isMoving (idx) {
-    return (idx >= this.props.drop && idx < this.props.drag) ||
-      (idx <= this.props.drop && idx > this.props.drag)
-  }
+export const TableRow = memo(({
+  columns,
+  data = {},
+  drag,
+  drop,
+  edit,
+  getSelection,
+  hasPositionColumn,
+  isDisabled,
+  isReadOnly,
+  isSelected,
+  item,
+  onCancel,
+  onChange,
+  onContextMenu,
+  onDropItems,
+  onDropPhotos,
+  onEdit,
+  onItemOpen,
+  onSelect,
+  photos,
+  position,
+  size,
+  tags,
+  template
+}) => {
+  let container = useRef()
 
-  isItemColumn (id) {
-    let idx = id.search(/^item\./)
-    return -1 === idx ? false : id.slice(5)
-  }
+  let [{ canDrop, isDragging, isOver }, dnd] =
+    useDragDropItem(container, {
+      item,
+      getSelection,
+      isDisabled: isReadOnly,
+      onDropItems,
+      onDropPhotos
+    })
 
-  isEditing = (id) => {
-    return get(this.props.edit, [this.props.item.id]) === id
-  }
+  let handlers = useItemClickHandler(item, {
+    isSelected,
+    onContextMenu,
+    onOpen: onItemOpen,
+    onSelect
+  })
 
-  getNextColumn = (at = 0, dir = 1) => {
-    let { columns } = this.props
+  let getNextColumn = useEvent((at = 0, dir = 1) => {
     for (let k = 1, N = columns.length; k < N; ++k) {
       let column = columns[(N + at + k * dir) % N]
       if (column.protected) continue
       return column.id
     }
-  }
+  })
 
-  getPrevColumn = (at = 0) => (
-    this.getNextColumn(at, -1)
-  )
+  let getPrevColumn = useEvent((at = 0) => (
+    getNextColumn(at, -1)
+  ))
 
-  getColumnProps (column, idx) {
+  let handleChange = useEvent((id, value) => {
+    if (value.type == null) {
+      let field = template?.fields?.find(f => f.property === id)
+      value.type = field?.datatype || TYPE.TEXT
+    }
+
+    onChange({
+      id: item.id,
+      data: { [id]: value }
+    })
+  })
+
+  let getColumnProps = (column, idx) => {
     let isMainColumn = (idx === 0)
-    let isItemColumn = this.isItemColumn(column.id)
+    let itemColumn = isItemColumn(column.id)
     let type, value
 
-    if (isItemColumn) {
+    if (itemColumn) {
       type = column.type
-      value = this.props.item[isItemColumn]
+      value = item[itemColumn]
 
     } else {
-      let data = this.props.data[column.id]
+      let cell = data[column.id]
 
-      if (data != null) {
-        type = data.type
-        value = data.text
+      if (cell != null) {
+        type = cell.type
+        value = cell.text
       }
     }
 
     let props = {
       id: column.id,
-      isDragging: this.isDragging(idx),
-      isEditing: this.isEditing(column.id),
+      isDragging: idx === drag,
+      isEditing: get(edit, [item.id]) === column.id,
       isMainColumn,
-      isMoving: this.isMoving(idx),
-      isReadOnly: this.props.isReadOnly || !!column.protected,
+      isMoving: (idx >= drop && idx < drag) || (idx <= drop && idx > drag),
+      isReadOnly: isReadOnly || !!column.protected,
       position: idx,
       type,
       value
     }
 
     if (isMainColumn) {
-      pick(this.props, MainCellProps, props)
-      props.title = value
+      Object.assign(props, { photos, tags, size, title: value })
     }
 
     if (column.id === 'item.template') {
       props.title = value
-      props.display = get(this.props.template, ['name'])
+      props.display = template?.name
     }
 
     return props
   }
 
-  getTemplateFieldType (id) {
-    let fields = get(this.props.template, ['fields'])
-    if (fields == null) return null
-    let field = fields.find(f => f.property === id)
-    if (field == null) return null
-    return field.datatype
-
+  let cellProps = {
+    getSelection,
+    isDisabled,
+    isSelected,
+    item,
+    onCancel,
+    onEdit
   }
 
-  handleChange = (id, value) => {
-    if (value.type == null) {
-      value.type = this.getTemplateFieldType(id) || TYPE.TEXT
-    }
-
-    this.props.onChange({
-      id: this.props.item.id,
-      data: { [id]: value }
-    })
-  }
-
-  render () {
-    let props = pick(this.props, CellProps)
-
-    return this.connect(
-      <div
-        className={cx('tr', this.classes)}
-        ref={this.setContainer}
-        onMouseDown={this.handleMouseDown}
-        onClick={this.handleClick}
-        onDoubleClick={this.handleOpen}
-        onContextMenu={this.handleContextMenu}>
-        {this.props.hasPositionColumn && (
-          <TableCell
-            {...props}
-            isReadOnly
-            id={NAV.COLUMN.POSITION.id}
-            type={NAV.COLUMN.POSITION.type}
-            value={this.props.position}/>
-        )}
-        {this.props.columns.map((column, idx) => (
-          <TableCell
-            key={column.id}
-            {...props}
-            {...this.getColumnProps(column, idx)}
-            getNextColumn={this.getNextColumn}
-            getPrevColumn={this.getPrevColumn}
-            onChange={this.handleChange}/>
-        ))}
-      </div>
-    )
-  }
-
-  static defaultProps = {
-    ...ItemIterable.defaultProps,
-    data: {}
-  }
-}
-
-const MainCellProps = [
-  'photos',
-  'tags',
-  'size'
-]
-
-const CellProps = [
-  'isDisabled',
-  'isSelected',
-  'item',
-  'getSelection',
-  'onCancel',
-  'onChange',
-  'onEdit'
-]
-
-
-const TableRowContainer = TableRow.wrap()
-
-export {
-  TableRowContainer as TableRow
-}
+  return (
+    <div
+      {...handlers}
+      ref={dnd}
+      className={cx('tr', 'item', {
+        active: isSelected,
+        dragging: isDragging,
+        over: isOver && canDrop
+      })}>
+      {hasPositionColumn && (
+        <TableCell
+          {...cellProps}
+          onChange={onChange}
+          isReadOnly
+          id={NAV.COLUMN.POSITION.id}
+          type={NAV.COLUMN.POSITION.type}
+          value={position}/>
+      )}
+      {columns.map((column, idx) => (
+        <TableCell
+          key={column.id}
+          {...cellProps}
+          {...getColumnProps(column, idx)}
+          getNextColumn={getNextColumn}
+          getPrevColumn={getPrevColumn}
+          onChange={handleChange}/>
+      ))}
+    </div>
+  )
+})

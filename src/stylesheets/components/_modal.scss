@@ -1,0 +1,32 @@
+@use "../abstracts/config" as *;
+
+//
+// Modal
+// --------------------------------------------------
+
+.modal {
+  max-width: min-content;
+  color: $text-color;
+  background-color: $modal-bg;
+  padding: $modal-padding;
+  border: 0;
+  border-radius: 10px;
+  box-shadow:
+    0 16px 32px -16px $modal-shadow-1,
+    0 0 0 1px $modal-shadow-2;
+  user-select: none;
+
+  &::backdrop {
+    background-color: $modal-backdrop-bg;
+  }
+
+  footer {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: $space-xs;
+    width: max-content;
+    margin-top: $space-xl;
+    margin-left: auto;
+  }
+}

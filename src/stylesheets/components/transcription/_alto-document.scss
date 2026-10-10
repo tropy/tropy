@@ -1,27 +1,16 @@
 @use "../../abstracts/config" as *;
 
 //
-// Transcription
+// Alto document
 // --------------------------------------------------
 
 .alto-document {
   flex: 1 1 auto;
-  font-family: $font-family-monospace;
-  font-size: $editor-font-size;
   line-height: normal;
   padding-block: min(10cqh, #{$editor-padding});
   padding-inline: calc(10% - 0.45ch);
   height: fit-content; // Stretch container
   min-height: 100cqh; // Stretch container
-
-  // Enable but hide native selection
-  user-select: text;
-
-  &::selection,
-  ::selection {
-    background-color: rgb(0, 0, 0, 0.002); // Transparent causes antialiasing glitch
-    color: inherit;
-  }
 
   .text-line {
     line-height: calc(1lh + 2 * (1ch / 6 + 0.25ch));

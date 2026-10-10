@@ -1,4 +1,5 @@
-import assert from 'node:assert'
+import assert from 'node:assert/strict'
+import { EventEmitter } from 'node:events'
 import { extname, dirname } from 'node:path'
 import { ipcRenderer as ipc } from 'electron'
 import { IntlMessageFormat } from 'intl-messageformat'
@@ -10,57 +11,156 @@ import { pext } from './common/project.js'
 import IMAGE from './constants/image.js'
 import { darwin } from './common/os.js'
 
-let seq
-let pending
-let STORE
+let instance
+export { instance as default }
+
+export function createDialogService (store) {
+  assert(instance == null, 'dialog service already initialized')
+  instance = new DialogService(store)
+  instance.start()
+  return instance
+}
+
+export class DialogService extends EventEmitter {
+  #seq = counter()
+  #pending = new Map()
+  #isLayerAttached = false
+
+  modals = Object.create(null)
+
+  constructor (store) {
+    super()
+    this.store = store
+  }
+
+  #handleIpcMessage = (_, { id, payload, error }) => {
+    this.#remove(id)?.[error ? 'reject' : 'resolve'](payload)
+  }
+
+  #remove (id) {
+    let dialog = this.#pending.get(id)
+
+    if (!dialog) {
+      warn(`failed to settle dialog #${id}: not pending`)
+      return
+    }
+
+    this.#pending.delete(id)
+
+    if (dialog.isModal)
+      this.emit('change')
+
+    return dialog
+  }
+
+  register (type, component) {
+    this.modals[type] = component
+
+    return () => {
+      if (this.modals[type] !== component)
+        return
+
+      delete this.modals[type]
+
+      this.#pending.values().forEach(dialog => {
+        if (dialog.isModal && dialog.type === type)
+          this.close(dialog.id)
+      })
+    }
+  }
+
+  attach () {
+    this.#isLayerAttached = true
+
+    return () => {
+      this.#isLayerAttached = false
+
+      this.#pending.values().forEach(dialog => {
+        if (dialog.isModal) this.close(dialog.id)
+      })
+    }
+  }
+
+  start () {
+    ipc.on('dialog', this.#handleIpcMessage)
+  }
+
+  stop = () => {
+    ipc.removeListener('dialog', this.#handleIpcMessage)
+    this.clear()
+  }
+
+  close (id, result = { cancel: true }) {
+    this.#remove(id)?.resolve(result)
+  }
+
+  clear () {
+    this.#pending.values().forEach(dialog => {
+      this.close(dialog.id)
+    })
+  }
+
+  get current () {
+    return this.#pending.values().find(dialog => dialog.isModal)
+  }
+
+  canShowAsModal (type) {
+    return this.#isLayerAttached && (type in this.modals)
+  }
+
+  localize (...args) {
+    return get(this.store.getState(), ['intl', 'messages', ...args])
+  }
+
+  show (type, { signal, ...options } = {}) {
+    if (signal?.aborted)
+      return Promise.resolve({ cancel: true })
+
+    let { promise, resolve, reject } = Promise.withResolvers()
+    let { value: id } = this.#seq.next()
+    let isModal = this.canShowAsModal(type)
+
+    this.#pending.set(id, { id, type, options, isModal, resolve, reject })
+
+    if (signal) {
+      let close = () => { this.close(id) }
+      let cleanup = () => { signal.removeEventListener('abort', close) }
+
+      signal.addEventListener('abort', close, { once: true })
+      promise.then(cleanup, cleanup)
+    }
+
+    try {
+      if (isModal) {
+        this.emit('change')
+      } else {
+        ipc.send('wm', 'dialog', { id, type, options })
+      }
+    } catch (err) {
+      this.#remove(id)?.reject(err)
+    }
+
+    return promise
+  }
+}
 
 function t (...args) {
-  return get(STORE.getState(), ['intl', 'messages', ...args])
+  return instance.localize(...args)
 }
 
 function f (message, ...opts) {
   return new IntlMessageFormat(message, ARGS.locale).format(...opts)
 }
 
-function start (store) {
-  assert(seq == null, 'already initialized')
-
-  seq = counter()
-  pending = {}
-  STORE = store
-
-  ipc.on('dialog', onClosed)
-}
-
-function stop () {
-  ipc.removeListener('dialog', onClosed)
-  seq = null
-  pending = null
-}
-
-function onClosed (_, { id, payload, error }) {
-  try {
-    pending[id][error ? 'reject' : 'resolve'](payload)
-  } catch (error) {
-    warn(`failed to resolve dialog #${id}: ${error.message}`)
-  } finally {
-    delete pending[id]
+async function show (type, { message, values, ...opts } = {}) {
+  if (message) {
+    message = f(message, values)
   }
+
+  return instance.show(type, { message, ...opts })
 }
 
-function show (type, options = {}) {
-  return new Promise((resolve, reject) => {
-    let id = seq.next().value
-    if (options.message) {
-      options.message = f(options.message, options.values)
-      options.values = null
-    }
-    ipc.send('wm', 'dialog', { id, type, options })
-    pending[id] = { resolve, reject }
-  })
-}
-
-function notify (id, opts) {
+async function notify (id, opts) {
   return show('message-box', {
     type: 'info',
     ...t('dialog', 'notify', ...id.split('.')),
@@ -68,7 +168,7 @@ function notify (id, opts) {
   })
 }
 
-function fail (e, code = e.code, detail) {
+async function fail (e, code = e.code, detail) {
   let message = t(`error.${code}`) || e.message
 
   return show('message-box', {
@@ -76,8 +176,8 @@ function fail (e, code = e.code, detail) {
     ...t('dialog', 'error'),
     message,
     detail: detail || e.stack
-  }).then(({ response }) => {
-    switch (response) {
+  }).then(({ value }) => {
+    switch (value) {
       case 1:
         copy({ text: crashReport(e, message) })
         break
@@ -94,7 +194,7 @@ async function prompt (id, {
   isChecked = false,
   ...opts
 } = {}) {
-  let { response, checked } = await show('message-box', {
+  let { cancel, data } = await show('message-box', {
     ...t('dialog', 'prompt', ...id.split('.')),
     type: 'question',
     defaultId,
@@ -104,18 +204,18 @@ async function prompt (id, {
   })
 
   return {
-    ok: response !== cancelId,
-    cancel: response === cancelId,
-    isChecked: checked
+    ok: !cancel,
+    cancel,
+    isChecked: data?.checked ?? false
   }
 }
 
-function save (opts) {
-  return show('save', opts)
+async function save (opts) {
+  return (await show('save', opts)).value
 }
 
-function open (opts) {
-  return show('file', opts)
+async function open (opts) {
+  return (await show('file', opts)).value ?? []
 }
 
 open.images = (opts) => open({
@@ -286,7 +386,5 @@ export {
   open,
   prompt,
   save,
-  show,
-  start,
-  stop
+  show
 }

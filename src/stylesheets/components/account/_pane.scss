@@ -15,12 +15,16 @@
       margin-top: $space-sm;
     }
 
+    header {
+      display: flex;
+      margin-bottom: $space-lg;
+    }
+
     h1 {
       font-size: to-rem(18);
       font-weight: 600;
       text-box: trim-both cap alphabetic;
       color: $profile-heading-color;
-      margin-bottom: $space-lg;
 
       &:only-child {
         margin-bottom: 0;

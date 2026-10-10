@@ -1,66 +1,93 @@
-import { Editable } from '../editable.js'
-import { createClickHandler } from '../util.js'
-import { PhotoIterable } from './iterable.js'
-import { SelectionList } from '../selection/list.js'
-import { pluck } from '../../common/util.js'
-import { TYPE } from '../../constants/index.js'
+import { memo, useRef } from 'react'
 import cx from 'classnames'
-import { testFocusChange } from '../../dom.js'
+import { Editable } from '../editable.js'
+import { Thumbnail } from './thumbnail.js'
+import { SelectionList } from '../selection/list.js'
 import { Icon } from '../icons.js'
 import { Button } from '../button.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
+import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
+import { useClickHandler } from '../../hooks/use-click-handler.js'
+import { useEvent } from '../../hooks/use-event.js'
+import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
+import { pick, pluck } from '../../common/util.js'
+import { testFocusChange } from '../../dom.js'
+import { TYPE } from '../../constants/index.js'
 
+export const PhotoListItem = memo(({
+  data,
+  getAdjacent,
+  isDisabled,
+  isEditing,
+  isExpandable,
+  isExpanded,
+  isItemOpen,
+  isSelected,
+  isVertical,
+  onChange,
+  onConsolidate,
+  onContextMenu,
+  onContract,
+  onDropPhoto,
+  onEdit,
+  onEditCancel,
+  onExpand,
+  onItemOpen,
+  onSelect,
+  onSelectionSort,
+  photo,
+  selection,
+  selections,
+  size = 48,
+  title
+}) => {
+  let container = useRef()
+  let hasFocusChanged = useRef()
 
-class PhotoListItem extends PhotoIterable {
-  get classes () {
-    return [...super.classes, { active: this.isActive }]
-  }
+  let isActive = isSelected && selection == null
 
-  get isDraggable () {
-    return !this.props.isEditing && super.isDraggable
-  }
+  let [{ canDrop, direction, isDragging, isOver }, dnd] =
+    useDragDropPhoto(container, {
+      photo,
+      getAdjacent,
+      isDisabled: isDisabled || isEditing,
+      isVertical,
+      onDrop: onDropPhoto
+    })
 
-  get selections () {
-    return pluck(this.props.selections, this.props.photo.selections)
-  }
+  useScrollIntoView(container, { when: isSelected })
 
-  get title () {
-    let { data, photo, title } = this.props
-    return data?.[photo.id]?.[title]?.text
-  }
+  let select = useEvent(() => {
+    if (!isActive)
+      onSelect(photo)
+  })
 
-  handleMouseDown = () => {
-    this.hasFocusChanged = testFocusChange()
-  }
+  let edit = useEvent(() => {
+    if (!(isDisabled || isDragging))
+      onEdit(photo)
+  })
 
-  handleSingleClick = () => {
-    if (!(this.props.isDisabled || this.props.isDragging)) {
-      this.props.onEdit(this.props.photo)
-    }
-  }
+  let handleMouseDown = useEvent(() => {
+    hasFocusChanged.current = testFocusChange()
+  })
 
-  handleClick = createClickHandler({
-    onClick: () => {
-      let { isActive } = this
-      this.select()
-      return !isActive || this.hasFocusChanged()
+  let handleClick = useClickHandler({
+    onClick () {
+      select()
+      return !isActive || hasFocusChanged.current?.()
     },
 
-    onSingleClick: this.handleSingleClick,
+    onSingleClick: edit,
 
-    onDoubleClick: () => {
-      if (!this.props.isItemOpen) {
-        this.props.onItemOpen(this.props.photo)
-      } else {
-        this.handleSingleClick()
-      }
+    onDoubleClick () {
+      if (!isItemOpen)
+        onItemOpen(photo)
+      else
+        edit()
     }
   })
 
-
-  handleChange = (text) => {
-    const { photo, title, onChange, onEditCancel } = this.props
-
+  let handleChange = useEvent((text) => {
     onChange({
       id: photo.id,
       data: {
@@ -69,96 +96,92 @@ class PhotoListItem extends PhotoIterable {
     })
 
     onEditCancel()
-  }
+  })
 
-  handleTwistyButtonClick = (event) => {
+  let handleContextMenu = useEvent((event) => {
+    select()
+    onContextMenu(
+      event,
+      isDisabled ? 'photo-read-only' : 'photo',
+      pick(photo, ['id', 'item', 'path', 'protocol']))
+  })
+
+  let handleConsolidate = useEvent((event) => {
+    event?.stopPropagation()
+    onConsolidate([photo.id], { force: true, prompt: true })
+  })
+
+  let handleTwistyButtonClick = useEvent((event) => {
     event.stopPropagation()
 
-    if (this.props.isExpanded) this.contract()
-    else this.expand()
-  }
+    if (isExpanded)
+      onContract(photo)
+    else
+      onExpand(photo)
+  })
 
-
-  renderSelectionList () {
-    if (!this.props.isExpanded) return null
-
-    return (
-      <SelectionList
-        isDisabled={this.props.isDisabled}
-        isItemOpen={this.props.isItemOpen}
-        onChange={this.props.onChange}
-        onContextMenu={this.props.onContextMenu}
-        onEdit={this.props.onEdit}
-        onEditCancel={this.props.onEditCancel}
-        onItemOpen={this.props.onItemOpen}
-        onSelect={this.props.onSelect}
-        onSort={this.props.onSelectionSort}
-        photo={this.props.photo}
-        selections={this.selections}/>
-    )
-  }
-
-  renderTwistyButton () {
-    return this.props.isExpandable && (
-      <Button
-        noFocus
-        icon={<Icon name="Chevron9"/>}
-        className="disclosure"
-        onClick={this.handleTwistyButtonClick}/>
-    )
-  }
-
-  render () {
-    const {
-      isDisabled,
-      isEditing,
-      isExpandable,
-      onEditCancel,
-      photo
-    } = this.props
-
-    return this.connect(
-      <li
-        className={cx(this.classes)}
-        ref={this.container}>
-        <div
-          className="photo-container"
-          onClick={this.handleClick}
-          onContextMenu={this.handleContextMenu}
-          onMouseDown={this.handleMouseDown}>
-          {this.renderTwistyButton()}
-          <div className="thumbnail-container">
-            {this.renderThumbnail()}
-          </div>
-          <div className="title">
-            <Editable
-              value={this.title}
-              resize
-              isActive={isEditing}
-              isDisabled={isDisabled}
-              onCancel={onEditCancel}
-              onChange={this.handleChange}/>
-          </div>
-          <div className="icon-container">
-            {photo.broken && (
-              <Button
-                icon={<Icon name="Warning"/>}
-                title="photo.consolidate"
-                onClick={this.handleConsolidate}/>
-            )}
-            {isExpandable && <Icon name="Selection"/>}
-            <TranscriptionIcon id={this.props.photo.transcriptions?.at(-1)}/>
-          </div>
+  return (
+    <li
+      ref={dnd}
+      className={cx('photo', {
+        active: isActive,
+        dragging: isDragging,
+        expandable: isExpandable,
+        expanded: isExpanded,
+        over: isOver && canDrop,
+        [direction]: direction
+      })}>
+      <div
+        className="photo-container"
+        onClick={handleClick}
+        onContextMenu={handleContextMenu}
+        onMouseDown={handleMouseDown}>
+        {isExpandable && (
+          <Button
+            noFocus
+            icon={<Icon name="Chevron9"/>}
+            className="disclosure"
+            onClick={handleTwistyButtonClick}/>
+        )}
+        <div className="thumbnail-container">
+          <Thumbnail
+            {...pick(photo, Thumbnail.keys)}
+            size={size}/>
         </div>
-        {this.renderSelectionList()}
-      </li>
-    )
-  }
-}
-
-
-const PhotoListItemContainer = PhotoListItem.wrap()
-
-export {
-  PhotoListItemContainer as PhotoListItem
-}
+        <div className="title">
+          <Editable
+            value={data?.[photo.id]?.[title]?.text}
+            resize
+            isActive={isEditing}
+            isDisabled={isDisabled}
+            onCancel={onEditCancel}
+            onChange={handleChange}/>
+        </div>
+        <div className="icon-container">
+          {photo.broken && (
+            <Button
+              icon={<Icon name="Warning"/>}
+              title="photo.consolidate"
+              onClick={handleConsolidate}/>
+          )}
+          {isExpandable && <Icon name="Selection"/>}
+          <TranscriptionIcon id={photo.transcriptions?.at(-1)}/>
+        </div>
+      </div>
+      {isExpanded && (
+        <SelectionList
+          isDisabled={isDisabled}
+          isItemOpen={isItemOpen}
+          onChange={onChange}
+          onContextMenu={onContextMenu}
+          onEdit={onEdit}
+          onEditCancel={onEditCancel}
+          onItemOpen={onItemOpen}
+          onSelect={onSelect}
+          onSort={onSelectionSort}
+          photo={photo}
+          selections={pluck(selections, photo.selections)}/>
+      )}
+    </li>
+  )
+})

@@ -26,7 +26,7 @@ const helpers = {
 
 let win = WIN || createWindowInstance()
 
-let messages = new Strings(
+export const messages = new Strings(
   Strings.parse(fs.readFileSync(Strings.expand('renderer')))
 ).flatten()
 

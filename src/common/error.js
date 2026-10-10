@@ -10,9 +10,10 @@ export class DuplicateError extends Error {
 
 export class AccountError extends Error {
   name = 'AccountError'
-  constructor (code, message = code, ...args) {
+  constructor (code, message = code, type = 'error', ...args) {
     super(message, ...args)
     this.code = code
+    this.type = type
   }
 }
 export class IpcError extends Error {

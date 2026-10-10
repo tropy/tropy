@@ -3,7 +3,7 @@ import { Command } from '../command.js'
 import * as mod from '../../models/index.js'
 import * as act from '../../actions/index.js'
 import { NOTE } from '../../constants/index.js'
-import { getNextNoteSelection, getNotesMap } from '../../selectors/index.js'
+import { getNoteSuccessor, getNotesMap } from '../../selectors/index.js'
 import { containsRTL } from '../../common/util.js'
 import { fromHTML } from '../../editor/serialize.js'
 
@@ -60,7 +60,7 @@ export class Delete extends Command {
     ]))
 
     if (isSelected) {
-      let next = yield select(getNextNoteSelection)
+      let next = yield select(getNoteSuccessor)
       yield put(act.note.select(next && {
         note: next.id,
         photo: next.photo,

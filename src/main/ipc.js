@@ -19,7 +19,8 @@ export function ipcServiceHandler (channel, handler) {
           command,
           code: err.code,
           message: err.message,
-          name: err.name
+          name: err.name,
+          type: err.type
         }
       }
     }

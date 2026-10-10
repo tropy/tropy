@@ -257,19 +257,6 @@ export function swap (array, from, to) {
   ]
 }
 
-export function adjacent (array, item) {
-  const i = array.indexOf(item)
-  const n = array.length - 1
-
-  switch (i) {
-    case -1: return []
-    case 0: return n ? [undefined, array[1]] : []
-    case n: return [array[n - 1]]
-    default:
-      return [array[i - 1], array[i + 1]]
-  }
-}
-
 export function flatten (obj) {
   const res = {}
 

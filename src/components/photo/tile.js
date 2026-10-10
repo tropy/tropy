@@ -1,77 +1,116 @@
-import { PhotoIterable } from './iterable.js'
-import { createClickHandler } from '../util.js'
+import { memo, useRef } from 'react'
 import cx from 'classnames'
+import { Thumbnail } from './thumbnail.js'
 import { Icon } from '../icons.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
 import { Button } from '../button.js'
+import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
+import { useClickHandler } from '../../hooks/use-click-handler.js'
+import { useEvent } from '../../hooks/use-event.js'
+import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
+import { pick } from '../../common/util.js'
 
-class PhotoTile extends PhotoIterable {
-  get classes () {
-    return [...super.classes, 'tile', {
-      active: this.props.isSelected,
-      last: this.props.isLast
-    }]
-  }
+export const PhotoTile = memo(({
+  getAdjacent,
+  isDisabled,
+  isExpandable,
+  isExpanded,
+  isLast,
+  isSelected,
+  isVertical,
+  onConsolidate,
+  onContextMenu,
+  onContract,
+  onDropPhoto,
+  onExpand,
+  onItemOpen,
+  onSelect,
+  photo,
+  selection,
+  size = 512
+}) => {
+  let container = useRef()
 
-  handleClick = createClickHandler({
-    onClick: this.select,
-    onDoubleClick: () => {
-      this.props.onItemOpen(this.props.photo)
-    }
+  let [{ canDrop, direction, isDragging, isOver }, dnd] =
+    useDragDropPhoto(container, {
+      photo,
+      getAdjacent,
+      isDisabled,
+      isVertical,
+      onDrop: onDropPhoto
+    })
+
+  useScrollIntoView(container, { when: isSelected })
+
+  let select = useEvent(() => {
+    if (!(isSelected && selection == null))
+      onSelect(photo)
   })
 
-  handleExpansionToggle = (event) => {
+  let handleClick = useClickHandler({
+    onClick: select,
+    onDoubleClick: () => onItemOpen(photo)
+  })
+
+  let handleContextMenu = useEvent((event) => {
+    select()
+    onContextMenu(
+      event,
+      isDisabled ? 'photo-read-only' : 'photo',
+      pick(photo, ['id', 'item', 'path', 'protocol']))
+  })
+
+  let handleConsolidate = useEvent((event) => {
+    event?.stopPropagation()
+    onConsolidate([photo.id], { force: true, prompt: true })
+  })
+
+  let handleExpansionToggle = useEvent((event) => {
     event?.stopPropagation()
 
-    if (this.props.isExpanded) {
-      this.props.onContract(this.props.photo)
-    } else {
-      this.props.onExpand(this.props.photo)
-    }
-  }
+    if (isExpanded)
+      onContract(photo)
+    else
+      onExpand(photo)
+  })
 
-  render () {
-    return this.connect(
-      <li
-        className={cx(this.classes)}
-        ref={this.container}>
-        <div className="tile-state">
-          {this.renderThumbnail({
-            onClick: this.handleClick,
-            onContextMenu: this.handleContextMenu
-          })}
-          {this.props.photo.broken && (
+  return (
+    <li
+      ref={dnd}
+      className={cx('photo', 'tile', {
+        active: isSelected,
+        dragging: isDragging,
+        expandable: isExpandable,
+        expanded: isExpanded,
+        last: isLast,
+        over: isOver && canDrop,
+        [direction]: direction
+      })}>
+      <div className="tile-state">
+        <Thumbnail
+          {...pick(photo, Thumbnail.keys)}
+          size={size}
+          onClick={handleClick}
+          onContextMenu={handleContextMenu}/>
+        {photo.broken && (
+          <Button
+            icon={<Icon name="WarningOverlay"/>}
+            className="warning"
+            title="photo.consolidate"
+            onClick={handleConsolidate}/>
+        )}
+        <div className="icon-container">
+          {isExpandable && (
             <Button
-              icon={<Icon name="WarningOverlay"/>}
-              className="warning"
-              title="photo.consolidate"
-              onClick={this.handleConsolidate}/>
+              icon={<Icon name="SelectionOverlay"/>}
+              onClick={handleExpansionToggle}/>
           )}
-          <div className="icon-container">
-            {this.props.isExpandable && (
-              <Button
-                icon={<Icon name="SelectionOverlay"/>}
-                onClick={this.handleExpansionToggle}/>
-            )}
-            <TranscriptionIcon
-              id={this.props.photo.transcriptions?.at(-1)}
-              overlay/>
-          </div>
+          <TranscriptionIcon
+            id={photo.transcriptions?.at(-1)}
+            overlay/>
         </div>
-        {this.props.isExpanded && <div className="pointer"/>}
-      </li>
-    )
-  }
-
-  static defaultProps = {
-    ...PhotoIterable.defaultProps,
-    size: 512
-  }
-}
-
-
-const PhotoTileContainer = PhotoTile.wrap()
-
-export {
-  PhotoTileContainer as PhotoTile
-}
+      </div>
+      {isExpanded && <div className="pointer"/>}
+    </li>
+  )
+})

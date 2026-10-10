@@ -9,6 +9,10 @@ import { SASS } from '../../constants/index.js'
 
 
 class PhotoGrid extends PhotoIterator {
+  get isVertical () {
+    return false
+  }
+
   contract = (photo) => {
     if (this.isExpandable(photo) && this.isExpanded(photo)) {
       this.props.onContract(this.props.photos.map(p => p.id))

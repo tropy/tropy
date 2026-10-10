@@ -73,13 +73,19 @@
       }
     }
 
-    .btn-icon {
-      &:hover {
-        background-color: $transcription-btn-icon-hover-bg;
+    .tool-group {
+      .btn-icon {
+        &:hover {
+          background-color: $transcription-btn-icon-hover-bg;
+        }
+
+        &.active {
+          background-color: $transcription-btn-icon-active-bg;
+        }
       }
 
-      &.active {
-        background-color: $transcription-btn-icon-active-bg;
+      & + .tool-group {
+        margin-left: $space-lg;
       }
     }
   }

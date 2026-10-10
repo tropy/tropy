@@ -93,7 +93,7 @@ export class AccountService extends EventEmitter {
 
     } catch (err) {
       warn({ err, url }, 'account: request failed')
-      throw new AccountError('network', 'request failed', { cause: err })
+      throw new AccountError('network', 'error.account.network', 'info', { cause: err })
     }
   }
 
@@ -178,7 +178,7 @@ export class AccountService extends EventEmitter {
     let account = this.app.safe?.account
 
     if (!account?.token) {
-      throw new AccountError('token')
+      throw new AccountError('token', 'error.account.profile.token')
     }
 
     let res = await this.post('/token', {
@@ -193,12 +193,15 @@ export class AccountService extends EventEmitter {
         delete this.app.safe?.account
         delete this.tokenSet
         this.emit('change')
-        throw new AccountError('token')
+        throw new AccountError('token', 'error.account.profile.token')
       }
     }
 
     if (!res.ok) {
-      throw new AccountError(res.status, res.statusText)
+      throw new AccountError(
+        res.status,
+        'error.account.profile.http',
+        (res.status >= 500 || res.status === 429) ? 'warning' : 'error')
     }
 
     this.tokenSet = new TokenSet(await res.json())
@@ -228,7 +231,7 @@ export class AccountService extends EventEmitter {
       }
     } catch (err) {
       warn({ err }, 'account: failed to verify id token')
-      throw new AccountError('id-token')
+      throw new AccountError('id-token', 'error.account.profile.id_token')
     }
   }
 }

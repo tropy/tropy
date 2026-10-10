@@ -77,6 +77,17 @@
   margin: -2px; // Special treat 20 x 20 arrow icon
 }
 
+.icon-status,
+.icon-transcription-status {
+  circle {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: rotate(-90deg);
+    animation: spin 1.2s linear infinite;
+    animation-name: if(style(--indeterminate: true): spin; else: none);
+  }
+}
+
 .icon-container {
   flex: 0 0 auto;
   display: flex;

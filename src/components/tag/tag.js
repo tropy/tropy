@@ -6,7 +6,7 @@ import { TagColor } from '../colors.js'
 import { isMeta } from '../../keymap.js'
 import { noop, toId } from '../../common/util.js'
 import { hasFocus } from '../../dom.js'
-import { DND, useDrop } from '../dnd.js'
+import { useDropItems } from '../../hooks/use-drag-drop-items.js'
 
 
 export const NewTag = ({
@@ -47,20 +47,19 @@ export const Tag = React.memo(({
 
   let container = useRef()
 
-  let [{ isOver }, drop] = useDrop({
-    accept: [DND.ITEMS],
-    drop: (item) => {
+  let isDropDisabled = isReadOnly || isSelected || onDropItems == null
+
+  let [{ canDrop, isOver }, drop] = useDropItems({
+    isDisabled: isDropDisabled,
+    onDrop: (items) => {
       onDropItems({
-        id: item.items.map(toId),
+        id: items.map(toId),
         tags: [tag.id]
       })
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver()
-    })
+    }
   })
 
-  if (!isReadOnly && !isSelected && onDropItems != null)
+  if (!isDropDisabled)
     drop(container)
 
   let handleChange = useCallback((name) => {
@@ -95,7 +94,7 @@ export const Tag = React.memo(({
       className={cx('tag', {
         active: isSelected,
         mixed: !!tag.mixed,
-        over: isOver
+        over: isOver && canDrop
       })}
       tabIndex={-1}
       onContextMenu={isEditing ? null : handleContextMenu}

@@ -7,6 +7,10 @@ export function useGlobalKeys (keymap) {
     if (isInput(event.target || event.srcElement))
       return
 
+    // Skip global keys when a modal is open
+    if (document.querySelector(':modal'))
+      return
+
     let name = match(keymap, event)
 
     if (name == null)

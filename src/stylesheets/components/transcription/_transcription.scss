@@ -9,14 +9,28 @@
   grid-column: 1 / 2;
   display: flex;
   overflow: auto;
+  font-size: var(--font-size, #{$editor-font-size});
 
   .side-by-side .text-overlay-split &,
   .side-by-side:not(.esper-maximized) .text-overlay-full & {
     grid-column: 1 / -1;
   }
 
+  &::selection,
+  ::selection {
+    background-color: rgb(0, 0, 0, 0.002); // Transparent causes antialiasing glitch
+    color: inherit;
+  }
+
+  .alto-document,
   pre {
-    user-select: text;
+    font-family: $font-family-monospace;
+    user-select: text; // Enable but hide native selection
+  }
+
+  // Plain text fallback
+  pre {
     cursor: text;
+    line-height: $editor-line-height;
   }
 }

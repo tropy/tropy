@@ -10,3 +10,11 @@
 
 @use "../partials/cover" as *;
 @use "../partials/window-controls" as *;
+
+
+// Components
+// --------------------------------------------------
+
+@use "../components/button" as *;
+@use "../components/modal" as *;
+@use "../components/message-box" as *;

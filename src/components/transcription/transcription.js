@@ -17,7 +17,7 @@ const useScrollOffset = (container, id) => {
 
   useLayoutEffect(() => {
     if (offset.current != null)
-      container.current.scroll(offset.current.top, offset.current.left)
+      container.current.scrollTo(offset.current)
   }, [container])
 
   return useEvent(() => {
@@ -44,7 +44,6 @@ export const Transcription = ({
 }) => {
   let container = useRef()
   let handleScrollStop = useScrollOffset(container, id)
-
   let content
 
   if (status < 0) {
@@ -54,7 +53,7 @@ export const Transcription = ({
 
   } else if (status === 0) {
     content = (
-      <div className="pending">
+      <div className="state pending">
         <Icon name="TranscriptionExtraLarge"/>
         <FormattedMessage id="transcription.pending" tagName="p"/>
       </div>
@@ -68,9 +67,17 @@ export const Transcription = ({
         selection={selection}/>
     )
 
-  } else {
+  } else if (text?.trim()) {
     content = (
       <pre>{text}</pre>
+    )
+
+  } else {
+    content = (
+      <div className="state empty">
+        <Icon name="TranscriptionEmptyExtraLarge"/>
+        <FormattedMessage id="transcription.empty" tagName="p"/>
+      </div>
     )
   }
 

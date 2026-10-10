@@ -4,9 +4,10 @@ import { DND } from '../dnd.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDropOutside } from '../../hooks/use-drop-outside.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
-import { useNavKeys } from '../../hooks/use-nav-keys.js'
+import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
 import { SelectionTile } from './tile.js'
-import { adjacent, move } from '../../common/util.js'
+import { move } from '../../common/util.js'
+import { Cursor, adjacent } from '../../common/sequence.js'
 import { TABS } from '../../constants/index.js'
 import cx from 'classnames'
 
@@ -58,53 +59,42 @@ export const SelectionGrid = memo(({
   })
 
   let getAdjacent = useEvent((selection) =>
-    adjacent(selections, selection).map(s => s.id))
+    adjacent(selections, selection.id).map(s => s?.id))
 
-  let { current, next, prev } = useNavKeys(selections, active)
-
-  let handleKeyDown = useKeyMap('SelectionGrid', {
-    left () {
-      select(prev())
-    },
-    right () {
-      select(next())
-    },
-    up () {
-      select(prev(cols))
-    },
-    down () {
-      select(next(cols))
-    },
-    first () {
-      select(selections[0])
-    },
-    last () {
-      select(selections.at(-1))
-    },
-    open () {
-      open(current())
-    },
-    delete () {
-      let c = current()
-      if (c != null) {
-        onDelete({ id: photo.id, selection: c.id })
-        select(next() || prev())
-      }
-    },
-    rotateLeft () {
-      onRotate(-90)
-    },
-    rotateRight () {
-      onRotate(90)
-    }
+  let cursor = new Cursor(selections, active, {
+    layout: 'grid',
+    columns: cols
   })
 
-  let canDrop = useEvent((item) =>
-    photo.id === item.photo)
+  let onKeyDown = useCursorKeys(cursor, {
+    onMove: select,
+    onKeyDown: useKeyMap('SelectionGrid', {
+      open () {
+        open(cursor.current())
+      },
+      delete () {
+        // Subtle: always handled, so that the key does not bubble
+        // up to the photo grid and delete the photo instead.
+        if (cursor.current() != null)
+          onDelete({ id: photo.id, selection: cursor.id })
+      },
+      rotateLeft () {
+        onRotate(-90)
+      },
+      rotateRight () {
+        onRotate(90)
+      }
+    })
+  })
 
-  let [{ isOver }, drop] = useDropOutside({
+  let canDropSelection = useEvent((item) =>
+    isSortable &&
+    photo.id === item.photo &&
+    item.id !== photo.selections.at(-1))
+
+  let [{ canDrop, isOver }, drop] = useDropOutside({
     type: DND.SELECTION,
-    canDrop,
+    canDrop: canDropSelection,
     items: photo.selections,
     onDrop: handleDropSelection
   })
@@ -112,11 +102,11 @@ export const SelectionGrid = memo(({
   return (
     <ul
       ref={isSortable ? drop(container) : container}
-      className={cx('selection-grid', { over: isOver })}
+      className={cx('selection-grid', { over: isOver && canDrop })}
       style={style}
       tabIndex={TABS.SelectionGrid}
       onBlur={onBlur}
-      onKeyDown={handleKeyDown}>
+      onKeyDown={onKeyDown}>
       {selections.map((selection, index) => (
         <SelectionTile
           key={selection.id}

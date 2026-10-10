@@ -19,6 +19,7 @@
     --primary-light:    #cedef7;
     --primary-dark:     color-mix(in srgb, #222 60%, var(--primary));
     --red:              #e62e2e;
+    --orange:           #ff8c19;
     --green:            #39bf68;
   }
 
@@ -26,9 +27,10 @@
     --primary:          #395bac;                // Blue
     --primary-overlay:  #4176f2;                // Blue Overlay
     --primary-vibrancy: #{alpha(#4176f2, 70%)}; // Blue Vibrancy
-    --primary-light:    #cedef7;                // Blue Light
+    --primary-light:    #f0f5fd;                // Blue Light (4% k, #5c93e5)
     --primary-dark:     #171b2e;
     --red:              #e62e2e;
+    --orange:           #ff8c19;
     --green:            #328e52;                // Dark: 64% of the light theme green + 7% saturation
   }
 }
@@ -248,7 +250,7 @@ $toolbar-blurred-opacity: os(0.5, 0.5, 0.5);
 // Project
 $no-project-bg:         --scheme(var(--light-1),              var(--dark-4));
 $no-project-blurred-bg: --scheme(shade(var(--light-1), 4%),   var(--dark-2));
-$project-darken-color:  --scheme(alpha(var(--light-10), 10%), shade(var(--dark-0), 20%));
+$project-darken-color:  --scheme(alpha(var(--light-10), 10%), alpha(var(--dark-0), 20%));
 $project-heading-color: --scheme(var(--light-8),              var(--dark-8));
 $item-count-color:      --scheme(var(--light-5),              var(--dark-6));
 
@@ -553,6 +555,18 @@ $option-no-matches-color: --scheme(var(--light-5), var(--dark-6));
 $option-separator-color:  --scheme(var(--light-2), var(--dark-1));
 
 // Account
+$account-info-color:    --scheme(var(--primary),            tint(var(--primary), 14%));
+$account-info-bg:       --scheme(tint(var(--primary), 82%), alpha(var(--primary), 14%));
+$account-warning-color: --scheme(shade(var(--orange), 8%),  shade(var(--orange), 8%));
+$account-warning-bg:    --scheme(tint(var(--orange), 78%),  alpha(var(--orange), 5%));
+$account-error-color:   --scheme(shade(var(--red), 8%),     shade(var(--red), 8%));
+$account-error-bg:      --scheme(tint(var(--red), 87%),     alpha(var(--red), 10%));
 $account-card-bg:       --scheme(shade(var(--light-1), 4%), tint(var(--dark-4), 2%));
-$profile-heading-color: --scheme(var(--light-6), var(--dark-8));
+$profile-heading-color: --scheme(var(--light-6),            var(--dark-8));
 $profile-border-color:  --scheme(shade(var(--light-3), 4%), var(--dark-1));
+
+// Modal
+$modal-bg:           --scheme(var(--light-1),             var(--dark-4));
+$modal-backdrop-bg:  --scheme(alpha(var(--light-5), 70%), alpha(var(--dark-1), 70%));
+$modal-shadow-1:     --scheme(rgba(0, 0, 0, 0.25),        rgba(0, 0, 0, 0.75));
+$modal-shadow-2:     --scheme(rgba(0, 0, 0, 0.02),        rgba(0, 0, 0, 0.08));

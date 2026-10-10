@@ -40,6 +40,7 @@ en:
           one {1 Photo}
           other {# Photos}}
       create: Add Photos
+      transcribe: Transcribe Photo
       selection: Selection
     note:
       title: >-
@@ -322,10 +323,16 @@ en:
       register.2: Sign up
       link: Sign in
       unlink: Sign out
+      retry: Retry
       usage:
         label: Usage
+        window:
+          hourly: Hourly
+          daily: Daily
+          weekly: Weekly
+          monthly: Monthly
         transcriptions:
-          label: Transcriptions
+          label: transcriptions
           loading: Loading…
           limit: >-
             {delta, plural,
@@ -375,6 +382,9 @@ en:
       full: Show full text overlay
       split: Show split-view text overlay
       panel: Toggle transcription version history
+      fontSize:
+        decrease: Decrease font size
+        increase: Increase font size
     panel:
       negative: Invert colors
       revert: Revert to Original
@@ -489,7 +499,6 @@ en:
             {count, plural,
               one {One orphaned file was found.}
               other {{count} orphaned files were found.}}
-            See the log file for the full list.
             Do you want to delete all orphaned files now?
             This action cannot be undone.
           buttons:
@@ -737,6 +746,7 @@ en:
     error: Transcription failed
     retry: Try Again
     pending: Transcription pending…
+    empty: No text recognized
     title: >-
       {name, select,
         true {{name}}
@@ -747,9 +757,14 @@ en:
     account:
       link:
         invalid: Invalid username or password.
-        network: Could not reach the Tropy server.
         unknown: Something went wrong. Please try again.
+      network: Could not reach the Tropy server.
       offline: Tropy is offline.
+      profile:
+        token: Your session has expired. Please sign in again.
+        http: Something went wrong. Please try again.
+        id_token: Something went wrong. Please try again.
+        unknown: Something went wrong. Please try again.
     cache:
       prune: Failed to optimize project cache.
       purge: Failed to remove old project caches.

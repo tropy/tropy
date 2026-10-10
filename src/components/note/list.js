@@ -1,7 +1,8 @@
-import { useRef } from 'react'
 import { Scroll } from '../scroll/index.js'
 import { NoteListItem } from './list-item.js'
 import { TABS, SASS } from '../../constants/index.js'
+import { Cursor } from '../../common/sequence.js'
+import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 
@@ -17,41 +18,42 @@ export const NoteList = ({
   selection,
   tabIndex = TABS.NoteList
 }) => {
-  let scroll = useRef()
+  let cursor = new Cursor(notes, selection?.id)
 
-  let handleSelect = useEvent((note, event) => {
+  let handleSelect = useEvent((note, { repeat } = {}) => {
     if (!(note == null || note.id === selection?.id))
       onSelect({
         note: note.id,
         photo: note.photo,
         selection: note.selection
-      }, { throttle: event?.repeat })
+      }, { throttle: repeat })
   })
 
-  let handleRemove = useEvent((note) => {
-    if (!(isReadOnly || note == null))
-      onRemove([note.id])
-  })
+  let handleKeyDown = useCursorKeys(cursor, {
+    onMove: handleSelect,
+    onKeyDown: useKeyMap('NoteList', {
+      open () {
+        onOpen(cursor.current())
+      },
+      remove: !isReadOnly && (() => {
+        let note = cursor.current()
 
-  let handleKeyDown = useKeyMap('NoteList', {
-    open () {
-      onOpen(scroll.current.current)
-    },
-    remove () {
-      handleRemove(scroll.current.current)
-    }
+        if (note == null)
+          return false
+
+        onRemove([note.id])
+      })
+    })
   })
 
   return (
     <div className="note-list">
       <Scroll
-        ref={scroll}
         cursor={selection?.id}
         items={notes}
         itemHeight={rowHeight}
         tabIndex={tabIndex}
-        onKeyDown={handleKeyDown}
-        onSelect={handleSelect}>
+        onKeyDown={handleKeyDown}>
         {(note) => (
           <NoteListItem
             key={note.id}

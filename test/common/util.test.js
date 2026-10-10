@@ -160,20 +160,6 @@ describe('util', () => {
     })
   })
 
-  describe('adjacent', () => {
-    it('returns the two items adjacent to the given item', () => {
-      expect(util.adjacent([])).to.eql([])
-      expect(util.adjacent([], 1)).to.eql([])
-
-      expect(util.adjacent([1], 1)).to.eql([])
-      expect(util.adjacent([1, 2], 1)).to.eql([undefined, 2])
-      expect(util.adjacent([1, 2], 2)).to.eql([1])
-      expect(util.adjacent([1, 2, 3], 1)).to.eql([undefined, 2])
-      expect(util.adjacent([1, 2, 3], 2)).to.eql([1, 3])
-      expect(util.adjacent([1, 2, 3], 3)).to.eql([2])
-    })
-  })
-
   describe('get', () => {
     it('returns the value', () => {
       expect(util.get({}, '')).to.eql({})

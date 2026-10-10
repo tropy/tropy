@@ -5,7 +5,7 @@ import { ScrollContainer } from './container.js'
 import { getExpandedRows, getExpandedRowsAbove } from './expansion.js'
 import { Viewport } from './viewport.js'
 import { restrict } from '../../common/util.js'
-import { indexOf, sanitize } from '../../common/collection.js'
+import { indexOf, sanitize } from '../../common/sequence.js'
 import memoize from 'memoize-one'
 
 
@@ -24,10 +24,6 @@ export class Scroll extends React.Component {
     row: 0,
     numRowsAbove: 0,
     expRowPosition: 0
-  }
-
-  componentDidMount () {
-    this.handleResize(this.container.current.bounds)
   }
 
   componentWillUnmount () {
@@ -296,6 +292,7 @@ export class Scroll extends React.Component {
     this.setState({ width, height }, () => {
       this.handleScroll()
     })
+    this.props.onResize?.({ width, height })
   }
 
   handleScrollStart = () => {
@@ -339,6 +336,15 @@ export class Scroll extends React.Component {
         offset += expansionPadding
     }
 
+    // Subtle: skip state update if no change
+    // Remove check when we switch to useState!
+    if (
+      offset === this.state.offset &&
+      row === this.state.row &&
+      numRowsAbove === this.state.numRowsAbove &&
+      expRowPosition === this.state.expRowPosition
+    ) return
+
     this.setState({
       offset,
       row,
@@ -359,12 +365,12 @@ export class Scroll extends React.Component {
     }
   }
 
-  scroll (...args) {
-    this.container.current.scroll(...args)
+  scroll (top, left) {
+    this.container.current.scrollTo({ top, left })
   }
 
-  scrollBy (...args) {
-    this.container.current.scrollBy(...args)
+  scrollBy (top, left) {
+    this.container.current.scrollBy({ top, left })
   }
 
   scrollPageDown () {
@@ -421,10 +427,6 @@ export class Scroll extends React.Component {
     this.scroll(offset)
   }
 
-  sync (...args) {
-    this.container.current.sync(...args)
-  }
-
   render () {
     this.layout = this.getComputedLayout(
       this.props.items,
@@ -446,7 +448,6 @@ export class Scroll extends React.Component {
       <ScrollContainer
         ref={this.container}
         className={this.state.isScrolling ? 'scrolling' : null}
-        sync={this.props.sync}
         onClick={this.props.onClick}
         onKeyDown={this.handleKeyDown}
         onResize={this.handleResize}

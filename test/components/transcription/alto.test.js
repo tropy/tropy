@@ -1,3 +1,4 @@
+import { once } from 'node:events'
 import { mock } from 'node:test'
 import { setImmediate } from 'node:timers/promises'
 import { render } from '../../support/react.js'
@@ -17,17 +18,22 @@ const setup = () => {
   return { alto, onSelect, strings: [...$$('.string')] }
 }
 
+// Subtle: native selection changes are dispatched asynchronously
+// and may take a while, e.g. if the renderer has been idle.
+const selectionChange = () =>
+  once(document, 'selectionchange')
+
 const selectRange = async (head, tail) => {
   let range = document.createRange()
   range.setStart(head.firstChild, 0)
   range.setEnd(tail.firstChild, tail.firstChild.length)
 
+  let changed = selectionChange()
   let selection = document.getSelection()
   selection.removeAllRanges()
   selection.addRange(range)
 
-  // Subtle: native selection changes are dispatched asynchronously!
-  await setImmediate()
+  await changed
 }
 
 const content = (selection) =>
@@ -64,11 +70,12 @@ describe('Alto', () => {
     range.setStart(strings[1].firstChild, 1)
     range.setEnd(strings[2].firstChild, 2)
 
+    let changed = selectionChange()
     let selection = document.getSelection()
     selection.removeAllRanges()
     selection.addRange(range)
 
-    await setImmediate()
+    await changed
 
     expect(content(onSelect.mock.calls[0].arguments[0]))
       .to.eql(['two', 'three'])
@@ -81,8 +88,9 @@ describe('Alto', () => {
     expect(content(onSelect.mock.calls[0].arguments[0]))
       .to.eql(['two'])
 
+    let changed = selectionChange()
     document.getSelection().collapseToStart()
-    await setImmediate()
+    await changed
 
     expect(onSelect.mock.calls[1].arguments[0]).to.be.empty
   })
@@ -95,16 +103,18 @@ describe('Alto', () => {
     range.setStart(strings[1].firstChild, 1)
     range.collapse(true)
 
+    let changed = selectionChange()
     let selection = document.getSelection()
     selection.removeAllRanges()
     selection.addRange(range)
 
-    await setImmediate()
+    await changed
     expect(onSelect.mock.calls[0].arguments[0]).to.be.empty
 
+    changed = selectionChange()
     strings[1].dispatchEvent(new MouseEvent('click', { bubbles: true }))
 
-    await setImmediate()
+    await changed
     expect(content(onSelect.mock.calls[1].arguments[0]))
       .to.eql(['two'])
   })
@@ -133,11 +143,12 @@ describe('Alto', () => {
       let range = document.createRange()
       range.selectNodeContents(outside)
 
+      let changed = selectionChange()
       let selection = document.getSelection()
       selection.removeAllRanges()
       selection.addRange(range)
 
-      await setImmediate()
+      await changed
 
       expect(onSelect.mock.calls[0].arguments[0]).to.be.empty
 

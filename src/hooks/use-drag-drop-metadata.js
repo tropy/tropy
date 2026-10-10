@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useEvent } from './use-event.js'
 import { DND, getEmptyImage, useDrag, useDrop } from '../components/dnd.js'
 import { auto } from '../format.js'
@@ -25,37 +25,44 @@ export function useDragDropMetadata ({
 
   let canDrag = useEvent(() => !(isDisabled || blank(text) || id == null))
 
-  let [, drag, preview] = useDrag({
+  let handleDragEnd = useEvent((item, monitor) => {
+    if (monitor.didDrop()) {
+      onDragEnd(monitor.getDropResult())
+    }
+  })
+
+  let [, drag, preview] = useDrag(() => ({
     type: DND.FIELD,
     canDrag,
     item: makeDragItem,
-    end (item, monitor) {
-      if (monitor.didDrop()) {
-        onDragEnd(monitor.getDropResult())
-      }
-    }
-  }, [onDragEnd])
+    end: handleDragEnd
+  }), [])
 
   let canDrop = useEvent((item) => (
     !(isDisabled || isReadOnly) &&
     (id === item.id && property !== item.property)
   ))
 
-  let [collectedProps, drop] = useDrop(() => ({
+  let handleDrop = useEvent(() => ({
+    id,
+    property
+  }))
+
+  let [props, drop] = useDrop(() => ({
     accept: DND.FIELD,
     canDrop,
-    drop: () => ({
-      id,
-      property
-    }),
+    drop: handleDrop,
     collect: (monitor) => ({
-      isOver: monitor.canDrop() && monitor.isOver()
+      canDrop: monitor.canDrop(),
+      isOver: monitor.isOver()
     })
-  }), [id, property])
+  }), [])
 
   useEffect(() => {
     preview(getEmptyImage())
   }, [preview])
 
-  return [collectedProps, (node) => drag(drop(node))]
+  let connect = useCallback((node) => drag(drop(node)), [drag, drop])
+
+  return [props, connect]
 }

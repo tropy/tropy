@@ -95,6 +95,14 @@ export default [
   },
 
   {
+    files: ['scripts/*.js'],
+    rules: {
+      'no-console': 0
+    }
+  },
+
+
+  {
     files: ['test/wdio/**/*.js'],
     languageOptions: {
       globals: {
@@ -134,6 +142,7 @@ export default [
       ...react.configs.flat['jsx-runtime'].rules,
       'react/display-name': 0,
       'react/prop-types': 0,
+      'react/no-unknown-property': [2, { ignore: ['closedby'] }],
       ...reactHooks.configs.recommended.rules,
       'react-hooks/immutability': 0,
       'react-hooks/refs': 0,

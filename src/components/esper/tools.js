@@ -3,10 +3,10 @@ import { useEvent } from '../../hooks/use-event.js'
 import { useResolution } from '../../hooks/use-resolution.js'
 import { useThrottle } from '../../hooks/use-debounce.js'
 import { ToolButton, ToolGroup } from '../toolbar.js'
-import { channel } from '../../common/release.js'
 import { MaximizeButton } from '../settings/maximize.js'
 import { Button } from '../button.js'
 import { Slider } from '../slider.js'
+import { restrict } from '../../common/util.js'
 import { ESPER } from '../../constants/index.js'
 
 export const Tool = ({
@@ -131,6 +131,36 @@ export const Zoom = ({
   )
 }
 
+export const FontSize = ({
+  current,
+  isDisabled,
+  max = 24,
+  min = 12,
+  onChange,
+  step = 1
+}) => {
+  let handleChange = (by) => {
+    onChange(restrict(current + by, min, max))
+  }
+
+  return (
+    <ToolGroup>
+      <Button
+        icon="IconASmall"
+        isDisabled={isDisabled || current <= min}
+        noFocus
+        onClick={() => handleChange(-step)}
+        title="esper.overlay.fontSize.decrease"/>
+      <Button
+        icon="IconALarge"
+        isDisabled={isDisabled || current >= max}
+        noFocus
+        onClick={() => handleChange(step)}
+        title="esper.overlay.fontSize.increase"/>
+    </ToolGroup>
+  )
+}
+
 export const Layout = ({
   isAltLayout = false,
   isDisabled,
@@ -175,31 +205,33 @@ export const Layout = ({
     )
 
   return (
-    <ToolGroup>
-      <ToolButton
-        current={overlay}
-        defaultValue={ESPER.OVERLAY.NONE}
-        icon="IconTranscriptionLarge"
-        isDisabled={isDisabled}
-        isHidden={channel === 'latest'}
-        name="overlay"
-        onChange={onChange}
-        title="esper.overlay.full"
-        value={ESPER.OVERLAY.FULL}/>
-      <ToolButton
-        current={overlay}
-        defaultValue={ESPER.OVERLAY.NONE}
-        icon="IconTranscriptionSplitView"
-        isDisabled={isDisabled}
-        isHidden={channel === 'latest'}
-        name="overlay"
-        onChange={onChange}
-        title="esper.overlay.split"
-        value={ESPER.OVERLAY.SPLIT}/>
-      {altButtons}
-      <MaximizeButton
-        isDisabled={isDisabled}
-        name="esper"/>
-    </ToolGroup>
+    <>
+      <ToolGroup>
+        <ToolButton
+          current={overlay}
+          defaultValue={ESPER.OVERLAY.NONE}
+          icon="IconTranscriptionLarge"
+          isDisabled={isDisabled}
+          name="overlay"
+          onChange={onChange}
+          title="esper.overlay.full"
+          value={ESPER.OVERLAY.FULL}/>
+        <ToolButton
+          current={overlay}
+          defaultValue={ESPER.OVERLAY.NONE}
+          icon="IconTranscriptionSplitView"
+          isDisabled={isDisabled}
+          name="overlay"
+          onChange={onChange}
+          title="esper.overlay.split"
+          value={ESPER.OVERLAY.SPLIT}/>
+        {altButtons}
+      </ToolGroup>
+      <ToolGroup>
+        <MaximizeButton
+          isDisabled={isDisabled}
+          name="esper"/>
+      </ToolGroup>
+    </>
   )
 }

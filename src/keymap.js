@@ -82,6 +82,53 @@ export function match (map, event) {
   return null
 }
 
+export const hasModifiers = (event) =>
+  event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
+
+export const getKeyState = (event) => ({
+  altKey: event.altKey,
+  ctrlKey: event.ctrlKey,
+  metaKey: event.metaKey,
+  shiftKey: event.shiftKey,
+  repeat: event.repeat
+})
+
 export function isMeta (event) {
   return (!darwin && event.ctrlKey) || (darwin && event.metaKey)
+}
+
+export class CursorKeyMap {
+  constructor (cursor, { scrollKeys = 'scroll' } = {}) {
+    this.cursor = cursor
+    this.scrollKeys = scrollKeys
+  }
+
+  get layout () {
+    return this.cursor.options?.layout ?? 'list'
+  }
+
+  match ({ altKey, key }) {
+    switch (key) {
+      case 'ArrowUp':
+        return altKey ? 'first' : 'up'
+      case 'ArrowDown':
+        return altKey ? 'last' : 'down'
+      case 'ArrowLeft':
+        if (this.layout !== 'grid') return null
+        return altKey ? 'start' : 'prev'
+      case 'ArrowRight':
+        if (this.layout !== 'grid') return null
+        return altKey ? 'end' : 'next'
+      case 'Home':
+        return (this.scrollKeys === 'select') ? 'first' : null
+      case 'End':
+        return (this.scrollKeys === 'select') ? 'last' : null
+      case 'PageUp':
+        return (this.scrollKeys === 'select') ? 'pageUp' : null
+      case 'PageDown':
+        return (this.scrollKeys === 'select') ? 'pageDown' : null
+      default:
+        return null
+    }
+  }
 }

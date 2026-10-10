@@ -1,0 +1,31 @@
+@use "../abstracts/config" as *;
+
+//
+// Message box
+// --------------------------------------------------
+
+.message-box {
+  .message,
+  .detail {
+    line-height: 1.33;
+    user-select: text;
+    cursor: text;
+  }
+
+  .message {
+    font-weight: 600;
+    text-box: trim-start cap alphabetic;
+    margin-top: 0;
+
+    &:has(+ footer) {
+      text-box: trim-both cap alphabetic;
+    }
+  }
+
+  .detail {
+    max-height: 20lh;
+    overflow: auto;
+    padding-right: $modal-padding;
+    margin-right: -$modal-padding;
+  }
+}

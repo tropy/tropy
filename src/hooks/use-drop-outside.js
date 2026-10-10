@@ -21,7 +21,8 @@ export function useDropOutside ({
     canDrop,
     drop: handleDrop,
     collect: (monitor) => ({
-      isOver: monitor.isOver({ shallow: true })
+      isOver: monitor.isOver({ shallow: true }),
+      canDrop: monitor.canDrop()
     })
   }), [])
 }

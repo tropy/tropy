@@ -1,37 +1,57 @@
-import { ItemIterable } from './iterable.js'
-import { CoverImage } from './cover-image.js'
+import { memo, useRef } from 'react'
 import cx from 'classnames'
+import { CoverImage } from './cover-image.js'
+import { useDragDropItem } from '../../hooks/use-drag-drop-items.js'
+import { useItemClickHandler } from '../../hooks/use-item-click-handler.js'
 
+export const ItemTile = memo(({
+  getSelection,
+  isLast,
+  isReadOnly,
+  isSelected,
+  item,
+  onContextMenu,
+  onDropItems,
+  onDropPhotos,
+  onItemOpen,
+  onSelect,
+  size = 512
+}) => {
+  let container = useRef()
 
-class ItemTile extends ItemIterable {
-  render () {
-    return this.connect(
-      <li
-        ref={this.setContainer}
-        className={cx(this.classes, 'tile', { last: this.props.isLast })}>
-        <div className="tile-state">
-          <CoverImage
-            cover={this.props.item.cover}
-            photos={this.props.item.photos}
-            tags={this.props.item.tags}
-            size={this.props.size}
-            onMouseDown={this.handleMouseDown}
-            onClick={this.handleClick}
-            onDoubleClick={this.handleOpen}
-            onContextMenu={this.handleContextMenu}/>
-        </div>
-      </li>
-    )
-  }
+  let [{ canDrop, isDragging, isOver }, dnd] =
+    useDragDropItem(container, {
+      item,
+      getSelection,
+      isDisabled: isReadOnly,
+      onDropItems,
+      onDropPhotos
+    })
 
-  static defaultProps = {
-    ...ItemIterable.defaultProps,
-    size: 512
-  }
-}
+  let handlers = useItemClickHandler(item, {
+    isSelected,
+    onContextMenu,
+    onOpen: onItemOpen,
+    onSelect
+  })
 
-const ItemTileContainer = ItemTile.wrap()
-
-export {
-  ItemTileContainer as ItemTile
-}
+  return (
+    <li
+      ref={dnd}
+      className={cx('item', 'tile', {
+        active: isSelected,
+        dragging: isDragging,
+        last: isLast,
+        over: isOver && canDrop
+      })}>
+      <div className="tile-state">
+        <CoverImage
+          {...handlers}
+          cover={item.cover}
+          photos={item.photos}
+          tags={item.tags}
+          size={size}/>
+      </div>
+    </li>
+  )
+})

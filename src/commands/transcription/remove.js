@@ -1,6 +1,7 @@
-import { call, select } from 'redux-saga/effects'
+import { call, put, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { remove, restore } from '../../models/transcription.js'
+import { getTranscriptionSuccessor } from '../../selectors/index.js'
 import * as slice from '../../slices/transcriptions.js'
 
 
@@ -23,10 +24,14 @@ export class Remove extends Command {
     let { payload } = this.action
 
     let transcriptions = yield select(getTranscriptionsForRemoval, payload)
+    let successor = yield select(getTranscriptionSuccessor, payload)
 
     yield call(db.transaction, async tx => {
       await remove(tx, payload)
     })
+
+    if (successor != null)
+      yield put(slice.activate(successor))
 
     this.undo = slice.restore(transcriptions)
     this.redo = slice.remove(payload)

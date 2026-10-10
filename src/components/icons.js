@@ -9,7 +9,7 @@ export function Icon ({ name, ...props }) {
   return React.createElement(icons[name], props)
 }
 
-export function IconContainer ({ children, className, name, title }) {
+export function IconContainer ({ children, className, name, style, title }) {
   let intl = useIntl()
 
   if (title)
@@ -18,6 +18,7 @@ export function IconContainer ({ children, className, name, title }) {
   return (
     <span
       className={cx('icon', `icon-${lispcase(name)}`, className)}
+      style={style}
       title={title}>
       {children}
     </span>
@@ -25,10 +26,11 @@ export function IconContainer ({ children, className, name, title }) {
 }
 
 function i (name, svg) {
-  let IconComponent = React.memo(({ className, title }) => (
+  let IconComponent = React.memo(({ className, style, title }) => (
     <IconContainer
       className={className}
       name={name}
+      style={style}
       title={title}>
       {svg}
     </IconContainer>
@@ -131,6 +133,14 @@ export const IconTranscriptionFailedOverlay = i('TranscriptionFailedOverlay', (
   </svg>
 ))
 
+export const IconTranscriptionSmall = i('TranscriptionSmall', (
+  <svg width="12" height="12" viewBox="0 0 12 12">
+    <g className="line" fill="currentColor">
+      <path d="M7,10L9,10L9,11L4,11L4,10L6,10L6,2L3,2L3,4L2,4L2,1L11,1L11,4L10,4L10,2L7,2L7,10Z"/>
+    </g>
+  </svg>
+))
+
 export const IconWarningSm = i('WarningSm', (
   <svg width="12" height="12">
     <g className="line" fill="currentColor">
@@ -141,6 +151,15 @@ export const IconWarningSm = i('WarningSm', (
 
 
 /* 16 x 16 */
+
+export const IconALarge = i('ALarge', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M11.396,15L13.54,15L9.125,1L6.875,1L2.46,15L4.498,15L5.623,11.139L10.28,11.139L11.396,15ZM7.922,3.241L7.99,3.241L9.805,9.499L6.098,9.499L7.922,3.241Z"/>
+    </g>
+  </svg>
+))
+
 
 export const IconAlignCenter = i('AlignCenter', (
   <svg width="16" height="16" viewBox="0 0 16 16">
@@ -162,6 +181,14 @@ export const IconAlignRight = i('AlignRight', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
       <path d="M3,14H15v1H3ZM1,12H15V11H1ZM3,9H15V8H3ZM1,6H15V5H1ZM3,3H15V2H3Z"/>
+    </g>
+  </svg>
+))
+
+export const IconASmall = i('ASmall', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M6.936,3C5.922,6.333 4.908,9.667 3.894,13L5.717,13C5.944,12.155 6.172,11.309 6.399,10.464L9.473,10.464C9.697,11.309 9.921,12.155 10.145,13L12.106,13C11.092,9.667 10.078,6.333 9.064,3L6.936,3ZM9.091,9.029L6.784,9.029C7.157,7.638 7.53,6.248 7.903,4.857L7.983,4.857C8.352,6.248 8.722,7.638 9.091,9.029Z"/>
     </g>
   </svg>
 ))
@@ -669,6 +696,12 @@ export const IconSplit = i('Split', (
   </svg>
 ))
 
+export const IconStatus = i('Status', (
+  <svg width="16" height="16" viewBox="0 0 16 16" overflow="visible">
+    <circle fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" pathLength="100" strokeDasharray="var(--progress, 75) 100" transform="rotate(-90 8.5 7.5)" cx="8.5" cy="7.5" r="7.75"/>
+  </svg>
+))
+
 export const IconSub = i('Sub', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
@@ -721,6 +754,15 @@ export const IconTranscriptionFailed = i('TranscriptionFailed', (
     <g className="line" fill="currentColor">
       <path d="M14,2a1,1,0,0,1,1,1V13a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2H14m0-1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V3a2,2,0,0,0-2-2ZM9.348,8l2.576-2.576a.6.6,0,0,0-.848-.848L8.5,7.152,5.924,4.576a.6.6,0,0,0-.848.848L7.652,8,5.076,10.576a.6.6,0,1,0,.848.848L8.5,8.848l2.576,2.576a.6.6,0,0,0,.848-.848Z"/>
     </g>
+  </svg>
+))
+
+export const IconTranscriptionStatus = i('TranscriptionStatus', (
+  <svg width="16" height="16" viewBox="0 0 16 16" overflow="visible">
+    <g className="line" fill="currentColor">
+      <path d="M9,11h2v1H6V11H8V5H6V7H5V4h7V7H11V5H9Z"/>
+    </g>
+    <circle fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" pathLength="100" strokeDasharray="var(--progress, 75) 100" cx="8.5" cy="7.5" r="7.75"/>
   </svg>
 ))
 
@@ -788,6 +830,14 @@ export const IconUser = i('User', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
       <path d="M8,0C10.209,0 12,1.791 12,4C12,6.209 10.209,8 8,8C5.791,8 4,6.209 4,4C4,1.791 5.791,0 8,0ZM8,1.2C6.456,1.2 5.2,2.456 5.2,4C5.2,5.544 6.456,6.8 8,6.8C9.544,6.8 10.8,5.544 10.8,4C10.8,2.456 9.544,1.2 8,1.2ZM15.1,15L13.9,15C13.9,13.26 13.661,12.019 12.791,11.23C11.892,10.414 10.385,10.1 8,10.1C5.615,10.1 4.108,10.414 3.209,11.23C2.339,12.019 2.1,13.26 2.1,15L0.9,15C0.9,12.833 1.319,11.325 2.402,10.341C3.458,9.383 5.2,8.9 8,8.9C10.8,8.9 12.542,9.383 13.598,10.341C14.681,11.325 15.1,12.833 15.1,15Z"/>
+    </g>
+  </svg>
+))
+
+export const IconWifiWarning = i('WifiWarning', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M5.75,5.273c-1.589,0.393 -3.093,1.209 -4.334,2.448l-1.416,-1.414c1.633,-1.631 3.642,-2.659 5.75,-3.083l-0,2.049Zm4.5,-2.049c2.108,0.425 4.117,1.452 5.75,3.083l-1.416,1.414c-1.241,-1.239 -2.745,-2.055 -4.334,-2.448l-0,-2.049Zm0,4.399c0.964,0.336 1.868,0.888 2.638,1.657l0.068,0.068l-1.416,1.414l-0.067,-0.069c-0.369,-0.369 -0.782,-0.668 -1.222,-0.897l0,-2.174Zm-4.5,2.106c-0.491,0.237 -0.951,0.559 -1.358,0.966l-1.416,-1.414c0.806,-0.805 1.759,-1.372 2.774,-1.703l0,2.152Zm3.25,-6.729l0,6.5c0,0.552 -0.448,1 -1,1c-0.552,-0 -1,-0.448 -1,-1l0,-6.5c-0,-0.552 0.448,-1 1,-1c0.552,-0 1,0.448 1,1Zm-1,8.625c0.759,0 1.375,0.616 1.375,1.375c0,0.759 -0.616,1.375 -1.375,1.375c-0.759,0 -1.375,-0.616 -1.375,-1.375c0,-0.759 0.616,-1.375 1.375,-1.375Z"/>
     </g>
   </svg>
 ))
@@ -877,14 +927,25 @@ export const IconWarningExtraLarge = i('WarningExtraLarge', (
 ))
 
 export const IconTranscriptionExtraLarge = i('TranscriptionExtraLarge', (
-  <svg width="80" height="80">
-    <path className="line" fill="currentColor" d="M65,10c2.757,0,5,2.243,5,5v50c0,2.757-2.243,5-5,5H15c-2.757,0-5-2.243-5-5V15c0-2.757,2.243-5,5-5h50M65,5H15c-5.523,0-10,4.477-10,10v50c0,5.523,4.477,10,10,10h50c5.523,0,10-4.477,10-10V15c0-5.523-4.477-10-10-10h0ZM22,20v10h3.5l.8-4.8,1.2-1.2h9.5v31l-1.2,1.2-4.8.8v3h18v-3l-4.8-.8-1.2-1.2v-31h9.5l1.2,1.2.8,4.8h3.5v-10H22Z"/>
+  <svg width="80" height="80" viewBox="0 0 80 80">
+    <defs>
+      <clipPath id="clip">
+        <path className="clip" d="M80 0 L0 0 L0 80 L80 80 L80 0 L65 10 L65 70 L15 70 L15 10 L65 10 Z"/>
+      </clipPath>
+    </defs>
+    <path className="line" fill="currentColor" clipPath="url(#clip)" d="M65,10c2.757,0,5,2.243,5,5v50c0,2.757-2.243,5-5,5H15c-2.757,0-5-2.243-5-5V15c0-2.757,2.243-5,5-5h50M65,5H15c-5.523,0-10,4.477-10,10v50c0,5.523,4.477,10,10,10h50c5.523,0,10-4.477,10-10V15c0-5.523-4.477-10-10-10h0ZM22,20v10h3.5l.8-4.8,1.2-1.2h9.5v31l-1.2,1.2-4.8.8v3h18v-3l-4.8-.8-1.2-1.2v-31h9.5l1.2,1.2.8,4.8h3.5v-10H22Z"/>
   </svg>
 ))
 
 export const IconTranscriptionFailedExtraLarge = i('TranscriptionFailedExtraLarge', (
   <svg width="80" height="80">
-    <path className="line" fill="currentColor" d="M65,10c2.757,0,5,2.243,5,5v50c0,2.757-2.243,5-5,5H15c-2.757,0-5-2.243-5-5V15c0-2.757,2.243-5,5-5h50M65,5H15c-5.523,0-10,4.477-10,10v50c0,5.523,4.477,10,10,10h50c5.523,0,10-4.477,10-10V15c0-5.523-4.477-10-10-10h0ZM59.621,24.621l-4.242-4.242-15.379,15.379-15.379-15.379-4.242,4.242,15.379,15.379-15.379,15.379,4.242,4.242,15.379-15.379,15.379,15.379,4.242-4.242-15.379-15.379,15.379-15.379Z"/>
+    <path className="line" fill="currentColor" d="M65,5C70.525,5 75,9.475 75,15L75,65C75,70.525 70.525,75 65,75L15,75C9.475,75 5,70.525 5,65L5,15C5,9.475 9.475,5 15,5L65,5ZM65,10L15,10C12.245,10 10,12.245 10,15L10,65C10,67.755 12.245,70 15,70L65,70C67.755,70 70,67.755 70,65L70,15C70,12.245 67.755,10 65,10ZM60,55L60,60L20,60L20,55L60,55ZM21.464,30L15.732,24.268L19.268,20.732L25,26.464L30.732,20.732L34.268,24.268L28.536,30L34.268,35.732L30.732,39.268L25,33.536L19.268,39.268L15.732,35.732L21.464,30ZM51.464,30L45.732,24.268L49.268,20.732L55,26.464L60.732,20.732L64.268,24.268L58.536,30L64.268,35.732L60.732,39.268L55,33.536L49.268,39.268L45.732,35.732L51.464,30Z"/>
+  </svg>
+))
+
+export const IconTranscriptionEmptyExtraLarge = i('TranscriptionEmptyExtraLarge', (
+  <svg width="80" height="80">
+    <path className="line" fill="currentColor" d="M65,5C70.525,5 75,9.475 75,15L75,65C75,70.525 70.525,75 65,75L15,75C9.475,75 5,70.525 5,65L5,15C5,9.475 9.475,5 15,5L65,5ZM65,10L15,10C12.245,10 10,12.245 10,15L10,65C10,67.755 12.245,70 15,70L65,70C67.755,70 70,67.755 70,65L70,15C70,12.245 67.755,10 65,10ZM55,20C60.519,20 65,24.481 65,30C65,35.519 60.519,40 55,40C49.481,40 45,35.519 45,30C45,24.481 49.481,20 55,20ZM55,25C52.24,25 50,27.24 50,30C50,32.76 52.24,35 55,35C57.76,35 60,32.76 60,30C60,27.24 57.76,25 55,25ZM25,20C30.519,20 35,24.481 35,30C35,35.519 30.519,40 25,40C19.481,40 15,35.519 15,30C15,24.481 19.481,20 25,20ZM25,25C22.24,25 20,27.24 20,30C20,32.76 22.24,35 25,35C27.76,35 30,32.76 30,30C30,27.24 27.76,25 25,25ZM60,55L60,60L20,60L20,55L60,55Z"/>
   </svg>
 ))
 

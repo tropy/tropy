@@ -1,21 +1,27 @@
 import { useSelector } from 'react-redux'
-import { useEvent } from './use-event.js'
-import { match } from '../keymap.js'
 
-export function useKeyMap (name, handlers) {
-  let keymap = useSelector(state => state.keymap[name])
+export function useKeyDown (keymap, handlers) {
+  return (event) => {
+    let cmd = keymap?.match(event)
 
-  return useEvent((event) => {
-    let cmd = match(keymap, event)
+    let handler = (typeof handlers === 'function') ?
+      handlers :
+      handlers?.[cmd]
 
-    if (!(cmd in handlers))
+    if (cmd == null || typeof handler !== 'function')
+      return
+
+    // Handlers return false to leave the event unhandled.
+    if (handler(event, cmd) === false)
       return
 
     event.preventDefault()
     event.stopPropagation()
 
     event.nativeEvent?.stopImmediatePropagation()
+  }
+}
 
-    handlers[cmd](event)
-  })
+export function useKeyMap (name, handlers) {
+  return useKeyDown(useSelector(state => state.keymap[name]), handlers)
 }

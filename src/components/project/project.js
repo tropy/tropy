@@ -8,10 +8,16 @@ import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useGlobalKeys } from '../../hooks/use-global-keys.js'
 import { ProjectView } from './view.js'
 import { ItemView } from '../item/view.js'
+import { ModalLayer } from '../modal-layer.js'
+import { MessageBox } from '../message-box.js'
 import { DragLayer } from '../drag-layer.js'
 import { MODE } from '../../constants/nav.js'
 import * as act from '../../actions/index.js'
 import { IconTropyLarge } from '../icons.js'
+
+const MODALS = {
+  'message-box': MessageBox
+}
 
 const modeToString = (mode) =>
   `${mode}-mode`
@@ -100,6 +106,7 @@ export const Project = React.forwardRef(({
         onPanelResize={handlePanelResize}/>
 
       <DragLayer/>
+      <ModalLayer modals={MODALS}/>
       <div className="cover">
         <IconTropyLarge/>
       </div>

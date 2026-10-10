@@ -8,24 +8,26 @@
   .panel-group-header {
     position: relative;
     z-index: 2;
-  }
 
-  .tabs {
-    transition: border-radius 0.1s ease;
-
-    .panel.closed :is(&) {
-      border-radius: 0;
+    .item-panel-group:has(.item-panel:focus-visible) :is(&) {
+      background-color: $panel-focus-bg;
     }
 
-    .tab {
-      transition: border-color 0.1s ease, border-radius 0.1s ease;
+    .is-blurred .item-mode & {
+      @if $platform == darwin {
+        background-color: $panel-blurred-bg-darwin;
+      }
+    }
 
-      .panel.closed :is(&) {
-        border-radius: 0;
-        margin: 0;
+    .toolbar-right {
+      .project-mode:not(.item-mode-enter-active) &,
+      .project-mode-enter-active & {
+        @include window-controls-spacing;
+      }
 
-        &.active {
-          box-shadow: none;
+      .icon {
+        & + .icon {
+          margin-left: $space-sm;
         }
       }
     }

@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
+import { Cursor } from '../common/sequence.js'
 
 export const getTranscriptionIds = (state, { id }) =>
   (state.photos[id] ?? state.selections[id])?.transcriptions
@@ -6,20 +7,25 @@ export const getTranscriptionIds = (state, { id }) =>
 export const getTranscriptions = (state, props) =>
   getTranscriptionIds(state, props)?.map(id => state.transcriptions[id])
 
-const byModifiedDate = (a, b) => {
-  if (a.modified < b.modified)
-    return -1
-  if (a.modifed > b.modified)
-    return 1
-  return 0
-}
-
-export const getActiveTranscription = (state, props) => {
-  let transcriptions = getTranscriptions(state, {
+// The active transcription is the most recently modified one
+export const getActiveTranscription = (state, props) =>
+  getTranscriptions(state, {
     id: props?.id ?? state.nav.selection ?? state.nav.photo
-  })
+  })?.reduce((active, tr) =>
+    (active == null || tr.modified >= active.modified) ? tr : active,
+  undefined)
 
-  return transcriptions?.sort(byModifiedDate).at(-1)
+export function getTranscriptionSuccessor (state, ids) {
+  let id = state.transcriptions[ids[0]]?.parent
+  let active = getActiveTranscription(state, { id })?.id
+
+  if (!ids.includes(active))
+    return null
+
+  let seq = getTranscriptionIds(state, { id })
+    .filter(tr => tr === active || !ids.includes(tr))
+
+  return new Cursor(seq, active).successor()
 }
 
 export const getPendingTranscriptions = createSelector(

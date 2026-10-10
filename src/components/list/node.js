@@ -61,10 +61,10 @@ export const ListNode = memo(({
     depth,
     icon,
     indent: INDENT,
+    isDisabled: isReadOnly,
     isDraggingParent,
     isExpanded,
     isLastChild,
-    isReadOnly,
     minDropDepth,
     node: list,
     onDrop,
@@ -74,12 +74,12 @@ export const ListNode = memo(({
   })
 
   let [di, dropItems] = useDropItems({
-    isReadOnly,
+    isDisabled: isReadOnly,
     onDrop: handleDropItems
   })
 
   let [df, dropFiles] = useDropPhotoFiles({
-    isReadOnly,
+    isDisabled: isReadOnly,
     onDrop: handleDropFiles
   })
 
@@ -89,7 +89,7 @@ export const ListNode = memo(({
   let handleContextMenu = useEvent((event) => {
     if (!isEditing) {
       if (!isSelected) {
-        onClick(list)
+        onClick(list.id)
       }
       onContextMenu(event, 'list', {
         id: list.id

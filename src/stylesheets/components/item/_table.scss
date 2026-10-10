@@ -13,6 +13,7 @@
   position: relative;
   overscroll-behavior: contain;
   contain: strict;
+  timeline-scope: --item-table-scroll-x;
 
   .metadata-head,
   .td {
@@ -38,26 +39,38 @@
   }
 
   > .scroll-container {
-    overflow: auto hidden;
+    height: $item-table-header-height;
+    overflow: hidden;
+    container-type: size;
+  }
 
-    &::-webkit-scrollbar {
-      display: none;
+  @keyframes sync-item-table-scroll-x {
+    to {
+      transform: translateX(
+        calc(-1 * max(
+          0px,
+          var(--item-min-width) - 100cqw + var(--scrollbar-compensation)
+        ))
+      );
     }
   }
 
   .table-head {
+    --scrollbar-compensation: 0px;
+
     display: grid;
     grid-template-columns: var(--item-template-columns);
     color: $item-table-header-color;
     height: $item-table-header-height;
-    border: {
-      top: 1px solid $item-table-header-border-color;
-      bottom: 1px solid $item-table-header-border-color;
-    }
-    overflow: hidden;
+    border-block: 1px solid $item-table-header-border-color;
     min-width: var(--item-min-width);
+    animation: sync-item-table-scroll-x auto linear both;
+    animation-timeline: --item-table-scroll-x;
+    overflow: hidden;
 
     .scrollbar-style-old-school & {
+      --scrollbar-compensation: #{$scrollbar-size};
+
       width: calc(100% - #{$default-spacing-x});
       min-width: calc(var(--item-min-width) + #{$scrollbar-size});
     }
@@ -221,6 +234,8 @@
       background-attachment: local;
       padding-top: $space-min;
       overflow-x: auto;
+      scroll-timeline-name: --item-table-scroll-x;
+      scroll-timeline-axis: inline;
     }
   }
 

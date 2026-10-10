@@ -5,7 +5,7 @@ import { Toolbar, ToolGroup } from '../toolbar.js'
 import { SASS } from '../../constants/index.js'
 
 import {
-  IconPhoto, IconPlusSmall, IconListSmall, IconGridSmall
+  IconPhoto, IconPlusSmall, IconListSmall, IconGridSmall, IconTranscriptionSmall
 } from '../icons.js'
 
 
@@ -30,16 +30,25 @@ export const PhotoToolbar = ({
     </Toolbar.Left>
     <Toolbar.Right>
       {
-        hasCreateButton && (
+        <>
+          {hasCreateButton && (
+            <ToolGroup>
+              <Button
+                icon={<IconPlusSmall/>}
+                size="sm"
+                isDisabled={isDisabled}
+                title="panel.photo.create"
+                onClick={onCreate}/>
+            </ToolGroup>
+          )}
           <ToolGroup>
             <Button
-              icon={<IconPlusSmall/>}
+              icon={<IconTranscriptionSmall/>}
               size="sm"
               isDisabled={isDisabled}
-              title="panel.photo.create"
-              onClick={onCreate}/>
+              title="panel.photo.transcribe"/>
           </ToolGroup>
-        )
+        </>
       }
       <ToolGroup>
         <Slider

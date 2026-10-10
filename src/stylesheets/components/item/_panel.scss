@@ -4,28 +4,26 @@
 // Item panel
 // --------------------------------------------------
 
-.item-panel-group {
-  .panel-group-header {
-    .item-panel-group:has(.item-panel:focus-visible) :is(&) {
-      background-color: $panel-focus-bg;
-    }
-
-    .is-blurred .item-mode & {
-      @if $platform == darwin {
-        background-color: $panel-blurred-bg-darwin;
-      }
-    }
-  }
-
+.item-panel {
   .toolbar {
     transition: padding 0.1s ease;
 
     .item-panel.closed :is(&) {
       padding: 0;
     }
+
+    .icon-hangtag {
+      margin-right: $space-xs - 3px;
+    }
   }
 
   .tabs {
+    transition: border-radius 0.1s ease;
+
+    .panel.closed :is(&) {
+      border-radius: 0;
+    }
+
     .is-blurred .item-mode & {
       @if $platform == darwin {
         background-color: $item-panel-tab-blurred-bg-darwin;
@@ -33,12 +31,23 @@
     }
 
     .tab {
+      transition: border-color 0.1s ease, border-radius 0.1s ease;
+
       &.active {
         .is-blurred .item-mode & {
           @if $platform == darwin {
             background-color: $item-panel-tab-blurred-selected-bg-darwin;
             box-shadow: 0 0 0 $input-border-width $item-panel-tab-blurred-selected-border-darwin;
           }
+        }
+      }
+
+      .panel.closed :is(&) {
+        border-radius: 0;
+        margin: 0;
+
+        &.active {
+          box-shadow: none;
         }
       }
     }

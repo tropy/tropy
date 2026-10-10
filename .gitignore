@@ -10,10 +10,7 @@ db/*.db
 .vimrc
 scripts/appimagetool-*
 scripts/appimage-runtime-*
-scripts/stats.mjs
-_book
-.github/styles/*
-!.github/styles/Vocab/tropy
+scripts/stats.js
 vendor/code-sign-tool
 vendor/sharp
 vendor/sqlite3/sqlite-autoconf-*.tar.gz

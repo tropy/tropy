@@ -1,5 +1,5 @@
 import React from 'react'
-import { indexOf } from '../../common/collection.js'
+import { indexOf } from '../../common/sequence.js'
 
 export const ExpansionRow = ({
   item,

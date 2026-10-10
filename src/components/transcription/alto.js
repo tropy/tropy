@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef } from 'react'
 import cx from 'classnames'
 import { useEventHandler } from '../../hooks/use-event-handler.js'
-import { growingEdge } from '../../selection.js'
+import { growingEdge } from '../../common/selection.js'
 
 // Returns the next (dir > 0) or previous string element, starting at
 // node, but never one of its descendants.

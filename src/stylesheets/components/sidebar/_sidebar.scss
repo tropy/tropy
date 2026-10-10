@@ -193,7 +193,10 @@
         }
 
         .icon-folder {
-          li.holding:not(.active) > .node-container :is(&) {
+          li.holding > .node-container :is(&) {
+            --background-color: transparent;
+            --border-color: #{$icon-color};
+
             position: relative;
 
             svg {
@@ -208,14 +211,29 @@
               bottom: -1px;
               width: 7px;
               height: 7px;
-              border: 1px solid $icon-color;
+              background-color: var(--background-color);
+              border: 1px solid var(--border-color);
+            }
+
+            .vibrancy:not(.is-blurred) & {
+              --border-color: #{$sidebar-vibrancy-icon-color};
+            }
+
+            .active :is(&) {
+              --border-color: #{$list-active-icon-color};
 
               .vibrancy:not(.is-blurred) & {
-                border-color: $sidebar-vibrancy-icon-color;
+                --border-color: #{$sidebar-vibrancy-icon-selected-color};
+              }
+
+              .sidebar :focus :is(&) {
+                --border-color: #{$list-focus-color};
               }
             }
 
             .alt-key & {
+               --background-color: #{$icon-color};
+
               .line {
                 display: none;
               }
@@ -227,11 +245,22 @@
               &::after {
                 width: 6px;
                 height: 6px;
-                background-color: $icon-color;
                 border: 0;
+              }
 
-                .alt-key.vibrancy :is(&) {
-                  background-color: $sidebar-vibrancy-icon-color;
+              .alt-key.vibrancy :is(&) {
+                --background-color: #{$sidebar-vibrancy-icon-color};
+              }
+
+              .active :is(&) {
+                --background-color: #{$list-active-icon-color};
+
+                .vibrancy:not(.is-blurred) & {
+                  --background-color: #{$sidebar-vibrancy-icon-selected-color};
+                }
+
+                .sidebar :focus :is(&) {
+                  --background-color: #{$list-focus-color};
                 }
               }
             }

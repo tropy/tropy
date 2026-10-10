@@ -16,7 +16,7 @@ import { TranscriptionPanel } from '../transcription/panel.js'
 import { pick, restrict } from '../../common/util.js'
 import { Cache } from '../../common/cache.js'
 import { isHorizontal, rotate, round } from '../../common/math.js'
-import { growingEdge } from '../../selection.js'
+import { growingEdge } from '../../common/selection.js'
 import { addOrientation, subOrientation } from '../../common/iiif.js'
 import { match } from '../../keymap.js'
 import { getResolution } from '../../dom.js'
@@ -45,9 +45,13 @@ const {
   ZOOM_PRECISION
 } = SASS.ESPER
 
-const parseAltoDocument = memoize((data, width, height, angle, mirror) => (
-  Document.parse(data).setTransform({ width, height, angle, mirror })
-))
+const parseAltoDocument = memoize((data, width, height, angle, mirror) => {
+  let doc = Document.parse(data)
+
+  return (doc.strings().next().done) ?
+    null :
+    doc.setTransform({ width, height, angle, mirror })
+})
 
 
 export class Esper extends React.Component {
@@ -684,7 +688,7 @@ export class Esper extends React.Component {
 
   render () {
     let { isDisabled } = this
-    let { hasSideBySideLayout, overlay, overlayPanel, transcription } = this.props
+    let { hasSideBySideLayout, overlay, transcription } = this.props
 
     let isOverlayVisible =
       overlay && transcription != null
@@ -778,22 +782,11 @@ export class Esper extends React.Component {
         {isOverlayVisible && (
           <EsperOverlay
             mode={overlay}
-            hasTitlebar={hasSideBySideLayout || !isOverlaySplit}
-            toolbar={(
-              <Toolbar.Right>
-                <ToolGroup.Layout
-                  isAltLayout={!hasSideBySideLayout && isOverlaySplit}
-                  isDisabled={isDisabled}
-                  onChange={this.handleChange}
-                  overlay={overlay}
-                  overlayPanel={overlayPanel}/>
-              </Toolbar.Right>
-            )}
-            isPanelVisible={overlayPanel}
+            isDisabled={isDisabled}
             panel={(
               <TranscriptionPanel
                 active={transcription.id}
-                isDisabled={isDisabled}
+                isDisabled={isDisabled || this.props.isReadOnly}
                 id={this.state.id}/>
             )}>
             <Transcription

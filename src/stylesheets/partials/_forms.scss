@@ -167,14 +167,17 @@ fieldset {
 .checkbox,
 .radio {
   display: flex;
-  padding-right: $padding-base-horizontal;
 
-  &:where(:first-child) {
-    padding-top: calc(($input-height-base - $line-height-computed) / 2);
-  }
+  .form-horizontal & {
+    padding-right: $padding-base-horizontal;
 
-  &:where(:last-child) {
-    padding-bottom: calc(($input-height-base - $line-height-computed) / 2);
+    &:first-child {
+      padding-top: calc(($input-height-base - $line-height-computed) / 2);
+    }
+
+    &:last-child {
+      padding-bottom: calc(($input-height-base - $line-height-computed) / 2);
+    }
   }
 
   &:has(.form-description-inline) {

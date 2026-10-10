@@ -61,7 +61,7 @@ en:
       open: Enter
       edit: F2
       clear: Escape
-      delete:
+      delete: &delete
         - Backspace
         - Delete
       rotateLeft: &rotateLeft
@@ -96,16 +96,8 @@ en:
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
     SelectionGrid: &SelectionGrid
-      up: ArrowUp
-      down: ArrowDown
-      left: ArrowLeft
-      right: ArrowRight
-      first: Alt+ArrowUp
-      last: Alt+ArrowDown
       open: Enter
-      delete:
-        - Backspace
-        - Delete
+      delete: *delete
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
     ItemPanel: &ItemPanel
@@ -171,6 +163,8 @@ en:
         - CmdOrCtrl+Shift+Z
         - CmdOrCtrl+Shift+z
         - CmdOrCtrl+y
+    TranscriptionPanel: &TranscriptionPanel
+      delete: *delete
     TagList: &TagList
       up: ArrowUp
       down: ArrowDown
@@ -219,25 +213,22 @@ en:
       contract:
         - ArrowLeft
         - Escape
+      copyPhoto:
+        - CmdOrCtrl+Shift+C
+      extract:
+        - CmdOrCtrl+Shift+X
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
     SelectionGrid:
-      up: ArrowUp
-      down: ArrowDown
-      left: ArrowLeft
-      right: ArrowRight
-      first: Alt+ArrowUp
-      last: Alt+ArrowDown
       open:
         - Cmd+ArrowDown
         - Cmd+ArrowRight
-      delete:
-        - Backspace
-        - Delete
+      delete: *delete
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
     ItemPanel: *ItemPanel
     NoteList: *NoteList
     NotePad: *NotePad
     TagList: *TagList
+    TranscriptionPanel: *TranscriptionPanel
   win32: *linux
