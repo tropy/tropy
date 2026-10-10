@@ -141,6 +141,15 @@ en:
         command: 'app:copy-note'
       - label: 'Delete Note'
         command: 'app:delete-note'
+    transcription: &transcription
+      - label: 'Export Transcription …'
+        command: 'app:export-transcription'
+      - label: 'Copy ALTO XML to Clipboard'
+        command: 'app:copy-transcription'
+        condition: 'hasAlto'
+      - label: 'Delete Transcription'
+        command: 'app:delete-transcription'
+        condition: '!isReadOnly'
     notepad: &notepad
       - label: 'Direction'
         id: 'direction'
@@ -371,6 +380,7 @@ en:
     tag: *tag
     item-tag: *item-tag
     note: *note
+    transcription: *transcription
     notepad: *notepad
     items: *items
     item: *item
@@ -410,6 +420,7 @@ en:
     tag: *tag
     item-tag: *item-tag
     note: *note
+    transcription: *transcription
     notepad: *notepad
     items: *items
     item: *item

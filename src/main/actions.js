@@ -110,5 +110,7 @@ export const tag = {
 }
 
 export const transcriptions = {
-  create: a('transcriptions.create')
+  create: a('transcriptions.create'),
+  remove: a('transcriptions.remove'),
+  export: a('transcriptions.export')
 }

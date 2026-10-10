@@ -379,6 +379,20 @@ save.notes = (opts) => save({
   ...opts
 })
 
+save.transcription = ({ alto = true, ...opts } = {}) => save({
+  filters: [
+    alto && {
+      name: t('dialog', 'filter', 'alto'),
+      extensions: ['xml']
+    },
+    {
+      name: t('dialog', 'filter', 'text'),
+      extensions: ['txt']
+    }
+  ].filter(Boolean),
+  ...opts
+})
+
 
 export {
   fail,

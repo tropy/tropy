@@ -38,6 +38,8 @@ const transcriptions = createSlice({
         for (let tr of payload) state[tr.id] = tr
     }),
 
+    export: cmdReducer(() => {}),
+
     update (state, { payload }) {
       let { id, ...props } = payload
       Object.assign(state[id], props)
@@ -87,5 +89,8 @@ export const {
   restore,
   update
 } = transcriptions.actions
+
+const exportAction = transcriptions.actions.export
+export { exportAction as export }
 
 export default transcriptions.reducer

@@ -550,6 +550,8 @@ en:
       projects: Tropy Projects
       rdf: RDF Vocabularies
       jsonld: JSON-LD
+      alto: ALTO XML
+      text: Plain Text
 
   action:
     project:

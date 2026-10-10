@@ -687,6 +687,22 @@ export class Tropy extends EventEmitter {
     this.on('app:open-note', (win) =>
       this.dispatch(act.note.open(), win))
 
+    this.on('app:delete-transcription', (win, { target }) =>
+      this.dispatch(
+        act.transcriptions.remove([target.id], { history: 'add' }),
+        win))
+
+    this.on('app:export-transcription', (win, { target }) =>
+      this.dispatch(act.transcriptions.export(target.id), win))
+
+    this.on('app:copy-transcription', (win, { target }) =>
+      this.dispatch(
+        act.transcriptions.export(target.id, {
+          target: ':clipboard:',
+          format: 'alto'
+        }),
+        win))
+
     this.on('app:delete-note', (win, { target }) =>
       this.dispatch(act.note.delete(target.notes), win))
 

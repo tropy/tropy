@@ -256,6 +256,9 @@ export class ContextMenu extends Menu {
   scopes.note = ['note']
   scopes.note.position = 2
 
+  scopes.transcription = ['transcription']
+  scopes.transcription.position = 2
+
   scopes['metadata-list'] = [
     'metadata-list']
   scopes['metadata-list'].position = 2
