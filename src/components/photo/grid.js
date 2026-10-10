@@ -1,126 +1,92 @@
-import { PhotoIterator } from './iterator.js'
+import { usePhotoIterator } from '../../hooks/use-photo-iterator.js'
 import { PhotoTile } from './tile.js'
 import { SelectionGrid } from '../selection/grid.js'
 import { Scroll } from '../scroll/scroll.js'
+import { useKeyMap } from '../../hooks/use-keymap.js'
 import { pluck } from '../../common/util.js'
 import cx from 'classnames'
-import { match } from '../../keymap.js'
-import { SASS } from '../../constants/index.js'
+import { SASS, TABS } from '../../constants/index.js'
 
 
-class PhotoGrid extends PhotoIterator {
-  get isVertical () {
-    return false
-  }
+export const PhotoGrid = (props) => {
+  let {
+    isDisabled,
+    onSelectionSort,
+    photos,
+    selections,
+    size
+  } = props
 
-  contract = (photo) => {
-    if (this.isExpandable(photo) && this.isExpanded(photo)) {
-      this.props.onContract(this.props.photos.map(p => p.id))
+  let iterator = usePhotoIterator(props, { isGrid: true })
 
-      if (this.isSelected(photo)) {
-        this.props.onSelect({
-          photo: photo.id,
-          item: photo.item,
-          note: photo.notes[0]
-        })
-      }
-      return true
+  let onKeyDown = useKeyMap('PhotoIterator', {
+    contract: () => iterator.contract(iterator.current()),
+    expand: () => iterator.expand(iterator.current()),
+    enter: () => iterator.expand(iterator.current()),
+    open () {
+      iterator.open(iterator.current())
+    },
+    preview () {
+      iterator.preview(iterator.current())
+    },
+    delete () {
+      iterator.remove(iterator.current())
+    },
+    rotateLeft () {
+      iterator.rotate(-90)
+    },
+    rotateRight () {
+      iterator.rotate(90)
+    },
+    copyPhoto () {
+      iterator.extract(iterator.current(), { target: ':clipboard:' })
+    },
+    extract () {
+      iterator.extract(iterator.current())
     }
+  })
 
-    return false
-  }
-
-
-  handleKeyDown = (event) => {
-    switch (match(this.keymap, event)) {
-      case 'open':
-        this.handleItemOpen(this.current)
-        break
-      case 'preview':
-        this.preview(this.current)
-        break
-      case 'expand':
-      case 'enter':
-        if (!this.expand(this.current)) return
-        break
-      case 'contract':
-        if (!this.contract(this.current)) return
-        break
-      case 'delete':
-        this.handleDelete(this.current)
-        break
-      case 'rotateLeft':
-        this.handleRotate(-90)
-        break
-      case 'rotateRight':
-        this.handleRotate(90)
-        break
-      case 'copyPhoto':
-        this.handleExtract(this.current, { target: ':clipboard:' })
-        break
-      case 'extract':
-        this.handleExtract(this.current)
-        break
-      default:
-        return
-    }
-
-    event.preventDefault()
-    event.stopPropagation()
-    event.nativeEvent.stopImmediatePropagation()
-  }
-
-  renderSelectionGrid = (photo, columns) => (
+  let renderSelectionGrid = (photo, columns) => (
     <SelectionGrid
       cols={columns}
-      isDisabled={this.props.isDisabled}
-      onContextMenu={this.handleContextMenu}
-      onDelete={this.handleDelete}
-      onItemOpen={this.handleItemOpen}
-      onRotate={this.handleRotate}
-      onSelect={this.select}
-      onSort={this.props.onSelectionSort}
+      isDisabled={isDisabled}
+      onContextMenu={iterator.contextMenu}
+      onDelete={iterator.remove}
+      onItemOpen={iterator.open}
+      onRotate={iterator.rotate}
+      onSelect={iterator.select}
+      onSort={onSelectionSort}
       photo={photo}
-      selections={pluck(this.props.selections, photo.selections)}
-      size={this.props.size}/>
+      selections={pluck(selections, photo.selections)}
+      size={size}/>
   )
 
-  render () {
-    let tileSize = Math.round(this.props.size * SASS.TILE.FACTOR)
+  let tileSize = Math.round(size * SASS.TILE.FACTOR)
 
-    return this.connect(
-      <div
-        className={cx('photo-grid', this.classes)}
-        data-size={this.props.size}>
-        <Scroll
-          ref={this.container}
-          cursor={this.props.current}
-          items={this.props.photos}
-          itemHeight={tileSize}
-          itemWidth={tileSize}
-          expandedItems={this.props.expandedPhotos}
-          expansionPadding={SASS.GRID.PADDING * 4}
-          renderExpansionRow={this.renderSelectionGrid}
-          tabIndex={this.tabIndex}
-          onBlur={this.props.onBlur}
-          onKeyDown={this.handleKeyDown}
-          onSelect={this.handleSelectPhoto}>
-          {(photo, index, { isExpanded }) => (
-            <PhotoTile
-              {...this.getIterableProps(photo)}
-              key={photo.id}
-              photo={photo}
-              isExpanded={isExpanded}
-              isLast={index >= this.props.photos.length - 1}/>
-          )}
-        </Scroll>
-      </div>
-    )
-  }
-}
-
-const PhotoGridContainer = PhotoGrid.asDropTarget()
-
-export {
-  PhotoGridContainer as PhotoGrid
+  return iterator.connect(
+    <div
+      className={cx('photo-grid', iterator.classes)}
+      data-size={size}>
+      <Scroll
+        ref={iterator.scroll}
+        cursor={props.current}
+        items={photos}
+        itemHeight={tileSize}
+        itemWidth={tileSize}
+        expandedItems={props.expandedPhotos}
+        expansionPadding={SASS.GRID.PADDING * 4}
+        renderExpansionRow={renderSelectionGrid}
+        tabIndex={TABS.PhotoGrid}
+        onKeyDown={onKeyDown}
+        onSelect={iterator.select}>
+        {(photo, index, { isExpanded }) => (
+          <PhotoTile
+            {...iterator.getIterableProps(photo)}
+            key={photo.id}
+            isExpanded={isExpanded}
+            isLast={index >= photos.length - 1}/>
+        )}
+      </Scroll>
+    </div>
+  )
 }

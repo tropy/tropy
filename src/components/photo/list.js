@@ -1,134 +1,103 @@
 import { Scroll } from '../scroll/index.js'
 import { PhotoListItem } from './list-item.js'
-import { PhotoIterator } from './iterator.js'
-import { SASS } from '../../constants/index.js'
+import { usePhotoIterator } from '../../hooks/use-photo-iterator.js'
+import { useEvent } from '../../hooks/use-event.js'
+import { useKeyMap } from '../../hooks/use-keymap.js'
+import { SASS, TABS } from '../../constants/index.js'
 import { dc } from '../../ontology/ns.js'
 import cx from 'classnames'
-import { match } from '../../keymap.js'
 
 
-class PhotoList extends PhotoIterator {
-  get classes () {
-    return ['photo-list', super.classes]
-  }
+export const PhotoList = (props) => {
+  let {
+    data,
+    edit = {},
+    isDisabled,
+    onChange,
+    onEdit,
+    onEditCancel,
+    onSelectionSort,
+    photos,
+    selections
+  } = props
 
-  get isVertical () {
-    return true
-  }
+  let iterator = usePhotoIterator(props)
 
-  isEditing (photo) {
-    return this.props.edit.photo === photo.id
-  }
+  let handleEdit = useEvent((photo) => {
+    if (photo == null || isDisabled)
+      return
 
-  edit = (photo) => {
-    if (photo != null && !this.props.isDisabled) {
-      const { id, selection } = photo
+    if (photo.selection == null)
+      onEdit({ photo: photo.id })
+    else
+      onEdit({ selection: photo.selection })
+  })
 
-      if (selection == null) {
-        this.props.onEdit({ photo: id })
-      } else {
-        this.props.onEdit({ selection })
-      }
+  let handleEditCancel = useEvent((...args) => {
+    onEditCancel(...args)
+    iterator.scroll.current.focus()
+  })
+
+  let onKeyDown = useKeyMap('PhotoIterator', {
+    contract: () => iterator.contract(iterator.current()),
+    expand: () => iterator.expand(iterator.current()),
+    edit () {
+      handleEdit(iterator.current())
+    },
+    enter () {
+      handleEdit(iterator.current())
+    },
+    open () {
+      iterator.open(iterator.current())
+    },
+    preview () {
+      iterator.preview(iterator.current())
+    },
+    rotateLeft () {
+      iterator.rotate(-90)
+    },
+    rotateRight () {
+      iterator.rotate(90)
+    },
+    delete () {
+      iterator.remove(iterator.current())
+    },
+    copyPhoto () {
+      iterator.extract(iterator.current(), { target: ':clipboard:' })
+    },
+    extract () {
+      iterator.extract(iterator.current())
     }
-  }
+  })
 
-  handleEditCancel = (...args) => {
-    this.props.onEditCancel(...args)
-    this.container.current.focus()
-  }
-
-
-  handleKeyDown = (event) => {
-    switch (match(this.keymap, event)) {
-      case 'left':
-      case 'contract':
-        if (!this.contract(this.current)) return
-        break
-      case 'right':
-      case 'expand':
-        if (!this.expand(this.current)) return
-        break
-      case 'edit':
-      case 'enter':
-        this.edit(this.current)
-        break
-      case 'open':
-        this.handleItemOpen(this.current)
-        break
-      case 'preview':
-        this.preview(this.current)
-        break
-      case 'rotateLeft':
-        this.handleRotate(-90)
-        break
-      case 'rotateRight':
-        this.handleRotate(90)
-        break
-      case 'delete':
-        this.handleDelete(this.current)
-        break
-      case 'copyPhoto':
-        this.handleExtract(this.current, { target: ':clipboard:' })
-        break
-      case 'extract':
-        this.handleExtract(this.current)
-        break
-      default:
-        return
-    }
-
-    event.preventDefault()
-    event.stopPropagation()
-    event.nativeEvent.stopImmediatePropagation()
-  }
-
-
-  render () {
-    const { data, edit, onBlur, onChange } = this.props
-
-    return this.connect(
-      <div className={cx(this.classes)}>
-        <Scroll
-          ref={this.container}
-          cursor={this.props.current}
-          expansionCursor={this.props.selection}
-          items={this.props.photos}
-          itemHeight={SASS.ROW.HEIGHT}
-          expandedItems={this.props.expandedPhotos}
-          tabIndex={this.tabIndex}
-          onBlur={onBlur}
-          onKeyDown={this.handleKeyDown}
-          onSelect={this.handleSelectPhoto}>
-          {(photo, index, { isExpanded }) => (
-            <PhotoListItem
-              {...this.getIterableProps(photo)}
-              key={photo.id}
-              photo={photo}
-              data={data}
-              edit={edit}
-              selections={this.props.selections}
-              title={dc.title}
-              isExpanded={isExpanded}
-              isEditing={this.isEditing(photo)}
-              onChange={onChange}
-              onEdit={this.edit}
-              onEditCancel={this.handleEditCancel}
-              onSelectionSort={this.props.onSelectionSort}/>
-          )}
-        </Scroll>
-      </div>
-    )
-  }
-
-  static defaultProps = {
-    ...PhotoIterator.defaultProps,
-    edit: {}
-  }
-}
-
-
-const PhotoListContainer = PhotoList.asDropTarget()
-
-export {
-  PhotoListContainer as PhotoList
+  return iterator.connect(
+    <div className={cx('photo-list', iterator.classes)}>
+      <Scroll
+        ref={iterator.scroll}
+        cursor={props.current}
+        expansionCursor={props.selection}
+        items={photos}
+        itemHeight={SASS.ROW.HEIGHT}
+        expandedItems={props.expandedPhotos}
+        tabIndex={TABS.PhotoList}
+        onKeyDown={onKeyDown}
+        onSelect={iterator.select}>
+        {(photo, index, { isExpanded }) => (
+          <PhotoListItem
+            {...iterator.getIterableProps(photo)}
+            key={photo.id}
+            data={data}
+            edit={edit}
+            selections={selections}
+            title={dc.title}
+            isExpanded={isExpanded}
+            isEditing={edit.photo === photo.id}
+            onChange={onChange}
+            onEdit={handleEdit}
+            onEditCancel={handleEditCancel}
+            onSelectionSort={onSelectionSort}/>
+        )}
+      </Scroll>
+    </div>
+  )
 }
