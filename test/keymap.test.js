@@ -1,4 +1,5 @@
-import { CursorKeyMap } from '#tropy/keymap.js'
+import { CursorKeyMap, getSelectionMode } from '#tropy/keymap.js'
+import { darwin } from '#tropy/common/os.js'
 import { Cursor } from '#tropy/common/sequence.js'
 
 describe('CursorKeyMap', () => {
@@ -49,4 +50,15 @@ describe('CursorKeyMap', () => {
     expect(match('a')).to.be.null
   })
 
+})
+
+describe('getSelectionMode', () => {
+  let meta = darwin ? { metaKey: true } : { ctrlKey: true }
+
+  it('maps modifier keys to selection modes', () => {
+    expect(getSelectionMode({})).to.equal('replace')
+    expect(getSelectionMode(meta)).to.equal('toggle')
+    expect(getSelectionMode({ shiftKey: true })).to.equal('extend')
+    expect(getSelectionMode({ ...meta, shiftKey: true })).to.equal('flip')
+  })
 })

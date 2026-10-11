@@ -97,6 +97,13 @@ export function isMeta (event) {
   return (!darwin && event.ctrlKey) || (darwin && event.metaKey)
 }
 
+export function getSelectionMode (keyState) {
+  if (keyState.shiftKey)
+    return isMeta(keyState) ? 'flip' : 'extend'
+  else
+    return isMeta(keyState) ? 'toggle' : 'replace'
+}
+
 export class CursorKeyMap {
   constructor (cursor, { scrollKeys = 'scroll' } = {}) {
     this.cursor = cursor
