@@ -1,17 +1,20 @@
 import { useLayoutEffect, useRef } from 'react'
 import { useEvent } from './use-event.js'
 
-// Observes the node of the given ref, reporting changes of its content
-// box size. Subtle: because we stabilize the callback, we create the
-// observer exactly once, when we mount; and we create none at all if
-// there is no callback to report to.
-export function useResizeObserver (ref, onResize) {
+// Observes the node of the given stable (!) ref,
+// reporting changes of its content box size.
+//
+// Subtle: because we stabilize the callback,
+// we create the observer exactly once, when we mount;
+// and we create none at all if there is no callback to report to.
+//
+export function useResizeObserver (nodeRef, onResize) {
   let size = useRef()
   let handler = useEvent(onResize)
   let isEnabled = onResize != null
 
   useLayoutEffect(() => {
-    if (!isEnabled || ref.current == null)
+    if (!isEnabled || nodeRef.current == null)
       return
 
     let ro = new ResizeObserver(([entry]) => {
@@ -24,10 +27,10 @@ export function useResizeObserver (ref, onResize) {
       }
     })
 
-    ro.observe(ref.current)
+    ro.observe(nodeRef.current)
 
     return () => {
       ro.disconnect()
     }
-  }, [ref, handler, isEnabled])
+  }, [nodeRef, handler, isEnabled])
 }
