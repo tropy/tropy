@@ -1,5 +1,6 @@
 import { getItemMetadata } from '#tropy/selectors/index.js'
 import { text } from '#tropy/value.js'
+import { create } from '#tropy/common/selection.js'
 
 describe('Metadata Selectors', () => {
   const metadata = {
@@ -7,7 +8,8 @@ describe('Metadata Selectors', () => {
     2: { id: 2, title: text('bar'), type: text('test') }
   }
 
-  const state = (items = []) => ({ nav: { items }, metadata })
+  const state = (items = []) =>
+    ({ nav: { item: create(items) }, qr: { items }, metadata })
 
   describe('getItemMetadata', () => {
     it('returns empty for no selection', () => {
@@ -18,10 +20,11 @@ describe('Metadata Selectors', () => {
       expect(getItemMetadata(state([23]))).to.eql({ id: [23] })
     })
 
-    it('returns combined metadata for multiple items', () => {
+    it('returns combined metadata, with the primary item\'s values', () => {
+      // The cursor (the last selected item) is the primary item.
       let result = getItemMetadata(state([1, 2]))
-      expect(result.id).to.eql([1, 2])
-      expect(result).to.have.nested.property('title.text', 'foo')
+      expect(result.id).to.eql([2, 1])
+      expect(result).to.have.nested.property('title.text', 'bar')
     })
 
     it('marks mixed values', () => {

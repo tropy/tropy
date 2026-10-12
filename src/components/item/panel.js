@@ -70,7 +70,7 @@ export class ItemPanelGroup extends React.PureComponent {
   handleNoteOpen = (note) => {
     if (note != null && !this.props.isItemMode) {
       this.props.onItemOpen({
-        id: this.props.items[0].id,
+        id: this.props.photo.item,
         photos: [this.props.photo.id],
         notes: [note.id],
         selection: note.selection

@@ -1,5 +1,5 @@
-import { isSelected, select } from '../common/selection.js'
-import { merge, insert, omit, splice } from '../common/util.js'
+import { create, has, ids } from '../common/selection.js'
+import { array, merge, insert, omit, splice } from '../common/util.js'
 import { dc } from '../ontology/ns.js'
 
 import {
@@ -13,7 +13,7 @@ import {
 } from '../constants/index.js'
 
 const reset = {
-  items: [],
+  item: create(),
   photo: null,
   selection: null,
   note: null
@@ -37,8 +37,17 @@ const init = {
 
 export function nav (state = init, { type, payload, meta, error }) {
   switch (type) {
-    case NAV.RESTORE:
-      return merge(init, omit(payload || {}, ['query', 'tags']))
+    case NAV.RESTORE: {
+      let { items, ...nav } = omit(payload || {}, ['query', 'tags'])
+      let state = merge(init, nav)
+
+      // Restore item selection from legacy `items` array or previous state
+      state.item = items
+        ? create(items)
+        : create(ids(state.item), state.item)
+
+      return state
+    }
     case NAV.UPDATE:
       return { ...state, ...payload }
 
@@ -85,7 +94,7 @@ export function nav (state = init, { type, payload, meta, error }) {
     case ITEM.DELETE:
     case ITEM.RESTORE:
     case ITEM.REMOVE:
-      return meta.done || !isSelected(state.items, payload) ?
+      return meta.done || !array(payload).some(id => has(state.item, id)) ?
         state : {
           ...state,
           ...reset
@@ -97,7 +106,7 @@ export function nav (state = init, { type, payload, meta, error }) {
         photo: payload.photo,
         selection: payload.selection,
         note: payload.note,
-        items: select(state.items, payload.items, meta.mod)
+        item: payload.item
       }
 
     case ITEM.OPEN: {
@@ -105,7 +114,7 @@ export function nav (state = init, { type, payload, meta, error }) {
       return (!meta.done || error) ? state : {
         ...state,
         mode: NAV.MODE.ITEM,
-        items: select(state.items, [id], 'replace'),
+        item: create([id]),
         photo,
         selection,
         note
@@ -116,7 +125,7 @@ export function nav (state = init, { type, payload, meta, error }) {
       return (!meta.done || error) ? state : {
         ...state,
         mode: NAV.MODE.ITEM,
-        items: select(state.items, [item], 'replace'),
+        item: create([item]),
         photo,
         selection,
         note
@@ -132,10 +141,10 @@ export function nav (state = init, { type, payload, meta, error }) {
       }
 
     case TAG.DELETE:
-      return (!meta.done || error || !isSelected(state.tags, payload)) ?
+      return (!meta.done || error || !state.tags.includes(payload)) ?
         state : {
           ...state,
-          tags: select(state.tags, [payload], 'remove')
+          tags: state.tags.filter(id => id !== payload)
         }
 
     case TAG.SELECT:
@@ -144,7 +153,7 @@ export function nav (state = init, { type, payload, meta, error }) {
         ...reset,
         trash: null,
         imports: null,
-        tags: select(state.tags, [payload], meta.mod)
+        tags: selectTag(state.tags, payload, meta.mod)
       }
 
     case PHOTO.SELECT:
@@ -153,20 +162,20 @@ export function nav (state = init, { type, payload, meta, error }) {
         photo: payload.photo,
         selection: payload.selection,
         note: payload.note,
-        items: [payload.item]
+        item: create([payload.item])
       } : { ...state, photo: null, selection: null }
 
     case NOTE.SELECT:
       return payload ? {
         ...state,
-        items: [payload.item],
+        item: create([payload.item]),
         photo: payload.photo,
         selection: payload.selection,
         note: payload.note
       } : { ...state, note: null }
 
     case ITEM.PHOTO.REMOVE:
-      return isSelected(state.items, payload.id) &&
+      return has(state.item, payload.id) &&
         payload.photos.includes(state.photo) ?
           { ...state, photo: null, selection: null, note: null } : state
 
@@ -229,5 +238,22 @@ export function nav (state = init, { type, payload, meta, error }) {
 
     default:
       return state
+  }
+}
+
+// TODO remove when tag list uses new selections
+// The tag filter: replace, add (merge), remove or clear.
+function selectTag (tags, id, mod = 'replace') {
+  switch (mod) {
+    case 'replace':
+      return [id]
+    case 'merge':
+      return [...tags.filter(t => t !== id), id]
+    case 'remove':
+      return tags.filter(t => t !== id)
+    case 'clear':
+      return []
+    default:
+      throw new Error(`unknown selection mode: "${mod}"`)
   }
 }

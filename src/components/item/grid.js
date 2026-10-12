@@ -6,6 +6,10 @@ import { SASS } from '../../constants/index.js'
 
 
 export class ItemGrid extends ItemIterator {
+  getKeySelectionMode (event) {
+    let mode = super.getKeySelectionMode(event)
+    return (mode === 'extend') ? 'step' : mode
+  }
 
   renderItemTile = (item, index) => (
     <ItemTile
@@ -27,7 +31,7 @@ export class ItemGrid extends ItemIterator {
         <Scroll
           ref={this.container}
           autoselect
-          cursor={this.head()}
+          cursor={this.cursor}
           items={this.props.items}
           itemHeight={tileSize}
           itemWidth={tileSize}

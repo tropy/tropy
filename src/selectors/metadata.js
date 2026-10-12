@@ -1,5 +1,6 @@
 import { createSelector as memo } from 'reselect'
 import { pluck } from './util.js'
+import { getItemSelection } from './items.js'
 import { own } from '../common/util.js'
 import { equal } from '../value.js'
 import { compare } from '../collate.js'
@@ -54,7 +55,7 @@ const collectMetadata = (metadata, ids) =>
 
 export const getItemMetadata = memo(
   ({ metadata }) => metadata,
-  ({ nav }) => (nav.items),
+  (state) => getItemSelection(state).ids(),
   collectMetadata
 )
 

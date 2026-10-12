@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useEvent } from './use-event.js'
-import { isMeta } from '../keymap.js'
+import { getSelectionMode } from '../keymap.js'
 
 export function useItemClickHandler (item, {
   isSelected,
@@ -12,10 +12,7 @@ export function useItemClickHandler (item, {
 
   let select = useEvent((event) => {
     if (!(event.button > 2)) {
-      onSelect(item, {
-        isMeta: isMeta(event),
-        isRange: event.shiftKey
-      })
+      onSelect(item, { mode: getSelectionMode(event) })
     }
   })
 

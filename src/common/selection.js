@@ -1,94 +1,298 @@
-import { indexOf, matches, range } from './sequence.js'
+import { indexOf } from './sequence.js'
+import { own } from './util.js'
 
-export function select (s, items, mod = 'replace') {
-  switch (mod) {
+const toId = (it) => it?.id ?? it
+
+// Maps the ids of elements (or ids) to true.
+const toMap = (elements = []) => {
+  let map = Object.create(null)
+  for (let it of elements) map[toId(it)] = true
+  return map
+}
+
+// Selection state of a sequence:
+//   - selected: maps (numeric!) id -> true
+//   - anchor: id where current range starts
+//   - cursor: id of current position in sequence
+//
+// Selection state is plain and may live in Redux.
+// Selection class is a thin wrapper on top of it.
+
+export const create = (ids = [], {
+  anchor = toId(ids.at(-1)) ?? null,
+  cursor = anchor
+} = {}) => ({
+  selected: toMap(ids),
+  anchor,
+  cursor
+})
+
+const copy = (map) =>
+  Object.assign(Object.create(null), map)
+
+// Accepts an element or an id.
+export const has = (state, it) =>
+  own(state.selected, toId(it))
+
+export const size = (state) =>
+  Object.keys(state.selected).length
+
+export const equal = (a, b) => {
+  if (a === b)
+    return true
+  if (a.anchor !== b.anchor || a.cursor !== b.cursor)
+    return false
+
+  for (let id in a.selected)
+    if (!own(b.selected, id)) return false
+
+  for (let id in b.selected)
+    if (!own(a.selected, id)) return false
+
+  return true
+}
+
+// NB: selections have no inherent order!
+// Because we use numeric keys in a plain object,
+// they may get returned sorted by value or in insertion order.
+//
+// Returns selected ids, in no particular order.
+export const ids = (state) =>
+  Object.keys(state.selected).map(Number)
+
+// Returns the selected elements of seq, in sequence order.
+const effective = (state, seq) =>
+  seq.filter(it => has(state, it))
+
+export { effective as elements }
+
+// NB: Multi-selections are inherently unorderd,
+// but sometimes we need a representative element.
+// By default this 'primary' element is the cursor (if selected),
+// and otherwise the first selected element
+//
+// Primary element is used, e.g., as the merge target when merging items.
+
+// Returns the primary element, or null.
+export const primary = (state, seq) => {
+  let index = indexOf(seq, state.cursor)
+
+  return (index >= 0 && has(state, state.cursor)) ?
+    seq[index] :
+    seq.find(it => has(state, it)) ?? null
+}
+
+// Selects `id` with `mode` and returns new state, or `state` if unchanged.
+export function select (state, seq, id, { mode = 'replace' } = {}) {
+  let at = indexOf(seq, id)
+
+  if (at < 0)
+    return state
+
+  let next = change(state, seq, id, at, mode)
+  return equal(state, next) ? state : next
+}
+
+const change = (state, seq, id, at, mode) => {
+  switch (mode) {
     case 'replace':
-      return replace(s, items)
-    case 'remove':
-      return remove(s, items)
-    case 'subtract':
-      return subtract(s, items)
-    case 'append':
-      return append(s, items)
-    case 'merge':
-      return merge(s, items)
-    case 'clear':
-      return clear(s, items)
+      return {
+        selected: toMap([id]),
+        anchor: id,
+        cursor: id
+      }
+
+    case 'toggle': {
+      let selected = copy(state.selected)
+      toggle(selected, id)
+
+      return {
+        selected,
+        anchor: id,
+        cursor: id
+      }
+    }
+
+    case 'extend': {
+      let { anchor, prev, next } = ranges(state, seq, id, at)
+      let selected = copy(state.selected)
+
+      if (prev) {
+        each(seq, prev, (it) => { delete selected[it] })
+      }
+
+      each(seq, next, (it) => { selected[it] = true })
+
+      return {
+        selected,
+        anchor,
+        cursor: id
+      }
+    }
+
+    case 'flip': {
+      let { anchor, prev, next } = ranges(state, seq, id, at)
+      let selected = copy(state.selected)
+
+      if (prev) {
+        each(seq, prev, (it) => toggle(selected, it))
+      }
+
+      each(seq, next, (it) => toggle(selected, it))
+
+      return {
+        selected,
+        anchor,
+        cursor: id
+      }
+    }
+
+    // Keyboard steps in grids, as in macOS Finder:
+    // add the range from the cursor to id, or,
+    // if fully selected (moving back), removed except for id.
+    // Anchor and cursor always move to id.
+    case 'step': {
+      let c = indexOf(seq, state.cursor)
+      let range = [(c < 0) ? at : c, at]
+      let selected = copy(state.selected)
+      let isSelected = true
+
+      each(seq, range, (it) => {
+        if (!own(selected, it)) isSelected = false
+      })
+
+      if (isSelected) {
+        each(seq, range, (it) => {
+          if (it !== id) delete selected[it]
+        })
+      } else {
+        each(seq, range, (it) => { selected[it] = true })
+      }
+
+      return {
+        selected,
+        anchor: id,
+        cursor: id
+      }
+    }
+
     default:
-      throw new Error(`unknown selection mode: "${mod}"`)
-
+      throw new Error(`unknown selection mode: "${mode}"`)
   }
 }
 
-// Returns the elements of `seq` and the selection mode for selecting
-// `id`, or null if the selection would not change or `id` is not in
-// `seq`. Ranges extend from the selection's head (its last id) or,
-// without a selection, from the start; `id` becomes the new head. If
-// the head is not in `seq`, only `id` is selected.
-export function getSelectionChange (selection, seq, id, {
-  isMeta,
-  isRange
-} = {}) {
-  let element = seq[indexOf(seq, id)]
+// Returns new state with all elements of seq selected, or `state` if unchanged.
+export const all = (state, seq) =>
+  (seq.every(it => has(state, it)) && size(state) === seq.length)
+    ? state
+    : { ...state, selected: toMap(seq) }
 
-  if (element == null)
-    return null
+// Returns new state with nothing selected, or `state` if unchanged.
+export const clear = (state) => {
+  let next = { ...state, selected: toMap() }
+  return equal(state, next) ? state : next
+}
 
-  let isSelected = (it) => selection.some(s => matches(it, s))
+// Applies fn to the ids of seq between positions a and b, inclusive.
+const each = (seq, [a, b], fn) => {
+  for (let i = Math.min(a, b), j = Math.max(a, b); i <= j; ++i)
+    fn(toId(seq[i]))
+}
 
-  if (isRange) {
-    let head = selection.at(-1)
+// Returns the anchor and prev/next ranges (positions).
+const ranges = ({ anchor, cursor }, seq, id, at) => {
+  let a = indexOf(seq, anchor)
 
-    if (head != null && indexOf(seq, head) < 0)
-      return [[element], 'replace']
+  // With no visible anchor, next starts at the new position
+  if (a < 0)
+    return {
+      anchor: id, prev: null, next: [at, at]
+    }
 
-    let elements = range(seq, head, id)
+  // Next range is from old anchor to the new position
+  let next = [a, at]
+  let c = indexOf(seq, cursor)
 
-    if (!elements.every(isSelected))
-      return [elements, 'merge']
+  // With no visible cursor, prev is just the old anchor
+  if (c < 0)
+    return { anchor, prev: [a, a], next }
+  else
+    return { anchor, prev: [a, c], next }
+}
 
-    // Subtract keeps the first element selected as the new head.
-    if (elements[0] !== element) elements.unshift(elements.pop())
-    return [elements, 'subtract']
+const toggle = (selected, id) => {
+  if (own(selected, id))
+    delete selected[id]
+  else
+    selected[id] = true
+}
+
+// A Selection is an immutable wrapper
+// for a selection state and a sequence.
+export class Selection {
+  #elements
+  #primary
+  #ids
+  #size
+
+  constructor (state, seq) {
+    this.state = state
+    this.seq = seq
+    Object.freeze(this)
   }
 
-  if (isMeta)
-    return [[element], isSelected(element) ? 'remove' : 'append']
+  get anchor () {
+    return this.state.anchor
+  }
 
-  if (selection.length === 1 && matches(element, selection[0]))
-    return null
+  get cursor () {
+    return this.state.cursor
+  }
 
-  return [[element], 'replace']
-}
+  get size () {
+    return (this.#size ??= size(this.state))
+  }
 
-export function clear () {
-  return []
-}
+  has (id) {
+    return has(this.state, id)
+  }
 
-export function replace (_, items) {
-  return [...items]
-}
+  // All selected ids, with the primary one first, for easy access.
+  ids () {
+    if (this.#ids === undefined) {
+      let first = toId(this.primary())
+      let rest = ids(this.state)
 
-export function remove (s, items) {
-  return s.filter(it => !items.includes(it))
-}
+      this.#ids = Object.freeze((first == null) ?
+        rest :
+        [first, ...rest.filter(id => id !== first)])
+    }
 
-export function subtract (s, [head, ...items]) {
-  return [...s.filter(it => it !== head && !items.includes(it)), head]
-}
+    return this.#ids
+  }
 
-export function append (s, items) {
-  return [...s, ...items]
-}
+  elements () {
+    return (this.#elements ??= Object.freeze(effective(this.state, this.seq)))
+  }
 
-export function merge (s, items) {
-  return [...remove(s, items), ...items]
-}
+  primary () {
+    if (this.#primary === undefined)
+      this.#primary = primary(this.state, this.seq)
 
-export function isSelected (s, items) {
-  return Array.isArray(items) ?
-    items.find(it => s.includes(it)) :
-    s.includes(items)
+    return this.#primary
+  }
+
+  select (id, options) {
+    return select(this.state, this.seq, id, options)
+  }
+
+  all () {
+    return all(this.state, this.seq)
+  }
+
+  clear () {
+    return clear(this.state)
+  }
 }
 
 // Returns the edge of the range which has grown,

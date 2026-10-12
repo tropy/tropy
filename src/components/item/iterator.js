@@ -1,8 +1,7 @@
 import React from 'react'
-import { match, isMeta as meta } from '../../keymap.js'
+import { match, getKeyState, getSelectionMode } from '../../keymap.js'
 import { indexOf } from '../../common/sequence.js'
 import { blank, get } from '../../common/util.js'
-import { getSelectionChange } from '../../common/selection.js'
 import { on, off } from '../../dom.js'
 import { seq, compose, map, cat, keep } from 'transducers.js'
 import { TABS } from '../../constants/index.js'
@@ -39,8 +38,8 @@ export class ItemIterator extends React.Component {
     return this.container.current.current
   }
 
-  head () {
-    return this.props.selection[this.props.selection.length - 1]
+  get cursor () {
+    return this.props.selection.cursor
   }
 
   // Note: this can be improved, but we currently check only
@@ -57,17 +56,19 @@ export class ItemIterator extends React.Component {
     return (prev == null || this.isSelected(prev)) ? null : prev
   }
 
-  getSelection = () => this.props.selection
+  getSelection = () => this.props.selection.ids()
 
-  getSelectedPhotos ({ items, selection } = this.props) {
-    return seq(selection, compose(
+  getSelectedPhotos () {
+    let { items, selection } = this.props
+
+    return seq(selection.ids(), compose(
       map(id => get(items, [indexOf(items, id), 'photos'])),
       keep(),
       cat))
   }
 
   isSelected ({ id }) {
-    return this.props.selection.includes(id)
+    return this.props.selection.has(id)
   }
 
   clearSelection () {
@@ -89,14 +90,14 @@ export class ItemIterator extends React.Component {
       list
     }
 
-    if (selection.length > 1) {
+    if (selection.size > 1) {
       context.push('bulk')
-      target.id = [...selection]
+      // TODO drop with useSequenceClicks: it selects on mouse-down,
+      // so the right-clicked item is already selected (and primary).
+      target.id = this.isSelected(item) ?
+        selection.ids() :
+        [...selection.ids(), item.id]
       target.photos = this.getSelectedPhotos()
-
-      if (!this.isSelected(item)) {
-        target.id.push(item.id)
-      }
     }
 
     if (this.props.isTrashSelected)
@@ -118,7 +119,7 @@ export class ItemIterator extends React.Component {
   handleCopy = () => {
     let sel = document.getSelection()
     if (sel == null || !sel.toString()) {
-      this.handleItemCopy(this.props.selection)
+      this.handleItemCopy(this.props.selection.elements())
     }
   }
 
@@ -152,16 +153,16 @@ export class ItemIterator extends React.Component {
         break
       case 'delete':
         if (!this.props.isReadOnly) {
-          let { selection } = this.props
+          let ids = this.props.selection.ids()
           this.select(this.after() || this.before())
-          this.handleItemDelete(selection)
+          this.handleItemDelete(ids)
         }
         break
       case 'all':
-        this.props.onSelect({}, 'all')
+        this.props.onSelect({ all: true })
         break
       case 'merge':
-        this.handleItemMerge(this.props.selection)
+        this.handleItemMerge(this.props.selection.ids())
         break
       case 'rotateLeft':
         this.rotate(-90)
@@ -191,25 +192,24 @@ export class ItemIterator extends React.Component {
 
   handleSelectItem = (item, event) => {
     this.select(item, {
-      isMeta: event && meta(event),
-      isRange: event?.shiftKey,
+      mode: event && this.getKeySelectionMode(event),
       throttle: event?.repeat
     })
   }
 
-  select = (item, { isMeta, isRange, throttle } = {}) => {
-    if (item == null || !this.props.items.length) return
+  // The selection mode for key events (arrow keys).
+  getKeySelectionMode (event) {
+    return getSelectionMode(getKeyState(event))
+  }
 
-    let change = getSelectionChange(
-      this.props.selection,
-      this.props.items,
-      item.id,
-      { isMeta, isRange })
+  select = (item, { mode, throttle } = {}) => {
+    if (item == null) return
 
-    if (change != null) {
-      let [items, mod] = change
-      this.props.onSelect({ items: items.map(it => it.id) }, mod, { throttle })
-    }
+    let { selection } = this.props
+    let next = selection.select(item.id, { mode })
+
+    if (next !== selection.state)
+      this.props.onSelect({ item: next }, { throttle })
   }
 
   preview ({ id, photos }) {
@@ -217,7 +217,7 @@ export class ItemIterator extends React.Component {
   }
 
   rotate (by) {
-    if (!this.props.isReadOnly && this.props.selection.length > 0) {
+    if (!this.props.isReadOnly && this.props.selection.size > 0) {
       this.props.onPhotoRotate({
         id: this.getSelectedPhotos(),
         by

@@ -4,11 +4,17 @@ import { version } from '../common/release.js'
 import { compact, blank, URI, get, pick } from '../common/util.js'
 import { serialize } from '../editor/serialize.js'
 import { getListPath } from './lists.js'
+import { getItemSelection } from './items.js'
 
 const RESERVED = Object.fromEntries(properties.all.map(prop => ([prop, true])))
 
-export const getExportItemIds = ({ nav, qr }, { id } = {}) =>
-  (id?.length > 0) ? id : (nav.items.length > 0 ? nav.items : qr.items)
+export const getExportItemIds = (state, { id } = {}) => {
+  if (id?.length > 0)
+    return id
+
+  let ids = getItemSelection(state).elements()
+  return (ids.length > 0) ? ids : state.qr.items
+}
 
 export const getExportItems = (state, props = {}) => {
   let context = ctx.item

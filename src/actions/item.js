@@ -1,5 +1,7 @@
 import { ITEM } from '../constants/index.js'
 import { array, get } from '../common/util.js'
+import { create, ids } from '../common/selection.js'
+import { getItemSelection } from '../selectors/items.js'
 
 export default {
   create (payload, meta) {
@@ -125,21 +127,27 @@ export default {
     }
   },
 
+  // Payload: the new selection state (item),
+  // the ids to select (items),
+  // or all to select all visible items.
+  // Selecting a single item selects its first photo and note.
   select (payload, meta = {}) {
     return (dispatch, getState) => {
-      let { items, photo, note } = payload
-      let mod = meta.mod || 'replace'
+      let { photo, note } = payload
+      let state = getState()
 
-      if (mod === 'all') {
-        const { qr } = getState()
-        mod = 'replace'
-        items = qr.items
+      let item = payload.all
+        ? getItemSelection(state).all()
+        : payload.item ?? create(payload.items)
 
-      } else if (items.length === 1 && mod === 'replace') {
-        const state = getState()
+      // Count all selected, not only the visible ones:
+      // new items are not in the results yet (until the rule
+      // "selected items are visible" applies them together).
+      let selected = ids(item)
 
+      if (selected.length === 1) {
         if (photo === undefined) {
-          photo = get(state.items[items[0]], ['photos', 0])
+          photo = get(state.items[selected[0]], ['photos', 0])
         }
 
         if (note === undefined && photo) {
@@ -147,11 +155,10 @@ export default {
         }
       }
 
-
       dispatch({
         type: ITEM.SELECT,
-        payload: { items, photo, note },
-        meta: { log: 'trace', ...meta, mod }
+        payload: { item, photo, note },
+        meta: { log: 'trace', ...meta }
       })
     }
   },

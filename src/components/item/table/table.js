@@ -257,7 +257,7 @@ export class ItemTable extends ItemIterator {
           ref={this.container}
           tag="div"
           autoselect
-          cursor={this.head()}
+          cursor={this.cursor}
           items={this.props.items}
           itemHeight={ROW.HEIGHT}
           tabIndex={this.tabIndex}
@@ -287,7 +287,7 @@ export class ItemTable extends ItemIterator {
         template={this.props.templates[item.template]}
         onCancel={this.handleEditCancel}
         onChange={this.handleChange}
-        onEdit={this.props.selection.length === 1 ? this.props.onEdit : noop}/>
+        onEdit={this.props.selection.size === 1 ? this.props.onEdit : noop}/>
     )
   }
 

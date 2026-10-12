@@ -24,7 +24,7 @@ export class Merge extends Command {
     yield all([
       put(act.photo.bulk.update([m.photos, { item: id }])),
       put(act.metadata.insert({ id, ...m.data })),
-      put(act.item.select({ items: [id] }, { mod: 'replace' }))
+      put(act.item.select({ items: [id] }))
     ])
 
 

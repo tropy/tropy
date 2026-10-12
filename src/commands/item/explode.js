@@ -94,7 +94,7 @@ export class Implode extends Command {
 
     yield put(act.photo.bulk.update([photos, { item: id }]))
     yield put(act.item.remove(items))
-    yield put(act.item.select({ items: [id] }, { mod: 'replace' }))
+    yield put(act.item.select({ items: [id] }))
 
     this.meta = {
       dec: items.length

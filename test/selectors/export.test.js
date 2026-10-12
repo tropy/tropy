@@ -1,5 +1,6 @@
 import { version } from '#tropy/common/release.js'
 import { getExportItemIds, getExportItems } from '#tropy/selectors/export.js'
+import { create } from '#tropy/common/selection.js'
 
 const { state } = F
 
@@ -10,9 +11,18 @@ describe('Export Selectors', () => {
     })
 
     describe('when there are items selected', () => {
+      it('selects the visibly selected items in list order', () => {
+        expect(
+          getExportItemIds({
+            nav: { item: create([4, 2, 1]) },
+            qr: { items: [1, 3, 2] }
+          })
+        ).to.eql([1, 2])
+      })
+
       it('selects selected items when no id given', () => {
         expect(
-          getExportItemIds({ nav: { items: [23] } })
+          getExportItemIds({ nav: { item: create([23]) }, qr: { items: [23] } })
         ).to.eql([23])
       })
     })
@@ -21,7 +31,7 @@ describe('Export Selectors', () => {
       it('selects all visible items when no id given', () => {
         expect(
           getExportItemIds({
-            nav: { items: [] },
+            nav: { item: create() },
             qr: { items: [7] }
           })
         ).to.eql([7])

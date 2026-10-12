@@ -34,11 +34,11 @@ describe('useItemClickHandler', () => {
     expect(onSelect.mock.callCount()).to.equal(1)
   })
 
-  it('passes range and meta modifiers', () => {
+  it('passes the selection mode', () => {
     let { container } = render(<Item isSelected={false}/>)
     fireEvent.mouseDown(container.firstChild, { shiftKey: true })
 
     expect(onSelect.mock.calls[0].arguments)
-      .to.eql([item, { isMeta: false, isRange: true }])
+      .to.eql([item, { mode: 'extend' }])
   })
 })

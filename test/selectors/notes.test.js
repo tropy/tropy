@@ -1,9 +1,11 @@
 import { getNoteSuccessor } from '#tropy/selectors/index.js'
+import { create } from '#tropy/common/selection.js'
 
 describe('Note Selectors', () => {
   describe('getNoteSuccessor', () => {
     let state = (note, photos = { 1: [10, 11], 2: [12] }) => ({
-      nav: { items: [1], note },
+      nav: { item: create([1]), note },
+      qr: { items: [1] },
       items: { 1: { id: 1, photos: Object.keys(photos).map(Number) } },
       photos: Object.fromEntries(Object.entries(photos).map(([id, notes]) =>
         [id, { id: Number(id), notes, selections: [] }])),

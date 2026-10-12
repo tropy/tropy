@@ -15,6 +15,7 @@ import * as act from '../../actions/index.js'
 
 import {
   getAllColumns,
+  getItemSelection,
   getSortColumn,
   getVisibleItems
 } from '../../selectors/index.js'
@@ -33,6 +34,7 @@ export const ProjectView = ({
   let nav = useSelector(state => state.nav)
   let zoom = useSelector(state => state.ui.zoom)
   let items = useSelector(getVisibleItems)
+  let selection = useSelector(getItemSelection)
   let sort = useSelector(getSortColumn)
 
   let list = typeof nav.list === 'number' && nav.list > 0 ?
@@ -116,8 +118,8 @@ export const ProjectView = ({
     'photo.move', 'photo.rotate'
   ])
 
-  let handleItemSelect = useEvent((payload, mod, meta) => {
-    dispatch(act.item.select(payload, { mod, ...meta }))
+  let handleItemSelect = useEvent((payload, meta) => {
+    dispatch(act.item.select(payload, meta))
   })
   // ------------------------------------------------------------
 
@@ -161,7 +163,7 @@ export const ProjectView = ({
               onItemDelete={handleItemDelete}
               onSelect={handleItemSelect}
               onSort={handleSort}
-              selection={nav.items}
+              selection={selection}
               size={size}
 
               columns={columns}

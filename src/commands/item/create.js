@@ -22,7 +22,7 @@ export class Create extends Command {
       mod.item.create(tx, template.id, data))
 
     yield put(act.item.insert(item))
-    yield put(act.item.select({ items: [item.id] }, { mod: 'replace' }))
+    yield put(act.item.select({ items: [item.id] }))
 
     this.undo = act.item.delete([item.id])
     this.redo = act.item.restore([item.id])

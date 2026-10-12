@@ -1,5 +1,6 @@
 import { createSelector as memo } from 'reselect'
 import { getMetadataFields } from './metadata.js'
+import { getItemSelection } from './items.js'
 import { serialize } from '../editor/serialize.js'
 
 const getPhotoExpanded = (
@@ -51,7 +52,11 @@ const getItemExpanded =
   )
 
 export const getPrintableItems = memo(
-  ({ nav, qr }) => (nav.items.length > 0 ? nav.items : qr.items),
+  // The visibly selected items, in list order.
+  (state) => {
+    let ids = getItemSelection(state).elements()
+    return (ids.length > 0) ? ids : state.qr.items
+  },
   ({ items }) => items,
   ({ photos }) => photos,
   ({ selections }) => selections,

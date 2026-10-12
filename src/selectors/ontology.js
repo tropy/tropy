@@ -5,6 +5,7 @@ import { blank, get, homogenize } from '../common/util.js'
 import { expand, tropy } from '../ontology/index.js'
 import { ITEM, PHOTO, SELECTION } from '../constants/index.js'
 import { value } from '../value.js'
+import { getPrimaryItemId } from './items.js'
 
 const getResourceList =
   (res, vocab) =>
@@ -163,7 +164,7 @@ export const getTemplateDefaultValues = memo(
 
 export const getActiveItemTemplate = memo(
   ({ ontology }) => ontology.template,
-  ({ nav }) => nav.items[0],
+  getPrimaryItemId,
   ({ items }) => items,
   (template, id, items) =>
     (id != null && id in items) ? template[items[id].template] : null

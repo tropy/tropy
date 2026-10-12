@@ -1,4 +1,5 @@
 import { getItemTags } from '#tropy/selectors/index.js'
+import { create } from '#tropy/common/selection.js'
 
 describe('Tag Selectors', () => {
   const tags = {
@@ -13,7 +14,8 @@ describe('Tag Selectors', () => {
   }
 
   describe('getItemTags', () => {
-    const getState = (ids) => ({ tags, items, nav: { items: ids } })
+    const getState = (ids) =>
+      ({ tags, items, nav: { item: create(ids) }, qr: { items: ids } })
 
     it('returns empty for no selection', () => {
       expect(getItemTags(getState([]))).to.eql([])

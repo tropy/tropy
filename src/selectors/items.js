@@ -1,11 +1,27 @@
 import { createSelector as memo } from 'reselect'
 import { pluck } from './util.js'
 import { BLANK } from '../common/util.js'
+import { Selection } from '../common/selection.js'
 
-export const getItems = ({ items }) => items
+export const getItemSelection = memo(
+  ({ nav }) => nav.item,
+  ({ qr }) => qr.items,
+  (state, seq) => new Selection(state, seq)
+)
 
+// All selected items: primary first, the rest unordered.
 export const getSelectedItems = memo(
-  ({ items }) => items, ({ nav }) => (nav.items), pluck
+  ({ items }) => items,
+  getItemSelection,
+  (items, selection) => pluck(items, selection.ids())
+)
+
+// The primary selected item represents the selection
+// (merge target, bulk editor values and template).
+// Selected items not in the results fall back to any one.
+export const getPrimaryItemId = memo(
+  getItemSelection,
+  (selection) => selection.ids()[0] ?? null
 )
 
 export const getVisibleItems = memo(
@@ -22,8 +38,13 @@ export const getListHoldIndex = memo(
 
 export const getSelectedItemTemplate = memo(
   getSelectedItems,
-  ([item, ...items]) => (item == null) ? BLANK : {
-    id: item.template,
-    mixed: items.find(it => it.template !== item.template) != null
+  getPrimaryItemId,
+  (items, first) => {
+    let item = items.find(it => it.id === first) ?? items[0]
+
+    return (item == null) ? BLANK : {
+      id: item.template,
+      mixed: items.some(it => it.template !== item.template)
+    }
   }
 )
