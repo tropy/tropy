@@ -5,6 +5,12 @@
 // --------------------------------------------------
 
 .modal {
+  // Center on whole pixels to keep anchored popovers aligned
+  inset: auto;
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  translate: round(down, -50%, 1px) round(down, -50%, 1px);
   max-width: min-content;
   color: $text-color;
   background-color: $modal-bg;
