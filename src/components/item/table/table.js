@@ -1,10 +1,10 @@
-import React, { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Scroll, ScrollContainer } from '../../scroll/index.js'
 import { TableRow } from './row.js'
 import { TableHead } from './head.js'
 import { ColumnContextMenu } from '../column.js'
 import cx from 'classnames'
-import { noop } from '../../../common/util.js'
+import { useEvent } from '../../../hooks/use-event.js'
 import { useItemIterator } from '../use-item-iterator.js'
 
 import {
@@ -23,7 +23,23 @@ const { ROW } = SASS
 const any = (src) => { for (let key in src) return key }
 
 export const ItemTable = (props) => {
-  let { columns, isReadOnly, onEdit } = props
+  let {
+    columns,
+    data,
+    edit,
+    isReadOnly,
+    items,
+    minColWidth = 40,
+    minMainColWidth = 100,
+    selection,
+    sort,
+    templates,
+    onEdit,
+    onEditCancel,
+    onMetadataSave,
+    onSort
+  } = props
+
   let table = useRef()
 
   let iterator = useItemIterator(props, {
@@ -34,6 +50,8 @@ export const ItemTable = (props) => {
     }
   })
 
+  let { scroll } = iterator
+
   let columnState = useColumnState(props)
   let columnDrag = useColumnDrag(table, columnState)
 
@@ -43,164 +61,108 @@ export const ItemTable = (props) => {
     hasPositionColumn: columnState.hasPositionColumn
   })
 
-  return (
-    <ItemTableView
-      {...props}
-      columnDrag={columnDrag}
-      columnMenu={columnMenu}
-      columnState={columnState}
-      iterator={iterator}
-      table={table}/>
-  )
-}
+  // Keep the edited item in view when editing starts.
+  useEffect(() => {
+    if (edit != null)
+      scroll.current?.scrollIntoView({ id: Number(any(edit)) })
+  }, [edit, scroll])
 
-class ItemTableView extends React.Component {
-  get container () {
-    return this.props.iterator.scroll
-  }
+  // Rows are memoized: these handlers are stable.
+  let handleChange = useEvent((...args) => {
+    onMetadataSave(...args)
+    scroll.current.focus()
+  })
 
-  componentDidUpdate () {
-    if (this.props.edit != null) {
-      this.container.current?.scrollIntoView({
-        id: Number(any(this.props.edit))
-      })
-    }
-  }
+  let handleEditCancel = useEvent((...args) => {
+    onEditCancel(...args)
+    scroll.current.focus()
+  })
 
-  get classes () {
-    return ['table-body', {
-      over: this.props.iterator.isOver
-    }]
-  }
-
-  getPosition (index) {
-    return (this.props.sort.asc) ?
-      index + 1 :
-      this.props.items.length - index
-  }
-
-  getTemplateColumns () {
-    let { colwidth, hasPositionColumn } = this.props.columnState
-    let gtc = hasPositionColumn ?
-      `${NAV.COLUMN.POSITION.width}px ` : ''
-    for (let width of colwidth)
-      gtc += width + 'px '
-    return gtc + 'auto'
-  }
-
-  handleChange = (...args) => {
-    this.props.onMetadataSave(...args)
-    this.container.current.focus()
-  }
-
-  handleEditCancel = (...args) => {
-    this.props.onEditCancel(...args)
-    this.container.current.focus()
-  }
-
-  handleHeadWheel = ({ deltaX, deltaY }) => {
+  let handleHeadWheel = ({ deltaX, deltaY }) => {
     if (Math.abs(deltaX) > Math.abs(deltaY))
-      this.container.current.scrollBy(null, deltaX)
+      scroll.current.scrollBy(null, deltaX)
     else
-      this.container.current.scrollBy(deltaY)
+      scroll.current.scrollBy(deltaY)
   }
 
-  renderTableBody () {
-    let { iterator } = this.props
+  let getPosition = (index) =>
+    sort.asc ? index + 1 : items.length - index
 
-    return iterator.connect(
-      <div className={cx(this.classes)}>
-        <Scroll
-          ref={iterator.scroll}
-          tag="div"
-          autoselect
-          cursor={this.props.selection.cursor}
-          items={this.props.items}
-          itemHeight={ROW.HEIGHT}
-          tabIndex={iterator.tabIndex}
-          onClick={iterator.clearSelection}
-          onKeyDown={iterator.onKeyDown}
-          onSelect={iterator.handleSelectItem}>
-          {this.renderTableRow}
-        </Scroll>
-      </div>
-    )
-  }
+  let templateColumns = (columnState.hasPositionColumn ?
+    `${NAV.COLUMN.POSITION.width}px ` : '') +
+    columnState.colwidth.map(width => `${width}px `).join('') +
+    'auto'
 
-  renderTableRow = (item, index, { isScrolling }) => {
-    let { columnDrag, columnState } = this.props
-
-    return (
-      <TableRow
-        {...this.props.iterator.getIterableProps(item, index)}
-        key={item.id}
-        columns={columnState.columns}
-        data={this.props.data[item.id]}
-        drag={columnDrag.drag}
-        drop={columnDrag.drop}
-        edit={this.props.edit}
-        hasPositionColumn={columnState.hasPositionColumn}
-        isReadOnly={this.props.isReadOnly || isScrolling}
-        item={item}
-        position={this.getPosition(index)}
-        template={this.props.templates[item.template]}
-        onCancel={this.handleEditCancel}
-        onChange={this.handleChange}
-        onEdit={this.props.selection.size === 1 ? this.props.onEdit : noop}/>
-    )
-  }
-
-  renderColumnContextMenu () {
-    let { columnMenu } = this.props
-
-    return columnMenu.menu != null && (
-      <ColumnContextMenu
-        {...columnMenu.menu}
-        onInsert={columnMenu.insert}
-        onRemove={columnMenu.remove}
-        onClose={columnMenu.hide}/>
-    )
-  }
-
-  render () {
-    let { columnDrag, columnMenu, columnState } = this.props
-
-    return (
-      <div
-        ref={this.props.table}
-        className={cx('item-table', {
-          'dragging-column': columnDrag.drop != null
-        })}
-        style={{
-          '--item-min-width': columnState.minWidth + 'px',
-          '--item-template-columns': this.getTemplateColumns()
-        }}>
-        <ScrollContainer onWheel={this.handleHeadWheel}>
-          <TableHead
-            columns={columnState.columns}
-            colwidth={columnState.colwidth}
-            drag={columnDrag.drag}
-            drop={columnDrag.drop}
-            hasPositionColumn={columnState.hasPositionColumn}
-            minWidth={this.props.minColWidth}
-            minWidthMain={this.props.minMainColWidth}
-            sort={this.props.sort}
-            onContextMenu={columnMenu.show}
-            onOrder={columnDrag.onOrder}
-            onOrderReset={columnDrag.onOrderReset}
-            onOrderStart={columnDrag.onOrderStart}
-            onOrderStop={columnDrag.onOrderStop}
-            onResize={columnState.resize}
-            onSort={this.props.onSort}/>
-        </ScrollContainer>
-        {this.renderTableBody()}
-        {this.renderColumnContextMenu()}
-      </div>
-    )
-  }
-
-  static defaultProps = {
-    minColWidth: 40,
-    minMainColWidth: 100
-  }
+  return (
+    <div
+      ref={table}
+      className={cx('item-table', {
+        'dragging-column': columnDrag.drop != null
+      })}
+      style={{
+        '--item-min-width': columnState.minWidth + 'px',
+        '--item-template-columns': templateColumns
+      }}>
+      <ScrollContainer onWheel={handleHeadWheel}>
+        <TableHead
+          columns={columnState.columns}
+          colwidth={columnState.colwidth}
+          drag={columnDrag.drag}
+          drop={columnDrag.drop}
+          hasPositionColumn={columnState.hasPositionColumn}
+          minWidth={minColWidth}
+          minWidthMain={minMainColWidth}
+          sort={sort}
+          onContextMenu={columnMenu.show}
+          onOrder={columnDrag.onOrder}
+          onOrderReset={columnDrag.onOrderReset}
+          onOrderStart={columnDrag.onOrderStart}
+          onOrderStop={columnDrag.onOrderStop}
+          onResize={columnState.resize}
+          onSort={onSort}/>
+      </ScrollContainer>
+      {iterator.connect(
+        <div className={cx('table-body', { over: iterator.isOver })}>
+          <Scroll
+            ref={scroll}
+            tag="div"
+            autoselect
+            cursor={selection.cursor}
+            items={items}
+            itemHeight={ROW.HEIGHT}
+            tabIndex={iterator.tabIndex}
+            onClick={iterator.clearSelection}
+            onKeyDown={iterator.onKeyDown}
+            onSelect={iterator.handleSelectItem}>
+            {(item, index, { isScrolling }) => (
+              <TableRow
+                {...iterator.getIterableProps(item, index)}
+                key={item.id}
+                columns={columnState.columns}
+                data={data[item.id]}
+                drag={columnDrag.drag}
+                drop={columnDrag.drop}
+                edit={edit}
+                hasPositionColumn={columnState.hasPositionColumn}
+                isOnlySelected={selection.size === 1 && selection.has(item.id)}
+                isReadOnly={isReadOnly || isScrolling}
+                item={item}
+                position={getPosition(index)}
+                template={templates[item.template]}
+                onCancel={handleEditCancel}
+                onChange={handleChange}
+                onEdit={onEdit}/>
+            )}
+          </Scroll>
+        </div>
+      )}
+      {columnMenu.menu != null && (
+        <ColumnContextMenu
+          {...columnMenu.menu}
+          onInsert={columnMenu.insert}
+          onRemove={columnMenu.remove}
+          onClose={columnMenu.hide}/>
+      )}
+    </div>
+  )
 }

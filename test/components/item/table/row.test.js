@@ -28,14 +28,14 @@ describe('TableRow', () => {
       mock.timers.reset()
     })
 
-    let click = (selection) => {
+    let click = (isOnlySelected) => {
       let onEdit = mock.fn()
       let { $$ } = render(
         <TableRow
           item={item}
           columns={columns}
           isSelected
-          getSelection={() => selection}
+          isOnlySelected={isOnlySelected}
           onEdit={onEdit}
           onSelect={() => {}}/>,
         inWindowContext)
@@ -49,12 +49,12 @@ describe('TableRow', () => {
     }
 
     it('edits the clicked cell of the only selected item', () => {
-      expect(click([1]).mock.calls[0].arguments[0])
+      expect(click(true).mock.calls[0].arguments[0])
         .to.eql({ column: { 1: 'y' } })
     })
 
     it('does not edit items in a multi-selection', () => {
-      expect(click([1, 2]).mock.callCount()).to.equal(0)
+      expect(click(false).mock.callCount()).to.equal(0)
     })
   })
 })

@@ -11,15 +11,14 @@ export const TableCell = memo(({
   display,
   getNextColumn = noop,
   getPrevColumn = noop,
-  getSelection,
   id,
   isDisabled,
   isDragging,
   isEditing,
   isMainColumn,
   isMoving,
+  isOnlySelected,
   isReadOnly,
-  isSelected,
   item,
   onCancel,
   onChange,
@@ -39,7 +38,7 @@ export const TableCell = memo(({
   // only that item and must not start editing.
   let clickToEdit = useClickToEdit({
     isDisabled: isReadOnly || isDisabled || isEditing,
-    isSelected: isSelected && getSelection?.().length === 1,
+    isSelected: isOnlySelected,
     onEdit: edit,
     value: id
   })

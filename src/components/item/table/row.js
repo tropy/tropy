@@ -22,6 +22,7 @@ export const TableRow = memo(({
   getSelection,
   hasPositionColumn,
   isDisabled,
+  isOnlySelected,
   isReadOnly,
   isSelected,
   item,
@@ -125,9 +126,8 @@ export const TableRow = memo(({
   }
 
   let cellProps = {
-    getSelection,
     isDisabled,
-    isSelected,
+    isOnlySelected,
     item,
     onCancel,
     onEdit
