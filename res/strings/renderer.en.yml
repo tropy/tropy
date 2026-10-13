@@ -740,6 +740,10 @@ en:
       sinkListItem: Sink list item
       liftListItem: Lift list item
   transcription:
+    config:
+      title: Transcription Settings
+      cancel: Cancel
+      submit: Transcribe
     error: Transcription failed
     retry: Try Again
     pending: Transcription pending…

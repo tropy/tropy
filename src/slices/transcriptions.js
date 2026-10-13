@@ -49,7 +49,7 @@ const transcriptions = createSlice({
 
 export const nested = {
   create (state, { payload, meta, error }) {
-    return (!meta.done || error) ?
+    return (!meta.done || error || payload == null) ?
       state : createNextState(state, draft => {
         for (let tr of Object.values(payload)) {
           draft[tr.parent]?.transcriptions.push(tr.id)

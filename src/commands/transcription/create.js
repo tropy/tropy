@@ -1,8 +1,10 @@
-import { call, select } from 'redux-saga/effects'
+import { call, cancelled, put, select } from 'redux-saga/effects'
 import { Document } from 'alto-xml'
 import { Command } from '../command.js'
 import { create } from '../../models/transcription.js'
 import * as slice from '../../slices/transcriptions.js'
+import { settings } from '../../actions/index.js'
+import win from '../../window.js'
 
 export class Create extends Command {
   *exec () {
@@ -10,7 +12,13 @@ export class Create extends Command {
     let {
       angle, config, data, mirror, photo, selection, text
     } = this.action.payload
-    let { plugin } = this.action.meta
+    let { plugin, prompt = true } = this.action.meta
+
+    // TODO prompt only on request (e.g. modifier key)
+    if (prompt && data == null && text == null) {
+      if (!(yield * this.configure()))
+        return
+    }
 
     if (photo == null) {
       ({ photo, selection } = yield select(state => state.nav))
@@ -45,6 +53,41 @@ export class Create extends Command {
         ({ id, parent, idx: -1 })))
 
     return transcriptions.reduce((acc, tr) => (acc[tr.id] = tr, acc), {})
+  }
+
+  // Shows the transcription config modal, if available.
+  // Returns false if the user cancelled.
+  *configure () {
+    if (!win.dialog.canShowAsModal('transcription-config'))
+      return true
+
+    let config = yield select(state => state.settings.ocr)
+    let ctrl = new AbortController()
+
+    try {
+      this.suspend()
+
+      var { cancel, data } = yield call(
+        [win.dialog, win.dialog.show],
+        'transcription-config',
+        { config, signal: ctrl.signal })
+
+    } finally {
+      this.resume()
+
+      if (yield cancelled())
+        ctrl.abort()
+    }
+
+    if (cancel)
+      return false
+
+    // For now, the adjusted config becomes the new default. To use it
+    // for this transcription only, pass it on in the transcription's
+    // config instead: Transcribe merges it with the defaults.
+    yield put(settings.persist({ ocr: data }))
+
+    return true
   }
 }
 

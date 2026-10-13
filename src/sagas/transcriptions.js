@@ -24,8 +24,9 @@ const POLL_INTERVAL = 20_000
 const onAccountLinked = ({ type, payload }) =>
   type === SETTINGS.UPDATE && 'account' in payload && isLinked()
 
-const onTranscriptionAdded = ({ type, error, meta }) =>
-  (type === create.type || type === load.type) && !error && meta.done
+const onTranscriptionAdded = ({ type, error, meta, payload }) =>
+  (type === create.type || type === load.type) &&
+  !error && meta.done && payload != null
 
 const TRANSCRIPTION_ACTIONS =
   [create, insert, load, remove, restore, update].map(a => a.type)
