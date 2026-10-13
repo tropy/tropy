@@ -1,9 +1,9 @@
-import fs from 'fs'
-import { basename } from 'path'
+import fs from 'node:fs'
+import { basename } from 'node:path'
 import Koa from 'koa'
 import Router from '@koa/router'
 import bodyParser from 'koa-bodyparser'
-import act from '../actions/api'
+import act from '../actions/api.js'
 
 const show = (type) =>
   async (ctx) => {
@@ -508,7 +508,7 @@ export function create ({
 
     .get('/project/:project{/}', (ctx) => {
       ctx.body = {
-        project: ctx.projectPath || ctx.current(),
+        project: ctx.projectPath,
         id: ctx.projectId,
         status: 'ok',
         version
