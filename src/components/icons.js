@@ -9,11 +9,18 @@ export function Icon ({ name, ...props }) {
   return React.createElement(icons[name], props)
 }
 
-export function IconContainer ({ children, className, name, style, title }) {
+export function IconContainer ({
+  children,
+  className,
+  name,
+  style,
+  title,
+  values
+}) {
   let intl = useIntl()
 
   if (title)
-    title = intl.formatMessage({ id: title })
+    title = intl.formatMessage({ id: title }, values)
 
   return (
     <span
@@ -26,12 +33,13 @@ export function IconContainer ({ children, className, name, style, title }) {
 }
 
 function i (name, svg) {
-  let IconComponent = React.memo(({ className, style, title }) => (
+  let IconComponent = React.memo(({ className, style, title, values }) => (
     <IconContainer
       className={className}
       name={name}
       style={style}
-      title={title}>
+      title={title}
+      values={values}>
       {svg}
     </IconContainer>
   ))
