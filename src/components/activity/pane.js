@@ -7,7 +7,10 @@ import { useEvent } from '../../hooks/use-event.js'
 import { SASS } from '../../constants/index.js'
 import * as act from '../../actions/index.js'
 
-export const ActivityPane = memo(({ delay }) => {
+export const ActivityPane = memo(({
+  delay,
+  height = SASS.ACTIVITY.HEIGHT
+}) => {
   let dispatch = useDispatch()
   let busy = useBusyActivities(delay)
 
@@ -18,7 +21,7 @@ export const ActivityPane = memo(({ delay }) => {
   return (
     <div
       className={cx('activity-pane', { busy: busy.length > 0 })}
-      style={{ height: busy.length * SASS.ACTIVITY.HEIGHT }}>
+      style={{ height: busy.length * height }}>
       {busy.map(({ id, cancel, type, progress, total }) => (
         <Activity
           key={id}
