@@ -1,7 +1,6 @@
 export * from './drag-preview.js'
 export * from './grid.js'
 export * from './info.js'
-export * from './iterator.js'
 export * from './no-items.js'
 export * from './panel.js'
 export * from './table/index.js'

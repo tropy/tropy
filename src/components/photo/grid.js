@@ -1,4 +1,4 @@
-import { usePhotoIterator } from '../../hooks/use-photo-iterator.js'
+import { usePhotoIterator } from './use-photo-iterator.js'
 import { PhotoTile } from './tile.js'
 import { SelectionGrid } from '../selection/grid.js'
 import { Scroll } from '../scroll/scroll.js'

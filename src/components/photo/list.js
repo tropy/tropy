@@ -1,6 +1,6 @@
 import { Scroll } from '../scroll/index.js'
 import { PhotoListItem } from './list-item.js'
-import { usePhotoIterator } from '../../hooks/use-photo-iterator.js'
+import { usePhotoIterator } from './use-photo-iterator.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 import { SASS, TABS } from '../../constants/index.js'

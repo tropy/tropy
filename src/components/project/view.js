@@ -88,7 +88,6 @@ export const ProjectView = ({
   // TODO these don't concern ProjectView and should be moved!
   // ------------------------------------------------------------
   let edit = useSelector(state => state.edit.column)
-  let keymap = useSelector(state => state.keymap.ItemIterator)
   let photos = useSelector(state => state.photos)
   let data = useSelector(state => state.metadata)
   let columns = useSelector(getAllColumns)
@@ -150,7 +149,6 @@ export const ProjectView = ({
           {isBlank ? (
             <NoItems
               ref={drop}
-              isOver={canDrop}
               isReadOnly={isReadOnly}/>
           ) : (
             <ItemIterator
@@ -167,12 +165,10 @@ export const ProjectView = ({
               size={size}
 
               columns={columns}
-              connectDropTarget={drop}
               data={data}
               edit={edit}
               isOver={canDrop}
               isTrashSelected={nav.trash}
-              keymap={keymap}
               onColumnInsert={handleColumnInsert}
               onColumnOrder={handleColumnOrder}
               onColumnRemove={handleColumnRemove}
@@ -181,6 +177,7 @@ export const ProjectView = ({
               onEdit={handleEdit}
               onEditCancel={handleEditCancel}
               onItemExport={handleItemExport}
+              onItemImport={handleItemImport}
               onItemMerge={handleItemMerge}
               onItemOpen={handleItemOpen}
               onItemPreview={handleItemPreview}

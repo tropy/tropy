@@ -1,6 +1,6 @@
 import { mock } from 'node:test'
 import { render, fireEvent } from '@testing-library/react'
-import { useItemClickHandler } from '#tropy/hooks/use-item-click-handler.js'
+import { useItemClickHandler } from '#tropy/components/item/table/use-item-click-handler.js'
 
 describe('useItemClickHandler', () => {
   let item = { id: 1, photos: [] }

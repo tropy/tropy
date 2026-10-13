@@ -1,5 +1,5 @@
+import React from 'react'
 import { Scroll, ScrollContainer } from '../../scroll/index.js'
-import { ItemIterator } from '../iterator.js'
 import { TableRow } from './row.js'
 import { TableHead } from './head.js'
 import { ColumnContextMenu } from '../column.js'
@@ -8,15 +8,38 @@ import { noop } from '../../../common/util.js'
 import { bounds, ensure } from '../../../dom.js'
 import { restrict, shallow, splice, warp } from '../../../common/util.js'
 
+import { useItemIterator } from '../use-item-iterator.js'
+
 import {
   NAV,
-  SASS
+  SASS,
+  TABS
 } from '../../../constants/index.js'
 
 const { COLUMN, ROW } = SASS
 const any = (src) => { for (let key in src) return key }
 
-export class ItemTable extends ItemIterator {
+// The table gets the shared item behavior from useItemIterator
+// (as the iterator prop) until it is a function component.
+export const ItemTable = (props) => {
+  let { columns, isReadOnly, onEdit } = props
+
+  let iterator = useItemIterator(props, {
+    tabIndex: TABS.ItemTable,
+    edit (item) {
+      if (item != null && !isReadOnly)
+        onEdit({ column: { [item.id]: columns.active[0].id } })
+    }
+  })
+
+  return <ItemTableView {...props} iterator={iterator}/>
+}
+
+class ItemTableView extends React.Component {
+  get container () {
+    return this.props.iterator.scroll
+  }
+
   constructor (props) {
     super(props)
     this.state = { ...this.getColumnState(props) }
@@ -39,7 +62,7 @@ export class ItemTable extends ItemIterator {
 
   get classes () {
     return ['table-body', {
-      over: this.props.isOver
+      over: this.props.iterator.isOver
     }]
   }
 
@@ -93,14 +116,6 @@ export class ItemTable extends ItemIterator {
     for (let width of this.state.colwidth)
       gtc += width + 'px '
     return gtc + 'auto'
-  }
-
-  edit (item) {
-    if (!this.props.isReadOnly) {
-      this.props.onEdit({
-        column: { [item.id]: this.state.columns[0].id }
-      })
-    }
   }
 
   hasPositionColumn (props = this.props) {
@@ -251,19 +266,21 @@ export class ItemTable extends ItemIterator {
   }
 
   renderTableBody () {
-    return this.connect(
+    let { iterator } = this.props
+
+    return iterator.connect(
       <div className={cx(this.classes)}>
         <Scroll
-          ref={this.container}
+          ref={iterator.scroll}
           tag="div"
           autoselect
-          cursor={this.cursor}
+          cursor={this.props.selection.cursor}
           items={this.props.items}
           itemHeight={ROW.HEIGHT}
-          tabIndex={this.tabIndex}
-          onClick={this.handleClickOutside}
-          onKeyDown={this.handleKeyDown}
-          onSelect={this.handleSelectItem}>
+          tabIndex={iterator.tabIndex}
+          onClick={iterator.clearSelection}
+          onKeyDown={iterator.onKeyDown}
+          onSelect={iterator.handleSelectItem}>
           {this.renderTableRow}
         </Scroll>
       </div>
@@ -273,7 +290,7 @@ export class ItemTable extends ItemIterator {
   renderTableRow = (item, index, { isScrolling }) => {
     return (
       <TableRow
-        {...this.getIterableProps(item, index)}
+        {...this.props.iterator.getIterableProps(item, index)}
         key={item.id}
         columns={this.state.columns}
         data={this.props.data[item.id]}
@@ -337,7 +354,6 @@ export class ItemTable extends ItemIterator {
   }
 
   static defaultProps = {
-    ...ItemIterator.defaultProps,
     minColWidth: 40,
     minMainColWidth: 100
   }

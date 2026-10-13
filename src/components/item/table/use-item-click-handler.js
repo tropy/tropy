@@ -1,6 +1,6 @@
 import { useRef } from 'react'
-import { useEvent } from './use-event.js'
-import { getSelectionMode } from '../keymap.js'
+import { useEvent } from '../../../hooks/use-event.js'
+import { getSelectionMode } from '../../../keymap.js'
 
 export function useItemClickHandler (item, {
   isSelected,

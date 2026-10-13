@@ -1,10 +1,10 @@
 import { useRef } from 'react'
-import { DND } from '../components/dnd.js'
-import { useDropPhotoFiles } from './use-drop-photo-files.js'
-import { useEvent } from './use-event.js'
-import { useGlobalEvent } from './use-global-event.js'
-import { useSortableSequence } from './use-sortable-sequence.js'
-import { pick } from '../common/util.js'
+import { DND } from '../dnd.js'
+import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
+import { useEvent } from '../../hooks/use-event.js'
+import { useGlobalEvent } from '../../hooks/use-global-event.js'
+import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
+import { pick } from '../../common/util.js'
 
 export function usePhotoIterator ({
   canCreate,
