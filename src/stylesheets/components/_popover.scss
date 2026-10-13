@@ -91,8 +91,8 @@ $popover-fallbacks: ("top": none, "bottom": flip-block);
     @include aligned("top") {
       clip-path:
         inset(
-          #{0 (-$popover-focus-shadow-width) (-$popover-focus-shadow-width)
-          (-$popover-focus-shadow-width)}
+          #{0 (-$popover-focus-shadow-width - 1px) (-$popover-focus-shadow-width - 1px)
+          (-$popover-focus-shadow-width - 1px)}
         );
 
       .option-list {
@@ -103,8 +103,8 @@ $popover-fallbacks: ("top": none, "bottom": flip-block);
     @include aligned("bottom") {
       clip-path:
         inset(
-          #{(-$popover-focus-shadow-width) (-$popover-focus-shadow-width)
-          0 (-$popover-focus-shadow-width)}
+          #{(-$popover-focus-shadow-width - 1px) (-$popover-focus-shadow-width - 1px)
+          0 (-$popover-focus-shadow-width - 1px)}
         );
 
       .option-list {
