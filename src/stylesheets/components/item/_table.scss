@@ -239,7 +239,7 @@
     }
   }
 
-  .runway {
+  .table-body .runway {
     min-width: var(--item-min-width);
 
     .item-table.dragging-column :is(&) {
@@ -247,7 +247,7 @@
     }
   }
 
-  .viewport {
+  .table-body .viewport {
     .item-table.dragging-column :is(&) {
       contain: none; // Needed for dragging lines
     }

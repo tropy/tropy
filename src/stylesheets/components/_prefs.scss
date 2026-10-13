@@ -94,7 +94,7 @@
     flex-direction: column;
   }
 
-  .scroll-container {
+  .pane > .scroll-container {
     padding: $space-lg $space-lg 0;
 
     .scrollbar-style-old-school & {

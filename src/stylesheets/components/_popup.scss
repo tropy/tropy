@@ -1,3 +1,4 @@
+@use "sass:map";
 @use "../abstracts/config" as *;
 
 //
@@ -23,25 +24,38 @@ $popup-focus-animations: (
   }
 }
 
-#popup-root {
-  position: fixed; // Account for optional border on html
-  left: 0;
-  top: 0;
-  z-index: $zindex-popup;
-  pointer-events: auto; // Reset
+// Anchored popups are below their source,
+// or above it if there is not enough space (i.e., when flipped).
+$popup-fallbacks: ("top": none, "bottom": flip-block);
 
-  &:not(:empty) {
-    right: 0;
-    bottom: 0;
+@mixin aligned($alignment) {
+  @container anchored(fallback: #{map.get($popup-fallbacks, $alignment)}) {
+    @content;
   }
+}
 
-  .popup-container {
-    width: 100%;
-    height: 100%;
-    border: 0; // Reset [popover] defaults
-    background: none;
-    color: inherit;
-    overflow: visible;
+// Popups are rendered in place, but shown in the top layer.
+.popup-container {
+  inset: 0 auto auto 0; // Reset [popover] defaults
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  overflow: visible;
+  pointer-events: auto; // Reset (see below)
+
+  &.anchored {
+    inset:
+      calc(anchor(bottom) - #{$input-border-width + $popup-focus-shadow-width})
+      auto auto anchor(left);
+    width: anchor-size(width);
+    position-try-fallbacks: flip-block;
+    container-type: anchored;
+
+    > .popup {
+      position: relative;
+    }
   }
 
   .popup {
@@ -66,7 +80,7 @@ $popup-focus-animations: (
     }
 
     @each $alignment in "top", "bottom" {
-      &.#{$alignment} {
+      @include aligned($alignment) {
         border-#{$alignment}: 0;
         padding-#{$alignment}: $popup-padding;
         border-#{$alignment}-left-radius: 0;
@@ -74,8 +88,7 @@ $popup-focus-animations: (
       }
     }
 
-    &.top {
-      margin-top: (-$input-border-width - $popup-focus-shadow-width);
+    @include aligned("top") {
       clip-path:
         inset(
           #{0 (-$popup-focus-shadow-width) (-$popup-focus-shadow-width)
@@ -87,8 +100,7 @@ $popup-focus-animations: (
       }
     }
 
-    &.bottom {
-      margin-top: ($input-border-width + $popup-focus-shadow-width);
+    @include aligned("bottom") {
       clip-path:
         inset(
           #{(-$popup-focus-shadow-width) (-$popup-focus-shadow-width)
@@ -124,7 +136,7 @@ $popup-focus-animations: (
         right: -3px;
       }
 
-      &.top {
+      @include aligned("top") {
         border-top: 0;
 
         &::before,
@@ -133,7 +145,7 @@ $popup-focus-animations: (
         }
       }
 
-      &.bottom {
+      @include aligned("bottom") {
         border-bottom: 0;
 
         &::before,
@@ -145,6 +157,8 @@ $popup-focus-animations: (
   }
 }
 
-.popup-open {
+// While a popup is open, disable pointer events
+// for everything but inputs and popups.
+:root:has(.popup-container:popover-open) {
   pointer-events: none;
 }
