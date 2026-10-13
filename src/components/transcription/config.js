@@ -26,7 +26,7 @@ export const TranscriptionConfig = ({ config, onClose }) => {
           <FormattedMessage id="transcription.config.title"/>
         </h1>
         <OCRSettings config={draft} onChange={handleChange}/>
-        <div className="btn-container">
+        <footer>
           <button
             type="button"
             className="btn btn-default"
@@ -39,7 +39,7 @@ export const TranscriptionConfig = ({ config, onClose }) => {
             value="transcribe">
             <FormattedMessage id="transcription.config.submit"/>
           </button>
-        </div>
+        </footer>
       </form>
     </Modal>
   )
