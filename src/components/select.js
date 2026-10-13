@@ -131,7 +131,7 @@ export class Select extends React.Component {
 
   open () {
     if (!this.isDisabled) {
-      this.shouldPopupFadeIn = !this.state.hasFocus
+      this.shouldPopoverFadeIn = !this.state.hasFocus
       this.setState({ isOpen: true })
       this.props.onOpen()
     }
@@ -302,7 +302,7 @@ export class Select extends React.Component {
             'has-icon': this.props.icon != null
           })}
           completions={this.props.options}
-          fadeIn={this.shouldPopupFadeIn}
+          fadeIn={this.shouldPopoverFadeIn}
           isSelectionHidden={this.props.isSelectionHidden}
           isVisibleWhenBlank
           match={this.props.match}
@@ -310,7 +310,7 @@ export class Select extends React.Component {
           onResize={this.props.onResize}
           onSelect={this.handleSelect}
           anchor={this.container}
-          popup={!this.props.isStatic}
+          popover={!this.props.isStatic}
           query={this.state.query}
           ref={this.completions}
           selection={this.state.selection}
@@ -318,7 +318,7 @@ export class Select extends React.Component {
           toText={this.props.toText}/>
       )
     } finally {
-      this.shouldPopupFadeIn = false
+      this.shouldPopoverFadeIn = false
     }
   }
 

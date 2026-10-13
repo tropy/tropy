@@ -1,26 +1,26 @@
 import { mock } from 'node:test'
 import { render, inWindowContext } from '../../support/react.js'
-import { PopupSelect } from '#tropy/components/resource/popup.js'
+import { PopoverSelect } from '#tropy/components/resource/popover.js'
 
-describe('PopupSelect', () => {
+describe('PopoverSelect', () => {
   let options = [
     { id: 'a', label: 'Alpha' },
     { id: 'b', label: 'Beta' }
   ]
 
   let show = (props) => render(
-    <PopupSelect options={options} value={[]} {...props}/>,
+    <PopoverSelect options={options} value={[]} {...props}/>,
     inWindowContext)
 
-  let popup = () =>
-    document.querySelector('.popup-select')
+  let popover = () =>
+    document.querySelector('.popover-select')
 
   it('opens at the given position', () => {
     let { unmount } = show({ left: 10, top: 20, width: 100 })
 
-    expect(popup().style.left).to.equal('10px')
-    expect(popup().style.top).to.equal('20px')
-    expect(popup().style.width).to.equal('100px')
+    expect(popover().style.left).to.equal('10px')
+    expect(popover().style.top).to.equal('20px')
+    expect(popover().style.width).to.equal('100px')
 
     unmount()
   })
@@ -32,7 +32,7 @@ describe('PopupSelect', () => {
       width: 100
     })
 
-    let { left, top, height } = popup().style
+    let { left, top, height } = popover().style
     expect(left).to.equal(`${innerWidth - 110}px`)
     expect(top).to.equal(`${innerHeight - 10 - parseFloat(height)}px`)
 

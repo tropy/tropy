@@ -544,9 +544,9 @@ $search-border-color: --scheme(var(--light-2), var(--dark-1)); // TODO --light(v
 $clear-search-color:  --scheme(var(--light-0), var(--dark-4));
 $search-disabled-bg:  --scheme(var(--light-1), tint(var(--dark-3), 2%));
 
-// Popup
-$popup-bg:           --scheme(var(--light-0), var(--dark-3));
-$popup-border-color: $input-btn-focus-color;
+// Popover
+$popover-bg:           --scheme(var(--light-0), var(--dark-3));
+$popover-border-color: $input-btn-focus-color;
 
 // Option list
 $option-active-bg:        --scheme(var(--light-1), var(--dark-4));

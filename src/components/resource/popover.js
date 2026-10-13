@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ResourceSelect } from './select.js'
-import { Popup } from '../popup.js'
+import { Popover } from '../popover.js'
 import { SASS } from '../../constants/index.js'
 import { viewport } from '../../dom.js'
 import { useEventHandler } from '../../hooks/use-event-handler.js'
@@ -19,7 +19,7 @@ function fitToViewport ({ left, top, width, height }) {
   return { left, top }
 }
 
-export const PopupSelect = ({
+export const PopoverSelect = ({
   left,
   maxRows = 10,
   top,
@@ -41,8 +41,8 @@ export const PopupSelect = ({
   }
 
   return (
-    <Popup
-      className="popup-select"
+    <Popover
+      className="popover-select"
       style={{ ...position, width, height }}>
       <ResourceSelect
         {...props}
@@ -55,6 +55,6 @@ export const PopupSelect = ({
         maxRows={maxRows}
         onClose={onClose}
         onResize={handleResize}/>
-    </Popup>
+    </Popover>
   )
 }

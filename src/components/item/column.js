@@ -1,9 +1,9 @@
 import { Id, Label } from '../resource/select.js'
-import { PopupSelect } from '../resource/popup.js'
+import { PopoverSelect } from '../resource/popover.js'
 import { IconTick } from '../icons.js'
 
 export const ColumnContextMenu = (props) => (
-  <PopupSelect
+  <PopoverSelect
     {...props}
     placeholder="select.column.placeholder"
     toText={toColumn}

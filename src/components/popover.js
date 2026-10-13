@@ -3,7 +3,7 @@ import cx from 'classnames'
 import { has } from '../dom.js'
 import { usePopover } from '../hooks/use-popover.js'
 
-export const Popup = ({
+export const Popover = ({
   children,
   className,
   fadeIn = false,
@@ -30,10 +30,10 @@ export const Popup = ({
     <div
       ref={dom}
       popover="manual"
-      className={cx('popup-container', { anchored: anchor != null })}>
+      className={cx('popover-container', { anchored: anchor != null })}>
       {isReady && (
         <div
-          className={cx('popup', className, { 'fade-in': fadeIn })}
+          className={cx('popover', className, { 'fade-in': fadeIn })}
           style={style}
           onContextMenu={handleContextMenu}
           onMouseDown={handleMouseDown}>

@@ -8,14 +8,14 @@
   overscroll-behavior: contain;
   contain: content; // size breaks padding-bottom of app prefs scroll-container
 
-  :root:has(.popup-container:popover-open) & {
+  :root:has(.popover-container:popover-open) & {
     overflow-y: hidden;
 
     .scrollbar-style-old-school :is(&) {
       overflow-y: scroll;
     }
 
-    .popup-container :is(&) {
+    .popover-container :is(&) {
       overflow-y: scroll;
     }
   }

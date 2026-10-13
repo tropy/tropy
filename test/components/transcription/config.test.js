@@ -60,7 +60,7 @@ describe('TranscriptionConfig', () => {
     expect(await dom.result).to.eql({ cancel: true })
   })
 
-  it('opens the model select popup inside the modal', async () => {
+  it('opens the model select popover inside the modal', async () => {
     let dom = show()
     unmount = dom.unmount
 
@@ -69,13 +69,13 @@ describe('TranscriptionConfig', () => {
 
     await sleep(10)
 
-    let popup = document.querySelector('.popup-container')
-    expect(popup.closest('dialog')).to.equal(document.querySelector('dialog'))
+    let popover = document.querySelector('.popover-container')
+    expect(popover.closest('dialog')).to.equal(document.querySelector('dialog'))
 
     // Elements outside the modal would be inert.
-    let option = popup.querySelector('.option')
+    let option = popover.querySelector('.option')
     let { left, top, width, height } = option.getBoundingClientRect()
-    expect(popup.contains(
+    expect(popover.contains(
       document.elementFromPoint(left + width / 2, top + height / 2)
     )).to.be.true
   })

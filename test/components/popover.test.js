@@ -1,48 +1,48 @@
 import { render } from '@testing-library/react'
-import { Popup } from '#tropy/components/popup.js'
+import { Popover } from '#tropy/components/popover.js'
 import { Modal } from '#tropy/components/modal.js'
 
-describe('Popup', () => {
+describe('Popover', () => {
   let container = () =>
-    document.querySelector('.popup-container')
+    document.querySelector('.popover-container')
 
-  // Mirrors the selector the styles use while a popup is open.
+  // Mirrors the selector the styles use while a popover is open.
   let contextmenu = (node) =>
     node.dispatchEvent(new MouseEvent('contextmenu', {
       bubbles: true,
       cancelable: true
     }))
 
-  let isPopupOpen = () =>
-    document.documentElement.matches(':root:has(.popup-container:popover-open)')
+  let isPopoverOpen = () =>
+    document.documentElement.matches(':root:has(.popover-container:popover-open)')
 
   it('is rendered in place and shown in the top layer', () => {
-    let { container: dom, unmount } = render(<Popup>popup</Popup>)
+    let { container: dom, unmount } = render(<Popover>popover</Popover>)
 
     expect(container().parentElement).to.equal(dom)
     expect(container().matches(':popover-open')).to.be.true
-    expect(isPopupOpen()).to.be.true
+    expect(isPopoverOpen()).to.be.true
 
     unmount()
     expect(container()).to.be.null
-    expect(isPopupOpen()).to.be.false
+    expect(isPopoverOpen()).to.be.false
   })
 
-  it('is open while any popup is open', () => {
-    let a = render(<Popup>a</Popup>)
-    let b = render(<Popup>b</Popup>)
+  it('is open while any popover is open', () => {
+    let a = render(<Popover>a</Popover>)
+    let b = render(<Popover>b</Popover>)
 
     a.unmount()
-    expect(isPopupOpen()).to.be.true
+    expect(isPopoverOpen()).to.be.true
 
     b.unmount()
-    expect(isPopupOpen()).to.be.false
+    expect(isPopoverOpen()).to.be.false
   })
 
   it('is not inert in a modal', () => {
     let { container: dom, unmount } = render(
       <Modal onClose={() => {}}>
-        <Popup>popup</Popup>
+        <Popover>popover</Popover>
       </Modal>
     )
 
@@ -55,7 +55,7 @@ describe('Popup', () => {
 
   it('supports autofocus of its contents', () => {
     let { unmount } = render(
-      <Popup><input className="focus" autoFocus/></Popup>
+      <Popover><input className="focus" autoFocus/></Popover>
     )
 
     expect(document.activeElement).to.have.class('focus')
@@ -75,7 +75,7 @@ describe('Popup', () => {
     })
 
     it('is anchored to the anchor element', () => {
-      let { unmount } = render(<Popup anchor={{ current: source }}>popup</Popup>)
+      let { unmount } = render(<Popover anchor={{ current: source }}>popover</Popover>)
 
       expect(container()).to.have.class('anchored')
       expect(source.style.anchorName).to.match(/^--popover-/)
@@ -87,7 +87,7 @@ describe('Popup', () => {
     })
 
     it('lets context menus outside go through', () => {
-      let { unmount } = render(<Popup anchor={{ current: source }}>popup</Popup>)
+      let { unmount } = render(<Popover anchor={{ current: source }}>popover</Popover>)
 
       expect(contextmenu(document.body)).to.be.true
       expect(contextmenu(source)).to.be.true
@@ -97,15 +97,15 @@ describe('Popup', () => {
   })
 
   it('suppresses context menus inside', () => {
-    let { unmount } = render(<Popup><span className="inside">x</span></Popup>)
+    let { unmount } = render(<Popover><span className="inside">x</span></Popover>)
 
-    expect(contextmenu(document.querySelector('.popup .inside'))).to.be.false
+    expect(contextmenu(document.querySelector('.popover .inside'))).to.be.false
 
     unmount()
   })
 
   it('is not anchored without anchor', () => {
-    let { unmount } = render(<Popup>popup</Popup>)
+    let { unmount } = render(<Popover>popover</Popover>)
     expect(container()).not.to.have.class('anchored')
     unmount()
   })

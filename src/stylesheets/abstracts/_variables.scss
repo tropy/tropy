@@ -162,7 +162,7 @@ $zindex-esper-header:    1030;
 $zindex-drop-target:     1040;
 $zindex-drag-layer:      1050;
 $zindex-flash:           1060;
-$zindex-popup:           1070;
+$zindex-popover:         1070;
 $zindex-cover:           1080;
 $zindex-window-controls: 1090;
 
@@ -327,11 +327,11 @@ $search-frameless-border-radius: os($border-radius-small, $border-radius-small, 
 $clear-button-size:              14px;
 
 
-// Popup
+// Popover
 // --------------------------------------------------
 
-$popup-focus-shadow-width: const("INPUT.FOCUS_SHADOW_WIDTH", "px");
-$popup-padding:            const("POPUP.PADDING", "px");
+$popover-focus-shadow-width: const("INPUT.FOCUS_SHADOW_WIDTH", "px");
+$popover-padding:            const("POPOVER.PADDING", "px");
 
 
 // Option

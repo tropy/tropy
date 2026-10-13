@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Popup } from './popup.js'
+import { Popover } from './popover.js'
 import { OptionList } from './option.js'
 import * as collate from '../collate.js'
 import cx from 'classnames'
@@ -9,7 +9,7 @@ import { SASS } from '../constants/index.js'
 
 const {
   INPUT: { BORDER_WIDTH },
-  POPUP: { PADDING }
+  POPOVER: { PADDING }
 } = SASS
 
 export const Highlight = ({ text, matchData }) => (
@@ -200,7 +200,7 @@ export class Completions extends React.Component {
     if (!this.isVisible) return null
     const content = this.renderCompletions()
 
-    if (!this.props.popup) {
+    if (!this.props.popover) {
       const height = this.getOptionsHeight()
       return (
         <div
@@ -213,13 +213,13 @@ export class Completions extends React.Component {
 
     const height = this.getOptionsHeight() + PADDING + BORDER_WIDTH
     return (
-      <Popup
+      <Popover
         className={this.props.className}
         fadeIn={this.props.fadeIn}
         style={{ height }}
         anchor={this.props.anchor}>
         {content}
-      </Popup>
+      </Popover>
     )
   }
 
@@ -229,7 +229,7 @@ export class Completions extends React.Component {
     },
     maxRows: 10,
     minQueryLength: 0,
-    popup: true,
+    popover: true,
     selection: [],
     toId (value) {
       return (value.id || String(value))

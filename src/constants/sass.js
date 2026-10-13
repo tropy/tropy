@@ -220,7 +220,7 @@ const OPTION = {
   LIST_MARGIN: 4
 }
 
-const POPUP = {
+const POPOVER = {
   PADDING: 2
 }
 
@@ -246,7 +246,7 @@ export default {
   OPTION,
   PANEL,
   PHOTO,
-  POPUP,
+  POPOVER,
   ROW,
   SCROLLBAR,
   SIDEBAR,

@@ -2,15 +2,15 @@
 @use "../abstracts/config" as *;
 
 //
-// Popup
+// Popover
 // --------------------------------------------------
 
-$popup-focus-animations: (
-  popup-fade-in: $input-btn-focus-color,
-  popup-invalid-fade-in: $input-btn-invalid-color
+$popover-focus-animations: (
+  popover-fade-in: $input-btn-focus-color,
+  popover-invalid-fade-in: $input-btn-invalid-color
 );
 
-@each $name, $color in $popup-focus-animations {
+@each $name, $color in $popover-focus-animations {
   @keyframes #{$name} {
     0% {
       border-color: $input-border;
@@ -24,18 +24,18 @@ $popup-focus-animations: (
   }
 }
 
-// Anchored popups are below their source,
+// Anchored popovers are below their source,
 // or above it if there is not enough space (i.e., when flipped).
-$popup-fallbacks: ("top": none, "bottom": flip-block);
+$popover-fallbacks: ("top": none, "bottom": flip-block);
 
 @mixin aligned($alignment) {
-  @container anchored(fallback: #{map.get($popup-fallbacks, $alignment)}) {
+  @container anchored(fallback: #{map.get($popover-fallbacks, $alignment)}) {
     @content;
   }
 }
 
-// Popups are rendered in place, but shown in the top layer.
-.popup-container {
+// Popovers are rendered in place, but shown in the top layer.
+.popover-container {
   inset: 0 auto auto 0; // Reset [popover] defaults
   margin: 0;
   padding: 0;
@@ -47,24 +47,24 @@ $popup-fallbacks: ("top": none, "bottom": flip-block);
 
   &.anchored {
     inset:
-      calc(anchor(bottom) - #{$input-border-width + $popup-focus-shadow-width})
+      calc(anchor(bottom) - #{$input-border-width + $popover-focus-shadow-width})
       auto auto anchor(left);
     width: anchor-size(width);
     position-try-fallbacks: flip-block;
     container-type: anchored;
 
-    > .popup {
+    > .popover {
       position: relative;
     }
   }
 
-  .popup {
+  .popover {
     display: flex;
     flex-direction: column;
     position: absolute;
-    background: $popup-bg;
+    background: $popover-bg;
     border: $input-border-width solid $input-btn-focus-color;
-    box-shadow: 0 0 0 $popup-focus-shadow-width $input-btn-focus-color;
+    box-shadow: 0 0 0 $popover-focus-shadow-width $input-btn-focus-color;
     border-radius: $input-border-radius-small;
 
     &.invalid {
@@ -72,17 +72,17 @@ $popup-fallbacks: ("top": none, "bottom": flip-block);
     }
 
     &.fade-in {
-      animation: popup-fade-in $input-btn-transition both;
+      animation: popover-fade-in $input-btn-transition both;
 
       &.invalid {
-        animation: popup-invalid-fade-in $input-btn-transition both;
+        animation: popover-invalid-fade-in $input-btn-transition both;
       }
     }
 
     @each $alignment in "top", "bottom" {
       @include aligned($alignment) {
         border-#{$alignment}: 0;
-        padding-#{$alignment}: $popup-padding;
+        padding-#{$alignment}: $popover-padding;
         border-#{$alignment}-left-radius: 0;
         border-#{$alignment}-right-radius: 0;
       }
@@ -91,8 +91,8 @@ $popup-fallbacks: ("top": none, "bottom": flip-block);
     @include aligned("top") {
       clip-path:
         inset(
-          #{0 (-$popup-focus-shadow-width) (-$popup-focus-shadow-width)
-          (-$popup-focus-shadow-width)}
+          #{0 (-$popover-focus-shadow-width) (-$popover-focus-shadow-width)
+          (-$popover-focus-shadow-width)}
         );
 
       .option-list {
@@ -103,8 +103,8 @@ $popup-fallbacks: ("top": none, "bottom": flip-block);
     @include aligned("bottom") {
       clip-path:
         inset(
-          #{(-$popup-focus-shadow-width) (-$popup-focus-shadow-width)
-          0 (-$popup-focus-shadow-width)}
+          #{(-$popover-focus-shadow-width) (-$popover-focus-shadow-width)
+          0 (-$popover-focus-shadow-width)}
         );
 
       .option-list {
@@ -113,7 +113,7 @@ $popup-fallbacks: ("top": none, "bottom": flip-block);
     }
 
     &.editable-control-completions {
-      border: ($input-border-width + $popup-focus-shadow-width) solid $editable-border-color;
+      border: ($input-border-width + $popover-focus-shadow-width) solid $editable-border-color;
       box-shadow: none;
       background-clip: padding-box;
       padding: 0;
@@ -122,10 +122,10 @@ $popup-fallbacks: ("top": none, "bottom": flip-block);
       &::after {
         content: "";
         position: absolute;
-        width: ($input-border-width + $popup-focus-shadow-width);
-        height: ($input-border-width + $popup-focus-shadow-width);
+        width: ($input-border-width + $popover-focus-shadow-width);
+        height: ($input-border-width + $popover-focus-shadow-width);
         background-color: $panel-bg;
-        box-shadow: inset 0 0 0 ($input-border-width + $popup-focus-shadow-width) $editable-border-color;
+        box-shadow: inset 0 0 0 ($input-border-width + $popover-focus-shadow-width) $editable-border-color;
       }
 
       &::before {
@@ -157,8 +157,8 @@ $popup-fallbacks: ("top": none, "bottom": flip-block);
   }
 }
 
-// While a popup is open, disable pointer events
-// for everything but inputs and popups.
-:root:has(.popup-container:popover-open) {
+// While a popover is open, disable pointer events
+// for everything but inputs and popovers.
+:root:has(.popover-container:popover-open) {
   pointer-events: none;
 }
