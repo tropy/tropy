@@ -13,7 +13,7 @@ describe('PopoverSelect', () => {
     inWindowContext)
 
   let popover = () =>
-    document.querySelector('.popover-select')
+    document.querySelector('.popover-select').closest('.popover-container')
 
   it('opens at the given position', () => {
     let { unmount } = show({ left: 10, top: 20, width: 100 })

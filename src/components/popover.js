@@ -30,11 +30,11 @@ export const Popover = ({
     <div
       ref={dom}
       popover="manual"
-      className={cx('popover-container', { anchored: anchor != null })}>
+      className={cx('popover-container', { anchored: anchor != null })}
+      style={style}>
       {isReady && (
         <div
           className={cx('popover', className, { 'fade-in': fadeIn })}
-          style={style}
           onContextMenu={handleContextMenu}
           onMouseDown={handleMouseDown}>
           {children}
