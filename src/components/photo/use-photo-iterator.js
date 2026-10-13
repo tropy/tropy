@@ -1,33 +1,36 @@
 import { useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { pick } from '../../common/util.js'
+import { getExpandedPhotos, getVisiblePhotos } from '../../selectors/index.js'
+import * as act from '../../actions/index.js'
 
+// The photo list container logic shared by list and grid:
+// selects the photos, the current photo and selection,
+// and the expansions; dispatches the photo actions;
+// hands the leaves (tiles, list items) stable handlers.
 export function usePhotoIterator ({
   canCreate,
-  current,
-  expandedPhotos,
   isDisabled,
   isItemOpen,
-  photos,
-  selection,
-  onConsolidate,
   onContextMenu,
-  onContract,
-  onCreate,
-  onDelete,
-  onExpand,
-  onExtract,
-  onItemOpen,
-  onItemPreview,
-  onRotate,
-  onSelect,
-  onSort
+  onCreate
 }, { isGrid = false } = {}) {
+  let dispatch = useDispatch()
   let scroll = useRef()
+
+  let photos = useSelector(getVisiblePhotos)
+  let current = useSelector(state => state.nav.photo)
+  let selection = useSelector(state => state.nav.selection)
+  let expandedPhotos = useSelector(getExpandedPhotos)
+
+  let onSelect = (payload, meta) => {
+    dispatch(act.photo.select(payload, meta))
+  }
 
   let isSelected = (photo) =>
     current === photo.id
@@ -56,7 +59,7 @@ export function usePhotoIterator ({
     if (!(isExpandable(photo) && isExpanded(photo)))
       return false
 
-    onContract(isGrid ? photos.map(p => p.id) : [photo.id])
+    dispatch(act.photo.contract(isGrid ? photos.map(p => p.id) : [photo.id]))
 
     if (isSelected(photo)) {
       onSelect({
@@ -73,7 +76,7 @@ export function usePhotoIterator ({
     if (!isExpandable(photo) || isExpanded(photo))
       return false
 
-    onExpand(photo.id)
+    dispatch(act.photo.expand(photo.id))
     return true
   }
 
@@ -88,19 +91,21 @@ export function usePhotoIterator ({
     if (isItemOpen)
       expand(photo)
     else
-      onItemOpen({
+      dispatch(act.item.open({
         id: photo.item,
         photos: [photo.id],
         selection: photo.selection
-      })
+      }))
   })
 
   let remove = useEvent(({ id, item, selection }) => {
-    if (!isDisabled) {
-      onDelete(selection != null ?
-          { photo: id, selections: [selection] } :
-          { item, photos: [id] })
-    }
+    if (isDisabled)
+      return
+
+    if (selection != null)
+      dispatch(act.selection.delete({ photo: id, selections: [selection] }))
+    else
+      dispatch(act.photo.delete({ item, photos: [id] }))
   })
 
   let rotate = useEvent((by) => {
@@ -108,21 +113,21 @@ export function usePhotoIterator ({
       return
 
     if (selection != null)
-      onRotate({ id: selection, by, type: 'selection' })
+      dispatch(act.photo.rotate({ id: selection, by, type: 'selection' }))
     else if (current != null)
-      onRotate({ id: current, by, type: 'photo' })
+      dispatch(act.photo.rotate({ id: current, by, type: 'photo' }))
   })
 
   let extract = ({ id, selection }, meta = {}) => {
-    onExtract({ id, selection }, meta)
+    dispatch(act.photo.extract({ id, selection }, meta))
   }
 
   let preview = ({ id, item }) => {
-    onItemPreview({ id: item, photos: [id] })
+    dispatch(act.item.preview({ id: item, photos: [id] }))
   }
 
   let consolidate = useEvent((photo) => {
-    onConsolidate([photo.id], { force: true, prompt: true })
+    dispatch(act.photo.consolidate([photo.id], { force: true, prompt: true }))
   })
 
   let contextMenu = useEvent((event, photo, selection) => {
@@ -147,7 +152,8 @@ export function usePhotoIterator ({
     type: DND.PHOTO,
     isDisabled,
     items: photos.map(photo => photo.id),
-    onSort: (order) => onSort({ item: photos[0].item, photos: order })
+    onSort: (order) =>
+      dispatch(act.photo.order({ item: photos[0].item, photos: order }))
   })
 
   let [file, dropFile] = useDropPhotoFiles({
@@ -180,12 +186,22 @@ export function usePhotoIterator ({
     onToggle: toggle
   })
 
+  // Sorting the selections of a photo (nested selection list/grid).
+  let sortSelections = useEvent((payload) => {
+    dispatch(act.selection.order(payload))
+  })
+
   return {
     classes,
     connect,
     contextMenu,
     contract,
     current: () => scroll.current?.current,
+    cursor: current,
+    expandedPhotos,
+    photos,
+    selection,
+    sortSelections,
     expand,
     extract,
     getIterableProps,

@@ -1,3 +1,4 @@
+import { useDispatch, useSelector } from 'react-redux'
 import { Scroll } from '../scroll/index.js'
 import { PhotoListItem } from './list-item.js'
 import { usePhotoIterator } from './use-photo-iterator.js'
@@ -6,36 +7,34 @@ import { useKeyMap } from '../../hooks/use-keymap.js'
 import { SASS, TABS } from '../../constants/index.js'
 import { dc } from '../../ontology/ns.js'
 import cx from 'classnames'
+import * as act from '../../actions/index.js'
 
 
 export const PhotoList = (props) => {
-  let {
-    data,
-    edit = {},
-    isDisabled,
-    onChange,
-    onEdit,
-    onEditCancel,
-    onSelectionSort,
-    photos,
-    selections
-  } = props
+  let { isDisabled } = props
+  let dispatch = useDispatch()
 
   let iterator = usePhotoIterator(props)
+  let editing = useSelector(state => state.edit.photo)
 
+  // List items are memoized: these handlers are stable.
   let handleEdit = useEvent((photo) => {
     if (photo == null || isDisabled)
       return
 
     if (photo.selection == null)
-      onEdit({ photo: photo.id })
+      dispatch(act.edit.start({ photo: photo.id }))
     else
-      onEdit({ selection: photo.selection })
+      dispatch(act.edit.start({ selection: photo.selection }))
   })
 
   let handleEditCancel = useEvent((...args) => {
-    onEditCancel(...args)
+    dispatch(act.edit.cancel(...args))
     iterator.scroll.current.focus()
+  })
+
+  let handleChange = useEvent((...args) => {
+    dispatch(act.metadata.save(...args))
   })
 
   let onKeyDown = useKeyMap('PhotoIterator', {
@@ -74,11 +73,11 @@ export const PhotoList = (props) => {
     <div className={cx('photo-list', iterator.classes)}>
       <Scroll
         ref={iterator.scroll}
-        cursor={props.current}
-        expansionCursor={props.selection}
-        items={photos}
+        cursor={iterator.cursor}
+        expansionCursor={iterator.selection}
+        items={iterator.photos}
         itemHeight={SASS.ROW.HEIGHT}
-        expandedItems={props.expandedPhotos}
+        expandedItems={iterator.expandedPhotos}
         tabIndex={TABS.PhotoList}
         onKeyDown={onKeyDown}
         onSelect={iterator.select}>
@@ -86,16 +85,13 @@ export const PhotoList = (props) => {
           <PhotoListItem
             {...iterator.getIterableProps(photo)}
             key={photo.id}
-            data={data}
-            edit={edit}
-            selections={selections}
             title={dc.title}
             isExpanded={isExpanded}
-            isEditing={edit.photo === photo.id}
-            onChange={onChange}
+            isEditing={editing === photo.id}
+            onChange={handleChange}
             onEdit={handleEdit}
             onEditCancel={handleEditCancel}
-            onSelectionSort={onSelectionSort}/>
+            onSelectionSort={iterator.sortSelections}/>
         )}
       </Scroll>
     </div>

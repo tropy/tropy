@@ -191,15 +191,9 @@ export class ItemPanelGroup extends React.PureComponent {
             canCreate
             isDisabled={isPhotosDisabled}
             isItemOpen={this.props.isItemMode}
-            photos={this.props.photos}
             zoom={panel.zoom}
-            onEdit={this.props.onEdit}
-            onEditCancel={this.props.onEditCancel}
-            onItemOpen={this.props.onItemOpen}
-            onChange={this.props.onMetadataSave}
             onContextMenu={this.props.onContextMenu}
-            onCreate={this.handlePhotoCreate}
-            onSelect={this.props.onPhotoSelect}/>
+            onCreate={this.handlePhotoCreate}/>
         </Panel>
 
         <Panel className="note-panel">

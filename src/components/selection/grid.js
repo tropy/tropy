@@ -1,5 +1,5 @@
 import { memo, useMemo, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { shallowEqual, useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
@@ -8,6 +8,7 @@ import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
 import { SelectionTile } from './tile.js'
 import { Cursor } from '../../common/sequence.js'
 import { TABS } from '../../constants/index.js'
+import { pluck } from '../../common/util.js'
 import cx from 'classnames'
 
 export const SelectionGrid = memo(({
@@ -21,10 +22,11 @@ export const SelectionGrid = memo(({
   onSelect,
   onSort,
   photo,
-  selections,
   size
 }) => {
   let active = useSelector(state => state.nav.selection)
+  let selections = useSelector(state =>
+    pluck(state.selections, photo.selections), shallowEqual)
 
   let container = useRef()
 

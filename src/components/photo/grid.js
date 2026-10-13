@@ -3,21 +3,15 @@ import { PhotoTile } from './tile.js'
 import { SelectionGrid } from '../selection/grid.js'
 import { Scroll } from '../scroll/scroll.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
-import { pluck } from '../../common/util.js'
 import cx from 'classnames'
 import { SASS, TABS } from '../../constants/index.js'
 
 
 export const PhotoGrid = (props) => {
-  let {
-    isDisabled,
-    onSelectionSort,
-    photos,
-    selections,
-    size
-  } = props
+  let { isDisabled, size } = props
 
   let iterator = usePhotoIterator(props, { isGrid: true })
+  let { photos } = iterator
 
   let onKeyDown = useKeyMap('PhotoIterator', {
     contract: () => iterator.contract(iterator.current()),
@@ -55,9 +49,8 @@ export const PhotoGrid = (props) => {
       onItemOpen={iterator.open}
       onRotate={iterator.rotate}
       onSelect={iterator.select}
-      onSort={onSelectionSort}
+      onSort={iterator.sortSelections}
       photo={photo}
-      selections={pluck(selections, photo.selections)}
       size={size}/>
   )
 
@@ -69,11 +62,11 @@ export const PhotoGrid = (props) => {
       data-size={size}>
       <Scroll
         ref={iterator.scroll}
-        cursor={props.current}
+        cursor={iterator.cursor}
         items={photos}
         itemHeight={tileSize}
         itemWidth={tileSize}
-        expandedItems={props.expandedPhotos}
+        expandedItems={iterator.expandedPhotos}
         expansionPadding={SASS.GRID.PADDING * 4}
         renderExpansionRow={renderSelectionGrid}
         tabIndex={TABS.PhotoGrid}

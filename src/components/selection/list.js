@@ -1,10 +1,11 @@
 import { memo, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { shallowEqual, useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { SelectionListItem } from './list-item.js'
 import { dc } from '../../ontology/ns.js'
+import { pluck } from '../../common/util.js'
 import cx from 'classnames'
 
 export const SelectionList = memo(({
@@ -17,10 +18,11 @@ export const SelectionList = memo(({
   onItemOpen,
   onSelect,
   onSort,
-  photo,
-  selections
+  photo
 }) => {
   let active = useSelector(state => state.nav.selection)
+  let selections = useSelector(state =>
+    pluck(state.selections, photo.selections), shallowEqual)
   let edit = useSelector(state => state.edit.selection)
 
   let container = useRef()

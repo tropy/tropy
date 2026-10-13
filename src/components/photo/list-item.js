@@ -1,4 +1,5 @@
 import { memo, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import { Editable } from '../editable.js'
 import { Thumbnail } from './thumbnail.js'
@@ -10,11 +11,10 @@ import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
 import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
-import { pick, pluck } from '../../common/util.js'
+import { pick } from '../../common/util.js'
 import { TYPE } from '../../constants/index.js'
 
 export const PhotoListItem = memo(({
-  data,
   getAdjacent,
   isDisabled,
   isEditing,
@@ -35,13 +35,15 @@ export const PhotoListItem = memo(({
   onToggle,
   photo,
   selection,
-  selections,
   size = 48,
   title
 }) => {
   let container = useRef()
 
   let isActive = isSelected && selection == null
+
+  let titleText = useSelector(state =>
+    state.metadata[photo.id]?.[title]?.text)
 
   let [{ canDrop, direction, isDragging, isOver }, dnd] =
     useDragDropPhoto(container, {
@@ -120,7 +122,7 @@ export const PhotoListItem = memo(({
         </div>
         <div className="title">
           <Editable
-            value={data?.[photo.id]?.[title]?.text}
+            value={titleText}
             resize
             isActive={isEditing}
             isDisabled={isDisabled}
@@ -150,8 +152,7 @@ export const PhotoListItem = memo(({
           onItemOpen={onItemOpen}
           onSelect={onSelect}
           onSort={onSelectionSort}
-          photo={photo}
-          selections={pluck(selections, photo.selections)}/>
+          photo={photo}/>
       )}
     </li>
   )
