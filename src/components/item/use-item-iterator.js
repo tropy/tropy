@@ -93,14 +93,11 @@ export function useItemIterator ({
       list
     }
 
+    // Items select on mouse-down (useSequenceClicks),
+    // so the right-clicked item is already selected.
     if (selection.size > 1) {
       context.push('bulk')
-      // TODO drop with useSequenceClicks (the table still uses
-      // useItemClickHandler): it selects on mouse-down,
-      // so the right-clicked item is already selected (and primary).
-      target.id = selection.has(item.id) ?
-        selection.ids() :
-        [...selection.ids(), item.id]
+      target.id = selection.ids()
       target.photos = getSelectedPhotos()
     }
 

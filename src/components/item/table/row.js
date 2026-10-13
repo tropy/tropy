@@ -2,9 +2,10 @@ import { memo, useRef } from 'react'
 import cx from 'classnames'
 import { TableCell } from './cell.js'
 import { useDragDropItem } from '../../../hooks/use-drag-drop-items.js'
-import { useItemClickHandler } from './use-item-click-handler.js'
+import { useSequenceClicks } from '../../../hooks/use-sequence-clicks.js'
 import { useEvent } from '../../../hooks/use-event.js'
 import { get } from '../../../common/util.js'
+import { getSelectionMode } from '../../../keymap.js'
 import { NAV, TYPE } from '../../../constants/index.js'
 
 const isItemColumn = (id) => {
@@ -49,11 +50,12 @@ export const TableRow = memo(({
       onDropPhotos
     })
 
-  let handlers = useItemClickHandler(item, {
+  let sequenceClicks = useSequenceClicks({
     isSelected,
-    onContextMenu,
-    onOpen: onItemOpen,
-    onSelect
+    onDoubleClick: onItemOpen,
+    onSelect: (value, keyState) =>
+      onSelect(value, { mode: getSelectionMode(keyState) }),
+    value: item
   })
 
   let getNextColumn = useEvent((at = 0, dir = 1) => {
@@ -133,8 +135,9 @@ export const TableRow = memo(({
 
   return (
     <div
-      {...handlers}
+      {...sequenceClicks}
       ref={dnd}
+      onContextMenu={(event) => onContextMenu(event, item)}
       className={cx('tr', 'item', {
         active: isSelected,
         dragging: isDragging,
