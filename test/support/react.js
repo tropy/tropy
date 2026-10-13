@@ -30,9 +30,7 @@ export const messages = new Strings(
   Strings.parse(fs.readFileSync(Strings.expand('renderer')))
 ).flatten()
 
-let store = configureStore({
-  reducer
-})
+let store = createStore()
 
 function onIntlError (error) {
   switch (error.code) {
@@ -43,22 +41,30 @@ function onIntlError (error) {
   }
 }
 
-export const inWindowContext = {
-  wrapper ({ children }) {
-    return (
-      <WindowContext.Provider value={win}>
-        <DndProvider backend={TestBackend}>
-          <Provider store={store}>
-            <IntlProvider
-              locale="en"
-              messages={messages}
-              onError={onIntlError}>
-              {children}
-            </IntlProvider>
-          </Provider>
-        </DndProvider>
-      </WindowContext.Provider>
-    )
+export function createStore (preloadedState) {
+  return configureStore({ reducer, preloadedState })
+}
+
+export const inWindowContext = withStore(store)
+
+export function withStore (store) {
+  return {
+    wrapper ({ children }) {
+      return (
+        <WindowContext.Provider value={win}>
+          <DndProvider backend={TestBackend}>
+            <Provider store={store}>
+              <IntlProvider
+                locale="en"
+                messages={messages}
+                onError={onIntlError}>
+                {children}
+              </IntlProvider>
+            </Provider>
+          </DndProvider>
+        </WindowContext.Provider>
+      )
+    }
   }
 }
 

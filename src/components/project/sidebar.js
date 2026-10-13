@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Titlebar } from '../toolbar.js'
-import { ActivityPane } from '../activity.js'
+import { ActivityPane } from '../activity/index.js'
 import { Resizable } from '../resizable.js'
 import { ListLeafNode, ListTree, TrashListNode } from '../list/index.js'
 import { TagList } from '../tag/index.js'
@@ -15,7 +15,6 @@ import { testFocusChange } from '../../dom.js'
 import * as act from '../../actions/index.js'
 
 import {
-  getActivities,
   getAllTags,
   getListSubTree
 } from '../../selectors/index.js'
@@ -327,16 +326,13 @@ class ProjectSidebar extends React.PureComponent {
             </section>
 
           </SidebarBody>
-          <ActivityPane
-            activities={this.props.activities}
-            onCancel={this.props.onActivityCancel}/>
+          <ActivityPane/>
         </Sidebar>
       </Resizable>
     )
   }
 
   static defaultProps = {
-    activities: [],
     edit: {},
     keymap: {},
     root: LIST.ROOT,
@@ -347,7 +343,6 @@ class ProjectSidebar extends React.PureComponent {
 
 const ProjectSidebarContainer = connect(
   (state, { root }) => ({
-    activities: getActivities(state),
     edit: state.edit,
     hasLastImport: state.imports.length > 0,
     isLastImportSelected: state.nav.imports,
@@ -363,10 +358,6 @@ const ProjectSidebarContainer = connect(
   }),
 
   (dispatch) => ({
-    onActivityCancel (...args) {
-      dispatch(act.activity.cancel(...args))
-    },
-
     onEdit (...args) {
       dispatch(act.edit.start(...args))
     },
