@@ -34,10 +34,8 @@ export const TableRow = memo(({
   onEdit,
   onItemOpen,
   onSelect,
-  photos,
   position,
   size,
-  tags,
   template
 }) => {
   let container = useRef()
@@ -114,7 +112,7 @@ export const TableRow = memo(({
     }
 
     if (isMainColumn) {
-      Object.assign(props, { photos, tags, size, title: value })
+      Object.assign(props, { size, title: value })
     }
 
     if (column.id === 'item.template') {

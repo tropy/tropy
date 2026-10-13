@@ -1,7 +1,6 @@
 import { useImperativeHandle, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { seq, compose, map, cat, keep } from 'transducers.js'
-import { useActions } from '../../hooks/use-action.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useEventHandler } from '../../hooks/use-event-handler.js'
@@ -11,78 +10,25 @@ import { getKeyState, getSelectionMode } from '../../keymap.js'
 import { indexOf } from '../../common/sequence.js'
 import { blank, get } from '../../common/util.js'
 import { getItemSelection, getVisibleItems } from '../../selectors/index.js'
+import * as act from '../../actions/index.js'
 
-// Module-level, so useActions returns stable handlers.
-const ACTIONS = [
-  'item.delete',
-  'item.export',
-  'item.merge',
-  'item.open',
-  'item.preview',
-  'item.select',
-  'photo.move',
-  'photo.rotate'
-]
-
-// Selects a value from the store, unless props has it:
-// props take precedence (e.g. given explicitly in tests),
-// and the selector only runs without the prop.
-export const useProp = (props, key, selector) =>
-  useSelector(state => (key in props) ? props[key] : selector(state))
-
-// The store state and actions of the item grid and table.
-export function useItemIteratorProps (props) {
-  let [
-    onItemDelete,
-    onItemExport,
-    onItemMerge,
-    onItemOpen,
-    onItemPreview,
-    onSelect,
-    onPhotoMove,
-    onPhotoRotate
-  ] = useActions(ACTIONS)
-
-  return {
-    isTrashSelected: useProp(props, 'isTrashSelected', s => s.nav.trash),
-    items: useProp(props, 'items', getVisibleItems),
-    photos: useProp(props, 'photos', s => s.photos),
-    selection: useProp(props, 'selection', getItemSelection),
-    tags: useProp(props, 'tags', s => s.tags),
-    onItemDelete,
-    onItemExport,
-    onItemMerge,
-    onItemOpen,
-    onItemPreview,
-    onPhotoMove,
-    onPhotoRotate,
-    onSelect,
-    ...props
-  }
-}
-
+// The item list container logic shared by grid and table:
+// selects the items and the selection, dispatches the item
+// actions, and hands the leaves (tiles, rows) stable handlers.
 export function useItemIterator ({
   isDisabled,
   isReadOnly,
-  isTrashSelected,
-  items,
   list,
-  photos,
   ref,
-  selection,
-  tags,
   onContextMenu,
-  onItemDelete,
-  onItemExport,
-  onItemImport,
-  onItemMerge,
-  onItemOpen,
-  onItemPreview,
-  onPhotoMove,
-  onPhotoRotate,
-  onSelect
+  onItemImport
 }, { edit, isGrid = false, tabIndex }) {
+  let dispatch = useDispatch()
   let scroll = useRef()
+
+  let items = useSelector(getVisibleItems)
+  let selection = useSelector(getItemSelection)
+  let isTrashSelected = useSelector(state => state.nav.trash)
 
   useImperativeHandle(ref, () => ({
     focus () {
@@ -98,7 +44,7 @@ export function useItemIterator ({
     let next = selection.select(item.id, { mode })
 
     if (next !== selection.state)
-      onSelect({ item: next }, { throttle })
+      dispatch(act.item.select({ item: next }, { throttle }))
   })
 
   // Arrow keys (via Scroll), the global next/prev events,
@@ -133,8 +79,21 @@ export function useItemIterator ({
   }
 
   let clearSelection = () => {
-    onSelect({ items: [] })
+    dispatch(act.item.select({ items: [] }))
   }
+
+  // Handlers for the leaves (memoized tiles and rows).
+  let open = useEvent((item) => {
+    dispatch(act.item.open(item))
+  })
+
+  let merge = useEvent((ids) => {
+    dispatch(act.item.merge(ids))
+  })
+
+  let movePhotos = useEvent((payload) => {
+    dispatch(act.photo.move(payload))
+  })
 
   let contextMenu = useEvent((event, item) => {
     let context = ['item']
@@ -163,16 +122,16 @@ export function useItemIterator ({
     onContextMenu(event, context.join('-'), target)
   })
 
-  let open = () => {
-    onItemOpen(current())
+  let openCurrent = () => {
+    open(current())
   }
 
   let onKeyDown = useKeyMap('ItemIterator', {
-    open,
+    open: openCurrent,
     preview () {
       let item = current()
       if (item != null)
-        onItemPreview({ id: item.id, photos: item.photos })
+        dispatch(act.item.preview({ id: item.id, photos: item.photos }))
     },
     clear: clearSelection,
     delete () {
@@ -180,17 +139,17 @@ export function useItemIterator ({
 
       if (!(isReadOnly || blank(ids))) {
         select(adjacent())
-        onItemDelete(ids)
+        dispatch(act.item.delete(ids))
       }
     },
     all () {
-      onSelect({ all: true })
+      dispatch(act.item.select({ all: true }))
     },
     merge () {
       let ids = selection.ids()
 
       if (!(isReadOnly || blank(ids)))
-        onItemMerge(ids)
+        merge(ids)
     },
     rotateLeft () {
       rotate(-90)
@@ -205,7 +164,7 @@ export function useItemIterator ({
 
   let rotate = (by) => {
     if (!isReadOnly && selection.size > 0)
-      onPhotoRotate({ id: getSelectedPhotos(), by })
+      dispatch(act.photo.rotate({ id: getSelectedPhotos(), by }))
   }
 
   useGlobalEvent('nextItem', (event) => {
@@ -217,14 +176,14 @@ export function useItemIterator ({
   })
 
   // The mouse forward button.
-  useGlobalEvent('forward', open)
+  useGlobalEvent('forward', openCurrent)
 
   useEventHandler(window, 'copy', () => {
     let sel = document.getSelection()
     let ids = selection.elements()
 
     if ((sel == null || !sel.toString()) && !blank(ids))
-      onItemExport(ids, { target: ':clipboard:' })
+      dispatch(act.item.export(ids, { target: ':clipboard:' }))
   })
 
   let [file, dropFile] = useDropPhotoFiles({
@@ -238,15 +197,13 @@ export function useItemIterator ({
   let getIterableProps = (item, index) => ({
     item,
     index,
-    photos,
-    tags,
     isSelected: selection.has(item.id),
     isReadOnly,
     getSelection,
     onContextMenu: contextMenu,
-    onDropItems: onItemMerge,
-    onDropPhotos: onPhotoMove,
-    onItemOpen,
+    onDropItems: merge,
+    onDropPhotos: movePhotos,
+    onItemOpen: open,
     onSelect: select
   })
 
@@ -256,8 +213,10 @@ export function useItemIterator ({
     getIterableProps,
     handleSelectItem,
     isOver: file.canDrop,
+    items,
     onKeyDown,
     scroll,
+    selection,
     tabIndex: (isDisabled || !items.length) ? null : tabIndex
   }
 }

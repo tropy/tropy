@@ -1,25 +1,19 @@
-import { render, inWindowContext } from '../../../support/react.js'
-import { create, Selection } from '#tropy/common/selection.js'
+import { render, withStore } from '../../../support/react.js'
 import { ItemTable } from '#tropy/components/item/table/table.js'
+import { createItemStore } from '../store.js'
 
 describe('ItemTable', () => {
-  let items = [1, 2].map(id => ({ id, photos: [], tags: [] }))
-  let active = [{ id: 'item.title', width: 200 }, { id: 'y', width: 80 }]
+  it('renders the head, the rows and the column template', () => {
+    let store = createItemStore()
+    let { $, $$ } = render(<ItemTable/>, withStore(store))
 
-  it('renders the head and rows with the column template', () => {
-    let { $, $$ } = render(
-      <ItemTable
-        columns={{ active, all: active, common: active }}
-        data={{}}
-        items={items}
-        selection={new Selection(create([1]), [1, 2])}
-        sort={{ asc: true }}
-        templates={{}}/>,
-      inWindowContext)
+    let { columns } = store.getState().nav
+    let widths = columns.map(col => `${Math.max(col.width, 40)}px `)
+    widths[0] = `${Math.max(columns[0].width, 100)}px `
 
-    expect($$('.table-head .metadata-head')).to.have.length(2)
-    expect($$('.tr.item')).to.have.length(2)
+    expect($$('.table-head .metadata-head')).to.have.length(columns.length)
+    expect($('.tr.item')).to.have.class('active')
     expect($('.item-table').style.getPropertyValue('--item-template-columns'))
-      .to.equal('200px 80px auto')
+      .to.equal(widths.join('') + 'auto')
   })
 })

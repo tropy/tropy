@@ -1,29 +1,27 @@
-import { mock } from 'node:test'
 import { renderHook } from '@testing-library/react'
-import { inWindowContext } from '../../support/react.js'
-import { create, Selection } from '#tropy/common/selection.js'
+import { withStore } from '../../support/react.js'
 import { useItemIterator } from '#tropy/components/item/use-item-iterator.js'
+import { createItemStore } from './store.js'
 
 describe('useItemIterator', () => {
-  let items = [1, 2, 3].map(id => ({ id, photos: [], tags: [] }))
-
-  let setup = (ids, onSelect) =>
-    renderHook(() => useItemIterator({
-      items,
-      selection: new Selection(create(ids), [1, 2, 3]),
-      onSelect
-    }, {}), inWindowContext).result.current
-
   // Scroll's autoselect on focus selects without an event.
+  let autoselect = (selected) => {
+    let store = createItemStore(selected)
+    let { result } = renderHook(() => useItemIterator({}, {}), withStore(store))
+
+    let before = store.getState().nav.item
+    result.current.handleSelectItem({ id: 2 })
+
+    return [before, store.getState().nav.item]
+  }
+
   it('keeps an existing selection on autoselect', () => {
-    let onSelect = mock.fn()
-    setup([1, 2], onSelect).handleSelectItem(items[1])
-    expect(onSelect.mock.callCount()).to.equal(0)
+    let [before, after] = autoselect([1, 3])
+    expect(after).to.equal(before)
   })
 
   it('selects on autoselect without a selection', () => {
-    let onSelect = mock.fn()
-    setup([], onSelect).handleSelectItem(items[1])
-    expect(onSelect.mock.callCount()).to.equal(1)
+    let [, after] = autoselect([])
+    expect(after).to.include({ anchor: 2, cursor: 2 })
   })
 })

@@ -1,19 +1,14 @@
 import { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Scroll, ScrollContainer } from '../../scroll/index.js'
 import { TableRow } from './row.js'
 import { TableHead } from './head.js'
 import { ColumnContextMenu } from '../column.js'
 import cx from 'classnames'
-import { useActions } from '../../../hooks/use-action.js'
 import { useEvent } from '../../../hooks/use-event.js'
 import { getAllColumns, getSortColumn } from '../../../selectors/index.js'
 import * as act from '../../../actions/index.js'
-import {
-  useItemIterator,
-  useItemIteratorProps,
-  useProp
-} from '../use-item-iterator.js'
+import { useItemIterator } from '../use-item-iterator.js'
 
 import {
   useColumnContextMenu,
@@ -30,72 +25,30 @@ import {
 const { ROW } = SASS
 const any = (src) => { for (let key in src) return key }
 
-// Module-level, so useActions returns stable handlers.
-const ACTIONS = [
-  'edit.start',
-  'edit.cancel',
-  'nav.column.insert',
-  'nav.column.order',
-  'nav.column.remove',
-  'nav.column.resize',
-  'metadata.save'
-]
+export const ItemTable = (props) => {
+  let {
+    isReadOnly,
+    list,
+    minColWidth = 40,
+    minMainColWidth = 100
+  } = props
 
-// The store state and actions of the table
-// (besides those shared with the grid).
-const useItemTableProps = (props) => {
   let dispatch = useDispatch()
 
-  let [
-    onEdit,
-    onEditCancel,
-    onColumnInsert,
-    onColumnOrder,
-    onColumnRemove,
-    onColumnResize,
-    onMetadataSave
-  ] = useActions(ACTIONS)
+  let columns = useSelector(getAllColumns)
+  let data = useSelector(state => state.metadata)
+  let edit = useSelector(state => state.edit.column)
+  let sort = useSelector(getSortColumn)
+  let templates = useSelector(state => state.ontology.template)
 
-  let onSort = useEvent((opts) => {
-    dispatch(act.nav.sort({ ...opts, list: props.list }))
+  // Rows and the head are memoized: these handlers are stable.
+  let handleEdit = useEvent((payload) => {
+    dispatch(act.edit.start(payload))
   })
 
-  return {
-    columns: useProp(props, 'columns', getAllColumns),
-    data: useProp(props, 'data', s => s.metadata),
-    edit: useProp(props, 'edit', s => s.edit.column),
-    sort: useProp(props, 'sort', getSortColumn),
-    templates: useProp(props, 'templates', s => s.ontology.template),
-    onColumnInsert,
-    onColumnOrder,
-    onColumnRemove,
-    onColumnResize,
-    onEdit,
-    onEditCancel,
-    onMetadataSave,
-    onSort,
-    ...props
-  }
-}
-
-export const ItemTable = (ownProps) => {
-  let props = useItemTableProps(useItemIteratorProps(ownProps))
-  let {
-    columns,
-    data,
-    edit,
-    isReadOnly,
-    items,
-    minColWidth = 40,
-    minMainColWidth = 100,
-    selection,
-    sort,
-    templates,
-    onEdit,
-    onEditCancel,
-    onMetadataSave,
-    onSort
-  } = props
+  let handleSort = useEvent((opts) => {
+    dispatch(act.nav.sort({ ...opts, list }))
+  })
 
   let table = useRef()
 
@@ -103,19 +56,32 @@ export const ItemTable = (ownProps) => {
     tabIndex: TABS.ItemTable,
     edit (item) {
       if (item != null && !isReadOnly)
-        onEdit({ column: { [item.id]: columns.active[0].id } })
+        handleEdit({ column: { [item.id]: columns.active[0].id } })
     }
   })
 
-  let { scroll } = iterator
+  let { items, scroll, selection } = iterator
 
-  let columnState = useColumnState(props)
+  let columnState = useColumnState({
+    columns,
+    list,
+    minColWidth,
+    minMainColWidth,
+    onColumnOrder: (payload) => dispatch(act.nav.column.order(payload)),
+    onColumnResize: (payload) => dispatch(act.nav.column.resize(payload))
+  })
+
   let columnDrag = useColumnDrag(table, columnState)
 
   let columnMenu = useColumnContextMenu(table, {
-    ...props,
     colwidth: columnState.colwidth,
-    hasPositionColumn: columnState.hasPositionColumn
+    columns,
+    hasPositionColumn: columnState.hasPositionColumn,
+    minMainColWidth,
+    onColumnInsert: (payload, meta) =>
+      dispatch(act.nav.column.insert(payload, meta)),
+    onColumnRemove: (payload) =>
+      dispatch(act.nav.column.remove(payload))
   })
 
   // Keep the edited item in view when editing starts.
@@ -124,14 +90,13 @@ export const ItemTable = (ownProps) => {
       scroll.current?.scrollIntoView({ id: Number(any(edit)) })
   }, [edit, scroll])
 
-  // Rows are memoized: these handlers are stable.
   let handleChange = useEvent((...args) => {
-    onMetadataSave(...args)
+    dispatch(act.metadata.save(...args))
     scroll.current.focus()
   })
 
   let handleEditCancel = useEvent((...args) => {
-    onEditCancel(...args)
+    dispatch(act.edit.cancel(...args))
     scroll.current.focus()
   })
 
@@ -176,7 +141,7 @@ export const ItemTable = (ownProps) => {
           onOrderStart={columnDrag.onOrderStart}
           onOrderStop={columnDrag.onOrderStop}
           onResize={columnState.resize}
-          onSort={onSort}/>
+          onSort={handleSort}/>
       </ScrollContainer>
       {iterator.connect(
         <div className={cx('table-body', { over: iterator.isOver })}>
@@ -208,7 +173,7 @@ export const ItemTable = (ownProps) => {
                 template={templates[item.template]}
                 onCancel={handleEditCancel}
                 onChange={handleChange}
-                onEdit={onEdit}/>
+                onEdit={handleEdit}/>
             )}
           </Scroll>
         </div>
