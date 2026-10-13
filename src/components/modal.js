@@ -1,5 +1,6 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import cx from 'classnames'
+import { useShowPopover } from '../hooks/use-popover.js'
 
 export const Modal = ({
   children,
@@ -9,14 +10,7 @@ export const Modal = ({
 }) => {
   let dom = useRef()
   let submission = useRef(null)
-  let [isOpen, setOpen] = useState(false)
-
-  // Subtle: mount children only after the dialog is open,
-  // otherwise React's autoFocus has no effect.
-  useLayoutEffect(() => {
-    dom.current.showModal()
-    setOpen(true)
-  }, [])
+  let isReady = useShowPopover(dom, 'showModal')
 
   let handleSubmit = ({ target, nativeEvent: { submitter } }) => {
     submission.current = {
@@ -24,6 +18,13 @@ export const Modal = ({
       value: submitter?.value ?? null,
       data: fromFormData(new FormData(target))
     }
+  }
+
+  // Subtle: the modal is rendered inside the view,
+  // so React events still reach the view's handlers.
+  // Keep context menus from going through.
+  let handleContextMenu = (event) => {
+    event.stopPropagation()
   }
 
   let handleClose = async ({ target }) => {
@@ -46,9 +47,10 @@ export const Modal = ({
       ref={dom}
       className={cx('modal', className)}
       closedby={closedBy}
+      onContextMenu={handleContextMenu}
       onSubmit={handleSubmit}
       onClose={handleClose}>
-      {isOpen && children}
+      {isReady && children}
     </dialog>
   )
 }
@@ -57,9 +59,9 @@ function fromFormData (formData) {
   let data = {}
 
   for (let [name, value] of formData) {
-    data[name] = Object.hasOwn(data, name) ?
-      [].concat(data[name], value) :
-      value
+    data[name] = Object.hasOwn(data, name)
+      ? [].concat(data[name], value)
+      : value
   }
 
   return data

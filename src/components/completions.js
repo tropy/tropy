@@ -2,19 +2,15 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Popup } from './popup.js'
 import { OptionList } from './option.js'
-import { translate } from '../common/math.js'
-import { bounds, viewport } from '../dom.js'
 import * as collate from '../collate.js'
 import cx from 'classnames'
 import memoize from 'memoize-one'
 import { SASS } from '../constants/index.js'
 
 const {
-  INPUT: { BORDER_WIDTH, FOCUS_SHADOW_WIDTH },
+  INPUT: { BORDER_WIDTH },
   POPUP: { PADDING }
 } = SASS
-
-const MARGIN = BORDER_WIDTH + FOCUS_SHADOW_WIDTH
 
 export const Highlight = ({ text, matchData }) => (
   (!Array.isArray(matchData)) ? text : (
@@ -106,26 +102,6 @@ export class Completions extends React.Component {
     }
   }
 
-  getPopupBounds () {
-    if (this.props.parent == null) return
-
-    let bnd = bounds(this.props.parent)
-    let height = this.getOptionsHeight() + PADDING + BORDER_WIDTH
-
-    let [anchor, clip] = (bnd.bottom + height <= viewport().height) ?
-        ['top', translate(bnd, { bottom: -MARGIN })] :
-        ['bottom', translate(bnd, { top: MARGIN })]
-
-    return {
-      anchor,
-      clip,
-      height,
-      left: bnd.left,
-      top: Math.round((anchor === 'top') ? bnd.bottom : bnd.top - height),
-      width: bnd.width
-    }
-  }
-
   getOptionsHeight (rows = this.state.options.length) {
     return OptionList.getHeight(rows || 1, { maxRows: this.props.maxRows })
   }
@@ -190,10 +166,6 @@ export class Completions extends React.Component {
     this.props.onSelect(this.props.completions[option.idx])
   }
 
-  handleResize = () => {
-    this.forceUpdate()
-  }
-
   renderCompletions () {
     if (this.isEmpty) return this.renderNoCompletions()
     if (this.isBlank) return this.renderNoMatches()
@@ -239,16 +211,13 @@ export class Completions extends React.Component {
       )
     }
 
-    const { anchor, clip, ...style } = this.getPopupBounds()
+    const height = this.getOptionsHeight() + PADDING + BORDER_WIDTH
     return (
       <Popup
-        anchor={anchor}
         className={this.props.className}
-        clip={clip}
         fadeIn={this.props.fadeIn}
-        style={style}
-        onClickOutside={this.props.onClickOutside}
-        onResize={this.handleResize}>
+        style={{ height }}
+        anchor={this.props.anchor}>
         {content}
       </Popup>
     )

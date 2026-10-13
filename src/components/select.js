@@ -307,10 +307,9 @@ export class Select extends React.Component {
           isVisibleWhenBlank
           match={this.props.match}
           maxRows={this.props.maxRows}
-          onClickOutside={this.close}
           onResize={this.props.onResize}
           onSelect={this.handleSelect}
-          parent={this.container.current}
+          anchor={this.container}
           popup={!this.props.isStatic}
           query={this.state.query}
           ref={this.completions}

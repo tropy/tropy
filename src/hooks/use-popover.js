@@ -1,0 +1,43 @@
+import { useId, useLayoutEffect, useState } from 'react'
+
+// Shows nodeRef using the Popover API.
+// Use anchor for CSS anchor positioning.
+//
+// NB: node and anchor are expected to be stable for the component lifetime!
+//
+// Returns isReady when popover is ready to show content.
+
+export function usePopover (nodeRef, { anchor } = {}) {
+  let isReady = useShowPopover(nodeRef)
+
+  // CSS links popover to anchor by global anchor name!
+  let anchorName = `--popover-${CSS.escape(useId())}`
+
+  useLayoutEffect(() => {
+    if (anchor == null)
+      return
+
+    let popover = nodeRef.current
+    let source = anchor.current
+    source.style.anchorName = anchorName
+    popover.style.positionAnchor = anchorName
+
+    return () => {
+      source.style.anchorName = ''
+      popover.style.positionAnchor = ''
+    }
+  }, [nodeRef, anchor, anchorName])
+
+  return isReady
+}
+
+export function useShowPopover (nodeRef, method = 'showPopover') {
+  let [isReady, setReady] = useState(false)
+
+  useLayoutEffect(() => {
+    nodeRef.current[method]()
+    setReady(true)
+  }, [nodeRef, method])
+
+  return isReady
+}

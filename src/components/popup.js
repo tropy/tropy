@@ -1,109 +1,45 @@
-import React from 'react'
-import { createPortal } from 'react-dom'
-import { $, append, element, has, on, off, toggle, remove } from '../dom.js'
-import { noop, throttle } from '../common/util.js'
+import { useRef } from 'react'
 import cx from 'classnames'
+import { has } from '../dom.js'
+import { usePopover } from '../hooks/use-popover.js'
 
-export class Popup extends React.Component {
-  constructor (props) {
-    super(props)
-    this.root = $('#popup-root')
-    this.dom = element('div')
-    this.dom.popover = 'manual'
-    toggle(this.dom, 'popup-container', true)
-  }
+export const Popup = ({
+  children,
+  className,
+  fadeIn = false,
+  anchor,
+  style
+}) => {
+  let dom = useRef()
+  let isReady = usePopover(dom, { anchor })
 
-  componentDidMount () {
-    on(window, 'resize', this.handleResize)
-    this.clip()
-    append(this.dom, this.root)
-    this.dom.showPopover()
-    toggle(document.documentElement, 'popup-open', true)
-    if (this.props.autofocus) this.focus()
-  }
-
-  componentWillUnmount () {
-    remove(this.dom)
-    off(window, 'resize', this.handleResize)
-    this.clip(null)
-    toggle(document.documentElement, 'popup-open', false)
-  }
-
-  get classes () {
-    return ['popup', this.props.anchor, this.props.className, {
-      'fade-in': this.props.fadeIn
-    }]
-  }
-
-  clip (path = this.getClipPath()) {
-    this.root.style.clipPath = this.dom.style.clipPath = path
-  }
-
-  focus () {
-    let e = $('[tabindex]', this.dom)
-    if (e != null) e.focus()
-  }
-
-  getClipPath ({ clip } = this.props) {
-    return (clip == null) ?
-      null :
-      `polygon(${[
-        '100% 100%, 100% 0px, 0px 0px, 0px 100%, 100% 100%',
-        `${clip.right}px ${clip.bottom}px`,
-        `${clip.left}px ${clip.bottom}px`,
-        `${clip.left}px ${clip.top}px`,
-        `${clip.right}px ${clip.top}px`,
-        `${clip.right}px ${clip.bottom}px`
-      ].join(', ')})`
-  }
-
-  handleClick = (event) => {
-    if (this.isOutside(event)) {
-      event.stopPropagation()
-      event.preventDefault()
-      if (event.button === 0) {
-        this.props.onClickOutside(event)
-      }
-
-    } else if (this.isClickToScroll(event)) {
+  let handleMouseDown = (event) => {
+    // Keep the focus when clicking to scroll.
+    if (has(event.target, 'scroll-container')) {
       event.stopPropagation()
       event.preventDefault()
     }
   }
 
-  handleContextMenu = (event) => {
+  let handleContextMenu = (event) => {
     event.stopPropagation()
     event.preventDefault()
-    if (this.isOutside(event)) {
-      this.props.onClickOutside(event)
-    }
   }
 
-  isOutside ({ target }) {
-    return target === this.dom
-  }
-
-  isClickToScroll ({ target }) {
-    return has(target, 'scroll-container')
-  }
-
-  handleResize = throttle(() => { this.props.onResize() }, 25)
-
-  render () {
-    return createPortal((
-      <div
-        className={cx(this.classes)}
-        style={this.props.style}
-        onContextMenu={this.handleContextMenu}
-        onMouseDown={this.handleClick}>
-        {this.props.children}
-      </div>
-    ), this.dom)
-  }
-
-  static defaultProps = {
-    anchor: 'float',
-    onClickOutside: noop,
-    onResize: noop
-  }
+  return (
+    <div
+      ref={dom}
+      popover="manual"
+      className={cx('popup-container', { anchored: anchor != null })}>
+      {isReady && (
+        <div
+          className={cx('popup', className, { 'fade-in': fadeIn })}
+          style={style}
+          onContextMenu={handleContextMenu}
+          onMouseDown={handleMouseDown}>
+          {children}
+        </div>
+      )}
+    </div>
+  )
 }

@@ -30,15 +30,6 @@ export function rounded (src) {
   return res
 }
 
-export function translate (a, { top = 0, bottom = 0, left = 0, right = 0 }) {
-  return {
-    top: a.top + top,
-    bottom: a.bottom + bottom,
-    left: a.left + left,
-    right: a.right + right
-  }
-}
-
 export function rotate (deg, by) {
   return (360 + ((deg + by) % 360)) % 360
 }

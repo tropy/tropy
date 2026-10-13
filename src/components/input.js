@@ -248,9 +248,8 @@ export class Input extends React.PureComponent {
             isExactMatchHidden
             match={this.props.match}
             minQueryLength={1}
-            onClickOutside={this.cancel}
             onSelect={this.handleCompletion}
-            parent={this.input.current}
+            anchor={this.input}
             query={this.state.query}
             ref={this.completions}/>
         )}
