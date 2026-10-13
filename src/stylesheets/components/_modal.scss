@@ -34,5 +34,9 @@
     width: max-content;
     margin-top: $space-xl;
     margin-left: auto;
+
+    .btn {
+      min-width: 2 * $space-xxl;
+    }
   }
 }
