@@ -1,11 +1,19 @@
 import { useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import { Scroll, ScrollContainer } from '../../scroll/index.js'
 import { TableRow } from './row.js'
 import { TableHead } from './head.js'
 import { ColumnContextMenu } from '../column.js'
 import cx from 'classnames'
+import { useActions } from '../../../hooks/use-action.js'
 import { useEvent } from '../../../hooks/use-event.js'
-import { useItemIterator } from '../use-item-iterator.js'
+import { getAllColumns, getSortColumn } from '../../../selectors/index.js'
+import * as act from '../../../actions/index.js'
+import {
+  useItemIterator,
+  useItemIteratorProps,
+  useProp
+} from '../use-item-iterator.js'
 
 import {
   useColumnContextMenu,
@@ -22,7 +30,56 @@ import {
 const { ROW } = SASS
 const any = (src) => { for (let key in src) return key }
 
-export const ItemTable = (props) => {
+// Module-level, so useActions returns stable handlers.
+const ACTIONS = [
+  'edit.start',
+  'edit.cancel',
+  'nav.column.insert',
+  'nav.column.order',
+  'nav.column.remove',
+  'nav.column.resize',
+  'metadata.save'
+]
+
+// The store state and actions of the table
+// (besides those shared with the grid).
+const useItemTableProps = (props) => {
+  let dispatch = useDispatch()
+
+  let [
+    onEdit,
+    onEditCancel,
+    onColumnInsert,
+    onColumnOrder,
+    onColumnRemove,
+    onColumnResize,
+    onMetadataSave
+  ] = useActions(ACTIONS)
+
+  let onSort = useEvent((opts) => {
+    dispatch(act.nav.sort({ ...opts, list: props.list }))
+  })
+
+  return {
+    columns: useProp(props, 'columns', getAllColumns),
+    data: useProp(props, 'data', s => s.metadata),
+    edit: useProp(props, 'edit', s => s.edit.column),
+    sort: useProp(props, 'sort', getSortColumn),
+    templates: useProp(props, 'templates', s => s.ontology.template),
+    onColumnInsert,
+    onColumnOrder,
+    onColumnRemove,
+    onColumnResize,
+    onEdit,
+    onEditCancel,
+    onMetadataSave,
+    onSort,
+    ...props
+  }
+}
+
+export const ItemTable = (ownProps) => {
+  let props = useItemTableProps(useItemIteratorProps(ownProps))
   let {
     columns,
     data,

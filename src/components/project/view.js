@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
-import { useActions } from '../../hooks/use-action.js'
+import { useAction } from '../../hooks/use-action.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { usePasteEvent } from '../../hooks/use-paste-event.js'
-import { useTheme } from '../../hooks/use-theme.js'
 
 import { ItemGrid, ItemTable, NoItems } from '../item/index.js'
 import { ProjectSidebar } from './sidebar.js'
@@ -13,12 +12,7 @@ import { SASS } from '../../constants/index.js'
 
 import * as act from '../../actions/index.js'
 
-import {
-  getAllColumns,
-  getItemSelection,
-  getSortColumn,
-  getVisibleItems
-} from '../../selectors/index.js'
+import { getVisibleItems } from '../../selectors/index.js'
 
 
 export const ProjectView = ({
@@ -28,14 +22,11 @@ export const ProjectView = ({
   project
 }) => {
 
-  let { scrollbars } = useTheme()
   let dispatch = useDispatch()
 
   let nav = useSelector(state => state.nav)
   let zoom = useSelector(state => state.ui.zoom)
   let items = useSelector(getVisibleItems)
-  let selection = useSelector(getItemSelection)
-  let sort = useSelector(getSortColumn)
 
   let list = typeof nav.list === 'number' && nav.list > 0 ?
     nav.list : null
@@ -67,10 +58,6 @@ export const ProjectView = ({
     dispatch(act.item.import({ list, ...data }))
   })
 
-  let handleSort = useEvent((opts) => {
-    dispatch(act.nav.sort({ ...opts, list }))
-  })
-
   let handleSearch = useEvent((query) => {
     dispatch(act.nav.search({ query }))
   })
@@ -84,44 +71,7 @@ export const ProjectView = ({
     isDisabled: isReadOnly
   })
 
-
-  // TODO these don't concern ProjectView and should be moved!
-  // ------------------------------------------------------------
-  let edit = useSelector(state => state.edit.column)
-  let photos = useSelector(state => state.photos)
-  let data = useSelector(state => state.metadata)
-  let columns = useSelector(getAllColumns)
-  let templates = useSelector(state => state.ontology.template)
-  let tags = useSelector(state => state.tags)
-
-  let [
-    handleEdit,
-    handleEditCancel,
-    handleColumnInsert,
-    handleColumnOrder,
-    handleColumnRemove,
-    handleColumnResize,
-    handleItemExport,
-    handleItemDelete,
-    handleItemMerge,
-    handleItemOpen,
-    handleItemPreview,
-    handleMetadataSave,
-    handlePhotoMove,
-    handlePhotoRotate
-  ] = useActions([
-    'edit.start', 'edit.cancel',
-    'nav.column.insert', 'nav.column.order', 'nav.column.remove', 'nav.column.resize',
-    'item.export', 'item.delete', 'item.merge', 'item.open', 'item.preview',
-    'metadata.save',
-    'photo.move', 'photo.rotate'
-  ])
-
-  let handleItemSelect = useEvent((payload, meta) => {
-    dispatch(act.item.select(payload, meta))
-  })
-  // ------------------------------------------------------------
-
+  let handleItemDelete = useAction(dispatch, 'item.delete')
 
   return (
     <div id="project-view">
@@ -149,45 +99,17 @@ export const ProjectView = ({
           {isBlank ? (
             <NoItems
               ref={drop}
+              isOver={canDrop}
               isReadOnly={isReadOnly}/>
           ) : (
             <ItemIterator
               ref={iterator}
-              hasScrollbars={scrollbars}
               isDisabled={isDisabled}
               isReadOnly={isReadOnly}
-              items={items}
               list={list}
-              onItemDelete={handleItemDelete}
-              onSelect={handleItemSelect}
-              onSort={handleSort}
-              selection={selection}
               size={size}
-
-              columns={columns}
-              data={data}
-              edit={edit}
-              isOver={canDrop}
-              isTrashSelected={nav.trash}
-              onColumnInsert={handleColumnInsert}
-              onColumnOrder={handleColumnOrder}
-              onColumnRemove={handleColumnRemove}
-              onColumnResize={handleColumnResize}
               onContextMenu={onContextMenu}
-              onEdit={handleEdit}
-              onEditCancel={handleEditCancel}
-              onItemExport={handleItemExport}
-              onItemImport={handleItemImport}
-              onItemMerge={handleItemMerge}
-              onItemOpen={handleItemOpen}
-              onItemPreview={handleItemPreview}
-              onMetadataSave={handleMetadataSave}
-              onPhotoMove={handlePhotoMove}
-              onPhotoRotate={handlePhotoRotate}
-              photos={photos}
-              sort={sort}
-              tags={tags}
-              templates={templates}/>
+              onItemImport={handleItemImport}/>
           )}
         </section>
       </div>

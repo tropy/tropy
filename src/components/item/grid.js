@@ -1,11 +1,12 @@
 import { ItemTile } from './tile.js'
 import { Scroll } from '../scroll/index.js'
-import { useItemIterator } from './use-item-iterator.js'
+import { useItemIterator, useItemIteratorProps } from './use-item-iterator.js'
 import cx from 'classnames'
 import { SASS, TABS } from '../../constants/index.js'
 
 
-export const ItemGrid = (props) => {
+export const ItemGrid = (ownProps) => {
+  let props = useItemIteratorProps(ownProps)
   let { items, selection, size } = props
 
   let iterator = useItemIterator(props, {

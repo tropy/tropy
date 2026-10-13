@@ -1,5 +1,7 @@
 import { useImperativeHandle, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { seq, compose, map, cat, keep } from 'transducers.js'
+import { useActions } from '../../hooks/use-action.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useEventHandler } from '../../hooks/use-event-handler.js'
@@ -8,6 +10,56 @@ import { useKeyMap } from '../../hooks/use-keymap.js'
 import { getKeyState, getSelectionMode } from '../../keymap.js'
 import { indexOf } from '../../common/sequence.js'
 import { blank, get } from '../../common/util.js'
+import { getItemSelection, getVisibleItems } from '../../selectors/index.js'
+
+// Module-level, so useActions returns stable handlers.
+const ACTIONS = [
+  'item.delete',
+  'item.export',
+  'item.merge',
+  'item.open',
+  'item.preview',
+  'item.select',
+  'photo.move',
+  'photo.rotate'
+]
+
+// Selects a value from the store, unless props has it:
+// props take precedence (e.g. given explicitly in tests),
+// and the selector only runs without the prop.
+export const useProp = (props, key, selector) =>
+  useSelector(state => (key in props) ? props[key] : selector(state))
+
+// The store state and actions of the item grid and table.
+export function useItemIteratorProps (props) {
+  let [
+    onItemDelete,
+    onItemExport,
+    onItemMerge,
+    onItemOpen,
+    onItemPreview,
+    onSelect,
+    onPhotoMove,
+    onPhotoRotate
+  ] = useActions(ACTIONS)
+
+  return {
+    isTrashSelected: useProp(props, 'isTrashSelected', s => s.nav.trash),
+    items: useProp(props, 'items', getVisibleItems),
+    photos: useProp(props, 'photos', s => s.photos),
+    selection: useProp(props, 'selection', getItemSelection),
+    tags: useProp(props, 'tags', s => s.tags),
+    onItemDelete,
+    onItemExport,
+    onItemMerge,
+    onItemOpen,
+    onItemPreview,
+    onPhotoMove,
+    onPhotoRotate,
+    onSelect,
+    ...props
+  }
+}
 
 export function useItemIterator ({
   isDisabled,
