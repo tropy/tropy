@@ -363,7 +363,7 @@
         transition: none;
       }
 
-      .main-column:first-child .td-container :is(&) {
+      .main-column:first-child :is(&) {
         padding-left: $default-spacing-x;
       }
     }
