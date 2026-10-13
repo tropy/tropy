@@ -26,12 +26,7 @@ const { ROW } = SASS
 const any = (src) => { for (let key in src) return key }
 
 export const ItemTable = (props) => {
-  let {
-    isReadOnly,
-    list,
-    minColWidth = 40,
-    minMainColWidth = 100
-  } = props
+  let { isReadOnly, list } = props
 
   let dispatch = useDispatch()
 
@@ -65,8 +60,6 @@ export const ItemTable = (props) => {
   let columnState = useColumnState({
     columns,
     list,
-    minColWidth,
-    minMainColWidth,
     onColumnOrder: (payload) => dispatch(act.nav.column.order(payload)),
     onColumnResize: (payload) => dispatch(act.nav.column.resize(payload))
   })
@@ -77,7 +70,7 @@ export const ItemTable = (props) => {
     colwidth: columnState.colwidth,
     columns,
     hasPositionColumn: columnState.hasPositionColumn,
-    minMainColWidth,
+    minMainColWidth: columnState.minMainColWidth,
     onColumnInsert: (payload, meta) =>
       dispatch(act.nav.column.insert(payload, meta)),
     onColumnRemove: (payload) =>
@@ -132,8 +125,8 @@ export const ItemTable = (props) => {
           drag={columnDrag.drag}
           drop={columnDrag.drop}
           hasPositionColumn={columnState.hasPositionColumn}
-          minWidth={minColWidth}
-          minWidthMain={minMainColWidth}
+          minWidth={columnState.minColWidth}
+          minWidthMain={columnState.minMainColWidth}
           sort={sort}
           onContextMenu={columnMenu.show}
           onOrder={columnDrag.onOrder}
@@ -164,7 +157,7 @@ export const ItemTable = (props) => {
                 data={data[item.id]}
                 drag={columnDrag.drag}
                 drop={columnDrag.drop}
-                edit={edit}
+                editing={edit?.[item.id]}
                 hasPositionColumn={columnState.hasPositionColumn}
                 isOnlySelected={selection.size === 1 && selection.has(item.id)}
                 isReadOnly={isReadOnly || isScrolling}

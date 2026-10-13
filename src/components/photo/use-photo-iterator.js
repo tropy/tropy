@@ -171,7 +171,7 @@ export function usePhotoIterator ({
 
   let getIterableProps = (photo) => ({
     photo,
-    selection,
+    isActive: isSelected(photo) && selection == null,
     isDisabled,
     isExpandable: isExpandable(photo),
     isItemOpen,
@@ -198,18 +198,18 @@ export function usePhotoIterator ({
     contract,
     current: () => scroll.current?.current,
     cursor: current,
-    expandedPhotos,
-    photos,
-    selection,
-    sortSelections,
     expand,
+    expandedPhotos,
     extract,
     getIterableProps,
     open,
+    photos,
     preview,
     remove,
     rotate,
     scroll,
-    select
+    select,
+    selection,
+    sortSelections
   }
 }

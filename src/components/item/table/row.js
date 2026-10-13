@@ -4,7 +4,6 @@ import { TableCell } from './cell.js'
 import { useDragDropItem } from '../../../hooks/use-drag-drop-items.js'
 import { useSequenceClicks } from '../../../hooks/use-sequence-clicks.js'
 import { useEvent } from '../../../hooks/use-event.js'
-import { get } from '../../../common/util.js'
 import { getSelectionMode } from '../../../keymap.js'
 import { NAV, TYPE } from '../../../constants/index.js'
 
@@ -18,7 +17,7 @@ export const TableRow = memo(({
   data = {},
   drag,
   drop,
-  edit,
+  editing,
   getSelection,
   hasPositionColumn,
   isDisabled,
@@ -102,7 +101,7 @@ export const TableRow = memo(({
     let props = {
       id: column.id,
       isDragging: idx === drag,
-      isEditing: get(edit, [item.id]) === column.id,
+      isEditing: editing === column.id,
       isMainColumn,
       isMoving: (idx >= drop && idx < drag) || (idx <= drop && idx > drag),
       isReadOnly: isReadOnly || !!column.protected,

@@ -66,6 +66,8 @@ export function useColumnState ({
   return {
     ...state,
     hasPositionColumn,
+    minColWidth,
+    minMainColWidth,
     minWidth,
     order,
     resize
@@ -175,7 +177,7 @@ export function useColumnContextMenu (table, {
   colwidth,
   columns,
   hasPositionColumn,
-  minMainColWidth = 100,
+  minMainColWidth,
   onColumnInsert,
   onColumnRemove
 }) {

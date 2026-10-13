@@ -16,6 +16,7 @@ import { TYPE } from '../../constants/index.js'
 
 export const PhotoListItem = memo(({
   getAdjacent,
+  isActive,
   isDisabled,
   isEditing,
   isExpandable,
@@ -34,13 +35,10 @@ export const PhotoListItem = memo(({
   onSelectionSort,
   onToggle,
   photo,
-  selection,
   size = 48,
   title
 }) => {
   let container = useRef()
-
-  let isActive = isSelected && selection == null
 
   let titleText = useSelector(state =>
     state.metadata[photo.id]?.[title]?.text)

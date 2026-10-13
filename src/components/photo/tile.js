@@ -11,6 +11,7 @@ import { pick } from '../../common/util.js'
 
 export const PhotoTile = memo(({
   getAdjacent,
+  isActive,
   isDisabled,
   isExpandable,
   isExpanded,
@@ -24,7 +25,6 @@ export const PhotoTile = memo(({
   onSelect,
   onToggle,
   photo,
-  selection,
   size = 512
 }) => {
   let container = useRef()
@@ -42,7 +42,7 @@ export const PhotoTile = memo(({
 
   // Read-only (isDisabled here) does not block selection.
   let sequenceClicks = useSequenceClicks({
-    isSelected: isSelected && selection == null,
+    isSelected: isActive,
     onDoubleClick: onItemOpen,
     onSelect,
     value: photo

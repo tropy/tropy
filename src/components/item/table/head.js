@@ -59,9 +59,4 @@ export class TableHead extends React.PureComponent {
       </div>
     )
   }
-
-  static defaultProps = {
-    minWidth: 40,
-    minWidthMain: 100
-  }
 }
