@@ -618,6 +618,10 @@ en:
       order: Sort Selections
 
   activity:
+    status: >-
+      {count, plural,
+        one {1 activity in progress …}
+        other {# activities in progress …}}
     cache:
       prune: Optimizing project cache …
       purge: Purging old caches …

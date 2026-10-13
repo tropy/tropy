@@ -4,9 +4,9 @@ import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar, Toolbar, ToolGroup } from '../toolbar.js'
 import { Button } from '../button.js'
 import { AccountStatus } from '../account/status.js'
+import { ActivityStatus } from '../activity/index.js'
 import { Fade } from '../fx.js'
 import { mode } from '../../actions/nav.js'
-import { Icon } from '../icons.js'
 
 export const ItemToolbar = ({ isItemMode }) => {
   let dispatch = useDispatch()
@@ -30,8 +30,7 @@ export const ItemToolbar = ({ isItemMode }) => {
         </ToolGroup>
       </Toolbar.Left>
       <Toolbar.Right>
-        <Icon name="Status" style={{ '--indeterminate': 'true' }}/>
-        <Icon name="TranscriptionStatus" style={{ '--progress': 75 }}/>
+        <ActivityStatus/>
         <AccountStatus/>
       </Toolbar.Right>
     </Titlebar>
