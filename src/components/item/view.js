@@ -50,6 +50,7 @@ export const ItemView = ({
     handlePhotoCreate,
     handlePhotoSave,
     handlePhotoSelect,
+    handlePhotoTranscribe,
     handleUiUpdate
   ] = useActions([
     'edit.start', 'edit.cancel',
@@ -57,6 +58,7 @@ export const ItemView = ({
     'metadata.save',
     'note.delete', 'note.select',
     'photo.create', 'photo.save', 'photo.select',
+    'transcriptions.create',
     'ui.update'
   ])
   // ------------------------------------------------------------
@@ -89,6 +91,7 @@ export const ItemView = ({
           onPhotoCreate={handlePhotoCreate}
           onPhotoSave={handlePhotoSave}
           onPhotoSelect={handlePhotoSelect}
+          onPhotoTranscribe={handlePhotoTranscribe}
           onUiUpdate={handleUiUpdate}
           panel={panel}
           photo={photo}

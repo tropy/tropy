@@ -85,6 +85,10 @@ export class ItemPanelGroup extends React.PureComponent {
     })
   }
 
+  handlePhotoTranscribe = () => {
+    this.props.onPhotoTranscribe({})
+  }
+
   handleResize = (slots) => {
     this.props.onUiUpdate({ panel: { slots } })
   }
@@ -176,6 +180,7 @@ export class ItemPanelGroup extends React.PureComponent {
             photos={this.props.photos.length}
             zoom={panel.zoom}
             onCreate={this.handlePhotoCreate}
+            onTranscribe={this.handlePhotoTranscribe}
             onZoomChange={this.handleZoomChange}/>
           <PhotoPanel
             canCreate

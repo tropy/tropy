@@ -15,6 +15,7 @@ export const PhotoToolbar = ({
   isDisabled,
   maxZoom = SASS.PHOTO.ZOOM.length - 1,
   onCreate,
+  onTranscribe,
   onZoomChange,
   photos,
   zoom = 0
@@ -46,7 +47,8 @@ export const PhotoToolbar = ({
               icon={<IconTranscriptionSmall/>}
               size="sm"
               isDisabled={isDisabled}
-              title="panel.photo.transcribe"/>
+              title="panel.photo.transcribe"
+              onClick={onTranscribe}/>
           </ToolGroup>
         </>
       }
