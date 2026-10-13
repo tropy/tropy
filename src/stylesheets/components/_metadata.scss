@@ -4,163 +4,165 @@
 // Metadata
 // --------------------------------------------------
 
-.metadata-heading {
-  font-size: $font-size-small;
-  color: $panel-heading-color;
-  line-height: $metadata-line-height;
-  margin: calc($font-size-small / 2) $default-spacing-x 0;
-
-  .scrollbar-style-old-school & {
-    margin-right: calc($default-spacing-x - $scrollbar-size / 3);
-  }
-
-  &.separator {
-    margin-bottom: calc(($metadata-line-height - 10px) / 2); // 10px: Caps height
-    border-bottom: 1px solid $panel-separator-color;
-
-    .panel:focus-visible & {
-      border-bottom-color: $panel-nested-focus-separator-color;
-    }
-  }
-
-  .metadata section:first-child & {
-    margin-top: 9px; // Visual spacing of following headings
-  }
-
-  .panel:focus-visible & {
-    color: $panel-nested-focus-heading-color;
-  }
-}
-
-.form-control {
-  &.select {
-    width: calc(100% - 2 * #{$default-spacing-x});
-    margin: auto;
-  }
-
-  &.template-select {
-    border-color: $template-select-border;
-    margin-bottom: calc(($metadata-line-height - 10px) / 2);
-
-    &:not(.disabled) {
-      background-color: $template-select-bg; // 'Transparent' causes border/box-shadow issue
-    }
-
-    &.focus {
-      background-color: $input-bg;
-    }
-
-    &.mixed {
-      .value {
-        @extend %mixed-indicator;
-      }
-    }
+.metadata {
+  .metadata-heading {
+    font-size: $font-size-small;
+    color: $panel-heading-color;
+    line-height: $metadata-line-height;
+    margin: calc($font-size-small / 2) $default-spacing-x 0;
 
     .scrollbar-style-old-school & {
-      width:
-        calc(
-          100% - 2 * #{$default-spacing-x}
-          + #{$scrollbar-size} / 3
-        );
-      margin-left: $default-spacing-x;
+      margin-right: calc($default-spacing-x - $scrollbar-size / 3);
+    }
+
+    &.separator {
+      margin-bottom: calc(($metadata-line-height - 10px) / 2); // 10px: Caps height
+      border-bottom: 1px solid $panel-separator-color;
+
+      .panel:focus-visible & {
+        border-bottom-color: $panel-nested-focus-separator-color;
+      }
+    }
+
+    .metadata section:first-child & {
+      margin-top: 9px; // Visual spacing of following headings
     }
 
     .panel:focus-visible & {
-      background-color: $template-select-nested-focus-bg;
-      border-color: $template-select-nested-focus-border;
+      color: $panel-nested-focus-heading-color;
+    }
+  }
+
+  .form-control {
+    &.select {
+      width: calc(100% - 2 * #{$default-spacing-x});
+      margin: auto;
     }
 
-    .is-blurred .item-mode & {
-      @if $platform == darwin {
-        background-color: $template-select-blurred-bg-darwin;
-        border-color: $template-select-blurred-border-darwin;
+    &.template-select {
+      border-color: $template-select-border;
+      margin-bottom: calc(($metadata-line-height - 10px) / 2);
+
+      &:not(.disabled) {
+        background-color: $template-select-bg; // 'Transparent' causes border/box-shadow issue
       }
-    }
-  }
 
-  &.resource-select {
-    margin-top: (-$input-border-width);
-    margin-bottom: (-$input-border-width);
-  }
-}
+      &.focus {
+        background-color: $input-bg;
+      }
 
-.metadata-fields {
-  .metadata-field {
-    display: flex;
-    line-height: $metadata-line-height;
+      &.mixed {
+        .value {
+          @extend %mixed-indicator;
+        }
+      }
 
-    &.mixed {
-      .editable:not(.active) {
-        display: flex;
-        @extend %mixed-indicator;
+      .scrollbar-style-old-school & {
+        width:
+          calc(
+            100% - 2 * #{$default-spacing-x}
+            + #{$scrollbar-size} / 3
+          );
+        margin-left: $default-spacing-x;
+      }
 
-        .truncate {
-          flex: 0 1 auto;
+      .panel:focus-visible & {
+        background-color: $template-select-nested-focus-bg;
+        border-color: $template-select-nested-focus-border;
+      }
+
+      .is-blurred .item-mode & {
+        @if $platform == darwin {
+          background-color: $template-select-blurred-bg-darwin;
+          border-color: $template-select-blurred-border-darwin;
         }
       }
     }
-  }
 
-  label {
-    flex: 0 0 $metadata-horizontal-offset;
-    text-align: right;
-    padding-left: $default-spacing-x;
-    padding-right: calc($metadata-gutter / 2);
-    color: $label-color;
-    @include css-truncation;
-
-    .extra :is(&) {
-      font-style: italic;
+    &.resource-select {
+      margin-top: (-$input-border-width);
+      margin-bottom: (-$input-border-width);
     }
   }
 
-  .value {
-    flex: 0 0 calc(100% - #{$metadata-horizontal-offset});
-    display: flex;
-    align-items: center;
-    padding-left: calc($metadata-gutter / 2);
-    padding-right: $default-spacing-x;
-    min-width: 0; // Fix truncation
-    position: relative;
+  .metadata-fields {
+    .metadata-field {
+      display: flex;
+      line-height: $metadata-line-height;
 
-    &.over {
-      @extend %drop-target;
+      &.mixed {
+        .editable:not(.active) {
+          display: flex;
+          @extend %mixed-indicator;
+
+          .truncate {
+            flex: 0 1 auto;
+          }
+        }
+      }
     }
 
-    .over :is(&) {
-      @extend %drop-target;
+    label {
+      flex: 0 0 $metadata-horizontal-offset;
+      text-align: right;
+      padding-left: $default-spacing-x;
+      padding-right: calc($metadata-gutter / 2);
+      color: $label-color;
+      @include css-truncation;
+
+      .extra :is(&) {
+        font-style: italic;
+      }
     }
 
-    .scrollbar-style-old-school & {
-      padding-right: calc($default-spacing-x - $scrollbar-size / 3);
+    .value {
+      flex: 0 0 calc(100% - #{$metadata-horizontal-offset});
+      display: flex;
+      align-items: center;
+      padding-left: calc($metadata-gutter / 2);
+      padding-right: $default-spacing-x;
+      min-width: 0; // Fix truncation
+      position: relative;
+
+      &.over {
+        @extend %drop-target;
+      }
+
+      .over :is(&) {
+        @extend %drop-target;
+      }
+
+      .scrollbar-style-old-school & {
+        padding-right: calc($default-spacing-x - $scrollbar-size / 3);
+      }
+
+      .clickable.static :is(&) {
+        cursor: pointer;
+      }
+
+      .static :is(&) {
+        cursor: not-allowed;
+      }
     }
 
-    .clickable.static :is(&) {
-      cursor: pointer;
+    .editable {
+      &.disabled {
+        user-select: all;
+      }
     }
 
-    .static :is(&) {
-      cursor: not-allowed;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
-  }
 
-  .editable {
-    &.disabled {
-      user-select: all;
-    }
-  }
+    .icon {
+      flex: 0 0 auto;
+      margin-left: $space-xs;
 
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .icon {
-    flex: 0 0 auto;
-    margin-left: $space-xs;
-
-    & + .icon {
-      margin-left: $space-min;
+      & + .icon {
+        margin-left: $space-min;
+      }
     }
   }
 }
