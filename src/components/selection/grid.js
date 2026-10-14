@@ -1,7 +1,6 @@
 import { memo, useMemo, useRef } from 'react'
 import { shallowEqual, useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
-import { useEvent } from '../../hooks/use-event.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
@@ -42,46 +41,22 @@ export const SelectionGrid = memo(({
     onSort: (selections) => onSort({ photo: photo.id, selections })
   })
 
-  let select = useEvent((selection) => {
-    if (selection != null) {
-      onSelect({
-        id: photo.id,
-        item: photo.item,
-        selection: selection.id
-      })
-    }
-  })
-
-  let open = useEvent((selection) => {
-    if (selection != null) {
-      onItemOpen({
-        id: photo.id,
-        item: photo.item,
-        selection: selection.id
-      })
-    }
-  })
-
-  let handleContextMenu = useEvent((event, selection) => {
-    onContextMenu(event, photo, selection.id)
-  })
-
   let cursor = new Cursor(selections, active, {
     layout: 'grid',
     columns: cols
   })
 
   let onKeyDown = useCursorKeys(cursor, {
-    onMove: select,
+    onMove: onSelect,
     onKeyDown: useKeyMap('SelectionGrid', {
       open () {
-        open(cursor.current())
+        onItemOpen(cursor.current())
       },
       delete () {
         // Subtle: always handled, so that the key does not bubble
         // up to the photo grid and delete the photo instead.
         if (cursor.current() != null)
-          onDelete({ id: photo.id, selection: cursor.id })
+          onDelete(cursor.current())
       },
       rotateLeft () {
         onRotate(-90)
@@ -111,10 +86,10 @@ export const SelectionGrid = memo(({
           isLast={index === selections.length - 1}
           isSortable={sortable.isSortable}
           isVertical={!(cols > 1)}
-          onContextMenu={handleContextMenu}
+          onContextMenu={onContextMenu}
           onDrop={sortable.onDrop}
-          onItemOpen={open}
-          onSelect={select}
+          onItemOpen={onItemOpen}
+          onSelect={onSelect}
           photo={photo}
           selection={selection}
           size={size}/>

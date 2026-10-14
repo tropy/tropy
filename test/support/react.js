@@ -42,7 +42,15 @@ function onIntlError (error) {
 }
 
 export function createStore (preloadedState) {
-  return configureStore({ reducer, preloadedState })
+  return configureStore({
+    reducer,
+    preloadedState,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+      serializableCheck: {
+        ignoredPaths: [/^keymap\./]
+      }
+    })
+  })
 }
 
 export const inWindowContext = withStore(store)

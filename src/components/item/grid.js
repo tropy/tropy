@@ -30,7 +30,7 @@ export const ItemGrid = (props) => {
         onClick={iterator.clearSelection}
         onTabFocus={iterator.handleTabFocus}
         onKeyDown={iterator.onKeyDown}
-        onSelect={iterator.handleSelectItem}>
+        onLayoutChange={iterator.onLayoutChange}>
         {(item, index) => (
           <ItemTile
             {...iterator.getIterableProps(item, index)}

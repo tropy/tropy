@@ -2,6 +2,7 @@ import { usePhotoIterator } from './use-photo-iterator.js'
 import { PhotoTile } from './tile.js'
 import { SelectionGrid } from '../selection/grid.js'
 import { Scroll } from '../scroll/scroll.js'
+import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 import cx from 'classnames'
 import { SASS, TABS } from '../../constants/index.js'
@@ -13,10 +14,16 @@ export const PhotoGrid = (props) => {
   let iterator = usePhotoIterator(props, { isGrid: true })
   let { photos } = iterator
 
-  let onKeyDown = useKeyMap('PhotoIterator', {
-    contract: () => iterator.contract(iterator.current()),
-    expand: () => iterator.expand(iterator.current()),
-    enter: () => iterator.expand(iterator.current()),
+  let commands = useKeyMap('PhotoIterator', {
+    contract () {
+      return iterator.contract(iterator.current())
+    },
+    expand () {
+      return iterator.expand(iterator.current())
+    },
+    enter () {
+      return iterator.expand(iterator.current())
+    },
     open () {
       iterator.open(iterator.current())
     },
@@ -38,6 +45,11 @@ export const PhotoGrid = (props) => {
     extract () {
       iterator.extract(iterator.current())
     }
+  })
+
+  let onKeyDown = useCursorKeys(iterator.navigation, {
+    onMove: iterator.move,
+    onKeyDown: commands
   })
 
   let renderSelectionGrid = (photo, columns) => (
@@ -71,7 +83,7 @@ export const PhotoGrid = (props) => {
         renderExpansionRow={renderSelectionGrid}
         tabIndex={TABS.PhotoGrid}
         onKeyDown={onKeyDown}
-        onSelect={iterator.select}>
+        onLayoutChange={iterator.onLayoutChange}>
         {(photo, index, { isExpanded }) => (
           <PhotoTile
             {...iterator.getIterableProps(photo)}

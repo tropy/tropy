@@ -1,5 +1,5 @@
 import { mock } from 'node:test'
-import { fireEvent } from '@testing-library/react'
+import { fireEvent, waitFor } from '@testing-library/react'
 import { render, withStore } from '../../support/react.js'
 import { emit } from '#tropy/dom.js'
 import { ItemGrid } from '#tropy/components/item/grid.js'
@@ -24,12 +24,15 @@ describe('ItemGrid', () => {
     expect(selection()).to.include({ anchor: 2, cursor: 2 })
   })
 
-  it('steps from the cursor with Shift+arrow keys', () => {
+  it('steps from the cursor with Shift+arrow keys', async () => {
     let { $ } = setup()
-    fireEvent.keyDown($('.scroll-container'), { key: 'ArrowRight', shiftKey: true })
 
+    // The grid layout is known once Scroll has measured itself.
     // A step moves the anchor (an extend would keep it at 1).
-    expect(selection()).to.include({ anchor: 2, cursor: 2 })
+    await waitFor(() => {
+      fireEvent.keyDown($('.scroll-container'), { key: 'ArrowRight', shiftKey: true })
+      expect(selection()).to.include({ anchor: 2, cursor: 2 })
+    })
   })
 
   it('extends from the anchor on Shift-click', () => {

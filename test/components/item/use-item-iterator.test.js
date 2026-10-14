@@ -4,12 +4,10 @@ import { useItemIterator } from '#tropy/components/item/use-item-iterator.js'
 import { createItemStore } from './store.js'
 
 describe('useItemIterator', () => {
-  // Tab focus (reported by Scroll) with item 2 as current.
+  // Tab focus (reported by Scroll).
   let focus = (selected) => {
     let store = createItemStore(selected)
     let { result } = renderHook(() => useItemIterator({}, {}), withStore(store))
-
-    result.current.scroll.current = { current: { id: 2 } }
 
     let before = store.getState().nav.item
     result.current.handleTabFocus()
@@ -22,8 +20,8 @@ describe('useItemIterator', () => {
     expect(after).to.equal(before)
   })
 
-  it('selects the current item on tab focus without a selection', () => {
+  it('selects the first item on tab focus without a selection', () => {
     let [, after] = focus([])
-    expect(after).to.include({ anchor: 2, cursor: 2 })
+    expect(after).to.include({ anchor: 1, cursor: 1 })
   })
 })

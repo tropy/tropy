@@ -1,7 +1,6 @@
 import { memo, useRef } from 'react'
 import { shallowEqual, useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
-import { useEvent } from '../../hooks/use-event.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { SelectionListItem } from './list-item.js'
 import { dc } from '../../ontology/ns.js'
@@ -35,34 +34,6 @@ export const SelectionList = memo(({
     onSort: (selections) => onSort({ photo: photo.id, selections })
   })
 
-  let select = useEvent((selection) => {
-    if (selection != null) {
-      onSelect({
-        id: photo.id,
-        item: photo.item,
-        selection: selection.id
-      })
-    }
-  })
-
-  let open = useEvent((selection) => {
-    if (selection != null) {
-      onItemOpen({
-        id: photo.id,
-        item: photo.item,
-        selection: selection.id
-      })
-    }
-  })
-
-  let handleEdit = useEvent((selection) => {
-    onEdit({ selection: selection.id })
-  })
-
-  let handleContextMenu = useEvent((event, selection) => {
-    onContextMenu(event, photo, selection.id)
-  })
-
   return (
     <ul
       ref={sortable.isSortable ? sortable.drop(container) : container}
@@ -80,12 +51,12 @@ export const SelectionList = memo(({
           isLast={index === selections.length - 1}
           isSortable={sortable.isSortable}
           onChange={onChange}
-          onContextMenu={handleContextMenu}
+          onContextMenu={onContextMenu}
           onDrop={sortable.onDrop}
-          onEdit={handleEdit}
+          onEdit={onEdit}
           onEditCancel={onEditCancel}
-          onItemOpen={open}
-          onSelect={select}
+          onItemOpen={onItemOpen}
+          onSelect={onSelect}
           photo={photo}
           selection={selection}
           title={dc.title}/>

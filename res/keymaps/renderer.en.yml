@@ -83,11 +83,9 @@ en:
       expand:
         - CmdOrCtrl+ArrowDown
         - CmdOrCtrl+ArrowRight
-        - ArrowRight
       contract:
         - CmdOrCtrl+ArrowUp
         - CmdOrCtrl+ArrowLeft
-        - ArrowLeft
         - Escape
       copyPhoto:
         - CmdOrCtrl+Shift+C
@@ -95,6 +93,9 @@ en:
         - CmdOrCtrl+Shift+X
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
+    PhotoList: &PhotoList
+      expand: ArrowRight
+      contract: ArrowLeft
     SelectionGrid: &SelectionGrid
       open: Enter
       delete: *delete
@@ -207,17 +208,14 @@ en:
         - Delete
       enter: Enter
       preview: Space
-      expand:
-        - ArrowRight
-      contract:
-        - ArrowLeft
-        - Escape
+      contract: Escape
       copyPhoto:
         - CmdOrCtrl+Shift+C
       extract:
         - CmdOrCtrl+Shift+X
       rotateLeft: *rotateLeft
       rotateRight: *rotateRight
+    PhotoList: *PhotoList
     SelectionGrid:
       open:
         - Cmd+ArrowDown

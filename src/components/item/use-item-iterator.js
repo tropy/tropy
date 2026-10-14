@@ -1,20 +1,22 @@
-import { useImperativeHandle, useRef } from 'react'
+import { useImperativeHandle, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { seq, compose, map, cat, keep } from 'transducers.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
+import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useEventHandler } from '../../hooks/use-event-handler.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
-import { getKeyState, getSelectionMode } from '../../keymap.js'
-import { indexOf } from '../../common/sequence.js'
+import { getSelectionMode } from '../../keymap.js'
+import { Cursor, indexOf } from '../../common/sequence.js'
 import { blank, get } from '../../common/util.js'
 import { getItemSelection, getVisibleItems } from '../../selectors/index.js'
 import * as act from '../../actions/index.js'
 
 // The item list container logic shared by grid and table:
-// selects the items and the selection, dispatches the item
-// actions, and hands the leaves (tiles, rows) stable handlers.
+// selects the items and the selection, navigates them
+// (a Cursor with Scroll's layout), dispatches the item actions,
+// and hands the leaves (tiles, rows) stable handlers.
 export function useItemIterator ({
   isDisabled,
   isReadOnly,
@@ -30,13 +32,16 @@ export function useItemIterator ({
   let selection = useSelector(getItemSelection)
   let isTrashSelected = useSelector(state => state.nav.trash)
 
+  let [layout, setLayout] = useState()
+  let cursor = new Cursor(items, selection.cursor, layout)
+
   useImperativeHandle(ref, () => ({
     focus () {
       scroll.current?.focus()
     }
   }), [])
 
-  let current = () => scroll.current?.current
+  let current = () => cursor.current()
 
   let select = useEvent((item, { mode, throttle } = {}) => {
     if (item == null) return
@@ -47,21 +52,25 @@ export function useItemIterator ({
       dispatch(act.item.select({ item: next }, { throttle }))
   })
 
-  // Arrow keys (via Scroll) and the global next/prev events.
-  let handleSelectItem = useEvent((item, event) => {
-    let mode = event && getSelectionMode(getKeyState(event))
+  // Cursor keys: Shift extends, in grids it steps.
+  // Ctrl/Cmd+arrow keys are left alone (they bubble).
+  let move = (item, keyState) => {
+    if (keyState.ctrlKey || keyState.metaKey)
+      return false
+
+    let mode = getSelectionMode(keyState)
 
     if (isGrid && mode === 'extend')
       mode = 'step'
 
-    select(item, { mode, throttle: event?.repeat })
-  })
+    select(item, { mode, throttle: keyState.repeat })
+  }
 
-  // Tab focus selects the current item,
+  // Tab focus selects the current (or first) item,
   // unless something is selected already.
   let handleTabFocus = () => {
     if (selection.size === 0)
-      select(current())
+      select(current() ?? items[0])
   }
 
   let getSelection = useEvent(() => selection.ids())
@@ -76,7 +85,9 @@ export function useItemIterator ({
   // Only these are checked: the worst case for sparse selections
   // is not worth the price.
   let adjacent = () => {
-    for (let it of [scroll.current?.next(), scroll.current?.prev()])
+    let [prev, next] = cursor.adjacent()
+
+    for (let it of [next, prev])
       if (it != null && !selection.has(it.id)) return it
   }
 
@@ -128,7 +139,7 @@ export function useItemIterator ({
     open(current())
   }
 
-  let onKeyDown = useKeyMap('ItemIterator', {
+  let commands = useKeyMap('ItemIterator', {
     open: openCurrent,
     preview () {
       let item = current()
@@ -169,12 +180,17 @@ export function useItemIterator ({
       dispatch(act.photo.rotate({ id: getSelectedPhotos(), by }))
   }
 
+  let onKeyDown = useCursorKeys(cursor, {
+    onMove: move,
+    onKeyDown: commands
+  })
+
   useGlobalEvent('nextItem', (event) => {
-    handleSelectItem(scroll.current?.next(), event)
+    select(cursor.next(), { throttle: event?.repeat })
   })
 
   useGlobalEvent('prevItem', (event) => {
-    handleSelectItem(scroll.current?.prev(), event)
+    select(cursor.prev(), { throttle: event?.repeat })
   })
 
   // The mouse forward button.
@@ -214,10 +230,10 @@ export function useItemIterator ({
     connect,
     getIterableProps,
     handleTabFocus,
-    handleSelectItem,
     isOver: file.canDrop,
     items,
     onKeyDown,
+    onLayoutChange: setLayout,
     scroll,
     selection,
     tabIndex: (isDisabled || !items.length) ? null : tabIndex

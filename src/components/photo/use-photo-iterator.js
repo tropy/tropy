@@ -1,11 +1,12 @@
-import { useRef } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
-import { pick } from '../../common/util.js'
+import { pick, pluck } from '../../common/util.js'
+import { Cursor, indexOf } from '../../common/sequence.js'
 import { getExpandedPhotos, getVisiblePhotos } from '../../selectors/index.js'
 import * as act from '../../actions/index.js'
 
@@ -13,6 +14,8 @@ import * as act from '../../actions/index.js'
 // selects the photos, the current photo and selection,
 // and the expansions; dispatches the photo actions;
 // hands the leaves (tiles, list items) stable handlers.
+// Commands take sequence elements: photos or selections
+// (a selection has a photo field).
 export function usePhotoIterator ({
   canCreate,
   isDisabled,
@@ -27,6 +30,30 @@ export function usePhotoIterator ({
   let current = useSelector(state => state.nav.photo)
   let selection = useSelector(state => state.nav.selection)
   let expandedPhotos = useSelector(getExpandedPhotos)
+  let selections = useSelector(state => state.selections)
+
+  // Navigation: a Cursor with Scroll's layout.
+  // The grid navigates the photos (the expansion row has its own
+  // keys, in SelectionGrid); the list also steps into the expanded
+  // selections, one row each, as Scroll renders them.
+  // Photo and selection ids are unique (subjects), so both mix.
+  let sequence = useMemo(() => isGrid ? photos : photos.flatMap(photo => [
+    photo,
+    ...pluck(selections, expandedPhotos[photo.id] ?? [])
+  ]), [isGrid, photos, expandedPhotos, selections])
+
+  // The active selection's row, or the photo's if not expanded.
+  let at = (selection != null && indexOf(sequence, selection) >= 0) ?
+    selection :
+    current
+
+  let [layout, setLayout] = useState()
+  let cursor = new Cursor(sequence, at, layout)
+
+  // The photo of an element, and the selection id for selections.
+  let resolve = (el) => (el?.photo != null) ?
+    { photo: photos[indexOf(photos, el.photo)], selection: el.id } :
+    { photo: el, selection: undefined }
 
   let onSelect = (payload, meta) => {
     dispatch(act.photo.select(payload, meta))
@@ -41,21 +68,24 @@ export function usePhotoIterator ({
   let isExpanded = (photo) =>
     photo != null && !!expandedPhotos[photo.id]
 
-  let select = useEvent((photo, event) => {
-    if (photo == null || (
-      isSelected(photo) && selection === photo.selection
-    )) {
+  let select = useEvent((el, keyState) => {
+    let { photo, selection: target } = resolve(el)
+
+    if (photo == null || (isSelected(photo) && selection === target))
       return
-    }
 
     onSelect({
       photo: photo.id,
       item: photo.item,
-      selection: photo.selection
-    }, { throttle: event?.repeat })
+      selection: target
+    }, { throttle: keyState?.repeat })
   })
 
-  let contract = (photo) => {
+  // Expansion works on the element's photo
+  // (contracting a selection row contracts its photo).
+  let contract = (el) => {
+    let { photo } = resolve(el)
+
     if (!(isExpandable(photo) && isExpanded(photo)))
       return false
 
@@ -72,7 +102,9 @@ export function usePhotoIterator ({
     return true
   }
 
-  let expand = (photo) => {
+  let expand = (el) => {
+    let { photo } = resolve(el)
+
     if (!isExpandable(photo) || isExpanded(photo))
       return false
 
@@ -87,25 +119,32 @@ export function usePhotoIterator ({
       expand(photo)
   })
 
-  let open = useEvent((photo) => {
+  let open = useEvent((el) => {
+    let { photo, selection } = resolve(el)
+
+    if (photo == null)
+      return
+
     if (isItemOpen)
       expand(photo)
     else
       dispatch(act.item.open({
         id: photo.item,
         photos: [photo.id],
-        selection: photo.selection
+        selection
       }))
   })
 
-  let remove = useEvent(({ id, item, selection }) => {
-    if (isDisabled)
+  let remove = useEvent((el) => {
+    let { photo, selection } = resolve(el)
+
+    if (isDisabled || photo == null)
       return
 
     if (selection != null)
-      dispatch(act.selection.delete({ photo: id, selections: [selection] }))
+      dispatch(act.selection.delete({ photo: photo.id, selections: [selection] }))
     else
-      dispatch(act.photo.delete({ item, photos: [id] }))
+      dispatch(act.photo.delete({ item: photo.item, photos: [photo.id] }))
   })
 
   let rotate = useEvent((by) => {
@@ -118,19 +157,26 @@ export function usePhotoIterator ({
       dispatch(act.photo.rotate({ id: current, by, type: 'photo' }))
   })
 
-  let extract = ({ id, selection }, meta = {}) => {
-    dispatch(act.photo.extract({ id, selection }, meta))
+  let extract = (el, meta = {}) => {
+    let { photo, selection } = resolve(el)
+
+    if (photo != null)
+      dispatch(act.photo.extract({ id: photo.id, selection }, meta))
   }
 
-  let preview = ({ id, item }) => {
-    dispatch(act.item.preview({ id: item, photos: [id] }))
+  let preview = (el) => {
+    let { photo } = resolve(el)
+
+    if (photo != null)
+      dispatch(act.item.preview({ id: photo.item, photos: [photo.id] }))
   }
 
   let consolidate = useEvent((photo) => {
     dispatch(act.photo.consolidate([photo.id], { force: true, prompt: true }))
   })
 
-  let contextMenu = useEvent((event, photo, selection) => {
+  let contextMenu = useEvent((event, el) => {
+    let { photo, selection } = resolve(el)
     let scope = (selection == null) ? 'photo' : 'selection'
 
     onContextMenu(
@@ -140,12 +186,20 @@ export function usePhotoIterator ({
         (selection == null) ? {} : { selection }))
   })
 
+  // Cursor keys; Ctrl/Cmd+arrow keys are left alone (they bubble).
+  let move = (el, keyState) => {
+    if (keyState.ctrlKey || keyState.metaKey)
+      return false
+
+    select(el, keyState)
+  }
+
   useGlobalEvent('nextPhoto', (event) => {
-    select(scroll.current?.next(), event)
+    select(cursor.next(), event)
   })
 
   useGlobalEvent('prevPhoto', (event) => {
-    select(scroll.current?.prev(), event)
+    select(cursor.prev(), event)
   })
 
   let sortable = useSortableSequence({
@@ -196,12 +250,15 @@ export function usePhotoIterator ({
     connect,
     contextMenu,
     contract,
-    current: () => scroll.current?.current,
+    current: () => cursor.current(),
     cursor: current,
     expand,
     expandedPhotos,
     extract,
     getIterableProps,
+    move,
+    navigation: cursor,
+    onLayoutChange: setLayout,
     open,
     photos,
     preview,

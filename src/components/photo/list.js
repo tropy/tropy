@@ -3,6 +3,7 @@ import { Scroll } from '../scroll/index.js'
 import { PhotoListItem } from './list-item.js'
 import { usePhotoIterator } from './use-photo-iterator.js'
 import { useEvent } from '../../hooks/use-event.js'
+import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 import { SASS, TABS } from '../../constants/index.js'
 import { dc } from '../../ontology/ns.js'
@@ -18,14 +19,15 @@ export const PhotoList = (props) => {
   let editing = useSelector(state => state.edit.photo)
 
   // List items are memoized: these handlers are stable.
-  let handleEdit = useEvent((photo) => {
-    if (photo == null || isDisabled)
+  // Edits a photo or a selection (it has a photo field).
+  let handleEdit = useEvent((el) => {
+    if (el == null || isDisabled)
       return
 
-    if (photo.selection == null)
-      dispatch(act.edit.start({ photo: photo.id }))
+    if (el.photo == null)
+      dispatch(act.edit.start({ photo: el.id }))
     else
-      dispatch(act.edit.start({ selection: photo.selection }))
+      dispatch(act.edit.start({ selection: el.id }))
   })
 
   let handleEditCancel = useEvent((...args) => {
@@ -37,9 +39,13 @@ export const PhotoList = (props) => {
     dispatch(act.metadata.save(...args))
   })
 
-  let onKeyDown = useKeyMap('PhotoIterator', {
-    contract: () => iterator.contract(iterator.current()),
-    expand: () => iterator.expand(iterator.current()),
+  let commands = useKeyMap(['PhotoList', 'PhotoIterator'], {
+    contract () {
+      return iterator.contract(iterator.current())
+    },
+    expand () {
+      return iterator.expand(iterator.current())
+    },
     edit () {
       handleEdit(iterator.current())
     },
@@ -69,6 +75,11 @@ export const PhotoList = (props) => {
     }
   })
 
+  let onKeyDown = useCursorKeys(iterator.navigation, {
+    onMove: iterator.move,
+    onKeyDown: commands
+  })
+
   return iterator.connect(
     <div className={cx('photo-list', iterator.classes)}>
       <Scroll
@@ -80,7 +91,7 @@ export const PhotoList = (props) => {
         expandedItems={iterator.expandedPhotos}
         tabIndex={TABS.PhotoList}
         onKeyDown={onKeyDown}
-        onSelect={iterator.select}>
+        onLayoutChange={iterator.onLayoutChange}>
         {(photo, index, { isExpanded }) => (
           <PhotoListItem
             {...iterator.getIterableProps(photo)}
