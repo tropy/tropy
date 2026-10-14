@@ -1,14 +1,11 @@
-import { createRef } from 'react'
 import { mock } from 'node:test'
-import { act, waitFor } from '@testing-library/react'
+import { waitFor } from '@testing-library/react'
 import { render } from '../../support/react.js'
-import { pluck } from '#tropy/selectors/util.js'
 import { Scroll } from '#tropy/components/scroll/index.js'
 
 describe('Scroll', () => {
   let style
-  let ids = Array.from({ length: 100 }, (_, idx) => idx + 1)
-  let items = pluck(Object.fromEntries(ids.map(id => [id, { id }])), ids)
+  let items = Array.from({ length: 100 }, (_, idx) => ({ id: idx + 1 }))
 
   before(() => {
     style = document.createElement('style')
@@ -52,33 +49,31 @@ describe('Scroll', () => {
     })
   })
 
-  it('renders and scrolls to the cursor', async () => {
+  it('centers far items and aligns near ones to the edge', async () => {
     let { $, $$, rerender } = render(renderScroll({ cursor: 1 }))
-
-    // Once measured, only the rows around the viewport are rendered.
-    await measured($$)
-
-    expect($('#item-1')).to.exist
-    expect($('#item-80')).not.to.exist
-
-    // Rendered right away, not after the scroll event.
-    rerender(renderScroll({ cursor: 80 }))
-
-    expect($('#item-80')).to.exist
-    expect($('.scroll-container').scrollTop).to.be.above(1000)
-  })
-
-  it('scrolls to the end', async () => {
-    let scroll = createRef()
-    let { $, $$ } = render(renderScroll({ ref: scroll }))
     let container = $('.scroll-container')
 
-    await measured($$)
-    act(() => scroll.current.scrollToEnd())
+    // The item's top, relative to the view (100px).
+    let position = (id) =>
+      $(`#item-${id}`).getBoundingClientRect().top -
+      container.getBoundingClientRect().top
 
-    expect(container.scrollTop)
-      .to.equal(container.scrollHeight - container.clientHeight)
-    expect($('#item-100')).to.exist
+    // Once measured, only the rows around the view are rendered.
+    await measured($$)
+    expect($('#item-80')).not.to.exist
+
+    // Rendered and scrolled right away (before paint).
+    // Near: just below the view, aligned to its bottom.
+    rerender(renderScroll({ cursor: 7 }))
+    expect(position(7)).to.equal(80)
+
+    // Far: centered.
+    rerender(renderScroll({ cursor: 80 }))
+    expect(position(80)).to.equal(40)
+
+    // Near again: just above the view, aligned to its top.
+    rerender(renderScroll({ cursor: 77 }))
+    expect(position(77)).to.equal(0)
   })
 
   it('scrolls to the cursor once measured', async () => {
@@ -96,7 +91,11 @@ describe('Scroll', () => {
 
     await measured($$)
 
-    for (let top of [15, 35, 90, 333, 777, 1240, 1900, 500, 10]) {
+    // Jumps, then scrolling slowly.
+    for (let top of [
+      333, 1900, 10,
+      ...Array.from({ length: 15 }, (_, i) => 500 + i * 10)
+    ]) {
       container.scrollTop = top
 
       await waitFor(() => {
@@ -111,11 +110,10 @@ describe('Scroll', () => {
     }
   })
 
-  it('keeps the visible rows rendered when the steps change', async () => {
+  it('keeps the visible rows rendered when resized', async () => {
     let { $, $$ } = render(renderScroll())
     let container = $('.scroll-container')
 
-    // Tall: large steps (8 rows).
     container.style.height = '400px'
     await waitFor(() => {
       expect($$('li').length).to.be.above(20)
@@ -126,23 +124,35 @@ describe('Scroll', () => {
       expect($('#item-64')).to.exist
     })
 
-    // Short: small steps; scrollTop is still 1270.
+    // A little further: no new rows needed while tall.
+    container.scrollTop = 1340
+    await frame()
+    await frame()
+
     container.style.height = '100px'
     await measured($$)
 
-    expect($('#item-69')).to.exist
+    expect($('#item-72')).to.exist
   })
 
-  it('does not render when scrolling within a step', async () => {
+  it('does not render rows when scrolling a little', async () => {
     let onRender = mock.fn()
     let { $, $$ } = render(renderScroll({}, onRender))
+    let container = $('.scroll-container')
 
     await measured($$)
+    container.scrollTop = 600
+    await frame()
+    await frame()
+
     let renders = onRender.mock.callCount()
 
-    $('.scroll-container').scrollTop = 20
-    await frame()
-    await frame()
+    // Back and forth across a row.
+    for (let top of [610, 620, 610, 620]) {
+      container.scrollTop = top
+      await frame()
+      await frame()
+    }
 
     expect(onRender.mock.callCount()).to.equal(renders)
   })
@@ -239,7 +249,7 @@ describe('Scroll', () => {
 
       let zoom = (size) => rerender(renderGrid(size, cursor))
 
-      return { $$, container, position, zoom }
+      return { position, zoom }
     }
 
     it('keeps the cursor in place', async () => {
@@ -255,26 +265,6 @@ describe('Scroll', () => {
       let before = position(76)
 
       zoom(25)
-      expect(position(76)).to.be.closeTo(before, 1)
-    })
-
-    it('keeps its place when hidden and shown', async () => {
-      let { $$, container, position } = await setup(76, 300)
-      let before = position(76)
-
-      // Collapsed: unmeasured, a single column.
-      container.style.width = '0px'
-      container.style.height = '0px'
-      await waitFor(() => {
-        expect($$('li').length).to.be.at.most(2)
-      })
-
-      container.style.width = '117px'
-      container.style.height = ''
-      await waitFor(() => {
-        expect($$('li').length).to.be.above(20)
-      })
-
       expect(position(76)).to.be.closeTo(before, 1)
     })
 

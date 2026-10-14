@@ -1,9 +1,7 @@
-import { pluck } from '#tropy/selectors/util.js'
 import { getLayout, getOffset, getRowAt } from '#tropy/components/scroll/layout.js'
 
 describe('Scroll layout', () => {
-  let ids = Array.from({ length: 20 }, (_, idx) => idx + 1)
-  let items = pluck(Object.fromEntries(ids.map(id => [id, { id }])), ids)
+  let items = Array.from({ length: 20 }, (_, idx) => ({ id: idx + 1 }))
 
   let layout = (props) => getLayout({
     items,

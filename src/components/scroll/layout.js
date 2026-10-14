@@ -36,15 +36,20 @@ export const getLayout = ({
   let overscanRows = Math.max(2, Math.ceil(visibleRows * overscan))
   let rowsPerPage = visibleRows + overscanRows
 
-  // The rendered rows move in steps of a third of the overscan.
-  // The rest of the overscan is split evenly above and below
-  // the visible rows: that much stays rendered ahead in both directions.
-  let step = Math.max(1, Math.floor(overscanRows / 3))
-  let pageOffset = Math.floor((overscanRows - step) / 2) * itemHeight
+  // The cursor's page size (PageUp/PageDown):
+  // the items in the rows fully in view.
+  let pageSize = columns * Math.max(Math.floor(height / itemHeight), 1)
+
+  // The page is rendered for a scroll position: the overscan is
+  // split evenly above and below the view at that position.
+  // Scrolled less than the tolerance away, the page still covers
+  // the view (it starts at a full row: one row less below).
+  let pageOffset = Math.floor(overscanRows / 2) * itemHeight
+  let tolerance = (Math.ceil(overscanRows / 2) - 1) * itemHeight
 
   let runway = rows * itemHeight + (gap?.height ?? 0)
 
-  // The rendered rows start at the row of this offset at most.
+  // The page starts at the row of this offset at most.
   let maxOffset = Math.max(runway - (rowsPerPage * itemHeight), 0)
 
   return {
@@ -53,11 +58,13 @@ export const getLayout = ({
     height,
     isGrid,
     itemHeight,
+    length: items.length,
     maxOffset,
     pageOffset,
+    pageSize,
     rowsPerPage,
     runway,
-    step
+    tolerance
   }
 }
 
@@ -84,10 +91,15 @@ export const getRowAt = (layout, offset) => {
   return Math.floor(offset / itemHeight) * columns
 }
 
-// The first rendered item at the scroll position, and its offset.
+// The rendered items at the scroll position (`from` inclusive,
+// `to` exclusive), and the offset of the first one.
 export const getPosition = (top, layout) => {
-  let { maxOffset, pageOffset } = layout
+  let { columns, length, maxOffset, pageOffset, rowsPerPage } = layout
   let from = getRowAt(layout, restrict(top - pageOffset, 0, maxOffset))
 
-  return { from, offset: getOffset(layout, from) }
+  return {
+    from,
+    to: Math.min(from + columns * rowsPerPage, length),
+    offset: getOffset(layout, from)
+  }
 }
