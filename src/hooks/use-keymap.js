@@ -1,12 +1,22 @@
 import { useSelector } from 'react-redux'
+import { array } from '../common/util.js'
+
+function matchFirst (event, keymaps) {
+  for (let keymap of keymaps) {
+    let cmd = keymap?.match(event)
+    if (cmd != null) return cmd
+  }
+}
 
 export function useKeyDown (keymap, handlers) {
   return (event) => {
-    let cmd = keymap?.match(event)
+    let cmd = Array.isArray(keymap)
+      ? matchFirst(event, keymap)
+      : keymap?.match(event)
 
-    let handler = (typeof handlers === 'function') ?
-      handlers :
-      handlers?.[cmd]
+    let handler = (typeof handlers === 'function')
+      ? handlers
+      : handlers?.[cmd]
 
     if (cmd == null || typeof handler !== 'function')
       return
@@ -22,6 +32,7 @@ export function useKeyDown (keymap, handlers) {
   }
 }
 
-export function useKeyMap (name, handlers) {
-  return useKeyDown(useSelector(state => state.keymap[name]), handlers)
+export function useKeyMap (names, handlers) {
+  let keymap = useSelector(state => state.keymap)
+  return useKeyDown(array(names).map(name => keymap[name]), handlers)
 }
