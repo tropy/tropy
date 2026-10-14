@@ -6,7 +6,6 @@ const getNextRowOffset = (index, columns) =>
 
 export const Range = ({
   columns = 1,
-  isScrolling,
   items,
   expandedItems = {},
   from,
@@ -23,10 +22,7 @@ export const Range = ({
     let item = range[i]
     let isExpanded = !!expandedItems[item.id]
 
-    output.push(renderItem(item, from + i, {
-      isExpanded,
-      isScrolling
-    }))
+    output.push(renderItem(item, from + i, { isExpanded }))
 
     // Invariant: in Grid there must be at most one expanded item!
     if (isExpanded && !expansion && renderExpansionRow) {

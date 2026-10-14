@@ -1,6 +1,4 @@
-import { useRef } from 'react'
 import cx from 'classnames'
-import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
 import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
 
 export const NoteListItem = ({
@@ -10,11 +8,6 @@ export const NoteListItem = ({
   onOpen,
   onSelect
 }) => {
-
-  let dom = useRef()
-
-  useScrollIntoView(dom, { when: isSelected })
-
   let sequenceClicks = useSequenceClicks({
     isSelected,
     onDoubleClick: onOpen,
@@ -24,7 +17,6 @@ export const NoteListItem = ({
 
   return (
     <li
-      ref={dom}
       className={cx('note', { active: isSelected })}
       onContextMenu={(event) => onContextMenu(event, note)}
       {...sequenceClicks}>

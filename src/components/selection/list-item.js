@@ -4,7 +4,6 @@ import { useIntl } from 'react-intl'
 import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
 import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
 import { Editable } from '../editable.js'
 import { Thumbnail } from '../photo/thumbnail.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
@@ -44,8 +43,6 @@ export const SelectionListItem = memo(({
       isSortable,
       onDrop
     })
-
-  useScrollIntoView(container, { when: isActive })
 
   // Read-only (isDisabled here) blocks editing, not selection.
   let sequenceClicks = useSequenceClicks({

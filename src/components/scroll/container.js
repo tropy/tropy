@@ -1,6 +1,6 @@
 import { useImperativeHandle, useLayoutEffect, useRef } from 'react'
 import cx from 'classnames'
-import { isTabFocus, on, off } from '../../dom.js'
+import { isTabFocus, on, off, toggle } from '../../dom.js'
 import { useDebounce } from '../../hooks/use-debounce.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useResizeObserver } from '../../hooks/use-resize-observer.js'
@@ -14,9 +14,12 @@ const useScrollHandler = (dom, {
   let isScrolling = useRef(false)
   let isEnabled = !!(onScroll || onScrollStart || onScrollStop)
 
+  // NB: we set the 'scrolling' class on the DOM node directly,
+  // to get the CSS styles, but skip the React re-render!
   let handleScrollStop = useDebounce(() => {
     if (isScrolling.current) {
       isScrolling.current = false
+      toggle(dom.current, 'scrolling', false)
       onScrollStop?.()
     }
   }, { wait: 150 })
@@ -24,6 +27,7 @@ const useScrollHandler = (dom, {
   let handleScroll = useEvent((event) => {
     if (!isScrolling.current) {
       isScrolling.current = true
+      toggle(dom.current, 'scrolling', true)
       onScrollStart?.(event)
     }
 

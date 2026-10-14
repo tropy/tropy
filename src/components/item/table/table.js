@@ -80,7 +80,7 @@ export const ItemTable = (props) => {
   // Keep the edited item in view when editing starts.
   useEffect(() => {
     if (edit != null)
-      scroll.current?.scrollIntoView({ id: Number(any(edit)) })
+      scroll.current?.scrollIntoView(Number(any(edit)))
   }, [edit, scroll])
 
   let handleChange = useEvent((...args) => {
@@ -149,7 +149,7 @@ export const ItemTable = (props) => {
             onTabFocus={iterator.handleTabFocus}
             onKeyDown={iterator.onKeyDown}
             onLayoutChange={iterator.onLayoutChange}>
-            {(item, index, { isScrolling }) => (
+            {(item, index) => (
               <TableRow
                 {...iterator.getIterableProps(item, index)}
                 key={item.id}
@@ -160,7 +160,7 @@ export const ItemTable = (props) => {
                 editing={edit?.[item.id]}
                 hasPositionColumn={columnState.hasPositionColumn}
                 isOnlySelected={selection.size === 1 && selection.has(item.id)}
-                isReadOnly={isReadOnly || isScrolling}
+                isReadOnly={isReadOnly}
                 item={item}
                 position={getPosition(index)}
                 template={templates[item.template]}

@@ -10,7 +10,6 @@ import { TranscriptionIcon } from '../transcription/icon.js'
 import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
 import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
 import { pick } from '../../common/util.js'
 import { TYPE } from '../../constants/index.js'
 
@@ -51,8 +50,6 @@ export const PhotoListItem = memo(({
       isVertical,
       onDrop: onDropPhoto
     })
-
-  useScrollIntoView(container, { when: isSelected })
 
   // Read-only (isDisabled here) blocks editing, not selection.
   let sequenceClicks = useSequenceClicks({
