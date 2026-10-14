@@ -5,7 +5,7 @@ import { ScrollContainer } from './container.js'
 import { getExpandedRows, getExpandedRowsAbove } from './expansion.js'
 import { Viewport } from './viewport.js'
 import { restrict } from '../../common/util.js'
-import { indexOf, sanitize } from '../../common/sequence.js'
+import { indexOf } from '../../common/sequence.js'
 import memoize from 'memoize-one'
 
 
@@ -76,107 +76,6 @@ export class Scroll extends React.Component {
     return [index, expRowPosition]
   }
 
-  get current () {
-    return this.next(0)
-  }
-
-  next (k = 1) {
-    let [cursor, expRowPosition] = this.cursor
-
-    if (cursor === -1)
-      return (k < 0) ? this.last() : this.first()
-
-    let { expandedRows, isGrid } = this.layout
-    let { numRowsAbove } =
-      getExpandedRowsAbove(expandedRows, { index: cursor })
-
-    let row = cursor + k
-    let len = this.props.items.length
-
-    if (!isGrid) {
-      row += numRowsAbove + expRowPosition
-      len += expandedRows.length
-    }
-
-    row = sanitize(len, row, this.props.restrict)
-
-    if (row == null)
-      return null
-
-    if (isGrid)
-      return this.props.items[row]
-
-    let nxt = getExpandedRowsAbove(expandedRows, { position: row })
-    let item = this.props.items[row - nxt.numRowsAbove]
-
-    if (nxt.expRowPosition) {
-      // TODO selection name!
-      let selection = item.selections[nxt.expRowPosition - 1]
-      return { ...item, selection }
-    }
-
-    return item
-  }
-
-  prev (k = 1) {
-    return this.next(-k)
-  }
-
-  first () {
-    return this.props.items[0]
-  }
-
-  last () {
-    let { items, expandedItems } = this.props
-    let { isGrid } = this.layout
-    let item = items[items.length - 1]
-    let expansion = expandedItems[item.id]
-
-    // TODO selection name!
-    if (!isGrid && expansion) {
-      let selection = expansion[expansion.length - 1]
-      return { ...item, selection }
-    }
-
-    return item
-  }
-
-  pageUp () {
-    let { items, itemHeight } = this.props
-    let { columns } = this.layout
-
-    this.scrollPageUp()
-
-    let offset = this.container.current.scrollTop
-    let row = Math.floor(offset / itemHeight)
-
-    // TODO handle list expansions
-    // TODO account for expansion padding
-
-    return items[row * columns]
-  }
-
-  pageDown () {
-    let { items, itemHeight } = this.props
-    let { columns } = this.layout
-
-    this.scrollPageDown()
-
-    let top = this.container.current.scrollTop
-    let offset = top + this.state.height - itemHeight
-    let row = Math.floor(offset / itemHeight)
-
-    // TODO handle list expansions
-    // TODO account for expansion padding
-
-    return items[row * columns]
-  }
-
-  select (item, event) {
-    this.props.onSelect?.(item, event)
-    return item
-  }
-
   focus () {
     this.container.current.focus()
   }
@@ -228,85 +127,6 @@ export class Scroll extends React.Component {
       visibleItems
     }
   })
-
-  handleKeyDown = (event) => {
-    // By default, the home, end, page up, page down and arrow keys
-    // will work as expected for the ScrollContainer. If we have an
-    // `onSelect` callback, however, we override the default behavior
-    // of the arrow keys to select items instead of only scrolling
-    // the container.
-    if (this.props.onSelect)
-      this.handleArrowKeys(event)
-
-    if (!event.isDefaultPrevented()) {
-      this.props.onKeyDown?.(event)
-    }
-  }
-
-
-  handleArrowKeys (event) {
-    if (event.ctrlKey || event.metaKey)
-      return
-
-    let { items } = this.props
-    let { columns, isGrid } = this.layout
-    let [cursor] = this.cursor
-
-    if (cursor === -1) ++cursor
-
-    if (isGrid && this.props.restrict === 'bounds') {
-      var isFirstRow = cursor < columns
-      var isLastRow =
-        cursor >= (items.length - ((items.length % columns) || columns))
-    }
-
-    switch (event.key) {
-      case 'ArrowDown':
-        if (event.altKey)
-          this.select(this.last(), event)
-        else {
-          if (!isLastRow)
-            this.select(this.next(columns), event)
-        }
-        break
-
-      case 'ArrowUp':
-        if (event.altKey)
-          this.select(this.first(), event)
-        else {
-          if (!isFirstRow)
-            this.select(this.prev(columns), event)
-        }
-        break
-
-      case 'ArrowRight':
-        if (!isGrid)
-          return
-
-        if (event.altKey)
-          this.select(this.next(columns - 1 - (cursor % columns)), event)
-        else
-          this.select(this.next(), event)
-        break
-
-      case 'ArrowLeft':
-        if (!isGrid)
-          return
-
-        if (event.altKey)
-          this.select(this.prev(cursor % columns), event)
-        else
-          this.select(this.prev(), event)
-        break
-
-      default:
-        return
-    }
-
-    event.preventDefault()
-    event.stopPropagation()
-    event.nativeEvent.stopImmediatePropagation()
-  }
 
   handleResize = ({ width, height }) => {
     this.setState({ width, height }, () => {
@@ -391,14 +211,6 @@ export class Scroll extends React.Component {
     this.container.current.scrollBy({ top, left })
   }
 
-  scrollPageDown () {
-    this.scrollBy(this.state.height)
-  }
-
-  scrollPageUp () {
-    this.scrollBy(-this.state.height)
-  }
-
   scrollToEnd () {
     this.scroll(this.layout.maxOffset)
   }
@@ -467,7 +279,7 @@ export class Scroll extends React.Component {
         ref={this.container}
         className={this.state.isScrolling ? 'scrolling' : null}
         onClick={this.props.onClick}
-        onKeyDown={this.handleKeyDown}
+        onKeyDown={this.props.onKeyDown}
         onResize={this.handleResize}
         onScroll={this.handleScroll}
         onScrollStart={this.handleScrollStart}
@@ -498,7 +310,6 @@ export class Scroll extends React.Component {
     expandedItems: {},
     expansionPadding: 0,
     items: [],
-    overscan: 1.25,
-    restrict: 'bounds'
+    overscan: 1.25
   }
 }
