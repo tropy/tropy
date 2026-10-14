@@ -1,6 +1,6 @@
 import { useImperativeHandle, useLayoutEffect, useRef } from 'react'
 import cx from 'classnames'
-import { on, off } from '../../dom.js'
+import { isTabFocus, on, off } from '../../dom.js'
 import { useDebounce } from '../../hooks/use-debounce.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useResizeObserver } from '../../hooks/use-resize-observer.js'
@@ -56,6 +56,7 @@ export const ScrollContainer = ({
   onScroll,
   onScrollStart,
   onScrollStop,
+  onTabFocus,
   onWheel,
   ref,
   tabIndex
@@ -80,7 +81,10 @@ export const ScrollContainer = ({
       onClick={(event) => {
         if (event.target === dom.current) onClick?.(event)
       }}
-      onFocus={onFocus}
+      onFocus={(event) => {
+        onFocus?.(event)
+        if (isTabFocus(event)) onTabFocus?.(event)
+      }}
       onKeyDown={tabIndex != null ? onKeyDown : null}
       onWheel={onWheel}
       tabIndex={tabIndex ?? -1}>

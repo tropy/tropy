@@ -154,6 +154,16 @@ export function testFocusChange () {
   }
 }
 
+export function isTabFocus (event) {
+  // :focus-visible survives scrolling items out of view,
+  // therefore we also require a relatedTarget,
+  // which is typically missing when the window was blurred.
+  return (
+    event.target.matches(':focus-visible') &&
+    event.relatedTarget != null
+  )
+}
+
 export function reflow (node) {
   node.scrollTop // eslint-disable-line no-unused-expressions
 }
