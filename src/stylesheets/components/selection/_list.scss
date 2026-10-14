@@ -4,7 +4,7 @@
 // Selection list
 // --------------------------------------------------
 
-.selection-list {
+.photo-list {
   .selection {
     @include sort-indicator("list");
     display: flex;
@@ -23,6 +23,20 @@
       .scroll-container:focus & {
         @extend %list-focus;
       }
+    }
+
+    &.no-drop-target {
+      opacity: 0.5;
+    }
+  }
+
+  // Show sort indicator of an expanded photo
+  // after its last selection (no other photos in between!).
+  .photo.expanded.after ~ .selection.last:not(.photo.after ~ .photo ~ .selection) {
+    position: relative;
+
+    &::after {
+      content: "";
     }
   }
 }

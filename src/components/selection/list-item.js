@@ -1,6 +1,7 @@
 import { memo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { useIntl } from 'react-intl'
+import { DND } from '../dnd.js'
 import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
 import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
 import { useEvent } from '../../hooks/use-event.js'
@@ -33,7 +34,7 @@ export const SelectionListItem = memo(({
   let container = useRef()
   let intl = useIntl()
 
-  let [{ canDrop, isDragging, isOver, direction }, dnd] =
+  let [{ canDrop, direction, dragType, isDragging, isOver }, dnd] =
     useDragDropSelection(container, {
       selection,
       photo,
@@ -69,11 +70,15 @@ export const SelectionListItem = memo(({
     id: 'panel.photo.selection'
   })
 
+  let noDropTarget = dragType === DND.PHOTO ||
+    (dragType === DND.SELECTION && !canDrop)
+
   return (
     <li
       ref={dnd}
       className={cx('selection', {
         active: isActive,
+        'no-drop-target': noDropTarget,
         dragging: isDragging,
         last: isLast,
         over: isOver && canDrop,

@@ -24,6 +24,14 @@
     align-items: center;
     position: relative;
 
+    &.no-drop-target {
+      opacity: 0.5;
+    }
+
+    &.expanded.after::after {
+      content: none;
+    }
+
     .photo-container {
       display: flex;
       align-items: center;

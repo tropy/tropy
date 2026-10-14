@@ -5,8 +5,8 @@ import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
-import { pick, pluck } from '../../common/util.js'
-import { Cursor, indexOf } from '../../common/sequence.js'
+import { move as reorder, pick, pluck } from '../../common/util.js'
+import { Cursor, adjacent, indexOf } from '../../common/sequence.js'
 import { getExpandedPhotos, getVisiblePhotos } from '../../selectors/index.js'
 import * as act from '../../actions/index.js'
 
@@ -240,10 +240,42 @@ export function usePhotoIterator ({
     onToggle: toggle
   })
 
-  // Sorting the selections of a photo (nested selection list/grid).
+  // Sorting the selections of a photo (selection grid and list rows).
   let sortSelections = useEvent((payload) => {
     dispatch(act.selection.order(payload))
   })
+
+  // The list's selection rows sort within their photo.
+  let getSelectionAdjacent = useEvent((value) =>
+    adjacent(resolve(value).photo.selections, value.id))
+
+  let dropSelection = useEvent(({ id, to, offset }) => {
+    let { photo } = resolve(selections[id])
+
+    sortSelections({
+      photo: photo.id,
+      selections: reorder(photo.selections, id, to, offset)
+    })
+  })
+
+  let getSelectionProps = (value) => {
+    let { photo } = resolve(value)
+
+    return {
+      photo,
+      selection: value,
+      getAdjacent: getSelectionAdjacent,
+      isActive: selection === value.id,
+      isDisabled,
+      isItemOpen,
+      isLast: photo.selections.at(-1) === value.id,
+      isSortable: !isDisabled && photo.selections.length > 1,
+      onContextMenu: contextMenu,
+      onDrop: dropSelection,
+      onItemOpen: open,
+      onSelect: select
+    }
+  }
 
   return {
     classes,
@@ -251,11 +283,12 @@ export function usePhotoIterator ({
     contextMenu,
     contract,
     current: () => cursor.current(),
-    cursor: current,
+    cursor: at,
     expand,
     expandedPhotos,
     extract,
     getIterableProps,
+    getSelectionProps,
     move,
     navigation: cursor,
     onLayoutChange: setLayout,
@@ -266,7 +299,7 @@ export function usePhotoIterator ({
     rotate,
     scroll,
     select,
-    selection,
+    sequence,
     sortSelections
   }
 }

@@ -1,4 +1,3 @@
-import { getExpandedRows, getExpandedRowsAbove } from './expansion.js'
 import { indexOf } from '../../common/sequence.js'
 import { restrict } from '../../common/util.js'
 
@@ -8,7 +7,6 @@ export const getLayout = ({
   itemWidth,
   height,
   width,
-  expandedItems,
   expanded,
   expansionLength,
   expansionPadding = 0,
@@ -17,7 +15,6 @@ export const getLayout = ({
   let columns = Math.floor(width / itemWidth) || 1
   let isGrid = itemWidth > 0
 
-  let expandedRows = isGrid ? [] : getExpandedRows(items, expandedItems)
   let gap = null
 
   // A grid may expand one item:
@@ -34,7 +31,7 @@ export const getLayout = ({
       }
   }
 
-  let rows = Math.ceil(items.length / columns) + expandedRows.length
+  let rows = Math.ceil(items.length / columns)
   let visibleRows = Math.ceil(height / itemHeight)
   let overscanRows = Math.max(2, Math.ceil(visibleRows * overscan))
   let rowsPerPage = visibleRows + overscanRows
@@ -52,7 +49,6 @@ export const getLayout = ({
 
   return {
     columns,
-    expandedRows,
     gap,
     height,
     isGrid,
@@ -65,15 +61,11 @@ export const getLayout = ({
   }
 }
 
-// The offset of the item's row, or of a row in its expansion.
-export const getOffset = (layout, index, expRowPosition = 0) => {
-  let { columns, expandedRows, gap, itemHeight } = layout
+// The offset of the item's row.
+export const getOffset = (layout, index) => {
+  let { columns, gap, itemHeight } = layout
   let row = Math.floor(index / columns)
-
-  let { numRowsAbove } =
-    getExpandedRowsAbove(expandedRows, { index: row })
-
-  let offset = (row + numRowsAbove + expRowPosition) * itemHeight
+  let offset = row * itemHeight
 
   if (gap != null && row > gap.row)
     offset += gap.height
@@ -81,28 +73,21 @@ export const getOffset = (layout, index, expRowPosition = 0) => {
   return offset
 }
 
-// The first item of the row at the offset,
-// and the row's position in the item's expansion.
+// The first item of the row at the offset.
 // Offsets in the gap map to the expanded item's row.
 export const getRowAt = (layout, offset) => {
-  let { columns, expandedRows, gap, itemHeight } = layout
+  let { columns, gap, itemHeight } = layout
 
   if (gap != null && offset >= (gap.row + 1) * itemHeight)
     offset = Math.max(offset - gap.height, gap.row * itemHeight)
 
-  let row = Math.floor(offset / itemHeight)
-
-  let { numRowsAbove, expRowPosition } =
-    getExpandedRowsAbove(expandedRows, { position: row })
-
-  return [(row - numRowsAbove) * columns, expRowPosition]
+  return Math.floor(offset / itemHeight) * columns
 }
 
 // The first rendered item at the scroll position, and its offset.
-// The rendered rows start at a full item row (with its expansion).
 export const getPosition = (top, layout) => {
   let { maxOffset, pageOffset } = layout
-  let [from] = getRowAt(layout, restrict(top - pageOffset, 0, maxOffset))
+  let from = getRowAt(layout, restrict(top - pageOffset, 0, maxOffset))
 
   return { from, offset: getOffset(layout, from) }
 }

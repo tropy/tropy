@@ -90,21 +90,6 @@ describe('Scroll', () => {
     })
   })
 
-  it('scrolls to the expansion cursor', async () => {
-    let expandedItems = {
-      1: Array.from({ length: 40 }, (_, idx) => 101 + idx)
-    }
-
-    let { $, $$, rerender } = render(renderScroll({ cursor: 1, expandedItems }))
-    await measured($$)
-
-    rerender(renderScroll({ cursor: 1, expandedItems, expansionCursor: 140 }))
-
-    await waitFor(() => {
-      expect($('.scroll-container').scrollTop).to.be.above(600)
-    })
-  })
-
   it('keeps the visible rows rendered', async () => {
     let { $, $$ } = render(renderScroll())
     let container = $('.scroll-container')

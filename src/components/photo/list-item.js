@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import { Editable } from '../editable.js'
 import { Thumbnail } from './thumbnail.js'
-import { SelectionList } from '../selection/list.js'
 import { Icon } from '../icons.js'
 import { Button } from '../button.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
+import { DND } from '../dnd.js'
 import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
 import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
 import { useEvent } from '../../hooks/use-event.js'
@@ -31,7 +31,6 @@ export const PhotoListItem = memo(({
   onEditCancel,
   onItemOpen,
   onSelect,
-  onSelectionSort,
   onToggle,
   photo,
   size = 48,
@@ -42,7 +41,7 @@ export const PhotoListItem = memo(({
   let titleText = useSelector(state =>
     state.metadata[photo.id]?.[title]?.text)
 
-  let [{ canDrop, direction, isDragging, isOver }, dnd] =
+  let [{ canDrop, direction, dragType, isDragging, isOver }, dnd] =
     useDragDropPhoto(container, {
       photo,
       getAdjacent,
@@ -92,6 +91,7 @@ export const PhotoListItem = memo(({
       ref={dnd}
       className={cx('photo', {
         active: isActive,
+        'no-drop-target': dragType === DND.SELECTION,
         dragging: isDragging,
         expandable: isExpandable,
         expanded: isExpanded,
@@ -136,19 +136,6 @@ export const PhotoListItem = memo(({
           <TranscriptionIcon id={photo.transcriptions?.at(-1)}/>
         </div>
       </div>
-      {isExpanded && (
-        <SelectionList
-          isDisabled={isDisabled}
-          isItemOpen={isItemOpen}
-          onChange={onChange}
-          onContextMenu={onContextMenu}
-          onEdit={onEdit}
-          onEditCancel={onEditCancel}
-          onItemOpen={onItemOpen}
-          onSelect={onSelect}
-          onSort={onSelectionSort}
-          photo={photo}/>
-      )}
     </li>
   )
 })

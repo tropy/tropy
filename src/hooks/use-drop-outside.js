@@ -8,7 +8,8 @@ export function useDropOutside ({
   onDrop
 }) {
   let handleDrop = useEvent((item, monitor) => {
-    if (monitor.didDrop()) return
+    if (!monitor.isOver({ shallow: true }))
+      return
 
     let to = items.at(-1)
     if (item.id !== to) {

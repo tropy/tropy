@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Scroll } from '../scroll/index.js'
 import { PhotoListItem } from './list-item.js'
+import { SelectionListItem } from '../selection/list-item.js'
 import { usePhotoIterator } from './use-photo-iterator.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
@@ -17,6 +18,7 @@ export const PhotoList = (props) => {
 
   let iterator = usePhotoIterator(props)
   let editing = useSelector(state => state.edit.photo)
+  let editingSelection = useSelector(state => state.edit.selection)
 
   // List items are memoized: these handlers are stable.
   // Edits a photo or a selection (it has a photo field).
@@ -85,24 +87,30 @@ export const PhotoList = (props) => {
       <Scroll
         ref={iterator.scroll}
         cursor={iterator.cursor}
-        expansionCursor={iterator.selection}
-        items={iterator.photos}
+        items={iterator.sequence}
         itemHeight={SASS.ROW.HEIGHT}
-        expandedItems={iterator.expandedPhotos}
         tabIndex={TABS.PhotoList}
         onKeyDown={onKeyDown}
         onLayoutChange={iterator.onLayoutChange}>
-        {(photo) => (
+        {(el) => (el.photo == null) ? (
           <PhotoListItem
-            {...iterator.getIterableProps(photo)}
-            key={photo.id}
+            {...iterator.getIterableProps(el)}
+            key={el.id}
             title={dc.title}
-            isExpanded={!!iterator.expandedPhotos[photo.id]}
-            isEditing={editing === photo.id}
+            isExpanded={!!iterator.expandedPhotos[el.id]}
+            isEditing={editing === el.id}
             onChange={handleChange}
             onEdit={handleEdit}
-            onEditCancel={handleEditCancel}
-            onSelectionSort={iterator.sortSelections}/>
+            onEditCancel={handleEditCancel}/>
+        ) : (
+          <SelectionListItem
+            {...iterator.getSelectionProps(el)}
+            key={el.id}
+            title={dc.title}
+            isEditing={editingSelection === el.id}
+            onChange={handleChange}
+            onEdit={handleEdit}
+            onEditCancel={handleEditCancel}/>
         )}
       </Scroll>
     </div>

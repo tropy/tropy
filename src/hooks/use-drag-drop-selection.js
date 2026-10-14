@@ -29,6 +29,7 @@ export function useDragDropSelection (dom, {
   return useSortableElement(dom, {
     id: selection.id,
     type: DND.SELECTION,
+    accept: [DND.SELECTION, DND.PHOTO], // DND.PHOTO is refused by canDrop!
     canDrop,
     createDragItem,
     getAdjacent: () => getAdjacent(selection),

@@ -13,26 +13,20 @@ describe('Scroll layout', () => {
     ...props
   })
 
-  // Every item row and expansion row maps back to its item.
+  // Every item row maps back to its first item.
   let expectInverse = (geometry) => {
-    let { columns, expandedRows } = geometry
+    let { columns } = geometry
 
     for (let index = 0; index < items.length; index += columns) {
-      let numRows = expandedRows
-        .filter(row => row.index === index / columns).length
-
-      for (let exp = 0; exp <= numRows; ++exp) {
-        expect(getRowAt(geometry, getOffset(geometry, index, exp)))
-          .to.eql([index, exp])
-      }
+      expect(getRowAt(geometry, getOffset(geometry, index)))
+        .to.equal(index)
     }
   }
 
   it('maps offsets to rows in lists', () => {
-    let geometry = layout({ expandedItems: { 4: [101, 102], 9: [103] } })
+    let geometry = layout()
 
-    expect(getOffset(geometry, 3, 2)).to.equal(50)
-    expect(getOffset(geometry, 4)).to.equal(60)
+    expect(getOffset(geometry, 4)).to.equal(40)
     expectInverse(geometry)
   })
 
@@ -50,7 +44,7 @@ describe('Scroll layout', () => {
     expectInverse(geometry)
 
     // The gap belongs to the expanded item's row.
-    expect(getRowAt(geometry, 20)).to.eql([5, 0])
-    expect(getRowAt(geometry, 43)).to.eql([5, 0])
+    expect(getRowAt(geometry, 20)).to.equal(5)
+    expect(getRowAt(geometry, 43)).to.equal(5)
   })
 })

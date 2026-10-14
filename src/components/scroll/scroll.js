@@ -11,9 +11,7 @@ import { indexOf } from '../../common/sequence.js'
 export const Scroll = ({
   children,
   cursor,
-  expandedItems,
   expansion,
-  expansionCursor,
   itemHeight,
   itemWidth,
   items = [],
@@ -53,7 +51,6 @@ export const Scroll = ({
     itemWidth,
     height,
     width,
-    expandedItems,
     expanded,
     expansionLength,
     expansionPadding,
@@ -64,7 +61,6 @@ export const Scroll = ({
     itemWidth,
     height,
     width,
-    expandedItems,
     expanded,
     expansionLength,
     expansionPadding,
@@ -72,15 +68,6 @@ export const Scroll = ({
   ])
 
   let { from, offset } = getPosition(top, layout)
-
-  // The item's index and, for the cursor,
-  // the expansion cursor's row in the item's expansion.
-  let locate = (id) => [
-    indexOf(items, id),
-    (id === cursor && expansionCursor != null) ?
-      (expandedItems?.[id]?.indexOf(expansionCursor) ?? -1) + 1 :
-      0
-  ]
 
   // Programmatic scrolls update the rendered rows right away:
   // without waiting for the scroll event, they render before paint.
@@ -106,13 +93,13 @@ export const Scroll = ({
     if (height === 0)
       return
 
-    let [index, expRowPosition] = locate(id)
+    let index = indexOf(items, id)
 
     if (index < 0)
       return
 
     let current = container.current.scrollTop
-    let target = getOffset(layout, index, expRowPosition)
+    let target = getOffset(layout, index)
     let bottom = target + itemHeight
     let isBelow = bottom > current
 
@@ -131,19 +118,19 @@ export const Scroll = ({
   // stays at the same relative position in the viewport.
   let anchor = (prev) => {
     let top = exactTop.current
-    let [index, expRowPosition] = locate(cursor)
-    let offset = getOffset(prev, index, expRowPosition)
+    let index = indexOf(items, cursor)
+    let offset = getOffset(prev, index)
 
     if (index < 0 ||
       offset < top ||
       offset + prev.itemHeight > top + prev.height) {
-      [index, expRowPosition] = getRowAt(prev, top)
-      offset = getOffset(prev, index, expRowPosition)
+      index = getRowAt(prev, top)
+      offset = getOffset(prev, index)
     }
 
     let center = (offset + prev.itemHeight / 2 - top) / prev.height
 
-    scroll(getOffset(layout, index, expRowPosition) +
+    scroll(getOffset(layout, index) +
       layout.itemHeight / 2 - center * layout.height)
   }
 
@@ -192,7 +179,7 @@ export const Scroll = ({
 
   useLayoutEffect(() => {
     scrollIntoView()
-  }, [cursor, expansionCursor, isMeasured, scrollIntoView])
+  }, [cursor, isMeasured, scrollIntoView])
 
   useLayoutEffect(() => () => {
     cancelAnimationFrame(frame.current)

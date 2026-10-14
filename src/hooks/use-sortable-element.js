@@ -6,6 +6,7 @@ import { bounds } from '../dom.js'
 export function useSortableElement (element, {
   id,
   type,
+  accept = type,
   canDrop,
   createDragItem,
   getAdjacent,
@@ -68,13 +69,14 @@ export function useSortableElement (element, {
   }, [])
 
   let [props, drop] = useDrop(() => ({
-    accept: type,
+    accept,
     canDrop: handleCanDrop,
     hover: handleHover,
     drop: handleDrop,
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
+      canDrop: monitor.canDrop(),
+      dragType: monitor.getItemType()
     })
   }), [])
 
@@ -90,5 +92,5 @@ export function useSortableElement (element, {
     ...props,
     isDragging,
     direction
-  }, isDisabled ? element : drag(drop(element))]
+  }, drop(isDisabled ? element : drag(element))]
 }
