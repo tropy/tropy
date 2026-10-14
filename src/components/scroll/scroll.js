@@ -378,9 +378,7 @@ export class Scroll extends React.Component {
     // therefore we also test for relatedTarget which is typically
     // missing when the window was blurred.
     if (event?.target?.matches(':focus-visible') && event?.relatedTarget != null) {
-      if (this.props.autoselect) {
-        this.select(this.current)
-      }
+      this.props.onTabFocus?.(event)
       this.scrollIntoView()
     }
   }

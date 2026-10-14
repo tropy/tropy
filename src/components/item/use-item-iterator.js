@@ -47,13 +47,8 @@ export function useItemIterator ({
       dispatch(act.item.select({ item: next }, { throttle }))
   })
 
-  // Arrow keys (via Scroll), the global next/prev events,
-  // and Scroll's autoselect on focus (without an event):
-  // it only selects when nothing is selected yet.
+  // Arrow keys (via Scroll) and the global next/prev events.
   let handleSelectItem = useEvent((item, event) => {
-    if (event == null && selection.size > 0)
-      return
-
     let mode = event && getSelectionMode(getKeyState(event))
 
     if (isGrid && mode === 'extend')
@@ -61,6 +56,13 @@ export function useItemIterator ({
 
     select(item, { mode, throttle: event?.repeat })
   })
+
+  // Tab focus selects the current item,
+  // unless something is selected already.
+  let handleTabFocus = () => {
+    if (selection.size === 0)
+      select(current())
+  }
 
   let getSelection = useEvent(() => selection.ids())
 
@@ -211,6 +213,7 @@ export function useItemIterator ({
     clearSelection,
     connect,
     getIterableProps,
+    handleTabFocus,
     handleSelectItem,
     isOver: file.canDrop,
     items,

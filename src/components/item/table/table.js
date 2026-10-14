@@ -141,12 +141,12 @@ export const ItemTable = (props) => {
           <Scroll
             ref={scroll}
             tag="div"
-            autoselect
             cursor={selection.cursor}
             items={items}
             itemHeight={ROW.HEIGHT}
             tabIndex={iterator.tabIndex}
             onClick={iterator.clearSelection}
+            onTabFocus={iterator.handleTabFocus}
             onKeyDown={iterator.onKeyDown}
             onSelect={iterator.handleSelectItem}>
             {(item, index, { isScrolling }) => (

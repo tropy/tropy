@@ -22,13 +22,13 @@ export const ItemGrid = (props) => {
       data-size={size}>
       <Scroll
         ref={iterator.scroll}
-        autoselect
         cursor={selection.cursor}
         items={items}
         itemHeight={tileSize}
         itemWidth={tileSize}
         tabIndex={iterator.tabIndex}
         onClick={iterator.clearSelection}
+        onTabFocus={iterator.handleTabFocus}
         onKeyDown={iterator.onKeyDown}
         onSelect={iterator.handleSelectItem}>
         {(item, index) => (
