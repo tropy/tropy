@@ -2,11 +2,8 @@ import { FormattedMessage } from 'react-intl'
 import { Slider } from '../slider.js'
 import { Button } from '../button.js'
 import { Toolbar, ToolGroup } from '../toolbar.js'
+import { Icon } from '../icons.js'
 import { SASS } from '../../constants/index.js'
-
-import {
-  IconPhoto, IconPlusSmall, IconListSmall, IconGridSmall, IconTranscriptionSmall
-} from '../icons.js'
 
 
 export const PhotoToolbar = ({
@@ -16,13 +13,14 @@ export const PhotoToolbar = ({
   maxZoom = SASS.PHOTO.ZOOM.length - 1,
   onCreate,
   onTranscribe,
+  onTranscribePrompt,
   onZoomChange,
   photos,
   zoom = 0
 }) => (
   <Toolbar>
     <Toolbar.Left>
-      <IconPhoto/>
+      <Icon name="Photo"/>
       <h4>
         <FormattedMessage
           id="panel.photo.title"
@@ -35,7 +33,7 @@ export const PhotoToolbar = ({
           {hasCreateButton && (
             <ToolGroup>
               <Button
-                icon={<IconPlusSmall/>}
+                icon="PlusSmall"
                 size="sm"
                 isDisabled={isDisabled}
                 title="panel.photo.create"
@@ -44,11 +42,17 @@ export const PhotoToolbar = ({
           )}
           <ToolGroup>
             <Button
-              icon={<IconTranscriptionSmall/>}
+              icon="TranscriptionSmall"
               size="sm"
               isDisabled={isDisabled}
               title="panel.photo.transcribe"
               onClick={onTranscribe}/>
+            <Button
+              icon="GearSmall"
+              size="sm"
+              isDisabled={isDisabled}
+              title="panel.photo.transcribeDialog"
+              onClick={onTranscribePrompt}/>
           </ToolGroup>
         </>
       }
@@ -57,8 +61,8 @@ export const PhotoToolbar = ({
           value={zoom}
           max={maxZoom}
           size="sm"
-          minIcon={<IconListSmall/>}
-          maxIcon={<IconGridSmall/>}
+          minIcon="ListSmall"
+          maxIcon="GridSmall"
           isDisabled={isClosed || photos === 0}
           tabIndex={-1}
           onChange={onZoomChange}/>

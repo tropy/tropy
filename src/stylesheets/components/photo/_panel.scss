@@ -9,6 +9,23 @@
     padding-right: $default-spacing-x - $btn-icon-padding; // Align icon buttons like 16x16 icons
   }
 
+  .btn-icon {
+    &:has(.icon-transcription-small) {
+      .alt-key & {
+        display: none;
+      }
+    }
+
+    &:has(.icon-gear-small) {
+      display: none;
+      margin-left: 0;
+
+      .alt-key & {
+        display: inline-flex;
+      }
+    }
+  }
+
   .slider {
     .slider-handle {
       .photo-panel:focus-visible:not(:has(li.active)) :is(&) {

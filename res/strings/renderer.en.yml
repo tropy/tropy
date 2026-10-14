@@ -41,6 +41,7 @@ en:
           other {# Photos}}
       create: Add Photos
       transcribe: Transcribe Photo
+      transcribeDialog: Transcribe Photo…
       selection: Selection
     note:
       title: >-
