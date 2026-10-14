@@ -1,17 +1,20 @@
+import { createRef } from 'react'
 import { mock } from 'node:test'
-import { waitFor } from '@testing-library/react'
-import { render } from '../support/react.js'
+import { act, waitFor } from '@testing-library/react'
+import { render } from '../../support/react.js'
+import { pluck } from '#tropy/selectors/util.js'
 import { Scroll } from '#tropy/components/scroll/index.js'
 
 describe('Scroll', () => {
   let style
-  let items = Array.from({ length: 100 }, (_, idx) => ({ id: idx + 1 }))
+  let ids = Array.from({ length: 100 }, (_, idx) => idx + 1)
+  let items = pluck(Object.fromEntries(ids.map(id => [id, { id }])), ids)
 
   before(() => {
     style = document.createElement('style')
     style.textContent = `
       .scroll-container { height: 100px; overflow: auto }
-      .viewport { margin: 0; padding: 0 }
+      .viewport { display: grid; margin: 0; padding: 0 }
       .viewport > li { display: block; height: 20px }`
     document.head.appendChild(style)
   })
@@ -57,12 +60,24 @@ describe('Scroll', () => {
     expect($('#item-1')).to.exist
     expect($('#item-80')).not.to.exist
 
+    // Rendered right away, not after the scroll event.
     rerender(renderScroll({ cursor: 80 }))
 
-    await waitFor(() => {
-      expect($('#item-80')).to.exist
-      expect($('.scroll-container').scrollTop).to.be.above(1000)
-    })
+    expect($('#item-80')).to.exist
+    expect($('.scroll-container').scrollTop).to.be.above(1000)
+  })
+
+  it('scrolls to the end', async () => {
+    let scroll = createRef()
+    let { $, $$ } = render(renderScroll({ ref: scroll }))
+    let container = $('.scroll-container')
+
+    await measured($$)
+    act(() => scroll.current.scrollToEnd())
+
+    expect(container.scrollTop)
+      .to.equal(container.scrollHeight - container.clientHeight)
+    expect($('#item-100')).to.exist
   })
 
   it('scrolls to the cursor once measured', async () => {
@@ -144,5 +159,93 @@ describe('Scroll', () => {
     await frame()
 
     expect(onRender.mock.callCount()).to.equal(renders)
+  })
+
+  describe('when zooming a grid', () => {
+    let tiles = Array.from({ length: 200 }, (_, idx) => ({ id: idx + 1 }))
+
+    let renderGrid = (size, cursor) => (
+      <Scroll
+        items={tiles}
+        itemHeight={size}
+        itemWidth={size}
+        cursor={cursor}
+        tabIndex={0}>
+        {(item) => (
+          <li key={item.id} id={`item-${item.id}`} style={{ height: size }}/>
+        )}
+      </Scroll>
+    )
+
+    let setup = async (cursor, scrollTop, size = 20) => {
+      let { $, $$, rerender } = render(renderGrid(size, cursor))
+      let container = $('.scroll-container')
+
+      // 5 columns of 20px or 4 of 25px, with or without a scrollbar.
+      container.style.width = '117px'
+      await waitFor(() => {
+        expect($$('li').length).to.be.above(20)
+      })
+
+      container.scrollTop = scrollTop
+      await frame()
+      await frame()
+
+      // The tile's center, relative to the viewport.
+      let position = (id) => {
+        let { top, bottom } = $(`#item-${id}`).getBoundingClientRect()
+        return (top + bottom) / 2 - container.getBoundingClientRect().top
+      }
+
+      let zoom = (size) => rerender(renderGrid(size, cursor))
+
+      return { $$, container, position, zoom }
+    }
+
+    it('keeps the cursor in place', async () => {
+      let { position, zoom } = await setup(53, 150)
+      let before = position(53)
+
+      zoom(25)
+      expect(position(53)).to.be.closeTo(before, 1)
+    })
+
+    it('keeps the top row in place without a visible cursor', async () => {
+      let { position, zoom } = await setup(1, 300)
+      let before = position(76)
+
+      zoom(25)
+      expect(position(76)).to.be.closeTo(before, 1)
+    })
+
+    it('keeps its place when hidden and shown', async () => {
+      let { $$, container, position } = await setup(76, 300)
+      let before = position(76)
+
+      // Collapsed: unmeasured, a single column.
+      container.style.width = '0px'
+      container.style.height = '0px'
+      await waitFor(() => {
+        expect($$('li').length).to.be.at.most(2)
+      })
+
+      container.style.width = '117px'
+      container.style.height = ''
+      await waitFor(() => {
+        expect($$('li').length).to.be.above(20)
+      })
+
+      expect(position(76)).to.be.closeTo(before, 1)
+    })
+
+    // Zooming out shortens the runway: the browser clamps
+    // the scroll position before the view is anchored.
+    it('keeps the top row in place when zooming out at the end', async () => {
+      let { position, zoom } = await setup(1, 1100, 25)
+      let before = position(177)
+
+      zoom(20)
+      expect(position(177)).to.be.closeTo(before, 1)
+    })
   })
 })
