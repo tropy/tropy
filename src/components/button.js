@@ -2,7 +2,7 @@ import React from 'react'
 import { useIntl } from 'react-intl'
 import cx from 'classnames'
 import { Toggle } from './form.js'
-import * as icons from './icons.js'
+import { Icon } from './icons.js'
 
 export const ButtonGroup = ({ className, children }) => (
   <div className={cx('btn-group', className)}>
@@ -84,7 +84,7 @@ export const Button = React.memo(React.forwardRef(({
     icon = activeIcon || icon
 
   if (typeof icon === 'string')
-    icon = React.createElement(icons[icon])
+    icon = React.createElement(Icon, { name: icon })
 
   return React.createElement(
     noFocus ? 'span' : 'button',
@@ -147,11 +147,11 @@ export const PlusMinusControls = ({
 }) => (
   <ButtonGroup>
     <Button
-      icon="IconPlusCircle"
+      icon="PlusCircle"
       isDisabled={!(canAdd && onAdd)}
       onClick={onAdd}/>
     <Button
-      icon="IconMinusCircle"
+      icon="MinusCircle"
       isDisabled={!(canRemove && onRemove)}
       onClick={onRemove}/>
   </ButtonGroup>

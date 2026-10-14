@@ -25,7 +25,7 @@ export const NodeContainer = ({
       onClick={onClick}>
       {onExpandButtonClick && (
         <Button
-          icon="IconTriangle"
+          icon="Triangle"
           noFocus
           onClick={handleExpandButtonClick}/>
       )}

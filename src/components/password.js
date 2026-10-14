@@ -11,7 +11,7 @@ export const Password = (props) => {
         type={isVisible ? 'text' : 'password'}/>
       <Button
         title={`password.${isVisible ? 'hide' : 'reveal'}`}
-        icon={isVisible ? 'IconEyeClosed' : 'IconEye'}
+        icon={isVisible ? 'EyeClosed' : 'Eye'}
         disabled={props?.disabled}
         onClick={() => setVisibility(!isVisible)}/>
     </div>

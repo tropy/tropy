@@ -13,10 +13,10 @@ export const MaximizeButton = ({ isDisabled, name }) => {
 
   return (
     <ToolButton
-      activeIcon="IconMinimize"
+      activeIcon="Minimize"
       current={current}
       defaultValue="none"
-      icon="IconMaximize"
+      icon="Maximize"
       isDisabled={isDisabled}
       name="maximize"
       onChange={handleChange}

@@ -3,7 +3,6 @@ import { Titlebar, Toolbar, ToolGroup } from '../toolbar.js'
 import { MaximizeButton } from '../settings/maximize.js'
 import { Button } from '../button.js'
 import { LinkContext } from './link.js'
-import * as icons from '../icons.js'
 
 export class EditorToolbar extends React.PureComponent {
   state = {
@@ -50,50 +49,50 @@ export class EditorToolbar extends React.PureComponent {
           <Toolbar.Left>
             <ToolGroup>
               <EditorButton
-                icon="IconB"
+                icon="B"
                 isActive={marks.bold}
                 isDisabled={isDisabled}
                 title="editor.commands.bold"
                 onMouseDown={this.handleCommand('bold')}/>
               <EditorButton
-                icon="IconI"
+                icon="I"
                 isActive={marks.italic}
                 isDisabled={isDisabled}
                 title="editor.commands.italic"
                 onMouseDown={this.handleCommand('italic')}/>
               <EditorButton
-                icon="IconU"
+                icon="U"
                 isActive={marks.underline}
                 isDisabled={isDisabled}
                 title="editor.commands.underline"
                 onMouseDown={this.handleCommand('underline')}/>
               <EditorButton
-                icon="IconO"
+                icon="O"
                 isActive={marks.overline}
                 isDisabled={isDisabled}
                 title="editor.commands.overline"
                 onMouseDown={this.handleCommand('overline')}/>
               <EditorButton
-                icon="IconS"
+                icon="S"
                 isActive={marks.strikethrough}
                 isDisabled={isDisabled}
                 title="editor.commands.strikethrough"
                 onMouseDown={this.handleCommand('strikethrough')}/>
               <EditorButton
-                icon="IconQ"
+                icon="Q"
                 isDisabled={isDisabled}
                 title="editor.commands.blockquote"
                 onMouseDown={this.handleCommand('blockquote')}/>
             </ToolGroup>
             <ToolGroup>
               <EditorButton
-                icon="IconSup"
+                icon="Sup"
                 isActive={marks.superscript}
                 isDisabled={isDisabled}
                 title="editor.commands.superscript"
                 onMouseDown={this.handleCommand('superscript')}/>
               <EditorButton
-                icon="IconSub"
+                icon="Sub"
                 isActive={marks.subscript}
                 isDisabled={isDisabled}
                 title="editor.commands.subscript"
@@ -101,19 +100,19 @@ export class EditorToolbar extends React.PureComponent {
             </ToolGroup>
             <ToolGroup>
               <EditorButton
-                icon="IconAlignLeft"
+                icon="AlignLeft"
                 isActive={align.left}
                 isDisabled={isDisabled}
                 title="editor.commands.left"
                 onMouseDown={this.handleCommand('left')}/>
               <EditorButton
-                icon="IconAlignCenter"
+                icon="AlignCenter"
                 isActive={align.center}
                 isDisabled={isDisabled}
                 title="editor.commands.center"
                 onMouseDown={this.handleCommand('center')}/>
               <EditorButton
-                icon="IconAlignRight"
+                icon="AlignRight"
                 isActive={align.right}
                 isDisabled={isDisabled}
                 title="editor.commands.right"
@@ -121,23 +120,23 @@ export class EditorToolbar extends React.PureComponent {
             </ToolGroup>
             <ToolGroup>
               <EditorButton
-                icon="IconBulletList"
+                icon="BulletList"
                 isDisabled={isDisabled}
                 title="editor.commands.ul"
                 onMouseDown={this.handleCommand('ul')}/>
               <EditorButton
-                icon="IconNumberedList"
+                icon="NumberedList"
                 isDisabled={isDisabled}
                 title="editor.commands.ol"
                 onMouseDown={this.handleCommand('ol')}/>
               <EditorButton
-                icon="IconSink"
+                icon="Sink"
                 isDisabled={isDisabled}
                 title="editor.commands.sinkListItem"
                 onMouseDown={this.handleCommand('sinkListItem')}/>
               <EditorButton
                 noFocus
-                icon="IconLift"
+                icon="Lift"
                 isDisabled={isDisabled}
                 title="editor.commands.liftListItem"
                 onMouseDown={this.handleCommand('liftListItem')}/>
@@ -146,12 +145,12 @@ export class EditorToolbar extends React.PureComponent {
               <EditorButton
                 isDisabled={isDisabled}
                 title="editor.commands.link.button"
-                icon="IconLink"
+                icon="Link"
                 onMouseDown={this.handleLinkButtonClick}/>
               <EditorButton
                 isDisabled={!marks.link || isDisabled}
                 title="editor.commands.unlink"
-                icon="IconRemoveLink"
+                icon="RemoveLink"
                 onMouseDown={this.handleUnlinkButtonClick}/>
             </ToolGroup>
           </Toolbar.Left>
@@ -179,10 +178,6 @@ export class EditorToolbar extends React.PureComponent {
   }
 }
 
-const EditorButton = ({ icon, ...props }) => {
-  let Icon = icons[icon]
-
-  return (
-    <Button {...props} noFocus icon={<Icon/>}/>
-  )
-}
+const EditorButton = (props) => (
+  <Button {...props} noFocus/>
+)

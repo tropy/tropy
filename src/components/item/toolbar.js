@@ -23,7 +23,7 @@ export const ItemToolbar = ({ isItemMode }) => {
           <Fade nodeRef={nodeRef} in={isItemMode}>
             <Button
               ref={nodeRef}
-              icon="IconChevron16"
+              icon="Chevron16"
               noFocus
               onClick={toggleProjectMode}/>
           </Fade>

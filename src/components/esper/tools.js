@@ -19,20 +19,20 @@ export const Tool = ({
   <ToolGroup>
     <ToolButton
       current={current}
-      icon="IconArrow"
+      icon="Arrow"
       isDisabled={isDisabled}
       onChange={onChange}
       value={ESPER.TOOL.ARROW}/>
     <ToolButton
       current={current}
-      icon="IconSelection"
+      icon="Selection"
       isDisabled={isDisabled || isReadOnly || isSelectionActive}
       onChange={onChange}
       title="esper.tool.select"
       value={ESPER.TOOL.SELECT}/>
     <ToolButton
       current={current}
-      icon="IconHand"
+      icon="Hand"
       isDisabled={isDisabled}
       onChange={onChange}
       title="esper.tool.pan"
@@ -53,13 +53,13 @@ export const Rotation = ({
   return (
     <ToolGroup>
       <Button
-        icon="IconRotate"
+        icon="Rotate"
         isDisabled={isDisabled}
         noFocus
         onClick={handleRotate}
         title="esper.tool.rotate"/>
       <Button
-        icon="IconMirror"
+        icon="Mirror"
         isActive={mirror}
         isDisabled={isDisabled}
         noFocus
@@ -78,7 +78,7 @@ export const Mode = ({
     <ToolButton
       current={current}
       defaultValue={ESPER.MODE.ZOOM}
-      icon="IconFill"
+      icon="Fill"
       isDisabled={isDisabled}
       name="mode"
       onChange={onChange}
@@ -87,7 +87,7 @@ export const Mode = ({
     <ToolButton
       current={current}
       defaultValue={ESPER.MODE.ZOOM}
-      icon="IconFit"
+      icon="Fit"
       isDisabled={isDisabled}
       name="mode"
       onChange={onChange}
@@ -117,9 +117,9 @@ export const Zoom = ({
       <Slider
         isDisabled={isDisabled}
         max={max}
-        maxIcon="IconPlusCircle"
+        maxIcon="PlusCircle"
         min={min}
-        minIcon="IconMinusCircle"
+        minIcon="MinusCircle"
         onChange={handleChange}
         precision={precision}
         resolution={resolution * 100}
@@ -146,13 +146,13 @@ export const FontSize = ({
   return (
     <ToolGroup>
       <Button
-        icon="IconASmall"
+        icon="ASmall"
         isDisabled={isDisabled || current <= min}
         noFocus
         onClick={() => handleChange(-step)}
         title="esper.overlay.fontSize.decrease"/>
       <Button
-        icon="IconALarge"
+        icon="ALarge"
         isDisabled={isDisabled || current >= max}
         noFocus
         onClick={() => handleChange(step)}
@@ -177,7 +177,7 @@ export const Layout = ({
         key="panel"
         current={panel}
         defaultValue={false}
-        icon="IconSliders"
+        icon="Sliders"
         isDisabled={isDisabled}
         name="panel"
         onChange={onChange}
@@ -191,7 +191,7 @@ export const Layout = ({
         key="overlayPanel"
         current={overlayPanel}
         defaultValue={false}
-        icon="IconTranscriptionVersions"
+        icon="TranscriptionVersions"
         isDisabled={isDisabled}
         name="overlayPanel"
         onChange={onChange}
@@ -210,7 +210,7 @@ export const Layout = ({
         <ToolButton
           current={overlay}
           defaultValue={ESPER.OVERLAY.NONE}
-          icon="IconTranscriptionLarge"
+          icon="TranscriptionLarge"
           isDisabled={isDisabled}
           name="overlay"
           onChange={onChange}
@@ -219,7 +219,7 @@ export const Layout = ({
         <ToolButton
           current={overlay}
           defaultValue={ESPER.OVERLAY.NONE}
-          icon="IconTranscriptionSplitView"
+          icon="TranscriptionSplitView"
           isDisabled={isDisabled}
           name="overlay"
           onChange={onChange}
