@@ -80,15 +80,6 @@
       }
     }
 
-    .icon-arrow {
-      margin: zoom(-2px);
-
-      svg {
-        width: zoom(20px);
-        height: zoom(20px);
-      }
-    }
-
     .icon-rotate {
       .alt-key & {
         transform: scaleX(-1);

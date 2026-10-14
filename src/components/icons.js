@@ -888,7 +888,7 @@ export const IconDotsVertical = i('DotsVertical', (
 /* 20 x 20 */
 
 export const IconArrow = i('Arrow', (
-  <svg width="20" height="20" viewBox="0 0 20 20">
+  <svg width="16" height="16" viewBox="2 2 16 16" overflow="visible">
     <g className="line" fill="currentColor">
       <path d="M6,4.273,14.429,12h-4.9l-.3.36L6,16.238V4.273M5,2V19l5-6h7L5,2Z"/>
     </g>
