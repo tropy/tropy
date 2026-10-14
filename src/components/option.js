@@ -2,6 +2,7 @@ import React from 'react'
 import { Scroll } from './scroll/scroll.js'
 import { SASS } from '../constants/index.js'
 import { blank } from '../common/util.js'
+import { Cursor } from '../common/sequence.js'
 import cx from 'classnames'
 
 export class Option extends React.PureComponent {
@@ -39,6 +40,20 @@ export class Option extends React.PureComponent {
 
 export class OptionList extends React.Component {
   scroll = React.createRef()
+  state = {}
+
+  get cursor () {
+    return new Cursor(this.props.values, this.props.active, {
+      ...this.state.layout,
+      restrict: this.props.restrict
+    })
+  }
+
+  move (cmd) {
+    let option = this.cursor.seek(cmd)
+    this.props.onActivate(option)
+    return option
+  }
 
   hasMoved ({ clientX, clientY }) {
     try {
@@ -63,28 +78,32 @@ export class OptionList extends React.Component {
     }
   }
 
-  next (...args) {
-    return this.scroll.current.select(this.scroll.current.next(...args))
+  handleLayoutChange = (layout) => {
+    this.setState({ layout })
   }
 
-  prev (...args) {
-    return this.scroll.current.select(this.scroll.current.prev(...args))
+  next () {
+    return this.move('next')
+  }
+
+  prev () {
+    return this.move('prev')
   }
 
   first () {
-    return this.scroll.current.select(this.scroll.current.first())
+    return this.move('first')
   }
 
   last () {
-    return this.scroll.current.select(this.scroll.current.last())
+    return this.move('last')
   }
 
   pageUp () {
-    return this.scroll.current.select(this.scroll.current.pageUp())
+    return this.move('pageUp')
   }
 
   pageDown () {
-    return this.scroll.current.select(this.scroll.current.pageDown())
+    return this.move('pageDown')
   }
 
   render () {
@@ -93,10 +112,9 @@ export class OptionList extends React.Component {
         <Scroll
           ref={this.scroll}
           cursor={this.props.active}
-          restrict={this.props.restrict}
-          onSelect={this.props.onActivate}
           items={this.props.values}
-          itemHeight={this.props.rowHeight}>
+          itemHeight={this.props.rowHeight}
+          onLayoutChange={this.handleLayoutChange}>
           {(option) => (
             <Option
               key={option.id}

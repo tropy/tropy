@@ -133,12 +133,12 @@ export class Completions extends React.Component {
     if (active != null) this.props.onSelect(this.props.completions[active.idx])
   }
 
-  next (...args) {
-    return this.optionsList.current?.next(...args)
+  next () {
+    return this.optionsList.current?.next()
   }
 
-  prev (...args) {
-    return this.optionsList.current?.prev(...args)
+  prev () {
+    return this.optionsList.current?.prev()
   }
 
   first () {
