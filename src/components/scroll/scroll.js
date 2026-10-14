@@ -12,8 +12,8 @@ export const Scroll = ({
   children,
   cursor,
   expandedItems,
+  expansion,
   expansionCursor,
-  expansionPadding = 0,
   itemHeight,
   itemWidth,
   items = [],
@@ -23,7 +23,6 @@ export const Scroll = ({
   onTabFocus,
   overscan = 1.25,
   ref,
-  renderExpansionRow,
   tabIndex,
   tag
 }) => {
@@ -40,6 +39,14 @@ export const Scroll = ({
   let [top, setTop] = useState(0)
   let exactTop = useRef(0)
 
+  // A grid may expand one item: `{ id, length, padding, render }`.
+  // Its expansion renders `length` items in the grid's columns.
+  let {
+    id: expanded,
+    length: expansionLength,
+    padding: expansionPadding
+  } = expansion ?? {}
+
   let layout = useMemo(() => getLayout({
     items,
     itemHeight,
@@ -47,6 +54,8 @@ export const Scroll = ({
     height,
     width,
     expandedItems,
+    expanded,
+    expansionLength,
     expansionPadding,
     overscan
   }), [
@@ -56,6 +65,8 @@ export const Scroll = ({
     height,
     width,
     expandedItems,
+    expanded,
+    expansionLength,
     expansionPadding,
     overscan
   ])
@@ -242,8 +253,8 @@ export const Scroll = ({
             items={items}
             from={from}
             to={to}
-            expandedItems={expandedItems}
-            renderExpansionRow={renderExpansionRow}
+            renderExpansion={expansion?.render}
+            gap={layout.gap}
             renderItem={children}/>
         </Viewport>
       </Runway>

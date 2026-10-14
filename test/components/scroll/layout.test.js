@@ -10,7 +10,6 @@ describe('Scroll layout', () => {
     itemHeight: 10,
     height: 50,
     overscan: 1,
-    expansionPadding: 0,
     ...props
   })
 
@@ -39,7 +38,8 @@ describe('Scroll layout', () => {
 
   it('maps offsets to rows in grids', () => {
     let geometry = layout({
-      expandedItems: { 7: Array.from({ length: 7 }, (_, i) => 101 + i) },
+      expanded: 7,
+      expansionLength: 7,
       expansionPadding: 4,
       itemWidth: 10,
       width: 50
@@ -48,5 +48,9 @@ describe('Scroll layout', () => {
     // Two expansion rows below the second row, then the padding.
     expect(getOffset(geometry, 10)).to.equal(44)
     expectInverse(geometry)
+
+    // The gap belongs to the expanded item's row.
+    expect(getRowAt(geometry, 20)).to.eql([5, 0])
+    expect(getRowAt(geometry, 43)).to.eql([5, 0])
   })
 })

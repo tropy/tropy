@@ -1,4 +1,5 @@
 import { getExpandedRows, getExpandedRowsAbove } from './expansion.js'
+import { indexOf } from '../../common/sequence.js'
 import { restrict } from '../../common/util.js'
 
 export const getLayout = ({
@@ -7,18 +8,31 @@ export const getLayout = ({
   itemWidth,
   height,
   width,
-  expandedItems = {},
-  expansionPadding,
+  expandedItems,
+  expanded,
+  expansionLength,
+  expansionPadding = 0,
   overscan
 }) => {
   let columns = Math.floor(width / itemWidth) || 1
   let isGrid = itemWidth > 0
 
-  let expandedRows = getExpandedRows(
-    columns,
-    items,
-    expandedItems,
-    isGrid)
+  let expandedRows = isGrid ? [] : getExpandedRows(items, expandedItems)
+  let gap = null
+
+  // A grid may expand one item:
+  // its expansion fills a gap below the item's row.
+  if (isGrid && expanded != null) {
+    let index = indexOf(items, expanded)
+
+    if (index >= 0)
+      gap = {
+        index,
+        row: Math.floor(index / columns),
+        height: Math.ceil(expansionLength / columns) * itemHeight +
+          expansionPadding
+      }
+  }
 
   let rows = Math.ceil(items.length / columns) + expandedRows.length
   let visibleRows = Math.ceil(height / itemHeight)
@@ -31,18 +45,15 @@ export const getLayout = ({
   let step = Math.max(1, Math.floor(overscanRows / 3))
   let pageOffset = Math.floor((overscanRows - step) / 2) * itemHeight
 
-  let runway = rows * itemHeight
+  let runway = rows * itemHeight + (gap?.height ?? 0)
 
-  if (expandedRows.length > 0)
-    runway += expansionPadding
-
-  let maxOffset = runway - (rowsPerPage * itemHeight)
-  maxOffset = Math.max(maxOffset - (maxOffset % itemHeight), 0)
+  // The rendered rows start at the row of this offset at most.
+  let maxOffset = Math.max(runway - (rowsPerPage * itemHeight), 0)
 
   return {
     columns,
     expandedRows,
-    expansionPadding,
+    gap,
     height,
     isGrid,
     itemHeight,
@@ -56,7 +67,7 @@ export const getLayout = ({
 
 // The offset of the item's row, or of a row in its expansion.
 export const getOffset = (layout, index, expRowPosition = 0) => {
-  let { columns, expandedRows, expansionPadding, isGrid, itemHeight } = layout
+  let { columns, expandedRows, gap, itemHeight } = layout
   let row = Math.floor(index / columns)
 
   let { numRowsAbove } =
@@ -64,16 +75,21 @@ export const getOffset = (layout, index, expRowPosition = 0) => {
 
   let offset = (row + numRowsAbove + expRowPosition) * itemHeight
 
-  if (isGrid && numRowsAbove > 0)
-    offset += expansionPadding
+  if (gap != null && row > gap.row)
+    offset += gap.height
 
   return offset
 }
 
 // The first item of the row at the offset,
 // and the row's position in the item's expansion.
+// Offsets in the gap map to the expanded item's row.
 export const getRowAt = (layout, offset) => {
-  let { columns, expandedRows, itemHeight } = layout
+  let { columns, expandedRows, gap, itemHeight } = layout
+
+  if (gap != null && offset >= (gap.row + 1) * itemHeight)
+    offset = Math.max(offset - gap.height, gap.row * itemHeight)
+
   let row = Math.floor(offset / itemHeight)
 
   let { numRowsAbove, expRowPosition } =

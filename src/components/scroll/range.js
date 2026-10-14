@@ -1,44 +1,27 @@
-import React from 'react'
-import { ExpansionRow } from './expansion.js'
-
-const getNextRowOffset = (index, columns) =>
-  index + (columns - (index % columns))
-
 export const Range = ({
   columns = 1,
   items,
-  expandedItems = {},
   from,
+  gap,
   to,
-  renderExpansionRow,
+  renderExpansion,
   renderItem
 }) => {
-  let output = []
-  let expansion
+  let output = items.slice(from, to).map((item, i) =>
+    renderItem(item, from + i))
 
-  let range = items.slice(from, to)
+  if (gap != null && gap.index >= from && gap.index < to) {
+    let item = items[gap.index]
 
-  for (let i = 0; i < range.length; ++i) {
-    let item = range[i]
-    let isExpanded = !!expandedItems[item.id]
-
-    output.push(renderItem(item, from + i, { isExpanded }))
-
-    // Invariant: in Grid there must be at most one expanded item!
-    if (isExpanded && !expansion && renderExpansionRow) {
-      expansion = {
-        at: getNextRowOffset(i, columns),
-        row: React.createElement(ExpansionRow, {
-          item,
-          columns,
-          renderExpansionRow
-        })
-      }
-    }
+    output.splice((gap.row + 1) * columns - from, 0, (
+      <li
+        key={`expansion-${item.id}`}
+        className="tile-expansion"
+        style={{ gridColumnEnd: columns + 1 }}>
+        {renderExpansion(item, columns)}
+      </li>
+    ))
   }
-
-  if (expansion)
-    output.splice(expansion.at, 0, expansion.row)
 
   return output
 }

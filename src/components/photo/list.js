@@ -92,12 +92,12 @@ export const PhotoList = (props) => {
         tabIndex={TABS.PhotoList}
         onKeyDown={onKeyDown}
         onLayoutChange={iterator.onLayoutChange}>
-        {(photo, index, { isExpanded }) => (
+        {(photo) => (
           <PhotoListItem
             {...iterator.getIterableProps(photo)}
             key={photo.id}
             title={dc.title}
-            isExpanded={isExpanded}
+            isExpanded={!!iterator.expandedPhotos[photo.id]}
             isEditing={editing === photo.id}
             onChange={handleChange}
             onEdit={handleEdit}

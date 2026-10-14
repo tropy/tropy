@@ -1,18 +1,4 @@
-import React from 'react'
 import { indexOf } from '../../common/sequence.js'
-
-export const ExpansionRow = ({
-  item,
-  columns,
-  tag = 'li',
-  renderExpansionRow
-}) =>
-  React.createElement(tag, {
-    key: `expansion-${item.id}`,
-    className: 'tile-expansion',
-    style: { gridColumnEnd: columns + 1 }
-  }, renderExpansionRow(item, columns))
-
 
 export const getExpandedRowsAbove = (rows, { index, position }) => {
   let numRowsAbove = 0
@@ -33,20 +19,9 @@ export const getExpandedRowsAbove = (rows, { index, position }) => {
   return { numRowsAbove, expRowPosition }
 }
 
-export const getExpandedRows = (
-  columns,
-  items,
-  expandedItems,
-  isGrid
-) =>
-  isGrid ?
-    getExpandedGridRows(columns, items, expandedItems) :
-    getExpandedListRows(items, expandedItems)
-
-
-const getExpandedListRows = (items, expandedItems) => {
+export const getExpandedRows = (items, expandedItems) => {
   let rows = []
-  let expansions = getExpansions(1, items, expandedItems)
+  let expansions = getExpansions(items, expandedItems)
 
   let count = 0
 
@@ -66,36 +41,16 @@ const getExpandedListRows = (items, expandedItems) => {
 }
 
 
-const getExpandedGridRows = (columns, items, expandedItems) => {
-  let rows = []
-  let [expansion] = getExpansions(columns, items, expandedItems)
-
-  if (expansion) {
-    let { index, numRows } = expansion
-
-    for (let i = 1; i <= numRows; ++i)
-      rows.push({
-        index,
-        position: index + i,
-        numRowsAbove: i,
-        expRowPosition: i
-      })
-  }
-
-  return rows
-}
-
-
-const getExpansions = (columns, items, expandedItems) => {
+const getExpansions = (items, expandedItems) => {
   let expansions = []
 
   for (let id in expandedItems) {
-    let index = Math.floor(indexOf(items, id) / columns)
+    let index = indexOf(items, id)
 
     if (index >= 0)
       expansions.push({
         index,
-        numRows: Math.ceil(expandedItems[id].length / columns) || 0
+        numRows: expandedItems[id].length
       })
   }
 

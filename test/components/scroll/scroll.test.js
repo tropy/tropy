@@ -15,7 +15,8 @@ describe('Scroll', () => {
     style.textContent = `
       .scroll-container { height: 100px; overflow: auto }
       .viewport { display: grid; margin: 0; padding: 0 }
-      .viewport > li { display: block; height: 20px }`
+      .viewport > li { display: block; height: 20px }
+      .viewport > .tile-expansion { height: 44px }`
     document.head.appendChild(style)
   })
 
@@ -159,6 +160,60 @@ describe('Scroll', () => {
     await frame()
 
     expect(onRender.mock.callCount()).to.equal(renders)
+  })
+
+  describe('when a grid expands an item', () => {
+    let tiles = Array.from({ length: 200 }, (_, idx) => ({ id: idx + 1 }))
+
+    let renderGrid = (cursor) => (
+      <Scroll
+        items={tiles}
+        itemHeight={20}
+        itemWidth={20}
+        cursor={cursor}
+        expansion={{
+          id: 3,
+          length: 7,
+          padding: 4,
+          render: () => <div id="expansion"/>
+        }}
+        tabIndex={0}>
+        {(item) => <li key={item.id} id={`item-${item.id}`}/>}
+      </Scroll>
+    )
+
+    let setup = async (cursor) => {
+      let { $, $$, rerender } = render(renderGrid(cursor))
+      let container = $('.scroll-container')
+
+      // 5 columns, with or without a scrollbar.
+      container.style.width = '117px'
+      await waitFor(() => {
+        expect($$('li').length).to.be.above(20)
+      })
+
+      let top = (id) => $(`#item-${id}`).getBoundingClientRect().top
+
+      return { $, container, rerender, top }
+    }
+
+    it('renders the expansion below the item\'s row', async () => {
+      let { $, top } = await setup(1)
+
+      expect($('#expansion').parentElement.previousElementSibling.id)
+        .to.equal('item-5')
+      expect(top(6) - top(1)).to.equal(64)
+    })
+
+    it('scrolls to items below the expansion', async () => {
+      let { container, rerender, top } = await setup(1)
+
+      rerender(renderGrid(198))
+
+      let bounds = container.getBoundingClientRect()
+      expect(top(198)).to.be.at.least(bounds.top)
+      expect(top(198) + 20).to.be.at.most(bounds.bottom)
+    })
   })
 
   describe('when zooming a grid', () => {
