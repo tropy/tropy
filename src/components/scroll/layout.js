@@ -80,10 +80,11 @@ export const getOffset = (layout, index) => {
   return offset
 }
 
-// The scroll position that brings the item into view, or nothing
-// if it is in view already. Near the view (within its height),
-// the item aligns to the nearest edge; far away, it is centered
-// to show what is around it.
+// The scroll position that brings the item into view,
+// or nothing if it is in view already.
+// Near the view (within its height),
+// the item aligns to the nearest edge; far away,
+// it is centered to show what is around it.
 export const getScrollTo = (layout, index, scrollTop) => {
   let { height, itemHeight } = layout
   let top = getOffset(layout, index)
@@ -100,6 +101,29 @@ export const getScrollTo = (layout, index, scrollTop) => {
     return top + (itemHeight - height) / 2
 
   return isBelow ? bottom - height : top
+}
+
+// The scroll position that keeps the view stable when the rows change
+// (zoom, resize): the item's row, if it was in view, or else the top
+// row, stays at the same relative position in the view.
+// Nothing if the rows did not change.
+export const getAnchoredScrollTop = (prev, layout, index, scrollTop) => {
+  if (prev.columns === layout.columns && prev.itemHeight === layout.itemHeight)
+    return
+
+  let offset = getOffset(prev, index)
+
+  if (index < 0 ||
+    offset < scrollTop ||
+    offset + prev.itemHeight > scrollTop + prev.height) {
+    index = getRowAt(prev, scrollTop)
+    offset = getOffset(prev, index)
+  }
+
+  let center = (offset + prev.itemHeight / 2 - scrollTop) / prev.height
+
+  return getOffset(layout, index) +
+    layout.itemHeight / 2 - center * layout.height
 }
 
 // The first item of the row at the offset.

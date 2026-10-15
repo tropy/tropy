@@ -8,42 +8,39 @@ import { useEvent } from '../../hooks/use-event.js'
 // A new sequence keeps the cursor in view,
 // or starts at the top if the cursor is not in it.
 
-export const useScrollIntoView = (layout, {
-  container,
-  cursor,
-  scroll
-}) => {
+export const useScrollIntoView = (layout, { cursor, position }) => {
   let scrollIntoView = useEvent((element) => {
     // Nothing to scroll into before we are measured.
     if (layout.height === 0)
       return
 
-    let { index } = (element == null) ? cursor : cursor.to(element)
+    let { index } = (element == null)
+      ? cursor
+      : cursor.to(element)
 
     if (index < 0)
       return
 
-    let top = getScrollTo(layout, index, container.current.scrollTop)
+    let top = getScrollTo(layout, index, position.scrollTop())
 
     if (top != null)
-      scroll(top)
+      position.scroll(top)
   })
 
-  let isMeasured = layout.height > 0
+  let isReady = layout.height > 0
 
   let handleSequenceChange = useEvent(() => {
-    if (!isMeasured)
-      return
-
-    if (cursor.index < 0)
-      scroll(0)
-    else
+    // Only if not at the top already: scrolling forces
+    // a style and layout recalculation, even without moving.
+    if (cursor.index >= 0)
       scrollIntoView()
+    else if (position.scrollTop() > 0)
+      position.scroll(0)
   })
 
   useLayoutEffect(() => {
     scrollIntoView()
-  }, [cursor.id, isMeasured, scrollIntoView])
+  }, [cursor.id, isReady, scrollIntoView])
 
   useLayoutEffect(() => {
     handleSequenceChange()

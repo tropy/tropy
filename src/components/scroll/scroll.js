@@ -1,14 +1,13 @@
-import { useImperativeHandle, useLayoutEffect, useRef, useState } from 'react'
+import { useImperativeHandle, useLayoutEffect, useRef } from 'react'
 import { flushSync } from 'react-dom'
 import { Page } from './page.js'
 import { Runway } from './runway.js'
 import { ScrollContainer } from './container.js'
 import { Viewport } from './viewport.js'
-import { getPage } from './layout.js'
-import { useAnchor, useLayoutChange } from './use-anchor.js'
-import { useLayout } from './use-layout.js'
+import { getAnchoredScrollTop, getPage } from './layout.js'
+import { useLayout, useLayoutChange } from './use-layout.js'
 import { useScrollIntoView } from './use-scroll-into-view.js'
-import { useEvent } from '../../hooks/use-event.js'
+import { useScrollTop } from './use-scroll-top.js'
 
 
 export const Scroll = ({
@@ -36,39 +35,26 @@ export const Scroll = ({
     overscan
   })
 
-  // The scroll position the page is rendered for.
-  let [pageScrollTop, setPageScrollTop] = useState(0)
-
-  let { from, to, offset } = getPage(pageScrollTop, layout)
-
-  let anchor = useAnchor(cursor)
-
-  // Renders a new page only when scrolled beyond the tolerance.
-  let syncScrollTop = useEvent(() => {
-    let { scrollTop } = container.current
-    anchor.track(scrollTop)
-
-    if (Math.abs(scrollTop - pageScrollTop) > layout.tolerance)
-      setPageScrollTop(scrollTop)
-  })
-
-  // Programmatic scrolls update the rendered rows right away:
-  // without waiting for the scroll event, they render before paint.
-  let scroll = (top, left) => {
-    container.current.scrollTo({ top, left })
-    syncScrollTop()
-  }
+  let position = useScrollTop(container, layout)
+  let { from, to, offset } = getPage(position.pageScrollTop, layout)
 
   // Zooming or resizing keeps the view stable; other layout changes
   // (measured or shown again, items changed) catch up with the
   // scroll position.
   useLayoutChange(layout, (prev) => {
-    let top = anchor.restore(prev, layout)
+    if (prev.height === 0)
+      return position.sync()
 
-    if (top == null)
-      syncScrollTop()
-    else
-      scroll(top)
+    let scrollTop = position.scrollTop()
+    let top = getAnchoredScrollTop(prev, layout, cursor.index, scrollTop)
+
+    if (top != null)
+      return position.scroll(top)
+
+    // The tracked position holds, unless the browser clamped it
+    // to a shorter runway: only then read the container's.
+    let isClamped = scrollTop > Math.max(0, layout.runway - layout.height)
+    position.sync(isClamped ? undefined : scrollTop)
   })
 
   let { columns, isGrid, pageSize, runway } = layout
@@ -82,11 +68,7 @@ export const Scroll = ({
     })
   }, [isGrid, columns, pageSize, onLayoutChange])
 
-  let scrollIntoView = useScrollIntoView(layout, {
-    container,
-    cursor,
-    scroll
-  })
+  let scrollIntoView = useScrollIntoView(layout, { cursor, position })
 
   useImperativeHandle(ref, () => ({
     focus () {
@@ -94,13 +76,13 @@ export const Scroll = ({
     },
     scrollBy (top, left) {
       container.current.scrollBy({ top, left })
-      syncScrollTop()
+      position.sync()
     },
     scrollIntoView
-  }), [syncScrollTop, scrollIntoView])
+  }), [position, scrollIntoView])
 
   let handleScroll = () => {
-    flushSync(syncScrollTop)
+    flushSync(position.sync)
   }
 
   let handleTabFocus = (event) => {

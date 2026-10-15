@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { getLayout } from './layout.js'
 
 export const useLayout = (items, {
@@ -50,4 +50,16 @@ export const useLayout = (items, {
   }
 
   return [layout, handleResize]
+}
+
+export const useLayoutChange = (layout, onChange) => {
+  let committed = useRef()
+
+  useLayoutEffect(() => {
+    let prev = committed.current
+    committed.current = layout
+
+    if (prev != null && prev !== layout && layout.height > 0)
+      onChange(prev)
+  })
 }
