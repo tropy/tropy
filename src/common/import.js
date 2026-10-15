@@ -2,7 +2,7 @@ import gt from 'semver/functions/gt.js'
 import * as ex from './export.js'
 import { expand } from './json.js'
 import { rdfs, tropy, xsd, dc, dcterms } from '../ontology/index.js'
-import { URI, any, array, map, morph, omit, get, decodeListPath } from './util.js'
+import { URI, any, array, morph, omit, get, decodeListPath } from './util.js'
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
 export async function normalize (json) {
@@ -71,10 +71,16 @@ const toFirstValue = (key, values) =>
   toValue(values[0], key)
 
 const getMetadata = (data, type) =>
-  map(omit(data, props[type]), toFirstValue)
+  morph(omit(data, props[type]), (md, prop, values) => {
+    if (values.length > 0)
+      md[prop] = toFirstValue(prop, values)
+  })
 
 const getProps = (data, type, ...args) =>
   morph(data, (img, prop, values) => {
+    if (values.length === 0)
+      return
+
     let value = any(values[0], '@value', '@id')
     if (value === undefined)
       return
