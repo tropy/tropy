@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback } from 'react'
 import cx from 'classnames'
 import { Editable } from '../editable.js'
 import { IconPlusCircles } from '../icons.js'
@@ -45,8 +45,6 @@ export const Tag = React.memo(({
   onSelect
 }) => {
 
-  let container = useRef()
-
   let isDropDisabled = isReadOnly || isSelected || onDropItems == null
 
   let [{ canDrop, isOver }, drop] = useDropItems({
@@ -58,9 +56,6 @@ export const Tag = React.memo(({
       })
     }
   })
-
-  if (!isDropDisabled)
-    drop(container)
 
   let handleChange = useCallback((name) => {
     onChange({ name }, tag.id)
@@ -92,7 +87,7 @@ export const Tag = React.memo(({
 
   return (
     <li
-      ref={container}
+      ref={isDropDisabled ? null : drop}
       className={cx('tag', {
         active: isSelected,
         mixed: !!tag.mixed,
