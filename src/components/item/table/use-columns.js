@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { useDerivedState } from '../../../hooks/use-derived-state.js'
 import { useEvent } from '../../../hooks/use-event.js'
 import { bounds, ensure } from '../../../dom.js'
@@ -29,11 +29,13 @@ export function useColumnState ({
   onColumnOrder,
   onColumnResize
 }) {
-  let [state, setState] = useDerivedState(columns, ({ active }) => ({
+  let derive = useCallback(({ active }) => ({
     columns: active,
     colwidth: active.map((c, idx) =>
       Math.max(c.width, idx > 0 ? minColWidth : minMainColWidth))
-  }))
+  }), [minColWidth, minMainColWidth])
+
+  let [state, setState] = useDerivedState(columns, derive)
 
   let hasPositionColumn = !!list
   let minWidth = state.colwidth.reduce((sum, w) => sum + w, 0) +
