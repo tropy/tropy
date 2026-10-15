@@ -3,7 +3,7 @@ export default function (api) {
 
   return {
     plugins: [
-      'babel-plugin-react-compiler'
+      ['babel-plugin-react-compiler', { panicThreshold: 'all_errors' }]
     ],
     presets: [
       ['@babel/preset-react', { runtime: 'automatic' }]
