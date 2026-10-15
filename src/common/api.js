@@ -557,7 +557,9 @@ export function create ({
 
   app
     .use(logging)
-    .use(bodyParser())
+    .use(bodyParser({
+      queryString: { arrayLimit: 1000 }
+    }))
     .use(api.routes())
     .use(api.allowedMethods())
 
