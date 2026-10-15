@@ -20,7 +20,7 @@
     &.active {
       @extend %list-active;
 
-      .scroll-container:focus & {
+      .scroll-container:focus :is(&) {
         @extend %list-focus;
       }
     }
