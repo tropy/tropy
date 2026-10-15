@@ -7,18 +7,18 @@ import { useId, useLayoutEffect, useState } from 'react'
 //
 // Returns isReady when popover is ready to show content.
 
-export function usePopover (nodeRef, { anchor } = {}) {
+export function usePopover (nodeRef, { anchor: anchorRef } = {}) {
   let isReady = useShowPopover(nodeRef)
 
   // CSS links popover to anchor by global anchor name!
   let anchorName = `--popover-${CSS.escape(useId())}`
 
   useLayoutEffect(() => {
-    if (anchor == null)
+    if (anchorRef == null)
       return
 
     let popover = nodeRef.current
-    let source = anchor.current
+    let source = anchorRef.current
     source.style.anchorName = anchorName
     popover.style.positionAnchor = anchorName
 
@@ -26,7 +26,7 @@ export function usePopover (nodeRef, { anchor } = {}) {
       source.style.anchorName = ''
       popover.style.positionAnchor = ''
     }
-  }, [nodeRef, anchor, anchorName])
+  }, [nodeRef, anchorRef, anchorName])
 
   return isReady
 }
