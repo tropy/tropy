@@ -149,6 +149,7 @@ const props = {
     '@type',
     tropy.note,
     tropy.selection,
+    tropy.transcription,
     ...ex.props.photo.map(prop => tropy[prop]),
     ...ex.props.image.map(prop => tropy[prop])
   ],
@@ -156,15 +157,17 @@ const props = {
     '@id',
     '@type',
     tropy.note,
+    tropy.transcription,
     ...ex.props.selection.map(prop => tropy[prop]),
     ...ex.props.image.map(prop => tropy[prop])
   ]
 }
 
 props.photo.skip = [
-  '@id', '@type', tropy.template, tropy.selection, tropy.note
+  '@id', '@type', tropy.template, tropy.selection, tropy.note,
+  tropy.transcription
 ]
 
 props.selection.skip = [
-  '@id', '@type', tropy.note
+  '@id', '@type', tropy.note, tropy.transcription
 ]
