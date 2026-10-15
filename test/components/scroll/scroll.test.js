@@ -208,6 +208,19 @@ describe('Scroll', () => {
     expect($('#item-72')).to.exist
   })
 
+  it('renders the new page within the scroll event', async () => {
+    let { $, $$ } = render(renderScroll())
+    let container = $('.scroll-container')
+
+    await measured($$)
+
+    // No frame in between: the rows are there before paint.
+    container.scrollTop = 1500
+    container.dispatchEvent(new Event('scroll'))
+
+    expect($('#item-76')).to.exist
+  })
+
   it('does not render rows when scrolling a little', async () => {
     let onRender = mock.fn()
     let { $, $$ } = render(renderScroll({}, onRender))

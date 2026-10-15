@@ -1,4 +1,5 @@
 import { useImperativeHandle, useLayoutEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { Page } from './page.js'
 import { Runway } from './runway.js'
 import { ScrollContainer } from './container.js'
@@ -98,6 +99,10 @@ export const Scroll = ({
     scrollIntoView
   }), [syncScrollTop, scrollIntoView])
 
+  let handleScroll = () => {
+    flushSync(syncScrollTop)
+  }
+
   let handleTabFocus = (event) => {
     // Callback first so it may select before scrolling!
     onTabFocus?.(event)
@@ -110,7 +115,7 @@ export const Scroll = ({
       onClick={onClick}
       onKeyDown={onKeyDown}
       onResize={handleResize}
-      onScroll={syncScrollTop}
+      onScroll={handleScroll}
       onTabFocus={handleTabFocus}
       tabIndex={cursor.seq.length === 0 ? null : tabIndex}>
       <Runway height={runway}>
