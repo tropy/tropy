@@ -21,9 +21,47 @@
     0 16px 32px -16px $modal-shadow-1,
     0 0 0 1px $modal-shadow-2;
   user-select: none;
+  opacity: 0;
+  transform: translateY(-$space-xl);
+  transition:
+    opacity 0.33s ease,
+    transform 0.33s ease,
+    display 0.33s allow-discrete,
+    overlay 0.33s allow-discrete;
+
+  @media (prefers-reduced-motion: reduce) {
+    transform: none;
+  }
+
+  &[open] {
+    opacity: 1;
+    transform: translateY(0);
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(-$space-xl);
+
+      @media (prefers-reduced-motion: reduce) {
+        transform: none;
+      }
+    }
+  }
 
   &::backdrop {
     background-color: $modal-backdrop-bg;
+    opacity: 0;
+    transition:
+      opacity 0.33s ease,
+      display 0.33s allow-discrete,
+      overlay 0.33s allow-discrete;
+  }
+
+  &[open]::backdrop {
+    opacity: $modal-backdrop-opacity;
+
+    @starting-style {
+      opacity: 0;
+    }
   }
 
   footer {

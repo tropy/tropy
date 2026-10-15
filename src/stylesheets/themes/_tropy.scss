@@ -566,7 +566,8 @@ $profile-heading-color: --scheme(var(--light-6),            var(--dark-8));
 $profile-border-color:  --scheme(shade(var(--light-3), 4%), var(--dark-1));
 
 // Modal
-$modal-bg:           --scheme(var(--light-1),             var(--dark-4));
-$modal-backdrop-bg:  --scheme(alpha(var(--light-5), 70%), alpha(var(--dark-1), 70%));
-$modal-shadow-1:     --scheme(rgba(0, 0, 0, 0.25),        rgba(0, 0, 0, 0.75));
-$modal-shadow-2:     --scheme(rgba(0, 0, 0, 0.02),        rgba(0, 0, 0, 0.08));
+$modal-bg:               --scheme(var(--light-1),      var(--dark-4));
+$modal-backdrop-bg:      --scheme(var(--light-5),      var(--dark-1));
+$modal-backdrop-opacity: --scheme(0.7,                 0.7);
+$modal-shadow-1:         --scheme(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.75));
+$modal-shadow-2:         --scheme(rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.08));
