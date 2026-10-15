@@ -1,17 +1,19 @@
-import { useReducer, useRef } from 'react'
+import { useMemo, useState } from 'react'
+import { useEvent } from './use-event.js'
 import { identity } from '../common/util.js'
 
-const next = (_, state) => (state)
+// Like useState, but updates when prop changes.
+// NB: `derive` should be a stable reference!
 
-// Like useState but updates the state when the prop changes
 export function useDerivedState (prop, derive = identity) {
-  let ref = useRef(prop)
-  let [value, setValue] = useReducer(next, prop, derive)
+  let [override, setOverride] = useState()
+  let derived = useMemo(() => derive(prop), [prop, derive])
 
-  if (prop !== ref.current) {
-    ref.current = prop
-    setValue(derive(prop))
-  }
+  let value = (override?.prop === prop) ? override.value : derived
+
+  let setValue = useEvent((next) => {
+    setOverride({ prop, value: next })
+  })
 
   return [value, setValue]
 }
