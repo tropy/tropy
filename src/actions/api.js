@@ -1,4 +1,4 @@
-import { API, ITEM, METADATA, NOTE, PHOTO, TAG } from '../constants/index.js'
+import { API, ITEM, LIST, METADATA, NOTE, PHOTO, TAG } from '../constants/index.js'
 import { array } from '../common/util.js'
 
 export default {
@@ -188,6 +188,36 @@ export default {
   },
 
   list: {
+    create (payload, meta) {
+      return {
+        type: LIST.CREATE,
+        payload,
+        meta: {
+          cmd: 'project',
+          history: 'add',
+          ...meta
+        }
+      }
+    },
+
+    items: {
+      add ({ id, items }, meta) {
+        return {
+          type: LIST.ITEM.ADD,
+          payload: {
+            id,
+            items: array(items)
+          },
+          meta: {
+            cmd: 'project',
+            history: 'add',
+            search: true,
+            ...meta
+          }
+        }
+      }
+    },
+
     show (payload, meta) {
       return {
         type: API.LIST.SHOW,

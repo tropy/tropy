@@ -3,7 +3,7 @@ import { basename } from 'path'
 import Koa from 'koa'
 import Router from '@koa/router'
 import bodyParser from 'koa-bodyparser'
-import act from '../actions/api'
+import act from '../actions/api.js'
 
 const show = (type) =>
   async (ctx) => {
@@ -385,6 +385,33 @@ const project = {
   },
 
   lists: {
+    async create (ctx) {
+      let { assert, request, rsvp } = ctx
+      let { name, parent = 0 } = request.body
+
+      assert.ok(name, 400, 'missing name parameter')
+
+      let { payload } = await rsvp(act.list.create({
+        name,
+        parent: Number(parent)
+      }))
+
+      ctx.body = payload
+    },
+
+    async add (ctx) {
+      let { assert, params, request, rsvp } = ctx
+
+      assert.ok(request.body.item, 400, 'missing item parameter')
+
+      let { payload } = await rsvp(act.list.items.add({
+        id: Number(params.id),
+        items: [request.body.item].flat().map(Number)
+      }))
+
+      ctx.body = payload
+    },
+
     async show (ctx) {
       let { params, query, rsvp } = ctx
 
@@ -480,7 +507,9 @@ export function create ({
     .post('/project/:project/items/:id/tags', project.tags.add)
     .delete('/project/:project/items/:id/tags', project.tags.remove)
 
+    .post('/project/:project/lists', project.lists.create)
     .get('/project/:project/lists/:id/items', project.items.find)
+    .post('/project/:project/lists/:id/items', project.lists.add)
     .get('/project/:project/lists{/:id}', project.lists.show)
 
     .post('/project/:project/tags', project.tags.create)
