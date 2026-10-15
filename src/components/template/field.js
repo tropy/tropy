@@ -66,9 +66,6 @@ export const TemplateField = ({
     }
   })
 
-  if (isDragAndDropEnabled)
-    drop(container)
-
   let handleChange = (data) => {
     onSave(field.id, data, position)
   }
@@ -86,7 +83,10 @@ export const TemplateField = ({
 
   return (
     <li
-      ref={container}
+      ref={(node) => {
+        container.current = node
+        if (isDragAndDropEnabled) drop(node)
+      }}
       className={cx('template-field', {
         dragging: isDragging
       })}>
