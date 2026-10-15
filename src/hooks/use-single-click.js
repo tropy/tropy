@@ -5,8 +5,10 @@ export function useSingleClick (handler, { delay = 350 } = {}) {
   let timeout = useRef(null)
 
   let cancel = useEvent(() => {
-    clearTimeout(timeout.current)
-    timeout.current = null
+    if (timeout.current != null) {
+      clearTimeout(timeout.current)
+      timeout.current = null
+    }
   })
 
   let handleClick = (event) => {
