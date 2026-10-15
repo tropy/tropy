@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useRef } from 'react'
 import cx from 'classnames'
 import { useEventHandler } from '../../hooks/use-event-handler.js'
 import { growingEdge } from '../../common/selection.js'
+import { counter } from '../../common/util.js'
 
 // Returns the next (dir > 0) or previous string element, starting at
 // node, but never one of its descendants.
@@ -165,7 +166,8 @@ export const Alto = React.memo(({
   useRevealSelection(dom, selection)
   useNativeSelection(dom, alto, selection, onSelect)
 
-  let idx = 0
+  // The strings' running index across blocks and lines (from 0).
+  let idx = counter(-1)
 
   return (
     <section
@@ -179,7 +181,7 @@ export const Alto = React.memo(({
               {line.strings().map((string, sidx) => (
                 <String
                   key={sidx}
-                  idx={idx++}
+                  idx={idx.next().value}
                   isSelected={!!selection?.get(string)}
                   value={string}/>
               )).toArray()}

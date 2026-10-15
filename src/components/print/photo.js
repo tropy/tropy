@@ -16,9 +16,11 @@ export const Photo = ({
   Object.assign(photo, addOrientation(photo))
   let rotation = new Rotation(photo)
 
+  let ratio
+
   if (hasPhotos && !(hasMetadata || hasNotes)) {
     let [x, y] = rotation.ratio(photo)
-    var ratio = { '--x': x, '--y': y }
+    ratio = { '--x': x, '--y': y }
   }
 
   return (

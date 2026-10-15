@@ -1,11 +1,12 @@
 import { FormattedDate, FormattedRelativeTime } from 'react-intl'
 
-
 export const RelativeDate = ({
   origin = Date.now(), // eslint-disable-line react-hooks/purity
   threshold = 86400 * 2,
   value
 }) => {
+  'use no memo'
+
   let delta = Math.round((value - origin) / 1000)
   let seconds = Math.abs(delta)
 

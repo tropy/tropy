@@ -11,20 +11,29 @@ export const ActivityStatus = ({ delay }) => {
   if (busy.length === 0)
     return null
 
-  if (busy.length === 1) {
-    var { statusIcon, type, progress, total } = busy[0]
-    var hasProgressBar = progress > 0 && total > 0
-    var title = `activity.${type}`
+  let {
+    statusIcon,
+    type,
+    progress,
+    total
+  } = (busy.length === 1) ? busy[0] : {}
 
-    if (hasProgressBar)
-      var style = { '--progress': Math.round(100 * progress / total) }
-  }
+  let hasProgressBar = progress > 0 && total > 0
+  let title = type && `activity.${type}`
+  let style = hasProgressBar
+    ? { '--progress': Math.round(100 * progress / total) }
+    : null
 
   return (
     <Icon
       name={statusIcon || ICON}
       style={style || STYLE}
       title={title || TITLE}
-      values={{ count: busy.length, progress, total, hasProgressBar }}/>
+      values={{
+        count: busy.length,
+        progress,
+        total,
+        hasProgressBar
+      }}/>
   )
 }

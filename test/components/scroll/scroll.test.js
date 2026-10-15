@@ -189,6 +189,31 @@ describe('Scroll', () => {
     expect(onRender.mock.callCount()).to.equal(renders)
   })
 
+  it('does not render rows for a new cursor at the same position', async () => {
+    let onRender = mock.fn()
+
+    // The owner's renderItem is stable (compiled or memoized);
+    // its cursor is new on every render.
+    let renderItem = (item) => {
+      onRender()
+      return <li key={item.id} id={`item-${item.id}`}/>
+    }
+
+    let renderOwner = () => (
+      <Scroll cursor={new Cursor(items, 1)} itemHeight={20} tabIndex={0}>
+        {renderItem}
+      </Scroll>
+    )
+
+    let { $$, rerender } = render(renderOwner())
+    await measured($$)
+
+    let renders = onRender.mock.callCount()
+    rerender(renderOwner())
+
+    expect(onRender.mock.callCount()).to.equal(renders)
+  })
+
   describe('when a grid expands an item', () => {
     let tiles = Array.from({ length: 200 }, (_, idx) => ({ id: idx + 1 }))
 

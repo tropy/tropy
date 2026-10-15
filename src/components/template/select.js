@@ -5,11 +5,14 @@ import { Select } from '../select.js'
 import * as collate from '../../collate.js'
 import { selectTemplatesByType } from '../../selectors/ontology.js'
 
+const matchName = (tpl, query) =>
+  collate.match(tpl.name, query, /\b\w/g)
+
 export const TemplateSelect = ({
   isMixed,
   tabIndex = -1,
   type,
-  match = (tpl, query) => (collate.match(tpl.name, query, /\b\w/g)),
+  match = matchName,
   ...props
 }) => {
   let intl = useIntl()

@@ -15,6 +15,15 @@ import { useEvent } from '../../hooks/use-event.js'
 import { useWindow } from '../../hooks/use-window.js'
 
 
+const busy = async (win, action) => {
+  try {
+    win.toggle('busy', true)
+    return await action()
+  } finally {
+    win.toggle('busy', false)
+  }
+}
+
 export const ProjectSettings = React.memo(({
   baseOptions = BASES,
   project,
@@ -24,48 +33,36 @@ export const ProjectSettings = React.memo(({
   let intl = useIntl()
   let win = useWindow()
 
-  let handleProjectOptimize = useEvent(async () => {
-    try {
-      win.toggle('busy', true)
+  let handleProjectOptimize = useEvent(() => busy(win, async () => {
+    let action = await dispatch(optimize({
+      name: project.name,
+      src: project.path,
+      quality: project.optimize?.quality
+    }))
 
-      let action = await dispatch(optimize({
-        name: project.name,
-        src: project.path,
-        quality: project.optimize?.quality
-      }))
-
-      if (action?.payload?.path) {
-        await notify('project.optimize')
-        ipc.send('switch-project', action.payload.path, project.path)
-      }
-    } finally {
-      win.toggle('busy', false)
+    if (action?.payload?.path) {
+      await notify('project.optimize')
+      ipc.send('switch-project', action.payload.path, project.path)
     }
-  })
+  }))
 
-  let handleProjectConvert = useEvent(async () => {
-    try {
-      win.toggle('busy', true)
+  let handleProjectConvert = useEvent(() => busy(win, async () => {
+    let action = await dispatch(convert({
+      name: project.name,
+      src: project.path,
+      type: TYPES[0]
+    }))
 
-      let action = await dispatch(convert({
-        name: project.name,
-        src: project.path,
-        type: TYPES[0]
-      }))
-
-      if (action?.payload?.path) {
-        await notify('project.convert', {
-          detail: intl.formatMessage({ id: 'prefs.project.convert.detail' }, {
-            errors: action.payload.errors.length
-          })
+    if (action?.payload?.path) {
+      await notify('project.convert', {
+        detail: intl.formatMessage({ id: 'prefs.project.convert.detail' }, {
+          errors: action.payload.errors.length
         })
+      })
 
-        ipc.send('switch-project', action.payload.path, project.path)
-      }
-    } finally {
-      win.toggle('busy', false)
+      ipc.send('switch-project', action.payload.path, project.path)
     }
-  })
+  }))
 
   return (
     <Form size={8}>

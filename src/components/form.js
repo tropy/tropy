@@ -187,12 +187,12 @@ export const Toggle = ({
   type = 'checkbox',
   value
 }) => {
-  isChecked ??= value === true
+  let checked = isChecked ?? value === true
 
   let handleChange = useEvent(() => {
     let inverse = (typeof value === 'boolean' || value === undefined) ?
         !value :
-      isChecked ? null : value
+      checked ? null : value
 
     onChange(set({}, name, inverse), true)
   })
@@ -200,7 +200,7 @@ export const Toggle = ({
   return (
     <div className={cx(className || type)}>
       <input
-        checked={isChecked}
+        checked={checked}
         disabled={isDisabled}
         id={id}
         name={name}

@@ -10,7 +10,6 @@ export const PhotoToolbar = ({
   hasCreateButton,
   isClosed,
   isDisabled,
-  maxZoom = SASS.PHOTO.ZOOM.length - 1,
   onCreate,
   onTranscribe,
   onTranscribePrompt,
@@ -59,7 +58,7 @@ export const PhotoToolbar = ({
       <ToolGroup>
         <Slider
           value={zoom}
-          max={maxZoom}
+          max={SASS.PHOTO.ZOOM.length - 1}
           size="sm"
           minIcon="ListSmall"
           maxIcon="GridSmall"

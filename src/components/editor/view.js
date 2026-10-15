@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
+import { useEffect, useImperativeHandle, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { EditorView as ProseMirror } from 'prosemirror-view'
 import cx from 'classnames'
@@ -6,11 +6,12 @@ import { Frame } from '../frame.js'
 import { isBlank, nodeViews } from '../../editor/index.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useIpcSend } from '../../hooks/use-ipc.js'
-import { create, isLink } from '../../dom.js'
+import { isLink } from '../../dom.js'
 import { isMeta } from '../../keymap.js'
+import { usePlaceholder } from './use-placeholder.js'
 
 
-export const EditorView = forwardRef(({
+export const EditorView = ({
   isDisabled,
   isReadOnly,
   direction = 'ltr',
@@ -22,17 +23,19 @@ export const EditorView = forwardRef(({
   onFocus,
   onKeyDown,
   placeholder,
+  ref,
   state,
   tabIndex,
   wrap = true
-}, ref) => {
+}) => {
   let [view, setView] = useState()
   let intl = useIntl()
   let open = useIpcSend(['shell', 'open'])
 
-  let p = useMemo(() => (
-    create('div', { class: 'placeholder' })
-  ), [])
+  let setPlaceholder = usePlaceholder({
+    text: intl.formatMessage({ id: placeholder }),
+    isVisible: !isDisabled && !isReadOnly && isBlank(state.doc)
+  })
 
   let editable = useEvent(() =>
     !(isDisabled || isReadOnly))
@@ -50,13 +53,13 @@ export const EditorView = forwardRef(({
   })
 
   let handleLoad = useEvent((doc) => {
-    setView(new ProseMirror(doc.body, {
+    let pm = new ProseMirror(doc.body, {
       editable,
       dispatchTransaction (tr) {
-        let next = this.state.apply(tr)
+        let next = pm.state.apply(tr)
 
-        if (this.composing)
-          this.updateState(next)
+        if (pm.composing)
+          pm.updateState(next)
         else
           onChange(next, tr.docChanged)
       },
@@ -73,9 +76,10 @@ export const EditorView = forwardRef(({
       handleKeyDown: onKeyDown,
       nodeViews,
       state
-    }))
+    })
 
-    doc.body.prepend(p)
+    setView(pm)
+    setPlaceholder(doc)
   })
 
   let handleUnload = useEvent(() => {
@@ -94,16 +98,6 @@ export const EditorView = forwardRef(({
 
   useImperativeHandle(ref, () => view, [view])
 
-  useEffect(() => {
-    p.textContent = intl.formatMessage({ id: placeholder })
-  }, [placeholder, intl, p])
-
-  useEffect(() => {
-    p.style.display = (
-      isDisabled || isReadOnly || !isBlank(state.doc)
-    ) ? 'none' : 'block'
-  }, [state, isDisabled, isReadOnly, p])
-
 
   return (
     <Frame
@@ -117,4 +111,4 @@ export const EditorView = forwardRef(({
       styleSheet="editor"
       tabIndex={tabIndex}/>
   )
-})
+}

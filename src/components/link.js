@@ -3,7 +3,7 @@ import { useIpcEvent } from '../hooks/use-ipc.js'
 
 export const Link = ({
   className,
-  children: text,
+  children,
   id,
   title,
   url,
@@ -11,13 +11,16 @@ export const Link = ({
 }) => {
   let intl = useIntl()
 
-  if (id != null) {
-    url ??= intl.formatMessage({ id: `${id}.url` }, opts)
-    text ??= intl.formatMessage({ id: `${id}.title` }, opts)
-    // title ??= intl.formatMessage({ id: `${id}.hint` }, opts)
-  }
+  // The `id` messages fill in a missing url and text.
+  let message = (key) => (id == null) ?
+    undefined :
+    intl.formatMessage({ id: `${id}.${key}` }, opts)
 
-  let handleClick = useIpcEvent(null, ['shell', 'open', url])
+  let href = url ?? message('url')
+  let text = children ?? message('title')
+  // title ?? message('hint')
+
+  let handleClick = useIpcEvent(null, ['shell', 'open', href])
 
   return (
     <a className={className} onClick={handleClick} title={title}>

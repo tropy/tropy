@@ -3,9 +3,20 @@ import cx from 'classnames'
 import { useEvent } from '../hooks/use-event.js'
 import { Input } from './input.js'
 
-function restore (focus) {
-  focus.current?.focus()
-  focus.current = null
+// Remembers where the focus came from, to return it there.
+const useFocusRestore = () => {
+  let origin = useRef(null)
+
+  return {
+    onFocus (event) {
+      origin.current = event.relatedTarget
+    },
+
+    restore () {
+      origin.current?.focus()
+      origin.current = null
+    }
+  }
 }
 
 export const Editable = memo(({
@@ -23,39 +34,33 @@ export const Editable = memo(({
   ...props
 }) => {
   let input = useRef(null)
-  let focus = useRef(null)
+  let focus = useFocusRestore()
 
   let handleBlur = useEvent((event) => {
-    try {
-      return onBlur?.(event)
-    } finally {
-      restore(focus)
-    }
+    let result = onBlur?.(event)
+    focus.restore()
+    return result
   })
 
   let handleFocus = useEvent((event) => {
-    focus.current = event.relatedTarget
+    focus.onFocus(event)
     return onFocus?.(event)
   })
 
   let handleCancel = useEvent((...args) => {
-    try {
-      return onCancel?.(...args)
-    } finally {
-      restore(focus)
-    }
+    let result = onCancel?.(...args)
+    focus.restore()
+    return result
   })
 
   let handleCommit = useEvent((next, { hasChanged, hasBeenForced }) => {
-    try {
-      if (hasChanged || hasBeenForced) {
-        onChange?.(next, hasChanged, hasBeenForced)
-      } else {
-        onCancel?.(false, hasChanged)
-      }
-    } finally {
-      restore(focus)
+    if (hasChanged || hasBeenForced) {
+      onChange?.(next, hasChanged, hasBeenForced)
+    } else {
+      onCancel?.(false, hasChanged)
     }
+
+    focus.restore()
   })
 
   isActive = isActive && !isDisabled && onChange != null
