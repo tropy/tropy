@@ -9,7 +9,9 @@ export function useDerivedState (prop, derive = identity) {
   let [override, setOverride] = useState()
   let derived = useMemo(() => derive(prop), [prop, derive])
 
-  let value = (override?.prop === prop) ? override.value : derived
+  let value = (override != null && override.prop === prop)
+    ? override.value
+    : derived
 
   let setValue = useEvent((next) => {
     setOverride({ prop, value: next })

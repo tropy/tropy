@@ -35,6 +35,11 @@ describe('useDerivedState', () => {
     expect(result.current[0]).to.equal(7)
   })
 
+  it('derives undefined props', () => {
+    let { result } = setup(undefined)
+    expect(result.current[0]).to.be.NaN
+  })
+
   it('derives only when the prop changes', () => {
     let { rerender } = setup(1)
 
