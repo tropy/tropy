@@ -1,10 +1,11 @@
-import { useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useImperativeHandle, useLayoutEffect, useRef, useState } from 'react'
 import { Page } from './page.js'
 import { Runway } from './runway.js'
 import { ScrollContainer } from './container.js'
 import { Viewport } from './viewport.js'
-import { getLayout, getPage } from './layout.js'
+import { getPage } from './layout.js'
 import { useAnchor, useLayoutChange } from './use-anchor.js'
+import { useLayout } from './use-layout.js'
 import { useScrollIntoView } from './use-scroll-into-view.js'
 import { useEvent } from '../../hooks/use-event.js'
 
@@ -21,49 +22,21 @@ export const Scroll = ({
   onTabFocus,
   overscan = 0.75,
   ref,
+  renderExpansion,
   tabIndex,
   tag
 }) => {
   let container = useRef()
 
-  let [height, setHeight] = useState(0)
-
-  // Only grids depend on the width:
-  // lists don't render again when resized horizontally.
-  let [width, setWidth] = useState(0)
+  let [layout, handleResize] = useLayout(cursor.seq, {
+    expansion,
+    itemHeight,
+    itemWidth,
+    overscan
+  })
 
   // The scroll position the page is rendered for.
   let [pageScrollTop, setPageScrollTop] = useState(0)
-
-  // A grid may expand one item: `{ id, length, padding, render }`.
-  // Its expansion renders `length` items in the grid's columns.
-  let {
-    id: expanded,
-    length: expansionLength,
-    padding: expansionPadding
-  } = expansion ?? {}
-
-  let layout = useMemo(() => getLayout({
-    items: cursor.seq,
-    itemHeight,
-    itemWidth,
-    height,
-    width,
-    expanded,
-    expansionLength,
-    expansionPadding,
-    overscan
-  }), [
-    cursor.seq,
-    itemHeight,
-    itemWidth,
-    height,
-    width,
-    expanded,
-    expansionLength,
-    expansionPadding,
-    overscan
-  ])
 
   let { from, to, offset } = getPage(pageScrollTop, layout)
 
@@ -125,11 +98,6 @@ export const Scroll = ({
     scrollIntoView
   }), [syncScrollTop, scrollIntoView])
 
-  let handleResize = (size) => {
-    setHeight(size.height)
-    setWidth(itemWidth > 0 ? size.width : 0)
-  }
-
   let handleTabFocus = (event) => {
     // Callback first so it may select before scrolling!
     onTabFocus?.(event)
@@ -155,7 +123,7 @@ export const Scroll = ({
             items={cursor.seq}
             from={from}
             to={to}
-            renderExpansion={expansion?.render}
+            renderExpansion={renderExpansion}
             gap={layout.gap}
             renderItem={children}/>
         </Viewport>

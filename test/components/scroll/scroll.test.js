@@ -197,12 +197,8 @@ describe('Scroll', () => {
         cursor={new Cursor(tiles, cursor)}
         itemHeight={20}
         itemWidth={20}
-        expansion={{
-          id: 3,
-          length: 7,
-          padding: 4,
-          render: () => <div id="expansion"/>
-        }}
+        expansion={{ id: 3, length: 7, padding: 4 }}
+        renderExpansion={() => <div id="expansion"/>}
         tabIndex={0}>
         {(item) => <li key={item.id} id={`item-${item.id}`}/>}
       </Scroll>

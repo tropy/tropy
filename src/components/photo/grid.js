@@ -83,9 +83,9 @@ export const PhotoGrid = (props) => {
         expansion={expanded && {
           id: Number(expanded),
           length: iterator.expandedPhotos[expanded].length,
-          padding: SASS.GRID.PADDING * 4,
-          render: renderSelectionGrid
+          padding: SASS.GRID.PADDING * 4
         }}
+        renderExpansion={renderSelectionGrid}
         tabIndex={TABS.PhotoGrid}
         onKeyDown={onKeyDown}
         onLayoutChange={iterator.onLayoutChange}>
