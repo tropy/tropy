@@ -48,14 +48,11 @@ export function useSortableElement (element, {
   })
 
   let handleDrop = useEvent((item) => {
-    try {
-      let result = { id: item.id, to: id, offset }
+    let result = { id: item.id, to: id, offset }
+    setOffset(null)
 
-      if (result.id !== result.to && result.offset != null) {
-        onDrop(result)
-      }
-    } finally {
-      setOffset(null)
+    if (result.id !== result.to && result.offset != null) {
+      onDrop(result)
     }
   })
 

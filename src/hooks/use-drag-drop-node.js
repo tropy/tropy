@@ -42,41 +42,39 @@ export function useDragDropNode (dom, {
   let [indicator, setDropIndicator] = useState(null)
 
   let handleDrop = useEvent((item) => {
-    try {
-      let { offset, depth: dropDepth } = dragging.current
+    let { offset, depth: dropDepth } = dragging.current
 
-      // Drop into or after an expanded node
-      if (offset == null || (offset === 1 && isExpanded)) {
-        return onDrop({
-          id: item.id,
-          parent: node.id
-        }, { idx: 0 })
-      }
+    setDropIndicator(null)
+    dragging.current.depth = null
+    dragging.current.offset = null
 
-      dropDepth = restrict(dropDepth, minDropDepth, depth)
-
-      // Drop outside/after last node
-      if (isLastChild && offset === 1 && dropDepth < depth) {
-        return onDropOutside({
-          id: item.id,
-          parent: node.id,
-          depth: 1 + depth - dropDepth
-        })
-      }
-
-      let idx = (node.parent !== item.parent || position < item.idx)
-        ? position + offset
-        : position - 1 + offset
-
+    // Drop into or after an expanded node
+    if (offset == null || (offset === 1 && isExpanded)) {
       return onDrop({
         id: item.id,
-        parent: node.parent
-      }, { idx })
-    } finally {
-      setDropIndicator(null)
-      dragging.current.depth = null
-      dragging.current.offset = null
+        parent: node.id
+      }, { idx: 0 })
     }
+
+    dropDepth = restrict(dropDepth, minDropDepth, depth)
+
+    // Drop outside/after last node
+    if (isLastChild && offset === 1 && dropDepth < depth) {
+      return onDropOutside({
+        id: item.id,
+        parent: node.id,
+        depth: 1 + depth - dropDepth
+      })
+    }
+
+    let idx = (node.parent !== item.parent || position < item.idx)
+      ? position + offset
+      : position - 1 + offset
+
+    return onDrop({
+      id: item.id,
+      parent: node.parent
+    }, { idx })
   })
 
   let handleHover = useEvent((item, monitor) => {
