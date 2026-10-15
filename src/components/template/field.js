@@ -80,7 +80,6 @@ export const TemplateField = ({
     label: `template.field.${name}`,
     name,
     onChange: handleChange,
-    size: 9,
     tabIndex: 0,
     value: field[name]
   })
@@ -96,8 +95,7 @@ export const TemplateField = ({
         <FormElement
           id={`${position}.template.field.property`}
           isCompact
-          label="template.field.property"
-          size={9}>
+          label="template.field.property">
           <PropertySelect
             id={`${position}.template.field.property`}
             value={field.property}
@@ -114,8 +112,7 @@ export const TemplateField = ({
         <FormElement
           id={`${position}.template.field.datatype`}
           isCompact
-          label="template.field.datatype"
-          size={9}>
+          label="template.field.datatype">
           <DataTypeSelect
             id={`${position}.template.field.datatype`}
             value={field.datatype}

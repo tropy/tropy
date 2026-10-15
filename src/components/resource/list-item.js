@@ -17,27 +17,23 @@ export class ResourceListItem extends React.PureComponent {
             name="label"
             value={resource.label}
             isCompact
-            size={8}
             tabIndex={null}
             isRequired
             onChange={this.handleChange}/>
           <FormLink
             id="resource.id"
             isCompact
-            size={8}
             value={resource.id}
             onClick={onOpenLink}/>
           <FormText
             id="resource.comment"
             isCompact
             isOptional
-            size={8}
             value={resource.comment}/>
           <FormText
             id="resource.description"
             isCompact
             isOptional
-            size={8}
             value={resource.description}/>
         </fieldset>
       </li>

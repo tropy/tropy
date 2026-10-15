@@ -22,7 +22,7 @@ export function AppSettings () {
   })
 
   return (
-    <Form>
+    <Form size={8}>
       <TemplateSettings
         config={settings.templates}
         onChange={handleSettingsUpdate}/>

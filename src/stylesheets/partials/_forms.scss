@@ -4,6 +4,21 @@
 // Forms
 // --------------------------------------------------
 
+.form-horizontal :has(> .cell) {
+  display: grid;
+  grid-template-columns: var(--grid-columns, 4fr 8fr);
+  column-gap: $grid-gutter-width;
+
+  > .cell {
+    min-width: 0; // Fix truncation
+
+    // Cells without labels
+    &:last-child {
+      grid-column: -2;
+    }
+  }
+}
+
 ::-webkit-input-placeholder,
 .placeholder {
   color: $input-color-placeholder;
@@ -44,18 +59,6 @@ fieldset {
     margin-bottom: $space-min;
   }
 
-  .form-horizontal & {
-    display: flex;
-    margin: {
-      left: calc($grid-gutter-width * -1 / 2);
-      right: calc($grid-gutter-width * -1 / 2);
-    }
-  }
-
-  &.align-right {
-    justify-content: flex-end;
-  }
-
   &:last-child {
     margin-bottom: 0;
   }
@@ -66,6 +69,7 @@ fieldset {
   width: fit-content;
 
   .form-horizontal & {
+    width: auto;
     text-align: right;
     padding-top: 3px;
     padding-bottom: 3px;

@@ -16,8 +16,7 @@ export class TemplateToolbar extends React.PureComponent {
     return (
       <FormElement
         id="prefs.template.select"
-        className="select-template"
-        size={9}>
+        className="select-template">
         <div className="flex-row">
           <TemplateSelect
             id="prefs.template.select"

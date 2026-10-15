@@ -4,14 +4,12 @@
 // Grid
 // --------------------------------------------------
 
-@for $i from 1 through 12 {
-  .col-#{$i} {
-    flex: 0 0 calc(100% / (12 / $i));
-    padding: 0 calc($grid-gutter-width / 2);
-    min-width: 0; // Fix truncation
-  }
+.grid {
+  display: grid;
+  grid-template-columns: var(--grid-columns);
+  column-gap: $grid-gutter-width;
 
-  .col-offset-#{$i} {
-    margin-left: calc(100% / (12 / $i));
+  > .cell {
+    min-width: 0; // Fix truncation
   }
 }

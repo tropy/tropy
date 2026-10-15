@@ -68,7 +68,7 @@ export const ProjectSettings = React.memo(({
   })
 
   return (
-    <Form>
+    <Form size={8}>
       <FormField
         id="prefs.project.name"
         name="name"

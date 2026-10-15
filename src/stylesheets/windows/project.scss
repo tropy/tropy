@@ -94,6 +94,7 @@
 @use "../components/transcription/state";
 @use "../components/transcription/panel" as *;
 @use "../components/transcription/versions" as *;
+@use "../components/transcription/config" as *;
 
 @use "../components/editor/view" as *;
 @use "../components/editor/toolbar" as *;

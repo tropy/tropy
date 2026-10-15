@@ -137,7 +137,7 @@ class TemplateEditor extends React.PureComponent {
   render () {
     let { isPristine } = this
     return (
-      <Form className="template-editor">
+      <Form className="template-editor" size={9}>
         <header className="template-header">
           <TemplateToolbar
             selected={isPristine ? null : this.state.id}
@@ -158,8 +158,7 @@ class TemplateEditor extends React.PureComponent {
             tabIndex={0}
             onChange={isPristine ? undefined : this.handleTemplateUpdate}
             onInputChange={isPristine ?
-              this.handleTemplateUpdate : undefined}
-            size={9}/>
+              this.handleTemplateUpdate : undefined}/>
           <FormField
             id="template.id"
             name="id"
@@ -167,8 +166,7 @@ class TemplateEditor extends React.PureComponent {
             isCompact
             isDisabled={this.state.isProtected || !isPristine}
             tabIndex={0}
-            onInputChange={this.handleTemplateUpdate}
-            size={9}/>
+            onInputChange={this.handleTemplateUpdate}/>
           <FormSelect
             id="template.type"
             name="type"
@@ -178,8 +176,7 @@ class TemplateEditor extends React.PureComponent {
             isCompact
             isDisabled={this.state.isProtected || !isPristine}
             isRequired
-            onChange={this.handleTemplateUpdate}
-            size={9}/>
+            onChange={this.handleTemplateUpdate}/>
           <FormField
             id="template.creator"
             name="creator"
@@ -187,16 +184,14 @@ class TemplateEditor extends React.PureComponent {
             isCompact
             isDisabled={this.state.isProtected}
             tabIndex={0}
-            onChange={this.handleTemplateUpdate}
-            size={9}/>
+            onChange={this.handleTemplateUpdate}/>
           <FormField
             id="template.description"
             name="description"
             value={this.state.description}
             isDisabled={this.state.isProtected}
             tabIndex={0}
-            onChange={this.handleTemplateUpdate}
-            size={9}/>
+            onChange={this.handleTemplateUpdate}/>
           {isPristine && (
             <FormElement className="flex-row justify-content-end">
               <button

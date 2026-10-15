@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar } from '../toolbar.js'
 import { Button, ToggleButtonGroup } from '../button.js'
-import { FormElement, FormGroup } from '../form.js'
+import { Form, FormGroup } from '../form.js'
 import { TYPES } from '../../common/project.js'
 import { create } from '../../slices/project-files.js'
 
@@ -41,16 +41,16 @@ export const NewProject = ({
       <Titlebar isOptional/>
       <figure className="tropy-icon"/>
       <h1><FormattedMessage id="project.new.title"/></h1>
-      <form onSubmit={handleProjectCreate}>
+      <Form onSubmit={handleProjectCreate}>
         <h2><FormattedMessage id="project.new.name"/></h2>
-        <FormElement>
+        <FormGroup>
           <input
             autoFocus
             className="form-control form-control-xl"
             onChange={handleNameChange}
             type="text"
             value={name}/>
-        </FormElement>
+        </FormGroup>
         <h2><FormattedMessage id="project.new.type.label"/></h2>
         <FormGroup>
           <ToggleButtonGroup
@@ -72,7 +72,7 @@ export const NewProject = ({
           tabIndex="0"
           text="project.new.create"
           type="submit"/>
-      </form>
+      </Form>
     </div>
   )
 }

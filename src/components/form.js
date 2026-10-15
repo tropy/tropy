@@ -9,13 +9,22 @@ import { Select } from './select.js'
 import { Slider } from './slider.js'
 import { SASS } from '../constants/index.js'
 
+const gridColumns = (size) =>
+  `${SASS.GRID.SIZE - size}fr ${size}fr`
+
 export const Form = ({
   children,
   className,
   ref,
+  size,
+  style,
   ...props
 }) => (
-  <form ref={ref} className={cx('form-horizontal', className)} {...props}>
+  <form
+    ref={ref}
+    className={cx({ 'form-horizontal': size }, className)}
+    style={size ? { ...style, '--grid-columns': gridColumns(size) } : style}
+    {...props}>
     {children}
   </form>
 )
@@ -28,12 +37,12 @@ export const FormGroup = ({ children, className, isCompact }) => (
   </div>
 )
 
-export const Label = React.memo(({ className, id, size, title, value }) => {
+export const Label = React.memo(({ className, id, title, value }) => {
   let intl = useIntl()
 
   return (
     <label
-      className={cx(className, size && ['control-label', `col-${size}`])}
+      className={className}
       title={title && intl.formatMessage({ id: title })}
       htmlFor={id}>
       {intl.formatMessage({ id: value || id })}
@@ -54,38 +63,24 @@ export class FormElement extends React.PureComponent {
     return this.props.label || this.props.id != null
   }
 
-  get offset () {
-    return SASS.GRID.SIZE - this.props.size
-  }
-
   render () {
-    const { hasLabel, offset } = this
-
     return (
       <FormGroup
         isCompact={this.props.isCompact}>
-        {hasLabel && (
+        {this.hasLabel && (
           <Label
+            className="control-label cell"
             id={this.props.id}
-            size={offset}
             title={this.props.title}
             value={this.props.label}/>
         )}
-        <div className={
-          cx(`col-${this.props.size}`,
-            this.props.className,
-            { [`col-offset-${offset}`]: !hasLabel })
-        }>
+        <div className={cx('cell', this.props.className)}>
           {this.props.children}
           {this.props.description &&
             <Description id={this.props.description}/>}
         </div>
       </FormGroup>
     )
-  }
-
-  static defaultProps = {
-    size: 8
   }
 }
 
@@ -130,7 +125,6 @@ export class FormField extends React.PureComponent {
       <FormElement
         id={this.props.id}
         description={this.props.description}
-        size={this.props.size}
         label={this.props.label}
         title={this.props.title}
         isCompact={this.props.isCompact}>
@@ -149,21 +143,16 @@ export class FormField extends React.PureComponent {
 
   static defaultProps = {
     isReadOnly: false,
-    size: 8,
     type: 'text'
   }
 }
 
-export const FormSelect = ({
-  size = 8,
-  ...props
-}) => {
+export const FormSelect = (props) => {
   const intl = useIntl()
 
   return (
     <FormElement
       id={props.id}
-      size={size}
       isCompact={props.isCompact}>
       <Select
         id={props.id}
@@ -230,7 +219,6 @@ export const Toggle = ({
 
 export const FormToggle = ({
   isCompact,
-  size = 8,
   type = 'checkbox',
   ...props
 }) => (
@@ -238,9 +226,7 @@ export const FormToggle = ({
     <Toggle
       {...props}
       type={type}
-      className={
-        cx(type, `col-${size}`, `col-offset-${SASS.GRID.SIZE - size}`)
-      }/>
+      className={cx(type, 'cell')}/>
   </FormGroup>
 )
 
@@ -250,7 +236,6 @@ export const FormSlider = ({
   isDisabled,
   name,
   onChange,
-  size = 8,
   tabIndex = 0,
   value
 }) => {
@@ -259,7 +244,7 @@ export const FormSlider = ({
   })
 
   return (
-    <FormElement id={`${id}.label`} size={size} isCompact={isCompact}>
+    <FormElement id={`${id}.label`} isCompact={isCompact}>
       <Slider
         isDisabled={isDisabled}
         precision={100}
@@ -278,13 +263,11 @@ export const FormToggleGroup = ({
   name,
   onChange,
   options,
-  size = 8,
   tabIndex,
   value
 }) => (
   <FormElement
     id={`${id}.label`}
-    size={size}
     isCompact={isCompact}>
     {options.map(option => (
       <Toggle
@@ -309,17 +292,12 @@ export class FormText extends React.PureComponent {
     return this.isVisible && (
       <FormElement
         id={this.props.id}
-        isCompact={this.props.isCompact}
-        size={this.props.size}>
+        isCompact={this.props.isCompact}>
         <div className="form-text">
           {this.props.value}
         </div>
       </FormElement>
     )
-  }
-
-  static defaultProps = {
-    size: 8
   }
 }
 
@@ -336,8 +314,7 @@ export class FormLink extends React.PureComponent {
     return this.isVisible && (
       <FormElement
         id={this.props.id}
-        isCompact={this.props.isCompact}
-        size={this.props.size}>
+        isCompact={this.props.isCompact}>
         <div className="form-text">
           <a
             tabIndex={-1}
@@ -348,9 +325,5 @@ export class FormLink extends React.PureComponent {
         </div>
       </FormElement>
     )
-  }
-
-  static defaultProps = {
-    size: 8
   }
 }

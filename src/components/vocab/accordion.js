@@ -59,7 +59,6 @@ export class VocabAccordion extends Accordion {
           <FormLink
             id="vocab.id"
             isCompact
-            size={8}
             value={vocab.id}
             onClick={this.props.onOpenLink}/>
           <FormField
@@ -67,20 +66,17 @@ export class VocabAccordion extends Accordion {
             isCompact
             name="prefix"
             value={vocab.prefix}
-            size={8}
             tabIndex={null}
             onChange={this.handleChange}/>
           <FormText
             id="vocab.description"
             isCompact
             isOptional
-            size={8}
             value={vocab.description}/>
           <FormLink
             id="vocab.seeAlso"
             isCompact
             isOptional
-            size={8}
             value={vocab.seeAlso}
             onClick={this.props.onOpenLink}/>
         </header>

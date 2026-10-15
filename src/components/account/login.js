@@ -4,7 +4,7 @@ import { useArgs } from '../../hooks/use-args.js'
 import { useIpcEventHandler, useIpcSend } from '../../hooks/use-ipc.js'
 import { Button } from '../button.js'
 import { Link } from '../link.js'
-import { FormElement } from '../form.js'
+import { Form, FormElement } from '../form.js'
 import { Password } from '../password.js'
 
 export function Login ({ ref }) {
@@ -37,7 +37,7 @@ export function Login ({ ref }) {
     <div className="login">
       <figure className="tropy-icon"/>
       <h1><FormattedMessage id="prefs.account.description"/></h1>
-      <form ref={ref} onSubmit={handleSubmit}>
+      <Form ref={ref} onSubmit={handleSubmit}>
         <FormElement id="prefs.account.username" isCompact>
           <input
             id="prefs.account.username"
@@ -84,7 +84,7 @@ export function Login ({ ref }) {
             <FormattedMessage id="prefs.account.register.2"/>
           </Link>
         </p>
-      </form>
+      </Form>
     </div>
   )
 }

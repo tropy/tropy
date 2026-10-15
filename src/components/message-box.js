@@ -1,4 +1,5 @@
 import cx from 'classnames'
+import { Form } from './form.js'
 import { Modal } from './modal.js'
 
 // NB: props and return value correspond to Electron's MessageBox!
@@ -26,7 +27,7 @@ export const MessageBox = ({
 
   return (
     <Modal className={cx('message-box', type)} onClose={handleClose}>
-      <form method="dialog">
+      <Form method="dialog">
         {title && <h1 className="title">{title}</h1>}
         <p className="message">{message}</p>
         {detail && <p className="detail">{detail}</p>}
@@ -50,7 +51,7 @@ export const MessageBox = ({
             </button>
           ))}
         </footer>
-      </form>
+      </Form>
     </Modal>
   )
 }

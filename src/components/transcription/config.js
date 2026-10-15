@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { Form } from '../form.js'
 import { Modal } from '../modal.js'
 import { OCRSettings } from '../settings/ocr.js'
 import { useEvent } from '../../hooks/use-event.js'
@@ -21,7 +22,7 @@ export const TranscriptionConfig = ({ config, onClose }) => {
 
   return (
     <Modal className="transcription-config" onClose={handleClose}>
-      <form method="dialog" className="form-horizontal">
+      <Form method="dialog" size={8}>
         <h1>
           <FormattedMessage id="transcription.config.title"/>
         </h1>
@@ -40,7 +41,7 @@ export const TranscriptionConfig = ({ config, onClose }) => {
             <FormattedMessage id="transcription.config.submit"/>
           </button>
         </footer>
-      </form>
+      </Form>
     </Modal>
   )
 }
