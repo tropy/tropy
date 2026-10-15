@@ -6,6 +6,14 @@ describe('sequence', () => {
       expect(indexOf(['a', 'b'], undefined)).to.equal(-1)
       expect(indexOf(['a', 'b'], null)).to.equal(-1)
     })
+
+    it('matches ids and elements in indexed sequences', () => {
+      let seq = [{ id: 7 }, { id: 9 }]
+      seq.idx = { 7: 0, 9: 1 }
+
+      expect(indexOf(seq, 9)).to.equal(1)
+      expect(indexOf(seq, seq[1])).to.equal(1)
+    })
   })
 
   describe('adjacent', () => {
@@ -128,6 +136,16 @@ describe('sequence', () => {
       expect(new Cursor(grid, 'b').index).to.equal(1)
       expect(new Cursor(grid, 'x').index).to.equal(-1)
       expect(new Cursor(grid, null).index).to.equal(-1)
+    })
+
+    it('moves to an element or its id', () => {
+      let seq = [{ id: 7 }, { id: 9 }]
+      let options = { layout: 'grid', columns: 2 }
+      let cursor = new Cursor(seq, 7, options)
+
+      expect(cursor.to(9).index).to.equal(1)
+      expect(cursor.to(seq[1]).id).to.equal(9)
+      expect(cursor.to(9).options).to.equal(options)
     })
 
     it('returns the current element', () => {

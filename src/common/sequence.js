@@ -6,7 +6,7 @@ export const indexOf = (seq, id) => {
     return -1
   else
     return (seq.idx != null)
-      ? seq.idx[id] ?? -1
+      ? seq.idx[id.id ?? id] ?? -1
       : seq.findIndex(it => matches(it, id))
 }
 
@@ -141,6 +141,11 @@ export class Cursor {
 
   current () {
     return this.seq[this.index] ?? null
+  }
+
+  // A move to the element (or its id): a cursor at that position.
+  to (element) {
+    return new Cursor(this.seq, element?.id ?? element, this.options)
   }
 
   adjacent () {
