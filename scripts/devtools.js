@@ -15,7 +15,7 @@ import {
 setLogSymbol('δ')
 
 const REACT_DEVTOOLS = 'fmkadmapgofadopljbjfkapdkoienihi'
-const REDUX_DEVTOOLS = 'lmhkpmbekcpmknklioeibfkpmmfibljd'
+// const REDUX_DEVTOOLS = 'lmhkpmbekcpmknklioeibfkpmmfibljd'
 
 program
   .name('tropy-devtools')
@@ -27,14 +27,14 @@ program
   .command('download')
   .action(async () => {
     await download(REACT_DEVTOOLS)
-    await download(REDUX_DEVTOOLS)
+    // await download(REDUX_DEVTOOLS)
   })
 
 program
   .command('install')
   .action(async () => {
     await install(await download(REACT_DEVTOOLS))
-    await install(await download(REDUX_DEVTOOLS))
+    // await install(await download(REDUX_DEVTOOLS))
     list()
   })
 
@@ -51,7 +51,7 @@ app
 
 
 function setUserData () {
-  program.parse()
+  program.parseOptions(process.argv.slice(2))
   let { data } = program.opts()
   check(exists(data),
     `user data directory not found: ${data}`)
@@ -62,6 +62,7 @@ function setUserData () {
 function list () {
   session
     .defaultSession
+    .extensions
     .getAllExtensions()
     .forEach(e => say(`${e.name} ${e.version}`))
 }
@@ -103,5 +104,7 @@ const save = (url, to) =>
 
 function install ({ name, path }) {
   say(`installing ${name}...`)
-  return session.defaultSession.loadExtension(path, { allowFileAccess: true })
+  return session.defaultSession.extensions.loadExtension(path, {
+    allowFileAccess: true
+  })
 }

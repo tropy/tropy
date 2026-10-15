@@ -149,7 +149,7 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
 
       for (let entry of entries) {
         if (entry.isDirectory()) {
-          await session.defaultSession.loadExtension(
+          await session.defaultSession.extensions.loadExtension(
             join(opts.extensions, entry.name),
             { allowFileAccess: true })
         }
