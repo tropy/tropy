@@ -15,7 +15,7 @@ export const Node = ({
   onSave,
   ...props
 }) => {
-  isEditing = isEditing || id == null
+  let isNew = id == null
   let isExpandable = onExpand && onCollapse
 
   let handleChange = useEvent((newName) => {
@@ -23,7 +23,7 @@ export const Node = ({
   })
 
   let handleClick = useEvent(() => {
-    if (!isEditing) {
+    if (!(isEditing || isNew)) {
       onClick?.(id)
     }
   })
@@ -39,7 +39,7 @@ export const Node = ({
       onExpandButtonClick={isExpandable && handleExpandButtonClick}>
       <div className="name">
         <Editable
-          isActive={isEditing}
+          isActive={isEditing || isNew}
           isDisabled={isDisabled}
           isRequired
           onCancel={onCancel}
