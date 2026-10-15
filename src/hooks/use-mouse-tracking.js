@@ -11,14 +11,18 @@ import { contains } from '../common/math.js'
 // of the element containing the titlebar.
 
 export function useMouseTracking () {
+  'use no memo'
+
   let ref = useRef()
   let [isOver, setState] = useState(false)
 
+  /* eslint-disable react-hooks/immutability */
   let handleMouseEnter = useEvent(() => {
     setState(true)
     off(ref.current, 'mousemove', handleMouseEnter)
     on(document, 'mouseover', handleMouseLeave)
   })
+  /* eslint-enable react-hooks/immutability */
 
   let handleMouseLeave = useEvent((event) => {
     let isOutside = !contains(bounds(ref.current), {
