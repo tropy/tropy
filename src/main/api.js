@@ -143,7 +143,7 @@ export class Server {
 
       server.on('error', onError)
       server.on('listening', onListening)
-      server.listen(port)
+      server.listen(port, '127.0.0.1')
     })
   }
 
