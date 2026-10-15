@@ -144,8 +144,6 @@ export default [
       'react/prop-types': 0,
       'react/no-unknown-property': [2, { ignore: ['closedby'] }],
       ...reactHooks.configs.recommended.rules,
-      'react-hooks/immutability': 0,
-      'react-hooks/refs': 0,
       'react-hooks/set-state-in-effect': 0,
       'react-hooks/use-memo': 0,
     }
