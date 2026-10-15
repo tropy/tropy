@@ -29,6 +29,7 @@
     "prerollup": "shx rm -rf lib",
     "rollup": "rollup -c",
     "rollup:dev": "NODE_ENV=development rollup -c",
+    "rollup:profile": "PROFILE=true rollup -c",
     "prebuild": "npm run clean && npm run rollup",
     "build": "node scripts/build.js",
     "pack": "node scripts/pack.js",

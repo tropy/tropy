@@ -20,6 +20,7 @@ import reactDnd from './scripts/rollup-plugin-react-dnd.js'
 import sharpRequire from './scripts/rollup-plugin-sharp.js'
 
 const NODE_ENV = process.env.NODE_ENV || 'production'
+const PROFILE = !!process.env.PROFILE
 
 const { platform } = process
 const arch =
@@ -188,7 +189,8 @@ export default [
       ], { commonjsBugFix: true }),
       alias({
         entries: {
-          'readable-stream': 'node:stream'
+          'readable-stream': 'node:stream',
+          ...(PROFILE && { 'react-dom/client': 'react-dom/profiling' })
         }
       }),
       replace({
