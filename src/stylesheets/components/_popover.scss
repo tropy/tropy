@@ -24,7 +24,7 @@ $popover-focus-animations: (
   }
 }
 
-:root:has(.popover-container:popover-open) {
+:root.popover-open {
   pointer-events: none;
 }
 

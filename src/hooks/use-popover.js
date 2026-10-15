@@ -1,4 +1,5 @@
 import { useId, useLayoutEffect, useState } from 'react'
+import { toggle } from '../dom.js'
 
 // Shows nodeRef using the Popover API.
 // Use anchor for CSS anchor positioning.
@@ -9,6 +10,14 @@ import { useId, useLayoutEffect, useState } from 'react'
 
 export function usePopover (nodeRef, { anchor: anchorRef } = {}) {
   let isReady = useShowPopover(nodeRef)
+
+  useLayoutEffect(() => {
+    toggle(document.documentElement, 'popover-open', true)
+
+    return () => {
+      toggle(document.documentElement, 'popover-open', false)
+    }
+  }, [])
 
   // CSS links popover to anchor by global anchor name!
   let anchorName = `--popover-${CSS.escape(useId())}`
