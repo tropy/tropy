@@ -14,13 +14,13 @@ function useLodash (method, fn, { wait = 250 } = {}) {
     }
   }, [method, callback, wait])
 
-  return useMemo(() => Object.assign(
-    (...args) => ref.current?.(...args),
-    {
-      flush: () => ref.current?.flush(),
-      cancel: () => ref.current?.cancel()
-    }
-  ), [])
+  return useMemo(() => {
+    let proxy = (...args) => ref.current?.(...args)
+    proxy.flush = () => ref.current?.flush()
+    proxy.cancel = () => ref.current?.cancel()
+
+    return proxy
+  }, [])
 }
 
 export function useDebounce (fn, opts) {
