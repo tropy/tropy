@@ -5,6 +5,8 @@ import { useEvent } from '../../hooks/use-event.js'
 // useScrollIntoView for virtualized nodes
 // Keeps the cursor in view after rendering,
 // and returns event handler.
+// A new sequence keeps the cursor in view,
+// or starts at the top if the cursor is not in it.
 
 export const useScrollIntoView = (layout, {
   container,
@@ -29,9 +31,23 @@ export const useScrollIntoView = (layout, {
 
   let isMeasured = layout.height > 0
 
+  let handleSequenceChange = useEvent(() => {
+    if (!isMeasured)
+      return
+
+    if (cursor.index < 0)
+      scroll(0)
+    else
+      scrollIntoView()
+  })
+
   useLayoutEffect(() => {
     scrollIntoView()
   }, [cursor.id, isMeasured, scrollIntoView])
+
+  useLayoutEffect(() => {
+    handleSequenceChange()
+  }, [cursor.seq, handleSequenceChange])
 
   return scrollIntoView
 }

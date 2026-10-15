@@ -23,9 +23,9 @@ describe('Scroll', () => {
     style.remove()
   })
 
-  let renderScroll = ({ cursor, ...props } = {}, onRender) => (
+  let renderScroll = ({ cursor, seq = items, ...props } = {}, onRender) => (
     <Scroll
-      cursor={new Cursor(items, cursor)}
+      cursor={new Cursor(seq, cursor)}
       itemHeight={20}
       tabIndex={0}
       {...props}>
@@ -92,6 +92,47 @@ describe('Scroll', () => {
     // A new cursor at the same position.
     rerender(renderScroll({ cursor: 1 }))
     expect(container.scrollTop).to.equal(1000)
+  })
+
+  describe('when the sequence changes', () => {
+    let setup = async (props) => {
+      let { $, $$, rerender } = render(renderScroll(props))
+      let container = $('.scroll-container')
+
+      await measured($$)
+      container.scrollTop = 1000
+      await frame()
+      await frame()
+
+      return { $, container, rerender }
+    }
+
+    it('starts at the top without the cursor', async () => {
+      let { container, rerender } = await setup()
+
+      rerender(renderScroll({ seq: items.slice(10) }))
+      expect(container.scrollTop).to.equal(0)
+    })
+
+    it('keeps the cursor in view', async () => {
+      let { $, container, rerender } = await setup({ cursor: 55 })
+
+      // Reversed: the cursor moves far away.
+      rerender(renderScroll({ cursor: 55, seq: [...items].reverse() }))
+
+      let bounds = container.getBoundingClientRect()
+      let { top } = $('#item-55').getBoundingClientRect()
+
+      expect(top).to.be.at.least(bounds.top)
+      expect(top + 20).to.be.at.most(bounds.bottom)
+    })
+
+    it('does not move when only the cursor is cleared', async () => {
+      let { container, rerender } = await setup({ cursor: 55 })
+
+      rerender(renderScroll())
+      expect(container.scrollTop).to.equal(1000)
+    })
   })
 
   it('scrolls elements into view', async () => {
