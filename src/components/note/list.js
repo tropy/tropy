@@ -61,8 +61,7 @@ export const NoteList = ({
   return (
     <div className="note-list">
       <Scroll
-        cursor={selection?.id}
-        items={notes}
+        cursor={cursor}
         itemHeight={rowHeight}
         tabIndex={tabIndex}
         onLayoutChange={setLayout}

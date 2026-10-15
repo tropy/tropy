@@ -228,6 +228,7 @@ export function useItemIterator ({
   return {
     clearSelection,
     connect,
+    cursor,
     getIterableProps,
     handleTabFocus,
     isOver: file.canDrop,

@@ -1,7 +1,9 @@
+import { createRef } from 'react'
 import { mock } from 'node:test'
-import { waitFor } from '@testing-library/react'
+import { act, waitFor } from '@testing-library/react'
 import { render } from '../../support/react.js'
 import { Scroll } from '#tropy/components/scroll/index.js'
+import { Cursor } from '#tropy/common/sequence.js'
 
 describe('Scroll', () => {
   let style
@@ -21,8 +23,12 @@ describe('Scroll', () => {
     style.remove()
   })
 
-  let renderScroll = (props, onRender) => (
-    <Scroll items={items} itemHeight={20} tabIndex={0} {...props}>
+  let renderScroll = ({ cursor, ...props } = {}, onRender) => (
+    <Scroll
+      cursor={new Cursor(items, cursor)}
+      itemHeight={20}
+      tabIndex={0}
+      {...props}>
       {(item) => {
         onRender?.()
         return <li key={item.id} id={`item-${item.id}`}/>
@@ -74,6 +80,32 @@ describe('Scroll', () => {
     // Near again: just above the view, aligned to its top.
     rerender(renderScroll({ cursor: 77 }))
     expect(position(77)).to.equal(0)
+  })
+
+  it('does not scroll back to the cursor when rendered again', async () => {
+    let { $, $$, rerender } = render(renderScroll({ cursor: 1 }))
+    let container = $('.scroll-container')
+
+    await measured($$)
+    container.scrollTop = 1000
+
+    // A new cursor at the same position.
+    rerender(renderScroll({ cursor: 1 }))
+    expect(container.scrollTop).to.equal(1000)
+  })
+
+  it('scrolls elements into view', async () => {
+    let scroll = createRef()
+    let { $, $$ } = render(renderScroll({ cursor: 1, ref: scroll }))
+
+    await measured($$)
+
+    // The element itself, or its id.
+    act(() => scroll.current.scrollIntoView(items[79]))
+    expect($('#item-80')).to.exist
+
+    act(() => scroll.current.scrollIntoView(3))
+    expect($('#item-3')).to.exist
   })
 
   it('scrolls to the cursor once measured', async () => {
@@ -162,10 +194,9 @@ describe('Scroll', () => {
 
     let renderGrid = (cursor) => (
       <Scroll
-        items={tiles}
+        cursor={new Cursor(tiles, cursor)}
         itemHeight={20}
         itemWidth={20}
-        cursor={cursor}
         expansion={{
           id: 3,
           length: 7,
@@ -216,10 +247,9 @@ describe('Scroll', () => {
 
     let renderGrid = (size, cursor) => (
       <Scroll
-        items={tiles}
+        cursor={new Cursor(tiles, cursor)}
         itemHeight={size}
         itemWidth={size}
-        cursor={cursor}
         tabIndex={0}>
         {(item) => (
           <li key={item.id} id={`item-${item.id}`} style={{ height: size }}/>

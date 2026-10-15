@@ -1,12 +1,12 @@
 import { useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { Range } from './range.js'
+import { Page } from './page.js'
 import { Runway } from './runway.js'
 import { ScrollContainer } from './container.js'
 import { Viewport } from './viewport.js'
-import { getLayout, getOffset, getPosition } from './layout.js'
-import { useAnchor } from './use-anchor.js'
+import { getLayout, getPage } from './layout.js'
+import { useAnchor, useLayoutChange } from './use-anchor.js'
+import { useScrollIntoView } from './use-scroll-into-view.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { indexOf } from '../../common/sequence.js'
 
 
 export const Scroll = ({
@@ -15,7 +15,6 @@ export const Scroll = ({
   expansion,
   itemHeight,
   itemWidth,
-  items = [],
   onClick,
   onKeyDown,
   onLayoutChange,
@@ -45,7 +44,7 @@ export const Scroll = ({
   } = expansion ?? {}
 
   let layout = useMemo(() => getLayout({
-    items,
+    items: cursor.seq,
     itemHeight,
     itemWidth,
     height,
@@ -55,7 +54,7 @@ export const Scroll = ({
     expansionPadding,
     overscan
   }), [
-    items,
+    cursor.seq,
     itemHeight,
     itemWidth,
     height,
@@ -66,7 +65,18 @@ export const Scroll = ({
     overscan
   ])
 
-  let { from, to, offset } = getPosition(pageScrollTop, layout)
+  let { from, to, offset } = getPage(pageScrollTop, layout)
+
+  let anchor = useAnchor(cursor)
+
+  // Renders a new page only when scrolled beyond the tolerance.
+  let syncScrollTop = useEvent(() => {
+    let { scrollTop } = container.current
+    anchor.track(scrollTop)
+
+    if (Math.abs(scrollTop - pageScrollTop) > layout.tolerance)
+      setPageScrollTop(scrollTop)
+  })
 
   // Programmatic scrolls update the rendered rows right away:
   // without waiting for the scroll event, they render before paint.
@@ -75,56 +85,19 @@ export const Scroll = ({
     syncScrollTop()
   }
 
-  // Renders a new page only when scrolled beyond the tolerance.
-  let syncScrollTop = useEvent(() => {
-    let { scrollTop } = container.current
-    track(scrollTop)
+  // Zooming or resizing keeps the view stable; other layout changes
+  // (measured or shown again, items changed) catch up with the
+  // scroll position.
+  useLayoutChange(layout, (prev) => {
+    let top = anchor.restore(prev, layout)
 
-    if (Math.abs(scrollTop - pageScrollTop) > layout.tolerance)
-      setPageScrollTop(scrollTop)
-  })
-
-  let scrollIntoView = useEvent((id = cursor) => {
-    // Nothing to scroll into before we are measured.
-    if (height === 0)
-      return
-
-    let index = indexOf(items, id)
-
-    if (index < 0)
-      return
-
-    let { scrollTop } = container.current
-    let target = getOffset(layout, index)
-    let bottom = target + itemHeight
-    let isBelow = bottom > scrollTop
-
-    // Don't scroll if item already in view!
-    if (isBelow && bottom <= scrollTop + height)
-      return
-
-    // Near the view (within its height): align to the nearest edge.
-    // Far away: center the item, to show what is around it.
-    let isNear = bottom > scrollTop - height &&
-      target < scrollTop + 2 * height
-
-    if (!isNear)
-      scroll(target + (itemHeight - height) / 2)
-    else if (isBelow)
-      scroll(bottom - height)
+    if (top == null)
+      syncScrollTop()
     else
-      scroll(target)
-  })
-
-  let track = useAnchor(layout, {
-    cursor,
-    items,
-    onChange: syncScrollTop,
-    scroll
+      scroll(top)
   })
 
   let { columns, isGrid, pageSize, runway } = layout
-  let isMeasured = height > 0
 
   // Reports the layout as options for cursors over the items.
   useLayoutEffect(() => {
@@ -135,9 +108,11 @@ export const Scroll = ({
     })
   }, [isGrid, columns, pageSize, onLayoutChange])
 
-  useLayoutEffect(() => {
-    scrollIntoView()
-  }, [cursor, isMeasured, scrollIntoView])
+  let scrollIntoView = useScrollIntoView(layout, {
+    container,
+    cursor,
+    scroll
+  })
 
   useImperativeHandle(ref, () => ({
     focus () {
@@ -169,15 +144,15 @@ export const Scroll = ({
       onResize={handleResize}
       onScroll={syncScrollTop}
       onTabFocus={handleTabFocus}
-      tabIndex={items.length === 0 ? null : tabIndex}>
+      tabIndex={cursor.seq.length === 0 ? null : tabIndex}>
       <Runway height={runway}>
         <Viewport
           tag={tag}
           columns={columns}
           offset={offset}>
-          <Range
+          <Page
             columns={columns}
-            items={items}
+            items={cursor.seq}
             from={from}
             to={to}
             renderExpansion={expansion?.render}

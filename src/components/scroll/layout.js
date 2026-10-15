@@ -80,6 +80,28 @@ export const getOffset = (layout, index) => {
   return offset
 }
 
+// The scroll position that brings the item into view, or nothing
+// if it is in view already. Near the view (within its height),
+// the item aligns to the nearest edge; far away, it is centered
+// to show what is around it.
+export const getScrollTo = (layout, index, scrollTop) => {
+  let { height, itemHeight } = layout
+  let top = getOffset(layout, index)
+  let bottom = top + itemHeight
+  let isBelow = bottom > scrollTop
+
+  if (isBelow && bottom <= scrollTop + height)
+    return
+
+  let isNear = bottom > scrollTop - height &&
+    top < scrollTop + 2 * height
+
+  if (!isNear)
+    return top + (itemHeight - height) / 2
+
+  return isBelow ? bottom - height : top
+}
+
 // The first item of the row at the offset.
 // Offsets in the gap map to the expanded item's row.
 export const getRowAt = (layout, offset) => {
@@ -91,9 +113,9 @@ export const getRowAt = (layout, offset) => {
   return Math.floor(offset / itemHeight) * columns
 }
 
-// The rendered items at the scroll position (`from` inclusive,
-// `to` exclusive), and the offset of the first one.
-export const getPosition = (top, layout) => {
+// The page at the scroll position: its items (`from` inclusive,
+// `to` exclusive) and the offset of the first one.
+export const getPage = (top, layout) => {
   let { columns, length, maxOffset, pageOffset, rowsPerPage } = layout
   let from = getRowAt(layout, restrict(top - pageOffset, 0, maxOffset))
 

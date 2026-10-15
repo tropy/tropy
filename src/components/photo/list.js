@@ -17,6 +17,7 @@ export const PhotoList = (props) => {
   let dispatch = useDispatch()
 
   let iterator = usePhotoIterator(props)
+  let { scroll } = iterator
   let editing = useSelector(state => state.edit.photo)
   let editingSelection = useSelector(state => state.edit.selection)
 
@@ -34,7 +35,7 @@ export const PhotoList = (props) => {
 
   let handleEditCancel = useEvent((...args) => {
     dispatch(act.edit.cancel(...args))
-    iterator.scroll.current.focus()
+    scroll.current.focus()
   })
 
   let handleChange = useEvent((...args) => {
@@ -77,7 +78,7 @@ export const PhotoList = (props) => {
     }
   })
 
-  let onKeyDown = useCursorKeys(iterator.navigation, {
+  let onKeyDown = useCursorKeys(iterator.cursor, {
     onMove: iterator.move,
     onKeyDown: commands
   })
@@ -85,9 +86,8 @@ export const PhotoList = (props) => {
   return iterator.connect(
     <div className={cx('photo-list', iterator.classes)}>
       <Scroll
-        ref={iterator.scroll}
+        ref={scroll}
         cursor={iterator.cursor}
-        items={iterator.sequence}
         itemHeight={SASS.ROW.HEIGHT}
         tabIndex={TABS.PhotoList}
         onKeyDown={onKeyDown}

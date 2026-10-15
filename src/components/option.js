@@ -111,8 +111,7 @@ export class OptionList extends React.Component {
       <div className="option-list">
         <Scroll
           ref={this.scroll}
-          cursor={this.props.active}
-          items={this.props.values}
+          cursor={this.cursor}
           itemHeight={this.props.rowHeight}
           onLayoutChange={this.handleLayoutChange}>
           {(option) => (

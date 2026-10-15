@@ -11,7 +11,7 @@ export const ItemGrid = (props) => {
     tabIndex: TABS.ItemGrid
   })
 
-  let { items, selection } = iterator
+  let { items, scroll } = iterator
   let { size } = props
 
   let tileSize = Math.round(size * SASS.TILE.FACTOR)
@@ -21,9 +21,8 @@ export const ItemGrid = (props) => {
       className={cx('item-grid', { over: iterator.isOver })}
       data-size={size}>
       <Scroll
-        ref={iterator.scroll}
-        cursor={selection.cursor}
-        items={items}
+        ref={scroll}
+        cursor={iterator.cursor}
         itemHeight={tileSize}
         itemWidth={tileSize}
         tabIndex={iterator.tabIndex}

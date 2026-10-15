@@ -12,7 +12,7 @@ export const PhotoGrid = (props) => {
   let { isDisabled, size } = props
 
   let iterator = usePhotoIterator(props, { isGrid: true })
-  let { photos } = iterator
+  let { photos, scroll } = iterator
 
   let commands = useKeyMap('PhotoIterator', {
     contract () {
@@ -47,7 +47,7 @@ export const PhotoGrid = (props) => {
     }
   })
 
-  let onKeyDown = useCursorKeys(iterator.navigation, {
+  let onKeyDown = useCursorKeys(iterator.cursor, {
     onMove: iterator.move,
     onKeyDown: commands
   })
@@ -76,9 +76,8 @@ export const PhotoGrid = (props) => {
       className={cx('photo-grid', iterator.classes)}
       data-size={size}>
       <Scroll
-        ref={iterator.scroll}
+        ref={scroll}
         cursor={iterator.cursor}
-        items={photos}
         itemHeight={tileSize}
         itemWidth={tileSize}
         expansion={expanded && {

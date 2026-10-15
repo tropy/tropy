@@ -283,14 +283,13 @@ export function usePhotoIterator ({
     contextMenu,
     contract,
     current: () => cursor.current(),
-    cursor: at,
+    cursor,
     expand,
     expandedPhotos,
     extract,
     getIterableProps,
     getSelectionProps,
     move,
-    navigation: cursor,
     onLayoutChange: setLayout,
     open,
     photos,
@@ -299,7 +298,6 @@ export function usePhotoIterator ({
     rotate,
     scroll,
     select,
-    sequence,
     sortSelections
   }
 }

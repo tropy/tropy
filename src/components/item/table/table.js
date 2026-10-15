@@ -141,8 +141,7 @@ export const ItemTable = (props) => {
           <Scroll
             ref={scroll}
             tag="div"
-            cursor={selection.cursor}
-            items={items}
+            cursor={iterator.cursor}
             itemHeight={ROW.HEIGHT}
             tabIndex={iterator.tabIndex}
             onClick={iterator.clearSelection}

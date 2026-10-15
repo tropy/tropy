@@ -1,4 +1,4 @@
-export const Range = ({
+export const Page = ({
   columns = 1,
   items,
   from,

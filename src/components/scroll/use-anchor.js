@@ -1,9 +1,8 @@
 import { useLayoutEffect, useRef } from 'react'
 import { getOffset, getRowAt } from './layout.js'
-import { indexOf } from '../../common/sequence.js'
 
 
-const useLayoutChange = (layout, onChange) => {
+export const useLayoutChange = (layout, onChange) => {
   let committed = useRef()
 
   useLayoutEffect(() => {
@@ -19,22 +18,28 @@ const useLayoutChange = (layout, onChange) => {
 // Keeps the view stable when the rows change (zoom, resize):
 // the cursor's row, if it was in view, or else the top row,
 // stays at the same relative position in the view.
-// Other layout changes (measured or shown again, items changed)
-// call `onChange`. Returns the function to track scroll positions.
-export const useAnchor = (layout, {
-  cursor,
-  items,
-  onChange,
-  scroll
-}) => {
+// `track` each scroll position read; when the layout changes,
+// `restore` returns the scroll position that keeps the view stable
+// (nothing if the rows did not change).
+export const useAnchor = (cursor) => {
   // The browser clamps the scroll position before we get to
   // anchor (when the runway got shorter): we anchor from the last
   // position read instead.
   let lastScrollTop = useRef(0)
 
-  let anchor = (prev) => {
+  let track = (scrollTop) => {
+    lastScrollTop.current = scrollTop
+  }
+
+  let restore = (prev, layout) => {
+    let hasNewRows = prev.columns !== layout.columns ||
+      prev.itemHeight !== layout.itemHeight
+
+    if (prev.height === 0 || !hasNewRows)
+      return
+
     let scrollTop = lastScrollTop.current
-    let index = indexOf(items, cursor)
+    let { index } = cursor
     let offset = getOffset(prev, index)
 
     if (index < 0 ||
@@ -46,21 +51,9 @@ export const useAnchor = (layout, {
 
     let center = (offset + prev.itemHeight / 2 - scrollTop) / prev.height
 
-    scroll(getOffset(layout, index) +
-      layout.itemHeight / 2 - center * layout.height)
+    return getOffset(layout, index) +
+      layout.itemHeight / 2 - center * layout.height
   }
 
-  useLayoutChange(layout, (prev) => {
-    let hasNewRows = prev.columns !== layout.columns ||
-      prev.itemHeight !== layout.itemHeight
-
-    if (prev.height > 0 && hasNewRows)
-      anchor(prev)
-    else
-      onChange()
-  })
-
-  return (scrollTop) => {
-    lastScrollTop.current = scrollTop
-  }
+  return { track, restore }
 }

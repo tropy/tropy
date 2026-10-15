@@ -1,4 +1,4 @@
-import { memo, useMemo, useRef } from 'react'
+import { memo, useMemo } from 'react'
 import { shallowEqual, useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
@@ -27,7 +27,6 @@ export const SelectionGrid = memo(({
   let selections = useSelector(state =>
     pluck(state.selections, photo.selections), shallowEqual)
 
-  let container = useRef()
 
   let style = useMemo(() => ({
     gridTemplateColumns: `repeat(${cols}, ${cols}fr)`
@@ -69,7 +68,7 @@ export const SelectionGrid = memo(({
 
   return (
     <ul
-      ref={sortable.isSortable ? sortable.drop(container) : container}
+      ref={sortable.isSortable ? sortable.drop : null}
       className={cx('selection-grid', {
         over: sortable.isOver && sortable.canDrop
       })}
