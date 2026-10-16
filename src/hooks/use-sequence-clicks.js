@@ -1,42 +1,86 @@
-import { useClickToEdit } from './use-click-to-edit.js'
-import { useClickToSelect } from './use-click-to-select.js'
+import { useRef } from 'react'
+import { clickToEdit, useClickToEditState } from './use-click-to-edit.js'
+import { clickToSelect } from './use-click-to-select.js'
 
-export function useSequenceClicks ({
+// Clicks on the elements of the cursor's sequence, by delegation:
+// the handlers go on a node containing the rows,
+// each row carries its index in the sequence (`data-index`).
+//
+// The same gestures as useElementClicks, for the element
+// of each event; elements are selected if at the cursor,
+// unless `isSelected` says.
+
+export function useSequenceClicks (cursor, {
   isDisabled,
   isSelected,
+  onContextMenu,
   onDoubleClick,
   onSelect,
-  onSelectedClick,
-  value
+  onSelectedClick
 }) {
-  let select = useClickToSelect({
-    isDisabled,
-    isSelected,
-    onSelect,
-    value
+  let selectState = useRef(null)
+
+  let isElementSelected = (element) => (isSelected != null)
+    ? isSelected(element)
+    : (element.id ?? element) === cursor.id
+
+  let editState = useClickToEditState((element, event) => {
+    // Subtle: we reach here after the single-click delay,
+    // and therefore evaluate the guard one more time!
+    if (!isDisabled && isElementSelected(element))
+      onSelectedClick(element, event)
   })
 
-  let selectedClick = useClickToEdit({
-    isDisabled: isDisabled || !onSelectedClick,
-    isSelected,
-    onEdit: onSelectedClick,
-    value
-  })
+  let getElement = (event) => {
+    let row = event.target.closest('[data-index]')
+
+    return (row != null && event.currentTarget.contains(row))
+      ? cursor.seq[row.dataset.index] ?? null
+      : null
+  }
+
+  let getHandlers = (event) => {
+    let value = getElement(event)
+    let isValueSelected = value != null && isElementSelected(value)
+
+    return [
+      clickToSelect(selectState, {
+        isDisabled,
+        isSelected: isValueSelected,
+        onSelect,
+        value
+      }),
+      clickToEdit(editState, {
+        isDisabled: isDisabled || !onSelectedClick,
+        isSelected: isValueSelected,
+        value
+      })
+    ]
+  }
 
   return {
     onClick (event) {
-      select.onClick(event)
-      selectedClick.onClick(event)
+      for (let handlers of getHandlers(event))
+        handlers.onClick(event)
+    },
+
+    onContextMenu (event) {
+      let element = getElement(event)
+
+      if (element != null)
+        onContextMenu?.(event, element)
     },
 
     onDoubleClick (event) {
-      if (!isDisabled && onDoubleClick)
-        onDoubleClick(value, event)
+      let element = getElement(event)
+
+      if (!isDisabled && element != null)
+        onDoubleClick?.(element, event)
     },
 
     onMouseDown (event) {
-      select.onMouseDown(event)
-      selectedClick.onMouseDown(event)
+      for (let handlers of getHandlers(event))
+        handlers.onMouseDown(event)
     }
   }
 }

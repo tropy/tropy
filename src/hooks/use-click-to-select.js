@@ -6,26 +6,37 @@ import { getKeyState } from '../keymap.js'
 // and on single click (no double clicks!) if selected,
 // so that dragging keeps multi-selection!
 
-export function useClickToSelect ({ isDisabled, isSelected, onSelect, value }) {
-  let wasSelected = useRef(false)
-
-  let handleMouseDown = (event) => {
-    if (isDisabled || event.button > 2) return
-
-    wasSelected.current = isSelected
-
-    if (!isSelected)
-      onSelect(value, getKeyState(event))
-  }
-
-  let handleClick = (event) => {
-    // Only the first click of a series (not by keyboard).
-    if (!isDisabled && wasSelected.current && event.detail === 1)
-      onSelect(value, getKeyState(event))
-  }
+export function useClickToSelect (props) {
+  let wasSelected = useRef(null)
+  let handlers = () => clickToSelect(wasSelected, props)
 
   return {
-    onClick: handleClick,
-    onMouseDown: handleMouseDown
+    onClick: (event) => handlers().onClick(event),
+    onMouseDown: (event) => handlers().onMouseDown(event)
   }
 }
+
+export const clickToSelect = (wasSelected, {
+  isDisabled,
+  isSelected,
+  onSelect,
+  value
+}) => ({
+  onMouseDown (event) {
+    wasSelected.current = null
+
+    if (isDisabled || value == null || event.button > 2) return
+
+    if (isSelected)
+      wasSelected.current = { id: value.id ?? value }
+    else
+      onSelect(value, getKeyState(event))
+  },
+
+  onClick (event) {
+    // Only the first click of a series (not by keyboard).
+    if (!isDisabled && event.detail === 1 && wasSelected.current != null &&
+      wasSelected.current.id === (value?.id ?? value))
+      onSelect(value, getKeyState(event))
+  }
+})

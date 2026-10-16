@@ -1,41 +1,56 @@
 import { mock } from 'node:test'
 import { render, fireEvent } from '@testing-library/react'
 import { useSequenceClicks } from '#tropy/hooks/use-sequence-clicks.js'
+import { Cursor } from '#tropy/common/sequence.js'
 
 describe('useSequenceClicks', () => {
+  let seq = [{ id: 1 }, { id: 2 }, { id: 3 }]
+
+  let onContextMenu = mock.fn()
+  let onDoubleClick = mock.fn()
   let onSelect = mock.fn()
   let onSelectedClick = mock.fn()
-  let onDoubleClick = mock.fn()
 
-  let List = (props) => (
-    <ul tabIndex={-1}>
-      <li {...useSequenceClicks({
-        onDoubleClick,
-        onSelect,
-        onSelectedClick,
-        value: 'value',
-        ...props
-      })}/>
+  let List = ({ at = 1, ...props }) => (
+    <ul tabIndex={-1} {...useSequenceClicks(new Cursor(seq, at), {
+      onContextMenu,
+      onDoubleClick,
+      onSelect,
+      onSelectedClick,
+      ...props
+    })}>
+      {seq.map((el, index) => (
+        <li key={el.id} data-index={index}><span/></li>
+      ))}
+      <li className="other"/>
     </ul>
   )
 
+  // Returns the list and the inner node of each row.
   let setup = (props) => {
-    let list = render(<List {...props}/>).container.firstChild
+    let { container, rerender } = render(<List {...props}/>)
+    let list = container.firstChild
+
     list.focus()
-    return list.firstChild
+
+    return {
+      list,
+      rows: [...list.querySelectorAll('span')],
+      rerender
+    }
   }
 
-  let click = (node, detail = 1) => {
-    fireEvent.mouseDown(node, { detail })
-    fireEvent.mouseUp(node, { detail })
-    fireEvent.click(node, { detail })
+  let click = (node, { detail = 1, ...opts } = {}) => {
+    fireEvent.mouseDown(node, { detail, ...opts })
+    fireEvent.mouseUp(node, { detail, ...opts })
+    fireEvent.click(node, { detail, ...opts })
   }
 
   let calls = () => [onSelect, onSelectedClick, onDoubleClick]
     .map(fn => fn.mock.callCount())
 
   beforeEach(() => {
-    for (let fn of [onSelect, onSelectedClick, onDoubleClick])
+    for (let fn of [onContextMenu, onDoubleClick, onSelect, onSelectedClick])
       fn.mock.resetCalls()
     mock.timers.enable({ apis: ['setTimeout'] })
   })
@@ -44,35 +59,98 @@ describe('useSequenceClicks', () => {
     mock.timers.reset()
   })
 
-  it('selects unselected items', () => {
-    click(setup({ isSelected: false }))
-    mock.timers.tick(350)
-    expect(calls()).to.eql([1, 0, 0])
-    expect(onSelect.mock.calls[0].arguments[0]).to.equal('value')
+  it('selects unselected elements on mouse-down', () => {
+    let { rows } = setup()
+
+    fireEvent.mouseDown(rows[1], { detail: 1, shiftKey: true })
+
+    let [element, mods] = onSelect.mock.calls[0].arguments
+    expect(element).to.equal(seq[1])
+    expect(mods).to.include({ shiftKey: true })
   })
 
-  it('handles clicks on selected items', () => {
-    click(setup({ isSelected: true }))
+  it('handles single clicks on selected elements', () => {
+    let { rows } = setup()
+
+    click(rows[0])
+    expect(calls()).to.eql([1, 0, 0])
+
     mock.timers.tick(350)
     expect(calls()).to.eql([1, 1, 0])
-    expect(onSelectedClick.mock.calls[0].arguments[0]).to.equal('value')
+    expect(onSelectedClick.mock.calls[0].arguments[0]).to.equal(seq[0])
+  })
+
+  it('ignores the click that selected the element', () => {
+    let { rows, rerender } = setup()
+
+    fireEvent.mouseDown(rows[1], { detail: 1 })
+    rerender(<List at={2}/>)
+    fireEvent.click(rows[1], { detail: 1 })
+    mock.timers.tick(350)
+
+    expect(calls()).to.eql([1, 0, 0])
+  })
+
+  it('ignores the click if deselected during the delay', () => {
+    let { rows, rerender } = setup()
+
+    click(rows[0])
+    rerender(<List at={2}/>)
+    mock.timers.tick(350)
+
+    expect(onSelectedClick.mock.callCount()).to.equal(0)
   })
 
   it('handles double clicks', () => {
-    let node = setup({ isSelected: true })
-    click(node)
-    click(node, 2)
-    fireEvent.doubleClick(node, { detail: 2 })
+    let { rows } = setup()
+
+    click(rows[0])
+    click(rows[0], { detail: 2 })
+    fireEvent.doubleClick(rows[0], { detail: 2 })
     mock.timers.tick(350)
+
     expect(calls()).to.eql([1, 0, 1])
-    expect(onDoubleClick.mock.calls[0].arguments[0]).to.equal('value')
+    expect(onDoubleClick.mock.calls[0].arguments[0]).to.equal(seq[0])
+  })
+
+  it('uses the given selection', () => {
+    let { rows } = setup({ isSelected: (el) => el.id !== 1 })
+
+    click(rows[0])
+    click(rows[2])
+    mock.timers.tick(350)
+
+    expect(onSelect.mock.calls[0].arguments[0]).to.equal(seq[0])
+    expect(onSelectedClick.mock.calls[0].arguments[0]).to.equal(seq[2])
+  })
+
+  it('reports context menus with the element', () => {
+    let { rows } = setup()
+
+    fireEvent.contextMenu(rows[2])
+    expect(onContextMenu.mock.calls[0].arguments[1]).to.equal(seq[2])
+  })
+
+  it('ignores clicks outside the elements', () => {
+    let { list } = setup()
+
+    click(list.querySelector('.other'))
+    fireEvent.doubleClick(list, { detail: 2 })
+    fireEvent.contextMenu(list)
+    mock.timers.tick(350)
+
+    expect(calls()).to.eql([0, 0, 0])
+    expect(onContextMenu.mock.callCount()).to.equal(0)
   })
 
   it('can be disabled', () => {
-    let node = setup({ isDisabled: true, isSelected: true })
-    click(node)
-    fireEvent.doubleClick(node, { detail: 2 })
+    let { rows } = setup({ isDisabled: true })
+
+    click(rows[0])
+    click(rows[1])
+    fireEvent.doubleClick(rows[0], { detail: 2 })
     mock.timers.tick(350)
+
     expect(calls()).to.eql([0, 0, 0])
   })
 })

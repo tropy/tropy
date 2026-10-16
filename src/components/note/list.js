@@ -1,10 +1,10 @@
 import { Scroll } from '../scroll/index.js'
-import { NoteListItem } from './list-item.js'
 import { TABS, SASS } from '../../constants/index.js'
 import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
-import { useEvent } from '../../hooks/use-event.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 import { useSequence } from '../../hooks/use-sequence.js'
+import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
+import cx from 'classnames'
 
 
 export const NoteList = ({
@@ -20,14 +20,14 @@ export const NoteList = ({
 }) => {
   let { cursor, onLayoutChange } = useSequence(notes, selection)
 
-  let handleSelect = useEvent((note, { repeat } = {}) => {
+  let handleSelect = (note, { repeat } = {}) => {
     if (!(note == null || note.id === selection?.id))
       onSelect({
         note: note.id,
         photo: note.photo,
         selection: note.selection
       }, { throttle: repeat })
-  })
+  }
 
   let handleContextMenu = (event, note) => {
     onContextMenu?.(event, 'note', {
@@ -56,23 +56,34 @@ export const NoteList = ({
     })
   })
 
+  let clicks = useSequenceClicks(cursor, {
+    onContextMenu: handleContextMenu,
+    onDoubleClick: onOpen,
+    onSelect: handleSelect
+  })
+
   return (
-    <div className="note-list">
+    <div className="note-list" {...clicks}>
       <Scroll
         cursor={cursor}
         itemHeight={rowHeight}
         tabIndex={tabIndex}
         onLayoutChange={onLayoutChange}
         onKeyDown={handleKeyDown}>
-        {(note) => (
-          <NoteListItem
-            key={note.id}
-            isSelected={note.id === selection?.id}
-            note={note.id === selection?.id ? selection : note}
-            onContextMenu={handleContextMenu}
-            onOpen={onOpen}
-            onSelect={handleSelect}/>
-        )}
+        {(note, index) => {
+          let isSelected = note.id === selection?.id
+
+          return (
+            <li
+              key={note.id}
+              className={cx('note', { active: isSelected })}
+              data-index={index}>
+              <div className="css-multiline-truncate">
+                {(isSelected ? selection : note).text.slice(0, 280)}
+              </div>
+            </li>
+          )
+        }}
       </Scroll>
     </div>
   )
