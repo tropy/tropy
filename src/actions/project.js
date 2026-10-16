@@ -12,7 +12,11 @@ export default {
   },
 
   open (payload, meta) {
-    return { type: PROJECT.OPEN, payload, meta }
+    return {
+      type: PROJECT.OPEN,
+      payload,
+      meta: { ipc: true, ...meta }
+    }
   },
 
   closed (payload, meta) {

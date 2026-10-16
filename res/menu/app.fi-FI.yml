@@ -32,9 +32,6 @@ fi-FI:
         - label: Avaa…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Avaa uudessa ikkunassa…
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Viimeisimmät projektit
           id: recent
           enabled: false
@@ -274,9 +271,6 @@ fi-FI:
         - label: Avaa…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Avaa uudessa ikkunassa…
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Viimeisimmät projektit
           id: recent
           enabled: false
@@ -490,9 +484,6 @@ fi-FI:
         - label: Avaa…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Avaa uudessa ikkunassa…
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Viimeisimmät projektit
           id: recent
           enabled: false

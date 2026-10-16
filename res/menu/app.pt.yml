@@ -32,9 +32,6 @@ pt:
         - label: Abrir...
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Abrir numa Nova Janela
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Projetos Recentes
           id: recent
           enabled: false
@@ -274,9 +271,6 @@ pt:
         - label: Abrir...
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Abrir numa Nova Janela
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Projetos Recentes
           id: recent
           enabled: false
@@ -490,9 +484,6 @@ pt:
         - label: Abrir...
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Abrir numa Nova Janela
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Projetos Recentes
           id: recent
           enabled: false
