@@ -32,9 +32,6 @@ it:
         - label: Apri...
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Apri in nuova finestra...
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Progetti recenti
           id: recent
           enabled: false
@@ -274,9 +271,6 @@ it:
         - label: Apri...
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Apri in nuova finestra...
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Progetti recenti
           id: recent
           enabled: false
@@ -490,9 +484,6 @@ it:
         - label: Apri...
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Apri in nuova finestra...
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Progetti recenti
           id: recent
           enabled: false

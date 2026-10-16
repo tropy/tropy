@@ -16,6 +16,7 @@ import {
   array,
   blank,
   counter,
+  pick,
   remove,
   restrict,
   when
@@ -62,6 +63,9 @@ export class WindowManager extends EventEmitter {
     this.windows = {}
     this.types = new WeakMap()
     this.props = new WeakMap()
+    this.persistenceIds = new WeakMap()
+    this.pendingBounds = new WeakMap()
+    this.geometry = {}
     this.pending = {}
     this.unloading = new WeakMap()
     this.seq = counter()
@@ -94,6 +98,14 @@ export class WindowManager extends EventEmitter {
 
     try {
       opts = this.configure(type, opts)
+
+      let { persistenceId } = opts
+      let saved = this.geometry[persistenceId]
+
+      if (saved) {
+        Object.assign(opts, pick(saved, ['x', 'y', 'width', 'height']))
+        opts.useContentSize = false
+      }
 
       if (args.zoom) {
         if (!opts.resizable) {
@@ -154,8 +166,8 @@ export class WindowManager extends EventEmitter {
 
       var win = new BrowserWindow(sanitizeWindowBounds(opts))
 
-      if (opts.name)
-        win.persistenceName = opts.name
+      if (persistenceId)
+        this.persistenceIds.set(win, persistenceId)
 
       if (opts.fixedSize) {
         this.setFixedSize(win, true, opts.fixedSize)
@@ -517,7 +529,18 @@ export class WindowManager extends EventEmitter {
         .on('show', () => {
           this.emit('show', type, win)
         })
+        .on('unmaximize', () => {
+          this.applyPendingSize(win)
+        })
+        .on('leave-full-screen', () => {
+          this.applyPendingSize(win)
+        })
+        .on('restore', () => {
+          this.applyPendingSize(win)
+        })
         .on('close', (event) => {
+          this.persistBounds(win)
+
           if (this.unloading.get(win) === 'done') {
             debug(`closing ${type} window`)
           } else {
@@ -600,18 +623,72 @@ export class WindowManager extends EventEmitter {
       fullscreenable = true
     } = this.props.get(win) || WindowManager.defaults[type]
 
+    this.props.set(win, {
+      isFixedSize: false
+    })
+
     win.setResizable(true)
-    win.setContentSize(width, height, animate)
+
+    if (!this.applyPendingSize(win, animate))
+      win.setContentSize(width, height, animate)
+
     win.setMinimumSize(minWidth, minHeight)
     win.setMaximizable(maximizable)
     win.setFullScreenable(fullscreenable)
 
     if (win.isMinimized())
       win.restore()
+  }
 
-    this.props.set(win, {
-      isFixedSize: false
-    })
+  setPersistenceId (win, id, { restore = true } = {}) {
+    if (win == null || win.isDestroyed()) return
+    if (this.persistenceIds.get(win) === id) return
+
+    this.persistBounds(win)
+    this.pendingBounds.delete(win)
+
+    if (id == null) {
+      this.persistenceIds.delete(win)
+    } else {
+      this.persistenceIds.set(win, id)
+
+      if (restore && this.geometry[id])
+        this.restoreSize(win, this.geometry[id])
+    }
+  }
+
+  persistBounds (win) {
+    let id = this.persistenceIds.get(win)
+
+    if (id && !this.props.get(win)?.isFixedSize)
+      this.geometry[id] =
+        this.pendingBounds.get(win) ?? win.getNormalBounds()
+  }
+
+  // Existing windows take only the saved size and stay where they are.
+  restoreSize (win, bounds) {
+    bounds = pick(bounds, ['x', 'y', 'width', 'height'])
+
+    if (this.props.get(win)?.isFixedSize || !win.isNormal())
+      this.pendingBounds.set(win, bounds)
+    else
+      this.resize(win, bounds)
+  }
+
+  applyPendingSize (win, animate) {
+    let bounds = this.pendingBounds.get(win)
+
+    if (bounds == null || !win.isNormal() || this.props.get(win)?.isFixedSize)
+      return false
+
+    this.pendingBounds.delete(win)
+    this.resize(win, bounds, animate)
+    return true
+  }
+
+  resize (win, { width, height }, animate) {
+    let { x, y } = win.getBounds()
+    win.setBounds(sanitizeWindowBounds({ x, y, width, height }), animate)
   }
 
   async setFixedSize (win, fixedSize = false, {
