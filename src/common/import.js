@@ -1,7 +1,7 @@
 import gt from 'semver/functions/gt.js'
 import * as ex from './export.js'
 import { expand } from './json.js'
-import { rdfs, tropy, xsd, dc, dcterms } from '../ontology/index.js'
+import { rdfs, tropy, xsd, dc, dcterms } from '../ontology/ns.js'
 import { URI, any, array, morph, omit, get, decodeListPath } from './util.js'
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
