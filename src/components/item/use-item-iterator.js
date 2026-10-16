@@ -117,7 +117,7 @@ export function useItemIterator ({
       list
     }
 
-    // Items select on mouse-down (useSequenceClicks),
+    // Items select on mouse-down (useElementClicks),
     // so the right-clicked item is already selected.
     if (selection.size > 1) {
       context.push('bulk')

@@ -2,7 +2,7 @@ import { memo, useRef } from 'react'
 import cx from 'classnames'
 import { TableCell } from './cell.js'
 import { useDragDropItem } from '../../../hooks/use-drag-drop-items.js'
-import { useSequenceClicks } from '../../../hooks/use-sequence-clicks.js'
+import { useElementClicks } from '../../../hooks/use-element-clicks.js'
 import { useEvent } from '../../../hooks/use-event.js'
 import { getSelectionMode } from '../../../keymap.js'
 import { NAV, TYPE } from '../../../constants/index.js'
@@ -48,7 +48,7 @@ export const TableRow = memo(({
       onDropPhotos
     })
 
-  let sequenceClicks = useSequenceClicks({
+  let elementClicks = useElementClicks({
     isSelected,
     onDoubleClick: onItemOpen,
     onSelect: (value, keyState) =>
@@ -132,7 +132,7 @@ export const TableRow = memo(({
 
   return (
     <div
-      {...sequenceClicks}
+      {...elementClicks}
       ref={dnd}
       onContextMenu={(event) => onContextMenu(event, item)}
       className={cx('tr', 'item', {

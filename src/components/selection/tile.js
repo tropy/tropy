@@ -1,7 +1,7 @@
 import { memo, useRef } from 'react'
 import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
-import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
+import { useElementClicks } from '../../hooks/use-element-clicks.js'
 import { Thumbnail } from '../photo/thumbnail.js'
 import { pick } from '../../common/util.js'
 import cx from 'classnames'
@@ -37,7 +37,7 @@ export const SelectionTile = memo(({
   useScrollIntoView(container, { when: isActive })
 
   // Read-only (isDisabled here) does not block selection.
-  let sequenceClicks = useSequenceClicks({
+  let elementClicks = useElementClicks({
     isSelected: isActive,
     onDoubleClick: onItemOpen,
     onSelect,
@@ -57,7 +57,7 @@ export const SelectionTile = memo(({
         [direction]: direction
       })}
       onContextMenu={(event) => onContextMenu(event, selection)}
-      {...sequenceClicks}>
+      {...elementClicks}>
       <div className="tile-state">
         <Thumbnail
           {...pick(selection, Thumbnail.keys)}

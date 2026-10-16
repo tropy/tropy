@@ -5,7 +5,7 @@ import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
-import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
+import { useElementClicks } from '../../hooks/use-element-clicks.js'
 import { Cursor } from '../../common/sequence.js'
 import { getTranscriptions } from '../../selectors/index.js'
 import { activate, remove } from '../../slices/transcriptions.js'
@@ -80,7 +80,7 @@ const TranscriptionVersion = ({
 
   useScrollIntoView(dom, { when: isActive })
 
-  let sequenceClicks = useSequenceClicks({
+  let elementClicks = useElementClicks({
     isSelected: isActive,
     onSelect: onActivate,
     value: transcription
@@ -91,7 +91,7 @@ const TranscriptionVersion = ({
       ref={dom}
       className={cx('version', { active: isActive })}
       onContextMenu={(event) => onContextMenu(event, transcription)}
-      {...sequenceClicks}>
+      {...elementClicks}>
       <TranscriptionMetadata created={transcription.created}/>
     </li>
   )

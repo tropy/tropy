@@ -2,7 +2,7 @@ import { memo, useRef } from 'react'
 import cx from 'classnames'
 import { CoverImage } from './cover-image.js'
 import { useDragDropItem } from '../../hooks/use-drag-drop-items.js'
-import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
+import { useElementClicks } from '../../hooks/use-element-clicks.js'
 import { getSelectionMode } from '../../keymap.js'
 
 export const ItemTile = memo(({
@@ -29,7 +29,7 @@ export const ItemTile = memo(({
       onDropPhotos
     })
 
-  let sequenceClicks = useSequenceClicks({
+  let elementClicks = useElementClicks({
     isSelected,
     onDoubleClick: onItemOpen,
     onSelect: (value, keyState) =>
@@ -48,7 +48,7 @@ export const ItemTile = memo(({
       })}>
       <div className="tile-state">
         <CoverImage
-          {...sequenceClicks}
+          {...elementClicks}
           cover={item.cover}
           onContextMenu={(event) => onContextMenu(event, item)}
           photos={item.photos}

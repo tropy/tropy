@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { useIntl } from 'react-intl'
 import { DND } from '../dnd.js'
 import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
-import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
+import { useElementClicks } from '../../hooks/use-element-clicks.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { Editable } from '../editable.js'
 import { Thumbnail } from '../photo/thumbnail.js'
@@ -46,7 +46,7 @@ export const SelectionListItem = memo(({
     })
 
   // Read-only (isDisabled here) blocks editing, not selection.
-  let sequenceClicks = useSequenceClicks({
+  let elementClicks = useElementClicks({
     isSelected: isActive,
     onDoubleClick: isItemOpen ? (!isDisabled && onEdit) : onItemOpen,
     onSelect,
@@ -85,7 +85,7 @@ export const SelectionListItem = memo(({
         [direction]: direction
       })}
       onContextMenu={(event) => onContextMenu(event, selection)}
-      {...sequenceClicks}>
+      {...elementClicks}>
       <div className="thumbnail-container">
         <Thumbnail
           {...pick(selection, Thumbnail.keys)}

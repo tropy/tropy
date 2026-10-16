@@ -5,7 +5,7 @@ import { Icon } from '../icons.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
 import { Button } from '../button.js'
 import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
-import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
+import { useElementClicks } from '../../hooks/use-element-clicks.js'
 import { pick } from '../../common/util.js'
 
 export const PhotoTile = memo(({
@@ -38,7 +38,7 @@ export const PhotoTile = memo(({
     })
 
   // Read-only (isDisabled here) does not block selection.
-  let sequenceClicks = useSequenceClicks({
+  let elementClicks = useElementClicks({
     isSelected: isActive,
     onDoubleClick: onItemOpen,
     onSelect,
@@ -62,7 +62,7 @@ export const PhotoTile = memo(({
           {...pick(photo, Thumbnail.keys)}
           size={size}
           onContextMenu={(event) => onContextMenu(event, photo)}
-          {...sequenceClicks}/>
+          {...elementClicks}/>
         {photo.broken && (
           <Button
             icon={<Icon name="WarningOverlay"/>}

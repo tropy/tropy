@@ -8,7 +8,7 @@ import { Button } from '../button.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
 import { DND } from '../dnd.js'
 import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
-import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
+import { useElementClicks } from '../../hooks/use-element-clicks.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { pick } from '../../common/util.js'
 import { TYPE } from '../../constants/index.js'
@@ -51,7 +51,7 @@ export const PhotoListItem = memo(({
     })
 
   // Read-only (isDisabled here) blocks editing, not selection.
-  let sequenceClicks = useSequenceClicks({
+  let elementClicks = useElementClicks({
     isSelected: isActive,
     onDoubleClick: isItemOpen ? (!isDisabled && onEdit) : onItemOpen,
     onSelect,
@@ -101,7 +101,7 @@ export const PhotoListItem = memo(({
       <div
         className="photo-container"
         onContextMenu={(event) => onContextMenu(event, photo)}
-        {...sequenceClicks}>
+        {...elementClicks}>
         {isExpandable && (
           <Button
             noFocus
