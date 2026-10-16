@@ -1,12 +1,13 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
+import { useSequence } from '../../hooks/use-sequence.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { move as reorder, pick, pluck } from '../../common/util.js'
-import { Cursor, adjacent, indexOf } from '../../common/sequence.js'
+import { adjacent, indexOf } from '../../common/sequence.js'
 import { getExpandedPhotos, getVisiblePhotos } from '../../selectors/index.js'
 import * as act from '../../actions/index.js'
 
@@ -47,8 +48,7 @@ export function usePhotoIterator ({
     selection :
     current
 
-  let [layout, setLayout] = useState()
-  let cursor = new Cursor(sequence, at, layout)
+  let { cursor, onLayoutChange } = useSequence(sequence, at)
 
   // The photo of an element, and the selection id for selections.
   let resolve = (el) => (el?.photo != null) ?
@@ -290,7 +290,7 @@ export function usePhotoIterator ({
     getIterableProps,
     getSelectionProps,
     move,
-    onLayoutChange: setLayout,
+    onLayoutChange,
     open,
     photos,
     preview,

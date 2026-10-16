@@ -1,4 +1,4 @@
-import { useImperativeHandle, useRef, useState } from 'react'
+import { useImperativeHandle, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { seq, compose, map, cat, keep } from 'transducers.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
@@ -7,8 +7,9 @@ import { useEvent } from '../../hooks/use-event.js'
 import { useEventHandler } from '../../hooks/use-event-handler.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
+import { useSequence } from '../../hooks/use-sequence.js'
 import { getSelectionMode } from '../../keymap.js'
-import { Cursor, indexOf } from '../../common/sequence.js'
+import { indexOf } from '../../common/sequence.js'
 import { blank, get } from '../../common/util.js'
 import { getItemSelection, getVisibleItems } from '../../selectors/index.js'
 import * as act from '../../actions/index.js'
@@ -32,8 +33,7 @@ export function useItemIterator ({
   let selection = useSelector(getItemSelection)
   let isTrashSelected = useSelector(state => state.nav.trash)
 
-  let [layout, setLayout] = useState()
-  let cursor = new Cursor(items, selection.cursor, layout)
+  let { cursor, onLayoutChange } = useSequence(items, selection.cursor)
 
   useImperativeHandle(ref, () => ({
     focus () {
@@ -234,7 +234,7 @@ export function useItemIterator ({
     isOver: file.canDrop,
     items,
     onKeyDown,
-    onLayoutChange: setLayout,
+    onLayoutChange,
     scroll,
     selection,
     tabIndex: (isDisabled || !items.length) ? null : tabIndex
