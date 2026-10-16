@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
-import { useDerivedState } from '../../hooks/use-derived-state.js'
+import { useDraftState } from '../../hooks/use-draft-state.js'
 import { useTransitionState } from '../../hooks/use-transition-state.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
@@ -59,7 +59,7 @@ export const Project = React.forwardRef(({
   })
 
   let panel = useSelector(state => state.ui.panel)
-  let [offset, setOffset] = useDerivedState(panel.width)
+  let [offset, setOffset] = useDraftState(panel.width)
 
   let handlePanelResize = useEvent(({ value }) => {
     setOffset(value)

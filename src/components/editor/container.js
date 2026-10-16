@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { EditorToolbar } from './toolbar.js'
 import { EditorView } from './view.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { useDerivedState } from '../../hooks/use-derived-state.js'
+import { useDraftState } from '../../hooks/use-draft-state.js'
 import { commands, toEditorState, toText } from '../../editor/index.js'
 import { getAlignment, getLink, getMarks } from '../../editor/state.js'
 import { match } from '../../keymap.js'
@@ -50,7 +50,8 @@ export const Editor = React.forwardRef(({
     }
   }, [srcState, onChange])
 
-  let [state, setState] = useDerivedState(srcState, toEditorState)
+  let [state, setState] = useDraftState(
+    useMemo(() => toEditorState(srcState), [srcState]))
 
   let [align, link, marks] = useMemo(() => ([
     getAlignment(state),

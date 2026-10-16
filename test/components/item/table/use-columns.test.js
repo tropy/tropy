@@ -38,7 +38,7 @@ describe('useColumnState', () => {
     expect(onColumnOrder.mock.calls[0].arguments[0])
       .to.eql({ order: { b: 0, a: 1 } })
 
-    rerender({ columns: { active }, onColumnOrder })
+    rerender({ columns: { active: [...active] }, onColumnOrder })
     expect(result.current.columns.map(c => c.id)).to.eql(['a', 'b'])
   })
 })
