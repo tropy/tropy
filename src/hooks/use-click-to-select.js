@@ -8,21 +8,23 @@ import { getKeyState } from '../keymap.js'
 
 export function useClickToSelect (props) {
   let wasSelected = useRef(null)
-  let handlers = () => clickToSelect(wasSelected, props)
 
   return {
-    onClick: (event) => handlers().onClick(event),
-    onMouseDown: (event) => handlers().onMouseDown(event)
+    onClick (event) {
+      clickToSelect.onClick(wasSelected, props, event)
+    },
+    onMouseDown (event) {
+      clickToSelect.onMouseDown(wasSelected, props, event)
+    }
   }
 }
 
-export const clickToSelect = (wasSelected, {
-  isDisabled,
-  isSelected,
-  onSelect,
-  value
-}) => ({
-  onMouseDown (event) {
+export const clickToSelect = {
+  onMouseDown (
+    wasSelected,
+    { isDisabled, isSelected, onSelect, value },
+    event
+  ) {
     wasSelected.current = null
 
     if (isDisabled || value == null || event.button > 2) return
@@ -33,10 +35,10 @@ export const clickToSelect = (wasSelected, {
       onSelect(value, getKeyState(event))
   },
 
-  onClick (event) {
+  onClick (wasSelected, { isDisabled, onSelect, value }, event) {
     // Only the first click of a series (not by keyboard).
     if (!isDisabled && event.detail === 1 && wasSelected.current != null &&
       wasSelected.current.id === (value?.id ?? value))
       onSelect(value, getKeyState(event))
   }
-})
+}

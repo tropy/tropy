@@ -80,6 +80,13 @@ describe('useSequenceClicks', () => {
     expect(onSelectedClick.mock.calls[0].arguments[0]).to.equal(seq[0])
   })
 
+  it('selects selected elements again without selected clicks', () => {
+    let { rows } = setup({ onSelectedClick: undefined })
+
+    click(rows[0])
+    expect(onSelect.mock.calls[0].arguments[0]).to.equal(seq[0])
+  })
+
   it('ignores the click that selected the element', () => {
     let { rows, rerender } = setup()
 

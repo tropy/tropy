@@ -17,11 +17,13 @@ export function useClickToEdit (props) {
     if (!isDisabled && isSelected) onEdit(value, event)
   })
 
-  let handlers = () => clickToEdit(state, props)
-
   return {
-    onClick: (event) => handlers().onClick(event),
-    onMouseDown: (event) => handlers().onMouseDown(event)
+    onClick (event) {
+      clickToEdit.onClick(state, props, event)
+    },
+    onMouseDown (event) {
+      clickToEdit.onMouseDown(state, props, event)
+    }
   }
 }
 
@@ -42,12 +44,8 @@ export function useClickToEditState (onEdit) {
   return { focus, pending, single, wasSelected }
 }
 
-export const clickToEdit = ({ focus, pending, single, wasSelected }, {
-  isDisabled,
-  isSelected,
-  value
-}) => ({
-  onMouseDown (event) {
+export const clickToEdit = {
+  onMouseDown ({ focus, single, wasSelected }, { isSelected, value }, event) {
     // Subtle: selection usually happens on mouse-down!
     wasSelected.current = (isSelected && value != null)
       ? { id: value.id ?? value }
@@ -57,13 +55,14 @@ export const clickToEdit = ({ focus, pending, single, wasSelected }, {
     single.onMouseDown(event)
   },
 
-  onClick (event) {
+  onClick ({ focus, pending, wasSelected }, { isDisabled, value }, event) {
     if (isDisabled || hasModifiers(event))
       return
-    if (!wasSelected.current || wasSelected.current.id !== (value?.id ?? value))
+    if (wasSelected.current == null ||
+      wasSelected.current.id !== (value?.id ?? value))
       return
 
     pending.current = value
     focus.onClick(event)
   }
-})
+}
