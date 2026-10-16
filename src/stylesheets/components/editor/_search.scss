@@ -1,0 +1,52 @@
+@use "../../abstracts/config" as *;
+
+//
+// Editor find-in-note bar
+// --------------------------------------------------
+
+.editor {
+  .editor-search {
+    position: absolute;
+    z-index: 2;
+    top: $toolbar-height + 1px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px;
+    background: $popup-bg;
+    border: 1px solid $editor-toolbar-border;
+    border-radius: 4px;
+
+    .frameless & {
+      --zoom: inherit; // Always counterbalance frameless editor toolbar
+      top: zoom($toolbar-frameless-height + 1px);
+    }
+  }
+
+  .editor-search-input {
+    width: 160px;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font-family: $font-family-base;
+    font-size: $toolbar-font-size;
+  }
+
+  .editor-search-count {
+    min-width: 42px;
+    padding-inline: 4px;
+    color: $editor-placeholder-color;
+    font-size: $toolbar-font-size;
+    text-align: center;
+
+    &.blank {
+      visibility: hidden;
+    }
+  }
+
+  .rotate-180 {
+    transform: rotate(180deg);
+  }
+}
