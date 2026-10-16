@@ -14,6 +14,20 @@ describe('sequence', () => {
       expect(indexOf(seq, 9)).to.equal(1)
       expect(indexOf(seq, seq[1])).to.equal(1)
     })
+
+    it('matches elements by id', () => {
+      let seq = [{ id: 7 }, { id: 9 }]
+
+      expect(indexOf(seq, { id: 9 })).to.equal(1)
+      expect(indexOf(seq, seq[0])).to.equal(0)
+    })
+
+    it('matches elements without ids by identity', () => {
+      let seq = [{}, {}]
+
+      expect(indexOf(seq, seq[1])).to.equal(1)
+      expect(indexOf(seq, {})).to.equal(-1)
+    })
   })
 
   describe('adjacent', () => {
@@ -138,14 +152,12 @@ describe('sequence', () => {
       expect(new Cursor(grid, null).index).to.equal(-1)
     })
 
-    it('moves to an element or its id', () => {
+    it('is at an element or its id', () => {
       let seq = [{ id: 7 }, { id: 9 }]
-      let options = { layout: 'grid', columns: 2 }
-      let cursor = new Cursor(seq, 7, options)
+      let cursor = new Cursor(seq, { id: 9 })
 
-      expect(cursor.to(9).index).to.equal(1)
-      expect(cursor.to(seq[1]).id).to.equal(9)
-      expect(cursor.to(9).options).to.equal(options)
+      expect(cursor.id).to.equal(9)
+      expect(cursor.index).to.equal(1)
     })
 
     it('returns the current element', () => {

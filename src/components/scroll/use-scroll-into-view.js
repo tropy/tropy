@@ -1,5 +1,6 @@
 import { useLayoutEffect } from 'react'
 import { getScrollTo } from './layout.js'
+import { indexOf } from '../../common/sequence.js'
 import { useEvent } from '../../hooks/use-event.js'
 
 // useScrollIntoView for virtualized nodes
@@ -14,9 +15,9 @@ export const useScrollIntoView = (layout, { cursor, position }) => {
     if (layout.height === 0)
       return
 
-    let { index } = (element == null)
-      ? cursor
-      : cursor.to(element)
+    let index = (element == null)
+      ? cursor.index
+      : indexOf(cursor.seq, element)
 
     if (index < 0)
       return

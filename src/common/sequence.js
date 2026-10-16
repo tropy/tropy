@@ -1,13 +1,14 @@
-// Sequence elements match either by identity or via `id` property.
-export const matches = (it, id) => it === id || it.id === id
-
-export const indexOf = (seq, id) => {
-  if (id == null)
+// Sequence elements match by their `id` property,
+// or by identity if they have none.
+export const indexOf = (seq, element) => {
+  if (element == null)
     return -1
-  else
-    return (seq.idx != null)
-      ? seq.idx[id.id ?? id] ?? -1
-      : seq.findIndex(it => matches(it, id))
+
+  let id = element.id ?? element
+
+  return (seq.idx != null)
+    ? seq.idx[id] ?? -1
+    : seq.findIndex(it => it === id || it.id === id)
 }
 
 // Returns all elements `from` `to` inclusive, in order.
@@ -38,18 +39,18 @@ export const sanitize = (length, index, restrict = 'bounds') => {
   }
 }
 
-// Returns the previous and next elements of the `id` element.
-export const adjacent = (seq, id) =>
-  adjacentAt(seq, indexOf(seq, id))
+// Returns the previous and next of element.
+export const adjacent = (seq, element) =>
+  adjacentAt(seq, indexOf(seq, element))
 
 const adjacentAt = (seq, index) =>
   (index < 0) ?
     [null, null] :
     [seq[index - 1] ?? null, seq[index + 1] ?? null]
 
-// Seek element by following nav `cmd` from `id` element.
-export const seek = (seq, id, cmd, options) =>
-  seekFrom(seq, indexOf(seq, id), cmd, options)
+// Seek by following nav `cmd` from the element.
+export const seek = (seq, element, cmd, options) =>
+  seekFrom(seq, indexOf(seq, element), cmd, options)
 
 const seekFrom = (seq, index, cmd, options) => {
   let { length } = seq
@@ -126,9 +127,9 @@ const getNextIndex = (length, index, cmd, {
 export class Cursor {
   #index
 
-  constructor (seq, id, options) {
+  constructor (seq, element, options) {
     this.seq = seq
-    this.id = id
+    this.id = element?.id ?? element
     this.options = options
   }
 
@@ -141,11 +142,6 @@ export class Cursor {
 
   current () {
     return this.seq[this.index] ?? null
-  }
-
-  // A move to the element (or its id): a cursor at that position.
-  to (element) {
-    return new Cursor(this.seq, element?.id ?? element, this.options)
   }
 
   adjacent () {
