@@ -148,6 +148,7 @@ describe('selection state', () => {
     let state = run([[2]])
     expect(ids(all(state, seq))).to.eql(seq)
     expect(ids(clear(state))).to.eql([])
+    expect(ids(run([[null, 'clear']], state))).to.eql([])
   })
 
   it('works on sequences of items', () => {
@@ -210,5 +211,26 @@ describe('Selection', () => {
     let state = selection.select(1, { mode: 'extend' })
     expect(new Selection(state, seq).elements()).to.eql([3, 1, 2])
     expect(selection.select(3)).to.not.equal(selection.state)
+  })
+})
+
+describe('Selection.from', () => {
+  let seq = [{ id: 1 }, { id: 2 }]
+
+  it('selects a single element or id', () => {
+    for (let selection of [Selection.from(seq[1], seq), Selection.from(2, seq)]) {
+      expect(selection.size).to.equal(1)
+      expect(selection.has(2)).to.be.true
+      expect(selection.cursor).to.equal(2)
+    }
+
+    expect(Selection.from(null, seq).size).to.equal(0)
+  })
+
+  it('wraps selection states', () => {
+    let selection = Selection.from(create([1, 2]), seq)
+
+    expect(selection.size).to.equal(2)
+    expect(Selection.from(selection, seq)).to.equal(selection)
   })
 })

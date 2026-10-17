@@ -10,7 +10,7 @@ describe('useItemIterator', () => {
     let { result } = renderHook(() => useItemIterator({}, {}), withStore(store))
 
     let before = store.getState().nav.item
-    result.current.handleTabFocus()
+    result.current.scrollProps.onTabFocus()
 
     return [before, store.getState().nav.item]
   }

@@ -1,9 +1,6 @@
 import { Scroll } from '../scroll/index.js'
 import { TABS, SASS } from '../../constants/index.js'
-import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
-import { useKeyMap } from '../../hooks/use-keymap.js'
 import { useSequence } from '../../hooks/use-sequence.js'
-import { useSequenceClicks } from '../../hooks/use-sequence-clicks.js'
 import cx from 'classnames'
 
 
@@ -18,15 +15,16 @@ export const NoteList = ({
   selection,
   tabIndex = TABS.NoteList
 }) => {
-  let { cursor, onLayoutChange } = useSequence(notes, selection)
+  // Notes are not cleared or selected on tab focus.
+  let handleSelect = (note, { cmd, throttle }) => {
+    if (note == null || cmd === 'focus')
+      return
 
-  let handleSelect = (note, { repeat } = {}) => {
-    if (!(note == null || note.id === selection?.id))
-      onSelect({
-        note: note.id,
-        photo: note.photo,
-        selection: note.selection
-      }, { throttle: repeat })
+    onSelect({
+      note: note.id,
+      photo: note.photo,
+      selection: note.selection
+    }, { throttle })
   }
 
   let handleContextMenu = (event, note) => {
@@ -38,14 +36,15 @@ export const NoteList = ({
     })
   }
 
-  let handleKeyDown = useCursorKeys(cursor, {
+  let [scrollProps, handlers] = useSequence(notes, {
+    selection,
     scrollKeys: 'select',
-    onMove: handleSelect,
-    onKeyDown: useKeyMap('NoteList', {
-      open () {
+    keymap: 'NoteList',
+    commands: {
+      open ({ cursor }) {
         onOpen(cursor.current())
       },
-      remove: !isReadOnly && (() => {
+      remove: !isReadOnly && (({ cursor }) => {
         let note = cursor.current()
 
         if (note == null)
@@ -53,23 +52,18 @@ export const NoteList = ({
 
         onRemove([note.id])
       })
-    })
-  })
-
-  let clicks = useSequenceClicks(cursor, {
+    },
     onContextMenu: handleContextMenu,
-    onDoubleClick: onOpen,
+    onOpen,
     onSelect: handleSelect
   })
 
   return (
-    <div className="note-list" {...clicks}>
+    <div className="note-list" {...handlers}>
       <Scroll
-        cursor={cursor}
+        {...scrollProps}
         itemHeight={rowHeight}
-        tabIndex={tabIndex}
-        onLayoutChange={onLayoutChange}
-        onKeyDown={handleKeyDown}>
+        tabIndex={tabIndex}>
         {(note, index) => {
           let isSelected = note.id === selection?.id
 

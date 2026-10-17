@@ -7,7 +7,6 @@ import { SASS, TABS } from '../../constants/index.js'
 
 export const ItemGrid = (props) => {
   let iterator = useItemIterator(props, {
-    isGrid: true,
     tabIndex: TABS.ItemGrid
   })
 
@@ -18,18 +17,15 @@ export const ItemGrid = (props) => {
 
   return iterator.connect(
     <div
+      {...iterator.handlers}
       className={cx('item-grid', { over: iterator.isOver })}
       data-size={size}>
       <Scroll
         ref={scroll}
-        cursor={iterator.cursor}
+        {...iterator.scrollProps}
         itemHeight={tileSize}
         itemWidth={tileSize}
-        tabIndex={iterator.tabIndex}
-        onClick={iterator.clearSelection}
-        onTabFocus={iterator.handleTabFocus}
-        onKeyDown={iterator.onKeyDown}
-        onLayoutChange={iterator.onLayoutChange}>
+        tabIndex={iterator.tabIndex}>
         {(item, index) => (
           <ItemTile
             {...iterator.getIterableProps(item, index)}

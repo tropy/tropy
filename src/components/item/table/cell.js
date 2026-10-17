@@ -3,7 +3,6 @@ import cx from 'classnames'
 import { CoverImage } from '../cover-image.js'
 import { Editable } from '../../editable.js'
 import { TagColors } from '../../tag/colors.js'
-import { useClickToEdit } from '../../../hooks/use-click-to-edit.js'
 import { auto } from '../../../format.js'
 import { noop } from '../../../common/util.js'
 
@@ -17,7 +16,6 @@ export const TableCell = memo(({
   isEditing,
   isMainColumn,
   isMoving,
-  isOnlySelected,
   isReadOnly,
   item,
   onCancel,
@@ -32,16 +30,6 @@ export const TableCell = memo(({
   let edit = (property) => {
     onEdit({ column: { [item.id]: property } })
   }
-
-  // Click-to-edit only when the item is the only selected one
-  // at mouse-down: a click on an item in a multi-selection selects
-  // only that item and must not start editing.
-  let clickToEdit = useClickToEdit({
-    isDisabled: isReadOnly || isDisabled || isEditing,
-    isSelected: isOnlySelected,
-    onEdit: edit,
-    value: id
-  })
 
   let handleChange = (text) => {
     onChange(id, { text, type })
@@ -72,7 +60,7 @@ export const TableCell = memo(({
         moving: isMoving,
         'read-only': isReadOnly
       })}
-      {...clickToEdit}>
+      data-column={id}>
       <div className="flex-row center td-container">
         {isMainColumn && (
           <div className="cover-image-container">

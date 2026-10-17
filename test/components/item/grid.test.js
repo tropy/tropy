@@ -41,6 +41,12 @@ describe('ItemGrid', () => {
     expect(selection()).to.include({ anchor: 1, cursor: 2 })
   })
 
+  it('clears the selection on background clicks', () => {
+    let { $ } = setup()
+    fireEvent.click($('.scroll-container'))
+    expect(store.getState().nav.item.selected).to.eql({})
+  })
+
   it('opens the context menu for the item', () => {
     let onContextMenu = mock.fn()
     let { $$ } = setup({ onContextMenu })

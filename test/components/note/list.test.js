@@ -1,6 +1,7 @@
 import { mock } from 'node:test'
 import { fireEvent, waitFor } from '@testing-library/react'
-import { render, inWindowContext } from '../../support/react.js'
+import { createStore, render, inWindowContext, withStore } from '../../support/react.js'
+import { KeyMap } from '#tropy/keymap.js'
 import { NoteList } from '#tropy/components/note/list.js'
 
 describe('NoteList', () => {
@@ -26,6 +27,20 @@ describe('NoteList', () => {
     fireEvent.doubleClick(note, { detail: 2 })
 
     expect(onSelect.mock.calls[0].arguments[0]).to.include({ note: 2 })
+    expect(onOpen.mock.calls[0].arguments[0]).to.equal(notes[1])
+  })
+
+  it('opens the note at the cursor with keys', () => {
+    let onOpen = mock.fn()
+    let store = createStore({
+      keymap: { NoteList: new KeyMap({ open: 'Enter' }) }
+    })
+
+    let { $ } = render(
+      <NoteList notes={notes} selection={notes[1]} onOpen={onOpen}/>,
+      withStore(store))
+
+    fireEvent.keyDown($('.scroll-container'), { key: 'Enter' })
     expect(onOpen.mock.calls[0].arguments[0]).to.equal(notes[1])
   })
 

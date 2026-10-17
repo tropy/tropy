@@ -4,7 +4,7 @@ import { DND } from '../dnd.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
-import { useSequence } from '../../hooks/use-sequence.js'
+import { useCursor } from '../../hooks/use-cursor.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { move as reorder, pick, pluck } from '../../common/util.js'
 import { adjacent, indexOf } from '../../common/sequence.js'
@@ -48,7 +48,7 @@ export function usePhotoIterator ({
     selection :
     current
 
-  let { cursor, onLayoutChange } = useSequence(sequence, at)
+  let [cursor, onLayoutChange] = useCursor(sequence, at)
 
   // The photo of an element, and the selection id for selections.
   let resolve = (el) => (el?.photo != null) ?

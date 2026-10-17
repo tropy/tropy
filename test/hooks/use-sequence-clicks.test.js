@@ -121,7 +121,7 @@ describe('useSequenceClicks', () => {
   })
 
   it('uses the given selection', () => {
-    let { rows } = setup({ isSelected: (el) => el.id !== 1 })
+    let { rows } = setup({ selection: new Set([3]) })
 
     click(rows[0])
     click(rows[2])
@@ -129,6 +129,15 @@ describe('useSequenceClicks', () => {
 
     expect(onSelect.mock.calls[0].arguments[0]).to.equal(seq[0])
     expect(onSelectedClick.mock.calls[0].arguments[0]).to.equal(seq[2])
+  })
+
+  it('handles selected clicks only on the only selected element', () => {
+    let { rows } = setup({ selection: new Set([1, 2]) })
+
+    click(rows[0])
+    mock.timers.tick(350)
+
+    expect(calls()).to.eql([1, 0, 0])
   })
 
   it('reports context menus with the element', () => {

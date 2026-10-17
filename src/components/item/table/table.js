@@ -47,22 +47,34 @@ export const ItemTable = (props) => {
 
   let table = useRef()
 
-  let iterator = useItemIterator(props, {
-    tabIndex: TABS.ItemTable,
-    edit (item) {
-      if (item != null && !isReadOnly)
-        handleEdit({ column: { [item.id]: columns.active[0].id } })
-    }
-  })
-
-  let { items, scroll, selection } = iterator
-
   let columnState = useColumnState({
     columns,
     list,
     onColumnOrder: (payload) => dispatch(act.nav.column.order(payload)),
     onColumnResize: (payload) => dispatch(act.nav.column.resize(payload))
   })
+
+  // A click on a selected item edits the clicked cell.
+  let handleSelectedClick = (item, event) => {
+    let id = event.target.closest('[data-column]')?.dataset.column
+    let column = columnState.columns.find(col => col.id === id)
+
+    if (isReadOnly || column == null || column.protected) return
+    if (edit?.[item.id] === id) return
+
+    handleEdit({ column: { [item.id]: id } })
+  }
+
+  let iterator = useItemIterator(props, {
+    tabIndex: TABS.ItemTable,
+    edit (item) {
+      if (item != null && !isReadOnly)
+        handleEdit({ column: { [item.id]: columns.active[0].id } })
+    },
+    onSelectedClick: handleSelectedClick
+  })
+
+  let { items, scroll } = iterator
 
   let columnDrag = useColumnDrag(table, columnState)
 
@@ -137,17 +149,15 @@ export const ItemTable = (props) => {
           onSort={handleSort}/>
       </ScrollContainer>
       {iterator.connect(
-        <div className={cx('table-body', { over: iterator.isOver })}>
+        <div
+          {...iterator.handlers}
+          className={cx('table-body', { over: iterator.isOver })}>
           <Scroll
             ref={scroll}
             tag="div"
-            cursor={iterator.cursor}
+            {...iterator.scrollProps}
             itemHeight={ROW.HEIGHT}
-            tabIndex={iterator.tabIndex}
-            onClick={iterator.clearSelection}
-            onTabFocus={iterator.handleTabFocus}
-            onKeyDown={iterator.onKeyDown}
-            onLayoutChange={iterator.onLayoutChange}>
+            tabIndex={iterator.tabIndex}>
             {(item, index) => (
               <TableRow
                 {...iterator.getIterableProps(item, index)}
@@ -158,7 +168,6 @@ export const ItemTable = (props) => {
                 drop={columnDrag.drop}
                 editing={edit?.[item.id]}
                 hasPositionColumn={columnState.hasPositionColumn}
-                isOnlySelected={selection.size === 1 && selection.has(item.id)}
                 isReadOnly={isReadOnly}
                 item={item}
                 position={getPosition(index)}

@@ -15,23 +15,29 @@ function rowIndexOf (event) {
 
 export function useSequenceClicks (cursor, {
   isDisabled,
-  isSelected,
   onContextMenu,
   onDoubleClick,
   onSelect,
-  onSelectedClick
+  onSelectedClick,
+  selection
 }) {
   let selectState = useRef(null)
 
-  let isElementSelected = (element) =>
-    (isSelected != null)
-      ? isSelected(element)
-      : (element.id ?? element) === cursor.id
+  let isElementSelected = (element) => {
+    let id = element.id ?? element
+
+    return (selection != null)
+      ? selection.has(id)
+      : id === cursor.id
+  }
+
+  let isElementOnlySelected = (element) =>
+    isElementSelected(element) && (selection == null || selection.size === 1)
 
   let editState = useClickToEditState((element, event) => {
     // Subtle: we reach here after the single-click delay,
     // and therefore evaluate the guard one more time!
-    if (!isDisabled && isElementSelected(element))
+    if (!isDisabled && isElementOnlySelected(element))
       onSelectedClick(element, event)
   })
 
@@ -49,15 +55,18 @@ export function useSequenceClicks (cursor, {
     }
   }
 
+  let getEditProps = (props) => ({
+    ...props,
+    isDisabled: isDisabled || !onSelectedClick,
+    isSelected: props.value != null && isElementOnlySelected(props.value)
+  })
+
   return {
     onClick (event) {
       let props = getElementProps(event)
 
       clickToSelect.onClick(selectState, props, event)
-      clickToEdit.onClick(editState, {
-        ...props,
-        isDisabled: isDisabled || !onSelectedClick
-      }, event)
+      clickToEdit.onClick(editState, getEditProps(props), event)
     },
 
     onContextMenu (event) {
@@ -78,7 +87,7 @@ export function useSequenceClicks (cursor, {
       let props = getElementProps(event)
 
       clickToSelect.onMouseDown(selectState, props, event)
-      clickToEdit.onMouseDown(editState, props, event)
+      clickToEdit.onMouseDown(editState, getEditProps(props), event)
     }
   }
 }

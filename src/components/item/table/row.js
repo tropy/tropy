@@ -2,9 +2,7 @@ import { memo, useRef } from 'react'
 import cx from 'classnames'
 import { TableCell } from './cell.js'
 import { useDragDropItem } from '../../../hooks/use-drag-drop-items.js'
-import { useElementClicks } from '../../../hooks/use-element-clicks.js'
 import { useEvent } from '../../../hooks/use-event.js'
-import { getSelectionMode } from '../../../keymap.js'
 import { NAV, TYPE } from '../../../constants/index.js'
 
 const isItemColumn = (id) => {
@@ -20,19 +18,16 @@ export const TableRow = memo(({
   editing,
   getSelection,
   hasPositionColumn,
+  index,
   isDisabled,
-  isOnlySelected,
   isReadOnly,
   isSelected,
   item,
   onCancel,
   onChange,
-  onContextMenu,
   onDropItems,
   onDropPhotos,
   onEdit,
-  onItemOpen,
-  onSelect,
   position,
   size,
   template
@@ -47,14 +42,6 @@ export const TableRow = memo(({
       onDropItems,
       onDropPhotos
     })
-
-  let elementClicks = useElementClicks({
-    isSelected,
-    onDoubleClick: onItemOpen,
-    onSelect: (value, keyState) =>
-      onSelect(value, { mode: getSelectionMode(keyState) }),
-    value: item
-  })
 
   let getNextColumn = useEvent((at = 0, dir = 1) => {
     for (let k = 1, N = columns.length; k < N; ++k) {
@@ -124,7 +111,6 @@ export const TableRow = memo(({
 
   let cellProps = {
     isDisabled,
-    isOnlySelected,
     item,
     onCancel,
     onEdit
@@ -132,9 +118,8 @@ export const TableRow = memo(({
 
   return (
     <div
-      {...elementClicks}
       ref={dnd}
-      onContextMenu={(event) => onContextMenu(event, item)}
+      data-index={index}
       className={cx('tr', 'item', {
         active: isSelected,
         dragging: isDragging,
