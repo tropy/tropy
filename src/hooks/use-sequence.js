@@ -97,5 +97,10 @@ export function useSequence (seq, {
     }
   }
 
-  return [scrollProps, { ...clicks, onKeyDown }]
+  let getItemProps = (element, index) => ({
+    index,
+    isSelected: selection.has(element.id ?? element)
+  })
+
+  return [scrollProps, { ...clicks, onKeyDown }, getItemProps]
 }

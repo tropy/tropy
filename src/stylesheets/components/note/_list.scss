@@ -39,7 +39,7 @@
       }
     }
 
-    &.active {
+    &.selected {
       color: $note-list-active-color;
       background: $note-list-active-bg;
 
@@ -84,7 +84,7 @@
         visibility: hidden;
       }
 
-      .note:not(.active) :is(&) {
+      .note:not(.selected) :is(&) {
         transition: visibility 0s linear 1s;
       }
     }
