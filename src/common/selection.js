@@ -84,6 +84,9 @@ export const primary = (state, seq) => {
 
 // Selects `id` with `mode` and returns new state, or `state` if unchanged.
 export function select (state, seq, id, { mode = 'replace' } = {}) {
+  if (mode === 'clear')
+    return clear(state)
+
   let at = indexOf(seq, id)
 
   if (at < 0)
