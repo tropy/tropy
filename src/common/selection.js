@@ -235,6 +235,21 @@ export class Selection {
   #ids
   #size
 
+  static is (selection) {
+    return selection instanceof Selection || selection?.selected != null
+  }
+
+  static from (selection, seq) {
+    if (selection instanceof Selection)
+      return selection
+
+    let state = Selection.is(selection)
+      ? selection
+      : create(selection == null ? [] : [toId(selection)])
+
+    return new Selection(state, seq)
+  }
+
   constructor (state, seq) {
     this.state = state
     this.seq = seq
