@@ -67,17 +67,6 @@ export class ItemPanelGroup extends React.PureComponent {
     this.panel.current.focus()
   }
 
-  handleNoteOpen = (note) => {
-    if (note != null && !this.props.isItemMode) {
-      this.props.onItemOpen({
-        id: this.props.photo.item,
-        photos: [this.props.photo.id],
-        notes: [note.id],
-        selection: note.selection
-      })
-    }
-  }
-
   handlePhotoCreate = (data) => {
     this.props.onPhotoCreate({
       item: this.props.items?.[0]?.id,
@@ -202,13 +191,9 @@ export class ItemPanelGroup extends React.PureComponent {
             isDisabled={isNotesDisabled}
             notes={this.props.notes.length}/>
           <NoteList
+            isItemOpen={this.props.isItemMode}
             isReadOnly={isReadOnly}
-            notes={this.props.notes}
-            selection={this.props.note}
-            onRemove={this.props.onNoteDelete}
-            onContextMenu={this.props.onContextMenu}
-            onOpen={this.handleNoteOpen}
-            onSelect={this.props.onNoteSelect}/>
+            onContextMenu={this.props.onContextMenu}/>
         </Panel>
       </PanelGroup>
     )

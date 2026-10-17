@@ -43,10 +43,7 @@ export const ItemView = ({
   let [
     handleEdit,
     handleEditCancel,
-    handleItemOpen,
     handleMetadataSave,
-    handleNoteDelete,
-    handleNoteSelect,
     handlePhotoCreate,
     handlePhotoSave,
     handlePhotoSelect,
@@ -54,9 +51,7 @@ export const ItemView = ({
     handleUiUpdate
   ] = useActions([
     'edit.start', 'edit.cancel',
-    'item.open',
     'metadata.save',
-    'note.delete', 'note.select',
     'photo.create', 'photo.save', 'photo.select',
     'transcriptions.create',
     'ui.update'
@@ -84,9 +79,6 @@ export const ItemView = ({
           onContextMenu={onContextMenu}
           onEdit={handleEdit}
           onEditCancel={handleEditCancel}
-          onItemOpen={handleItemOpen}
-          onNoteDelete={handleNoteDelete}
-          onNoteSelect={handleNoteSelect}
           onMetadataSave={handleMetadataSave}
           onPhotoCreate={handlePhotoCreate}
           onPhotoSave={handlePhotoSave}

@@ -1,62 +1,64 @@
 import { mock } from 'node:test'
 import { fireEvent, waitFor } from '@testing-library/react'
-import { createStore, render, inWindowContext, withStore } from '../../support/react.js'
+import { render, withStore } from '../../support/react.js'
 import { KeyMap } from '#tropy/keymap.js'
 import { NoteList } from '#tropy/components/note/list.js'
+import { createNoteStore } from './store.js'
 
 describe('NoteList', () => {
-  let notes = [
-    { id: 1, photo: 1, text: 'one' },
-    { id: 2, photo: 1, text: 'two' }
-  ]
+  let setup = (options, props) => {
+    let store = createNoteStore(options)
+    let dispatch = mock.method(store, 'dispatch')
+    let dom = render(<NoteList {...props}/>, withStore(store))
+
+    // The project commands dispatched (open, delete).
+    let commands = () => dispatch.mock.calls
+      .map(call => call.arguments[0])
+      .filter(action => action?.meta?.cmd === 'project')
+
+    return { ...dom, commands, store }
+  }
 
   it('selects and opens notes with the mouse', () => {
-    let onSelect = mock.fn()
-    let onOpen = mock.fn()
-
-    let { $ } = render(
-      <NoteList
-        notes={notes}
-        selection={notes[0]}
-        onOpen={onOpen}
-        onSelect={onSelect}/>,
-      inWindowContext)
+    let { $, commands, store } = setup()
 
     let note = $('.note:last-child')
     fireEvent.mouseDown(note, { detail: 1 })
     fireEvent.doubleClick(note, { detail: 2 })
 
-    expect(onSelect.mock.calls[0].arguments[0]).to.include({ note: 2 })
-    expect(onOpen.mock.calls[0].arguments[0]).to.equal(notes[1])
+    expect(store.getState().nav.note).to.equal(2)
+    expect(commands()[0].payload).to.include({ id: 1, selection: undefined })
+    expect(commands()[0].payload.notes).to.eql([2])
   })
 
-  it('opens the note at the cursor with keys', () => {
-    let onOpen = mock.fn()
-    let store = createStore({
-      keymap: { NoteList: new KeyMap({ open: 'Enter' }) }
+  it('does not open notes in item mode', () => {
+    let { $, commands } = setup({}, { isItemOpen: true })
+
+    fireEvent.doubleClick($('.note'), { detail: 2 })
+    expect(commands()).to.be.empty
+  })
+
+  it('opens and removes the note at the cursor with keys', () => {
+    let { $, commands } = setup({
+      note: 2,
+      keymap: {
+        NoteList: new KeyMap({ open: 'Enter', remove: 'Backspace' })
+      }
     })
 
-    let { $ } = render(
-      <NoteList notes={notes} selection={notes[1]} onOpen={onOpen}/>,
-      withStore(store))
-
     fireEvent.keyDown($('.scroll-container'), { key: 'Enter' })
-    expect(onOpen.mock.calls[0].arguments[0]).to.equal(notes[1])
+    fireEvent.keyDown($('.scroll-container'), { key: 'Backspace' })
+
+    let [open, remove] = commands()
+    expect(open.payload.notes).to.eql([2])
+    expect(remove.payload).to.eql([2])
   })
 
   it('selects notes with cursor keys', () => {
-    let onSelect = mock.fn()
+    let { $, store } = setup()
 
-    let { $ } = render(
-      <NoteList notes={notes} selection={notes[0]} onSelect={onSelect}/>,
-      inWindowContext)
-
-    fireEvent.keyDown($('.scroll-container'), { key: 'ArrowDown', repeat: true })
-
-    expect(onSelect.mock.calls[0].arguments).to.eql([
-      { note: 2, photo: 1, selection: undefined },
-      { throttle: true }
-    ])
+    fireEvent.keyDown($('.scroll-container'), { key: 'ArrowDown' })
+    expect(store.getState().nav.note).to.equal(2)
   })
 
   it('selects a page of notes with page keys', async () => {
@@ -64,23 +66,16 @@ describe('NoteList', () => {
     style.textContent = '.note-list .scroll-container { height: 50px }'
     document.head.appendChild(style)
 
-    let many = Array.from({ length: 20 }, (_, i) =>
-      ({ id: i + 1, photo: 1, text: `${i + 1}` }))
-    let onSelect = mock.fn()
+    let { $, $$, store } = setup({ count: 20 }, { rowHeight: 10 })
 
-    let { $ } = render(
-      <NoteList
-        notes={many}
-        rowHeight={10}
-        selection={many[0]}
-        onSelect={onSelect}/>,
-      inWindowContext)
-
-    // The page size is known once the container size is observed.
+    // The page size is known once the container size is observed
+    // (and more rows than without a size are rendered).
     await waitFor(() => {
-      fireEvent.keyDown($('.scroll-container'), { key: 'PageDown' })
-      expect(onSelect.mock.calls.at(-1).arguments[0]).to.include({ note: 6 })
+      expect($$('.note')).to.have.length.above(2)
     })
+
+    fireEvent.keyDown($('.scroll-container'), { key: 'PageDown' })
+    expect(store.getState().nav.note).to.equal(6)
 
     style.remove()
   })

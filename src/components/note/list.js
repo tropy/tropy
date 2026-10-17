@@ -1,30 +1,48 @@
-import { Scroll } from '../scroll/index.js'
+import { useDispatch, useSelector } from 'react-redux'
+import { List } from '../sequence/list.js'
 import { TABS, SASS } from '../../constants/index.js'
-import { useSequence } from '../../hooks/use-sequence.js'
-import cx from 'classnames'
+import * as act from '../../actions/index.js'
+
+import {
+  getSelectedNote,
+  getSelectedPhoto,
+  getVisibleNotes
+} from '../../selectors/index.js'
 
 
 export const NoteList = ({
+  isItemOpen,
   isReadOnly,
-  notes,
   onContextMenu,
-  onRemove,
-  onOpen,
-  onSelect,
   rowHeight = SASS.NOTE.ROW_HEIGHT,
-  selection,
   tabIndex = TABS.NoteList
 }) => {
+  let dispatch = useDispatch()
+
+  let notes = useSelector(getVisibleNotes)
+  let selected = useSelector(getSelectedNote)
+  let photo = useSelector(getSelectedPhoto)
+
   // Notes are not cleared or selected on tab focus.
   let handleSelect = (note, { cmd, throttle }) => {
     if (note == null || cmd === 'focus')
       return
 
-    onSelect({
+    dispatch(act.note.select({
       note: note.id,
       photo: note.photo,
       selection: note.selection
-    }, { throttle })
+    }, { throttle }))
+  }
+
+  let handleOpen = (note) => {
+    if (note != null && !isItemOpen)
+      dispatch(act.item.open({
+        id: photo.item,
+        photos: [photo.id],
+        notes: [note.id],
+        selection: note.selection
+      }))
   }
 
   let handleContextMenu = (event, note) => {
@@ -36,49 +54,36 @@ export const NoteList = ({
     })
   }
 
-  let [scrollProps, handlers] = useSequence(notes, {
-    selection,
-    scrollKeys: 'select',
-    keymap: 'NoteList',
-    commands: {
-      open ({ cursor }) {
-        onOpen(cursor.current())
-      },
-      remove: !isReadOnly && (({ cursor }) => {
-        let note = cursor.current()
-
-        if (note == null)
-          return false
-
-        onRemove([note.id])
-      })
-    },
-    onContextMenu: handleContextMenu,
-    onOpen,
-    onSelect: handleSelect
-  })
-
   return (
-    <div className="note-list" {...handlers}>
-      <Scroll
-        {...scrollProps}
-        itemHeight={rowHeight}
-        tabIndex={tabIndex}>
-        {(note, index) => {
-          let isSelected = note.id === selection?.id
+    <List
+      className="note-list"
+      itemClassName="note"
+      itemHeight={rowHeight}
+      items={notes}
+      keymap="NoteList"
+      scrollKeys="select"
+      selection={selected}
+      tabIndex={tabIndex}
+      commands={{
+        open ({ cursor }) {
+          handleOpen(cursor.current())
+        },
+        remove: !isReadOnly && (({ cursor }) => {
+          let note = cursor.current()
 
-          return (
-            <li
-              key={note.id}
-              className={cx('note', { active: isSelected })}
-              data-index={index}>
-              <div className="css-multiline-truncate">
-                {(isSelected ? selection : note).text.slice(0, 280)}
-              </div>
-            </li>
-          )
-        }}
-      </Scroll>
-    </div>
+          if (note == null)
+            return false
+
+          dispatch(act.note.delete([note.id]))
+        })
+      }}
+      onContextMenu={handleContextMenu}
+      onOpen={handleOpen}
+      onSelect={handleSelect}
+      renderItem={(note) => (
+        <div className="css-multiline-truncate">
+          {note.text.slice(0, 280)}
+        </div>
+      )}/>
   )
 }
