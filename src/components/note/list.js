@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { List } from '../sequence/list.js'
+import { List, ListItem } from '../sequence/list.js'
 import { TABS, SASS } from '../../constants/index.js'
 import * as act from '../../actions/index.js'
 
@@ -80,10 +80,12 @@ export const NoteList = ({
       onContextMenu={handleContextMenu}
       onOpen={handleOpen}
       onSelect={handleSelect}
-      renderItem={(note) => (
-        <div className="css-multiline-truncate">
-          {note.text.slice(0, 280)}
-        </div>
+      renderItem={(note, state) => (
+        <ListItem {...state}>
+          <div className="css-multiline-truncate">
+            {note.text.slice(0, 280)}
+          </div>
+        </ListItem>
       )}/>
   )
 }

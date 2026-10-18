@@ -1,12 +1,14 @@
 import { mock } from 'node:test'
 import { render, inWindowContext } from '../../support/react.js'
-import { List } from '#tropy/components/sequence/list.js'
+import { List, ListItem } from '#tropy/components/sequence/list.js'
 
 describe('List', () => {
   let items = [{ id: 1 }, { id: 2 }, { id: 3 }]
 
   // Stable, as owners should keep it.
-  let renderItem = mock.fn((item) => <span>{item.id}</span>)
+  let renderItem = mock.fn((item, state) => (
+    <ListItem {...state}>{item.id}</ListItem>
+  ))
 
   let renderList = (selection) => (
     <List

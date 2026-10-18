@@ -47,7 +47,7 @@ export const List = ({
         onLayoutChange={onLayoutChange}
         onTabFocus={tabAutoFocus ? onTabFocus : null}>
         {(element, index) => (
-          <ListItem
+          <RenderItem
             {...getElementProps(element, index)}
             key={element.id ?? element}
             element={element}
@@ -58,15 +58,20 @@ export const List = ({
   )
 }
 
-const ListItem = memo(({
-  element,
+const RenderItem = memo(({ element, renderItem, ...state }) =>
+  renderItem(element, state))
+
+export const ListItem = ({
+  children,
+  className,
   index,
   isSelected,
-  renderItem
+  ref
 }) => (
   <li
-    className={cx({ selected: isSelected })}
+    ref={ref}
+    className={cx(className, { selected: isSelected })}
     data-index={index}>
-    {renderItem(element, { index, isSelected })}
+    {children}
   </li>
-))
+)
