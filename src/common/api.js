@@ -44,7 +44,7 @@ const extract = (type) =>
 const project = {
   async import (ctx) {
     let { assert, request, rsvp } = ctx
-    let { file, list, data, createLists } = request.body
+    let { file, list, data, createLists, tagColor } = request.body
 
     assert(
       request.type === 'application/x-www-form-urlencoded',
@@ -66,7 +66,8 @@ const project = {
       files: file,
       list
     }, {
-      createLists: createLists == null ? undefined : createLists === 'true'
+      createLists: createLists == null ? undefined : createLists === 'true',
+      tagColor
     }))
 
     ctx.body = payload
@@ -559,6 +560,7 @@ export function create ({
 
   app
     .use(logging)
+    .use(guard)
     .use(bodyParser({
       queryString: { arrayLimit: 1000 }
     }))
@@ -579,4 +581,19 @@ const logging = async (ctx, next) => {
     query: ctx.query,
     url: ctx.url
   })
+}
+
+const guard = (ctx, next) => {
+  ctx.assert(
+    ctx.hostname === '127.0.0.1' || ctx.hostname === 'localhost',
+    403,
+    'host not allowed')
+
+  let site = ctx.get('Sec-Fetch-Site')
+  ctx.assert(
+    !ctx.get('Origin') && (!site || site === 'none'),
+    403,
+    'cross-origin requests not allowed')
+
+  return next()
 }

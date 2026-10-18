@@ -10,7 +10,8 @@ import { fail } from '../../dialog.js'
 import { fromHTML } from '../../editor/serialize.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
-import { ITEM, MIME, NAV } from '../../constants/index.js'
+import { ITEM, MIME, NAV, SASS } from '../../constants/index.js'
+import { sample } from '../../common/util.js'
 import win from '../../window.js'
 
 import {
@@ -105,6 +106,7 @@ export class Import extends ImportCommand {
       },
       useLocalTimezone: state.settings.timezone,
       createLists: this.action.meta.createLists ?? state.settings.createLists,
+      tagColor: this.action.meta.tagColor ?? state.settings.tagColor,
       optimizeOnImport: state.project.isManaged && state.project.optimize.onImport,
       optimizeQuality: state.project.optimize.quality
     })))
@@ -444,7 +446,7 @@ export class Import extends ImportCommand {
   *findOrCreateTags (names) {
     let tagIds = []
     let state = yield select()
-    let { db } = this.options
+    let { db, tagColor } = this.options
 
     for (let name of names) {
       let tag = findTag(state, { name })
@@ -453,7 +455,10 @@ export class Import extends ImportCommand {
       // Currently the tags remain after an undo.
 
       if (!tag) {
-        tag = yield call(mod.tag.create, db, { name })
+        tag = yield call(mod.tag.create, db, {
+          name,
+          color: (tagColor === 'random') ? sample(SASS.TAG.COLORS) : tagColor
+        })
         yield put(act.tag.insert(tag))
       }
 
