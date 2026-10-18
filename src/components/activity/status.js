@@ -21,7 +21,7 @@ export const ActivityStatus = ({ delay }) => {
   let hasProgressBar = progress > 0 && total > 0
   let title = type && `activity.${type}`
   let style = hasProgressBar
-    ? { '--progress': Math.round(100 * progress / total) }
+    ? { '--progress': Math.round(100 * (progress - 1) / total) }
     : null
 
   return (

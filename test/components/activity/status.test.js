@@ -33,7 +33,7 @@ describe('ActivityStatus', () => {
   })
 
   it('renders progress for a single activity', async () => {
-    let icon = await renderStatus(busy(1, { progress: 1, total: 4 }))
+    let icon = await renderStatus(busy(1, { progress: 2, total: 4 }))
     expect(icon).to.have.class('icon-status')
     expect(icon.style.getPropertyValue('--progress')).to.equal('25')
     expect(icon.style.getPropertyValue('--indeterminate')).to.equal('')
