@@ -698,8 +698,8 @@ en:
         }
       transcribe: >-
         {hasProgressBar, select,
-          true {Transcribing photo {progress, number} of {total, number} …}
-          other {Transcribing photos …}
+          true {Creating transcription {progress, number} of {total, number} …}
+          other {Creating transcriptions …}
         }
       load: Loading photos …
       move: Moving photos …
@@ -717,6 +717,12 @@ en:
       create: Creating photo selection …
       load: Loading photo selections …
       extract: Extracting selection …
+    transcription:
+      process: >-
+        {hasProgressBar, select,
+          true {Processing transcription {progress, number} of {total, number} …}
+          other {Processing transcriptions …}
+        }
     api:
       photo:
         extract: Extracting photo …

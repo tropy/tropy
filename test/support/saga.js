@@ -5,10 +5,12 @@ import { mock } from 'node:test'
 // Call effects are answered by node:test mocks:
 // the implementations in `mocks` (Map or [fn, impl] pairs),
 // or, for all other functions, mocks returning undefined.
+// Put effects are recorded in `puts`.
 
 export function run (saga, { state = {}, mocks = [] } = {}) {
   mocks = new Map(mocks)
   let fns = new Map()
+  let puts = []
 
   let mockFor = (fn) => {
     if (!fns.has(fn))
@@ -29,6 +31,10 @@ export function run (saga, { state = {}, mocks = [] } = {}) {
       case 'CALL':
         value = mockFor(payload.fn)(...payload.args)
         break
+      case 'PUT':
+        puts.push(payload.action)
+        value = payload.action
+        break
       default:
         throw new Error(`unsupported effect: ${type}`)
     }
@@ -38,6 +44,7 @@ export function run (saga, { state = {}, mocks = [] } = {}) {
 
   return {
     calls: (fn) => mockFor(fn).mock,
+    puts,
     result: next.value
   }
 }
