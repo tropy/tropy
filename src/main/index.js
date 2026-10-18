@@ -6,7 +6,7 @@ import { enableCompileCache } from 'node:module'
 import { pathToFileURL } from 'node:url'
 import { darwin, linux, win32, system } from '../common/os.js'
 import { exe, qualified, version } from '../common/release.js'
-import { parse, argToURL } from './args.js'
+import { parse } from './args.js'
 import { createLogger, info, warn } from '../common/log.js'
 import { Tropy } from './tropy.js'
 import { handleSquirrelEvent } from './squirrel.js'
@@ -64,7 +64,7 @@ if (win32 && process.argv.length > 1) {
 
 let isDuplicateInstance = false
 if (!handlingSquirrelEvent) {
-  if (!app.requestSingleInstanceLock()) {
+  if (!app.requestSingleInstanceLock({ args: args.map(String) })) {
     isDuplicateInstance = true
     app.quit()
   }
@@ -116,12 +116,9 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
     await tropy.start()
     tropy.ready = Date.now()
 
-    app.on('second-instance', async (_, argv, cwd) => {
-      info({ argv, cwd }, 'second-instance')
-
-      await tropy.open(
-        ...parse(argv.slice(1)).args.map(arg => argToURL(arg, cwd))
-      )
+    app.on('second-instance', async (_, argv, cwd, { args }) => {
+      info({ args }, 'second-instance')
+      await tropy.open(...args.map(url => new URL(url)))
     })
 
     app.on('gpu-info-update', () => {
