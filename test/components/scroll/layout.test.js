@@ -2,7 +2,9 @@ import {
   getAnchoredScrollTop,
   getLayout,
   getOffset,
-  getRowAt
+  getPage,
+  getRowAt,
+  getScrollTo
 } from '#tropy/components/scroll/layout.js'
 
 describe('Scroll layout', () => {
@@ -74,5 +76,57 @@ describe('Scroll layout', () => {
       expect(getAnchoredScrollTop(prev, layout({ height: 60 }), 10, 80))
         .to.be.undefined
     })
+  })
+  describe('scrolling into view', () => {
+    let geometry = layout()
+
+    it('keeps items in view', () => {
+      expect(getScrollTo(geometry, 12, 100)).to.be.undefined
+    })
+
+    it('aligns near items to the nearest edge', () => {
+      expect(getScrollTo(geometry, 16, 100)).to.equal(120)
+      expect(getScrollTo(geometry, 7, 100)).to.equal(70)
+    })
+
+    it('centers far items', () => {
+      expect(getScrollTo(geometry, 4, 100)).to.equal(20)
+      expect(getScrollTo(geometry, 15, 0)).to.equal(130)
+    })
+  })
+
+  // The page rendered for one scroll position covers the view
+  // at every position within the tolerance.
+  it('renders pages covering the view', () => {
+    for (let overscan of [0, 0.75, 1]) {
+      for (let height of [50, 55]) {
+        for (let geometry of [
+          layout({ height, overscan }),
+          layout({
+            height,
+            overscan,
+            expanded: 7,
+            expansionLength: 7,
+            expansionPadding: 4,
+            itemWidth: 10,
+            width: 30
+          })
+        ]) {
+          let { length, runway, tolerance } = geometry
+          let max = runway - height
+
+          for (let pageTop = 0; pageTop <= max; pageTop++) {
+            let { to, offset } = getPage(pageTop, geometry)
+            let bottom = to < length ? getOffset(geometry, to) : runway
+
+            let lo = Math.max(pageTop - tolerance, 0)
+            let hi = Math.min(pageTop + tolerance, max)
+
+            expect(offset, `${pageTop}`).to.be.at.most(lo)
+            expect(bottom, `${pageTop}`).to.be.at.least(hi + height)
+          }
+        }
+      }
+    }
   })
 })
