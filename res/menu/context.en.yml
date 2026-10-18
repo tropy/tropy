@@ -75,15 +75,15 @@ en:
           - label: 'Gray'
             color: ['gray', 'tagColor', 'app:save-default-tag-color']
           - label: 'Brown'
-            color: ['brown', 'color', 'app:save-default-tag-color']
+            color: ['brown', 'tagColor', 'app:save-default-tag-color']
           - label: 'Apricot'
-            color: ['apricot', 'color', 'app:save-default-tag-color']
+            color: ['apricot', 'tagColor', 'app:save-default-tag-color']
           - label: 'Dark Green'
-            color: ['dark-green', 'color', 'app:save-default-tag-color']
+            color: ['dark-green', 'tagColor', 'app:save-default-tag-color']
           - label: 'Light Blue'
-            color: ['light-blue', 'color', 'app:save-default-tag-color']
+            color: ['light-blue', 'tagColor', 'app:save-default-tag-color']
           - label: 'Lavender'
-            color: ['lavender', 'color', 'app:save-default-tag-color']
+            color: ['lavender', 'tagColor', 'app:save-default-tag-color']
     tag: &tag
       - &tag-color
         label: 'Tag Color'
