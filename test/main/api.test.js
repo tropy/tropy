@@ -12,3 +12,19 @@ describe('api.Server', () => {
     }
   })
 })
+
+describe('api.Server.resolveProject', () => {
+  let path = '/projects/My Project.tropy'
+  let win = {}
+
+  let api = new Server({
+    state: { recent: [path] },
+    wm: { values: () => [win] },
+    getProject: () => ({ path })
+  })
+
+  it('resolves decoded URL ids', () => {
+    expect(api.resolveProject('My Project'))
+      .to.include({ win, path, id: 'My%20Project' })
+  })
+})

@@ -38,6 +38,9 @@ export class Server {
       return { win, path, id: urlId(path) }
     }
 
+    // The router decodes the id, but URL ids are encoded.
+    id = encodeURIComponent(id.toWellFormed().normalize())
+
     // Several projects can share a URL id when their files have the same
     // basename; resolve to the most recent.
     let matches = this.app.state.recent.filter(f => urlId(f) === id)
