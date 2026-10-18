@@ -10,11 +10,10 @@ describe('List', () => {
 
   let renderList = (selection) => (
     <List
-      itemClassName="item"
-      itemHeight={20}
-      items={items}
       renderItem={renderItem}
-      selection={selection}/>
+      rowHeight={20}
+      selection={selection}
+      sequence={items}/>
   )
 
   beforeEach(() => {
@@ -24,7 +23,7 @@ describe('List', () => {
   it('renders the items and marks the selected one', () => {
     let { $, $$ } = render(renderList(items[1]), inWindowContext)
 
-    expect($$('li.item')).to.have.length.above(1)
+    expect($$('li')).to.have.length.above(1)
     expect($('li.selected').textContent).to.equal('2')
     expect(renderItem.mock.calls[1].arguments[1])
       .to.include({ index: 1, isSelected: true })

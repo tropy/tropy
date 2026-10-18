@@ -22,7 +22,7 @@ describe('NoteList', () => {
   it('selects and opens notes with the mouse', () => {
     let { $, commands, store } = setup()
 
-    let note = $('.note:last-child')
+    let note = $('.note-list li:last-child')
     fireEvent.mouseDown(note, { detail: 1 })
     fireEvent.doubleClick(note, { detail: 2 })
 
@@ -34,7 +34,7 @@ describe('NoteList', () => {
   it('does not open notes in item mode', () => {
     let { $, commands } = setup({}, { isItemOpen: true })
 
-    fireEvent.doubleClick($('.note'), { detail: 2 })
+    fireEvent.doubleClick($('.note-list li'), { detail: 2 })
     expect(commands()).to.be.empty
   })
 
@@ -54,6 +54,19 @@ describe('NoteList', () => {
     expect(remove.payload).to.eql([2])
   })
 
+  it('leaves remove keys alone when read-only', () => {
+    let { $, commands } = setup({
+      keymap: { NoteList: new KeyMap({ remove: 'Backspace' }) }
+    }, { isReadOnly: true })
+
+    let isHandled = !fireEvent.keyDown($('.scroll-container'), {
+      key: 'Backspace'
+    })
+
+    expect(isHandled).to.be.false
+    expect(commands()).to.be.empty
+  })
+
   it('selects notes with cursor keys', () => {
     let { $, store } = setup()
 
@@ -71,7 +84,7 @@ describe('NoteList', () => {
     // The page size is known once the container size is observed
     // (and more rows than without a size are rendered).
     await waitFor(() => {
-      expect($$('.note')).to.have.length.above(2)
+      expect($$('.note-list li')).to.have.length.above(2)
     })
 
     fireEvent.keyDown($('.scroll-container'), { key: 'PageDown' })

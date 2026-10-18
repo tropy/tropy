@@ -157,8 +157,8 @@ export function useItemIterator ({
     onContextMenu: contextMenu,
     onOpen: open,
     // Ctrl/Cmd+arrow keys are left alone (they bubble).
-    onSelect: (next, { cmd, ctrlKey, metaKey, throttle }) => {
-      if (cmd != null && (ctrlKey || metaKey))
+    onSelect: (next, { ctrlKey, metaKey, move, throttle }) => {
+      if (move != null && (ctrlKey || metaKey))
         return false
 
       dispatch(act.item.select({ item: next }, { throttle }))

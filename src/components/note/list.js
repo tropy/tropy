@@ -57,12 +57,11 @@ export const NoteList = ({
   return (
     <List
       className="note-list"
-      itemClassName="note"
-      itemHeight={rowHeight}
-      items={notes}
       keymap="NoteList"
+      rowHeight={rowHeight}
       scrollKeys="select"
       selection={selected}
+      sequence={notes}
       tabAutoFocus={false}
       tabIndex={tabIndex}
       commands={{

@@ -137,7 +137,7 @@ describe('sequence', () => {
       })
     })
 
-    it('fails on unknown commands', () => {
+    it('fails on unknown moves', () => {
       expect(() => seek(list, 'a', 'sideways')).to.throw()
       expect(() => seek(list, null, 'sideways')).to.throw()
     })

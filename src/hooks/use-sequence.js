@@ -39,35 +39,31 @@ export function useSequence (seq, {
     return onSelect?.(next, { ...info, target })
   }
 
-  let select = (element, keyState, cmd) => {
+  let select = (element, keyState, move) => {
     let mode = getSelectionMode(keyState)
 
     // In grids, Shift+arrow keys step (move the anchor).
-    if (cmd != null && mode === 'extend' && cursor.options?.layout === 'grid')
+    if (move != null && mode === 'extend' && cursor.options?.layout === 'grid')
       mode = 'step'
 
     return handleSelect(element, {
       ...keyState,
-      cmd,
       mode,
+      move,
       throttle: keyState.repeat
     })
   }
 
-  let handlers = {}
-
-  for (let cmd in commands) {
-    let command = commands[cmd]
-
-    if (typeof command === 'function')
-      handlers[cmd] = (event) => command(context, event)
-  }
-
   let onKeyDown = useCursorKeys(cursor, {
     scrollKeys,
-    onMove: (element, { cmd, ...keyState }) =>
-      select(element, keyState, cmd),
-    onKeyDown: useKeyMap(keymap ?? [], handlers)
+    onMove: (element, { move, ...keyState }) => (
+      select(element, keyState, move)
+    ),
+    onKeyDown: useKeyMap(keymap ?? [], (event, name) => (
+      (typeof commands?.[name] === 'function')
+        ? commands[name](context, event)
+        : false
+    ))
   })
 
   let clicks = useSequenceClicks(cursor, {
@@ -97,10 +93,10 @@ export function useSequence (seq, {
     }
   }
 
-  let getItemProps = (element, index) => ({
+  let getElementProps = (element, index) => ({
     index,
     isSelected: selection.has(element.id ?? element)
   })
 
-  return [scrollProps, { ...clicks, onKeyDown }, getItemProps]
+  return [scrollProps, { ...clicks, onKeyDown }, getElementProps]
 }

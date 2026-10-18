@@ -48,25 +48,25 @@ const adjacentAt = (seq, index) =>
     [null, null] :
     [seq[index - 1] ?? null, seq[index + 1] ?? null]
 
-// Seek by following nav `cmd` from the element.
-export const seek = (seq, element, cmd, options) =>
-  seekFrom(seq, indexOf(seq, element), cmd, options)
+// Seek by following the `move` from the element.
+export const seek = (seq, element, move, options) =>
+  seekFrom(seq, indexOf(seq, element), move, options)
 
-const seekFrom = (seq, index, cmd, options) => {
+const seekFrom = (seq, index, move, options) => {
   let { length } = seq
 
   if (length === 0)
     return null
 
   index = (index < 0) ?
-    getFirstIndex(length, cmd) :
-    getNextIndex(length, index, cmd, options)
+    getFirstIndex(length, move) :
+    getNextIndex(length, index, move, options)
 
   return (index == null) ? null : seq[index]
 }
 
-const getFirstIndex = (length, cmd) => {
-  switch (cmd) {
+const getFirstIndex = (length, move) => {
+  switch (move) {
     case 'next':
     case 'down':
     case 'end':
@@ -80,23 +80,23 @@ const getFirstIndex = (length, cmd) => {
     case 'last':
       return length - 1
     default:
-      throw new Error(`unknown seek command: "${cmd}"`)
+      throw new Error(`unknown move: "${move}"`)
   }
 }
 
-const getNextIndex = (length, index, cmd, {
+const getNextIndex = (length, index, move, {
   columns = 1,
   pageSize = 1,
   restrict = 'bounds'
 } = {}) => {
   if (columns === 1) {
-    if (cmd === 'up') cmd = 'prev'
-    if (cmd === 'down') cmd = 'next'
+    if (move === 'up') move = 'prev'
+    if (move === 'down') move = 'next'
   }
 
   let col = index % columns
 
-  switch (cmd) {
+  switch (move) {
     case 'next':
       return sanitize(length, index + 1, restrict)
     case 'prev':
@@ -120,7 +120,7 @@ const getNextIndex = (length, index, cmd, {
     case 'pageDown':
       return Math.min(index + pageSize, length - 1)
     default:
-      throw new Error(`unknown seek command: "${cmd}"`)
+      throw new Error(`unknown move: "${move}"`)
   }
 }
 
@@ -153,8 +153,8 @@ export class Cursor {
     return next ?? prev
   }
 
-  seek (cmd, options) {
-    return seekFrom(this.seq, this.index, cmd, { ...this.options, ...options })
+  seek (move, options) {
+    return seekFrom(this.seq, this.index, move, { ...this.options, ...options })
   }
 
   next () { return this.seek('next') }

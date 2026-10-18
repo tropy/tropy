@@ -29,7 +29,7 @@ describe('useCursorKeys', () => {
     expect(press(node, 'ArrowDown', { shiftKey: true })).to.be.true
     let [target, mods] = onMove.mock.calls[0].arguments
     expect(target).to.equal('c')
-    expect(mods).to.include({ cmd: 'down', shiftKey: true, altKey: false })
+    expect(mods).to.include({ move: 'down', shiftKey: true, altKey: false })
   })
 
   it('moves to the edges with alt', () => {

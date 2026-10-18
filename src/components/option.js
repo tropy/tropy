@@ -49,8 +49,8 @@ export class OptionList extends React.Component {
     })
   }
 
-  move (cmd) {
-    let option = this.cursor.seek(cmd)
+  move (move) {
+    let option = this.cursor.seek(move)
     this.props.onActivate(option)
     return option
   }

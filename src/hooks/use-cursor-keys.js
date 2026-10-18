@@ -8,8 +8,8 @@ export function useCursorKeys (cursor, {
 } = {}) {
   let handleCursorKeys = useKeyDown(
     new CursorKeyMap(cursor, { scrollKeys }),
-    onMove && ((event, cmd) => {
-      let target = cursor.seek(cmd)
+    onMove && ((event, move) => {
+      let target = cursor.seek(move)
 
       // No target means the key/command was not handled
       if (target == null)
@@ -20,7 +20,7 @@ export function useCursorKeys (cursor, {
         return true
 
       // Cursor moved, but onMove() can still decline by returning false
-      return onMove(target, { cmd, ...getKeyState(event) }) !== false
+      return onMove(target, { move, ...getKeyState(event) }) !== false
     }))
 
   return (event) => {

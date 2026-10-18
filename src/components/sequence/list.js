@@ -7,17 +7,16 @@ export const List = ({
   className,
   commands,
   isDisabled,
-  itemClassName,
-  itemHeight,
-  items,
   keymap,
   onContextMenu,
   onOpen,
   onSelect,
   onSelectedClick,
   renderItem,
+  rowHeight,
   scrollKeys,
   selection,
+  sequence,
   tabAutoFocus = true,
   tabIndex
 }) => {
@@ -26,7 +25,7 @@ export const List = ({
     onClick,
     onLayoutChange,
     onTabFocus
-  }, eventHandlers, getItemProps] = useSequence(items, {
+  }, eventHandlers, getElementProps] = useSequence(sequence, {
     commands,
     isDisabled,
     keymap,
@@ -42,16 +41,15 @@ export const List = ({
     <div className={className} {...eventHandlers}>
       <Scroll
         cursor={cursor}
-        itemHeight={itemHeight}
+        itemHeight={rowHeight}
         tabIndex={tabIndex}
         onClick={onClick}
         onLayoutChange={onLayoutChange}
         onTabFocus={tabAutoFocus ? onTabFocus : null}>
         {(element, index) => (
-          <Row
-            {...getItemProps(element, index)}
+          <ListItem
+            {...getElementProps(element, index)}
             key={element.id ?? element}
-            className={itemClassName}
             element={element}
             renderItem={renderItem}/>
         )}
@@ -60,15 +58,14 @@ export const List = ({
   )
 }
 
-const Row = memo(({
-  className,
+const ListItem = memo(({
   element,
   index,
   isSelected,
   renderItem
 }) => (
   <li
-    className={cx(className, { selected: isSelected })}
+    className={cx({ selected: isSelected })}
     data-index={index}>
     {renderItem(element, { index, isSelected })}
   </li>
