@@ -1,10 +1,10 @@
+export * as activity from '../slices/activities.js'
 export * as notepad from '../slices/notepad.js'
 export * as prefs from '../slices/prefs.js'
 export * as projectFiles from '../slices/project-files.js'
 export * as storage from '../slices/storage.js'
 export * as transcriptions from '../slices/transcriptions.js'
 
-export { default as activity } from './activity.js'
 export { default as api } from './api.js'
 export { default as cache } from './cache.js'
 export { default as context } from './context.js'

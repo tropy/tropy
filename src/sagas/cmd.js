@@ -4,12 +4,11 @@ import { info, trace, warn } from '../common/log.js'
 import { Command } from '../commands/command.js'
 import { fail } from '../dialog.js'
 import { activity, history } from '../actions/index.js'
-import { ACTIVITY } from '../constants/index.js'
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
 
 const cancellation = (id) => ({ payload, type }) => (
-  type === ACTIVITY.CANCEL && payload.id === id
+  type === activity.cancel.type && payload.id === id
 )
 
 export function commands (scope) {

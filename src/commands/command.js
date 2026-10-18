@@ -1,6 +1,6 @@
 import assert from 'assert'
 import { cancel, put } from 'redux-saga/effects'
-import activity from '../actions/activity.js'
+import * as activity from '../slices/activities.js'
 import { pick } from '../common/util.js'
 import { parallel } from '../sagas/util.js'
 

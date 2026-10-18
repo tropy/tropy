@@ -2,7 +2,7 @@ import { mock } from 'node:test'
 import { fireEvent, waitFor } from '@testing-library/react'
 import { render, createStore, withStore } from '../../support/react.js'
 import { ActivityPane } from '#tropy/components/activity/index.js'
-import { ACTIVITY } from '#tropy/constants/index.js'
+import { cancel } from '#tropy/slices/activities.js'
 
 const activity = (id, init, props) => ({
   id, init, type: 'test', ...props
@@ -29,6 +29,22 @@ describe('ActivityPane', () => {
       expect(container.querySelector('.activity-pane')).to.have.class('busy')
     })
     expect(container.querySelectorAll('.activity')).to.have.length(1)
+  })
+
+  it('never shows hidden activities', async () => {
+    let now = Date.now()
+    let store = createStore({
+      activities: {
+        1: activity(1, now - 1000),
+        2: activity(2, now - 1000, { hidden: true })
+      }
+    })
+
+    let { container } = render(<ActivityPane/>, withStore(store))
+
+    await waitFor(() => {
+      expect(container.querySelectorAll('.activity')).to.have.length(1)
+    })
   })
 
   it('shows pending activities once they exceed the delay', async () => {
@@ -81,6 +97,6 @@ describe('ActivityPane', () => {
     fireEvent.click(container.querySelector('.activity button'))
 
     expect(dispatch.mock.calls[0].arguments[0])
-      .to.have.property('type', ACTIVITY.CANCEL)
+      .to.have.property('type', cancel.type)
   })
 })
