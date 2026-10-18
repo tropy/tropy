@@ -44,7 +44,7 @@ const extract = (type) =>
 const project = {
   async import (ctx) {
     let { assert, request, rsvp } = ctx
-    let { file, list, data } = request.body
+    let { file, list, data, createLists } = request.body
 
     assert(
       request.type === 'application/x-www-form-urlencoded',
@@ -65,6 +65,8 @@ const project = {
       data,
       files: file,
       list
+    }, {
+      createLists: createLists == null ? undefined : createLists === 'true'
     }))
 
     ctx.body = payload

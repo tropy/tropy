@@ -104,7 +104,7 @@ export class Import extends ImportCommand {
         selection: getSelectionTemplate(state)
       },
       useLocalTimezone: state.settings.timezone,
-      createLists: state.settings.createLists,
+      createLists: this.action.meta.createLists ?? state.settings.createLists,
       optimizeOnImport: state.project.isManaged && state.project.optimize.onImport,
       optimizeQuality: state.project.optimize.quality
     })))
