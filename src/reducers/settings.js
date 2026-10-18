@@ -29,7 +29,7 @@ const defaults = {
     quality: 0.8,
     model: 356425
   },
-  tagColor: null,
+  tagColor: 'random',
   templates: {
     item: ITEM.TEMPLATE.DEFAULT,
     photo: PHOTO.TEMPLATE.DEFAULT,
