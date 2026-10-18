@@ -23,9 +23,9 @@ export const NoteList = ({
   let selected = useSelector(getSelectedNote)
   let photo = useSelector(getSelectedPhoto)
 
-  // Notes are not cleared or selected on tab focus.
-  let handleSelect = (note, { cmd, throttle }) => {
-    if (note == null || cmd === 'focus')
+  // Notes are not cleared.
+  let handleSelect = (note, { throttle }) => {
+    if (note == null)
       return
 
     dispatch(act.note.select({
@@ -63,6 +63,7 @@ export const NoteList = ({
       keymap="NoteList"
       scrollKeys="select"
       selection={selected}
+      tabAutoFocus={false}
       tabIndex={tabIndex}
       commands={{
         open ({ cursor }) {

@@ -18,9 +18,15 @@ export const List = ({
   renderItem,
   scrollKeys,
   selection,
+  tabAutoFocus = true,
   tabIndex
 }) => {
-  let [scrollProps, handlers, getItemProps] = useSequence(items, {
+  let [{
+    cursor,
+    onClick,
+    onLayoutChange,
+    onTabFocus
+  }, eventHandlers, getItemProps] = useSequence(items, {
     commands,
     isDisabled,
     keymap,
@@ -33,11 +39,14 @@ export const List = ({
   })
 
   return (
-    <div className={className} {...handlers}>
+    <div className={className} {...eventHandlers}>
       <Scroll
-        {...scrollProps}
+        cursor={cursor}
         itemHeight={itemHeight}
-        tabIndex={tabIndex}>
+        tabIndex={tabIndex}
+        onClick={onClick}
+        onLayoutChange={onLayoutChange}
+        onTabFocus={tabAutoFocus ? onTabFocus : null}>
         {(element, index) => (
           <Row
             {...getItemProps(element, index)}

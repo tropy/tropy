@@ -66,10 +66,8 @@ describe('useSequence', () => {
     scroll(create([1, 2])).onTabFocus()
     scroll(null).onTabFocus()
 
-    let [next, { cmd }] = onSelect.mock.calls[0].arguments
     expect(onSelect.mock.callCount()).to.equal(1)
-    expect(next).to.equal(seq[0])
-    expect(cmd).to.equal('focus')
+    expect(onSelect.mock.calls[0].arguments[0]).to.equal(seq[0])
   })
 
   it('does not propose unchanged selections', () => {

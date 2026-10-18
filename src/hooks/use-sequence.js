@@ -93,7 +93,7 @@ export function useSequence (seq, {
       let element = cursor.current() ?? seq[0]
 
       if (selection.size === 0 && element != null)
-        handleSelect(element, { cmd: 'focus', mode: 'replace' })
+        handleSelect(element, { mode: 'replace' })
     }
   }
 
