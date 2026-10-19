@@ -42,7 +42,7 @@ describe('ActivityStatus', () => {
   it('renders the activity message as title', async () => {
     let icon = await renderStatus(
       busy(1, { type: 'item.import', progress: 2, total: 5 }))
-    expect(icon).to.have.attribute('title', 'Importing item 2 of 5 …')
+    expect(icon).to.have.attribute('title', 'Imported 1 of 5 items …')
   })
 
   it('renders the activity status icon', async () => {

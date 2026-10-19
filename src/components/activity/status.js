@@ -31,7 +31,7 @@ export const ActivityStatus = ({ delay }) => {
       title={title || TITLE}
       values={{
         count: busy.length,
-        progress,
+        progress: progress - 1,
         total,
         hasProgressBar
       }}/>

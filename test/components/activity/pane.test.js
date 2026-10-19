@@ -47,6 +47,24 @@ describe('ActivityPane', () => {
     })
   })
 
+  it('renders completed steps as progress', async () => {
+    let store = createStore({
+      activities: {
+        1: activity(1, Date.now() - 1000, {
+          type: 'item.import', progress: 2, total: 5
+        })
+      }
+    })
+
+    let { container } = render(<ActivityPane/>, withStore(store))
+
+    await waitFor(() => {
+      expect(container.querySelector('.activity-text'))
+        .to.have.text('Imported 1 of 5 items …')
+    })
+    expect(container.querySelector('progress')).to.have.property('value', 1)
+  })
+
   it('shows pending activities once they exceed the delay', async () => {
     let store = createStore()
     let { container } = render(<ActivityPane delay={20}/>, withStore(store))

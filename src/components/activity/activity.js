@@ -23,7 +23,7 @@ export const Activity = ({
           <div className="activity-text">
             <FormattedMessage
               id={`activity.${type}`}
-              values={{ progress, total, hasProgressBar }}/>
+              values={{ progress: progress - 1, total, hasProgressBar }}/>
           </div>
           {hasCancelButton && (
             <Button
@@ -33,7 +33,7 @@ export const Activity = ({
         </div>
         {hasProgressBar && (
           <div className="flex-row center">
-            <progress value={progress} max={total}/>
+            <progress value={progress - 1} max={total}/>
           </div>
         )}
       </div>
