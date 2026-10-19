@@ -58,6 +58,8 @@ en:
     photo: Photo
     notes: Notes
     note: Note {idx, number}
+    transcriptions: Transcriptions
+    transcription: Transcription {idx, number}
     tags: Tags
   about:
       version: Version {version}
@@ -160,6 +162,7 @@ en:
         optimize: Optimize photo size and quality
         metadata: Include metadata
         notes: Include notes
+        transcriptions: Include transcriptions
         onlyNotes: Include only photos with notes
         overflow: Allow content to take up more than one page
       ocr:

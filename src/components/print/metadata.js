@@ -59,7 +59,7 @@ export const PhotoInfo = ({ photo }) => {
   )
 }
 
-export const MetadataContainer = ({ item, photo, notes }) => (
+export const MetadataContainer = ({ item, photo, notes, transcriptions }) => (
   <div className="metadata-container">
     <div className="col">
       {item && (
@@ -81,6 +81,7 @@ export const MetadataContainer = ({ item, photo, notes }) => (
           <PhotoInfo photo={photo}/>
         </>
       )}
+      {transcriptions}
       {notes}
     </div>
   </div>

@@ -8,12 +8,15 @@ export const getTranscriptions = (state, props) =>
   getTranscriptionIds(state, props)?.map(id => state.transcriptions[id])
 
 // The active transcription is the most recently modified one
-export const getActiveTranscription = (state, props) =>
-  getTranscriptions(state, {
-    id: props?.id ?? state.nav.selection ?? state.nav.photo
-  })?.reduce((active, tr) =>
+export const pickActiveTranscription = (transcriptions) =>
+  transcriptions?.reduce((active, tr) =>
     (active == null || tr.modified >= active.modified) ? tr : active,
   undefined)
+
+export const getActiveTranscription = (state, props) =>
+  pickActiveTranscription(getTranscriptions(state, {
+    id: props?.id ?? state.nav.selection ?? state.nav.photo
+  }))
 
 export function getTranscriptionSuccessor (state, ids) {
   let id = state.transcriptions[ids[0]]?.parent

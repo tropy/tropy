@@ -27,6 +27,7 @@ export class PrintContainer extends React.Component {
       hasPhotos: opts.photos,
       hasMetadata: opts.metadata,
       hasNotes: opts.notes,
+      hasTranscriptions: opts.transcriptions,
       hasOnlyNotes: opts.onlyNotes,
       items: opts.items,
       cache: join(ARGS.cache, opts.project)
@@ -64,6 +65,7 @@ export class PrintContainer extends React.Component {
           hasPhotos={this.state.hasPhotos}
           hasMetadata={this.state.hasMetadata}
           hasNotes={this.state.hasNotes}
+          hasTranscriptions={this.state.hasTranscriptions}
           hasOnlyNotes={this.state.hasOnlyNotes}/>
       ))
     )

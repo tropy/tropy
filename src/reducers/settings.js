@@ -54,6 +54,7 @@ const defaults = {
     optimize: true,
     metadata: true,
     notes: true,
+    transcriptions: true,
     onlyNotes: false,
     overflow: false
   },

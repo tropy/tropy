@@ -39,12 +39,18 @@ export function PrintSettings ({
       <FormElement isCompact>
         <ModeOptions config={config} onChange={handleChange}>
           {{
-            photos: config.metadata || config.notes,
+            photos:
+              config.metadata || config.notes || config.transcriptions,
             optimize: config.photos,
-            metadata: config.photos || config.notes,
-            notes: config.photos || config.metadata,
+            metadata:
+              config.photos || config.notes || config.transcriptions,
+            notes:
+              config.photos || config.metadata || config.transcriptions,
+            transcriptions:
+              config.photos || config.metadata || config.notes,
             onlyNotes: config.notes,
-            overflow: config.metadata || config.notes
+            overflow:
+              config.metadata || config.notes || config.transcriptions
           }}
         </ModeOptions>
       </FormElement>

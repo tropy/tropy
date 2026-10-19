@@ -1,5 +1,6 @@
 import { MetadataContainer } from './metadata.js'
 import { NoteList } from './note.js'
+import { TranscriptionList } from './transcription.js'
 import cx from 'classnames'
 import { Rotation, addOrientation } from '../../common/iiif.js'
 import { Cache } from '../../common/cache.js'
@@ -10,15 +11,17 @@ export const Photo = ({
   hasPhotos,
   hasMetadata,
   hasNotes,
+  hasTranscriptions,
   photo,
   cache
 }) => {
   Object.assign(photo, addOrientation(photo))
   let rotation = new Rotation(photo)
 
+  let hasText = hasNotes || hasTranscriptions
   let ratio
 
-  if (hasPhotos && !(hasMetadata || hasNotes)) {
+  if (hasPhotos && !(hasMetadata || hasText)) {
     let [x, y] = rotation.ratio(photo)
     ratio = { '--x': x, '--y': y }
   }
@@ -28,6 +31,7 @@ export const Photo = ({
       overflow: canOverflow,
       metadata: hasMetadata,
       notes: hasNotes,
+      transcriptions: hasTranscriptions,
       'text-only': !hasPhotos
     })}>
       {hasPhotos && (
@@ -40,16 +44,23 @@ export const Photo = ({
             style={ratio}/>
         </div>
       )}
-      {(hasMetadata || (hasNotes && !canOverflow)) && (
+      {(hasMetadata || (hasText && !canOverflow)) && (
         <MetadataContainer
           item={hasMetadata ? item : null}
           photo={hasMetadata ? photo : null}
+          transcriptions={hasTranscriptions && !canOverflow && (
+            <TranscriptionList
+              transcriptions={photo.transcriptions}
+              heading="print.transcriptions"/>
+          )}
           notes={hasNotes && !canOverflow && (
             <NoteList
               notes={photo.notes}
               heading="print.notes"/>
           )}/>
       )}
+      {hasTranscriptions && canOverflow &&
+        <TranscriptionList transcriptions={photo.transcriptions}/>}
       {hasNotes && canOverflow &&
         <NoteList notes={photo.notes}/>}
     </div>
