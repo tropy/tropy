@@ -118,11 +118,11 @@ const exportNote = (note, opts) => ({
   ...serialize(note, opts)
 })
 
-const exportTranscription = (transcription) => (
+const exportTranscription = (transcription, opts) => (
   (transcription.status < 1) ? null : {
     '@type': 'Transcription',
     text: transcription.text,
-    alto: transcription.data
+    alto: opts?.format?.alto ? transcription.data : undefined
   })
 
 const addMetadata = (context, into, data, ontology = {}) => {

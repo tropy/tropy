@@ -144,9 +144,8 @@ en:
     transcription: &transcription
       - label: 'Export Transcription …'
         command: 'app:export-transcription'
-      - label: 'Copy ALTO XML to Clipboard'
+      - label: 'Copy Transcription'
         command: 'app:copy-transcription'
-        condition: 'hasAlto'
       - label: 'Delete Transcription'
         command: 'app:delete-transcription'
         condition: '!isReadOnly'

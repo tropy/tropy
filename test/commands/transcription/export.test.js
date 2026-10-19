@@ -10,9 +10,12 @@ describe('Export transcription', () => {
   let text = { text: 'Text' }
   let { writeFile } = fs.promises
 
-  let exec = (tr, meta, saveAs) => run(
+  let exec = (tr, meta, saveAs, copyFormat = 'text') => run(
     new Export(slice.export(1, meta)).exec(), {
-      state: { transcriptions: { 1: tr } },
+      state: {
+        transcriptions: { 1: tr },
+        settings: { export: { transcription: { copyFormat } } }
+      },
       mocks: [[save.transcription, () => saveAs]]
     })
 
@@ -53,8 +56,16 @@ describe('Export transcription', () => {
       .to.eql([['a.xml', 'Text']])
   })
 
-  it('copies ALTO to the clipboard', () => {
-    let t = exec(alto, { target: ':clipboard:', format: 'alto' })
-    expect(args(t.calls(copy))).to.eql([[{ text: '<alto/>' }]])
+  it('copies using the preferred format', () => {
+    let meta = { target: ':clipboard:' }
+    expect(args(exec(alto, meta).calls(copy)))
+      .to.eql([[{ text: 'Text' }]])
+    expect(args(exec(alto, meta, null, 'alto').calls(copy)))
+      .to.eql([[{ text: '<alto/>' }]])
+  })
+
+  it('copies text if there is no ALTO', () => {
+    let t = exec(text, { target: ':clipboard:' }, null, 'alto')
+    expect(args(t.calls(copy))).to.eql([[{ text: 'Text' }]])
   })
 })

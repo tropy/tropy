@@ -13,7 +13,10 @@ export class Export extends Command {
     let { target, format } = this.action.meta
 
     try {
-      let tr = yield select(state => state.transcriptions[id])
+      let [tr, settings] = yield select(state => ([
+        state.transcriptions[id],
+        state.settings.export.transcription
+      ]))
 
       if (!target)
         target = yield call(save.transcription, { alto: !!tr?.data })
@@ -21,9 +24,9 @@ export class Export extends Command {
         return
 
       if (!format)
-        format = (tr?.data && extname(target) === '.xml') ? 'alto' : 'text'
+        format = formatFor(target, settings)
 
-      let data = (format === 'text') ? tr?.text : tr?.data
+      let data = (format === 'alto' && tr?.data) || tr?.text
 
       if (!data)
         return
@@ -41,3 +44,10 @@ export class Export extends Command {
 }
 
 Export.register(slice.export.type)
+
+function formatFor (target, opts) {
+  if (target === ':clipboard:')
+    return opts.copyFormat
+  else
+    return (extname(target) === '.xml') ? 'alto' : 'text'
+}

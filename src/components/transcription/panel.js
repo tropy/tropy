@@ -39,7 +39,6 @@ export const TranscriptionPanel = ({
     event.stopPropagation()
     dispatch(act.context.show(event, 'transcription', {
       id: tr.id,
-      hasAlto: !!tr.data,
       isReadOnly: isDisabled
     }))
   }
