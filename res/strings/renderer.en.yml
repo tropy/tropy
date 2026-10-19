@@ -218,6 +218,14 @@ en:
               text: Plain text
               markdown: Markdown
               html: HTML source code
+        transcription:
+          format:
+            alto: Transcriptions as ALTO XML
+          copy:
+            label: Copy transcriptions as
+            option:
+              text: Plain text
+              alto: ALTO XML
       ui:
         label: Interface
         option:

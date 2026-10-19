@@ -17,6 +17,12 @@ const defaults = {
       },
       copyFormat: 'text',
       localize: true
+    },
+    transcription: {
+      format: {
+        alto: true
+      },
+      copyFormat: 'text'
     }
   },
   layout: ITEM.LAYOUT.STACKED,
