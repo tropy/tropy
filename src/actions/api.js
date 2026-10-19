@@ -29,6 +29,7 @@ export default {
         },
         meta: {
           cmd: 'project',
+          hidden: true,
           ...meta
         }
       }
@@ -40,6 +41,7 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          hidden: true,
           ...meta
         }
       }
@@ -68,6 +70,7 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          hidden: true,
           ...meta
         }
       }
@@ -105,6 +108,7 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          hidden: true,
           ...meta
         }
       }
@@ -129,6 +133,7 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          hidden: true,
           ...meta
         }
       }
@@ -140,6 +145,7 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          hidden: true,
           ...meta
         }
       }
@@ -170,6 +176,7 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          hidden: true,
           ...meta
         }
       }
@@ -181,6 +188,7 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          hidden: true,
           ...meta
         }
       }
@@ -224,6 +232,7 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          hidden: true,
           ...meta
         }
       }
@@ -297,6 +306,7 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          hidden: true,
           ...meta
         }
       }
@@ -325,6 +335,7 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          hidden: true,
           ...meta
         }
       }
@@ -338,6 +349,7 @@ export default {
         payload,
         meta: {
           cmd: 'project',
+          hidden: true,
           ...meta
         }
       }
