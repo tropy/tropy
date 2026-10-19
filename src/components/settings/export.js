@@ -11,16 +11,12 @@ export function ExportSettings ({
     onChange({ export: { note: { format } } })
   })
 
-  let handleNoteChange = useEvent((note) => {
-    onChange({ export: { note } })
+  let handleChange = useEvent((data) => {
+    onChange({ export: data })
   })
 
   let handleTranscriptionFormatChange = useEvent((format) => {
     onChange({ export: { transcription: { format } } })
-  })
-
-  let handleTranscriptionChange = useEvent((transcription) => {
-    onChange({ export: { transcription } })
   })
 
   return (
@@ -46,18 +42,18 @@ export function ExportSettings ({
       </FormElement>
       <FormToggleGroup
         id="prefs.app.export.note.copy"
-        name="copyFormat"
+        name="note.copyFormat"
         isCompact
         value={config.note.copyFormat}
         options={noteFormats}
-        onChange={handleNoteChange}/>
+        onChange={handleChange}/>
       <FormToggleGroup
         id="prefs.app.export.transcription.copy"
-        name="copyFormat"
+        name="transcription.copyFormat"
         isCompact
         value={config.transcription.copyFormat}
         options={transcriptionFormats}
-        onChange={handleTranscriptionChange}/>
+        onChange={handleChange}/>
     </>
   )
 }

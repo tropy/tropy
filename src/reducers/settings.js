@@ -22,7 +22,7 @@ const defaults = {
       format: {
         alto: true
       },
-      copyFormat: 'text'
+      copyFormat: 'alto'
     }
   },
   layout: ITEM.LAYOUT.STACKED,
