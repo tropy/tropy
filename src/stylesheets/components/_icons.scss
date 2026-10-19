@@ -75,12 +75,18 @@
 
 .icon-status,
 .icon-transcription-status {
-  circle {
+  .track {
+    color: $icon-track-color;
+    visibility: if(style(--indeterminate: true): hidden;);
+  }
+
+  .progress {
     transform-box: fill-box;
     transform-origin: center;
     transform: rotate(-90deg);
     animation: spin 1.2s linear infinite;
-    animation-name: if(style(--indeterminate: true): spin; else: none);
+    animation-name: if(style(--indeterminate: true): spin;);
+    visibility: if(style(--progress: 0): hidden;);
   }
 }
 
