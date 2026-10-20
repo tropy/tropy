@@ -32,9 +32,6 @@ cn:
         - label: 打开...
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: 在新窗口打开...
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: 最近打开的库
           id: recent
           enabled: false
@@ -274,9 +271,6 @@ cn:
         - label: 打开...
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: 在新窗口打开...
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: 最近打开的库
           id: recent
           enabled: false
@@ -490,9 +484,6 @@ cn:
         - label: 打开...
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: 在新窗口打开...
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: 最近打开的库
           id: recent
           enabled: false

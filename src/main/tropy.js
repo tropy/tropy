@@ -53,6 +53,9 @@ const H = new WeakMap()
 const T = new WeakMap()
 const P = new WeakMap()
 
+const projectPersistenceId = (path) =>
+  path ? `project:${urlId(path)}` : undefined
+
 
 export class Tropy extends EventEmitter {
   static defaults = {
@@ -173,7 +176,7 @@ export class Tropy extends EventEmitter {
     })
 
     if (!cancel) {
-      await this.showProjectWindow(files[0], win)
+      await this.showProjectWindow(files[0], null)
     }
   }
 
@@ -187,6 +190,11 @@ export class Tropy extends EventEmitter {
         return
       }
 
+      if (file)
+        win = this.getEmptyProjectWindow()
+    }
+
+    if (win == null) {
       info({ file }, 'open new project window')
 
       let args = {
@@ -195,8 +203,12 @@ export class Tropy extends EventEmitter {
         ...this.hash
       }
 
-      let bounds = this.wm.has('project') ?
-          {} : this.state.win.bounds
+      // TODO remove in 1.20
+      let isFirstProject = !Object.keys(this.state.win)
+        .some(key => key.startsWith('project:'))
+
+      let bounds = (isFirstProject && !this.wm.has('project')) ?
+          this.state.win.bounds : {}
 
       // TODO fixed size if no file (and small size if no recent)
       let fixedSize
@@ -213,6 +225,7 @@ export class Tropy extends EventEmitter {
         show: 'init',
         title: 'Tropy',
         fixedSize,
+        persistenceId: projectPersistenceId(file),
         ...bounds
       })
 
@@ -220,6 +233,7 @@ export class Tropy extends EventEmitter {
       info({ file }, 'open project in current window')
 
       if (file) {
+        this.projectWillOpen(file, win)
         this.dispatch(act.project.open(file), win)
       }
 
@@ -263,11 +277,26 @@ export class Tropy extends EventEmitter {
     this.emit('project:opened', project)
   }
 
+  // drag and drop keeps current window geometry
+  projectWillOpen (path, win) {
+    if (this.wm.is(win, 'project'))
+      this.wm.setPersistenceId(win, projectPersistenceId(path), {
+        restore: this.getProject(win) == null
+      })
+  }
+
+  closeProject (win = this.wm.current()) {
+    this.wm.setPersistenceId(win, null)
+    this.dispatch(act.project.close('user'), win)
+  }
+
   clearRecentProjects (projects) {
     if (projects)
       this.state.recent = this.state.recent.filter(f => !projects.includes(f))
     else
       this.state.recent = []
+
+    this.pruneProjectGeometry()
 
     this.wm.send('project', 'recent', this.state.recent)
     this.emit('app:reload-menu')
@@ -327,6 +356,8 @@ export class Tropy extends EventEmitter {
       await this.store.load('state.json', {
         defaults: Tropy.defaults
       }))
+
+    this.wm.geometry = this.state.win
 
     this.safe = await this.store.load('safe.json.enc', {
       defaults: {},
@@ -470,7 +501,7 @@ export class Tropy extends EventEmitter {
       this.showProjectWindow(null, null))
 
     this.on('app:close-project', () =>
-      this.dispatch(act.project.close('user'), this.wm.current()))
+      this.closeProject())
 
     this.on('app:optimize-cache', () => {
       this.dispatch(act.cache.prune(), this.wm.current())
@@ -906,10 +937,6 @@ export class Tropy extends EventEmitter {
       this.showOpenDialog()
     })
 
-    this.on('app:open-new-dialog', () => {
-      this.showOpenDialog(null)
-    })
-
     this.on('app:print', () => {
       this.dispatch(act.item.print(), this.wm.current())
     })
@@ -989,6 +1016,11 @@ export class Tropy extends EventEmitter {
         BrowserWindow.fromWebContents(event.sender))
     })
 
+    // switch the window geometry before the window resizes
+    ipc.on(PROJECT.OPEN, (event, path) => {
+      this.projectWillOpen(path, BrowserWindow.fromWebContents(event.sender))
+    })
+
     ipc.on(PROJECT.OPENED, (event, project) => {
       let win = BrowserWindow.fromWebContents(event.sender)
       if (this.wm.is(win, 'project')) {
@@ -1050,12 +1082,6 @@ export class Tropy extends EventEmitter {
 
     this.wm.on('show', this.menu.handleWindowChange)
     this.wm.on('focus-change', this.menu.handleWindowChange)
-
-    this.wm.on('close', (type, win) => {
-      if (type === 'project' && win.isResizable()) {
-        this.state.win.bounds = win.getNormalBounds()
-      }
-    })
 
     this.wm.on('close', (type, win) => {
       if (type === 'prefs') {
@@ -1324,8 +1350,24 @@ export class Tropy extends EventEmitter {
     }
   }
 
+  getEmptyProjectWindow () {
+    return this.wm.map('project').find(win =>
+      this.getProject(win) == null &&
+      !this.wm.persistenceIds.has(win) &&
+      !this.wm.unloading.has(win))
+  }
+
   getProject (win = this.wm.current()) {
     return P.get(win)
+  }
+
+  pruneProjectGeometry () {
+    let keep = new Set(this.state.recent.map(projectPersistenceId))
+
+    for (let key of Object.keys(this.wm.geometry)) {
+      if (key.startsWith('project:') && !keep.has(key))
+        delete this.wm.geometry[key]
+    }
   }
 
   setProject (project, win = this.wm.current()) {

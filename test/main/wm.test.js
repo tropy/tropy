@@ -3,7 +3,7 @@ import { mock } from 'node:test'
 import { once } from 'node:events'
 import { join } from 'node:path'
 import { env } from 'node:process'
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, screen } from 'electron'
 import { WindowManager } from '#tropy/main/wm.js'
 import { Plugins } from '#tropy/common/plugins.js'
 
@@ -63,6 +63,191 @@ describe('WindowManager', () => {
         })
       })
     }
+
+    describe('restoreSize', {
+      timeout: env.CI ? 20000 : 2000
+    }, () => {
+      let win
+      let bounds = { x: 120, y: 140, width: 640, height: 480 }
+
+      beforeEach(async () => {
+        win = await wm.open('print', {
+          plugins: plugins.root,
+          log: join(app.getPath('userData'), 'wm-test-bounds.log'),
+          data: app.getPath('userData')
+        })
+      })
+
+      afterEach(() => wm.close('print'))
+
+      it('applies the size and keeps the position', () => {
+        let { x, y } = win.getBounds()
+        wm.restoreSize(win, bounds)
+
+        expect(win.getBounds()).to.eql({ x, y, width: 640, height: 480 })
+      })
+
+      it('defers the size while in fixed-size mode', async () => {
+        await wm.setFixedSize(win, true, {
+          width: 400,
+          height: 300,
+          animate: false
+        })
+
+        let { x, y } = win.getBounds()
+        wm.restoreSize(win, bounds)
+        expect(win.getContentSize()).to.eql([400, 300])
+
+        await wm.setFixedSize(win, false, { animate: false })
+        expect(win.getBounds()).to.eql({ x, y, width: 640, height: 480 })
+      })
+
+      it('keeps the pending size when restored in fixed-size mode', async () => {
+        await wm.setFixedSize(win, true, {
+          width: 400,
+          height: 300,
+          animate: false
+        })
+
+        let { x, y } = win.getBounds()
+        wm.pendingBounds.set(win, bounds)
+        win.emit('restore')
+        expect(win.getContentSize()).to.eql([400, 300])
+
+        await wm.setFixedSize(win, false, { animate: false })
+        expect(win.getBounds()).to.eql({ x, y, width: 640, height: 480 })
+      })
+    })
+
+    describe('persistence id', {
+      timeout: env.CI ? 20000 : 2000
+    }, () => {
+      let a = { x: 100, y: 120, width: 600, height: 400 }
+      let b = { x: 200, y: 220, width: 700, height: 500 }
+
+      let openWindow = (opts) =>
+        wm.open('print', {
+          plugins: plugins.root,
+          log: join(app.getPath('userData'), 'wm-test-persistence.log'),
+          data: app.getPath('userData')
+        }, opts)
+
+      beforeEach(() => {
+        wm.geometry = { 'test:a': a, 'test:b': b }
+      })
+
+      afterEach(() => wm.close('print'))
+
+      it('opens the window with the saved geometry', async () => {
+        let win = await openWindow({ persistenceId: 'test:a' })
+        expect(win.getBounds()).to.eql(a)
+      })
+
+      it('saves and restores the geometry when the id changes', async () => {
+        let win = await openWindow({ persistenceId: 'test:a' })
+        win.setBounds(b)
+
+        wm.setPersistenceId(win, 'test:c')
+        expect(wm.geometry['test:a']).to.eql(b)
+
+        win.setBounds(a)
+        wm.setPersistenceId(win, 'test:b')
+        expect(wm.geometry['test:c']).to.eql(a)
+        expect(win.getBounds()).to.eql({ ...b, x: a.x, y: a.y })
+      })
+
+      it('keeps the geometry when asked not to restore', async () => {
+        let win = await openWindow({ persistenceId: 'test:a' })
+
+        wm.setPersistenceId(win, 'test:b', { restore: false })
+        expect(win.getBounds()).to.eql(a)
+
+        await wm.close('print')
+        expect(wm.geometry['test:b']).to.eql(a)
+      })
+
+      it('saves the geometry when the window closes', async () => {
+        let win = await openWindow({ persistenceId: 'test:a' })
+        win.setBounds(b)
+
+        await wm.close('print')
+        expect(wm.geometry['test:a']).to.eql(b)
+      })
+
+      describe('when the saved position is off-screen', () => {
+        let offscreen = { x: -20000, y: -20000, width: 600, height: 400 }
+
+        let isOnScreen = ({ x, y, width, height }) =>
+          screen.getAllDisplays().some(({ workArea: a }) =>
+            x >= a.x && y >= a.y &&
+            x + width <= a.x + a.width &&
+            y + height <= a.y + a.height)
+
+        it('opens the window on a connected display', async () => {
+          wm.geometry['test:a'] = offscreen
+          let win = await openWindow({ persistenceId: 'test:a' })
+
+          expect(isOnScreen(win.getBounds())).to.be.true
+        })
+
+        it('fits a restored size onto the display', async () => {
+          let win = await openWindow({ persistenceId: 'test:a' })
+
+          wm.geometry['test:b'] = { ...offscreen, width: 50000, height: 50000 }
+          wm.setPersistenceId(win, 'test:b')
+
+          expect(isOnScreen(win.getBounds())).to.be.true
+        })
+      })
+
+      it('saves nothing while in fixed-size mode', async () => {
+        let win = await openWindow({ persistenceId: 'test:a' })
+
+        await wm.setFixedSize(win, true, {
+          width: 400,
+          height: 300,
+          animate: false
+        })
+
+        await wm.close('print')
+        expect(wm.geometry['test:a']).to.eql(a)
+      })
+
+      describe('when the window is maximized', () => {
+        let win
+
+        beforeEach(async () => {
+          win = await openWindow({ persistenceId: 'test:a' })
+
+          let maximized = once(win, 'maximize')
+          win.maximize()
+          await maximized
+
+          wm.setPersistenceId(win, 'test:b')
+        })
+
+        it('keeps the saved geometry of the new id', async () => {
+          await wm.close('print')
+          expect(wm.geometry['test:b']).to.eql(b)
+        })
+
+        it('restores the size once unmaximized', async () => {
+          let unmaximized = once(win, 'unmaximize')
+          win.unmaximize()
+          await unmaximized
+
+          expect(win.getBounds()).to.eql({ ...b, x: a.x, y: a.y })
+        })
+      })
+
+      it('saves nothing without an id', async () => {
+        let win = await openWindow()
+        win.setBounds(b)
+
+        await wm.close('print')
+        expect(Object.keys(wm.geometry)).to.eql(['test:a', 'test:b'])
+      })
+    })
 
     describe('unload lifecycle', {
       timeout: env.CI ? 20000 : 2000

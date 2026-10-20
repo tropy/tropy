@@ -32,9 +32,6 @@ uk:
         - label: Open…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Відкрити у новому вікні
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Останні проєкти
           id: recent
           enabled: false
@@ -274,9 +271,6 @@ uk:
         - label: Open…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Відкрити у новому вікні
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Останні проєкти
           id: recent
           enabled: false
@@ -490,9 +484,6 @@ uk:
         - label: Open…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Відкрити у новому вікні
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Останні проєкти
           id: recent
           enabled: false

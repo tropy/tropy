@@ -33,9 +33,6 @@ ja:
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
         - label: 最近のプロジェクト
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
-        - label: 最近のプロジェクト
           id: recent
           enabled: false
           submenu:
@@ -275,9 +272,6 @@ ja:
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
         - label: 最近のプロジェクト
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
-        - label: 最近のプロジェクト
           id: recent
           enabled: false
           submenu:
@@ -490,9 +484,6 @@ ja:
         - label: 開く
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: 最近のプロジェクト
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: 最近のプロジェクト
           id: recent
           enabled: false

@@ -32,9 +32,6 @@ nl-NL:
         - label: Openen…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Openen in nieuw venster…
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Recente projecten
           id: recent
           enabled: false
@@ -274,9 +271,6 @@ nl-NL:
         - label: Openen…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Openen in nieuw venster…
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Recente projecten
           id: recent
           enabled: false
@@ -490,9 +484,6 @@ nl-NL:
         - label: Openen…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Openen in nieuw venster…
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Recente projecten
           id: recent
           enabled: false
