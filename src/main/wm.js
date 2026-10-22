@@ -445,6 +445,9 @@ export class WindowManager extends EventEmitter {
       ...args
     }
 
+    if (WindowManager.defaults[type].plugins === false)
+      props.plugins = null
+
     let win = await this.create(type, props, opts)
 
     // On Linux minimizable/maximizable is always true,
@@ -730,7 +733,8 @@ export class WindowManager extends EventEmitter {
     },
     print: {
       width: 600,
-      height: 300
+      height: 300,
+      plugins: false
     },
     project: {
       width: 1280,

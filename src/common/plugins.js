@@ -153,6 +153,8 @@ export class Plugins extends EventEmitter {
   }
 
   async reload (autosave = false) {
+    if (!this.root) return this
+
     try {
       await this.unload()
       this.reset()

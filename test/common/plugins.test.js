@@ -48,6 +48,13 @@ describe('Plugins', () => {
     expect(b).to.equal(42)
   })
 
+  it('empty instance', async () => {
+    let empty = new Plugins(null)
+    await empty.reload()
+    let { instances } = await empty.create()
+    expect(instances).to.be.empty
+  })
+
   it('list', async () => {
     expect(await plugins.list()).to.eql([
       'tropy-omeka',
