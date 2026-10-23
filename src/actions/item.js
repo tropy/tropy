@@ -171,14 +171,6 @@ export default {
     }
   },
 
-  preview (payload, meta) {
-    return {
-      type: ITEM.PREVIEW,
-      payload,
-      meta: { cmd: 'project', ...meta }
-    }
-  },
-
   print (payload, meta) {
     return {
       type: ITEM.PRINT,
