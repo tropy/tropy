@@ -223,6 +223,12 @@ export class Window extends EventEmitter {
       .on('print', (_, data) => {
         this.emit('print', data)
       })
+      .on('quicklook-port', (event, id) => {
+        this.emit('quicklook-port', event.ports[0], id)
+      })
+      .on('quicklook-attach', (_, id) => {
+        this.emit('quicklook-attach', id)
+      })
       .on('menu', (_, state) => {
         this.toggle('menu', state)
       })

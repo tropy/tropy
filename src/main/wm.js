@@ -27,6 +27,7 @@ import {
   clipboard,
   ClipboardItem,
   ipcMain as ipc,
+  MessageChannelMain,
   nativeTheme,
   screen,
   systemPreferences as prefs
@@ -64,6 +65,7 @@ export class WindowManager extends EventEmitter {
     this.props = new WeakMap()
     this.pending = {}
     this.unloading = new WeakMap()
+    this.quicklook = null
     this.seq = counter()
   }
 
@@ -292,6 +294,12 @@ export class WindowManager extends EventEmitter {
       case 'preview':
         win.previewFile(...args)
         break
+      case 'quicklook':
+        this.showQuickLook(win, ...args)
+        break
+      case 'quicklook-hide':
+        this.hideQuickLook(win)
+        break
       case 'toggle-maximize':
       case 'maximize':
         if (win.isMaximized())
@@ -429,6 +437,13 @@ export class WindowManager extends EventEmitter {
   }
 
   async open (type, args, opts = {}) {
+    if (type === 'project') {
+      this.quicklook ??= this.open('quicklook', args).catch(err => {
+        warn({ err }, 'failed to open quicklook window')
+        this.quicklook = null
+      })
+    }
+
     let props = {
       app: Resource.base,
       documents: getPath('documents', 'home'),
@@ -517,6 +532,10 @@ export class WindowManager extends EventEmitter {
         .on('show', () => {
           this.emit('show', type, win)
         })
+        .on('ready', () => {
+          if (type === 'project')
+            this.connectQuickLook(win)
+        })
         .on('close', (event) => {
           if (this.unloading.get(win) === 'done') {
             debug(`closing ${type} window`)
@@ -524,11 +543,20 @@ export class WindowManager extends EventEmitter {
             event.preventDefault()
             this.handleUnload(win, 'close')
           }
+          if (type === 'project')
+            this.hideQuickLook(win)
+
           this.emit('close', type, win)
         })
         .once('closed', () => {
           this.unref(type, win)
           this.emit('closed', type)
+
+          if (type === 'quicklook')
+            this.quicklook = null
+
+          if (type === 'project' && !this.has('project'))
+            this.close('quicklook')
         })
 
       this.windows[type] = [win, ...array(this.windows[type])]
@@ -656,6 +684,65 @@ export class WindowManager extends EventEmitter {
     return win
   }
 
+  async connectQuickLook (win) {
+    let quicklook = await this.quicklook
+    if (quicklook == null) return
+
+    await quicklook.ready
+    if (win.isDestroyed() || quicklook.isDestroyed()) return
+
+    let { port1, port2 } = new MessageChannelMain()
+    quicklook.webContents.postMessage('quicklook-port', win.id, [port1])
+    win.webContents.postMessage('quicklook-port', null, [port2])
+  }
+
+  async showQuickLook (parent, { width, height } = {}) {
+    let win = await this.quicklook
+    if (win == null) return
+
+    if (win.isVisible() && win.getParentWindow() === parent)
+      return
+
+    await win.ready
+    if (win.isDestroyed() || parent.isDestroyed()) return
+
+    this.attachQuickLook(win, parent)
+
+    if (width > 0 && height > 0) {
+      let bounds = parent.getBounds()
+      let { workArea } = screen.getDisplayMatching(bounds)
+      let scale = Math.min(1,
+        0.75 * workArea.width / width,
+        0.75 * workArea.height / height)
+
+      width = Math.round(width * scale)
+      height = Math.round(height * scale)
+
+      win.setContentBounds(sanitizeWindowBounds({
+        x: Math.round(bounds.x + (bounds.width - width) / 2),
+        y: Math.round(bounds.y + (bounds.height - height) / 2),
+        width,
+        height
+      }))
+    }
+
+    win.showInactive()
+  }
+
+  async hideQuickLook (parent) {
+    let win = await this.quicklook
+
+    if (win?.getParentWindow() === parent) {
+      win.hide()
+      this.attachQuickLook(win, null)
+    }
+  }
+
+  attachQuickLook (win, parent) {
+    win.setParentWindow(parent)
+    win.webContents.send('quicklook-attach', parent?.id ?? null)
+  }
+
   async start () {
     ipc.on('wm', this.handleIpcMessage)
   }
@@ -734,6 +821,14 @@ export class WindowManager extends EventEmitter {
     print: {
       width: 600,
       height: 300,
+      plugins: false
+    },
+    quicklook: {
+      width: 640,
+      height: 480,
+      focusable: false,
+      skipTaskbar: true,
+      type: darwin ? 'panel' : undefined,
       plugins: false
     },
     project: {

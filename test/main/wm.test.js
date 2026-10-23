@@ -24,7 +24,7 @@ describe('WindowManager', () => {
       expect([...wm]).to.be.empty
     })
 
-    for (let type of ['about', 'prefs', 'print', 'project']) {
+    for (let type of ['about', 'prefs', 'print', 'project', 'quicklook']) {
       describe(`open('${type}')`, {
         timeout: env.CI ? 20000 : 2000
       }, () => {
@@ -63,6 +63,50 @@ describe('WindowManager', () => {
         })
       })
     }
+
+    describe('quicklook', {
+      timeout: env.CI ? 20000 : 4000
+    }, () => {
+      let parent
+      let quicklook
+
+      let openProject = () =>
+        wm.open('project', {
+          plugins: plugins.root,
+          log: join(app.getPath('userData'), 'wm-test-ql.log'),
+          data: app.getPath('userData')
+        })
+
+      before(async () => {
+        [parent] = await Promise.all([openProject(), openProject()])
+        quicklook = wm.first('quicklook')
+        await quicklook.ready
+      })
+
+      it('opens a single quicklook with project windows', () => {
+        expect(quicklook).to.be.instanceOf(BrowserWindow)
+        expect([...wm.values('quicklook')]).to.have.length(1)
+      })
+
+      it('shows quicklook as child of the sender', async () => {
+        await wm.showQuickLook(parent, { width: 400, height: 300 })
+        expect(quicklook.isVisible()).to.be.true
+        expect(quicklook.getParentWindow()).to.equal(parent)
+      })
+
+      it('hides and detaches quicklook', async () => {
+        await wm.hideQuickLook(parent)
+        expect(quicklook.isVisible()).to.be.false
+        expect(quicklook.getParentWindow()).to.be.null
+      })
+
+      it('closes quicklook with last project window', async () => {
+        let closed = once(quicklook, 'closed')
+        await wm.close('project')
+        await closed
+        expect(wm.has('quicklook')).to.be.false
+      })
+    })
 
     describe('unload lifecycle', {
       timeout: env.CI ? 20000 : 2000

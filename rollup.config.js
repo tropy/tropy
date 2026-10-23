@@ -160,6 +160,7 @@ export default [
           'views/about': 'src/views/about.js',
           'views/prefs': 'src/views/prefs.js',
           'views/print': 'src/views/print.js',
+          'views/quicklook': 'src/views/quicklook.js',
           'views/project': 'src/views/project.js'
         },
         implicitlyLoadedAfterOneOf: [
