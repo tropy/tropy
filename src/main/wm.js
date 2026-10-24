@@ -10,6 +10,7 @@ import { debug, error, trace, warn } from '../common/log.js'
 import { darwin, linux, win32 } from '../common/os.js'
 import { channel } from '../common/release.js'
 import { Resource, Icon, View } from './res.js'
+import { QuickLook } from './quicklook.js'
 import { MIME, SASS } from '../constants/index.js'
 
 import {
@@ -27,7 +28,6 @@ import {
   clipboard,
   ClipboardItem,
   ipcMain as ipc,
-  MessageChannelMain,
   nativeTheme,
   screen,
   systemPreferences as prefs
@@ -65,8 +65,8 @@ export class WindowManager extends EventEmitter {
     this.props = new WeakMap()
     this.pending = {}
     this.unloading = new WeakMap()
-    this.quicklook = null
     this.seq = counter()
+    this.quicklook = new QuickLook(this)
   }
 
   broadcast (...args) {
@@ -196,7 +196,7 @@ export class WindowManager extends EventEmitter {
       }
 
       this.register(type, win)
-      this.emit('create', type, win)
+      this.emit('create', type, win, args)
 
       return win
 
@@ -291,14 +291,8 @@ export class WindowManager extends EventEmitter {
       case 'dialog':
         this.handleShowDialog(win, ...args)
         break
-      case 'preview':
-        win.previewFile(...args)
-        break
       case 'quicklook':
-        this.showQuickLook(win, ...args)
-        break
-      case 'quicklook-hide':
-        this.hideQuickLook(win)
+        this.quicklook.handleMessage(win, ...args)
         break
       case 'toggle-maximize':
       case 'maximize':
@@ -437,13 +431,6 @@ export class WindowManager extends EventEmitter {
   }
 
   async open (type, args, opts = {}) {
-    if (type === 'project') {
-      this.quicklook ??= this.open('quicklook', args).catch(err => {
-        warn({ err }, 'failed to open quicklook window')
-        this.quicklook = null
-      })
-    }
-
     let props = {
       app: Resource.base,
       documents: getPath('documents', 'home'),
@@ -532,31 +519,21 @@ export class WindowManager extends EventEmitter {
         .on('show', () => {
           this.emit('show', type, win)
         })
-        .on('ready', () => {
-          if (type === 'project')
-            this.connectQuickLook(win)
-        })
         .on('close', (event) => {
+          if (type === 'quicklook' && this.quicklook.handleClose(event, win))
+            return
+
           if (this.unloading.get(win) === 'done') {
             debug(`closing ${type} window`)
           } else {
             event.preventDefault()
             this.handleUnload(win, 'close')
           }
-          if (type === 'project')
-            this.hideQuickLook(win)
-
           this.emit('close', type, win)
         })
         .once('closed', () => {
           this.unref(type, win)
           this.emit('closed', type)
-
-          if (type === 'quicklook')
-            this.quicklook = null
-
-          if (type === 'project' && !this.has('project'))
-            this.close('quicklook')
         })
 
       this.windows[type] = [win, ...array(this.windows[type])]
@@ -684,65 +661,6 @@ export class WindowManager extends EventEmitter {
     return win
   }
 
-  async connectQuickLook (win) {
-    let quicklook = await this.quicklook
-    if (quicklook == null) return
-
-    await quicklook.ready
-    if (win.isDestroyed() || quicklook.isDestroyed()) return
-
-    let { port1, port2 } = new MessageChannelMain()
-    quicklook.webContents.postMessage('quicklook-port', win.id, [port1])
-    win.webContents.postMessage('quicklook-port', null, [port2])
-  }
-
-  async showQuickLook (parent, { width, height } = {}) {
-    let win = await this.quicklook
-    if (win == null) return
-
-    if (win.isVisible() && win.getParentWindow() === parent)
-      return
-
-    await win.ready
-    if (win.isDestroyed() || parent.isDestroyed()) return
-
-    this.attachQuickLook(win, parent)
-
-    if (width > 0 && height > 0) {
-      let bounds = parent.getBounds()
-      let { workArea } = screen.getDisplayMatching(bounds)
-      let scale = Math.min(1,
-        0.75 * workArea.width / width,
-        0.75 * workArea.height / height)
-
-      width = Math.round(width * scale)
-      height = Math.round(height * scale)
-
-      win.setContentBounds(sanitizeWindowBounds({
-        x: Math.round(bounds.x + (bounds.width - width) / 2),
-        y: Math.round(bounds.y + (bounds.height - height) / 2),
-        width,
-        height
-      }))
-    }
-
-    win.showInactive()
-  }
-
-  async hideQuickLook (parent) {
-    let win = await this.quicklook
-
-    if (win?.getParentWindow() === parent) {
-      win.hide()
-      this.attachQuickLook(win, null)
-    }
-  }
-
-  attachQuickLook (win, parent) {
-    win.setParentWindow(parent)
-    win.webContents.send('quicklook-attach', parent?.id ?? null)
-  }
-
   async start () {
     ipc.on('wm', this.handleIpcMessage)
   }
@@ -827,8 +745,13 @@ export class WindowManager extends EventEmitter {
       width: 640,
       height: 480,
       focusable: false,
+      fullscreenable: false,
+      maximizable: false,
+      minimizable: false,
       skipTaskbar: true,
       type: darwin ? 'panel' : undefined,
+      vibrancy: 'under-window',
+      visualEffectState: 'active',
       plugins: false
     },
     project: {
@@ -960,12 +883,14 @@ const getWindowButtonPosition = (type) => {
   switch (type) {
     case 'prefs':
       return { x: 12, y: 11 }
+    case 'quicklook':
+      return { x: 13, y: 15 }
     default:
       return { x: 12, y: 11 }
   }
 }
 
-const getTitleBarOverlay = () => ({
+export const getTitleBarOverlay = () => ({
   height: 33, // 32px
   color: '#ffffff00',
   symbolColor: nativeTheme.shouldUseDarkColors ? '#bbbbbb' : '#222222'
@@ -1003,6 +928,7 @@ function webContentsForward (win, events) {
     win.on(type, () => { win.webContents.send('win', type) })
   }
 }
+
 
 export function sanitizeWindowBounds (opts = {}, display) {
   display ??= (opts.x != null && opts.y != null)

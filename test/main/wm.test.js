@@ -3,6 +3,7 @@ import { mock } from 'node:test'
 import { once } from 'node:events'
 import { join } from 'node:path'
 import { env } from 'node:process'
+import { setImmediate } from 'node:timers/promises'
 import { app, BrowserWindow } from 'electron'
 import { WindowManager } from '#tropy/main/wm.js'
 import { Plugins } from '#tropy/common/plugins.js'
@@ -68,7 +69,10 @@ describe('WindowManager', () => {
       timeout: env.CI ? 20000 : 4000
     }, () => {
       let parent
+      let other
       let quicklook
+
+      let size = { width: 400, height: 300 }
 
       let openProject = () =>
         wm.open('project', {
@@ -77,10 +81,27 @@ describe('WindowManager', () => {
           data: app.getPath('userData')
         })
 
+      let spy = (win) =>
+        mock.method(win.webContents, 'send')
+
+      let states = (send) => send.mock.calls
+        .map(({ arguments: [channel, message] }) =>
+          (channel === 'quicklook' && message.type === 'state') ?
+            message.isVisible :
+            null)
+        .filter(isVisible => isVisible != null)
+
       before(async () => {
-        [parent] = await Promise.all([openProject(), openProject()])
+        [parent, other] = await Promise.all([openProject(), openProject()])
         quicklook = wm.first('quicklook')
         await quicklook.ready
+
+        // Never actually show the window.
+        quicklook.showInactive = () => {}
+      })
+
+      afterEach(() => {
+        mock.restoreAll()
       })
 
       it('opens a single quicklook with project windows', () => {
@@ -88,20 +109,71 @@ describe('WindowManager', () => {
         expect([...wm.values('quicklook')]).to.have.length(1)
       })
 
+      it('does not show without content', async () => {
+        await wm.quicklook.show(parent)
+        expect(wm.quicklook.parent).to.be.null
+      })
+
       it('shows quicklook as child of the sender', async () => {
-        await wm.showQuickLook(parent, { width: 400, height: 300 })
-        expect(quicklook.isVisible()).to.be.true
+        await wm.quicklook.resize(parent, size)
+
+        let send = spy(parent)
+        await wm.quicklook.show(parent)
+
+        expect(wm.quicklook.parent).to.equal(parent)
         expect(quicklook.getParentWindow()).to.equal(parent)
+        expect(states(send)).to.eql([true])
       })
 
       it('hides and detaches quicklook', async () => {
-        await wm.hideQuickLook(parent)
-        expect(quicklook.isVisible()).to.be.false
+        let send = spy(parent)
+        await wm.quicklook.hide(parent)
+
+        expect(wm.quicklook.parent).to.be.null
         expect(quicklook.getParentWindow()).to.be.null
+        expect(states(send)).to.eql([false])
+      })
+
+      it('hides when the content is gone', async () => {
+        await wm.quicklook.show(parent)
+
+        let send = spy(parent)
+        await wm.quicklook.resize(parent, null)
+
+        expect(wm.quicklook.parent).to.be.null
+        expect(states(send)).to.eql([false])
+
+        await wm.quicklook.resize(parent, size)
+      })
+
+      it('follows the active project window', async () => {
+        await wm.quicklook.resize(other, size)
+        await wm.quicklook.show(other)
+
+        let send = spy(parent)
+        let sendOther = spy(other)
+        await wm.quicklook.follow(parent)
+
+        expect(wm.quicklook.parent).to.equal(parent)
+        expect(states(send)).to.eql([true])
+        expect(states(sendOther)).to.eql([false])
+      })
+
+      it('hides instead of closing while project windows are open', async () => {
+        await wm.quicklook.show(parent)
+
+        let send = spy(parent)
+        quicklook.close()
+        await setImmediate()
+
+        expect(quicklook.isDestroyed()).to.be.false
+        expect(wm.quicklook.parent).to.be.null
+        expect(states(send)).to.eql([false])
       })
 
       it('closes quicklook with last project window', async () => {
         let closed = once(quicklook, 'closed')
+
         await wm.close('project')
         await closed
         expect(wm.has('quicklook')).to.be.false
