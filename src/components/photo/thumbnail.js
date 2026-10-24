@@ -4,6 +4,7 @@ import { selectCachePrefix } from '../../selectors/project.js'
 import { Cache } from '../../common/cache.js'
 import { SASS } from '../../constants/index.js'
 import { Rotation } from '../../common/iiif.js'
+import { cssFilter } from '../../esper/filter/css.js'
 import act from '../../actions/photo.js'
 
 const variant = (size) =>
@@ -45,6 +46,7 @@ export function Thumbnail ({
       <Image
         src={src}
         rotation={rotation}
+        filter={cssFilter(props)}
         onError={handleError}/>
     </figure>
   )
@@ -52,14 +54,18 @@ export function Thumbnail ({
 
 Thumbnail.keys = [
   'angle',
+  'brightness',
   'broken',
   'color',
   'consolidated',
+  'contrast',
   'height',
+  'hue',
   'id',
   'mimetype',
   'mirror',
+  'negative',
   'orientation',
-  'size',
+  'saturation',
   'width'
 ]

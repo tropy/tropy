@@ -1,6 +1,6 @@
 import { IconPhoto } from './icons.js'
 
-export function Image ({ onError, src, rotation = '0' }) {
+export function Image ({ filter, onError, src, rotation = '0' }) {
   if (!src)
     return <IconPhoto/>
   else
@@ -10,6 +10,7 @@ export function Image ({ onError, src, rotation = '0' }) {
           decoding="async"
           loading="lazy"
           src={src}
+          style={{ filter }}
           onError={onError}/>
       </div>
     )
