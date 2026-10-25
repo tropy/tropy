@@ -1,6 +1,7 @@
 import { call, cancelled, put, select } from 'redux-saga/effects'
 import { Document } from 'alto-xml'
 import { Command } from '../command.js'
+import { array } from '../../common/util.js'
 import { create } from '../../models/transcription.js'
 import * as slice from '../../slices/transcriptions.js'
 import { settings } from '../../actions/index.js'
@@ -20,9 +21,17 @@ export class Create extends Command {
         return
     }
 
-    if (photo == null) {
+    if (photo == null && selection == null) {
       ({ photo, selection } = yield select(state => state.nav))
     }
+
+    let isValid = yield select(state => (selection != null) ?
+      selection in state.selections :
+      array(photo).every(id => id in state.photos))
+
+    // Skip unknown parents, e.g. item ids passed as photos.
+    if (!isValid)
+      return null
 
 
     if (config == null) {

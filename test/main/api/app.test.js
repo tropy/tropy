@@ -273,12 +273,26 @@ describe('api', () => {
       expect(api.actions).to.have.length(5)
     })
 
-    it('requires a photo or selection', async () => {
+    it('requires either a photo or a selection', async () => {
       let res = await api.post('/project/foo/notes', { html: '<p>x</p>' })
 
       expect(res.statusCode).to.equal(400)
       expect(res.json().errors.map(e => e.pointer))
         .to.include.members(['/photo', '/selection'])
+
+      res = await api.post('/project/foo/notes', {
+        html: '<p>x</p>',
+        photo: 1,
+        selection: 2
+      })
+
+      expect(res.statusCode).to.equal(400)
+      expect(api.actions).to.be.empty
+    })
+
+    it('responds with 404 for unknown photos or selections', async () => {
+      let res = await api.post('/project/foo/notes', { html: '<p>x</p>', photo: 1 })
+      expect(res.statusCode).to.equal(404)
     })
   })
 

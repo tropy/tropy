@@ -40,6 +40,11 @@ const some = (...names) => ({
   anyOf: names.map(name => ({ required: [name] }))
 })
 
+// Requires exactly one of the properties.
+const one = (...names) => ({
+  oneOf: names.map(name => ({ required: [name] }))
+})
+
 // Not strict, because route params include the :project param.
 const path = (properties) => ({ type: 'object', properties })
 
@@ -317,11 +322,11 @@ export function create ({
             photo: id,
             selection: id
           }, ['html']),
-          ...some('photo', 'selection')
+          ...one('photo', 'selection')
         }
       }
     }, async ({ body, rsvp }, reply) => {
-      let payload = await rsvp(act.note.create(body))
+      let payload = found(await rsvp(act.note.create(body)))
 
       return reply.code(201).send({
         id: Object.values(payload).map(note => note.id)
@@ -354,11 +359,11 @@ export function create ({
             photo: id,
             selection: id
           }),
-          allOf: [some('data', 'text'), some('photo', 'selection')]
+          allOf: [some('data', 'text'), one('photo', 'selection')]
         }
       }
     }, async ({ body, rsvp }, reply) => {
-      let payload = await rsvp(act.transcription.create(body))
+      let payload = found(await rsvp(act.transcription.create(body)))
 
       return reply.code(201).send({
         id: Object.values(payload).map(tr => tr.id)
