@@ -7,8 +7,12 @@ import { findTag, getAllTags } from '../../selectors/index.js'
 
 export class TagShow extends Command {
   *exec () {
-    let { payload } = this.action
-    let tag = yield select(state => findTag(state, payload))
+    let { id, name } = this.action.payload
+
+    // Look up by id only, unless a name is given.
+    let tag = yield select(state =>
+      (name == null) ? state.tags[id] : findTag(state, { name }))
+
     return tag
   }
 }

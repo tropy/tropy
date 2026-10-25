@@ -11,8 +11,7 @@ import { create } from '#tropy/main/api/app.js'
 // 'missing' (unknown project) and ids starting with 'twin' (ambiguous).
 // Like the real server, resolved ids are URL-encoded.
 //
-// Requests take bodies like curl: a string is sent as form data
-// (curl -d), anything else as JSON (curl --json).
+// Requests send bodies as JSON, like curl --json.
 export function mkapi () {
   let response
 
@@ -39,21 +38,13 @@ export function mkapi () {
     }),
 
     request (method, url, body) {
-      return api.app.inject({
-        method,
-        url,
-        ...(typeof body === 'string' ? {
-          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-          payload: body
-        } : {
-          payload: body
-        })
-      })
+      return api.app.inject({ method, url, payload: body })
     },
 
     get: (url) => api.request('GET', url),
     post: (url, body) => api.request('POST', url, body),
-    delete: (url, body) => api.request('DELETE', url, body)
+    patch: (url, body) => api.request('PATCH', url, body),
+    delete: (url) => api.request('DELETE', url)
   }
 
   before(() => {
