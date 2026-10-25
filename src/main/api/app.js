@@ -239,10 +239,7 @@ export function create ({
         }, ['name'])
       }
     }, async ({ body, rsvp }, reply) =>
-      reply.code(201).send(await rsvp(act.list.create({
-        name: body.name,
-        parent: body.parent
-      }))))
+      reply.code(201).send(await rsvp(act.list.create(body))))
 
     api.get('/lists/:id/items', findItems)
 
@@ -252,7 +249,7 @@ export function create ({
         body: object({ items: ids }, ['items'])
       }
     }, async ({ body, params, rsvp }) =>
-      rsvp(act.list.items.add({ id: params.id, items: body.items })))
+      rsvp(act.list.items.add({ id: params.id, ...body })))
 
     // Tags
 
@@ -283,11 +280,7 @@ export function create ({
         }, ['name'])
       }
     }, async ({ body, rsvp }, reply) =>
-      reply.code(201).send(await rsvp(act.tag.create({
-        name: body.name,
-        color: body.color,
-        items: body.items
-      }))))
+      reply.code(201).send(await rsvp(act.tag.create(body))))
 
     api.delete('/tags', {
       schema: {
@@ -321,7 +314,6 @@ export function create ({
         body: {
           ...object({
             html: { type: 'string', minLength: 1 },
-            language: { type: 'string' },
             photo: id,
             selection: id
           }, ['html']),
@@ -329,14 +321,7 @@ export function create ({
         }
       }
     }, async ({ body, rsvp }, reply) => {
-      let { html, language, photo = null, selection = null } = body
-
-      let payload = await rsvp(act.note.create({
-        language,
-        photo,
-        selection,
-        html
-      }))
+      let payload = await rsvp(act.note.create(body))
 
       return reply.code(201).send({
         id: Object.values(payload).map(note => note.id)
@@ -362,7 +347,7 @@ export function create ({
       schema: {
         body: {
           ...object({
-            data: {},
+            data: { type: 'string' },
             text: { type: 'string' },
             angle: { type: 'number' },
             mirror: { type: 'boolean' },
@@ -373,16 +358,7 @@ export function create ({
         }
       }
     }, async ({ body, rsvp }, reply) => {
-      let { data, text, angle, mirror, photo = null, selection = null } = body
-
-      let payload = await rsvp(act.transcription.create({
-        data,
-        text,
-        angle,
-        mirror,
-        photo,
-        selection
-      }))
+      let payload = await rsvp(act.transcription.create(body))
 
       return reply.code(201).send({
         id: Object.values(payload).map(tr => tr.id)
