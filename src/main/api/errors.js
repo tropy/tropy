@@ -15,7 +15,7 @@ export default fp(async (app) => {
   app.setErrorHandler((error, request, reply) => {
     let status = error.status || error.statusCode
 
-    if (!(status >= 400 && status < 600))
+    if (!(status >= 400))
       status = 500
 
     let title = STATUS_CODES[status]
