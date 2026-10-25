@@ -1,4 +1,4 @@
-import { Server } from '#tropy/main/api.js'
+import { Server } from '#tropy/main/api/server.js'
 
 describe('api.Server', () => {
   it('listens on loopback only', async () => {

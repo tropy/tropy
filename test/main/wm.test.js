@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import assert from 'node:assert/strict'
 import { mock } from 'node:test'
 import { once } from 'node:events'
 import { join } from 'node:path'
@@ -156,6 +157,45 @@ describe('WindowManager', () => {
           payload: { message: 'unknown dialog type: unknown' }
         }
       ])
+    })
+  })
+
+  describe('rsvp', () => {
+    let wm = new WindowManager()
+    let win = { webContents: { send () {} } }
+    let action = () => ({ type: 'test', meta: {} })
+
+    it('resolves with the response', async () => {
+      let res = wm.rsvp(win, action())
+      let [id] = Object.keys(wm.pending)
+
+      wm.handlePendingResponse({ meta: { rsvp: id }, payload: 42 })
+      expect(await res).to.have.property('payload', 42)
+    })
+
+    it('rejects after the timeout', async () => {
+      await assert.rejects(wm.rsvp(win, action(), { timeout: 10 }),
+        /no response/)
+      expect(wm.pending).to.be.empty
+    })
+
+    it('rejects when the window goes away', async () => {
+      let other = { webContents: { send () {} } }
+      let res = wm.rsvp(win, action(), { timeout: 0 })
+      let unaffected = wm.rsvp(other, action(), { timeout: 10 })
+
+      wm.cancel(win, 'closed')
+
+      await assert.rejects(res, { message: 'window closed' })
+      expect(Object.values(wm.pending).map(p => p.win)).to.eql([other])
+      await assert.rejects(unaffected, /no response/)
+    })
+
+    it('rejects when the window unloads', async () => {
+      let res = wm.rsvp(win, action(), { timeout: 0 })
+      wm.handleUnloaded(win)
+
+      await assert.rejects(res, { message: 'window unloaded' })
     })
   })
 })
