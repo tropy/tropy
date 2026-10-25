@@ -1,10 +1,12 @@
 import fs from 'node:fs'
 import { basename } from 'node:path'
+import Ajv from 'ajv'
 import Fastify, { LogController } from 'fastify'
-import formbody from '@fastify/formbody'
 import act from '../../actions/api.js'
 import { MIME } from '../../constants/index.js'
 import { HttpError } from '../../common/error.js'
+import accept from './accept.js'
+import errors from './errors.js'
 import guard from './guard.js'
 import legacy from './legacy.js'
 import project from './project.js'
@@ -18,16 +20,6 @@ const found = (payload) => {
   return payload
 }
 
-const TYPES = {
-  html: 'text/html',
-  plain: 'text/plain',
-  text: 'text/plain',
-  md: 'text/markdown',
-  markdown: 'text/markdown',
-  alto: 'application/xml',
-  xml: 'application/xml'
-}
-
 const id = { type: 'integer', minimum: 1 }
 const ids = { type: 'array', items: id }
 
@@ -35,27 +27,23 @@ const ids = { type: 'array', items: id }
 const list = { type: 'integer', minimum: 0 }
 const strings = { type: 'array', items: { type: 'string' } }
 
+// Rejects unknown properties.
 const object = (properties, required) => ({
   type: 'object',
   properties,
+  additionalProperties: false,
   ...(required && { required })
 })
 
-const params = object({ id })
-
-const format = (...formats) => ({
-  format: { enum: formats }
+// Requires at least one of the properties.
+const some = (...names) => ({
+  anyOf: names.map(name => ({ required: [name] }))
 })
 
-// Responds with the payload in the requested format.
-const formatted = (reply, format, payload) => {
-  found(payload)
+// Not strict, because route params include the :project param.
+const path = (properties) => ({ type: 'object', properties })
 
-  if (format in TYPES)
-    reply.type(TYPES[format])
-
-  return payload
-}
+const params = path({ id })
 
 const show = (type) => ({
   schema: { params },
@@ -66,7 +54,7 @@ const show = (type) => ({
 
 const extract = (type) => ({
   schema: {
-    params: object({ id, ...format('jpg', 'png', 'webp', 'raw') })
+    params: path({ id, format: { enum: ['jpg', 'png', 'webp', 'raw'] } })
   },
   async handler ({ params, rsvp }, reply) {
     let payload = found(await rsvp(act.photo.extract({
@@ -101,20 +89,6 @@ const findItems = {
   }
 }
 
-// Shared by /tags and /items/:id/tags
-const findTags = {
-  schema: {
-    params,
-    querystring: object({ reverse: { type: 'boolean' } })
-  },
-  async handler ({ params, query, rsvp }) {
-    return found(await rsvp(act.tag.find({
-      id: params.id,
-      reverse: query.reverse
-    })))
-  }
-}
-
 export function create ({
   current,
   log,
@@ -127,17 +101,29 @@ export function create ({
     logController: new Logging()
   })
 
-  app.register(formbody)
+  // Coerce only query strings and params, because their values are strings.
+  // JSON bodies must use the right types.
+  let options = { allErrors: true, allowUnionTypes: true, useDefaults: true }
+  let ajv = {
+    body: new Ajv(options),
+    strings: new Ajv({ ...options, coerceTypes: 'array' })
+  }
+
+  app.setValidatorCompiler(({ schema, httpPart }) =>
+    (httpPart === 'body' ? ajv.body : ajv.strings).compile(schema))
+
+  app.register(errors)
+  app.register(accept)
   app.register(guard)
   app.register(legacy)
 
   app.register(async (api) => {
     await api.register(project, { resolveProject, rsvp })
 
-    // Validate requests without a body as an empty body,
-    // e.g. DELETE /items/:id/tags clears all tags.
-    api.addHook('preValidation', async (request) => {
-      request.body ??= {}
+    // Commands without results respond with No Content.
+    api.addHook('onSend', async (request, reply, payload) => {
+      if (payload === undefined && reply.statusCode === 200)
+        reply.code(204)
     })
 
     api.get('/', ({ project }) => ({
@@ -152,38 +138,31 @@ export function create ({
     api.post('/import', {
       bodyLimit: 16 * 1024 * 1024,
       schema: {
-        body: object({
-          file: strings,
-          list: id,
-          data: {},
-          createLists: { type: 'boolean' },
-          tagColor: { type: 'string' }
-        })
-      }
-    }, async ({ body, rsvp }) => {
-      let { file, list, data, createLists, tagColor } = body
-
-      // Form bodies pass data as a JSON string.
-      if (typeof data === 'string') {
-        try {
-          data = JSON.parse(data)
-        } catch {
-          throw fail(400, 'invalid JSON data parameter')
+        body: {
+          ...object({
+            files: strings,
+            list: id,
+            data: { type: ['object', 'array'], items: { type: 'object' } },
+            createLists: { type: 'boolean' },
+            tagColor: { type: 'string' }
+          }),
+          ...some('files', 'data')
         }
       }
-
-      if (!file && !data)
-        throw fail(400, 'missing file/data parameter')
+    }, async ({ body, rsvp }, reply) => {
+      let { files, list, data, createLists, tagColor } = body
 
       // Imports can take a long time: wait without a timeout.
-      return rsvp(act.import({
+      let payload = await rsvp(act.import({
         data,
-        files: file,
+        files,
         list
       }, {
         createLists,
         tagColor
       }), { timeout: 0 })
+
+      return reply.code(201).send(payload)
     })
 
     // Items
@@ -194,38 +173,48 @@ export function create ({
     api.get('/items/:id/photos', { schema: { params } }, async ({ params, rsvp }) =>
       found(await rsvp(act.photo.find({ item: params.id }))))
 
-    api.get('/items/:id/tags', findTags)
+    api.get('/items/:id/tags', {
+      schema: {
+        params,
+        querystring: object({ reverse: { type: 'boolean' } })
+      }
+    }, async ({ params, query, rsvp }) =>
+      found(await rsvp(act.tag.find({
+        id: params.id,
+        reverse: query.reverse
+      }))))
 
     api.post('/items/:id/tags', {
       schema: {
         params,
-        body: object({ tag: strings }, ['tag'])
+        body: object({ tags: strings }, ['tags'])
       }
     }, async ({ body, params, rsvp }) =>
-      rsvp(act.tag.add({ id: params.id, tags: body.tag })))
+      rsvp(act.tag.add({ id: params.id, tags: body.tags })))
 
+    // Removes the given tags, or all tags without a tag param.
     api.delete('/items/:id/tags', {
       schema: {
         params,
-        body: object({ tag: strings })
+        querystring: object({ tag: strings })
       }
-    }, async ({ body, params, rsvp }) =>
-      rsvp(body?.tag ?
-        act.tag.remove({ id: params.id, tags: body.tag }) :
+    }, async ({ params, query, rsvp }) =>
+      rsvp(query.tag ?
+        act.tag.remove({ id: params.id, tags: query.tag }) :
         act.tag.clear({ id: params.id })))
 
     api.get('/items/:id/transcriptions', {
+      config: { formats: ['json', 'html', 'text'] },
       schema: {
         params,
         querystring: object({
-          ...format('json', 'html', 'plain', 'text'),
           separator: { type: 'string', pattern: '^[*_=-]+$' }
         })
       }
-    }, async ({ params, query, rsvp }, reply) =>
-      formatted(reply, query.format, await rsvp(act.transcription.find({
+    }, async ({ format, params, query, rsvp }) =>
+      found(await rsvp(act.transcription.find({
         id: params.id,
-        format: query.format,
+        format,
         separator: query.separator
       }))))
 
@@ -233,7 +222,7 @@ export function create ({
 
     api.get('/lists/:id?', {
       schema: {
-        params: object({ id: list }),
+        params: path({ id: list }),
         querystring: object({ expand: { type: 'boolean', default: false } })
       }
     }, async ({ params, query, rsvp }) =>
@@ -249,54 +238,69 @@ export function create ({
           parent: { ...list, default: 0 }
         }, ['name'])
       }
-    }, async ({ body, rsvp }) =>
-      rsvp(act.list.create({ name: body.name, parent: body.parent })))
+    }, async ({ body, rsvp }, reply) =>
+      reply.code(201).send(await rsvp(act.list.create({
+        name: body.name,
+        parent: body.parent
+      }))))
 
     api.get('/lists/:id/items', findItems)
 
     api.post('/lists/:id/items', {
       schema: {
         params,
-        body: object({ item: ids }, ['item'])
+        body: object({ items: ids }, ['items'])
       }
     }, async ({ body, params, rsvp }) =>
-      rsvp(act.list.items.add({ id: params.id, items: body.item })))
+      rsvp(act.list.items.add({ id: params.id, items: body.items })))
 
     // Tags
 
-    api.get('/tags', findTags)
+    // Tags can be looked up by name, e.g. /tags?name=Foo.
+    api.get('/tags', {
+      schema: {
+        querystring: object({
+          name: { type: 'string', minLength: 1 },
+          reverse: { type: 'boolean' }
+        })
+      }
+    }, async ({ query, rsvp }) => {
+      if (query.name == null)
+        return rsvp(act.tag.find({ reverse: query.reverse }))
 
-    // Tags can be looked up by id or name.
-    api.get('/tags/:id', async ({ params, rsvp }) =>
-      found(await rsvp(act.tag.show({ id: params.id }))))
+      let tag = await rsvp(act.tag.show({ name: query.name }))
+      return tag ? [tag] : []
+    })
+
+    api.get('/tags/:id', show('tag'))
 
     api.post('/tags', {
       schema: {
         body: object({
           name: { type: 'string', minLength: 1 },
           color: { type: 'string' },
-          item: ids
+          items: ids
         }, ['name'])
       }
-    }, async ({ body, rsvp }) =>
-      rsvp(act.tag.create({
+    }, async ({ body, rsvp }, reply) =>
+      reply.code(201).send(await rsvp(act.tag.create({
         name: body.name,
         color: body.color,
-        items: body.item
-      })))
+        items: body.items
+      }))))
 
     api.delete('/tags', {
       schema: {
-        body: object({ tag: strings }, ['tag'])
+        querystring: object({ tag: strings }, ['tag'])
       }
-    }, async ({ body, rsvp }) =>
-      rsvp(act.tag.delete(body.tag)))
+    }, async ({ query, rsvp }) =>
+      rsvp(act.tag.delete(query.tag)))
 
     // Metadata
 
     api.get('/data/:id', show('metadata'))
 
-    api.post('/data/:id', {
+    api.patch('/data/:id', {
       schema: {
         params,
         body: { type: 'object', minProperties: 1 }
@@ -307,31 +311,25 @@ export function create ({
     // Notes
 
     api.get('/notes/:id', {
-      schema: {
-        params,
-        querystring: object(
-          format('json', 'html', 'plain', 'text', 'md', 'markdown'))
-      }
-    }, async ({ params, query, rsvp }, reply) =>
-      formatted(reply, query.format, await rsvp(act.note.show({
-        id: params.id,
-        format: query.format
-      }))))
+      config: { formats: ['json', 'html', 'text', 'markdown'] },
+      schema: { params }
+    }, async ({ format, params, rsvp }) =>
+      found(await rsvp(act.note.show({ id: params.id, format }))))
 
     api.post('/notes', {
       schema: {
-        body: object({
-          html: { type: 'string', minLength: 1 },
-          language: { type: 'string' },
-          photo: id,
-          selection: id
-        }, ['html'])
+        body: {
+          ...object({
+            html: { type: 'string', minLength: 1 },
+            language: { type: 'string' },
+            photo: id,
+            selection: id
+          }, ['html']),
+          ...some('photo', 'selection')
+        }
       }
-    }, async ({ body, rsvp }) => {
+    }, async ({ body, rsvp }, reply) => {
       let { html, language, photo = null, selection = null } = body
-
-      if (photo == null && selection == null)
-        throw fail(400, 'missing photo or selection parameter')
 
       let payload = await rsvp(act.note.create({
         language,
@@ -340,9 +338,9 @@ export function create ({
         html
       }))
 
-      return {
+      return reply.code(201).send({
         id: Object.values(payload).map(note => note.id)
-      }
+      })
     })
 
     api.delete('/notes/:id', { schema: { params } }, async ({ params, rsvp }) => {
@@ -350,42 +348,32 @@ export function create ({
 
       if (payload.length === 0)
         throw fail(404, 'not found')
-
-      return {}
     })
 
     // Transcriptions
 
     api.get('/transcriptions/:id', {
-      schema: {
-        params,
-        querystring: object(
-          format('json', 'html', 'plain', 'text', 'xml', 'alto'))
-      }
-    }, async ({ params, query, rsvp }, reply) =>
-      formatted(reply, query.format, await rsvp(act.transcription.show({
-        id: params.id,
-        format: query.format
-      }))))
+      config: { formats: ['json', 'html', 'text', 'alto'] },
+      schema: { params }
+    }, async ({ format, params, rsvp }) =>
+      found(await rsvp(act.transcription.show({ id: params.id, format }))))
 
     api.post('/transcriptions', {
       schema: {
-        body: object({
-          data: {},
-          text: { type: 'string' },
-          angle: { type: 'number' },
-          mirror: { type: 'boolean' },
-          photo: id,
-          selection: id
-        })
+        body: {
+          ...object({
+            data: {},
+            text: { type: 'string' },
+            angle: { type: 'number' },
+            mirror: { type: 'boolean' },
+            photo: id,
+            selection: id
+          }),
+          allOf: [some('data', 'text'), some('photo', 'selection')]
+        }
       }
-    }, async ({ body, rsvp }) => {
+    }, async ({ body, rsvp }, reply) => {
       let { data, text, angle, mirror, photo = null, selection = null } = body
-
-      if (!data && !text)
-        throw fail(400, 'missing data or text parameter')
-      if (photo == null && selection == null)
-        throw fail(400, 'missing photo or selection parameter')
 
       let payload = await rsvp(act.transcription.create({
         data,
@@ -396,9 +384,9 @@ export function create ({
         selection
       }))
 
-      return {
+      return reply.code(201).send({
         id: Object.values(payload).map(tr => tr.id)
-      }
+      })
     })
 
     // Photos
