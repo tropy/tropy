@@ -13,9 +13,20 @@ export class Create extends Command {
     let { db } = this.options
     let { html, state, text, photo, selection } = this.action.payload
 
-    if (photo == null) {
+    if (photo == null && selection == null) {
       ({ photo, selection } = yield select(({ nav }) => nav))
     }
+
+    let parent = yield select(state => (selection != null) ?
+      state.selections[selection] :
+      state.photos[photo])
+
+    // Skip unknown parents, e.g. item ids passed as photos.
+    if (parent == null)
+      return null
+
+    if (selection != null)
+      photo = parent.photo
 
     let type = (selection != null) ? 'selection' : 'photo'
     let id = (selection != null) ? selection : photo
