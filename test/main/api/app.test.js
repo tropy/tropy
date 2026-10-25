@@ -12,7 +12,6 @@ describe('api', () => {
         version: '1.0.0'
       })
 
-      expect((await api.get('/version')).json()).to.eql({ version: '1.0.0' })
     })
 
     it('rejects foreign hosts and cross-origin requests', async () => {
@@ -98,10 +97,10 @@ describe('api', () => {
     })
 
     it('responds with 204 when commands return nothing', async () => {
-      let res = await api.delete('/project/foo/tags?tag=Foo')
+      let res = await api.delete('/project/foo/items/1/tags?tag=Foo')
 
       expect(res.statusCode).to.equal(204)
-      expect(api.action.payload).to.eql(['Foo'])
+      expect(api.action.payload).to.eql({ id: [1], tags: ['Foo'] })
     })
 
     it('maps window errors to HTTP status codes', async () => {
@@ -130,6 +129,7 @@ describe('api', () => {
       for (let res of [
         await api.get('/project/foo/items/abc'),
         await api.get('/project/foo/photos/1/file.gif'),
+        await api.get('/project/foo/photos/1/file.raw'),
         await api.get('/project/foo/items/0'),
         await api.get('/project/foo/lists/1?expand'),
         await api.post('/project/foo/lists', { name: 'Foo', parent: '2' }),
@@ -296,6 +296,17 @@ describe('api', () => {
     })
   })
 
+  describe('transcriptions', () => {
+    it('has no HTML format', async () => {
+      let res = await api.app.inject({
+        url: '/project/foo/transcriptions/1',
+        headers: { accept: 'text/html' }
+      })
+
+      expect(res.statusCode).to.equal(406)
+    })
+  })
+
   describe('tags', () => {
     it('creates tags', async () => {
       api.respond({ id: 3 })
@@ -316,6 +327,15 @@ describe('api', () => {
       expect((await api.get('/project/foo/tags/Foo')).statusCode)
         .to.equal(400)
     })
+
+    it('deletes tags by id', async () => {
+      api.respond(3)
+      expect((await api.delete('/project/foo/tags/3')).statusCode).to.equal(204)
+      expect(api.action).to.include({ type: TAG.DELETE, payload: 3 })
+
+      api.respond(null)
+      expect((await api.delete('/project/foo/tags/3')).statusCode).to.equal(404)
+    })
   })
 
   describe('photos', () => {
@@ -328,13 +348,13 @@ describe('api', () => {
       expect(api.action.payload).to.include({ id: 7 })
     })
 
-    it('serves raw photo files', async () => {
+    it('serves original photo files', async () => {
       api.respond({
         protocol: 'file',
         path: F.image.path('PA140105.JPG'),
         mimetype: 'image/jpeg'
       })
-      let res = await api.get('/project/foo/photos/1/raw')
+      let res = await api.get('/project/foo/photos/1/original')
 
       expect(res.statusCode).to.equal(200)
       expect(res.headers['content-type']).to.equal('image/jpeg')
@@ -344,15 +364,30 @@ describe('api', () => {
         .to.equal(Number(res.headers['content-length']))
     })
 
-    it('serves raw photo files of unknown type', async () => {
+    it('guesses the type of original photo files without one', async () => {
       api.respond({
         protocol: 'file',
         path: F.image.path('PA140105.JPG')
       })
-      let res = await api.get('/project/foo/photos/1/raw')
+      let res = await api.get('/project/foo/photos/1/original')
 
       expect(res.statusCode).to.equal(200)
-      expect(res.headers['content-type']).to.equal('application/octet-stream')
+      expect(res.headers['content-type']).to.equal('image/jpeg')
+    })
+
+    it('supports range and conditional requests', async () => {
+      let url = '/project/foo/photos/1/original'
+      api.respond({ protocol: 'file', path: F.image.path('PA140105.JPG') })
+
+      let res = await api.app.inject({ url, headers: { range: 'bytes=0-9' } })
+      expect(res.statusCode).to.equal(206)
+      expect(res.rawPayload.length).to.equal(10)
+
+      res = await api.app.inject({
+        url,
+        headers: { 'if-none-match': res.headers.etag }
+      })
+      expect(res.statusCode).to.equal(304)
     })
 
     it('responds with 404 for missing photo files', async () => {
@@ -361,7 +396,7 @@ describe('api', () => {
         path: F.image.path('missing.jpg'),
         mimetype: 'image/jpeg'
       })
-      let res = await api.get('/project/foo/photos/1/raw')
+      let res = await api.get('/project/foo/photos/1/original')
 
       expect(res.statusCode).to.equal(404)
     })

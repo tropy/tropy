@@ -4,12 +4,18 @@ import { HttpError } from '../../common/error.js'
 
 // API fails with RFC 9457 problem details.
 
+export const fail = (status, body) =>
+  new HttpError({ status, body })
+
+export const found = (payload) => {
+  if (payload == null)
+    throw fail(404, 'not found')
+  return payload
+}
+
 export default fp(async (app) => {
   app.setNotFoundHandler(async ({ method, url }) => {
-    throw new HttpError({
-      status: 404,
-      body: `route not found: ${method} ${url}`
-    })
+    throw fail(404, `route not found: ${method} ${url}`)
   })
 
   app.setErrorHandler((error, request, reply) => {

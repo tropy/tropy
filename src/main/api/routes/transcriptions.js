@@ -1,0 +1,39 @@
+import act from '../../../actions/api.js'
+import { found } from '../errors.js'
+import { id, object, one, params, some } from '../schema.js'
+
+export default async function transcriptions (api) {
+  api.get('/transcriptions/:id', {
+    schema: {
+      operationId: 'transcriptions.show',
+      summary: 'Show a transcription',
+      produces: ['application/json', 'text/plain', 'application/xml'],
+      params
+    }
+  }, async ({ format, params, rsvp }) =>
+    found(await rsvp(act.transcription.show({ id: params.id, format }))))
+
+  api.post('/transcriptions', {
+    schema: {
+      operationId: 'transcriptions.create',
+      summary: 'Create a transcription of a photo or selection',
+      body: {
+        ...object({
+          data: { type: 'string', description: 'ALTO XML document' },
+          text: { type: 'string', description: 'Plain text, if there is no ALTO' },
+          angle: { type: 'number', description: 'Rotation of the transcribed image in degrees' },
+          mirror: { type: 'boolean', description: 'Whether the transcribed image was mirrored' },
+          photo: id,
+          selection: id
+        }),
+        allOf: [some('data', 'text'), one('photo', 'selection')]
+      }
+    }
+  }, async ({ body, rsvp }, reply) => {
+    let payload = found(await rsvp(act.transcription.create(body)))
+
+    return reply.code(201).send({
+      id: Object.values(payload).map(tr => tr.id)
+    })
+  })
+}

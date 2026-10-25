@@ -56,9 +56,12 @@ export class Delete extends Command {
   *exec () {
     let { db } = this.options
     let id = this.action.payload
+    let tag = yield select(state => state.tags[id])
+
+    if (tag == null)
+      return null
 
     let items = yield call(mod.tag.items, db, id)
-    let tag = yield select(state => state.tags[id])
 
     yield call(mod.tag.delete, db, [id])
 
