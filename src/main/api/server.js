@@ -1,8 +1,8 @@
 import { createServer } from 'node:http'
-import { debug, info, logger, warn } from '../common/log.js'
-import { HttpError } from '../common/error.js'
-import { urlId } from '../common/util.js'
-import dialog from './dialog.js'
+import { debug, info, logger, warn } from '../../common/log.js'
+import { HttpError } from '../../common/error.js'
+import { urlId } from '../../common/util.js'
+import dialog from '../dialog.js'
 
 export class Server {
   #api
@@ -17,12 +17,8 @@ export class Server {
     return this.app.state.recent[0]
   }
 
-  dispatch = (type, action) => {
-    this.app.wm.current(type).webContents.send('dispatch', action)
-  }
-
-  rsvp = (win, action) => (
-    this.app.wm.rsvp(win, action)
+  rsvp = (win, action, options) => (
+    this.app.wm.rsvp(win, action, options)
   )
 
   resolveProject = (id) => {
@@ -92,16 +88,18 @@ export class Server {
       throw new Error('api already started')
 
     if (this.#api == null) {
-      let { create } = await import('../common/api.js')
+      let { create } = await import('./app.js')
 
-      this.#api = create({
+      let api = create({
         current: this.current,
-        dispatch: this.dispatch,
         log: logger.child({ name: 'api' }),
         resolveProject: this.resolveProject,
         rsvp: this.rsvp,
         version: this.app.version
       })
+
+      await api.ready()
+      this.#api = api
     }
 
     try {
@@ -114,7 +112,7 @@ export class Server {
     }
   }
 
-  listen (port = this.port, callback = this.#api.callback()) {
+  listen (port = this.port, callback = this.#api.routing) {
     return new Promise((resolve, reject) => {
       debug('api.listen creating http server ...')
       let server = createServer(callback)

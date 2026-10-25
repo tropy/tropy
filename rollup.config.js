@@ -1,4 +1,4 @@
-import { join, resolve } from 'node:path'
+import { resolve } from 'node:path'
 import { builtinModules } from 'node:module'
 import process from 'node:process'
 import alias from '@rollup/plugin-alias'
@@ -104,7 +104,6 @@ export default [
     plugins: [
       alias({
         entries: {
-          depd: join(process.cwd(), 'node_modules/depd'),
           'readable-stream': 'node:stream'
         }
       }),
@@ -115,7 +114,9 @@ export default [
       replace({
         preventAssignment: true,
         values: {
-          __filename: 'import.meta.filename'
+          __filename: 'import.meta.filename',
+          // Used by fastify to name plugins; not available in ES modules.
+          'require.cache': 'undefined'
         }
       }),
       json(),

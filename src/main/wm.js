@@ -345,6 +345,8 @@ export class WindowManager extends EventEmitter {
     let state = this.unloading.get(win)
     let type = this.types.get(win)
 
+    this.cancel(win, 'unloaded')
+
     if (state === 'close') {
       debug(`${type} window unloaded, will close`)
       this.unloading.set(win, 'done')
@@ -381,6 +383,10 @@ export class WindowManager extends EventEmitter {
   handlePendingResponse (action) {
     try {
       var id = action.meta.rsvp
+
+      // Ignore late responses after a timeout or cancel.
+      if (!(id in this.pending))
+        return
 
       if (action.error)
         this.pending[id].reject(action.payload)
@@ -507,6 +513,8 @@ export class WindowManager extends EventEmitter {
             this.emit('crashed', type, win)
           }
 
+          this.cancel(win, 'crashed')
+
           if (this.unloading.has(win)) {
             warn(`${type}[${win.id}] crashed during unload, forcing destroy`)
             win.destroy()
@@ -527,6 +535,7 @@ export class WindowManager extends EventEmitter {
           this.emit('close', type, win)
         })
         .once('closed', () => {
+          this.cancel(win, 'closed')
           this.unref(type, win)
           this.emit('closed', type)
         })
@@ -544,8 +553,9 @@ export class WindowManager extends EventEmitter {
     this.each(type, win => win.webContents.send(...args))
   }
 
-  rsvp (win, action) {
+  rsvp (win, action, { timeout = 60000 } = {}) {
     let id
+    let timer
 
     return new Promise((resolve, reject) => {
       id = this.seq.next().value
@@ -554,13 +564,32 @@ export class WindowManager extends EventEmitter {
         return reject(new Error('window not found'))
 
       action.meta.rsvp = id
-      this.pending[id] = { resolve, reject }
+      this.pending[id] = { win, resolve, reject }
 
       win.webContents.send('dispatch', action)
 
-      // TODO reject pending after timeout!
+      if (timeout > 0)
+        timer = setTimeout(() => {
+          reject(Object.assign(new Error(`no response after ${timeout}ms`), {
+            code: 'ETIMEDOUT'
+          }))
+        }, timeout)
 
-    }).finally(() => { delete this.pending[id] })
+    }).finally(() => {
+      clearTimeout(timer)
+      delete this.pending[id]
+    })
+  }
+
+  // Rejects all pending responses from the window:
+  // they will never arrive once it unloads, crashes or closes.
+  cancel (win, reason) {
+    for (let { win: w, reject } of Object.values(this.pending)) {
+      if (w === win)
+        reject(Object.assign(new Error(`window ${reason}`), {
+          code: 'ECANCELED'
+        }))
+    }
   }
 
   async enterFixedSize (win) {
