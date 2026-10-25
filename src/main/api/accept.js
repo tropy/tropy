@@ -1,35 +1,32 @@
 import fp from 'fastify-plugin'
-import { HttpError } from '../../common/error.js'
+import { fail } from './errors.js'
 
-const TYPES = {
-  json: 'application/json',
-  html: 'text/html',
-  text: 'text/plain',
-  markdown: 'text/markdown',
-  alto: 'application/xml'
+// Formats passed on to commands as request.format.
+const FORMATS = {
+  'application/json': 'json',
+  'text/html': 'html',
+  'text/plain': 'text',
+  'text/markdown': 'markdown',
+  'application/xml': 'alto'
 }
 
 export default fp(async (app) => {
   app.decorateRequest('format', null)
 
   app.addHook('preHandler', async (request, reply) => {
-    let { formats } = request.routeOptions.config
+    let types = request.routeOptions.schema?.produces
 
-    if (formats == null)
+    if (types == null)
       return
 
-    let types = formats.map(format => TYPES[format])
     let type = negotiate(request.headers.accept || '*/*', types)
 
     reply.header('vary', 'accept')
 
     if (type == null)
-      throw new HttpError({
-        status: 406,
-        body: `not acceptable, supported types: ${types.join(', ')}`
-      })
+      throw fail(406, `not acceptable, supported types: ${types.join(', ')}`)
 
-    request.format = formats[types.indexOf(type)]
+    request.format = FORMATS[type]
     reply.type(type)
   })
 }, { name: 'accept' })

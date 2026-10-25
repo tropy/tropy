@@ -1,0 +1,29 @@
+import act from '../../../actions/api.js'
+import { found } from '../errors.js'
+import { params } from '../schema.js'
+
+export default async function metadata (api) {
+  api.get('/data/:id', {
+    schema: {
+      operationId: 'metadata.show',
+      summary: 'Show the metadata of an item, photo or selection',
+      params
+    }
+  }, async ({ params, rsvp }) =>
+    found(await rsvp(act.metadata.show({ id: params.id }))))
+
+  api.patch('/data/:id', {
+    schema: {
+      operationId: 'metadata.save',
+      summary: 'Save metadata of an item, photo or selection',
+      description: 'Updates the given properties and keeps all others.',
+      params,
+      body: {
+        type: 'object',
+        minProperties: 1,
+        description: 'Values by metadata property URI'
+      }
+    }
+  }, async ({ body, params, rsvp }) =>
+    rsvp(act.metadata.save({ id: params.id, data: body })))
+}

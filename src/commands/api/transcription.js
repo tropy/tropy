@@ -15,7 +15,6 @@ export class TranscriptionFind extends Command {
     switch (format) {
       case 'plain':
       case 'text':
-      case 'html':
         return transcriptions.map(t => t.text).join(separator + '\n')
       default:
         return transcriptions

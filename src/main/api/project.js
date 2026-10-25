@@ -1,5 +1,5 @@
 import fp from 'fastify-plugin'
-import { HttpError } from '../../common/error.js'
+import { fail } from './errors.js'
 
 // Resolves the :project route param and gives routes access to
 // the project's window: request.rsvp(action) dispatches the action
@@ -30,9 +30,9 @@ export default fp(async (app, { resolveProject, rsvp }) => {
         }, options)).payload
       } catch (err) {
         if (err.code === 'ETIMEDOUT')
-          throw new HttpError({ status: 504, body: err.message })
+          throw fail(504, err.message)
         if (err.code === 'ECANCELED')
-          throw new HttpError({ status: 503, body: err.message })
+          throw fail(503, err.message)
         throw err
       }
     }
