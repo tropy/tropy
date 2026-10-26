@@ -54,6 +54,11 @@ export const metadata = {
   new: a('metadata.new')
 }
 
+export const nav = {
+  search: a('nav.search'),
+  select: a('nav.select')
+}
+
 export const note = {
   delete: a('note.delete'),
   export: a('note.export'),
