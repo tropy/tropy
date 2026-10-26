@@ -882,11 +882,9 @@ export class WindowManager extends EventEmitter {
 const getWindowButtonPosition = (type) => {
   switch (type) {
     case 'prefs':
-      return { x: 12, y: 11 }
-    case 'quicklook':
-      return { x: 13, y: 15 }
+      return { x: 12, y: 12 }
     default:
-      return { x: 12, y: 11 }
+      return { x: 12, y: 12 }
   }
 }
 

@@ -59,7 +59,7 @@ export class QuickLook {
           'theme',
           'zoom'
         ]),
-        frameless: !darwin,
+        frameless: true,
         vibrancy: !nativeTheme.prefersReducedTransparency
       })
 
@@ -184,7 +184,7 @@ export class QuickLook {
 
     // The title bar and padding around the content, see quicklook.scss.
     let frame = darwin ?
-      { width: 12, height: 50 } :
+      { width: 10, height: 43 } :
       { width: 0, height: linux ? 46 : getTitleBarOverlay().height }
 
     let display = screen.getDisplayMatching(parent.getBounds())

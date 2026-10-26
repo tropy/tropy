@@ -20,88 +20,81 @@
 @use "../partials/orientation" as *;
 
 
+// Components
+// --------------------------------------------------
+
+@use "../components/toolbar" as *;
+
+
 // Layout
 // --------------------------------------------------
 
-// Keep the frame in sync with QuickLook#setBounds in main/quicklook.js!
-:root {
-  @if $platform == darwin {
-    --inset: 6px;
-    --titlebar-height: 44px;
-  } @else if $platform == linux {
-    --inset: 0px;
-    --titlebar-height: 46px;
-  } @else {
-    --inset: 0px;
-    --titlebar-height: 33px; // The native title bar overlay
-  }
-}
+#quicklook {
+  padding-top: zoom($toolbar-frameless-height-sm);
 
-body {
-  @if $platform == darwin {
-    background: transparent; // Show the native vibrancy
-  }
-}
-
-.titlebar {
-  position: fixed;
-  inset: 0 0 auto;
-  height: var(--titlebar-height);
-  -webkit-app-region: drag;
-}
-
-.quicklook-title {
-  position: fixed;
-  top: 0;
-  height: var(--titlebar-height);
-  margin: 0;
-  overflow: hidden;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: var(--titlebar-height);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  pointer-events: none;
-
-  @if $platform == darwin {
-    left: 80px; // After the native window buttons
-    right: 16px;
+  .darwin & {
+    padding: zoom($toolbar-frameless-height-sm) 5px 5px; // Keep in sync with QuickLook#setBounds in main/quicklook.js
   }
 
-  @if $platform == win32 {
-    left: 12px;
-    right: 150px; // Before the native window buttons
-    font-size: 11px;
-    font-weight: normal;
+  .titlebar {
+    position: fixed;
+    inset: 0 0 auto;
+    height: zoom($toolbar-frameless-height-sm);
   }
 
-  @if $platform == linux {
-    left: 100px;
-    right: 100px;
-    text-align: center;
-  }
-}
+  .quicklook-title {
+    position: fixed;
+    top: 0;
+    height: zoom($toolbar-frameless-height-sm);
+    line-height: zoom($toolbar-frameless-height-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
 
-#main {
-  height: 100vh;
-  padding: var(--titlebar-height) var(--inset) var(--inset);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  img {
-    flex: none;
-    width: calc(100vw - 2 * var(--inset));
-    height: calc(100vh - var(--titlebar-height) - var(--inset));
-    object-fit: contain;
-
-    @if $platform == darwin {
-      border-radius: 10px;
+    .darwin & {
+      left: $window-controls-width + 9px;
+      right: $default-spacing-x;
+      font-weight: 700;
     }
 
+    .win32 & {
+      left: $default-spacing-x;
+      right: $window-controls-width + $space-md;
+      font-size: zoom(12px);
+    }
+
+    .linux & {
+      left: 46px; // Only close button
+      right: 46px;
+      font-size: zoom(14.667px);
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+
+  #main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    container-type: size;
+  }
+
+  img {
+    flex: 0 0 auto;
+    width: 100cqw;
+    height: 100cqh;
+    object-fit: contain;
+
     &.rotated {
-      width: calc(100vh - var(--titlebar-height) - var(--inset));
-      height: calc(100vw - 2 * var(--inset));
+      width: 100cqh;
+      height: 100cqw;
+    }
+
+    .darwin & {
+      border-radius: 11px;
+      -electron-corner-smoothing: system-ui;
     }
   }
 }
