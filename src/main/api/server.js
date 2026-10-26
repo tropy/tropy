@@ -1,5 +1,4 @@
-import { createServer } from 'node:http'
-import { debug, info, logger, warn } from '../../common/log.js'
+import { debug, logger, warn } from '../../common/log.js'
 import { HttpError } from '../../common/error.js'
 import { urlId } from '../../common/util.js'
 import dialog from '../dialog.js'
@@ -7,7 +6,6 @@ import dialog from '../dialog.js'
 export class Server {
   #api
   #pending
-  #server
 
   constructor (app) {
     this.app = app
@@ -46,18 +44,16 @@ export class Server {
 
     let [path] = matches
 
+    if (matches.length > 1)
+      debug(`api: ambiguous project URL id ${id}, using the most recent`)
+
     let win = this.app.wm.values('project')
       .find(w => this.app.getProject(w)?.path === path)
 
     if (win == null)
       throw new HttpError({ status: 404, body: `project "${id}" is not open` })
 
-    return {
-      win,
-      path,
-      id,
-      ambiguous: matches.length > 1
-    }
+    return { win, path, id }
   }
 
   get port () {
@@ -65,103 +61,49 @@ export class Server {
   }
 
   get status () {
-    return this.#server != null
+    return this.#api != null
   }
 
   async start () {
-    if (this.app.state.api || this.app.opts.port) {
-      if (this.#server == null) {
-        try {
-          if (!this.#pending) {
-            this.#pending = this.createServer()
-          }
-          await this.#pending
-        } finally {
-          this.#pending = null
-        }
-      }
-    }
+    if (this.#api || !(this.app.state.api || this.app.opts.port))
+      return
+
+    this.#pending ??= this.listen().finally(() => {
+      this.#pending = null
+    })
+
+    await this.#pending
   }
 
-  async createServer () {
-    if (this.#server != null)
-      throw new Error('api already started')
+  // Closed Fastify instances cannot listen again,
+  // so every start creates a new one.
+  async listen () {
+    let { create } = await import('./api.js')
 
-    if (this.#api == null) {
-      let { create } = await import('./api.js')
-
-      let api = create({
-        current: this.current,
-        log: logger.child({ name: 'api' }),
-        resolveProject: this.resolveProject,
-        rsvp: this.rsvp,
-        version: this.app.version
-      })
-
-      await api.ready()
-      this.#api = api
-    }
+    let api = create({
+      current: this.current,
+      log: logger.child({ name: 'api' }),
+      resolveProject: this.resolveProject,
+      rsvp: this.rsvp,
+      version: this.app.version
+    })
 
     try {
-      this.#server = await this.listen()
+      await api.listen({ port: this.port, host: '127.0.0.1' })
+      this.#api = api
     } catch (err) {
-      if (err.code !== 'EADDRINUSE') {
+      await api.close()
+
+      if (err.code !== 'EADDRINUSE')
         throw err
-      }
+
+      warn({ err }, 'api.listen failed')
       dialog.alert(null, this.app.dict.dialog.addrinuse)
     }
   }
 
-  listen (port = this.port, callback = this.#api.routing) {
-    return new Promise((resolve, reject) => {
-      debug('api.listen creating http server ...')
-      let server = createServer(callback)
-
-      function onError (err) {
-        warn({ err }, 'api.listen failed')
-        reject(err)
-        server.off('error', onError)
-        server.off('listening', onListening)
-        clearTimeout(timeout)
-      }
-
-      function onListening () {
-        info(`api.listen on port ${port}...`)
-        resolve(server)
-        server.off('error', onError)
-        server.off('listening', onListening)
-        clearTimeout(timeout)
-      }
-
-      let timeout = setTimeout(() => {
-        warn('api.listen timed out ...')
-        reject(new Error('server.listen timeout'))
-        server.off('error', onError)
-        server.off('listening', onListening)
-        server.close()
-        server.closeAllConnections()
-      }, 500)
-
-      server.on('error', onError)
-      server.on('listening', onListening)
-      server.listen(port, '127.0.0.1')
-    })
-  }
-
   async stop () {
-    if (this.#server != null) {
-      await this.close()
-      this.#server = null
-      debug('api.stop all connections closed')
-    }
+    await this.#api?.close()
+    this.#api = null
   }
-
-  close (server = this.#server) {
-    return new Promise((resolve) => {
-      info('api.stop closing connections...')
-      server.close(resolve)
-      server.closeAllConnections()
-    })
-  }
-
 }

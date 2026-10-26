@@ -32,8 +32,7 @@ export default async function transcriptions (api) {
   }, async ({ body, rsvp }, reply) => {
     let payload = found(await rsvp(act.transcription.create(body)))
 
-    return reply.code(201).send({
-      id: Object.values(payload).map(tr => tr.id)
-    })
+    reply.code(201)
+    return { id: Object.values(payload).map(tr => tr.id) }
   })
 }

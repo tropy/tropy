@@ -8,19 +8,10 @@ export default fp(async (app, { resolveProject, rsvp }) => {
   app.decorateRequest('project', null)
   app.decorateRequest('rsvp', null)
 
-  app.addHook('onRequest', async (request, reply) => {
-    let id = request.params.project
-    let { win, path, id: resolved, ambiguous } = resolveProject(id)
+  app.addHook('onRequest', async (request) => {
+    let { win, path, id } = resolveProject(request.params.project)
 
-    if (ambiguous)
-      reply.header('Warning',
-        `199 - "ambiguous project URL '${resolved}'; opened the most recent ` +
-        'match, consider renaming a project"')
-
-    request.project = {
-      id: resolved,
-      path
-    }
+    request.project = { id, path }
 
     request.rsvp = async (action, options) => {
       try {

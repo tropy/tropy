@@ -21,6 +21,7 @@ export function create ({
   version
 }) {
   let app = Fastify({
+    forceCloseConnections: true,
     loggerInstance: log,
     logController: new Logging()
   })
@@ -42,7 +43,7 @@ export function create ({
   app.register(legacy)
 
   app.register(async (api) => {
-    await api.register(project, { resolveProject, rsvp })
+    api.register(project, { resolveProject, rsvp })
 
     // Commands without results respond with No Content.
     api.addHook('onSend', async (request, reply, payload) => {
@@ -79,14 +80,11 @@ export function create ({
   return app
 }
 
-// Log requests at debug level only; errors keep the default levels.
+// Log requests at debug level only; errors are logged by the error handler.
 class Logging extends LogController {
   incomingRequest () {}
 
-  requestCompleted (error, request, reply, metadata) {
-    if (error)
-      return super.requestCompleted(error, request, reply, metadata)
-
+  requestCompleted (error, request, reply) {
     request.log.debug({
       ms: Math.round(reply.elapsedTime),
       status: reply.statusCode,

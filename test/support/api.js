@@ -8,7 +8,7 @@ import { create } from '#tropy/main/api/api.js'
 // with api.respond(payload) or api.respond(action => payload).
 //
 // Any project id resolves to /projects/:id.tropy, except
-// 'missing' (unknown project) and ids starting with 'twin' (ambiguous).
+// 'missing' (unknown project).
 // Like the real server, resolved ids are URL-encoded.
 //
 // Requests send bodies as JSON, like curl --json.
@@ -72,8 +72,7 @@ export function mkapi () {
     return {
       win: api.win,
       path: `/projects/${id}.tropy`,
-      id: encodeURIComponent(id),
-      ambiguous: id.startsWith('twin')
+      id: encodeURIComponent(id)
     }
   }
 

@@ -39,8 +39,10 @@ export default async function tags (api) {
         items: { ...ids, description: 'Tag these items' }
       }, ['name'])
     }
-  }, async ({ body, rsvp }, reply) =>
-    reply.code(201).send(await rsvp(act.tag.create(body))))
+  }, async ({ body, rsvp }, reply) => {
+    reply.code(201)
+    return rsvp(act.tag.create(body))
+  })
 
   api.delete('/tags/:id', {
     schema: { operationId: 'tags.delete', summary: 'Delete a tag', params }

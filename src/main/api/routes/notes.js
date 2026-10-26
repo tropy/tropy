@@ -1,5 +1,5 @@
 import act from '../../../actions/api.js'
-import { fail, found } from '../errors.js'
+import { found } from '../errors.js'
 import { id, object, one, params } from '../schema.js'
 
 export default async function notes (api) {
@@ -29,17 +29,13 @@ export default async function notes (api) {
   }, async ({ body, rsvp }, reply) => {
     let payload = found(await rsvp(act.note.create(body)))
 
-    return reply.code(201).send({
-      id: Object.values(payload).map(note => note.id)
-    })
+    reply.code(201)
+    return { id: Object.values(payload).map(note => note.id) }
   })
 
   api.delete('/notes/:id', {
     schema: { operationId: 'notes.delete', summary: 'Delete a note', params }
   }, async ({ params, rsvp }) => {
-    let payload = await rsvp(act.note.delete([params.id]))
-
-    if (payload.length === 0)
-      throw fail(404, 'not found')
+    found(await rsvp(act.note.delete([params.id])))
   })
 }

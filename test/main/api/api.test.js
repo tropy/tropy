@@ -42,18 +42,6 @@ describe('api', () => {
         .to.include({ project: '/projects/Kraków Atlas.tropy' })
     })
 
-    it('warns about ambiguous project ids', async () => {
-      let res = await api.get('/project/twin/')
-
-      expect(res.statusCode).to.equal(200)
-      expect(res.headers.warning).to.match(/ambiguous/)
-
-      // Header values must not contain non-Latin-1 characters
-      res = await api.get('/project/twin%E6%9D%B1%E4%BA%AC')
-      expect(res.statusCode).to.equal(200)
-      expect(res.headers.warning).to.include('twin%E6%9D%B1%E4%BA%AC')
-    })
-
     it('responds with problem details for unknown projects', async () => {
       let res = await api.get('/project/missing/items')
 
@@ -193,10 +181,12 @@ describe('api', () => {
   describe('lists', () => {
     it('shows the root list', async () => {
       api.respond([])
-      let res = await api.get('/project/foo/lists/0')
+      for (let url of ['/project/foo/lists/0', '/project/foo/lists']) {
+        let res = await api.get(url)
 
-      expect(res.statusCode).to.equal(200)
-      expect(api.action.payload).to.include({ id: 0 })
+        expect(res.statusCode).to.equal(200)
+        expect(api.action.payload).to.include({ id: 0 })
+      }
     })
   })
 
@@ -288,6 +278,14 @@ describe('api', () => {
 
       expect(res.statusCode).to.equal(400)
       expect(api.actions).to.be.empty
+    })
+
+    it('deletes notes', async () => {
+      api.respond([1])
+      expect((await api.delete('/project/foo/notes/1')).statusCode).to.equal(204)
+
+      api.respond(null)
+      expect((await api.delete('/project/foo/notes/1')).statusCode).to.equal(404)
     })
 
     it('responds with 404 for unknown photos or selections', async () => {
