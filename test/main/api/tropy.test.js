@@ -43,6 +43,26 @@ describe('tropy:// urls', () => {
     expect(target).to.equal(win)
   })
 
+  it('navigates within the project window', async () => {
+    let base = 'tropy://project/Krak%C3%B3w%20Atlas'
+
+    for (let [url, name, payload] of [
+      ['/items/41', 'item.open', { id: 41 }],
+      ['/items', 'nav.select', {}],
+      ['/items?q=Map', 'nav.search', { query: 'Map' }],
+      ['/lists/3', 'nav.select', { list: 3 }],
+      ['/tags/5', 'nav.select', { tags: [5] }],
+      ['/trash', 'nav.select', { trash: true }]
+    ]) {
+      await handle(app, base + url)
+
+      let [action, target] = app.dispatch.mock.calls.at(-1).arguments
+      expect(action.name, url).to.equal(name)
+      expect(action.payload, url).to.deep.include(payload)
+      expect(target).to.equal(win)
+    }
+  })
+
   it('rejects unknown projects unless prompted', async () => {
     let err = await handle(app, 'tropy://project/other').catch(e => e)
     expect(err).to.have.property('status', 404)
@@ -57,8 +77,9 @@ describe('tropy:// urls', () => {
       ['http://project/x', 400],
       ['tropy://project/x/items/0/3', 400],
       ['tropy://project/x/items/a/3', 400],
-      ['tropy://project/x/lists/1', 404],
+      ['tropy://project/x/notes/1', 404],
       ['tropy://project/x/', 404],
+      ['tropy://project/x/items?foo=1', 400],
       ['tropy://nothing', 404]
     ]) {
       let err = await handle(app, url).catch(e => e)

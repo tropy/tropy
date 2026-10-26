@@ -24,13 +24,58 @@ export const routes = [{
 }, {
   pattern: new URLPattern({
     hostname: 'project',
-    pathname: '/:urlId/items/:item/:photo{/:selection}?'
+    pathname: '/:urlId/items'
   }),
-  description: 'Open a project and show an item photo or selection. ' +
+  description: 'Open a project and show all items, or search them (q).',
+  params: object({
+    urlId,
+    q: { type: 'string', description: 'Search query' }
+  }, ['urlId']),
+  handler: (app, { urlId, q }, opts) =>
+    navigate(app, urlId, opts, (q == null) ?
+      act.nav.select({}) :
+      act.nav.search({ query: q }))
+}, {
+  pattern: new URLPattern({
+    hostname: 'project',
+    pathname: '/:urlId/items/:item{/:photo}?{/:selection}?'
+  }),
+  description: 'Open a project and show an item, photo or selection. ' +
     'Resolves with the project; the item is not verified.',
   params: object({ urlId, item: id, photo: id, selection: id },
-    ['urlId', 'item', 'photo']),
-  handler: openItem
+    ['urlId', 'item']),
+  handler: (app, { urlId, item, photo, selection }, opts) =>
+    navigate(app, urlId, opts,
+      act.item.open({ id: item, photo, selection }))
+}, {
+  pattern: new URLPattern({
+    hostname: 'project',
+    pathname: '/:urlId/lists/:list'
+  }),
+  description: 'Open a project and show a list. ' +
+    'Resolves with the project; the list is not verified.',
+  params: object({ urlId, list: id }, ['urlId', 'list']),
+  handler: (app, { urlId, list }, opts) =>
+    navigate(app, urlId, opts, act.nav.select({ list }))
+}, {
+  pattern: new URLPattern({
+    hostname: 'project',
+    pathname: '/:urlId/tags/:tag'
+  }),
+  description: 'Open a project and show the items with a tag. ' +
+    'Resolves with the project; the tag is not verified.',
+  params: object({ urlId, tag: id }, ['urlId', 'tag']),
+  handler: (app, { urlId, tag }, opts) =>
+    navigate(app, urlId, opts, act.nav.select({ tags: [tag] }))
+}, {
+  pattern: new URLPattern({
+    hostname: 'project',
+    pathname: '/:urlId/trash'
+  }),
+  description: 'Open a project and show the trash',
+  params: object({ urlId }, ['urlId']),
+  handler: (app, { urlId }, opts) =>
+    navigate(app, urlId, opts, act.nav.select({ trash: true }))
 }, {
   pattern: new URLPattern({ hostname: '(prefs|preferences)' }),
   description: 'Show the preferences',
@@ -61,7 +106,11 @@ export async function handle (app, url, { prompt = false } = {}) {
     let match = route.pattern.exec(url.href)
 
     if (match) {
-      let params = decode(match.pathname.groups)
+      let params = {
+        ...Object.fromEntries(url.searchParams),
+        ...decode(match.pathname.groups)
+      }
+
       await validate(route.params, params)
       return route.handler(app, params, { prompt })
     }
@@ -100,13 +149,14 @@ async function openProject (app, urlId, { prompt }) {
   return { win, project: app.projects.describe(path) }
 }
 
-async function openItem (app, { urlId, item, photo, selection }, opts) {
+// Opens a project and dispatches the action to its window.
+async function navigate (app, urlId, opts, action) {
   let opened = await openProject(app, urlId, opts)
 
   if (opened == null)
     return null
 
-  app.dispatch(act.item.open({ id: item, photo, selection }), opened.win)
+  app.dispatch(action, opened.win)
 
   return opened.project
 }
