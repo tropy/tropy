@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import { resolve } from 'node:path'
 import { app, ipcMain as ipc, BrowserWindow } from 'electron'
 import { info, warn } from '../common/log.js'
-import { urlId } from '../common/util.js'
+import { protocolURL, urlId as getUrlId } from '../common/util.js'
 import { PROJECT } from '../constants/index.js'
 import dialog from './dialog.js'
 import * as act from './actions.js'
@@ -63,13 +63,36 @@ export class ProjectRegistry {
     return this.app.state.recent
   }
 
-  find (id) {
-    id = encodeURIComponent(id.toWellFormed().normalize())
-    return this.recent.find(file => urlId(file) === id && fs.existsSync(file))
+  // The path of the most recent existing project with the URL id.
+  // The legacy id 'current' is the project in the current project window.
+  find (urlId) {
+    if (urlId === 'current')
+      return this.get(this.wm.current('project'))?.path ?? null
+
+    let id = encodeURIComponent(urlId.toWellFormed().normalize())
+
+    return this.recent.find(file =>
+      getUrlId(file) === id && fs.existsSync(file)) ?? null
   }
 
-  last () {
-    return this.recent.find(file => fs.existsSync(file))
+  // The path of the most recent existing project.
+  latest () {
+    return this.recent.find(file => fs.existsSync(file)) ?? null
+  }
+
+  // What Tropy knows about the project at path.
+  describe (path) {
+    return {
+      urlId: getUrlId(path),
+      path,
+      open: this.window(path) != null,
+      url: protocolURL(path)
+    }
+  }
+
+  // The recent projects, most recent first.
+  list () {
+    return this.recent.map(path => this.describe(path))
   }
 
   // Removes projects from the recent projects; open projects stay.
@@ -94,21 +117,21 @@ export class ProjectRegistry {
 
   // Opening projects
 
-  // Shows the window of the project at file. If the project is not
+  // Shows the window of the project at path. If the project is not
   // open or opening, opens it in win. Without win, opens it in the
   // current project window if that is empty, otherwise in a new window.
-  // Without a file, shows win, the empty current or a new project window.
-  async show (file, win) {
-    if (file) {
-      file = resolve(file)
+  // Without a path, shows win, the empty current or a new project window.
+  async show (path, win) {
+    if (path) {
+      path = resolve(path)
 
       // No await unless pending: concurrent calls must see the new
       // pending open before this call tracks another one.
-      let pending = this.#pending.get(file)
-      let open = this.window(file) ?? (pending && await pending.window)
+      let pending = this.#pending.get(path)
+      let open = this.window(path) ?? (pending && await pending.window)
 
       if (open) {
-        info({ file }, 'focus existing project window')
+        info({ path }, 'focus existing project window')
         open.show()
         return open
       }
@@ -117,19 +140,19 @@ export class ProjectRegistry {
     win ??= this.#empty()
 
     if (win == null) {
-      win = this.#createWindow(file)
+      win = this.#createWindow(path)
 
     } else {
-      info({ file }, 'open project in window')
+      info({ path }, 'open project in window')
 
-      if (file)
-        this.app.dispatch(act.project.open(file), win)
+      if (path)
+        this.app.dispatch(act.project.open(path), win)
 
       win.show()
     }
 
-    if (file)
-      this.#track(file, win)
+    if (path)
+      this.#track(path, win)
 
     return win
   }
@@ -151,23 +174,15 @@ export class ProjectRegistry {
   // if necessary. Returns null if there is no such project.
   // The legacy id 'current' is the active project window
   // or else the most recent project.
-  async openById (id) {
-    if (id === 'current') {
-      let win = this.wm.current('project')
+  async openById (urlId) {
+    let path = this.find(urlId) ??
+      ((urlId === 'current') ? this.latest() : null)
 
-      if (this.get(win))
-        return win
-
-      let path = this.last()
-      return path ? this.open(path) : null
-    }
-
-    let path = this.find(id)
     return path ? this.open(path) : null
   }
 
-  async openMostRecent () {
-    return this.show(this.last())
+  async openLatest () {
+    return this.show(this.latest())
   }
 
   // Lets the user pick a project file; null if cancelled.

@@ -676,7 +676,7 @@ describe('url', () => {
   describe('protocolURL', () => {
     it('derives the id from the file basename', () => {
       expect(util.protocolURL('/path/to/My Project.tpy'))
-        .to.equal('tropy://project/My%20Project/')
+        .to.equal('tropy://project/My%20Project')
     })
 
     it('builds an item/photo url when both are present', () => {
@@ -686,9 +686,9 @@ describe('url', () => {
 
     it('omits the item path when item or photo is missing', () => {
       expect(util.protocolURL('/path/to/My Project.tpy', { item: 1 }))
-        .to.equal('tropy://project/My%20Project/')
+        .to.equal('tropy://project/My%20Project')
       expect(util.protocolURL('/path/to/My Project.tpy', { photo: 2 }))
-        .to.equal('tropy://project/My%20Project/')
+        .to.equal('tropy://project/My%20Project')
     })
 
     it('round-trips through the WHATWG URL parser', () => {

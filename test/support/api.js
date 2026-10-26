@@ -1,13 +1,15 @@
 import { mock } from 'node:test'
+import { basename } from 'node:path'
 import { logger } from '#tropy/common/log.js'
+import { protocolURL, urlId } from '#tropy/common/util.js'
 import { create } from '#tropy/main/api/api.js'
 
 // Sets up an API instance whose project windows are fakes:
 // it records dispatched actions in api.actions and responds
 // with api.respond(payload) or api.respond(action => payload).
 //
-// Any project id resolves to /projects/:id.tropy, except
-// 'missing' (unknown project).
+// Any project id resolves to /projects/:id.tropy, except 'missing'
+// (unknown project). All projects are open, except 'closed'.
 //
 // Requests send bodies as JSON, like curl --json.
 export function mkapi () {
@@ -21,7 +23,7 @@ export function mkapi () {
 
     // The fake window of the project with id.
     window (id) {
-      windows[id] ??= { project: { path: `/projects/${id}.tropy` } }
+      windows[id] ??= { id }
       return windows[id]
     },
 
@@ -52,13 +54,12 @@ export function mkapi () {
     delete: (url) => api.request('DELETE', url)
   }
 
+  let projects = fakeProjects(api)
+
   before(() => {
     api.app = create({
-      log: logger.child({}, { level: 'silent' }),
-      projects: {
-        openById: async (id) => (id === 'missing') ? null : api.window(id),
-        get: (win) => win.project
-      },
+      loggerInstance: logger.child({}, { level: 'silent' }),
+      projects,
       version: '2.0.0',
       wm: { rsvp: api.rsvp }
     })
@@ -73,4 +74,27 @@ export function mkapi () {
   })
 
   return api
+}
+
+// A fake ProjectRegistry for the projects in mkapi.
+const fakeProjects = (api) => {
+  let window = (path) => {
+    let id = basename(path, '.tropy')
+    return (id === 'closed') ? null : api.window(id)
+  }
+
+  let describe = (path) => ({
+    urlId: urlId(path),
+    path,
+    open: window(path) != null,
+    url: protocolURL(path)
+  })
+
+  return {
+    find: (id) => (id === 'missing') ? null : `/projects/${id}.tropy`,
+    window,
+    describe,
+    list: () =>
+      ['/projects/foo.tropy', '/projects/closed.tropy'].map(describe)
+  }
 }

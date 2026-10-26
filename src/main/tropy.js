@@ -1,4 +1,3 @@
-import assert from 'node:assert'
 import fs from 'node:fs'
 import { EventEmitter } from 'node:events'
 import { extname, join } from 'node:path'
@@ -38,6 +37,7 @@ import { Storage } from './storage.js'
 import { Updater } from './updater.js'
 import dialog from './dialog.js'
 import { Server as ApiServer } from './api/server.js'
+import { handle as handleTropyURL } from './api/tropy.js'
 import { WindowManager, getPath } from './wm.js'
 import * as shell from './shell.js'
 import { addIdleObserver } from './idle.js'
@@ -122,7 +122,7 @@ export class Tropy extends EventEmitter {
       if (win != null)
         return win.show()
       else
-        return this.projects.openMostRecent()
+        return this.projects.openLatest()
     }
 
     for (let url of urls) {
@@ -955,57 +955,14 @@ export class Tropy extends EventEmitter {
       .catch(err => warn({ err }, 'failed to copy protocol url'))
   }
 
+  // Links have no one to report to: errors are logged.
   async handleProtocolRequest (url) {
     info(`opening url ${url}`)
 
-    switch (url.host) {
-      case 'prefs':
-      case 'preferences':
-        await this.showPreferencesWindow()
-        break
-
-      case 'about':
-      case 'version':
-        await this.showAboutWindow()
-        break
-
-      case 'project': {
-        // tropy://project(/:UrlId)/items/:id(/:photo)(/:selection)
-        let [, projectId, type, id, photo] = url.pathname.split('/')
-
-        projectId = projectId ? decodeURIComponent(projectId) : 'current'
-
-        let win = await this.projects.openById(projectId)
-
-        if (win == null) {
-          if (projectId === 'current')
-            return this.projects.show()
-
-          let file = await this.projects.pick(this.wm.current())
-          if (!file) return
-
-          win = await this.projects.open(file)
-        }
-
-        win.show()
-
-        if (type) {
-          assert.equal(type, 'items',
-            `bad request: action type '${type}' unknown`)
-
-          assert.ok(id, 'bad request: missing id')
-          assert.ok(photo, 'bad request: missing photo')
-
-          this.dispatch(act.item.open({
-            id: parseInt(id, 10),
-            photo: parseInt(photo, 10)
-          }), win)
-        }
-        break
-      }
-
-      default:
-        throw new Error(`bad request: host unknown: ${url}`)
+    try {
+      return await handleTropyURL(this, url, { prompt: true })
+    } catch (err) {
+      warn({ err }, `failed to open ${url}: ${err.message}`)
     }
   }
 
