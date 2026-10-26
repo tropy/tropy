@@ -13,7 +13,6 @@ export class TranscriptionFind extends Command {
       getItemTranscriptions(state, { id }))
 
     switch (format) {
-      case 'plain':
       case 'text':
         return transcriptions.map(t => t.text).join(separator + '\n')
       default:
@@ -34,11 +33,9 @@ export class TranscriptionShow extends Command {
       return null
 
     switch (format) {
-      case 'plain':
       case 'text':
         return transcription.text
       case 'alto':
-      case 'xml':
         return transcription.data
       default:
         return transcription

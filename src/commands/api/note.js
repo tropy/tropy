@@ -17,10 +17,8 @@ export class NoteShow extends Command {
     switch (format) {
       case 'html':
         return serialize(note, { format: { html: true }, localize: false }).html
-      case 'plain':
       case 'text':
         return note.text
-      case 'md':
       case 'markdown':
         return serialize(note, {
           format: { markdown: true },
