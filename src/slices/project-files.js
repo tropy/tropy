@@ -1,5 +1,6 @@
 import { basename } from 'node:path'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { ipcRenderer } from 'electron'
 import { pMap } from '../common/util.js'
 import { error, warn } from '../common/log.js'
 import { fail, open, save } from '../dialog.js'
@@ -68,13 +69,14 @@ export const reload = createAsyncThunk(
 
 export const consolidate = createAsyncThunk(
   'projectFiles/consolidate',
-  async (path, { fulfillWithValue }) => {
-
+  async (path) => {
     let [newPath] = await open.project(path)
 
-    return fulfillWithValue({ path, newPath }, {
-      ipc: newPath ? 'clear-recent-project' : false
-    })
+    // The project moved: remove its old path from the recent projects.
+    if (newPath)
+      ipcRenderer.send('cmd', 'app:clear-recent-projects', { target: { path } })
+
+    return { path, newPath }
   }
 )
 

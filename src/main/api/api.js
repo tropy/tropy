@@ -14,20 +14,22 @@ import tags from './routes/tags.js'
 import transcriptions from './routes/transcriptions.js'
 
 export function create ({
-  log,
-  resolveProject,
-  rsvp,
-  version
+  loggerInstance,
+  projects,
+  version,
+  wm
 }) {
   let app = Fastify({
     forceCloseConnections: true,
-    loggerInstance: log,
-    logController: new Logging()
+    loggerInstance,
+    logController: new DebugLogger()
   })
 
-  // Coerce only query strings and params, because their values are strings.
-  // JSON bodies must use the right types.
-  let options = { allErrors: true, allowUnionTypes: true, useDefaults: true }
+  let options = {
+    allErrors: true,
+    allowUnionTypes: true,
+    useDefaults: true
+  }
   let ajv = {
     body: new Ajv(options),
     strings: new Ajv({ ...options, coerceTypes: 'array' })
@@ -42,7 +44,7 @@ export function create ({
   app.register(legacy)
 
   app.register(async (api) => {
-    api.register(project, { resolveProject, rsvp })
+    api.register(project, { projects, wm })
 
     // Commands without results respond with No Content.
     api.addHook('onSend', async (request, reply, payload) => {
@@ -51,7 +53,10 @@ export function create ({
     })
 
     api.get('/', {
-      schema: { operationId: 'project.status', summary: 'Show the project status' }
+      schema: {
+        operationId: 'project.status',
+        summary: 'Show the project status'
+      }
     }, ({ project }) => ({
       project: project.path,
       id: project.id,
@@ -78,8 +83,7 @@ export function create ({
   return app
 }
 
-// Log requests at debug level only; errors are logged by the error handler.
-class Logging extends LogController {
+class DebugLogger extends LogController {
   incomingRequest () {}
 
   requestCompleted (error, request, reply) {

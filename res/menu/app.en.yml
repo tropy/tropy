@@ -35,10 +35,6 @@ en:
           label: 'Open…'
           accelerator: 'CmdOrCtrl+O'
           command: 'app:open-dialog'
-        - &open-new
-          label: 'Open In New Window…'
-          accelerator: 'Shift+CmdOrCtrl+O'
-          command: 'app:open-new-dialog'
         - &recent
           label: 'Recent Projects'
           id: 'recent'
@@ -285,7 +281,6 @@ en:
         - *new
         - type: 'separator'
         - *open
-        - *open-new
         - *recent
         - type: 'separator'
         - *import

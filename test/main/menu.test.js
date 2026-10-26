@@ -8,9 +8,9 @@ describe('AppMenu', () => {
   before(() => {
     menu = new AppMenu({
       defaults: { locale: 'en' },
-      state: { recent: [], locale: 'en' },
+      state: { locale: 'en' },
       getHistory: () => ({}),
-      getProject: () => null,
+      projects: { recent: [], get: () => null },
       plugins: { available: mock.fn(() => []) },
       wm: { windows: {} },
       updater: {}
