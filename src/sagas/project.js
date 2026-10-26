@@ -100,7 +100,13 @@ export function *open (opts, action) {
     if (db)
       yield call(db.close)
 
-    yield put(act.project.closed(error))
+    yield put(act.project.closed(error, {
+      project: {
+        id: project?.id,
+        path: project?.path ?? action.payload
+      }
+    }))
+
     debug('*project.open terminated')
   }
 }

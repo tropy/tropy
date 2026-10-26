@@ -5,7 +5,6 @@ export default {
   opened (payload, meta) {
     return {
       type: PROJECT.OPENED,
-      error: (payload instanceof Error),
       payload,
       meta: { ipc: true, ...meta }
     }
