@@ -63,7 +63,13 @@ Create.register(NOTE.CREATE)
 export class Delete extends Command {
   *exec () {
     let { db } = this.options
-    let { payload } = this.action
+
+    // Skip unknown notes.
+    let payload = yield select(state =>
+      this.action.payload.filter(id => id in state.notes))
+
+    if (payload.length === 0)
+      return null
 
     let [isSelected, map] = yield select(state => ([
       payload.includes(state.nav.note),

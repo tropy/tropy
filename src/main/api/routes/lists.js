@@ -10,7 +10,7 @@ export default async function lists (api) {
       summary: 'Show a list',
       description: 'The root list, or any list with expand, ' +
         'responds with its child lists instead.',
-      params: path({ id: list }),
+      params: path({ id: { ...list, default: 0 } }),
       querystring: object({
         expand: {
           type: 'boolean',
@@ -21,7 +21,7 @@ export default async function lists (api) {
     }
   }, async ({ params, query, rsvp }) =>
     found(await rsvp(act.list.show({
-      id: params.id ?? 0,
+      id: params.id,
       expand: query.expand
     }))))
 
@@ -34,8 +34,10 @@ export default async function lists (api) {
         parent: { ...list, default: 0, description: 'Parent list id' }
       }, ['name'])
     }
-  }, async ({ body, rsvp }, reply) =>
-    reply.code(201).send(await rsvp(act.list.create(body))))
+  }, async ({ body, rsvp }, reply) => {
+    reply.code(201)
+    return rsvp(act.list.create(body))
+  })
 
   api.get('/lists/:id/items', findItems({
     operationId: 'lists.items.find',

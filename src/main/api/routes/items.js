@@ -70,7 +70,8 @@ export default async function items (api) {
       act.import(rest, { createLists, tagColor }),
       { timeout: 0 })
 
-    return reply.code(201).send(payload)
+    reply.code(201)
+    return payload
   })
 
   api.get('/items', findItems({
