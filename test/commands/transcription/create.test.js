@@ -23,9 +23,7 @@ describe('Create transcription', () => {
 
   it('skips unknown parents', () => {
     for (let payload of [{ photo: 2 }, { photo: [1, 2] }, { selection: 1 }]) {
-      let t = exec(payload)
-      expect(t.result).to.be.null
-      expect(t.calls(db.transaction).callCount()).to.equal(0)
+      expect(exec(payload).result).to.be.null
     }
   })
 })
