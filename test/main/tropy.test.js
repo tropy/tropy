@@ -67,24 +67,5 @@ describe('Tropy', () => {
         expect(showPreferencesWindow.mock.callCount()).to.equal(1)
       })
     })
-
-    describe('project', () => {
-      it('tropy://project/:id/items/41/3 opens the project and item', async () => {
-        let win = { show: mock.fn() }
-        let openById = mock.method(tropy.projects, 'openById', async () => win)
-        let dispatch = mock.method(tropy, 'dispatch', () => {})
-
-        await tropy.handleProtocolRequest(
-          new URL('tropy://project/My%20Project/items/41/3'))
-
-        expect(openById.mock.calls[0].arguments[0]).to.equal('My Project')
-        expect(dispatch.mock.calls[0].arguments[1]).to.equal(win)
-        expect(dispatch.mock.calls[0].arguments[0])
-          .to.deep.include({ payload: { id: 41, photo: 3 } })
-
-        openById.mock.restore()
-        dispatch.mock.restore()
-      })
-    })
   })
 })

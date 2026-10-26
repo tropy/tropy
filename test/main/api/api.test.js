@@ -24,28 +24,56 @@ describe('api', () => {
       }
     })
 
-    it('redirects legacy URLs to the current project', async () => {
-      let res = await api.get('/project/items/42/tags?reverse=true')
+    it('redirects legacy URLs', async () => {
+      for (let [url, location] of [
+        ['/project/items/42/tags?reverse=true', '/projects/current/items/42/tags?reverse=true'],
+        ['/project/foo/items/42', '/projects/foo/items/42']
+      ]) {
+        let res = await api.get(url)
 
-      expect(res.statusCode).to.equal(308)
-      expect(res.headers.location)
-        .to.equal('/project/current/items/42/tags?reverse=true')
+        expect(res.statusCode).to.equal(308)
+        expect(res.headers.location).to.equal(location)
+      }
     })
 
-    it('resolves projects', async () => {
-      expect((await api.get('/project/foo')).json())
-        .to.include({ project: '/projects/foo.tropy', id: 'foo' })
+    it('lists known projects', async () => {
+      expect((await api.get('/projects')).json()).to.eql([
+        {
+          urlId: 'foo',
+          path: '/projects/foo.tropy',
+          open: true,
+          url: 'tropy://project/foo'
+        },
+        {
+          urlId: 'closed',
+          path: '/projects/closed.tropy',
+          open: false,
+          url: 'tropy://project/closed'
+        }
+      ])
+    })
 
-      // Project ids are decoded for lookup, encoded in responses
-      expect((await api.get('/project/Krak%C3%B3w%20Atlas')).json())
+    it('shows known projects', async () => {
+      // URL ids are decoded for lookup, encoded in responses
+      expect((await api.get('/projects/Krak%C3%B3w%20Atlas')).json())
         .to.include({
-          project: '/projects/Kraków Atlas.tropy',
-          id: 'Krak%C3%B3w%20Atlas'
+          urlId: 'Krak%C3%B3w%20Atlas',
+          path: '/projects/Kraków Atlas.tropy'
         })
+
+      expect((await api.get('/projects/missing')).statusCode).to.equal(404)
+    })
+
+    it('requires projects to be open', async () => {
+      let res = await api.get('/projects/closed/items')
+
+      expect(res.statusCode).to.equal(409)
+      expect(res.json().detail).to.include('tropy://project/closed')
+      expect(api.actions).to.be.empty
     })
 
     it('responds with problem details for unknown projects', async () => {
-      let res = await api.get('/project/missing/items')
+      let res = await api.get('/projects/missing/items')
 
       expect(res.statusCode).to.equal(404)
       expect(res.headers['content-type']).to.match(/^application\/problem\+json/)
@@ -70,7 +98,7 @@ describe('api', () => {
   describe('requests', () => {
     it('hands actions off to the project window', async () => {
       api.respond({ id: 42 })
-      let res = await api.get('/project/foo/items/42')
+      let res = await api.get('/projects/foo/items/42')
 
       expect(res.json()).to.eql({ id: 42 })
       expect(api.rsvp.mock.calls[0].arguments[0]).to.equal(api.window('foo'))
@@ -80,14 +108,14 @@ describe('api', () => {
     })
 
     it('responds with 404 when nothing is found', async () => {
-      let res = await api.get('/project/foo/items/42')
+      let res = await api.get('/projects/foo/items/42')
 
       expect(res.statusCode).to.equal(404)
       expect(res.json()).to.include({ code: 'NOT_FOUND' })
     })
 
     it('responds with 204 when commands return nothing', async () => {
-      let res = await api.delete('/project/foo/items/1/tags?tag=Foo')
+      let res = await api.delete('/projects/foo/items/1/tags?tag=Foo')
 
       expect(res.statusCode).to.equal(204)
       expect(api.action.payload).to.eql({ id: [1], tags: ['Foo'] })
@@ -100,13 +128,13 @@ describe('api', () => {
         ['EOTHER', 500]
       ]) {
         api.respond(() => { throw Object.assign(new Error(code), { code }) })
-        expect((await api.get('/project/foo/items/1')).statusCode)
+        expect((await api.get('/projects/foo/items/1')).statusCode)
           .to.equal(status)
       }
     })
 
     it('lists validation errors', async () => {
-      let res = await api.post('/project/foo/tags', { name: '', items: [0] })
+      let res = await api.post('/projects/foo/tags', { name: '', items: [0] })
 
       expect(res.json()).to.include({ status: 400, code: 'FST_ERR_VALIDATION' })
       expect(res.json().errors).to.eql([
@@ -117,16 +145,16 @@ describe('api', () => {
 
     it('validates params, queries and bodies', async () => {
       for (let res of [
-        await api.get('/project/foo/items/abc'),
-        await api.get('/project/foo/photos/1/file.gif'),
-        await api.get('/project/foo/photos/1/file.raw'),
-        await api.get('/project/foo/items/0'),
-        await api.get('/project/foo/lists/1?expand'),
-        await api.post('/project/foo/lists', { name: 'Foo', parent: '2' }),
-        await api.post('/project/foo/tags', { color: 'red' }),
-        await api.post('/project/foo/notes', { html: 'x', photo: 0 }),
-        await api.post('/project/foo/import', { data: 'nope' }),
-        await api.patch('/project/foo/data/1')
+        await api.get('/projects/foo/items/abc'),
+        await api.get('/projects/foo/photos/1/file.gif'),
+        await api.get('/projects/foo/photos/1/file.raw'),
+        await api.get('/projects/foo/items/0'),
+        await api.get('/projects/foo/lists/1?expand'),
+        await api.post('/projects/foo/lists', { name: 'Foo', parent: '2' }),
+        await api.post('/projects/foo/tags', { color: 'red' }),
+        await api.post('/projects/foo/notes', { html: 'x', photo: 0 }),
+        await api.post('/projects/foo/import', { data: 'nope' }),
+        await api.patch('/projects/foo/data/1')
       ]) {
         expect(res.statusCode).to.equal(400)
       }
@@ -136,8 +164,8 @@ describe('api', () => {
 
     it('rejects unknown parameters', async () => {
       for (let [res, pointer] of [
-        [await api.get('/project/foo/items?tags=1'), '/tags'],
-        [await api.post('/project/foo/tags', { name: 'Foo', item: [1] }), '/item']
+        [await api.get('/projects/foo/items?tags=1'), '/tags'],
+        [await api.post('/projects/foo/tags', { name: 'Foo', item: [1] }), '/item']
       ]) {
         expect(res.statusCode).to.equal(400)
         expect(res.json().errors.map(e => e.pointer)).to.include(pointer)
@@ -149,7 +177,7 @@ describe('api', () => {
     it('accepts only JSON bodies', async () => {
       let res = await api.app.inject({
         method: 'POST',
-        url: '/project/foo/tags',
+        url: '/projects/foo/tags',
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         payload: 'name=Foo'
       })
@@ -162,7 +190,7 @@ describe('api', () => {
   describe('items', () => {
     it('finds items by tag', async () => {
       api.respond([{ id: 1 }])
-      let res = await api.get('/project/foo/items?tag=1&tag=2&reverse=true')
+      let res = await api.get('/projects/foo/items?tag=1&tag=2&reverse=true')
 
       expect(res.json()).to.eql([{ id: 1 }])
       expect(api.action.type).to.equal(API.ITEM.FIND)
@@ -173,7 +201,7 @@ describe('api', () => {
     })
 
     it('clears all tags when no tag is given', async () => {
-      let res = await api.delete('/project/foo/items/1/tags')
+      let res = await api.delete('/projects/foo/items/1/tags')
 
       expect(res.statusCode).to.equal(204)
       expect(api.action.type).to.equal(ITEM.TAG.CLEAR)
@@ -183,7 +211,7 @@ describe('api', () => {
   describe('lists', () => {
     it('shows the root list', async () => {
       api.respond([])
-      for (let url of ['/project/foo/lists/0', '/project/foo/lists']) {
+      for (let url of ['/projects/foo/lists/0', '/projects/foo/lists']) {
         let res = await api.get(url)
 
         expect(res.statusCode).to.equal(200)
@@ -195,7 +223,7 @@ describe('api', () => {
   describe('import', () => {
     it('imports files without a timeout', async () => {
       api.respond([1])
-      let res = await api.post('/project/foo/import', {
+      let res = await api.post('/projects/foo/import', {
         files: ['/a.jpg'],
         createLists: true
       })
@@ -211,14 +239,14 @@ describe('api', () => {
     it('imports JSON data', async () => {
       let data = [{ 'http://purl.org/dc/terms/title': 'Map' }]
 
-      await api.post('/project/foo/import', { data, list: 2 })
+      await api.post('/projects/foo/import', { data, list: 2 })
       expect(api.action.payload).to.deep.include({ data, list: 2 })
     })
   })
 
   describe('metadata', () => {
     it('saves metadata', async () => {
-      let res = await api.patch('/project/foo/data/5', { title: 'Map' })
+      let res = await api.patch('/projects/foo/data/5', { title: 'Map' })
 
       expect(res.statusCode).to.equal(204)
       expect(api.action.type).to.equal(METADATA.SAVE)
@@ -230,7 +258,7 @@ describe('api', () => {
     it('responds in the requested format', async () => {
       api.respond('# Note')
       let res = await api.app.inject({
-        url: '/project/foo/notes/1',
+        url: '/projects/foo/notes/1',
         headers: { accept: 'text/markdown' }
       })
 
@@ -248,7 +276,7 @@ describe('api', () => {
       ]) {
         api.respond(({ payload }) => payload.format === 'json' ? {} : 'Note')
         let res = await api.app.inject({
-          url: '/project/foo/notes/1',
+          url: '/projects/foo/notes/1',
           headers: accept ? { accept } : {}
         })
 
@@ -257,7 +285,7 @@ describe('api', () => {
       }
 
       let res = await api.app.inject({
-        url: '/project/foo/notes/1',
+        url: '/projects/foo/notes/1',
         headers: { accept: 'image/png' }
       })
 
@@ -266,13 +294,13 @@ describe('api', () => {
     })
 
     it('requires either a photo or a selection', async () => {
-      let res = await api.post('/project/foo/notes', { html: '<p>x</p>' })
+      let res = await api.post('/projects/foo/notes', { html: '<p>x</p>' })
 
       expect(res.statusCode).to.equal(400)
       expect(res.json().errors.map(e => e.pointer))
         .to.include.members(['/photo', '/selection'])
 
-      res = await api.post('/project/foo/notes', {
+      res = await api.post('/projects/foo/notes', {
         html: '<p>x</p>',
         photo: 1,
         selection: 2
@@ -284,14 +312,14 @@ describe('api', () => {
 
     it('deletes notes', async () => {
       api.respond([1])
-      expect((await api.delete('/project/foo/notes/1')).statusCode).to.equal(204)
+      expect((await api.delete('/projects/foo/notes/1')).statusCode).to.equal(204)
 
       api.respond(null)
-      expect((await api.delete('/project/foo/notes/1')).statusCode).to.equal(404)
+      expect((await api.delete('/projects/foo/notes/1')).statusCode).to.equal(404)
     })
 
     it('responds with 404 for unknown photos or selections', async () => {
-      let res = await api.post('/project/foo/notes', { html: '<p>x</p>', photo: 1 })
+      let res = await api.post('/projects/foo/notes', { html: '<p>x</p>', photo: 1 })
       expect(res.statusCode).to.equal(404)
     })
   })
@@ -299,7 +327,7 @@ describe('api', () => {
   describe('transcriptions', () => {
     it('has no HTML format', async () => {
       let res = await api.app.inject({
-        url: '/project/foo/transcriptions/1',
+        url: '/projects/foo/transcriptions/1',
         headers: { accept: 'text/html' }
       })
 
@@ -310,7 +338,7 @@ describe('api', () => {
   describe('tags', () => {
     it('creates tags', async () => {
       api.respond({ id: 3 })
-      let res = await api.post('/project/foo/tags', { name: 'Foo' })
+      let res = await api.post('/projects/foo/tags', { name: 'Foo' })
 
       expect(res.statusCode).to.equal(201)
       expect(res.json()).to.eql({ id: 3 })
@@ -320,28 +348,28 @@ describe('api', () => {
     it('looks up tags by id or name', async () => {
       api.respond({ id: 3 })
 
-      expect((await api.get('/project/foo/tags?name=Foo')).json())
+      expect((await api.get('/projects/foo/tags?name=Foo')).json())
         .to.eql([{ id: 3 }])
       expect(api.action.payload).to.eql({ name: 'Foo' })
 
-      expect((await api.get('/project/foo/tags/Foo')).statusCode)
+      expect((await api.get('/projects/foo/tags/Foo')).statusCode)
         .to.equal(400)
     })
 
     it('deletes tags by id', async () => {
       api.respond(3)
-      expect((await api.delete('/project/foo/tags/3')).statusCode).to.equal(204)
+      expect((await api.delete('/projects/foo/tags/3')).statusCode).to.equal(204)
       expect(api.action).to.include({ type: TAG.DELETE, payload: 3 })
 
       api.respond(null)
-      expect((await api.delete('/project/foo/tags/3')).statusCode).to.equal(404)
+      expect((await api.delete('/projects/foo/tags/3')).statusCode).to.equal(404)
     })
   })
 
   describe('photos', () => {
     it('extracts images', async () => {
       api.respond({ data: [1, 2, 3], format: 'png' })
-      let res = await api.get('/project/foo/photos/7/file.png')
+      let res = await api.get('/projects/foo/photos/7/file.png')
 
       expect(res.headers['content-type']).to.equal('image/png')
       expect([...res.rawPayload]).to.eql([1, 2, 3])
@@ -354,7 +382,7 @@ describe('api', () => {
         path: F.image.path('PA140105.JPG'),
         mimetype: 'image/jpeg'
       })
-      let res = await api.get('/project/foo/photos/1/original')
+      let res = await api.get('/projects/foo/photos/1/original')
 
       expect(res.statusCode).to.equal(200)
       expect(res.headers['content-type']).to.equal('image/jpeg')
@@ -369,14 +397,14 @@ describe('api', () => {
         protocol: 'file',
         path: F.image.path('PA140105.JPG')
       })
-      let res = await api.get('/project/foo/photos/1/original')
+      let res = await api.get('/projects/foo/photos/1/original')
 
       expect(res.statusCode).to.equal(200)
       expect(res.headers['content-type']).to.equal('image/jpeg')
     })
 
     it('supports range and conditional requests', async () => {
-      let url = '/project/foo/photos/1/original'
+      let url = '/projects/foo/photos/1/original'
       api.respond({ protocol: 'file', path: F.image.path('PA140105.JPG') })
 
       let res = await api.app.inject({ url, headers: { range: 'bytes=0-9' } })
@@ -396,7 +424,7 @@ describe('api', () => {
         path: F.image.path('missing.jpg'),
         mimetype: 'image/jpeg'
       })
-      let res = await api.get('/project/foo/photos/1/original')
+      let res = await api.get('/projects/foo/photos/1/original')
 
       expect(res.statusCode).to.equal(404)
     })

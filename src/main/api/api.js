@@ -5,6 +5,7 @@ import errors from './errors.js'
 import guard from './guard.js'
 import legacy from './legacy.js'
 import project from './project.js'
+import projectsRoutes from './routes/projects.js'
 import items from './routes/items.js'
 import lists from './routes/lists.js'
 import metadata from './routes/metadata.js'
@@ -42,6 +43,7 @@ export function create ({
   app.register(accept)
   app.register(guard)
   app.register(legacy)
+  app.register(projectsRoutes, { projects })
 
   app.register(async (api) => {
     api.register(project, { projects, wm })
@@ -52,18 +54,6 @@ export function create ({
         reply.code(204)
     })
 
-    api.get('/', {
-      schema: {
-        operationId: 'project.status',
-        summary: 'Show the project status'
-      }
-    }, ({ project }) => ({
-      project: project.path,
-      id: project.id,
-      status: 'ok',
-      version
-    }))
-
     api.register(items)
     api.register(lists)
     api.register(tags)
@@ -71,7 +61,7 @@ export function create ({
     api.register(notes)
     api.register(transcriptions)
     api.register(photos)
-  }, { prefix: '/project/:project' })
+  }, { prefix: '/projects/:project' })
 
   app.get('/', {
     schema: { operationId: 'status', summary: 'Show the API status' }

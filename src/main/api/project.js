@@ -1,5 +1,4 @@
 import fp from 'fastify-plugin'
-import { urlId } from '../../common/util.js'
 import { fail } from './errors.js'
 
 export default fp(async (app, { projects, wm }) => {
@@ -8,13 +7,18 @@ export default fp(async (app, { projects, wm }) => {
 
   app.addHook('onRequest', async (request) => {
     let id = request.params.project
-    let win = await projects.openById(id)
+    let path = projects.find(id)
 
-    if (win == null)
+    if (path == null)
       throw fail(404, `unknown project: ${id}`)
 
-    let { path } = projects.get(win)
-    request.project = { id: urlId(path), path }
+    let win = projects.window(path)
+    let project = projects.describe(path)
+
+    if (win == null)
+      throw fail(409, `project is not open, open it with ${project.url}`)
+
+    request.project = project
 
     request.rsvp = async (action, options) => {
       try {

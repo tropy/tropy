@@ -716,7 +716,7 @@ export function protocolURL (path, { item, photo } = {}) {
 
   return (item != null && photo != null) ?
     `tropy://project/${id}/items/${item}/${photo}` :
-    `tropy://project/${id}/`
+    `tropy://project/${id}`
 }
 
 export const BLANK = Object.freeze(Object.create(null))
