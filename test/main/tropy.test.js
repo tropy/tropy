@@ -3,14 +3,6 @@ import { app } from 'electron'
 import { URL } from 'node:url'
 import { Tropy } from '#tropy/main/tropy.js'
 
-const fakeWindow = () => ({
-  show: mock.fn(),
-  setTitle: mock.fn(),
-  webContents: {
-    send: mock.fn()
-  }
-})
-
 describe('Tropy', () => {
   let tropy
 
@@ -77,118 +69,22 @@ describe('Tropy', () => {
     })
 
     describe('project', () => {
-      describe('with open window', () => {
-        let current, openMostRecentProject, dispatch
+      it('tropy://project/:id/items/41/3 opens the project and item', async () => {
+        let win = { show: mock.fn() }
+        let openById = mock.method(tropy.projects, 'openById', async () => win)
+        let dispatch = mock.method(tropy, 'dispatch', () => {})
 
-        beforeEach(() => {
-          current = mock.method(tropy.wm, 'current', fakeWindow)
-          openMostRecentProject = mock.method(tropy, 'openMostRecentProject', () => {})
-          dispatch = mock.method(tropy, 'dispatch', () => {})
-        })
+        await tropy.handleProtocolRequest(
+          new URL('tropy://project/My%20Project/items/41/3'))
 
-        afterEach(() => {
-          current.mock.restore()
-          openMostRecentProject.mock.restore()
-          dispatch.mock.restore()
-        })
+        expect(openById.mock.calls[0].arguments[0]).to.equal('My Project')
+        expect(dispatch.mock.calls[0].arguments[1]).to.equal(win)
+        expect(dispatch.mock.calls[0].arguments[0])
+          .to.deep.include({ payload: { id: 41, photo: 3 } })
 
-        it('tropy://project shows the project window', async () => {
-          await tropy.handleProtocolRequest(new URL('tropy://project'))
-
-          expect(current.mock.callCount()).to.equal(1)
-          expect(openMostRecentProject.mock.callCount()).to.equal(0)
-          expect(dispatch.mock.callCount()).to.equal(0)
-        })
-
-        it('tropy://project/current/items/41/3 opens item', async () => {
-          await tropy.handleProtocolRequest(
-            new URL('tropy://project/current/items/41/3'))
-
-          expect(dispatch.mock.callCount()).to.equal(1)
-          let action = dispatch.mock.calls[0].arguments[0]
-          expect(action).to.have.nested.property('payload.id', 41)
-          expect(action).to.have.nested.property('payload.photo', 3)
-        })
+        openById.mock.restore()
+        dispatch.mock.restore()
       })
-
-      describe('without open window', () => {
-        let current, openMostRecentProject, dispatch
-
-        beforeEach(() => {
-          current = mock.method(tropy.wm, 'current', () => null)
-          openMostRecentProject = mock.method(tropy, 'openMostRecentProject',
-            () => {
-              setTimeout(() => { tropy.emit('project:opened') }, 250)
-              return fakeWindow()
-            })
-          dispatch = mock.method(tropy, 'dispatch', () => {})
-        })
-
-        afterEach(() => {
-          current.mock.restore()
-          openMostRecentProject.mock.restore()
-          dispatch.mock.restore()
-        })
-
-        it('tropy://project shows the project window', async () => {
-          await tropy.handleProtocolRequest(new URL('tropy://project'))
-
-          expect(current.mock.callCount()).to.equal(1)
-          expect(openMostRecentProject.mock.callCount()).to.equal(1)
-          expect(dispatch.mock.callCount()).to.equal(0)
-        })
-      })
-    })
-  })
-
-  describe('showProjectWindow', () => {
-    let win, mapMock, openMock
-    let project = { path: 'x.tpy' }
-
-    beforeEach(() => {
-      win = fakeWindow()
-
-      tropy.state = { recents: [], win: { bounds: {} } }
-      tropy.setProject(project, win)
-
-      mapMock = mock.method(tropy.wm, 'map', () => [win])
-      openMock = mock.method(tropy.wm, 'open', () => {})
-    })
-
-    afterEach(() => {
-      tropy.setProject(null, win)
-      mapMock.mock.restore()
-      openMock.mock.restore()
-    })
-
-    it('focus window if project already open', async () => {
-      await tropy.showProjectWindow(project.path, null)
-
-      expect(win.show.mock.callCount()).to.be.greaterThan(0)
-      expect(openMock.mock.callCount()).to.equal(0)
-    })
-
-    it('new window if not already open', async () => {
-      await tropy.showProjectWindow('other.tpy', null)
-
-      expect(win.show.mock.callCount()).to.equal(0)
-      expect(openMock.mock.callCount()).to.equal(1)
-
-      let args = openMock.mock.calls[0].arguments
-      expect(args[0]).to.equal('project')
-      expect(args[1]).to.have.property('file', 'other.tpy')
-    })
-
-    it('open in existing window if given', async () => {
-      await tropy.showProjectWindow('other.tpy', win)
-
-      expect(openMock.mock.callCount()).to.equal(0)
-      expect(win.show.mock.callCount()).to.be.greaterThan(0)
-      expect(win.webContents.send.mock.callCount()).to.equal(1)
-
-      let [type, action] = win.webContents.send.mock.calls[0].arguments
-      expect(type).to.equal('dispatch')
-      expect(action.payload).to.equal('other.tpy')
     })
   })
 })

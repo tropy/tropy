@@ -1,21 +1,24 @@
 import fp from 'fastify-plugin'
+import { urlId } from '../../common/util.js'
 import { fail } from './errors.js'
 
-// Resolves the :project route param and gives routes access to
-// the project's window: request.rsvp(action) dispatches the action
-// to the window and resolves with the window's response payload.
-export default fp(async (app, { resolveProject, rsvp }) => {
+export default fp(async (app, { projects, wm }) => {
   app.decorateRequest('project', null)
   app.decorateRequest('rsvp', null)
 
   app.addHook('onRequest', async (request) => {
-    let { win, path, id } = resolveProject(request.params.project)
+    let id = request.params.project
+    let win = await projects.openById(id)
 
-    request.project = { id, path }
+    if (win == null)
+      throw fail(404, `unknown project: ${id}`)
+
+    let { path } = projects.get(win)
+    request.project = { id: urlId(path), path }
 
     request.rsvp = async (action, options) => {
       try {
-        return (await rsvp(win, {
+        return (await wm.rsvp(win, {
           ...action,
           meta: { ...action.meta, silent: true }
         }, options)).payload

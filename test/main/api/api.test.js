@@ -8,7 +8,7 @@ describe('api', () => {
     it('reports status', async () => {
       expect((await api.get('/')).json()).to.eql({
         status: 'ok',
-        version: '1.0.0'
+        version: '2.0.0'
       })
 
     })
@@ -36,9 +36,12 @@ describe('api', () => {
       expect((await api.get('/project/foo')).json())
         .to.include({ project: '/projects/foo.tropy', id: 'foo' })
 
-      // resolveProject expects decoded ids
+      // Project ids are decoded for lookup, encoded in responses
       expect((await api.get('/project/Krak%C3%B3w%20Atlas')).json())
-        .to.include({ project: '/projects/Kraków Atlas.tropy' })
+        .to.include({
+          project: '/projects/Kraków Atlas.tropy',
+          id: 'Krak%C3%B3w%20Atlas'
+        })
     })
 
     it('responds with problem details for unknown projects', async () => {
@@ -70,7 +73,7 @@ describe('api', () => {
       let res = await api.get('/project/foo/items/42')
 
       expect(res.json()).to.eql({ id: 42 })
-      expect(api.rsvp.mock.calls[0].arguments[0]).to.equal(api.win)
+      expect(api.rsvp.mock.calls[0].arguments[0]).to.equal(api.window('foo'))
       expect(api.action.type).to.equal(API.ITEM.SHOW)
       expect(api.action.meta).to.include({ silent: true })
       expect(api.action.payload).to.eql({ id: 42 })

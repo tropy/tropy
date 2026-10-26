@@ -28,7 +28,7 @@ import { darwin, linux } from '../common/os.js'
 import { channel, product, version } from '../common/release.js'
 import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
-import { debounce, delay, once, protocolURL, urlId } from '../common/util.js'
+import { debounce, delay, once, protocolURL } from '../common/util.js'
 
 import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
 import { AccountService } from './account.js'
@@ -43,15 +43,14 @@ import * as shell from './shell.js'
 import { addIdleObserver } from './idle.js'
 import { migrate } from './migrate.js'
 import * as act from './actions.js'
-import { setProjectFolderIcon } from './project.js'
+import { ProjectRegistry } from './project.js'
 
 import {
-  FLASH, HISTORY, TAG, PROJECT, CONTEXT
+  FLASH, HISTORY, TAG, CONTEXT
 } from '../constants/index.js'
 
 const H = new WeakMap()
 const T = new WeakMap()
-const P = new WeakMap()
 
 
 export class Tropy extends EventEmitter {
@@ -86,7 +85,7 @@ export class Tropy extends EventEmitter {
     this.ctx = new ContextMenu(this)
     this.menu = new AppMenu(this)
     this.plugins = new Plugins(join(opts.data, 'plugins'))
-    this.projects = new Map()
+    this.projects = new ProjectRegistry(this)
     this.store = new Storage(opts.data)
     this.updater = new Updater({
       enable: app.isPackaged && opts.autoUpdates
@@ -100,6 +99,7 @@ export class Tropy extends EventEmitter {
   async start () {
     await this.restore()
     this.listen()
+    this.projects.start()
     this.account.start()
     this.wm.start()
     await this.api.start()
@@ -111,6 +111,7 @@ export class Tropy extends EventEmitter {
     await this.api.stop()
     this.updater.stop()
     this.plugins.stop()
+    this.projects.stop()
     this.persist()
     await this.persist.flush()
   }
@@ -121,13 +122,13 @@ export class Tropy extends EventEmitter {
       if (win != null)
         return win.show()
       else
-        return this.openMostRecentProject()
+        return this.projects.openMostRecent()
     }
 
     for (let url of urls) {
       switch (url.protocol) {
         case 'file:':
-          await this.showProjectWindow(fileURLToPath(url), null)
+          await this.projects.show(fileURLToPath(url))
           break
         case 'tropy:':
           await this.handleProtocolRequest(url)
@@ -144,7 +145,7 @@ export class Tropy extends EventEmitter {
         case '.tpy':
         case '.mtpy':
         case '.tropy':
-          await this.showProjectWindow(file, null)
+          await this.projects.show(file)
           break
         case '.ttp':
           await this.importTemplates([file])
@@ -156,125 +157,8 @@ export class Tropy extends EventEmitter {
     }
   }
 
-  async openMostRecentProject () {
-    let recent = this.state.recent[0]
-    if (recent && fs.existsSync(recent))
-      return this.showProjectWindow(recent)
-
-    return this.showProjectWindow()
-  }
-
-  async showOpenDialog (win = this.wm.current()) {
-    let { cancel, value: files } = await dialog.open(win, {
-      filters: [{
-        name: this.dict.dialog.file.project,
-        extensions: ['tpy', 'tropy', 'mtpy']
-      }]
-    })
-
-    if (!cancel) {
-      await this.showProjectWindow(files[0], win)
-    }
-  }
-
-  async showProjectWindow (file, win = this.wm.current()) {
-    if (win == null) {
-
-      win = this.getProjectWindow(file)
-      if (win) {
-        info({ file }, 'focus existing project window')
-        win.show()
-        return
-      }
-
-      info({ file }, 'open new project window')
-
-      let args = {
-        file,
-        recent: this.state.recent,
-        ...this.hash
-      }
-
-      let bounds = this.wm.has('project') ?
-          {} : this.state.win.bounds
-
-      // TODO fixed size if no file (and small size if no recent)
-      let fixedSize
-
-      if (!file) {
-        fixedSize = {
-          width: 440 * (this.state.recent.length ? 2 : 1),
-          height: 580,
-          animate: false
-        }
-      }
-
-      return this.wm.open('project', args, {
-        show: 'init',
-        title: 'Tropy',
-        fixedSize,
-        ...bounds
-      })
-
-    } else {
-      info({ file }, 'open project in current window')
-
-      if (file) {
-        this.dispatch(act.project.open(file), win)
-      }
-
-      win.show()
-      return win
-    }
-  }
-
-  hasOpenedProject (project, win) {
-    this.wm.close(['prefs'])
-
-    if (project.path) {
-      switch (process.platform) {
-        case 'darwin':
-          if (!this.state.frameless) {
-            win.setRepresentedFilename(project.path)
-          }
-          app.addRecentDocument(project.path)
-          break
-        case 'win32':
-          app.addRecentDocument(project.path)
-          break
-      }
-
-      if (project.isManaged) {
-        setProjectFolderIcon(project.path)
-      }
-
-      this.state.recent = [
-        project.path,
-        ...this.state.recent.filter(f => f !== project.path)
-      ]
-    }
-
-    this.wm.send('project', 'recent', this.state.recent)
-
-    this.setHistory(null, win)
-    this.setProject(project, win)
-
-    this.emit('app:reload-menu')
-    this.emit('project:opened', project)
-  }
-
-  clearRecentProjects (projects) {
-    if (projects)
-      this.state.recent = this.state.recent.filter(f => !projects.includes(f))
-    else
-      this.state.recent = []
-
-    this.wm.send('project', 'recent', this.state.recent)
-    this.emit('app:reload-menu')
-  }
-
   async import (...args) {
-    if (this.getProject())
+    if (this.projects.get())
       return this.dispatch(act.item.import(...args), this.wm.current())
   }
 
@@ -305,7 +189,7 @@ export class Tropy extends EventEmitter {
 
   async showPreferencesWindow () {
     let win = this.wm.current()
-    let project = this.getProject(win)
+    let project = this.projects.get(win)
 
     let args = {
       file: project?.path,
@@ -466,12 +350,6 @@ export class Tropy extends EventEmitter {
     this.on('app:about', () =>
       this.showAboutWindow())
 
-    this.on('app:create-project', () =>
-      this.showProjectWindow(null, null))
-
-    this.on('app:close-project', () =>
-      this.dispatch(act.project.close('user'), this.wm.current()))
-
     this.on('app:optimize-cache', () => {
       this.dispatch(act.cache.prune(), this.wm.current())
       this.dispatch(act.cache.purge(), this.wm.current())
@@ -493,13 +371,11 @@ export class Tropy extends EventEmitter {
     this.on('app:import-plugin', (win, { plugin }) =>
       this.import({}, { plugin }))
 
+    this.on('app:close-project', () =>
+      this.dispatch(act.project.close('user'), this.wm.current()))
+
     this.on('app:rename-project', (win) =>
       this.dispatch(act.edit.start({ project: { name: true } }), win))
-
-    this.on('app:show-project-file', (_, { target } = {}) => {
-      let path = target?.path ?? this.state.recent[0]
-      if (path) shell.show(path)
-    })
 
     this.on('app:copy-url', (_, { target }) => {
       this.copyProtocolURL(target)
@@ -709,16 +585,16 @@ export class Tropy extends EventEmitter {
         win))
 
     this.on('app:copy-project-url', (win) =>
-      this.copyProtocolURL(this.getProject(win)))
+      this.copyProtocolURL(this.projects.get(win)))
 
     this.on('app:copy-item-link', (win, { target }) =>
-      this.copyProtocolURL(this.getProject(win), {
+      this.copyProtocolURL(this.projects.get(win), {
         item: target.id,
         photo: target.photos[0]
       }))
 
     this.on('app:copy-photo-link', (win, { target }) =>
-      this.copyProtocolURL(this.getProject(win), {
+      this.copyProtocolURL(this.projects.get(win), {
         item: target.item,
         photo: target.id
       }))
@@ -757,10 +633,6 @@ export class Tropy extends EventEmitter {
         win.setAutoHideMenuBar(true)
         win.setMenuBarVisibility(false)
       }
-    })
-
-    this.on('app:clear-recent-projects', (_, { target } = {}) => {
-      this.clearRecentProjects(target ? [target.path] : undefined)
     })
 
     this.on('app:switch-theme', (_, theme) => {
@@ -902,14 +774,6 @@ export class Tropy extends EventEmitter {
         await fs.promises.unlink(join(this.opts.data, 'ontology.db'))
     })
 
-    this.on('app:open-dialog', () => {
-      this.showOpenDialog()
-    })
-
-    this.on('app:open-new-dialog', () => {
-      this.showOpenDialog(null)
-    })
-
     this.on('app:print', () => {
       this.dispatch(act.item.print(), this.wm.current())
     })
@@ -969,16 +833,6 @@ export class Tropy extends EventEmitter {
       this.emit(cmd, BrowserWindow.fromWebContents(event.sender), ...args)
     })
 
-    ipc.on('switch-project', async (_, path, old) => {
-      await this.wm.close('prefs')
-      this.getProjectWindow(old)?.close()
-      this.showProjectWindow(path, null)
-    })
-
-    ipc.on('close-project', (_, path) => {
-      this.getProjectWindow(path)?.close()
-    })
-
     ipc.handle('print', async (event, opts) => {
       await this.print(opts, BrowserWindow.fromWebContents(event.sender))
     })
@@ -989,36 +843,10 @@ export class Tropy extends EventEmitter {
         BrowserWindow.fromWebContents(event.sender))
     })
 
-    ipc.on(PROJECT.OPENED, (event, project) => {
-      let win = BrowserWindow.fromWebContents(event.sender)
-      if (this.wm.is(win, 'project')) {
-        this.hasOpenedProject(project, win)
-      }
-    })
-
-    ipc.on('clear-recent-project', (_, project) => {
-      this.clearRecentProjects([project.path])
-    })
-
     ipc.on(FLASH.HIDE, (_, { id, confirm }) => {
       if (id === 'update.ready' && confirm) {
         this.updater.install()
       }
-    })
-
-    ipc.on(PROJECT.UPDATE, (event, project) => {
-      let win = BrowserWindow.fromWebContents(event.sender)
-      if (this.wm.is(win, 'project')) {
-        this.setProject(project, win)
-      }
-    })
-
-    ipc.on(PROJECT.CLOSED, (event) => {
-      let win = BrowserWindow.fromWebContents(event.sender)
-      this.setProject(null, win)
-
-      if (win === this.wm.current())
-        this.menu.handleWindowChange(win)
     })
 
     ipc.on(HISTORY.CHANGED, (event, history) => {
@@ -1060,7 +888,7 @@ export class Tropy extends EventEmitter {
     this.wm.on('close', (type, win) => {
       if (type === 'prefs') {
         let parent = win.getParentWindow()
-        let project = this.getProject(parent)
+        let project = this.projects.get(parent)
 
         if (project)
           parent.webContents.send('dispatch', act.project.reload())
@@ -1143,52 +971,22 @@ export class Tropy extends EventEmitter {
 
       case 'project': {
         // tropy://project(/:UrlId)/items/:id(/:photo)(/:selection)
-        let [, projectId = 'current', type, id, photo] =
-          url.pathname.split('/')
+        let [, projectId, type, id, photo] = url.pathname.split('/')
 
-        let win
+        projectId = projectId ? decodeURIComponent(projectId) : 'current'
 
-        if (projectId === 'current') {
-          win = this.wm.current()
+        let win = await this.projects.openById(projectId)
 
-          if (!win) {
-            win = await this.openMostRecentProject()
+        if (win == null) {
+          if (projectId === 'current')
+            return this.projects.show()
 
-            await Promise.race([
-              once(this, 'project:opened'),
-              delay(5000)
-            ])
-          }
+          let file = await this.projects.pick(this.wm.current())
+          if (!file) return
 
-        } else {
-          // open most recent project with that id
-          let file = this.state.recent.find(
-            path => urlId(path) === projectId)
-
-          if (file == null) {
-            let { cancel, value: files } = await dialog.open(this.wm.current(), {
-              filters: [{
-                name: this.dict.dialog.file.project,
-                extensions: ['tpy', 'tropy', 'mtpy']
-              }]
-            })
-
-            if (cancel) return
-            file = files[0]
-          }
-
-          win = this.getProjectWindow(file)
-
-          if (!win) {
-            win = await this.showProjectWindow(file, null)
-            await Promise.race([
-              once(this, 'project:opened'),
-              delay(5000)
-            ])
-          }
+          win = await this.projects.open(file)
         }
 
-        if (!win) break
         win.show()
 
         if (type) {
@@ -1302,48 +1100,6 @@ export class Tropy extends EventEmitter {
 
     if (win.isFocused())
       this.menu.handleHistoryChange(history)
-  }
-
-  findProject (file) {
-    if (file == null)
-      return this.getProject()
-
-    for (let [win, project] of P) {
-      if (file && project.file === file)
-        return { ...project, win }
-    }
-
-    return null
-  }
-
-  getProjectWindow (path) {
-    for (let win of this.wm.map('project')) {
-      if (this.getProject(win)?.path === path) {
-        return win
-      }
-    }
-  }
-
-  getProject (win = this.wm.current()) {
-    return P.get(win)
-  }
-
-  setProject (project, win = this.wm.current()) {
-    if (project == null) {
-      P.delete(win)
-
-      if (!this.state.frameless)
-        win.setTitle(this.name)
-
-    } else {
-      P.set(win, project)
-
-      if (!this.state.frameless)
-        win.setTitle([
-          project.name,
-          project.isReadOnly ? this.dict.window.project.readOnly : ''
-        ].join(''))
-    }
   }
 
   getTags (win = BrowserWindow.getFocusedWindow()) {

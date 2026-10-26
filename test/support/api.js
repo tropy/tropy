@@ -1,24 +1,29 @@
 import { mock } from 'node:test'
 import { logger } from '#tropy/common/log.js'
-import { HttpError } from '#tropy/common/error.js'
 import { create } from '#tropy/main/api/api.js'
 
-// Sets up an API instance whose project window is a fake:
+// Sets up an API instance whose project windows are fakes:
 // it records dispatched actions in api.actions and responds
 // with api.respond(payload) or api.respond(action => payload).
 //
 // Any project id resolves to /projects/:id.tropy, except
 // 'missing' (unknown project).
-// Like the real server, resolved ids are URL-encoded.
 //
 // Requests send bodies as JSON, like curl --json.
 export function mkapi () {
   let response
 
+  let windows = {}
+
   let api = {
     app: null,
     actions: [],
-    win: {},
+
+    // The fake window of the project with id.
+    window (id) {
+      windows[id] ??= { project: { path: `/projects/${id}.tropy` } }
+      return windows[id]
+    },
 
     get action () {
       return api.actions.at(-1)
@@ -50,9 +55,12 @@ export function mkapi () {
   before(() => {
     api.app = create({
       log: logger.child({}, { level: 'silent' }),
-      resolveProject,
-      rsvp: api.rsvp,
-      version: '1.0.0'
+      projects: {
+        openById: async (id) => (id === 'missing') ? null : api.window(id),
+        get: (win) => win.project
+      },
+      version: '2.0.0',
+      wm: { rsvp: api.rsvp }
     })
   })
 
@@ -63,17 +71,6 @@ export function mkapi () {
     api.actions.length = 0
     api.rsvp.mock.resetCalls()
   })
-
-  function resolveProject (id) {
-    if (id === 'missing')
-      throw new HttpError({ status: 404, body: `unknown project: ${id}` })
-
-    return {
-      win: api.win,
-      path: `/projects/${id}.tropy`,
-      id: encodeURIComponent(id)
-    }
-  }
 
   return api
 }
