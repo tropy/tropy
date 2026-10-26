@@ -8,9 +8,9 @@ export function recent (state = INIT, { type, payload }) {
     case RECENT.RESTORE:
       return merge(INIT, payload)
     case PROJECT.OPENED: {
-      let { id, file } = payload
+      let { id, path } = payload
       return merge(state, {
-        [id]: { id, file, opened: Date.now() }
+        [id]: { id, path, opened: Date.now() }
       })
     }
     default:

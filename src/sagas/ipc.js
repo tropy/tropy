@@ -1,6 +1,7 @@
 import { eventChannel } from 'redux-saga'
 import { ipcRenderer } from 'electron'
 import { warn } from '../common/log.js'
+import { pick } from '../common/util.js'
 import { getHistory, getAllTags } from '../selectors/index.js'
 import { PROJECT, TAG, HISTORY } from '../constants/index.js'
 import * as actions from '../actions/index.js'
@@ -13,6 +14,15 @@ import {
   select,
   takeEvery as every
 } from 'redux-saga/effects'
+
+const projectInfo = (project) =>
+  pick(project, [
+    'id',
+    'path',
+    'name',
+    'isReadOnly',
+    'isManaged'
+  ])
 
 const filters = {
   *[HISTORY.CHANGED] () {
@@ -34,17 +44,31 @@ const filters = {
     return yield select(getAllTags)
   },
 
+  [PROJECT.OPENED] ({ payload }) {
+    return projectInfo(payload)
+  },
+
+  [PROJECT.CLOSED] ({ payload, meta }) {
+    return {
+      ...meta.project,
+      error: (payload instanceof Error) ?
+        pick(payload, ['name', 'message', 'code']) :
+        undefined
+    }
+  },
+
   *[PROJECT.UPDATE] () {
-    return yield select(state => state.project)
+    return projectInfo(yield select(state => state.project))
   }
 }
 
-function *forward ({ type, payload, meta }) {
+function *forward (action) {
   try {
+    let { type, payload, meta } = action
     let name = meta.ipc === true ? type : meta.ipc
 
     let data = (name in filters) ?
-      yield call(filters[name], payload) :
+      yield call(filters[name], action) :
       payload
 
     yield call([ipcRenderer, ipcRenderer.send], name, data)
