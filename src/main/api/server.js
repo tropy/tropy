@@ -88,7 +88,7 @@ export class Server {
       throw new Error('api already started')
 
     if (this.#api == null) {
-      let { create } = await import('./app.js')
+      let { create } = await import('./api.js')
 
       let api = create({
         current: this.current,

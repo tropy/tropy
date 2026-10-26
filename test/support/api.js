@@ -1,7 +1,7 @@
 import { mock } from 'node:test'
 import { logger } from '#tropy/common/log.js'
 import { HttpError } from '#tropy/common/error.js'
-import { create } from '#tropy/main/api/app.js'
+import { create } from '#tropy/main/api/api.js'
 
 // Sets up an API instance whose project window is a fake:
 // it records dispatched actions in api.actions and responds

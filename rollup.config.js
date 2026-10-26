@@ -97,6 +97,7 @@ export default [
       dir: 'lib/main',
       format: 'es',
       generatedCode: 'es2015',
+      chunkFileNames: '[name].js',
       sourcemap: true
     },
     treeshake: 'recommended',
