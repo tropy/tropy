@@ -49,7 +49,6 @@ export function mkapi () {
 
   before(() => {
     api.app = create({
-      current: () => '/projects/current.tropy',
       log: logger.child({}, { level: 'silent' }),
       resolveProject,
       rsvp: api.rsvp,

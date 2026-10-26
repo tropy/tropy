@@ -7,7 +7,6 @@ describe('api', () => {
   describe('server', () => {
     it('reports status', async () => {
       expect((await api.get('/')).json()).to.eql({
-        project: '/projects/current.tropy',
         status: 'ok',
         version: '1.0.0'
       })

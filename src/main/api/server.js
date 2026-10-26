@@ -11,10 +11,6 @@ export class Server {
     this.app = app
   }
 
-  current = () => {
-    return this.app.state.recent[0]
-  }
-
   rsvp = (win, action, options) => (
     this.app.wm.rsvp(win, action, options)
   )
@@ -81,7 +77,6 @@ export class Server {
     let { create } = await import('./api.js')
 
     let api = create({
-      current: this.current,
       log: logger.child({ name: 'api' }),
       resolveProject: this.resolveProject,
       rsvp: this.rsvp,

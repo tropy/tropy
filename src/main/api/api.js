@@ -14,7 +14,6 @@ import tags from './routes/tags.js'
 import transcriptions from './routes/transcriptions.js'
 
 export function create ({
-  current,
   log,
   resolveProject,
   rsvp,
@@ -70,9 +69,8 @@ export function create ({
   }, { prefix: '/project/:project' })
 
   app.get('/', {
-    schema: { operationId: 'status', summary: 'Show the current project and status' }
+    schema: { operationId: 'status', summary: 'Show the API status' }
   }, () => ({
-    project: current(),
     status: 'ok',
     version
   }))
