@@ -110,8 +110,11 @@ export function nav (state = init, { type, payload, meta, error }) {
       }
 
     case ITEM.OPEN: {
+      if (!meta.done || error || payload == null)
+        return state
+
       let { id, photo, selection, note } = payload
-      return (!meta.done || error) ? state : {
+      return {
         ...state,
         mode: NAV.MODE.ITEM,
         item: create([id]),

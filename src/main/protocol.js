@@ -10,8 +10,8 @@ const fail = (status, body) =>
 
 // Route for tropy://project{pathname} URLs:
 //
-// Opens the project and dispatches the action
-// returned by handler (if any) to its window.
+// Opens the project and calls handler (if any)
+// with the args and the project window.
 //
 // Resolves with the project, or null if none was opened.
 function projectRoute (pathname, { description, params, query }, handler) {
@@ -27,16 +27,32 @@ function projectRoute (pathname, { description, params, query }, handler) {
         return null
 
       if (handler)
-        app.dispatch(handler(args), opened.win)
+        await handler(args, projectWindow(app, opened.win))
 
       return opened.project
     }
   }
 }
 
+function projectWindow (app, win) {
+  return {
+    dispatch (action) {
+      app.dispatch(action, win)
+    },
+
+    async rsvp (action) {
+      let response = await app.wm.rsvp(win, {
+        ...action,
+        meta: { ...action.meta, silent: true }
+      })
+
+      return response.payload
+    }
+  }
+}
+
 // Route for tropy://{hostname} URLs:
-// Shows an app window.
-// Resolves with null.
+// Shows an app window. Resolves with null.
 function windowRoute (hostname, { description }, handler) {
   return {
     pattern: new URLPattern({ hostname, pathname: '' }),
@@ -59,33 +75,37 @@ const ROUTES = Object.freeze([
     description: 'Show all items, or search them (q)',
     params: object({ urlId }, ['urlId']),
     query: object({ q: { type: 'string', description: 'Search query' } })
-  }, ({ q = '' }) =>
-    act.nav.select({ query: q })),
+  }, ({ q = '' }, win) =>
+    win.dispatch(act.nav.select({ query: q }))),
 
   projectRoute('/:urlId/items/:item{/:photo}?{/:selection}?', {
-    description: 'Show an item, photo or selection (not verified)',
+    description: 'Show an item, photo or selection',
     params: object({ urlId, item: id, photo: id, selection: id },
       ['urlId', 'item'])
-  }, ({ item, photo, selection }) =>
-    act.item.open({ id: item, photo, selection })),
+  }, async ({ item, photo, selection }, win) => {
+    let opened = await win.rsvp(act.item.open({ id: item, photo, selection }))
+
+    if (opened == null)
+      throw fail(404, `unknown item, photo or selection: ${item}`)
+  }),
 
   projectRoute('/:urlId/lists/:list', {
     description: 'Show a list (not verified)',
     params: object({ urlId, list: id }, ['urlId', 'list'])
-  }, ({ list }) =>
-    act.nav.select({ list, query: '' })),
+  }, ({ list }, win) =>
+    win.dispatch(act.nav.select({ list, query: '' }))),
 
   projectRoute('/:urlId/tags/:tag', {
     description: 'Show the items with a tag (not verified)',
     params: object({ urlId, tag: id }, ['urlId', 'tag'])
-  }, ({ tag }) =>
-    act.nav.select({ tags: [tag], query: '' })),
+  }, ({ tag }, win) =>
+    win.dispatch(act.nav.select({ tags: [tag], query: '' }))),
 
   projectRoute('/:urlId/trash', {
     description: 'Show the trash',
     params: object({ urlId }, ['urlId'])
-  }, () =>
-    act.nav.select({ trash: true, query: '' })),
+  }, (args, win) =>
+    win.dispatch(act.nav.select({ trash: true, query: '' }))),
 
   windowRoute('(prefs|preferences)', {
     description: 'Show the preferences'
