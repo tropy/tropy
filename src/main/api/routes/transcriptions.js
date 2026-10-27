@@ -17,6 +17,7 @@ export default async function transcriptions (api) {
     schema: {
       operationId: 'transcriptions.create',
       summary: 'Create a transcription of a photo or selection',
+      description: 'Requires data or text, and either photo or selection.',
       params: withUrlId(),
       body: {
         ...object({

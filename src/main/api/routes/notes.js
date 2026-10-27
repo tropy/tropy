@@ -17,6 +17,7 @@ export default async function notes (api) {
     schema: {
       operationId: 'notes.create',
       summary: 'Create a note on a photo or selection',
+      description: 'Requires either photo or selection.',
       params: withUrlId(),
       body: {
         ...object({

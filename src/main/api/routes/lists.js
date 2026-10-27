@@ -4,13 +4,13 @@ import { idParams, ids, list, object, withUrlId } from '../schema.js'
 import { findItems } from './items.js'
 
 export default async function lists (api) {
-  api.get('/lists/:id?', {
+  api.get('/lists/:id', {
     schema: {
       operationId: 'lists.show',
       summary: 'Show a list',
       description: 'The root list, or any list with expand, ' +
         'responds with its child lists instead.',
-      params: withUrlId({ id: { ...list, default: 0 } }),
+      params: withUrlId({ id: list }),
       querystring: object({
         expand: {
           type: 'boolean',

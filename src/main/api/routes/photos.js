@@ -3,7 +3,9 @@ import send from '@fastify/send'
 import act from '../../../actions/api.js'
 import { MIME } from '../../../constants/index.js'
 import { fail, found } from '../errors.js'
-import { id, idParams, withUrlId } from '../schema.js'
+import { id, idParams, object, withUrlId } from '../schema.js'
+
+const size = { type: 'integer', minimum: 1 }
 
 // Shared by /photos and /selections.
 const extract = (type) => ({
@@ -11,13 +13,23 @@ const extract = (type) => ({
     operationId: `${type}s.extract`,
     summary: `Extract the ${type} image`,
     description: 'Renders the image with its adjustments, e.g. rotation.',
-    params: withUrlId({ id, format: { enum: ['jpg', 'png', 'webp'] } })
+    params: withUrlId({ id, format: { enum: ['jpg', 'png', 'webp'] } }),
+    querystring: object({
+      width: { ...size, description: 'Fit within this width (no enlarging)' },
+      height: { ...size, description: 'Fit within this height (no enlarging)' },
+      quality: {
+        type: 'integer',
+        minimum: 1,
+        maximum: 100,
+        description: 'Compression quality, for jpg and webp'
+      }
+    })
   },
-  async handler ({ params, rsvp }, reply) {
+  async handler ({ params, query, rsvp }, reply) {
     let payload = found(await rsvp(act.photo.extract({
       [type]: params.id,
       format: params.format
-    })))
+    }, query)))
 
     return reply
       .type(MIME[payload.format.toUpperCase()] || 'application/octet-stream')
@@ -37,6 +49,8 @@ export default async function photos (api) {
     schema: {
       operationId: 'photos.original',
       summary: 'Download the original photo file as is',
+      // Any file type, or a redirect: no MCP tool, use extract instead.
+      mcp: false,
       description: 'Supports range and conditional requests. ' +
         'Redirects to photos stored at an HTTP(S) URL.',
       params: idParams

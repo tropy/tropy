@@ -14,10 +14,15 @@ const fail = (status, body) =>
 // with the args and the project window.
 //
 // Resolves with the project, or null if none was opened.
-function projectRoute (pathname, { description, params, query }, handler) {
+function projectRoute (pathname, { operationId, summary, params, query }, handler) {
   return {
+    operationId,
+    // Readable form, e.g. /{item}[/{photo}] for /:item{/:photo}?
+    url: 'tropy://project' + pathname
+      .replace(/\{([^}]*)\}\?/g, '[$1]')
+      .replace(/:(\w+)/g, '{$1}'),
     pattern: new URLPattern({ hostname: 'project', pathname }),
-    description,
+    summary,
     params,
     query,
     async handler (app, args, opts) {
@@ -53,10 +58,12 @@ function projectWindow (app, win) {
 
 // Route for tropy://{hostname} URLs:
 // Shows an app window. Resolves with null.
-function windowRoute (hostname, { description }, handler) {
+function windowRoute (hostname, { operationId, summary }, handler) {
   return {
+    operationId,
+    url: `tropy://${hostname.match(/\w+/)[0]}`,
     pattern: new URLPattern({ hostname, pathname: '' }),
-    description,
+    summary,
     params: object({}),
     async handler (app) {
       await handler(app)
@@ -67,19 +74,22 @@ function windowRoute (hostname, { description }, handler) {
 
 const ROUTES = Object.freeze([
   projectRoute('{/:urlId}?', {
-    description: 'Open a project; without URL id, the current or most recent one',
+    operationId: 'tropy.project',
+    summary: 'Open a project; without URL id, the current or most recent one',
     params: object({ urlId: { ...urlId, default: 'current' } })
   }),
 
   projectRoute('/:urlId/items', {
-    description: 'Show all items, or search them (q)',
+    operationId: 'tropy.items',
+    summary: 'Show all items, or search them (q)',
     params: object({ urlId }, ['urlId']),
     query: object({ q: { type: 'string', description: 'Search query' } })
   }, ({ q = '' }, win) =>
     win.dispatch(act.nav.select({ query: q }))),
 
   projectRoute('/:urlId/items/:item{/:photo}?{/:selection}?', {
-    description: 'Show an item, photo or selection',
+    operationId: 'tropy.item',
+    summary: 'Show an item, photo or selection',
     params: object({ urlId, item: id, photo: id, selection: id },
       ['urlId', 'item'])
   }, async ({ item, photo, selection }, win) => {
@@ -90,30 +100,35 @@ const ROUTES = Object.freeze([
   }),
 
   projectRoute('/:urlId/lists/:list', {
-    description: 'Show a list (not verified)',
+    operationId: 'tropy.list',
+    summary: 'Show a list (not verified)',
     params: object({ urlId, list: id }, ['urlId', 'list'])
   }, ({ list }, win) =>
     win.dispatch(act.nav.select({ list, query: '' }))),
 
   projectRoute('/:urlId/tags/:tag', {
-    description: 'Show the items with a tag (not verified)',
+    operationId: 'tropy.tag',
+    summary: 'Show the items with a tag (not verified)',
     params: object({ urlId, tag: id }, ['urlId', 'tag'])
   }, ({ tag }, win) =>
     win.dispatch(act.nav.select({ tags: [tag], query: '' }))),
 
   projectRoute('/:urlId/trash', {
-    description: 'Show the trash',
+    operationId: 'tropy.trash',
+    summary: 'Show the trash',
     params: object({ urlId }, ['urlId'])
   }, (args, win) =>
     win.dispatch(act.nav.select({ trash: true, query: '' }))),
 
   windowRoute('(prefs|preferences)', {
-    description: 'Show the preferences'
+    operationId: 'tropy.preferences',
+    summary: 'Show the preferences'
   }, (app) =>
     app.showPreferencesWindow()),
 
   windowRoute('(about|version)', {
-    description: 'Show the about window'
+    operationId: 'tropy.about',
+    summary: 'Show the about window'
   }, (app) =>
     app.showAboutWindow())
 ])

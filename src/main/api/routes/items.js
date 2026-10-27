@@ -40,7 +40,10 @@ export default async function items (api) {
     schema: {
       operationId: 'items.import',
       summary: 'Import items from image files or JSON-LD data',
-      description: 'Waits until the import is done, which can take a long time.',
+      description: 'Requires files or data. ' +
+        'Waits until the import is done, which can take a long time: ' +
+        'clients may time out while the import continues, ' +
+        'so check for the imported items before retrying.',
       params: withUrlId(),
       body: {
         ...object({
