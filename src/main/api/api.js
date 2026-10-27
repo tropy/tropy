@@ -7,6 +7,7 @@ import errors from './errors.js'
 import guard from './guard.js'
 import legacy from './legacy.js'
 import project from './project.js'
+import { validation } from './schema.js'
 import projectsRoutes from './routes/projects.js'
 import items from './routes/items.js'
 import lists from './routes/lists.js'
@@ -29,14 +30,9 @@ export function create ({
     logController: new DebugLogger()
   })
 
-  let options = {
-    allErrors: true,
-    allowUnionTypes: true,
-    useDefaults: true
-  }
   let ajv = {
-    body: new Ajv(options),
-    strings: new Ajv({ ...options, coerceTypes: 'array' })
+    body: new Ajv(validation.body),
+    strings: new Ajv(validation.strings)
   }
 
   app.setValidatorCompiler(({ schema, httpPart }) =>

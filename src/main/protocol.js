@@ -3,7 +3,7 @@ import { HttpError } from '../common/error.js'
 import { info, warn } from '../common/log.js'
 import { protocolURL } from '../common/util.js'
 import * as act from './actions.js'
-import { id, object, urlId } from './api/schema.js'
+import { id, object, urlId, validation } from './api/schema.js'
 
 const fail = (status, body) =>
   new HttpError({ status, body })
@@ -260,7 +260,7 @@ async function validate (schema, params) {
 
   if (ajv == null) {
     let { default: Ajv } = await import('ajv')
-    ajv = new Ajv({ allErrors: true, coerceTypes: true, useDefaults: true })
+    ajv = new Ajv(validation.strings)
   }
 
   let fn = ajv.compile(schema)
