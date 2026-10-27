@@ -28,7 +28,8 @@ import { darwin, linux } from '../common/os.js'
 import { channel, product, version } from '../common/release.js'
 import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
-import { debounce, delay, once, protocolURL, urlId } from '../common/util.js'
+import { debounce, delay, once } from '../common/util.js'
+import { protocolURL, urlId } from '../common/project-url.js'
 
 import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
 import { AccountService } from './account.js'
@@ -145,7 +146,6 @@ export class Tropy extends EventEmitter {
     for (let file of files) {
       switch (extname(file)) {
         case '.tpy':
-        case '.mtpy':
         case '.tropy':
           await this.showProjectWindow(file, null)
           break
@@ -171,7 +171,7 @@ export class Tropy extends EventEmitter {
     let { cancel, value: files } = await dialog.open(win, {
       filters: [{
         name: this.dict.dialog.file.project,
-        extensions: ['tpy', 'tropy', 'mtpy']
+        extensions: ['tpy', 'tropy']
       }]
     })
 
@@ -1198,7 +1198,7 @@ export class Tropy extends EventEmitter {
             let { cancel, value: files } = await dialog.open(this.wm.current(), {
               filters: [{
                 name: this.dict.dialog.file.project,
-                extensions: ['tpy', 'tropy', 'mtpy']
+                extensions: ['tpy', 'tropy']
               }]
             })
 

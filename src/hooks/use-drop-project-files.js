@@ -2,7 +2,7 @@ import { webUtils } from 'electron'
 import { useDrop } from 'react-dnd'
 import { NativeTypes } from 'react-dnd-html5-backend'
 import { hasProjectFiles } from '../components/dnd.js'
-import { getProjectType } from '../common/project.js'
+import { getProjectType } from '../common/project-url.js'
 
 function isProjectFile (path) {
   try {

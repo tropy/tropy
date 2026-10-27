@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { existsSync } from 'node:fs'
 import { chmod, cp, stat, mkdir } from 'node:fs/promises'
-import { basename, dirname, extname, join, resolve, relative } from 'node:path'
+import { dirname, join, resolve, relative } from 'node:path'
 import { randomUUID as uuid } from 'node:crypto'
 import { Database } from './db.js'
 import { home, normalize } from './os.js'
@@ -9,6 +9,13 @@ import { into, select, update } from './query.js'
 import { version } from './release.js'
 import { empty, pMap } from './util.js'
 import { info, warn } from './log.js'
+import {
+  getProjectType,
+  isManaged,
+  MANAGED,
+  MANAGED_DB_NAME,
+  TPY
+} from './project-url.js'
 
 import { Asset } from '../asset/asset.js'
 import { Store } from '../asset/store.js'
@@ -456,27 +463,6 @@ export function resolveBasePath (db, base) {
   }
 }
 
-export function getProjectType (path) {
-  switch (extname(path).toLowerCase()) {
-    case '.tpy':
-      return TPY
-    case '.tropy':
-    case '.mtpy':
-    case '.mpy':
-    case '':
-      return MANAGED
-    default:
-      throw new Error(`unknown project file extension ${path}`)
-  }
-}
-
-const isManaged = (dbFile) =>
-  basename(dbFile) === MANAGED_DB_NAME &&
-  getProjectType(dirname(dbFile)) === MANAGED
-
-const TPY = 'tpy'
-const MANAGED = 'managed'
-const MANAGED_DB_NAME = 'project.tpy'
 const MANAGED_STORE_NAME = 'assets'
 
 const BASE = {

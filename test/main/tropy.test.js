@@ -187,6 +187,13 @@ describe('Tropy', () => {
         .to.have.property('persistenceId', 'project:other')
     })
 
+    it('new window gets the bundle id for its database file', async () => {
+      await tropy.showProjectWindow('/path/to/Foo.tropy/project.tpy', null)
+
+      expect(openMock.mock.calls[0].arguments[2])
+        .to.have.property('persistenceId', 'project:Foo')
+    })
+
     it('new window uses the legacy bounds for the first project', async () => {
       tropy.state.win = { bounds: { x: 10, y: 20, width: 800, height: 600 } }
       await tropy.showProjectWindow('other.tpy', null)
