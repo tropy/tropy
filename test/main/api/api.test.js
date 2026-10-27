@@ -360,6 +360,14 @@ describe('api', () => {
         .to.equal(400)
     })
 
+    it('records the user agent with every action', async () => {
+      await api.app.inject({
+        url: '/projects/foo/tags',
+        headers: { 'user-agent': 'curl/8.7.1' }
+      })
+      expect(api.action.meta).to.include({ agent: 'curl/8.7.1', silent: true })
+    })
+
     it('deletes tags by id', async () => {
       api.respond(3)
       expect((await api.delete('/projects/foo/tags/3')).statusCode).to.equal(204)

@@ -60,7 +60,10 @@ export function mkapi () {
       let res = await api.app.inject({
         method: 'POST',
         url: '/mcp',
-        headers: { accept: 'application/json, text/event-stream' },
+        headers: {
+          accept: 'application/json, text/event-stream',
+          'user-agent': 'tropy-spark/1.0'
+        },
         payload: { jsonrpc: '2.0', id: 1, method, params }
       })
 
