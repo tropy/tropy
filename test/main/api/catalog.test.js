@@ -1,5 +1,6 @@
 import { logger } from '#tropy/common/log.js'
 import { create } from '#tropy/main/api/api.js'
+import { ProtocolHandler } from '#tropy/main/protocol.js'
 
 // The documented routes follow the design in src/main/api/catalog.js.
 describe('api.catalog', () => {
@@ -24,7 +25,7 @@ describe('api.catalog', () => {
     `${method} ${url}`
 
   it('records documented routes only', () => {
-    expect(routes.map(label)).to.include('GET /projects')
+    expect(routes.map(label)).to.include.members(['GET /', 'GET /projects'])
     expect(routes.map(label).join()).not.to.match(/HEAD|\/project\//)
   })
 
@@ -38,8 +39,17 @@ describe('api.catalog', () => {
     expect(new Set(ids).size).to.equal(ids.length)
   })
 
+  it('shares no operation ids with tropy:// routes', () => {
+    let ids = routes.map(route => route.schema.operationId)
+
+    for (let { operationId } of new ProtocolHandler({}).routes)
+      expect(ids).not.to.include(operationId)
+  })
+
   it('declares all path params', () => {
     for (let route of routes) {
+      expect(route.url, 'optional path param').not.to.include('?')
+
       let params = [...route.url.matchAll(/:(\w+)/g)].map(m => m[1])
       expect(names(route.schema.params), label(route)).to.have.members(params)
     }

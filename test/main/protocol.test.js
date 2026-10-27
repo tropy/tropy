@@ -34,9 +34,16 @@ describe('ProtocolHandler', () => {
       let params = Object.keys(route.params?.properties ?? {})
       let query = Object.keys(route.query?.properties ?? {})
 
-      expect(route.description).to.be.a('string')
+      expect(route).to.include.keys('operationId', 'summary', 'url')
       expect(params.filter(name => query.includes(name))).to.be.empty
     }
+
+    expect(proto.routes.map(route => route.url)).to.include.members([
+      'tropy://project[/{urlId}]',
+      'tropy://project/{urlId}/items',
+      'tropy://project/{urlId}/items/{item}[/{photo}][/{selection}]',
+      'tropy://prefs'
+    ])
   })
 
   it('opens projects and returns them', async () => {

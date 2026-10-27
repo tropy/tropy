@@ -7,6 +7,7 @@ async function createServer (app, port) {
   let api = create({
     loggerInstance: logger.child({ name: 'api' }),
     projects: app.projects,
+    proto: app.proto,
     wm: app.wm
   })
 
