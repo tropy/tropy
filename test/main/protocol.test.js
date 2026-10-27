@@ -12,7 +12,10 @@ describe('ProtocolHandler', () => {
       dispatch: mock.fn(),
       showAboutWindow: mock.fn(),
       showPreferencesWindow: mock.fn(),
-      wm: { current: () => null },
+      wm: {
+        current: () => null,
+        rsvp: mock.fn(async () => ({ payload: {} }))
+      },
       projects: {
         openById: mock.fn(async (id) =>
           (id === 'Kraków Atlas' || id === 'current') ? win : null),
@@ -43,11 +46,28 @@ describe('ProtocolHandler', () => {
     }
   })
 
+  it('opens items in the project window', async () => {
+    for (let [url, payload] of [
+      ['/items/41', { id: 41 }],
+      ['/items/41/3', { id: 41, photo: 3 }],
+      ['/items/41/3/7', { id: 41, photo: 3, selection: 7 }]
+    ]) {
+      await proto.handle(base + url)
+
+      let [target, action] = app.wm.rsvp.mock.calls.at(-1).arguments
+      expect(target).to.equal(win)
+      expect(action.name, url).to.equal('item.open')
+      expect(action.payload, url).to.deep.include(payload)
+    }
+
+    app.wm.rsvp.mock.mockImplementation(async () => ({ payload: null }))
+
+    let err = await proto.handle(base + '/items/41/3').catch(e => e)
+    expect(err).to.have.property('status', 404)
+  })
+
   it('navigates within the project window', async () => {
     for (let [url, name, payload] of [
-      ['/items/41', 'item.open', { id: 41 }],
-      ['/items/41/3', 'item.open', { id: 41, photo: 3 }],
-      ['/items/41/3/7', 'item.open', { id: 41, photo: 3, selection: 7 }],
       ['/items', 'nav.select', { query: '' }],
       ['/items?q=Map', 'nav.select', { query: 'Map' }],
       ['/lists/3', 'nav.select', { list: 3, query: '' }],

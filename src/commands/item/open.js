@@ -7,10 +7,19 @@ export class Open extends Command {
   *exec () {
     let { id, photo, selection, note } = this.action.payload
 
-    let [item, nav] = yield select(state => ([
+    let [item, nav, selections] = yield select(state => ([
       state.items[id],
-      state.nav
+      state.nav,
+      state.selections
     ]))
+
+    // Do nothing for missing/bad ids!
+    if (item == null)
+      return null
+    if (photo && !item.photos.includes(photo))
+      return null
+    if (selection && selections[selection]?.photo !== photo)
+      return null
 
     if (!photo) {
       photo = item.photos.includes(nav.photo) ?
