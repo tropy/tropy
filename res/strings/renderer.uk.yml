@@ -40,6 +40,8 @@ uk:
           one {1 Photo}
           other {# Photos}}
       create: Додати фото
+      transcribe: Transcribe Photo
+      transcribeDialog: Transcribe Photo…
       selection: Фрагмент
     note:
       title: |-
@@ -48,11 +50,16 @@ uk:
           one {1 Note}
           other {# Notes}}
       create: Додати нотатку
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: Елемент
     photo: Фото
     notes: Нотатки
     note: Note {idx, number}
+    transcriptions: Transcriptions
+    transcription: Transcription {idx, number}
     tags: Теґи
   about:
     version: Версія {version}
@@ -83,15 +90,17 @@ uk:
     file:
       open: Відкрити проєкт {шлях}
       missing: Find missing project {path}
-      remove: Remove project from list
+      options: Project options
+      conflict: >-
+        Non-unique project URLs will open the most recent project. Consider
+        renaming one of the project files.
     recent:
       search:
         placeholder: Фільтрувати проєкти
         blank: Немає відповідних проєктів
     corrupted: >-
-      Ваш файл проекту може бути пошкоджено, і для його виправлення необхідно
-      виконати додаткові дії. Для отримання допомоги зверніться до посібника
-      користувача.
+      Your project file may be damaged and manual steps are necessary to fix it.
+      Please consult the user manual for further assistance.
     readOnly: >-
       Ваш файл проекту заблокований і не може бути змінений. Щоб розблокувати,
       змініть права доступу до файлу та знову відкрийте проект.
@@ -152,8 +161,16 @@ uk:
         optimize: Optimize photo size and quality
         metadata: Include metadata
         notes: Include notes
+        transcriptions: Include transcriptions
         onlyNotes: Include only photos with notes
         overflow: Allow content to take up more than one page
+      ocr:
+        model: Default model
+        grayscale: Convert images to grayscale
+        resize: Resize large images
+        quality:
+          label: For Transcriptions
+          value: Use image quality {value, number, ::percent scale/0.01 .}
       locale:
         locale: Locale
         locales:
@@ -203,6 +220,14 @@ uk:
               text: Plain text
               markdown: Markdown
               html: HTML source code
+        transcription:
+          format:
+            alto: Transcriptions as ALTO XML
+          copy:
+            label: Copy transcriptions as
+            option:
+              text: Plain text
+              alto: ALTO XML
       ui:
         label: Interface
         option:
@@ -235,6 +260,7 @@ uk:
           home: Relative to your home directory
       store: Managed folder
       name: Заголовок
+      url: URL
       id: ID
       path: Файл
       type: Тип проєкту
@@ -246,6 +272,13 @@ uk:
             =0 {All photos consolidated.}
             one {1 photo not found; consolidation required.}
             other {# photos not found; consolidation required.}}
+      optimize:
+        confirm: Create Optimized Project
+        hint: Create an optimized copy of this project.
+        onImport: Optimize photos on import
+        quality:
+          label: Optimize assets
+          value: Quality {value, number, ::percent scale/0.01 .}
       watch:
         folder: Watch folder
         usePolling: Using file stat polling
@@ -289,6 +322,37 @@ uk:
       uninstall: Деінсталювати
       noInfo: Невідомий автор
       homepage: More
+    account:
+      label: Account
+      description: Sign in to your account
+      username: Username
+      email: Email
+      password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
+      link: Sign in
+      unlink: Sign out
+      retry: Retry
+      usage:
+        label: Usage
+        window:
+          hourly: Hourly
+          daily: Daily
+          weekly: Weekly
+          monthly: Monthly
+        transcriptions:
+          label: transcriptions
+          loading: Loading…
+          limit: |-
+            {delta, plural,
+              =0 {No transcriptions remaining. Resets {reset}.}
+              other {# of {limit} transcriptions remaining. Resets {reset}.}}
+          total: |-
+            {total, plural,
+              =0 {No transcriptions since {since}.}
+              one {1 transcription since {since}.}
+              other {# transcriptions since {since}.}}
   format:
     ppi: Pixels per inch (ppi)
   item:
@@ -311,6 +375,8 @@ uk:
   settings:
     maximize: Maximize this view
     unmaximize: Restore previous view size
+  slider:
+    value: '{value, number, ::percent scale/0.01 .}'
   esper:
     tool:
       pan: Перемістити
@@ -326,6 +392,9 @@ uk:
       full: Show full text overlay
       split: Show split-view text overlay
       panel: Toggle transcription version history
+      fontSize:
+        decrease: Decrease font size
+        increase: Increase font size
     panel:
       negative: Інвертувати кольори
       revert: Скинути до оригіналу
@@ -401,6 +470,13 @@ uk:
             new window.
           buttons:
             - OK
+        optimize:
+          title: Optimization complete
+          message: >-
+            Your optimized project copy has been saved. Tropy will now open the
+            optimized project in a new window.
+          buttons:
+            - OK
     error:
       title: Error
       buttons:
@@ -430,8 +506,8 @@ uk:
             {count, plural,
               one {One orphaned file was found.}
               other {{count} orphaned files were found.}}
-            See the log file for the full list. Do you want to delete all
-            orphaned files now? This action cannot be undone.
+            Do you want to delete all orphaned files now? This action cannot be
+            undone.
           buttons:
             - Cancel
             - Delete
@@ -451,6 +527,15 @@ uk:
           buttons:
             - Cancel
             - Delete
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again to use server-side
+            features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: >-
@@ -472,6 +557,8 @@ uk:
       projects: Проєкти Tropy
       rdf: RDF Vocabularies
       jsonld: JSON-LD
+      alto: ALTO XML
+      text: Plain Text
   action:
     project:
       save: Зберегти проєкт
@@ -536,26 +623,38 @@ uk:
       save: Зберегти фрагмент
       order: Сортувати фрагменти
   activity:
+    status: |-
+      {count, plural,
+        one {1 activity in progress …}
+        other {# activities in progress …}}
     cache:
       prune: Оптимізувати кеш проєкту …
       purge: Purging old caches …
     project:
+      optimize: Optimizing project …
+      prune: Removing orphaned files …
+      reindex: Rebuilding search index …
+      reload: Reloading project …
       save: Saving …
     list:
       create: Creating list …
       delete: Deleting list …
+      export: Exporting lists …
+      import: Importing lists …
       item:
         add: Adding items to list …
         merge: Об'єднання елементів …
         remove: Removing items from list …
         restore: Restoring items to list …
       load: Loading lists …
+      move: Moving list …
       order: Sorting list …
       restore: Restoring list …
       save: Saving list …
     tag:
       create: Creating tag …
       delete: Deleting tag …
+      export: Exporting tags …
       load: Loading tags …
       restore: Restoring tag …
       save: Saving tag …
@@ -568,73 +667,114 @@ uk:
       implode: Restoring item …
       import: |-
         {hasProgressBar, select,
-          true {Importing item {progress, number} of {total, number} …}
+          true {Imported {progress, number} of {total, number} items …}
           other {Importing items …}
         }
       load: Loading items …
       merge: Merging item …
+      open: Opening item …
+      preview: Loading preview …
       print: Processing items …
       restore: Restoring item …
       save: Saving items …
+      split: Splitting item …
       tag:
         create: Tagging item
+        delete: Removing tag from items …
         toggle: Tagging item …
         clear: Clearing item tags …
+      template:
+        change: Changing item template …
     metadata:
+      add: Adding metadata …
+      copy: Copying metadata …
+      delete: Deleting metadata …
       load: Loading metadata …
+      restore: Restoring metadata …
       save: Saving metadata …
     ontology:
       load: Loading ontology …
       import: Importing vocabularies …
+      class:
+        load: Loading classes …
+      props:
+        load: Loading properties …
       vocab:
+        delete: Deleting vocabulary …
+        export: Exporting vocabulary …
+        load: Loading vocabularies …
+        restore: Restoring vocabulary …
         save: Saving vocabulary …
       label:
         save: Saving label …
       template:
+        create: Creating template …
+        delete: Deleting template …
+        export: Exporting templates …
         import: Importing templates …
+        save: Saving template …
+        field:
+          add: Adding template field …
+          order: Sorting template fields …
+          remove: Removing template field …
+          save: Saving template field …
     photo:
       consolidate: |-
         {hasProgressBar, select,
-          true {Consolidating photo {progress, number} of {total, number} …}
+          true {Consolidated {progress, number} of {total, number} photos …}
           other {Consolidating photos …}
         }
       create: |-
         {hasProgressBar, select,
-          true {Importing photo {progress, number} of {total, number} …}
+          true {Imported {progress, number} of {total, number} photos …}
           other {Importing photos …}
         }
       delete: Видалення фото …
       duplicate: |-
         {hasProgressBar, select,
-          true {Duplicating photo {progress, number} of {total, number} …}
+          true {Duplicated {progress, number} of {total, number} photos …}
           other {Duplicating photos …}
         }
       transcribe: |-
         {hasProgressBar, select,
-          true {Transcribing photo {progress, number} of {total, number} …}
-          other {Transcribing photos …}
+          true {Created {progress, number} of {total, number} transcriptions …}
+          other {Creating transcriptions …}
         }
       load: Loading photos …
       move: Moving photos …
       order: Sorting photos …
       save: Saving photo …
       restore: Restoring photos …
+      rotate: Rotating photo …
       extract: Extracting photo …
+      template:
+        change: Changing photo template …
     note:
       create: Створення нотатки …
       delete: Deleting note …
+      export: Exporting notes …
       load: Loading notes …
+      open: Opening note …
       order: Sorting notes …
       restore: Restoring notes …
+      save: Saving note …
+      update: Saving note …
     selection:
       create: Creating photo selection …
+      delete: Deleting photo selection …
       load: Loading photo selections …
+      order: Sorting photo selections …
+      restore: Restoring photo selection …
+      save: Saving photo selection …
       extract: Extracting selection …
-    api:
-      photo:
-        extract: Extracting photo …
-      selection:
-        extract: Extracting selection …
+      template:
+        change: Changing selection template …
+    transcription:
+      process: |-
+        {hasProgressBar, select,
+          true {Processed {progress, number} of {total, number} transcriptions …}
+          other {Processing transcriptions …}
+        }
   editor:
     commands:
       bold: Жирний
@@ -658,21 +798,38 @@ uk:
       sinkListItem: Sink list item
       liftListItem: Lift list item
   transcription:
+    config:
+      title: Transcription Settings
+      cancel: Cancel
+      submit: Transcribe
     error: Transcription failed
     retry: Try Again
     pending: Transcription pending…
+    empty: No text recognized
     title: |-
       {name, select,
         true {{name}}
         other {Transcription}
       }
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        unknown: Something went wrong. Please try again.
+      network: Could not reach the Tropy server.
+      offline: Tropy is offline.
+      profile:
+        token: Your session has expired. Please sign in again.
+        http: Something went wrong. Please try again.
+        id_token: Something went wrong. Please try again.
+        unknown: Something went wrong. Please try again.
     cache:
       prune: Не вдалося оптимізувати кеш проєкту.
       purge: Не вдалося видалити старий кеш проєкту.
     project:
       created: Не вдалося створити проєкт.
       convert: Не вдалося перетворити проєкт.
+      optimize: Project optimization failed.
     item:
       export: Failed to export items.
       merge: Не вдалося об'єднати елементи.

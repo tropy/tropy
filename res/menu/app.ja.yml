@@ -33,9 +33,6 @@ ja:
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
         - label: 最近のプロジェクト
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
-        - label: 最近のプロジェクト
           id: recent
           enabled: false
           submenu:
@@ -275,9 +272,6 @@ ja:
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
         - label: 最近のプロジェクト
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
-        - label: 最近のプロジェクト
           id: recent
           enabled: false
           submenu:
@@ -290,10 +284,10 @@ ja:
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: 写真...
+            - label: 写真をインポートする
               command: app:import
               accelerator: CmdOrCtrl+Shift+I
-            - label: フォルダ...
+            - label: フォルダをインポートする
               command: app:import-directory
         - label: 写真ライブラリの修整結果を反映
           command: app:consolidate-photo-library
@@ -308,7 +302,7 @@ ja:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: 縦方向
+                - label: 縦向き
                   command: app:print-pdf
                 - label: 横向き
                   command: app:print-pdf-landscape
@@ -491,9 +485,6 @@ ja:
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
         - label: 最近のプロジェクト
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
-        - label: 最近のプロジェクト
           id: recent
           enabled: false
           submenu:
@@ -506,10 +497,10 @@ ja:
           window: project
           condition: '!isProjectReadOnly'
           submenu:
-            - label: 写真...
+            - label: 写真をインポートする
               command: app:import
               accelerator: CmdOrCtrl+Shift+I
-            - label: フォルダ...
+            - label: フォルダをインポートする
               command: app:import-directory
         - label: エクスポート
           id: export
@@ -519,7 +510,7 @@ ja:
               command: app:export-item
             - label: PDF
               submenu:
-                - label: 縦方向
+                - label: 縦向き
                   command: app:print-pdf
                 - label: 横向き
                   command: app:print-pdf-landscape

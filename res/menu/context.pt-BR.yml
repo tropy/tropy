@@ -15,8 +15,19 @@ pt-BR:
       - label: Renomear Projeto
         command: app:rename-project
         condition: '!isReadOnly'
-      - label: Mostrar Ficheiro do Projeto...
+      - label: Copy Project URL
+        command: app:copy-project-url
+      - label: Mostrar Arquivo do Projeto...
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Mostrar Arquivo do Projeto...
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Nova Lista
         command: app:create-list
@@ -91,27 +102,27 @@ pt-BR:
           - label: Marrom
             color:
               - brown
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Alperce
             color:
               - apricot
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Verde Escuro
             color:
               - dark-green
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Azul Claro
             color:
               - light-blue
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Lavanda
             color:
               - lavender
-              - color
+              - tagColor
               - app:save-default-tag-color
     tag:
       - label: Cor de Etiqueta
@@ -276,6 +287,14 @@ pt-BR:
         command: app:copy-note
       - label: Apagar Nota
         command: app:delete-note
+    transcription:
+      - label: Export Transcription …
+        command: app:export-transcription
+      - label: Copy Transcription
+        command: app:copy-transcription
+      - label: Delete Transcription
+        command: app:delete-transcription
+        condition: '!isReadOnly'
     notepad:
       - label: Direção
         id: direction
@@ -366,7 +385,7 @@ pt-BR:
         submenu:
           - label: Com Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     item-bulk:
       - label: Combinar Itens Selecionados
         command: app:merge-item
@@ -426,7 +445,7 @@ pt-BR:
         submenu:
           - label: Com Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Consolidar Foto
         command: app:consolidate-photo
     photo-rotate:
@@ -517,8 +536,19 @@ pt-BR:
       - label: Renomear Projeto
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Mostrar Arquivo do Projeto...
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Mostrar Arquivo do Projeto...
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Nova Lista
         command: app:create-list
@@ -593,27 +623,27 @@ pt-BR:
           - label: Marrom
             color:
               - brown
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Alperce
             color:
               - apricot
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Verde Escuro
             color:
               - dark-green
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Azul Claro
             color:
               - light-blue
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Lavanda
             color:
               - lavender
-              - color
+              - tagColor
               - app:save-default-tag-color
     tag:
       - label: Cor de Etiqueta
@@ -778,6 +808,14 @@ pt-BR:
         command: app:copy-note
       - label: Apagar Nota
         command: app:delete-note
+    transcription:
+      - label: Export Transcription …
+        command: app:export-transcription
+      - label: Copy Transcription
+        command: app:copy-transcription
+      - label: Delete Transcription
+        command: app:delete-transcription
+        condition: '!isReadOnly'
     notepad:
       - label: Direção
         id: direction
@@ -930,7 +968,7 @@ pt-BR:
         submenu:
           - label: Com Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: Novo Campo...
         command: app:create-field
@@ -972,7 +1010,7 @@ pt-BR:
         submenu:
           - label: Com Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Consolidar Foto
         command: app:consolidate-photo
     photo-rotate:
@@ -1019,8 +1057,19 @@ pt-BR:
       - label: Renomear Projeto
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Mostrar Arquivo do Projeto...
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Mostrar Arquivo do Projeto...
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Nova Lista
         command: app:create-list
@@ -1095,27 +1144,27 @@ pt-BR:
           - label: Marrom
             color:
               - brown
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Alperce
             color:
               - apricot
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Verde Escuro
             color:
               - dark-green
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Azul Claro
             color:
               - light-blue
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Lavanda
             color:
               - lavender
-              - color
+              - tagColor
               - app:save-default-tag-color
     tag:
       - label: Cor de Etiqueta
@@ -1280,6 +1329,14 @@ pt-BR:
         command: app:copy-note
       - label: Apagar Nota
         command: app:delete-note
+    transcription:
+      - label: Export Transcription …
+        command: app:export-transcription
+      - label: Copy Transcription
+        command: app:copy-transcription
+      - label: Delete Transcription
+        command: app:delete-transcription
+        condition: '!isReadOnly'
     notepad:
       - label: Direção
         id: direction
@@ -1432,7 +1489,7 @@ pt-BR:
         submenu:
           - label: Com Tropy
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: Novo Campo...
         command: app:create-field
@@ -1474,7 +1531,7 @@ pt-BR:
         submenu:
           - label: Com Tropy
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Consolidar Foto
         command: app:consolidate-photo
     photo-rotate:

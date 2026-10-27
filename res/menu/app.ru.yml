@@ -32,9 +32,6 @@ ru:
         - label: Открыть...
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Открыть в новом окне...
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Недавние проекты
           id: recent
           enabled: false
@@ -57,7 +54,7 @@ ru:
           id: export
           window: project
           submenu:
-            - label: формат JSON-LD
+            - label: Формат JSON-LD
               command: app:export-item
             - label: документ PDF
               submenu:
@@ -274,9 +271,6 @@ ru:
         - label: Открыть...
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Открыть  в новом окне...
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Недавние проекты
           id: recent
           enabled: false
@@ -304,7 +298,7 @@ ru:
           id: export
           window: project
           submenu:
-            - label: формат JSON-LD
+            - label: Формат JSON-LD
               command: app:export-item
             - label: документ PDF
               submenu:
@@ -490,9 +484,6 @@ ru:
         - label: Открыть...
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Открыть в новом окне...
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Недавние проекты
           id: recent
           enabled: false
@@ -515,7 +506,7 @@ ru:
           id: export
           window: project
           submenu:
-            - label: формат JSON-LD
+            - label: Формат JSON-LD
               command: app:export-item
             - label: документ PDF
               submenu:

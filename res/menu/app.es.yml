@@ -32,9 +32,6 @@ es:
         - label: Abrir…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Abrir en nueva ventana…
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Proyectos recientes
           id: recent
           enabled: false
@@ -66,7 +63,7 @@ es:
                 - label: Horizontal
                   command: app:print-pdf-landscape
         - type: separator
-        - label: Consolidar fototeca
+        - label: Consolidate Photo Library
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
@@ -274,9 +271,6 @@ es:
         - label: Abrir…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Abrir en nueva ventana
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Proyectos recientes
           id: recent
           enabled: false
@@ -295,7 +289,7 @@ es:
               accelerator: CmdOrCtrl+Shift+I
             - label: Carpeta...
               command: app:import-directory
-        - label: Consolidar fototeca
+        - label: Consolidate Photo Library
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'
@@ -490,9 +484,6 @@ es:
         - label: Abrir…
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: Abrir en nueva ventana
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Proyectos recientes
           id: recent
           enabled: false
@@ -524,7 +515,7 @@ es:
                 - label: Horizontal
                   command: app:print-pdf-landscape
         - type: separator
-        - label: Consolidar fototeca
+        - label: Consolidate Photo Library
           command: app:consolidate-photo-library
           window: project
           condition: '!isProjectReadOnly'

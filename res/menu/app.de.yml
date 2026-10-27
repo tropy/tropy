@@ -32,9 +32,6 @@ de:
         - label: Öffnen …
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: In neuem Fenster öffnen …
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Benutzte Projekte
           id: recent
           enabled: false
@@ -76,7 +73,7 @@ de:
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
-        - label: Projekt schließen
+        - label: Close Project
           command: app:close-project
           window: project
           condition: isProjectOpen
@@ -274,9 +271,6 @@ de:
         - label: Öffnen …
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: In neuem Fenster öffnen …
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Benutzte Projekte
           id: recent
           enabled: false
@@ -317,7 +311,7 @@ de:
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
-        - label: Projekt schließen
+        - label: Close Project
           command: app:close-project
           window: project
           condition: isProjectOpen
@@ -490,9 +484,6 @@ de:
         - label: Öffnen …
           accelerator: CmdOrCtrl+O
           command: app:open-dialog
-        - label: In neuem Fenster öffnen …
-          accelerator: Shift+CmdOrCtrl+O
-          command: app:open-new-dialog
         - label: Benutzte Projekte
           id: recent
           enabled: false
@@ -534,7 +525,7 @@ de:
           accelerator: CmdOrCtrl+P
           window: project
         - type: separator
-        - label: Projekt schließen
+        - label: Close Project
           command: app:close-project
           window: project
           condition: isProjectOpen

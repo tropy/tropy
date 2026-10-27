@@ -15,8 +15,19 @@ fi-FI:
       - label: Nimeä projekti uudelleen
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Näytä projektitiedosto…
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Näytä projektitiedosto…
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Uusi lista
         command: app:create-list
@@ -91,27 +102,27 @@ fi-FI:
           - label: Ruskea
             color:
               - brown
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Aprikoosi
             color:
               - apricot
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Tummanvihreä
             color:
               - dark-green
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Vaaleansininen
             color:
               - light-blue
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Laventeli
             color:
               - lavender
-              - color
+              - tagColor
               - app:save-default-tag-color
     tag:
       - label: Tunnisteen väri
@@ -276,6 +287,14 @@ fi-FI:
         command: app:copy-note
       - label: Poista muistiinpano
         command: app:delete-note
+    transcription:
+      - label: Export Transcription …
+        command: app:export-transcription
+      - label: Copy Transcription
+        command: app:copy-transcription
+      - label: Delete Transcription
+        command: app:delete-transcription
+        condition: '!isReadOnly'
     notepad:
       - label: Suunta
         id: direction
@@ -366,7 +385,7 @@ fi-FI:
         submenu:
           - label: Tropylla
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     item-bulk:
       - label: Yhdistä valitut tietueet
         command: app:merge-item
@@ -426,7 +445,7 @@ fi-FI:
         submenu:
           - label: Tropylla
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Konsolidoi kuva
         command: app:consolidate-photo
     photo-rotate:
@@ -517,8 +536,19 @@ fi-FI:
       - label: Nimeä projekti uudelleen
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Näytä projektitiedosto…
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Näytä projektitiedosto…
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Uusi lista
         command: app:create-list
@@ -593,27 +623,27 @@ fi-FI:
           - label: Ruskea
             color:
               - brown
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Aprikoosi
             color:
               - apricot
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Tummanvihreä
             color:
               - dark-green
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Vaaleansininen
             color:
               - light-blue
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Laventeli
             color:
               - lavender
-              - color
+              - tagColor
               - app:save-default-tag-color
     tag:
       - label: Tunnisteen väri
@@ -778,6 +808,14 @@ fi-FI:
         command: app:copy-note
       - label: Poista muistiinpano
         command: app:delete-note
+    transcription:
+      - label: Export Transcription …
+        command: app:export-transcription
+      - label: Copy Transcription
+        command: app:copy-transcription
+      - label: Delete Transcription
+        command: app:delete-transcription
+        condition: '!isReadOnly'
     notepad:
       - label: Suunta
         id: direction
@@ -930,7 +968,7 @@ fi-FI:
         submenu:
           - label: Tropylla
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: Uusi kenttä…
         command: app:create-field
@@ -972,7 +1010,7 @@ fi-FI:
         submenu:
           - label: Tropylla
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Konsolidoi kuva
         command: app:consolidate-photo
     photo-rotate:
@@ -1019,8 +1057,19 @@ fi-FI:
       - label: Nimeä projekti uudelleen
         command: app:rename-project
         condition: '!isReadOnly'
+      - label: Copy Project URL
+        command: app:copy-project-url
       - label: Näytä projektitiedosto…
         command: app:show-project-file
+    recent:
+      - label: Copy Project Link
+        command: app:copy-url
+        condition: '!isMissing'
+      - label: Näytä projektitiedosto…
+        command: app:show-project-file
+        condition: '!isMissing'
+      - label: Remove Project from List
+        command: app:clear-recent-projects
     lists:
       - label: Uusi lista
         command: app:create-list
@@ -1095,27 +1144,27 @@ fi-FI:
           - label: Ruskea
             color:
               - brown
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Aprikoosi
             color:
               - apricot
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Tummanvihreä
             color:
               - dark-green
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Vaaleansininen
             color:
               - light-blue
-              - color
+              - tagColor
               - app:save-default-tag-color
           - label: Laventeli
             color:
               - lavender
-              - color
+              - tagColor
               - app:save-default-tag-color
     tag:
       - label: Tunnisteen väri
@@ -1280,6 +1329,14 @@ fi-FI:
         command: app:copy-note
       - label: Poista muistiinpano
         command: app:delete-note
+    transcription:
+      - label: Export Transcription …
+        command: app:export-transcription
+      - label: Copy Transcription
+        command: app:copy-transcription
+      - label: Delete Transcription
+        command: app:delete-transcription
+        condition: '!isReadOnly'
     notepad:
       - label: Suunta
         id: direction
@@ -1432,7 +1489,7 @@ fi-FI:
         submenu:
           - label: Tropylla
             command: app:transcribe-item
-            enabled: false
+            condition: isAccountLinked
     metadata-list:
       - label: Uusi kenttä…
         command: app:create-field
@@ -1474,7 +1531,7 @@ fi-FI:
         submenu:
           - label: Tropylla
             command: app:transcribe-photo
-            enabled: false
+            condition: isAccountLinked
       - label: Konsolidoi kuva
         command: app:consolidate-photo
     photo-rotate:
