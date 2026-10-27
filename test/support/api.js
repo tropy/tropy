@@ -39,7 +39,7 @@ export function mkapi () {
     },
 
     proto: {
-      routes: [{ url: 'tropy://project{/:urlId}?', summary: 'Open a project' }],
+      routes: [{ url: 'tropy://project[/{urlId}]', summary: 'Open a project' }],
       handle: mock.fn(async (url) => ({ url }))
     },
 

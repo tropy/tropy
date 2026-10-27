@@ -5,18 +5,15 @@
  * so describe each route and any parameter that is not obvious.
  */
 
+const body = {
+  allErrors: true,
+  allowUnionTypes: true,
+  useDefaults: true
+}
+
 export const validation = {
-  body: {
-    allErrors: true,
-    allowUnionTypes: true,
-    useDefaults: true
-  },
-  strings: {
-    allErrors: true,
-    allowUnionTypes: true,
-    useDefaults: true,
-    coerceTypes: 'array'
-  }
+  body,
+  strings: { ...body, coerceTypes: 'array' }
 }
 
 export const id = { type: 'integer', minimum: 1 }
