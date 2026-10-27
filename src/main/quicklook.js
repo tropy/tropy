@@ -182,10 +182,10 @@ export class QuickLook {
     let { width, height } = this.sizes.get(parent)
     if (!(width > 0 && height > 0)) return
 
-    // The title bar and padding around the content, see quicklook.scss.
-    let frame = darwin ?
-      { width: 10, height: 43 } :
-      { width: 0, height: linux ? 46 : getTitleBarOverlay().height }
+    let frame = {
+      width: 0,
+      height: darwin ? 38 : linux ? 46 : getTitleBarOverlay().height
+    }
 
     let display = screen.getDisplayMatching(parent.getBounds())
     let { workArea } = display

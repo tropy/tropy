@@ -33,10 +33,6 @@
   background-color: $quicklook-bg;
   padding-top: zoom($toolbar-frameless-height-sm);
 
-  .darwin & {
-    padding: zoom($toolbar-frameless-height-sm) 5px 5px; // Keep in sync with QuickLook#setBounds in main/quicklook.js
-  }
-
   .vibrancy & {
     background-color: transparent;
   }
@@ -95,11 +91,6 @@
     &.rotated {
       width: 100cqh;
       height: 100cqw;
-    }
-
-    .darwin & {
-      border-radius: 11px;
-      -electron-corner-smoothing: system-ui;
     }
   }
 }
