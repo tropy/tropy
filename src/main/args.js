@@ -29,7 +29,14 @@ const options = {
   port: { type: 'string', short: 'p' }
 }
 
+const isLink = (arg) =>
+  (/^tropy:/i).test(arg)
+
 export function parse (argv = process.argv.slice(1)) {
+  // Drop other arguments if there's any link for extra protection!
+  if (argv.some(isLink))
+    argv = argv.filter(isLink)
+
   const { values, positionals } = parseArgs({
     args: argv,
     options,
