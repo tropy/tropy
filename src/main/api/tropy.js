@@ -1,12 +1,6 @@
 import { HttpError } from '../../common/error.js'
 import * as act from '../actions.js'
-import { id, object } from './schema.js'
-
-const urlId = {
-  type: 'string',
-  minLength: 1,
-  description: 'URL id: the project file name, without extension'
-}
+import { id, object, urlId } from './schema.js'
 
 const fail = (status, body) =>
   new HttpError({ status, body })

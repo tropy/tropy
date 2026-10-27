@@ -17,12 +17,7 @@ export default async function projects (api, { projects: registry }) {
     schema: {
       operationId: 'projects.show',
       summary: 'Show a known project',
-      params: path({
-        project: {
-          type: 'string',
-          description: 'URL id: the project file name, without extension'
-        }
-      })
+      params: path()
     }
   }, ({ params }) => {
     let path = registry.find(params.project)
