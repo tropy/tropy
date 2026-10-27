@@ -61,6 +61,7 @@ const IGNORE_WARNINGS = {
     resolve('node_modules/edtf/src/date.js'),
     resolve('node_modules/n3/src/N3DataFactory.js'),
     resolve('node_modules/semver/classes/range.js'),
+    resolve('node_modules/zod/v4/core/core.js'),
   ].some(id => warning.ids.includes(id)),
 
   UNUSED_EXTERNAL_IMPORT: true,
@@ -68,6 +69,9 @@ const IGNORE_WARNINGS = {
   MODULE_LEVEL_DIRECTIVE: (warning) => [
     resolve('node_modules/react-intl/index.js'),
   ].includes(warning.id),
+
+  INVALID_ANNOTATION: (warning) =>
+    warning.id.startsWith(resolve('node_modules/zod')),
 
   THIS_IS_UNDEFINED: (warning) =>
     (/this && this\.__/).test(warning.frame)
