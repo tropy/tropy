@@ -1,5 +1,6 @@
 import Ajv from 'ajv'
 import Fastify, { LogController } from 'fastify'
+import { channel, product, version } from '../../common/release.js'
 import accept from './accept.js'
 import errors from './errors.js'
 import guard from './guard.js'
@@ -14,10 +15,11 @@ import photos from './routes/photos.js'
 import tags from './routes/tags.js'
 import transcriptions from './routes/transcriptions.js'
 
+const API_VERSION = 1
+
 export function create ({
   loggerInstance,
   projects,
-  version,
   wm
 }) {
   let app = Fastify({
@@ -67,7 +69,10 @@ export function create ({
     schema: { operationId: 'status', summary: 'Show the API status' }
   }, () => ({
     status: 'ok',
-    version
+    name: product,
+    version,
+    channel,
+    apiVersion: API_VERSION
   }))
 
   return app

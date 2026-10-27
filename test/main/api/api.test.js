@@ -1,4 +1,5 @@
 import { mkapi } from '../../support/api.js'
+import { version } from '#tropy/common/release.js'
 import { API, ITEM, METADATA, TAG } from '#tropy/constants/index.js'
 
 describe('api', () => {
@@ -6,10 +7,12 @@ describe('api', () => {
 
   describe('server', () => {
     it('reports status', async () => {
-      expect((await api.get('/')).json()).to.eql({
+      expect((await api.get('/')).json()).to.include({
         status: 'ok',
-        version: '2.0.0'
-      })
+        name: 'Tropy',
+        version,
+        apiVersion: 1
+      }).and.to.have.property('channel')
 
     })
 
