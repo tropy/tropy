@@ -26,6 +26,16 @@ describe('ProtocolHandler', () => {
     proto = new ProtocolHandler(app)
   })
 
+  it('documents routes with distinct param and query names', () => {
+    for (let route of proto.routes) {
+      let params = Object.keys(route.params?.properties ?? {})
+      let query = Object.keys(route.query?.properties ?? {})
+
+      expect(route.description).to.be.a('string')
+      expect(params.filter(name => query.includes(name))).to.be.empty
+    }
+  })
+
   it('opens projects and returns them', async () => {
     for (let url of [base, 'tropy://project', 'tropy://Project/Krak%C3%B3w%20Atlas']) {
       expect(await proto.handle(url), url)

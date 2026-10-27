@@ -117,16 +117,18 @@ export class ProjectRegistry {
 
   // Opening projects
 
-  // Shows the window of the project at path. If the project is not
-  // open or opening, opens it in win. Without win, opens it in the
-  // current project window if that is empty, otherwise in a new window.
+  // Shows the window of the project at path.
+  // If the project is not open or opening, opens it in win.
+  // Without win, opens it in the current project window if that is empty,
+  // otherwise in a new window.
   // Without a path, shows win, the empty current or a new project window.
   async show (path, win) {
     if (path) {
       path = resolve(path)
 
-      // No await unless pending: concurrent calls must see the new
-      // pending open before this call tracks another one.
+      // No await unless pending:
+      // concurrent calls must see the new pending open
+      // before this call tracks another one.
       let pending = this.#pending.get(path)
       let open = this.window(path) ?? (pending && await pending.window)
 
@@ -170,8 +172,9 @@ export class ProjectRegistry {
     return win
   }
 
-  // Resolves a project URL id to a project window, opening the project
-  // if necessary. Returns null if there is no such project.
+  // Resolves a project URL id to a project window,
+  // opening the project if necessary.
+  // Returns null if there is no such project.
   // The legacy id 'current' is the active project window
   // or else the most recent project.
   async openById (urlId) {
@@ -297,8 +300,8 @@ export class ProjectRegistry {
     this.clear(target ? [target.path] : undefined)
   }
 
-  // The current project window, if it has no project and is not
-  // opening one.
+  // The current project window,
+  // if it has no project and is not opening one.
   #empty () {
     let win = this.wm.current('project')
 
@@ -337,8 +340,9 @@ export class ProjectRegistry {
     this.#pending.set(path, pending)
   }
 
-  // Whether win is opening path. Renderers may report a new window's
-  // project before main knows the window.
+  // Whether win is opening path.
+  // Renderers may report a new window's project
+  // before main knows the window.
   #isPending (path, win) {
     let pending = this.#pending.get(path)
     return pending != null && (pending.win ?? win) === win

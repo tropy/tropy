@@ -1,13 +1,13 @@
 import act from '../../../actions/api.js'
 import { found } from '../errors.js'
-import { params } from '../schema.js'
+import { idParams } from '../schema.js'
 
 export default async function metadata (api) {
   api.get('/data/:id', {
     schema: {
       operationId: 'metadata.show',
       summary: 'Show the metadata of an item, photo or selection',
-      params
+      params: idParams
     }
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.metadata.show({ id: params.id }))))
@@ -17,7 +17,7 @@ export default async function metadata (api) {
       operationId: 'metadata.save',
       summary: 'Save metadata of an item, photo or selection',
       description: 'Updates the given properties and keeps all others.',
-      params,
+      params: idParams,
       body: {
         type: 'object',
         minProperties: 1,

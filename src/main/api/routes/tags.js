@@ -1,12 +1,13 @@
 import act from '../../../actions/api.js'
 import { found } from '../errors.js'
-import { ids, object, params } from '../schema.js'
+import { idParams, ids, object, withUrlId } from '../schema.js'
 
 export default async function tags (api) {
   api.get('/tags', {
     schema: {
       operationId: 'tags.find',
       summary: 'List all tags',
+      params: withUrlId(),
       querystring: object({
         name: {
           type: 'string',
@@ -25,7 +26,7 @@ export default async function tags (api) {
   })
 
   api.get('/tags/:id', {
-    schema: { operationId: 'tags.show', summary: 'Show a tag', params }
+    schema: { operationId: 'tags.show', summary: 'Show a tag', params: idParams }
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.tag.show({ id: params.id }))))
 
@@ -33,6 +34,7 @@ export default async function tags (api) {
     schema: {
       operationId: 'tags.create',
       summary: 'Create a tag',
+      params: withUrlId(),
       body: object({
         name: { type: 'string', minLength: 1 },
         color: { type: 'string' },
@@ -45,7 +47,7 @@ export default async function tags (api) {
   })
 
   api.delete('/tags/:id', {
-    schema: { operationId: 'tags.delete', summary: 'Delete a tag', params }
+    schema: { operationId: 'tags.delete', summary: 'Delete a tag', params: idParams }
   }, async ({ params, rsvp }) => {
     found(await rsvp(act.tag.delete(params.id)))
   })
