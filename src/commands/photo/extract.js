@@ -19,7 +19,7 @@ export class Extract extends Command {
     try {
       let { cache } = this.options
       let { meta, payload } = this.action
-      var { format = 'png', target, plugin } = meta
+      var { format = 'png', target, plugin, width, height, quality } = meta
 
       if (plugin)
         target = ':plugin:'
@@ -52,7 +52,11 @@ export class Extract extends Command {
 
       switch (target) {
         case ':buffer:': {
-          let data = yield call(toBuffer, format, buffer, { raw })
+          let data = yield call(toBuffer, format, buffer, { raw }, {
+            width,
+            height,
+            quality
+          })
           return { data, format }
         }
         case ':clipboard:': {
