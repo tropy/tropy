@@ -54,6 +54,11 @@ describe('api', () => {
           url: 'tropy://project/closed'
         }
       ])
+
+      expect((await api.get('/projects?open=true')).json().map(p => p.urlId))
+        .to.eql(['foo'])
+      expect((await api.get('/projects?open=false')).json().map(p => p.urlId))
+        .to.eql(['closed'])
     })
 
     it('shows known projects', async () => {
