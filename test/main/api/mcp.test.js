@@ -35,6 +35,7 @@ describe('api /mcp', () => {
       .to.deep.include({ content: [{ type: 'text', text: '[1,2]' }] })
     expect(api.action.type).to.equal(TAG.CREATE)
     expect(api.action.payload).to.include({ name: 'Foo' })
+    expect(api.action.meta).to.include({ agent: 'tropy-spark/1.0' })
 
     api.respond(3)
     expect(await call('tags.delete', { urlId: 'foo', id: 3 }))

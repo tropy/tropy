@@ -20,11 +20,17 @@ export default fp(async (app, { projects, wm }) => {
 
     request.project = project
 
+    let agent = request.headers['user-agent'] || 'http-api'
+
     request.rsvp = async (action, options) => {
       try {
         return (await wm.rsvp(win, {
           ...action,
-          meta: { ...action.meta, silent: true }
+          meta: {
+            ...action.meta,
+            silent: true,
+            agent
+          }
         }, options)).payload
       } catch (err) {
         if (err.code === 'ETIMEDOUT')
