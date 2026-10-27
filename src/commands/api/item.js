@@ -3,12 +3,18 @@ import { Command } from '../command.js'
 import { API } from '../../constants/index.js'
 import { pluck } from '../../common/util.js'
 import * as mod from '../../models/index.js'
+import { getDefaultSort } from '../../selectors/nav.js'
 
 
 export class ItemFind extends Command {
   *exec () {
     let { db } = this.options
     let { list, query, sort, tags } = this.action.payload
+
+    sort = {
+      ...sort,
+      column: sort?.column ?? getDefaultSort(list).column
+    }
 
     let qr = (list == null) ?
       yield call(mod.item.all, db, { query, sort, tags }) :
