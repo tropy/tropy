@@ -8,8 +8,9 @@ import { create } from '#tropy/main/api/api.js'
 // it records dispatched actions in api.actions and responds
 // with api.respond(payload) or api.respond(action => payload).
 //
-// Any project id resolves to /projects/:id.tropy, except 'missing'
-// (unknown project). All projects are open, except 'closed'.
+// Any project id resolves to /projects/:id.tropy,
+// except 'missing' (unknown project).
+// All projects are open, except 'closed'.
 //
 // Requests send bodies as JSON, like curl --json.
 export function mkapi () {

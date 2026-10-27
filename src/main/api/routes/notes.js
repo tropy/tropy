@@ -1,6 +1,6 @@
 import act from '../../../actions/api.js'
 import { found } from '../errors.js'
-import { id, object, one, params } from '../schema.js'
+import { id, idParams, object, one, withUrlId } from '../schema.js'
 
 export default async function notes (api) {
   api.get('/notes/:id', {
@@ -8,7 +8,7 @@ export default async function notes (api) {
       operationId: 'notes.show',
       summary: 'Show a note',
       produces: ['application/json', 'text/html', 'text/plain', 'text/markdown'],
-      params
+      params: idParams
     }
   }, async ({ format, params, rsvp }) =>
     found(await rsvp(act.note.show({ id: params.id, format }))))
@@ -17,6 +17,7 @@ export default async function notes (api) {
     schema: {
       operationId: 'notes.create',
       summary: 'Create a note on a photo or selection',
+      params: withUrlId(),
       body: {
         ...object({
           html: { type: 'string', minLength: 1, description: 'Note text as HTML' },
@@ -34,7 +35,7 @@ export default async function notes (api) {
   })
 
   api.delete('/notes/:id', {
-    schema: { operationId: 'notes.delete', summary: 'Delete a note', params }
+    schema: { operationId: 'notes.delete', summary: 'Delete a note', params: idParams }
   }, async ({ params, rsvp }) => {
     found(await rsvp(act.note.delete([params.id])))
   })

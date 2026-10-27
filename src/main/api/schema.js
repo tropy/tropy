@@ -43,10 +43,10 @@ export const one = (...names) => ({
   oneOf: names.map(name => ({ required: [name] }))
 })
 
-// /projects/:project paths
-export const path = (properties) => ({
+// Params of routes under /projects/:urlId.
+export const withUrlId = (properties) => ({
   type: 'object',
-  properties: { project: urlId, ...properties }
+  properties: { urlId, ...properties }
 })
 
-export const params = path({ id })
+export const idParams = withUrlId({ id })

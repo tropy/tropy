@@ -1,9 +1,9 @@
 import act from '../../../actions/api.js'
 import { found } from '../errors.js'
-import { id, ids, object, params, some, strings } from '../schema.js'
+import { id, idParams, ids, object, some, strings, withUrlId } from '../schema.js'
 
 // Shared by /items and /lists/:id/items.
-export const findItems = ({ operationId, summary }) => ({
+export const findItems = ({ operationId, summary, params }) => ({
   schema: {
     operationId,
     summary,
@@ -41,6 +41,7 @@ export default async function items (api) {
       operationId: 'items.import',
       summary: 'Import items from image files or JSON-LD data',
       description: 'Waits until the import is done, which can take a long time.',
+      params: withUrlId(),
       body: {
         ...object({
           files: { ...strings, description: 'Paths of image files' },
@@ -76,11 +77,12 @@ export default async function items (api) {
 
   api.get('/items', findItems({
     operationId: 'items.find',
-    summary: 'Find items'
+    summary: 'Find items',
+    params: withUrlId()
   }))
 
   api.get('/items/:id', {
-    schema: { operationId: 'items.show', summary: 'Show an item', params }
+    schema: { operationId: 'items.show', summary: 'Show an item', params: idParams }
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.item.show({ id: params.id }))))
 
@@ -88,7 +90,7 @@ export default async function items (api) {
     schema: {
       operationId: 'items.photos.find',
       summary: 'List the photos of an item',
-      params
+      params: idParams
     }
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.photo.find({ item: params.id }))))
@@ -97,7 +99,7 @@ export default async function items (api) {
     schema: {
       operationId: 'items.tags.find',
       summary: 'List the tags of an item',
-      params,
+      params: idParams,
       querystring: object({
         reverse: { type: 'boolean', description: 'Reverse the order' }
       })
@@ -112,7 +114,7 @@ export default async function items (api) {
     schema: {
       operationId: 'items.tags.add',
       summary: 'Add tags to an item',
-      params,
+      params: idParams,
       body: object({
         tags: { ...strings, description: 'Tag ids or names' }
       }, ['tags'])
@@ -124,7 +126,7 @@ export default async function items (api) {
     schema: {
       operationId: 'items.tags.remove',
       summary: 'Remove tags from an item',
-      params,
+      params: idParams,
       querystring: object({
         tag: { ...strings, description: 'Tag ids or names; all tags if omitted' }
       })
@@ -140,7 +142,7 @@ export default async function items (api) {
       summary: 'List the transcriptions of an item',
       description: 'Plain text joins the transcriptions\' text.',
       produces: ['application/json', 'text/plain'],
-      params,
+      params: idParams,
       querystring: object({
         separator: {
           type: 'string',

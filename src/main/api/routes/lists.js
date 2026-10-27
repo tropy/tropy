@@ -1,6 +1,6 @@
 import act from '../../../actions/api.js'
 import { found } from '../errors.js'
-import { ids, list, object, params, path } from '../schema.js'
+import { idParams, ids, list, object, withUrlId } from '../schema.js'
 import { findItems } from './items.js'
 
 export default async function lists (api) {
@@ -10,7 +10,7 @@ export default async function lists (api) {
       summary: 'Show a list',
       description: 'The root list, or any list with expand, ' +
         'responds with its child lists instead.',
-      params: path({ id: { ...list, default: 0 } }),
+      params: withUrlId({ id: { ...list, default: 0 } }),
       querystring: object({
         expand: {
           type: 'boolean',
@@ -29,6 +29,7 @@ export default async function lists (api) {
     schema: {
       operationId: 'lists.create',
       summary: 'Create a list',
+      params: withUrlId(),
       body: object({
         name: { type: 'string', minLength: 1 },
         parent: { ...list, default: 0, description: 'Parent list id' }
@@ -41,14 +42,15 @@ export default async function lists (api) {
 
   api.get('/lists/:id/items', findItems({
     operationId: 'lists.items.find',
-    summary: 'Find the items in a list'
+    summary: 'Find the items in a list',
+    params: idParams
   }))
 
   api.post('/lists/:id/items', {
     schema: {
       operationId: 'lists.items.add',
       summary: 'Add items to a list',
-      params,
+      params: idParams,
       body: object({ items: ids }, ['items'])
     }
   }, async ({ body, params, rsvp }) =>

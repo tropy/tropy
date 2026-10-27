@@ -1,6 +1,6 @@
 import act from '../../../actions/api.js'
 import { found } from '../errors.js'
-import { id, object, one, params, some } from '../schema.js'
+import { id, idParams, object, one, some, withUrlId } from '../schema.js'
 
 export default async function transcriptions (api) {
   api.get('/transcriptions/:id', {
@@ -8,7 +8,7 @@ export default async function transcriptions (api) {
       operationId: 'transcriptions.show',
       summary: 'Show a transcription',
       produces: ['application/json', 'text/plain', 'application/xml'],
-      params
+      params: idParams
     }
   }, async ({ format, params, rsvp }) =>
     found(await rsvp(act.transcription.show({ id: params.id, format }))))
@@ -17,6 +17,7 @@ export default async function transcriptions (api) {
     schema: {
       operationId: 'transcriptions.create',
       summary: 'Create a transcription of a photo or selection',
+      params: withUrlId(),
       body: {
         ...object({
           data: { type: 'string', description: 'ALTO XML document' },

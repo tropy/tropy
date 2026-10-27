@@ -35,7 +35,8 @@ function projectRoute (pathname, { description, params, query }, handler) {
 }
 
 // Route for tropy://{hostname} URLs:
-// Shows an app window. Resolves with null.
+// Shows an app window.
+// Resolves with null.
 function windowRoute (hostname, { description }, handler) {
   return {
     pattern: new URLPattern({ hostname, pathname: '' }),

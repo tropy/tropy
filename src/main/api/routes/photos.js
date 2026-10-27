@@ -3,7 +3,7 @@ import send from '@fastify/send'
 import act from '../../../actions/api.js'
 import { MIME } from '../../../constants/index.js'
 import { fail, found } from '../errors.js'
-import { id, params, path } from '../schema.js'
+import { id, idParams, withUrlId } from '../schema.js'
 
 // Shared by /photos and /selections.
 const extract = (type) => ({
@@ -11,7 +11,7 @@ const extract = (type) => ({
     operationId: `${type}s.extract`,
     summary: `Extract the ${type} image`,
     description: 'Renders the image with its adjustments, e.g. rotation.',
-    params: path({ id, format: { enum: ['jpg', 'png', 'webp'] } })
+    params: withUrlId({ id, format: { enum: ['jpg', 'png', 'webp'] } })
   },
   async handler ({ params, rsvp }, reply) {
     let payload = found(await rsvp(act.photo.extract({
@@ -27,7 +27,7 @@ const extract = (type) => ({
 
 export default async function photos (api) {
   api.get('/photos/:id', {
-    schema: { operationId: 'photos.show', summary: 'Show a photo', params }
+    schema: { operationId: 'photos.show', summary: 'Show a photo', params: idParams }
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.photo.show({ id: params.id }))))
 
@@ -39,7 +39,7 @@ export default async function photos (api) {
       summary: 'Download the original photo file as is',
       description: 'Supports range and conditional requests. ' +
         'Redirects to photos stored at an HTTP(S) URL.',
-      params
+      params: idParams
     }
   }, async ({ params, raw, rsvp }, reply) => {
     let { protocol, path, mimetype } =
@@ -73,7 +73,7 @@ export default async function photos (api) {
   })
 
   api.get('/selections/:id', {
-    schema: { operationId: 'selections.show', summary: 'Show a selection', params }
+    schema: { operationId: 'selections.show', summary: 'Show a selection', params: idParams }
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.selection.show({ id: params.id }))))
 

@@ -2,6 +2,7 @@ import Ajv from 'ajv'
 import Fastify, { LogController } from 'fastify'
 import { channel, product, version } from '../../common/release.js'
 import accept from './accept.js'
+import catalog from './catalog.js'
 import errors from './errors.js'
 import guard from './guard.js'
 import legacy from './legacy.js'
@@ -41,6 +42,7 @@ export function create ({
   app.setValidatorCompiler(({ schema, httpPart }) =>
     (httpPart === 'body' ? ajv.body : ajv.strings).compile(schema))
 
+  app.register(catalog)
   app.register(errors)
   app.register(accept)
   app.register(guard)
@@ -63,7 +65,7 @@ export function create ({
     api.register(notes)
     api.register(transcriptions)
     api.register(photos)
-  }, { prefix: '/projects/:project' })
+  }, { prefix: '/projects/:urlId' })
 
   app.get('/', {
     schema: { operationId: 'status', summary: 'Show the API status' }
