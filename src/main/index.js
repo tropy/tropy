@@ -72,12 +72,13 @@ if (!handlingSquirrelEvent) {
 
 
 if (!handlingSquirrelEvent && !isDuplicateInstance) {
+  // Subtle: adding '--' so that crafted links cannot add switches!
   if (process.defaultApp) {
     app.setAsDefaultProtocolClient(
-      'tropy', process.execPath, [resolve(process.argv[1])]
+      'tropy', process.execPath, [resolve(process.argv[1]), '--']
     )
   } else {
-    app.setAsDefaultProtocolClient('tropy')
+    app.setAsDefaultProtocolClient('tropy', process.execPath, ['--'])
   }
 
   if (opts.disableHardwareAcceleration)

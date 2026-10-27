@@ -126,6 +126,21 @@ describe('args', () => {
         expect(args).to.have.length(1)
         expect(args[0]).to.have.property('protocol', 'tropy:')
       })
+
+      it('ignores options and other arguments in launches by a link', () => {
+        let { opts, args } = parse([
+          '--',
+          'tropy://project/x',
+          '--port', '2019',
+          '--data', 'C:/evil',
+          '--no-context-isolation',
+          '/tmp/a.tpy'
+        ])
+
+        expect(opts).to.include({ contextIsolation: true })
+        expect(opts).not.to.have.any.keys('port', 'data')
+        expect(args.map(String)).to.eql(['tropy://project/x'])
+      })
     })
   })
 
