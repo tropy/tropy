@@ -10,6 +10,10 @@ import {
 const DEFAULT_SORT = { column: dc.title, asc: true }
 const DEFAULT_LIST_SORT = { column: 'added', asc: true }
 
+// The item sort when the user has not chosen one.
+export const getDefaultSort = (list) =>
+  (list > 0) ? DEFAULT_LIST_SORT : DEFAULT_SORT
+
 const SPECIAL_COLUMNS = [
   NAV.COLUMN.CREATED,
   NAV.COLUMN.MODIFIED,
@@ -73,7 +77,5 @@ export const getAllColumns = memo(
 export const getSortColumn = memo(
   ({ nav }) => nav.sort,
   ({ nav }) => nav.list || 0,
-  (sort, list) => ((list in sort) ?
-    sort[list] :
-      (list > 0) ? DEFAULT_LIST_SORT : DEFAULT_SORT)
+  (sort, list) => ((list in sort) ? sort[list] : getDefaultSort(list))
 )
