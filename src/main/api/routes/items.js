@@ -34,8 +34,8 @@ export const findItems = ({ operationId, summary, params }) => ({
   }
 })
 
-export default async function items (api) {
-  api.post('/import', {
+export default async function items (fastify) {
+  fastify.post('/import', {
     bodyLimit: 16 * 1024 * 1024,
     schema: {
       operationId: 'items.import',
@@ -78,18 +78,18 @@ export default async function items (api) {
     return payload
   })
 
-  api.get('/items', findItems({
+  fastify.get('/items', findItems({
     operationId: 'items.find',
     summary: 'Find items',
     params: withUrlId()
   }))
 
-  api.get('/items/:id', {
+  fastify.get('/items/:id', {
     schema: { operationId: 'items.show', summary: 'Show an item', params: idParams }
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.item.show({ id: params.id }))))
 
-  api.get('/items/:id/photos', {
+  fastify.get('/items/:id/photos', {
     schema: {
       operationId: 'items.photos.find',
       summary: 'List the photos of an item',
@@ -98,7 +98,7 @@ export default async function items (api) {
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.photo.find({ item: params.id }))))
 
-  api.get('/items/:id/tags', {
+  fastify.get('/items/:id/tags', {
     schema: {
       operationId: 'items.tags.find',
       summary: 'List the tags of an item',
@@ -113,7 +113,7 @@ export default async function items (api) {
       reverse: query.reverse
     }))))
 
-  api.post('/items/:id/tags', {
+  fastify.post('/items/:id/tags', {
     schema: {
       operationId: 'items.tags.add',
       summary: 'Add tags to an item',
@@ -125,7 +125,7 @@ export default async function items (api) {
   }, async ({ body, params, rsvp }) =>
     rsvp(act.tag.add({ id: params.id, ...body })))
 
-  api.delete('/items/:id/tags', {
+  fastify.delete('/items/:id/tags', {
     schema: {
       operationId: 'items.tags.remove',
       summary: 'Remove tags from an item',
@@ -139,7 +139,7 @@ export default async function items (api) {
       act.tag.remove({ id: params.id, tags: query.tag }) :
       act.tag.clear({ id: params.id })))
 
-  api.get('/items/:id/transcriptions', {
+  fastify.get('/items/:id/transcriptions', {
     schema: {
       operationId: 'items.transcriptions.find',
       summary: 'List the transcriptions of an item',

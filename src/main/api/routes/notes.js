@@ -2,8 +2,8 @@ import act from '../../../actions/api.js'
 import { found } from '../errors.js'
 import { id, idParams, object, one, withUrlId } from '../schema.js'
 
-export default async function notes (api) {
-  api.get('/notes/:id', {
+export default async function notes (fastify) {
+  fastify.get('/notes/:id', {
     schema: {
       operationId: 'notes.show',
       summary: 'Show a note',
@@ -13,7 +13,7 @@ export default async function notes (api) {
   }, async ({ format, params, rsvp }) =>
     found(await rsvp(act.note.show({ id: params.id, format }))))
 
-  api.post('/notes', {
+  fastify.post('/notes', {
     schema: {
       operationId: 'notes.create',
       summary: 'Create a note on a photo or selection',
@@ -35,7 +35,7 @@ export default async function notes (api) {
     return { id: Object.values(payload).map(note => note.id) }
   })
 
-  api.delete('/notes/:id', {
+  fastify.delete('/notes/:id', {
     schema: { operationId: 'notes.delete', summary: 'Delete a note', params: idParams }
   }, async ({ params, rsvp }) => {
     found(await rsvp(act.note.delete([params.id])))

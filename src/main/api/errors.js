@@ -13,12 +13,12 @@ export const found = (payload) => {
   return payload
 }
 
-export default fp(async (app) => {
-  app.setNotFoundHandler(async ({ method, url }) => {
+export default fp(async (fastify) => {
+  fastify.setNotFoundHandler(async ({ method, url }) => {
     throw fail(404, `route not found: ${method} ${url}`)
   })
 
-  app.setErrorHandler((error, request, reply) => {
+  fastify.setErrorHandler((error, request, reply) => {
     let status = error.status || error.statusCode
 
     if (!(status >= 400))

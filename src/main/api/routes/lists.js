@@ -3,8 +3,8 @@ import { found } from '../errors.js'
 import { idParams, ids, list, object, withUrlId } from '../schema.js'
 import { findItems } from './items.js'
 
-export default async function lists (api) {
-  api.get('/lists/:id', {
+export default async function lists (fastify) {
+  fastify.get('/lists/:id', {
     schema: {
       operationId: 'lists.show',
       summary: 'Show a list',
@@ -25,7 +25,7 @@ export default async function lists (api) {
       expand: query.expand
     }))))
 
-  api.post('/lists', {
+  fastify.post('/lists', {
     schema: {
       operationId: 'lists.create',
       summary: 'Create a list',
@@ -40,13 +40,13 @@ export default async function lists (api) {
     return rsvp(act.list.create(body))
   })
 
-  api.get('/lists/:id/items', findItems({
+  fastify.get('/lists/:id/items', findItems({
     operationId: 'lists.items.find',
     summary: 'Find the items in a list',
     params: idParams
   }))
 
-  api.post('/lists/:id/items', {
+  fastify.post('/lists/:id/items', {
     schema: {
       operationId: 'lists.items.add',
       summary: 'Add items to a list',

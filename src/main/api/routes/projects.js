@@ -3,8 +3,8 @@ import { object, withUrlId } from '../schema.js'
 
 // The known projects, open or not.
 // Projects that are not open can be opened via their tropy:// url.
-export default async function projects (api, { projects: registry }) {
-  api.get('/projects', {
+export default async function projects (fastify, { projects: registry }) {
+  fastify.get('/projects', {
     schema: {
       operationId: 'projects.list',
       summary: 'List the known projects',
@@ -20,7 +20,7 @@ export default async function projects (api, { projects: registry }) {
     registry.list().filter(project =>
       query.open == null || project.open === query.open))
 
-  api.get('/projects/:urlId', {
+  fastify.get('/projects/:urlId', {
     schema: {
       operationId: 'projects.show',
       summary: 'Show a known project',

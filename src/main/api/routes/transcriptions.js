@@ -2,8 +2,8 @@ import act from '../../../actions/api.js'
 import { found } from '../errors.js'
 import { id, idParams, object, one, some, withUrlId } from '../schema.js'
 
-export default async function transcriptions (api) {
-  api.get('/transcriptions/:id', {
+export default async function transcriptions (fastify) {
+  fastify.get('/transcriptions/:id', {
     schema: {
       operationId: 'transcriptions.show',
       summary: 'Show a transcription',
@@ -13,7 +13,7 @@ export default async function transcriptions (api) {
   }, async ({ format, params, rsvp }) =>
     found(await rsvp(act.transcription.show({ id: params.id, format }))))
 
-  api.post('/transcriptions', {
+  fastify.post('/transcriptions', {
     schema: {
       operationId: 'transcriptions.create',
       summary: 'Create a transcription of a photo or selection',
