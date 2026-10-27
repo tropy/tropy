@@ -37,15 +37,15 @@ const extract = (type) => ({
   }
 })
 
-export default async function photos (api) {
-  api.get('/photos/:id', {
+export default async function photos (fastify) {
+  fastify.get('/photos/:id', {
     schema: { operationId: 'photos.show', summary: 'Show a photo', params: idParams }
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.photo.show({ id: params.id }))))
 
-  api.get('/photos/:id/file.:format', extract('photo'))
+  fastify.get('/photos/:id/file.:format', extract('photo'))
 
-  api.get('/photos/:id/original', {
+  fastify.get('/photos/:id/original', {
     schema: {
       operationId: 'photos.original',
       summary: 'Download the original photo file as is',
@@ -86,10 +86,10 @@ export default async function photos (api) {
     }
   })
 
-  api.get('/selections/:id', {
+  fastify.get('/selections/:id', {
     schema: { operationId: 'selections.show', summary: 'Show a selection', params: idParams }
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.selection.show({ id: params.id }))))
 
-  api.get('/selections/:id/file.:format', extract('selection'))
+  fastify.get('/selections/:id/file.:format', extract('selection'))
 }

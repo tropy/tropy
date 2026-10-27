@@ -2,8 +2,8 @@ import act from '../../../actions/api.js'
 import { found } from '../errors.js'
 import { idParams, ids, object, withUrlId } from '../schema.js'
 
-export default async function tags (api) {
-  api.get('/tags', {
+export default async function tags (fastify) {
+  fastify.get('/tags', {
     schema: {
       operationId: 'tags.find',
       summary: 'List all tags',
@@ -25,12 +25,12 @@ export default async function tags (api) {
     return tag ? [tag] : []
   })
 
-  api.get('/tags/:id', {
+  fastify.get('/tags/:id', {
     schema: { operationId: 'tags.show', summary: 'Show a tag', params: idParams }
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.tag.show({ id: params.id }))))
 
-  api.post('/tags', {
+  fastify.post('/tags', {
     schema: {
       operationId: 'tags.create',
       summary: 'Create a tag',
@@ -46,7 +46,7 @@ export default async function tags (api) {
     return rsvp(act.tag.create(body))
   })
 
-  api.delete('/tags/:id', {
+  fastify.delete('/tags/:id', {
     schema: { operationId: 'tags.delete', summary: 'Delete a tag', params: idParams }
   }, async ({ params, rsvp }) => {
     found(await rsvp(act.tag.delete(params.id)))

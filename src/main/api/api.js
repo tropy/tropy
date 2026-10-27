@@ -66,8 +66,8 @@ export function create ({
     api.register(photos)
   }, { prefix: '/projects/:urlId' })
 
-  app.register(async (app) => {
-    app.get('/', {
+  app.register(async (fastify) => {
+    fastify.get('/', {
       schema: {
         operationId: 'status',
         summary: 'Show the API status'

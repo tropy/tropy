@@ -1,14 +1,14 @@
 import fp from 'fastify-plugin'
 
-// Records the documented routes as app.catalog,
+// Records the documented routes as fastify.catalog,
 // e.g. to generate the OpenAPI spec and MCP tools.
 
-export default fp(async (app) => {
+export default fp(async (fastify) => {
   let catalog = []
 
-  app.decorate('catalog', catalog)
+  fastify.decorate('catalog', catalog)
 
-  app.addHook('onRoute', ({ method, url, schema = {} }) => {
+  fastify.addHook('onRoute', ({ method, url, schema = {} }) => {
     if (method === 'HEAD' || schema.hide)
       return
 

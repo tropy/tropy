@@ -4,7 +4,7 @@
 // to the current project.
 // Static routes take precedence over the wildcard route,
 // so /project/items redirects to the current project.
-export default async function legacy (app) {
+export default async function legacy (fastify) {
   let redirect = (target) => ({
     schema: { hide: true },
     handler: ({ url }, reply) =>
@@ -22,9 +22,9 @@ export default async function legacy (app) {
     'photos',
     'selections'
   ]) {
-    app.all(`/project/${collection}`, redirect('/projects/current'))
-    app.all(`/project/${collection}/*`, redirect('/projects/current'))
+    fastify.all(`/project/${collection}`, redirect('/projects/current'))
+    fastify.all(`/project/${collection}/*`, redirect('/projects/current'))
   }
 
-  app.all('/project/*', redirect('/projects'))
+  fastify.all('/project/*', redirect('/projects'))
 }

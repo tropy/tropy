@@ -10,10 +10,10 @@ const FORMATS = {
   'application/xml': 'alto'
 }
 
-export default fp(async (app) => {
-  app.decorateRequest('format', null)
+export default fp(async (fastify) => {
+  fastify.decorateRequest('format', null)
 
-  app.addHook('preHandler', async (request, reply) => {
+  fastify.addHook('preHandler', async (request, reply) => {
     let types = request.routeOptions.schema?.produces
 
     if (types == null)

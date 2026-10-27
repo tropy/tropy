@@ -1,11 +1,11 @@
 import fp from 'fastify-plugin'
 import { fail } from './errors.js'
 
-export default fp(async (app, { projects, wm }) => {
-  app.decorateRequest('project', null)
-  app.decorateRequest('rsvp', null)
+export default fp(async (fastify, { projects, wm }) => {
+  fastify.decorateRequest('project', null)
+  fastify.decorateRequest('rsvp', null)
 
-  app.addHook('onRequest', async (request) => {
+  fastify.addHook('onRequest', async (request) => {
     let id = request.params.urlId
     let path = projects.find(id)
 
