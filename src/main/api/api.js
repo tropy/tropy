@@ -6,6 +6,7 @@ import catalog from './catalog.js'
 import errors from './errors.js'
 import guard from './guard.js'
 import legacy from './legacy.js'
+import mcp from './mcp.js'
 import project from './project.js'
 import { validation } from './schema.js'
 import projectsRoutes from './routes/projects.js'
@@ -22,6 +23,7 @@ const API_VERSION = 1
 export function create ({
   loggerInstance,
   projects,
+  proto,
   wm
 }) {
   let app = Fastify({
@@ -44,6 +46,7 @@ export function create ({
   app.register(guard)
   app.register(legacy)
   app.register(projectsRoutes, { projects })
+  app.register(mcp, { proto })
 
   app.register(async (api) => {
     api.register(project, { projects, wm })
@@ -63,15 +66,20 @@ export function create ({
     api.register(photos)
   }, { prefix: '/projects/:urlId' })
 
-  app.get('/', {
-    schema: { operationId: 'status', summary: 'Show the API status' }
-  }, () => ({
-    status: 'ok',
-    name: product,
-    version,
-    channel,
-    apiVersion: API_VERSION
-  }))
+  app.register(async (app) => {
+    app.get('/', {
+      schema: {
+        operationId: 'status',
+        summary: 'Show the API status'
+      }
+    }, () => ({
+      status: 'ok',
+      name: product,
+      version,
+      channel,
+      apiVersion: API_VERSION
+    }))
+  })
 
   return app
 }

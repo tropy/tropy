@@ -13,6 +13,8 @@ import { create } from '#tropy/main/api/api.js'
 // All projects are open, except 'closed'.
 //
 // Requests send bodies as JSON, like curl --json.
+// MCP requests use api.rpc(method, params) and resolve with the result;
+// tropy:// URLs opened via MCP are recorded in api.proto.handle.
 export function mkapi () {
   let response
 
@@ -36,6 +38,11 @@ export function mkapi () {
       response = value
     },
 
+    proto: {
+      routes: [{ url: 'tropy://project{/:urlId}?', summary: 'Open a project' }],
+      handle: mock.fn(async (url) => ({ url }))
+    },
+
     rsvp: mock.fn(async (win, action) => {
       api.actions.push(action)
       return {
@@ -47,6 +54,19 @@ export function mkapi () {
 
     request (method, url, body) {
       return api.app.inject({ method, url, payload: body })
+    },
+
+    async rpc (method, params) {
+      let res = await api.app.inject({
+        method: 'POST',
+        url: '/mcp',
+        headers: { accept: 'application/json, text/event-stream' },
+        payload: { jsonrpc: '2.0', id: 1, method, params }
+      })
+
+      // Responses are sent as server-sent events.
+      let data = res.body.match(/^data: (.*)$/m)?.[1] ?? res.body
+      return JSON.parse(data).result
     },
 
     get: (url) => api.request('GET', url),
@@ -61,6 +81,7 @@ export function mkapi () {
     api.app = create({
       loggerInstance: logger.child({}, { level: 'silent' }),
       projects,
+      proto: api.proto,
       wm: { rsvp: api.rsvp }
     })
   })
@@ -71,6 +92,7 @@ export function mkapi () {
     response = undefined
     api.actions.length = 0
     api.rsvp.mock.resetCalls()
+    api.proto.handle.mock.resetCalls()
   })
 
   return api

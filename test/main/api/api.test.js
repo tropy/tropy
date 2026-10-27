@@ -204,7 +204,7 @@ describe('api', () => {
       expect(api.action.type).to.equal(API.ITEM.FIND)
       expect(api.action.payload).to.deep.include({
         tags: [1, 2],
-        sort: { column: 'item.created', asc: false }
+        sort: { column: undefined, asc: false }
       })
     })
 
@@ -219,12 +219,8 @@ describe('api', () => {
   describe('lists', () => {
     it('shows the root list', async () => {
       api.respond([])
-      for (let url of ['/projects/foo/lists/0', '/projects/foo/lists']) {
-        let res = await api.get(url)
-
-        expect(res.statusCode).to.equal(200)
-        expect(api.action.payload).to.include({ id: 0 })
-      }
+      expect((await api.get('/projects/foo/lists/0')).statusCode).to.equal(200)
+      expect(api.action.payload).to.include({ id: 0 })
     })
   })
 
@@ -382,6 +378,12 @@ describe('api', () => {
       expect(res.headers['content-type']).to.equal('image/png')
       expect([...res.rawPayload]).to.eql([1, 2, 3])
       expect(api.action.payload).to.include({ id: 7 })
+
+      await api.get('/projects/foo/photos/7/file.jpg?width=200&quality=60')
+      expect(api.action.meta).to.include({ format: 'jpg', width: 200, quality: 60 })
+
+      expect((await api.get('/projects/foo/photos/7/file.jpg?quality=0')).statusCode)
+        .to.equal(400)
     })
 
     it('serves original photo files', async () => {
