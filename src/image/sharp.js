@@ -39,11 +39,21 @@ export async function toFile (file, ...args) {
   return image.toFile(file)
 }
 
-export async function toBuffer (format, ...args) {
-  let image = await open(...args)
+export async function toBuffer (format, input, options, {
+  width,
+  height,
+  quality
+} = {}) {
+  let image = await open(input, options)
+
+  if (width || height)
+    image.resize(width, height, {
+      fit: 'inside',
+      withoutEnlargement: true
+    })
 
   if (format)
-    image.toFormat(format)
+    image.toFormat(format, { quality })
 
   return image.toBuffer()
 }
