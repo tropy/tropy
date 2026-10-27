@@ -55,7 +55,6 @@ export const metadata = {
 }
 
 export const nav = {
-  search: a('nav.search'),
   select: a('nav.select')
 }
 

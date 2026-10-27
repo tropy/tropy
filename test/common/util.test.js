@@ -679,14 +679,18 @@ describe('url', () => {
         .to.equal('tropy://project/My%20Project')
     })
 
-    it('builds an item/photo url when both are present', () => {
-      expect(util.protocolURL('/path/to/My Project.tpy', { item: 1, photo: 2 }))
+    it('builds item, photo and selection urls', () => {
+      let path = '/path/to/My Project.tpy'
+
+      expect(util.protocolURL(path, { item: 1 }))
+        .to.equal('tropy://project/My%20Project/items/1')
+      expect(util.protocolURL(path, { item: 1, photo: 2 }))
         .to.equal('tropy://project/My%20Project/items/1/2')
+      expect(util.protocolURL(path, { item: 1, photo: 2, selection: 3 }))
+        .to.equal('tropy://project/My%20Project/items/1/2/3')
     })
 
-    it('omits the item path when item or photo is missing', () => {
-      expect(util.protocolURL('/path/to/My Project.tpy', { item: 1 }))
-        .to.equal('tropy://project/My%20Project')
+    it('omits segments that follow a missing one', () => {
       expect(util.protocolURL('/path/to/My Project.tpy', { photo: 2 }))
         .to.equal('tropy://project/My%20Project')
     })
