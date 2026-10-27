@@ -1,0 +1,96 @@
+/* stylelint-disable max-empty-lines, no-invalid-position-at-import-rule */
+
+//
+// Quicklook window
+// --------------------------------------------------
+
+
+// Scaffolding
+// --------------------------------------------------
+
+@use "../abstracts/config" as *;
+@use "../base/reset" as *;
+@use "../base/base" as *;
+@use "../base/type" as *;
+
+
+// Partials
+// --------------------------------------------------
+
+@use "../partials/orientation" as *;
+
+
+// Components
+// --------------------------------------------------
+
+@use "../components/toolbar" as *;
+
+
+// Layout
+// --------------------------------------------------
+
+#quicklook {
+  background-color: $quicklook-bg;
+  padding-top: zoom($toolbar-frameless-height-sm);
+
+  .vibrancy & {
+    background-color: transparent;
+  }
+
+  .titlebar {
+    position: fixed;
+    inset: 0 0 auto;
+    height: zoom($toolbar-frameless-height-sm);
+  }
+
+  .quicklook-title {
+    position: fixed;
+    top: 0;
+    height: zoom($toolbar-frameless-height-sm);
+    line-height: zoom($toolbar-frameless-height-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
+
+    .darwin & {
+      left: $window-controls-width + 9px;
+      right: $default-spacing-x;
+      font-weight: 700;
+    }
+
+    .win32 & {
+      left: $default-spacing-x;
+      right: $window-controls-width + $space-md;
+      font-size: zoom(12px);
+    }
+
+    .linux & {
+      left: 46px; // Only close button
+      right: 46px;
+      font-size: zoom(14.667px);
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+
+  #main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    container-type: size;
+  }
+
+  img {
+    flex: 0 0 auto;
+    width: 100cqw;
+    height: 100cqh;
+    object-fit: contain;
+
+    &.rotated {
+      width: 100cqh;
+      height: 100cqw;
+    }
+  }
+}

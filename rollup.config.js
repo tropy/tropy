@@ -56,6 +56,7 @@ const IGNORE_WARNINGS = {
   CIRCULAR_DEPENDENCY: (warning) => [
     resolve('src/components/button.js'),
     resolve('src/components/list/tree.js'),
+    resolve('src/main/quicklook.js'),
     resolve('node_modules/@formatjs/ecma402-abstract/types/number.js'),
     resolve('node_modules/edtf/src/date.js'),
     resolve('node_modules/n3/src/N3DataFactory.js'),
@@ -160,6 +161,7 @@ export default [
           'views/about': 'src/views/about.js',
           'views/prefs': 'src/views/prefs.js',
           'views/print': 'src/views/print.js',
+          'views/quicklook': 'src/views/quicklook.js',
           'views/project': 'src/views/project.js'
         },
         implicitlyLoadedAfterOneOf: [
