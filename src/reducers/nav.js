@@ -199,6 +199,7 @@ export function nav (state = init, { type, payload, meta, error }) {
       return {
         ...state,
         ...reset,
+        mode: NAV.MODE.PROJECT,
         list: null,
         trash: null,
         imports: null,

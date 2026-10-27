@@ -27,7 +27,7 @@ import { darwin, linux } from '../common/os.js'
 import { channel, product, version } from '../common/release.js'
 import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
-import { debounce, delay, once, protocolURL } from '../common/util.js'
+import { debounce, delay, once } from '../common/util.js'
 
 import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
 import { AccountService } from './account.js'
@@ -37,13 +37,13 @@ import { Storage } from './storage.js'
 import { Updater } from './updater.js'
 import dialog from './dialog.js'
 import { Server as ApiServer } from './api/server.js'
-import { handle as handleTropyURL } from './api/tropy.js'
 import { WindowManager, getPath } from './wm.js'
 import * as shell from './shell.js'
 import { addIdleObserver } from './idle.js'
 import { migrate } from './migrate.js'
 import * as act from './actions.js'
 import { ProjectRegistry } from './project.js'
+import { ProtocolHandler } from './protocol.js'
 
 import {
   FLASH, HISTORY, TAG, CONTEXT
@@ -86,6 +86,7 @@ export class Tropy extends EventEmitter {
     this.menu = new AppMenu(this)
     this.plugins = new Plugins(join(opts.data, 'plugins'))
     this.projects = new ProjectRegistry(this)
+    this.proto = new ProtocolHandler(this)
     this.store = new Storage(opts.data)
     this.updater = new Updater({
       enable: app.isPackaged && opts.autoUpdates
@@ -100,6 +101,7 @@ export class Tropy extends EventEmitter {
     await this.restore()
     this.listen()
     this.projects.start()
+    this.proto.start()
     this.account.start()
     this.wm.start()
     await this.api.start()
@@ -112,6 +114,7 @@ export class Tropy extends EventEmitter {
     this.updater.stop()
     this.plugins.stop()
     this.projects.stop()
+    this.proto.stop()
     this.persist()
     await this.persist.flush()
   }
@@ -131,7 +134,7 @@ export class Tropy extends EventEmitter {
           await this.projects.show(fileURLToPath(url))
           break
         case 'tropy:':
-          await this.handleProtocolRequest(url)
+          await this.proto.handleRequest(url)
           break
         default:
           throw new Error(`protocol not supported: ${url}`)
@@ -377,10 +380,6 @@ export class Tropy extends EventEmitter {
     this.on('app:rename-project', (win) =>
       this.dispatch(act.edit.start({ project: { name: true } }), win))
 
-    this.on('app:copy-url', (_, { target }) => {
-      this.copyProtocolURL(target)
-    })
-
     this.on('app:center-window', () =>
       this.wm.center())
 
@@ -583,21 +582,6 @@ export class Tropy extends EventEmitter {
       this.dispatch(
         act.note.export(target.notes, { target: ':clipboard:' }),
         win))
-
-    this.on('app:copy-project-url', (win) =>
-      this.copyProtocolURL(this.projects.get(win)))
-
-    this.on('app:copy-item-link', (win, { target }) =>
-      this.copyProtocolURL(this.projects.get(win), {
-        item: target.id,
-        photo: target.photos[0]
-      }))
-
-    this.on('app:copy-photo-link', (win, { target }) =>
-      this.copyProtocolURL(this.projects.get(win), {
-        item: target.item,
-        photo: target.id
-      }))
 
     this.on('app:export-note', (win, { target }) =>
       this.dispatch(act.note.export(target.notes), win))
@@ -945,25 +929,6 @@ export class Tropy extends EventEmitter {
     })
 
     return this
-  }
-
-  copyProtocolURL (project, { item, photo } = {}) {
-    if (!project) return
-
-    clipboard
-      .writeText(protocolURL(project.path, { item, photo }))
-      .catch(err => warn({ err }, 'failed to copy protocol url'))
-  }
-
-  // Links have no one to report to: errors are logged.
-  async handleProtocolRequest (url) {
-    info(`opening url ${url}`)
-
-    try {
-      return await handleTropyURL(this, url, { prompt: true })
-    } catch (err) {
-      warn({ err }, `failed to open ${url}: ${err.message}`)
-    }
   }
 
   handleUncaughtException (e, win = BrowserWindow.getFocusedWindow()) {

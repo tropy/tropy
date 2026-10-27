@@ -23,49 +23,13 @@ describe('Tropy', () => {
     expect(tropy).to.equal(new Tropy())
   })
 
-  describe('handleProtocolRequest', () => {
-    describe('about', () => {
-      let showAboutWindow
+  it('hands tropy:// urls to the protocol handler', async () => {
+    let handleRequest = mock.method(tropy.proto, 'handleRequest', async () => {})
+    let url = new URL('tropy://about')
 
-      beforeEach(() => {
-        showAboutWindow = mock.method(tropy, 'showAboutWindow', async () => {})
-      })
+    await tropy.open(url)
+    expect(handleRequest.mock.calls[0].arguments[0]).to.equal(url)
 
-      afterEach(() => {
-        showAboutWindow.mock.restore()
-      })
-
-      it('tropy://about shows the about window', async () => {
-        await tropy.handleProtocolRequest(new URL('tropy://about'))
-        expect(showAboutWindow.mock.callCount()).to.equal(1)
-      })
-
-      it('tropy://version shows the about window', async () => {
-        await tropy.handleProtocolRequest(new URL('tropy://version'))
-        expect(showAboutWindow.mock.callCount()).to.equal(1)
-      })
-    })
-
-    describe('prefs', () => {
-      let showPreferencesWindow
-
-      beforeEach(() => {
-        showPreferencesWindow = mock.method(tropy, 'showPreferencesWindow', async () => {})
-      })
-
-      afterEach(() => {
-        showPreferencesWindow.mock.restore()
-      })
-
-      it('tropy://prefs shows the prefs window', async () => {
-        await tropy.handleProtocolRequest(new URL('tropy://prefs'))
-        expect(showPreferencesWindow.mock.callCount()).to.equal(1)
-      })
-
-      it('tropy://preferences shows the prefs window', async () => {
-        await tropy.handleProtocolRequest(new URL('tropy://preferences'))
-        expect(showPreferencesWindow.mock.callCount()).to.equal(1)
-      })
-    })
+    handleRequest.mock.restore()
   })
 })

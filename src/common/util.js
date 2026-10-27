@@ -711,12 +711,20 @@ export function urlId (path) {
     basename(file, extname(file)).toWellFormed().normalize())
 }
 
-export function protocolURL (path, { item, photo } = {}) {
-  let id = urlId(path)
+export function protocolURL (path, { item, photo, selection } = {}) {
+  let url = `tropy://project/${urlId(path)}`
 
-  return (item != null && photo != null) ?
-    `tropy://project/${id}/items/${item}/${photo}` :
-    `tropy://project/${id}`
+  if (item == null)
+    return url
+
+  url += `/items/${item}`
+
+  if (photo == null)
+    return url
+
+  url += `/${photo}`
+
+  return (selection == null) ? url : `${url}/${selection}`
 }
 
 export const BLANK = Object.freeze(Object.create(null))
