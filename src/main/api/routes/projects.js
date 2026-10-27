@@ -1,5 +1,5 @@
 import { fail } from '../errors.js'
-import { withUrlId } from '../schema.js'
+import { object, withUrlId } from '../schema.js'
 
 // The known projects, open or not.
 // Projects that are not open can be opened via their tropy:// url.
@@ -8,10 +8,17 @@ export default async function projects (api, { projects: registry }) {
     schema: {
       operationId: 'projects.list',
       summary: 'List the known projects',
-      description: 'Most recently opened first.'
+      description: 'Most recently opened first.',
+      querystring: object({
+        open: {
+          type: 'boolean',
+          description: 'Only open (true) or closed (false) projects'
+        }
+      })
     }
-  }, () =>
-    registry.list())
+  }, ({ query }) =>
+    registry.list().filter(project =>
+      query.open == null || project.open === query.open))
 
   api.get('/projects/:urlId', {
     schema: {
