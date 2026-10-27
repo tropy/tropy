@@ -34,6 +34,8 @@ es:
         one {1 foto}
         other {# fotos}}
       create: Añadir fotos
+      transcribe: Transcribe Photo
+      transcribeDialog: Transcribe Photo…
       selection: Selección
     note:
       title: |-
@@ -42,11 +44,16 @@ es:
         one {1 nota}
         other {# notas}}
       create: Añadir nota
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: Objeto
     photo: Foto
     notes: Notas
     note: Nota {idx, number}
+    transcriptions: Transcriptions
+    transcription: Transcription {idx, number}
     tags: Etiquetas
   about:
     version: Versión {version}
@@ -78,14 +85,17 @@ es:
     file:
       open: Abrir proyecto {path}
       missing: Encontrar proyecto perdido {path}
-      remove: Quitar proyecto de la lista
+      options: Project options
+      conflict: >-
+        Non-unique project URLs will open the most recent project. Consider
+        renaming one of the project files.
     recent:
       search:
         placeholder: Filtrar proyectos
         blank: Ningún proyecto correspondiente
     corrupted: >-
-      Tu archivo de proyecto puede estar dañado. Intervención manual puede ser
-      necesaria para repararlo. Consulta la guía del usuario para obtener ayuda.
+      Your project file may be damaged and manual steps are necessary to fix it.
+      Please consult the user manual for further assistance.
     readOnly: >-
       Tu proyecto está bloqueado y no se puede modificar. Para desbloquearlo,
       cambia los permisos del archivo y abre el proyecto nuevamente.
@@ -146,8 +156,16 @@ es:
         optimize: Optimizar tamaño y calidad de la foto
         metadata: Incluir metadatos
         notes: Incluir notas
+        transcriptions: Include transcriptions
         onlyNotes: Incluir únicamente fotos con notas
         overflow: Permitir al contenido de utilizar más de una página
+      ocr:
+        model: Default model
+        grayscale: Convert images to grayscale
+        resize: Resize large images
+        quality:
+          label: For Transcriptions
+          value: Use image quality {value, number, ::percent scale/0.01 .}
       locale:
         locale: Lengua
         locales:
@@ -197,6 +215,14 @@ es:
               text: Texto sin formato
               markdown: Markdown
               html: Código fuente HTML
+        transcription:
+          format:
+            alto: Transcriptions as ALTO XML
+          copy:
+            label: Copy transcriptions as
+            option:
+              text: Texto sin formato
+              alto: ALTO XML
       ui:
         label: Interfaz
         option:
@@ -230,6 +256,7 @@ es:
           <None>: Usando rutas absolutas
       store: Carpeta administrada
       name: Nombre
+      url: URL
       id: Número de identificación
       path: Archivo
       type: Tipo de proyecto
@@ -240,6 +267,13 @@ es:
           {errors, plural, =0 {Todas las fotos consolidadas.} one {1 foto no
           encontrada; consolidación necesaria.} other {# fotos no encontradas;
           consolidación necesaria.}}
+      optimize:
+        confirm: Create Optimized Project
+        hint: Create an optimized copy of this project.
+        onImport: Optimize photos on import
+        quality:
+          label: Optimize assets
+          value: Quality {value, number, ::percent scale/0.01 .}
       watch:
         folder: Carpeta monitoreada
         usePolling: Usando sondeo file stat
@@ -279,6 +313,37 @@ es:
       uninstall: Desinstalar
       noInfo: Autor desconocido
       homepage: Más
+    account:
+      label: Account
+      description: Sign in to your account
+      username: Username
+      email: Email
+      password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
+      link: Sign in
+      unlink: Sign out
+      retry: Retry
+      usage:
+        label: Usage
+        window:
+          hourly: Hourly
+          daily: Daily
+          weekly: Weekly
+          monthly: Monthly
+        transcriptions:
+          label: transcriptions
+          loading: Loading…
+          limit: |-
+            {delta, plural,
+              =0 {No transcriptions remaining. Resets {reset}.}
+              other {# of {limit} transcriptions remaining. Resets {reset}.}}
+          total: |-
+            {total, plural,
+              =0 {No transcriptions since {since}.}
+              one {1 transcription since {since}.}
+              other {# transcriptions since {since}.}}
   format:
     ppi: píxeles por pulgada (PPP)
   item:
@@ -301,6 +366,8 @@ es:
   settings:
     maximize: Maximize this view
     unmaximize: Restore previous view size
+  slider:
+    value: '{value, number, ::percent scale/0.01 .}'
   esper:
     tool:
       pan: Herramienta de panorama
@@ -316,6 +383,9 @@ es:
       full: Show full text overlay
       split: Show split-view text overlay
       panel: Toggle transcription version history
+      fontSize:
+        decrease: Decrease font size
+        increase: Increase font size
     panel:
       negative: Invertir colores
       revert: Revertir al original
@@ -391,6 +461,13 @@ es:
             nueva ventana.
           buttons:
             - OK
+        optimize:
+          title: Optimization complete
+          message: >-
+            Your optimized project copy has been saved. Tropy will now open the
+            optimized project in a new window.
+          buttons:
+            - OK
     error:
       title: Error
       buttons:
@@ -420,8 +497,8 @@ es:
             {count, plural,
               one {One orphaned file was found.}
               other {{count} orphaned files were found.}}
-            See the log file for the full list. Do you want to delete all
-            orphaned files now? This action cannot be undone.
+            Do you want to delete all orphaned files now? This action cannot be
+            undone.
           buttons:
             - Cancelar
             - Borrar
@@ -441,6 +518,15 @@ es:
           buttons:
             - Cancelar
             - Borrar
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again to use server-side
+            features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: No se puede encontrar o abrir el archivo de la base de datos.
@@ -460,6 +546,8 @@ es:
       projects: Proyectos de Tropy
       rdf: Esquemas RDF
       jsonld: JSON-LD
+      alto: ALTO XML
+      text: Plain Text
   action:
     project:
       save: Guardar proyecto
@@ -524,26 +612,38 @@ es:
       save: Guardar selección
       order: Ordenar selecciones
   activity:
+    status: |-
+      {count, plural,
+        one {1 activity in progress …}
+        other {# activities in progress …}}
     cache:
       prune: Optimizando la cache memoria del proyecto …
       purge: Purga de cache memoria antigua …
     project:
+      optimize: Optimizing project …
+      prune: Removing orphaned files …
+      reindex: Rebuilding search index …
+      reload: Reloading project …
       save: Guardando …
     list:
       create: Creando lista …
       delete: Suprimiendo lista …
+      export: Exporting lists …
+      import: Importing lists …
       item:
         add: Añadiendo objetos a lista …
         merge: Fusionando objetos …
         remove: Removiendo objetos de lista …
         restore: Restaurando objetos a lista …
       load: Cargando listas …
+      move: Moving list …
       order: Ordenando listas …
       restore: Restaurando lista …
       save: Guardando lista …
     tag:
       create: Creando etiqueta …
       delete: Suprimiendo etiqueta …
+      export: Exporting tags …
       load: Cargando etiquetas …
       restore: Restaurando etiqueta …
       save: Guardando etiqueta …
@@ -554,67 +654,116 @@ es:
       explode: Deconstruyendo objeto …
       export: Exportando objeto …
       implode: Restaurando objeto …
-      import: >-
-        {hasProgressBar, select, true {Importando objeto {progress, number} de
-        {total, number} …} other {Importando objetos …}}
+      import: |-
+        {hasProgressBar, select,
+          true {Imported {progress, number} of {total, number} items …}
+          other {Importing items …}
+        }
       load: Cargando objetos …
       merge: Fusionando objeto …
+      open: Opening item …
+      preview: Loading preview …
       print: Procesando objetos ...
       restore: Restaurando objeto …
       save: Guardando objetos …
+      split: Splitting item …
       tag:
         create: Etiquetando objeto
+        delete: Removing tag from items …
         toggle: Etiquetando objeto …
         clear: Desetiquetando objeto …
+      template:
+        change: Changing item template …
     metadata:
+      add: Adding metadata …
+      copy: Copying metadata …
+      delete: Deleting metadata …
       load: Cargando metadatos …
+      restore: Restoring metadata …
       save: Guardando metadatos …
     ontology:
       load: Cargando ontología …
       import: Importando esquema …
+      class:
+        load: Loading classes …
+      props:
+        load: Loading properties …
       vocab:
+        delete: Deleting vocabulary …
+        export: Exporting vocabulary …
+        load: Loading vocabularies …
+        restore: Restoring vocabulary …
         save: Guardando esquema …
       label:
         save: Guardando rótulo
       template:
+        create: Creating template …
+        delete: Deleting template …
+        export: Exporting templates …
         import: Importando plantillas …
+        save: Saving template …
+        field:
+          add: Adding template field …
+          order: Sorting template fields …
+          remove: Removing template field …
+          save: Saving template field …
     photo:
-      consolidate: >-
-        {hasProgressBar, select, true {Agrupando foto {progress, number} de
-        {total, number} …} other {Agrupando fotos …}}
-      create: >-
-        {hasProgressBar, select, true {Importando foto {progress, number} de
-        {total, number} …} other {Importando fotos …}}
+      consolidate: |-
+        {hasProgressBar, select,
+          true {Consolidated {progress, number} of {total, number} photos …}
+          other {Consolidating photos …}
+        }
+      create: |-
+        {hasProgressBar, select,
+          true {Imported {progress, number} of {total, number} photos …}
+          other {Importing photos …}
+        }
       delete: Borrando foto …
-      duplicate: >-
-        {hasProgressBar, select, true {Duplicando foto {progress, number} de
-        {total, number} …} other {Duplicando fotos …}}
+      duplicate: |-
+        {hasProgressBar, select,
+          true {Duplicated {progress, number} of {total, number} photos …}
+          other {Duplicating photos …}
+        }
       transcribe: |-
         {hasProgressBar, select,
-          true {Transcribing photo {progress, number} of {total, number} …}
-          other {Transcribing photos …}
+          true {Created {progress, number} of {total, number} transcriptions …}
+          other {Creating transcriptions …}
         }
       load: Cargando fotos …
       move: Moviendo fotos …
       order: Ordenando fotos …
       save: Guardando foto …
       restore: Restaurando fotos …
+      rotate: Rotating photo …
       extract: Extrayendo foto ...
+      template:
+        change: Changing photo template …
     note:
       create: Creando nota …
       delete: Suprimiendo nota …
+      export: Exporting notes …
       load: Cargando notas …
+      open: Opening note …
       order: Ordenando notas …
       restore: Restaurando notas …
+      save: Saving note …
+      update: Saving note …
     selection:
       create: Creando selección
+      delete: Deleting photo selection …
       load: Cargando selecciones …
+      order: Sorting photo selections …
+      restore: Restoring photo selection …
+      save: Saving photo selection …
       extract: Extrayendo selección ...
-    api:
-      photo:
-        extract: Extrayendo foto ...
-      selection:
-        extract: Extrayendo selección ...
+      template:
+        change: Changing selection template …
+    transcription:
+      process: |-
+        {hasProgressBar, select,
+          true {Processed {progress, number} of {total, number} transcriptions …}
+          other {Processing transcriptions …}
+        }
   editor:
     commands:
       bold: Negrilla
@@ -638,21 +787,38 @@ es:
       sinkListItem: Descender elemento
       liftListItem: Elevar elemento
   transcription:
+    config:
+      title: Transcription Settings
+      cancel: Cancel
+      submit: Transcribe
     error: Transcription failed
     retry: Try Again
     pending: Transcription pending…
+    empty: No text recognized
     title: |-
       {name, select,
         true {{name}}
         other {Transcription}
       }
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        unknown: Something went wrong. Please try again.
+      network: Could not reach the Tropy server.
+      offline: Tropy is offline.
+      profile:
+        token: Your session has expired. Please sign in again.
+        http: Something went wrong. Please try again.
+        id_token: Something went wrong. Please try again.
+        unknown: Something went wrong. Please try again.
     cache:
       prune: Falla al optimizar la cache memoria del proyecto.
       purge: Falla al remover la caché antigua.
     project:
       created: Falla en la creación de proyecto.
       convert: Conversión de proyecto fallida.
+      optimize: Project optimization failed.
     item:
       export: Falla en la exportación de objetos.
       merge: Falla en la fusión de objetos.

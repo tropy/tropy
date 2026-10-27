@@ -40,6 +40,8 @@ cn:
         one {1 张图片}
         other {# 张图片}}
       create: 添加图片
+      transcribe: 转录图片
+      transcribeDialog: Transcribe Photo…
       selection: 选择
     note:
       title: |-
@@ -48,11 +50,16 @@ cn:
         one {1 个笔记}
         other {# 个笔记}}
       create: 添加笔记
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: 项目
     photo: 图片
     notes: 笔记
     note: 笔记 {idx, number}
+    transcriptions: Transcriptions
+    transcription: Transcription {idx, number}
     tags: 标签
   about:
     version: 版本 {version}
@@ -81,12 +88,17 @@ cn:
     file:
       open: 打开库 {path}
       missing: 查找丢失的项目 {path}
-      remove: 从列表中移除项目
+      options: Project options
+      conflict: >-
+        Non-unique project URLs will open the most recent project. Consider
+        renaming one of the project files.
     recent:
       search:
         placeholder: 文件过滤器
         blank: 没有匹配的库
-    corrupted: 您的库文件可能已损坏，需要手动步骤来修复它。有关进一步的帮助，请参阅用户手册。
+    corrupted: >-
+      Your project file may be damaged and manual steps are necessary to fix it.
+      Please consult the user manual for further assistance.
     readOnly: 您的库文件被锁定，无法修改。若要解锁，请更改文件权限并再次打开项目。
     new:
       title: 创建一个新库
@@ -145,8 +157,16 @@ cn:
         optimize: 优化照片尺寸和质量
         metadata: 包含元数据
         notes: 包含笔记
+        transcriptions: Include transcriptions
         onlyNotes: 仅包含带有注释的照片
         overflow: 允许内容占用多于一页
+      ocr:
+        model: Default model
+        grayscale: Convert images to grayscale
+        resize: Resize large images
+        quality:
+          label: For Transcriptions
+          value: Use image quality {value, number, ::percent scale/0.01 .}
       locale:
         locale: 默认
         locales:
@@ -154,14 +174,14 @@ cn:
           de: Deutsch
           en: English
           es: Español
-          fi-FI: Suomi
+          fi-FI: 芬兰语
           fr: Français
           it: Italiano
           ja: 日本語
           nl-NL: 荷兰语
           pt: Português
           pt-BR: 巴西葡萄牙语
-          ru: русский
+          ru: 俄语
           uk: 乌克兰语
       templates:
         label: 默认模板
@@ -172,9 +192,9 @@ cn:
         label: 导入文件命名为
         force: 覆盖嵌入的照片元数据
       debug: 启用开发者模式
-      api: Enable Developer API
+      api: 启用开发者 API
       localtime: 假设 Exif 时间戳使用本地时区
-      createLists: Recreate lists
+      createLists: 重新创建列表
       dup:
         label: 导入设置
         option:
@@ -196,6 +216,14 @@ cn:
               text: 纯文本
               markdown: Markdown
               html: HTML 源代码
+        transcription:
+          format:
+            alto: Transcriptions as ALTO XML
+          copy:
+            label: Copy transcriptions as
+            option:
+              text: 纯文本
+              alto: ALTO XML
       ui:
         label: 界面
         option:
@@ -229,6 +257,7 @@ cn:
           <None>: 使用绝对路径
       store: 托管文件夹
       name: 名称
+      url: URL
       id: ID
       path: 文件
       type: 项目类型
@@ -240,6 +269,13 @@ cn:
           =0 {所有照片已合并。}
           one {未找到 1 张照片；需要合并。}
           other {未找到 # 张照片；需要合并。}}
+      optimize:
+        confirm: Create Optimized Project
+        hint: Create an optimized copy of this project.
+        onImport: Optimize photos on import
+        quality:
+          label: Optimize assets
+          value: Quality {value, number, ::percent scale/0.01 .}
       watch:
         folder: 监视文件夹
         usePolling: 使用文件统计
@@ -283,6 +319,37 @@ cn:
       uninstall: 卸载插件
       noInfo: 未知作者
       homepage: 更多
+    account:
+      label: Account
+      description: Sign in to your account
+      username: Username
+      email: Email
+      password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
+      link: Sign in
+      unlink: Sign out
+      retry: Retry
+      usage:
+        label: Usage
+        window:
+          hourly: Hourly
+          daily: Daily
+          weekly: Weekly
+          monthly: Monthly
+        transcriptions:
+          label: transcriptions
+          loading: Loading…
+          limit: |-
+            {delta, plural,
+              =0 {No transcriptions remaining. Resets {reset}.}
+              other {# of {limit} transcriptions remaining. Resets {reset}.}}
+          total: |-
+            {total, plural,
+              =0 {No transcriptions since {since}.}
+              one {1 transcription since {since}.}
+              other {# transcriptions since {since}.}}
   format:
     ppi: 每英寸像素（ppi）
   item:
@@ -305,6 +372,8 @@ cn:
   settings:
     maximize: 最大化视图
     unmaximize: 恢复之前的视图大小
+  slider:
+    value: '{value, number, ::percent scale/0.01 .}'
   esper:
     tool:
       pan: 平移工具
@@ -320,6 +389,9 @@ cn:
       full: 显示全文覆盖
       split: 显示分屏视图文本叠加
       panel: 切换转录版本历史记录
+      fontSize:
+        decrease: Decrease font size
+        increase: Increase font size
     panel:
       negative: 反色
       revert: 复原照片
@@ -392,6 +464,13 @@ cn:
           message: 您的项目已成功转换并保存。现在，Tropy 将关闭原始项目文件，并在新窗口中打开转换后的项目。
           buttons:
             - 确定
+        optimize:
+          title: Optimization complete
+          message: >-
+            Your optimized project copy has been saved. Tropy will now open the
+            optimized project in a new window.
+          buttons:
+            - 确定
     error:
       title: 错误
       buttons:
@@ -417,8 +496,8 @@ cn:
             {count, plural,
               one {One orphaned file was found.}
               other {{count} orphaned files were found.}}
-            See the log file for the full list. Do you want to delete all
-            orphaned files now? This action cannot be undone.
+            Do you want to delete all orphaned files now? This action cannot be
+            undone.
           buttons:
             - 取消
             - 删除
@@ -434,6 +513,15 @@ cn:
           buttons:
             - 取消
             - 删除
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again to use server-side
+            features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: 本体数据库中已经存在具有此id的模板。是否要覆盖现有模板?
@@ -453,6 +541,8 @@ cn:
       projects: Tropy 库
       rdf: RDF 词汇表
       jsonld: JSON-LD
+      alto: ALTO XML
+      text: Plain Text
   action:
     project:
       save: 保存库
@@ -517,26 +607,38 @@ cn:
       save: 保存选择
       order: 排序选择
   activity:
+    status: |-
+      {count, plural,
+        one {1 activity in progress …}
+        other {# activities in progress …}}
     cache:
       prune: 正在优化缓存
       purge: 清除旧缓存…
     project:
+      optimize: Optimizing project …
+      prune: Removing orphaned files …
+      reindex: Rebuilding search index …
+      reload: Reloading project …
       save: 正在保存...
     list:
       create: 正在创建列表...
       delete: 正在删除列表...
+      export: Exporting lists …
+      import: Importing lists …
       item:
         add: 正在添加项目到列表 ...
         merge: 正在合并图组…
         remove: 正在从列表移出...
         restore: 正在从图组恢复列表 ...
       load: 正在加载列表...
+      move: Moving list …
       order: 排序列表中...
       restore: 正在恢复列表...
       save: 正在保存列表..
     tag:
       create: 正在新建标签...
       delete: 正在删除标签...
+      export: Exporting tags …
       load: 正在加载标签...
       restore: 正在恢复标签...
       save: 正在保存标签...
@@ -549,73 +651,114 @@ cn:
       implode: 正在恢复...
       import: |-
         {hasProgressBar, select,
-        true {导入项目 {progress, number} of {total, number} …}
-        other {正在导入项目 …}
+          true {Imported {progress, number} of {total, number} items …}
+          other {Importing items …}
         }
       load: 加载文件中...
       merge: 正在合并图组...
+      open: Opening item …
+      preview: Loading preview …
       print: 处理中 ...
       restore: 正在恢复文件...
       save: 保存图组中...
+      split: Splitting item …
       tag:
         create: 正在添加标签...
+        delete: Removing tag from items …
         toggle: 正在添加标签...
         clear: 正在清除标签...
+      template:
+        change: Changing item template …
     metadata:
+      add: Adding metadata …
+      copy: Copying metadata …
+      delete: Deleting metadata …
       load: 正在加载元数据...
+      restore: Restoring metadata …
       save: 保存元数据中...
     ontology:
       load: 正在加载 ontology...
       import: 正在导入词汇表...
+      class:
+        load: Loading classes …
+      props:
+        load: Loading properties …
       vocab:
+        delete: Deleting vocabulary …
+        export: Exporting vocabulary …
+        load: Loading vocabularies …
+        restore: Restoring vocabulary …
         save: 正在保存词汇表...
       label:
         save: 正在保存标记...
       template:
+        create: Creating template …
+        delete: Deleting template …
+        export: Exporting templates …
         import: 正在导入模板...
+        save: Saving template …
+        field:
+          add: Adding template field …
+          order: Sorting template fields …
+          remove: Removing template field …
+          save: Saving template field …
     photo:
       consolidate: |-
         {hasProgressBar, select,
-        true {合并照片 {progress, number} of {total, number} …}
-        other {正在合并照片 …}
+          true {Consolidated {progress, number} of {total, number} photos …}
+          other {Consolidating photos …}
         }
       create: |-
         {hasProgressBar, select,
-        true {导入照片 {progress, number} of {total, number} …}
-        other {正在导入照片 …}
+          true {Imported {progress, number} of {total, number} photos …}
+          other {Importing photos …}
         }
       delete: 删除图片中...
       duplicate: |-
         {hasProgressBar, select,
-        true {复制照片 {progress, number} of {total, number} …}
-        other {正在复制照片 …}
+          true {Duplicated {progress, number} of {total, number} photos …}
+          other {Duplicating photos …}
         }
       transcribe: |-
         {hasProgressBar, select,
-        true {转录照片 {progress, number} of {total, number} …}
-        other {正在转录照片 …}
+          true {Created {progress, number} of {total, number} transcriptions …}
+          other {Creating transcriptions …}
         }
       load: 正在加载图片...
       move: 正在移动图片...
       order: 正在排序图片...
       save: 正在保存图片...
       restore: 正在恢复图片...
+      rotate: Rotating photo …
       extract: 正在提取照片...
+      template:
+        change: Changing photo template …
     note:
       create: 新建笔记中...
       delete: 删除笔记中...
+      export: Exporting notes …
       load: 加载笔记中...
+      open: Opening note …
       order: 排序笔记中...
       restore: 恢复笔记中...
+      save: Saving note …
+      update: Saving note …
     selection:
       create: 正在创建图片选择...
+      delete: Deleting photo selection …
       load: 正在加载图片选择...
+      order: Sorting photo selections …
+      restore: Restoring photo selection …
+      save: Saving photo selection …
       extract: 正在提取选择...
-    api:
-      photo:
-        extract: 正在提取照片...
-      selection:
-        extract: 正在提取选择...
+      template:
+        change: Changing selection template …
+    transcription:
+      process: |-
+        {hasProgressBar, select,
+          true {Processed {progress, number} of {total, number} transcriptions …}
+          other {Processing transcriptions …}
+        }
   editor:
     commands:
       bold: 加粗
@@ -639,21 +782,38 @@ cn:
       sinkListItem: 缩进
       liftListItem: 撤销缩进
   transcription:
-    error: Transcription failed
-    retry: Try Again
+    config:
+      title: Transcription Settings
+      cancel: Cancel
+      submit: Transcribe
+    error: 转录失败
+    retry: 重试
     pending: 正在转录…
+    empty: No text recognized
     title: |-
       {name, select,
-        true {{name}}
-        other {Transcription}
+      true {{name}}
+      other {Transcription}
       }
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        unknown: Something went wrong. Please try again.
+      network: Could not reach the Tropy server.
+      offline: Tropy is offline.
+      profile:
+        token: Your session has expired. Please sign in again.
+        http: Something went wrong. Please try again.
+        id_token: Something went wrong. Please try again.
+        unknown: Something went wrong. Please try again.
     cache:
       prune: 优化缓存失败。
       purge: 未能删除旧的缓存。
     project:
       created: 库创建失败。
       convert: 项目转换失败。
+      optimize: Project optimization failed.
     item:
       export: 无法导出文件。
       merge: 无法合并图组。

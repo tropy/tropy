@@ -40,6 +40,8 @@ ja:
         one {1つの写真}
         other {# の写真}}
       create: 写真を追加
+      transcribe: Transcribe Photo
+      transcribeDialog: Transcribe Photo…
       selection: セレクション
     note:
       title: |-
@@ -48,11 +50,16 @@ ja:
         one {1つのノート}
         other {# のノート}}
       create: ノートを追加
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: アイテム
     photo: 写真
     notes: ノート
     note: ノート {idx, number}
+    transcriptions: Transcriptions
+    transcription: Transcription {idx, number}
     tags: タグ
   about:
     version: バージョン {version}
@@ -81,16 +88,18 @@ ja:
     file:
       open: '{path}のプロジェクトを開く'
       missing: '{path}のプロジェクトを探す'
-      remove: リストからプロジェクトを削除する
+      options: Project options
+      conflict: >-
+        Non-unique project URLs will open the most recent project. Consider
+        renaming one of the project files.
     recent:
       search:
         placeholder: プロジェクトをフィルタリングする
         blank: マッチするプロジェクトが見当たりません
     corrupted: >-
-      プロジェクトファイルが破損している可能性があり、修復するには手動の手順が必要です。
-      さらに詳しいサポートが必要な場合は、ユーザーマニュアルを参照してください。
-    readOnly: >-
-      プロジェクトファイルがロックされており、変更できませんでした。ロックを解除するには、ファイルの書き込み権限を変更し、改めてプロジェクトを開いてください。
+      Your project file may be damaged and manual steps are necessary to fix it.
+      Please consult the user manual for further assistance.
+    readOnly: プロジェクトファイルがロックされており、変更できませんでした。ロックを解除するには、ファイルの書き込み権限を変更し、改めてプロジェクトを開いてください。
     new:
       title: 新規プロジェクトを作成
       name: プロジェクト名を入力
@@ -148,8 +157,16 @@ ja:
         optimize: 写真サイズと画質を最適化
         metadata: メタデータを含める
         notes: ノートを含める
+        transcriptions: Include transcriptions
         onlyNotes: ノートのある写真だけ含める
         overflow: コンテンツが複数ページに表示されることを許可する
+      ocr:
+        model: Default model
+        grayscale: Convert images to grayscale
+        resize: Resize large images
+        quality:
+          label: For Transcriptions
+          value: Use image quality {value, number, ::percent scale/0.01 .}
       locale:
         locale: ローカル
         locales:
@@ -199,6 +216,14 @@ ja:
               text: プレーンテキスト
               markdown: マークダウン
               html: HTMLソースコード
+        transcription:
+          format:
+            alto: Transcriptions as ALTO XML
+          copy:
+            label: Copy transcriptions as
+            option:
+              text: プレーンテキスト
+              alto: ALTO XML
       ui:
         label: インターフェース
         option:
@@ -232,6 +257,7 @@ ja:
           <None>: 絶対パスを利用
       store: 管理フォルダ
       name: 名前
+      url: URL
       id: ID
       path: ファイル
       type: プロジェクトタイプ
@@ -243,6 +269,13 @@ ja:
           =0 {すべての写真が反映済みです。}
           one {1件の写真が見つかりませんでした。反映が必要です。}
           other {# 件の写真が見つかりませんでした。反映が必要です。}}
+      optimize:
+        confirm: Create Optimized Project
+        hint: Create an optimized copy of this project.
+        onImport: Optimize photos on import
+        quality:
+          label: Optimize assets
+          value: Quality {value, number, ::percent scale/0.01 .}
       watch:
         folder: ウォッチフォルダ
         usePolling: ファイル状態を確認中
@@ -286,6 +319,37 @@ ja:
       uninstall: アンインストール
       noInfo: 作者不明
       homepage: More
+    account:
+      label: Account
+      description: Sign in to your account
+      username: Username
+      email: Email
+      password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
+      link: Sign in
+      unlink: Sign out
+      retry: Retry
+      usage:
+        label: Usage
+        window:
+          hourly: Hourly
+          daily: Daily
+          weekly: Weekly
+          monthly: Monthly
+        transcriptions:
+          label: transcriptions
+          loading: Loading…
+          limit: |-
+            {delta, plural,
+              =0 {No transcriptions remaining. Resets {reset}.}
+              other {# of {limit} transcriptions remaining. Resets {reset}.}}
+          total: |-
+            {total, plural,
+              =0 {No transcriptions since {since}.}
+              one {1 transcription since {since}.}
+              other {# transcriptions since {since}.}}
   format:
     ppi: 1インチあたりのピクセル数（ppi）
   item:
@@ -308,6 +372,8 @@ ja:
   settings:
     maximize: Maximize this view
     unmaximize: Restore previous view size
+  slider:
+    value: '{value, number, ::percent scale/0.01 .}'
   esper:
     tool:
       pan: パンツール
@@ -323,6 +389,9 @@ ja:
       full: Show full text overlay
       split: Show split-view text overlay
       panel: Toggle transcription version history
+      fontSize:
+        decrease: Decrease font size
+        increase: Increase font size
     panel:
       negative: 色を反転する
       revert: 最初の状態に戻す
@@ -392,8 +461,14 @@ ja:
       project:
         convert:
           title: 変換完了
+          message: プロジェクトは正常に変換され、保存されました。Tropyはこれから元のプロジェクトファイルを閉じ、変換後のプロジェクトを新しいウィンドウで開きます。
+          buttons:
+            - OK
+        optimize:
+          title: Optimization complete
           message: >-
-            プロジェクトは正常に変換され、保存されました。Tropyはこれから元のプロジェクトファイルを閉じ、変換後のプロジェクトを新しいウィンドウで開きます。
+            Your optimized project copy has been saved. Tropy will now open the
+            optimized project in a new window.
           buttons:
             - OK
     error:
@@ -421,8 +496,8 @@ ja:
             {count, plural,
               one {One orphaned file was found.}
               other {{count} orphaned files were found.}}
-            See the log file for the full list. Do you want to delete all
-            orphaned files now? This action cannot be undone.
+            Do you want to delete all orphaned files now? This action cannot be
+            undone.
           buttons:
             - キャンセル
             - 削除
@@ -438,6 +513,15 @@ ja:
           buttons:
             - キャンセル
             - 削除
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again to use server-side
+            features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: このIDを持つテンプレートが既にオントロジーデータベースに存在しています。既存のテンプレートを上書きしますか？
@@ -457,6 +541,8 @@ ja:
       projects: Tropyプロジェクト
       rdf: RDF語彙
       jsonld: JSON-LD
+      alto: ALTO XML
+      text: Plain Text
   action:
     project:
       save: プロジェクトを保存
@@ -521,26 +607,38 @@ ja:
       save: セレクションを保存する
       order: セレクションをソートする
   activity:
+    status: |-
+      {count, plural,
+        one {1 activity in progress …}
+        other {# activities in progress …}}
     cache:
       prune: プロジェクトのキャッシュを最適化しています
       purge: 古いキャッシュを削除しています
     project:
+      optimize: Optimizing project …
+      prune: Removing orphaned files …
+      reindex: Rebuilding search index …
+      reload: Reloading project …
       save: 保存中
     list:
       create: リストを作成中
       delete: リストを削除中
+      export: Exporting lists …
+      import: Importing lists …
       item:
         add: アイテムをリストに追加しています
         merge: アイテムを統合しています
         remove: リストからアイテムを取り除いています
         restore: アイテムを元のリストへ復元しています
       load: リストをロードしています
+      move: Moving list …
       order: リストをソートしています
       restore: リストを復元しています
       save: リストを保存しています
     tag:
       create: タグを作成しています
       delete: タグを削除しています
+      export: Exporting tags …
       load: タグをロードしています
       restore: タグを復元しています
       save: タグを保存しています
@@ -553,73 +651,114 @@ ja:
       implode: アイテムを復元しています
       import: |-
         {hasProgressBar, select,
-        true {{total, number}件中{progress, number}件のアイテムをインポートしています...}
-        other {アイテムをインポートしています…}
+          true {Imported {progress, number} of {total, number} items …}
+          other {Importing items …}
         }
       load: アイテムをロード中
       merge: アイテムを統合中
+      open: Opening item …
+      preview: Loading preview …
       print: アイテムの処理を実行中
       restore: アイテムを復元中
       save: アイテムを保存中
+      split: Splitting item …
       tag:
         create: アイテムをタグ付け中
+        delete: Removing tag from items …
         toggle: アイテムをタグ付け中
         clear: アイテムタグを削除中
+      template:
+        change: Changing item template …
     metadata:
+      add: Adding metadata …
+      copy: Copying metadata …
+      delete: Deleting metadata …
       load: メタデータをロード中
+      restore: Restoring metadata …
       save: メタデータを保存中
     ontology:
       load: オントロジーをロード中
       import: 語彙をインポート中
+      class:
+        load: Loading classes …
+      props:
+        load: Loading properties …
       vocab:
+        delete: Deleting vocabulary …
+        export: Exporting vocabulary …
+        load: Loading vocabularies …
+        restore: Restoring vocabulary …
         save: 語彙を保存中
       label:
         save: ラベルを保存中
       template:
+        create: Creating template …
+        delete: Deleting template …
+        export: Exporting templates …
         import: テンプレートをインポート中
+        save: Saving template …
+        field:
+          add: Adding template field …
+          order: Sorting template fields …
+          remove: Removing template field …
+          save: Saving template field …
     photo:
       consolidate: |-
         {hasProgressBar, select,
-        true {{total, number}件中{progress, number}件の写真を統合しています…}
-        other {写真を統合しています…}
+          true {Consolidated {progress, number} of {total, number} photos …}
+          other {Consolidating photos …}
         }
       create: |-
         {hasProgressBar, select,
-        true {{total, number}件中{progress, number}件の写真をインポートしています...}
-        other {写真をインポートしています…}
+          true {Imported {progress, number} of {total, number} photos …}
+          other {Importing photos …}
         }
       delete: 写真を削除中
       duplicate: |-
         {hasProgressBar, select,
-        true {{total, number}件中{progress, number}件の写真を複製しています...}
-        other {写真を複製しています…}
+          true {Duplicated {progress, number} of {total, number} photos …}
+          other {Duplicating photos …}
         }
       transcribe: |-
         {hasProgressBar, select,
-          true {Transcribing photo {progress, number} of {total, number} …}
-          other {Transcribing photos …}
+          true {Created {progress, number} of {total, number} transcriptions …}
+          other {Creating transcriptions …}
         }
       load: 写真をロード中
       move: 写真を移動中
       order: 写真をソート中
       save: 写真を保存中
       restore: 写真を復元中
+      rotate: Rotating photo …
       extract: 写真を抽出しています...
+      template:
+        change: Changing photo template …
     note:
       create: ノートを作成中
       delete: ノートを削除中
+      export: Exporting notes …
       load: ノートをロード中
+      open: Opening note …
       order: ノートをソート中
       restore: ノートを復元中
+      save: Saving note …
+      update: Saving note …
     selection:
       create: フォト・セレクションを作成しています...
+      delete: Deleting photo selection …
       load: フォト・セレクションをロード中
+      order: Sorting photo selections …
+      restore: Restoring photo selection …
+      save: Saving photo selection …
       extract: セレクションを抽出しています...
-    api:
-      photo:
-        extract: 写真を抽出しています...
-      selection:
-        extract: セレクションを抽出しています...
+      template:
+        change: Changing selection template …
+    transcription:
+      process: |-
+        {hasProgressBar, select,
+          true {Processed {progress, number} of {total, number} transcriptions …}
+          other {Processing transcriptions …}
+        }
   editor:
     commands:
       bold: 太字
@@ -643,21 +782,38 @@ ja:
       sinkListItem: インデントを増やす
       liftListItem: インデントを減らす
   transcription:
+    config:
+      title: Transcription Settings
+      cancel: キャンセル
+      submit: Transcribe
     error: Transcription failed
     retry: Try Again
     pending: Transcription pending…
+    empty: No text recognized
     title: |-
       {name, select,
         true {{name}}
         other {Transcription}
       }
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        unknown: Something went wrong. Please try again.
+      network: Could not reach the Tropy server.
+      offline: Tropy is offline.
+      profile:
+        token: Your session has expired. Please sign in again.
+        http: Something went wrong. Please try again.
+        id_token: Something went wrong. Please try again.
+        unknown: Something went wrong. Please try again.
     cache:
       prune: プロジェクトのキャッシュの最適化に失敗しました
       purge: 古いプロジェクトのキャッシュの削除に失敗しました
     project:
       created: プロジェクトの作成に失敗しました
       convert: プロジェクトの変換に失敗しました
+      optimize: Project optimization failed.
     item:
       export: アイテムのエクスポートに失敗しました
       merge: アイテムの統合に失敗しました

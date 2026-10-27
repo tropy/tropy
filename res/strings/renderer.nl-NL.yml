@@ -40,6 +40,8 @@ nl-NL:
         one {1 foto}
         other {# foto's}}
       create: Foto's toevoegen
+      transcribe: Foto transcriberen
+      transcribeDialog: Transcribe Photo…
       selection: Selectie
     note:
       title: |-
@@ -48,11 +50,16 @@ nl-NL:
         one {1 aantekening}
         other {# aantekeningen}}
       create: Aantekening toevoegen
+  password:
+    hide: Hide password
+    reveal: Reveal password
   print:
     item: Item
     photo: Foto
     notes: Aantekeningen
     note: Aantekening {idx, number}
+    transcriptions: Transcriptions
+    transcription: Transcription {idx, number}
     tags: Labels
   about:
     version: Versie {version}
@@ -83,14 +90,17 @@ nl-NL:
     file:
       open: Project openen ({path})
       missing: Zoeken naar ontbrekend project ({path})
-      remove: Project verwijderen van lijst
+      options: Project options
+      conflict: >-
+        Non-unique project URLs will open the most recent project. Consider
+        renaming one of the project files.
     recent:
       search:
         placeholder: Projecten filteren
         blank: Er zijn geen overeenkomsten
     corrupted: >-
-      Uw projectbestand is mogelijk beschadigd en dient handmatig te worden
-      gerepareerd. Raadpleeg de handleiding voor informatie hieromtrent.
+      Your project file may be damaged and manual steps are necessary to fix it.
+      Please consult the user manual for further assistance.
     readOnly: >-
       Uw projectbestand is vergrendeld en kan daarom niet worden bewerkt. Pas de
       bestandsrechten aan en open het project opnieuw.
@@ -151,8 +161,16 @@ nl-NL:
         optimize: Fotokwaliteit en -afmetingen optimaliseren
         metadata: Inclusief metagegevens
         notes: Inclusief aantekeningen
+        transcriptions: Include transcriptions
         onlyNotes: Alleen foto's met aantekeningen
         overflow: Inhoud verdelen over meer dan één pagina
+      ocr:
+        model: Default model
+        grayscale: Convert images to grayscale
+        resize: Resize large images
+        quality:
+          label: For Transcriptions
+          value: Use image quality {value, number, ::percent scale/0.01 .}
       locale:
         locale: Taal
         locales:
@@ -202,6 +220,14 @@ nl-NL:
               text: Platte tekst
               markdown: Markdown
               html: Html-broncode
+        transcription:
+          format:
+            alto: Transcriptions as ALTO XML
+          copy:
+            label: Copy transcriptions as
+            option:
+              text: Platte tekst
+              alto: ALTO XML
       ui:
         label: Vormgeving
         option:
@@ -235,6 +261,7 @@ nl-NL:
           <None>: Met behulp van directe locaties
       store: Beheerde map
       name: Naam
+      url: URL
       id: Id
       path: Bestand
       type: Soort project
@@ -246,6 +273,13 @@ nl-NL:
           =0 {Alle foto's zijn samengevoegd.}
           one {1 foto is niet aangetroffen - samenvoegen is vereist.}
           other {# foto's zijn niet aangetroffen - samenvoegen is vereist.}}
+      optimize:
+        confirm: Create Optimized Project
+        hint: Create an optimized copy of this project.
+        onImport: Optimize photos on import
+        quality:
+          label: Optimize assets
+          value: Quality {value, number, ::percent scale/0.01 .}
       watch:
         folder: Map bijhouden
         usePolling: Bestandsstatistieken bijhouden
@@ -289,6 +323,37 @@ nl-NL:
       uninstall: Verwijderen
       noInfo: Onbekende maker
       homepage: Meer
+    account:
+      label: Account
+      description: Sign in to your account
+      username: Username
+      email: Email
+      password: Password
+      forgot: Forgot your password?
+      register.1: Don't have an account?
+      register.2: Sign up
+      link: Sign in
+      unlink: Sign out
+      retry: Retry
+      usage:
+        label: Usage
+        window:
+          hourly: Hourly
+          daily: Daily
+          weekly: Weekly
+          monthly: Monthly
+        transcriptions:
+          label: transcriptions
+          loading: Loading…
+          limit: |-
+            {delta, plural,
+              =0 {No transcriptions remaining. Resets {reset}.}
+              other {# of {limit} transcriptions remaining. Resets {reset}.}}
+          total: |-
+            {total, plural,
+              =0 {No transcriptions since {since}.}
+              one {1 transcription since {since}.}
+              other {# transcriptions since {since}.}}
   format:
     ppi: Aantal pixels per inch (ppi)
   item:
@@ -311,6 +376,8 @@ nl-NL:
   settings:
     maximize: Weergave maximaliseren
     unmaximize: Vorige weergave herstellen
+  slider:
+    value: '{value, number, ::percent scale/0.01 .}'
   esper:
     tool:
       pan: Meetrekgereedschap
@@ -326,6 +393,9 @@ nl-NL:
       full: Volledige tekstlaag tonen
       split: Gesplitste tekstlaag tonen
       panel: Transcriptie-versiegeschiedenis tonen/verbergen
+      fontSize:
+        decrease: Decrease font size
+        increase: Increase font size
     panel:
       negative: Kleuren omkeren
       revert: Origineel herstellen
@@ -400,6 +470,13 @@ nl-NL:
             project wordt gesloten en het geconverteerde geopend.
           buttons:
             - Oké
+        optimize:
+          title: Optimization complete
+          message: >-
+            Your optimized project copy has been saved. Tropy will now open the
+            optimized project in a new window.
+          buttons:
+            - Oké
     error:
       title: Foutmelding
       buttons:
@@ -429,8 +506,8 @@ nl-NL:
             {count, plural,
               one {One orphaned file was found.}
               other {{count} orphaned files were found.}}
-            See the log file for the full list. Do you want to delete all
-            orphaned files now? This action cannot be undone.
+            Do you want to delete all orphaned files now? This action cannot be
+            undone.
           buttons:
             - Annuleren
             - Verwijderen
@@ -450,6 +527,15 @@ nl-NL:
           buttons:
             - Annuleren
             - Verwijderen
+      account:
+        unlink:
+          message: Unlink Tropy account?
+          detail: >-
+            You will need to enter your credentials again to use server-side
+            features.
+          buttons:
+            - Cancel
+            - Unlink
       template:
         import:
           message: >-
@@ -471,6 +557,8 @@ nl-NL:
       projects: Tropy-projecten
       rdf: Rdf-woordenboeken
       jsonld: JSON-LD
+      alto: ALTO XML
+      text: Plain Text
   action:
     project:
       save: Project opslaan
@@ -535,26 +623,38 @@ nl-NL:
       save: Selectie opslaan
       order: Selecties sorteren
   activity:
+    status: |-
+      {count, plural,
+        one {1 activity in progress …}
+        other {# activities in progress …}}
     cache:
       prune: Bezig met optimaliseren van projectcache…
       purge: Bezig met opruimen van oude caches…
     project:
+      optimize: Optimizing project …
+      prune: Removing orphaned files …
+      reindex: Rebuilding search index …
+      reload: Reloading project …
       save: Bezig met opslaan…
     list:
       create: Bezig met samenstellen…
       delete: Bezig met verwijderen…
+      export: Exporting lists …
+      import: Importing lists …
       item:
         add: Bezig met toevoegen…
         merge: Bezig met samenvoegen…
         remove: Bezig met verwijderen…
         restore: Bezig met herstellen…
       load: Bezig met laden…
+      move: Moving list …
       order: Bezig met sorteren…
       restore: Bezig met herstellen…
       save: Bezig met opslaan…
     tag:
       create: Bezig met maken…
       delete: Bezig met verwijderen…
+      export: Exporting tags …
       load: Bezig met laden…
       restore: Bezig met herstellen…
       save: Bezig met opslaan…
@@ -565,95 +665,116 @@ nl-NL:
       explode: Bezig met vernietigen…
       export: Bezig met exporteren…
       implode: Bezig met herstellen…
-      import: >-
+      import: |-
         {hasProgressBar, select,
-
-        true {Bezig met importeren van item {progress, number} van {total,
-        number}…}
-
-        other {Bezig met importeren van items…}
-
+          true {Imported {progress, number} of {total, number} items …}
+          other {Importing items …}
         }
       load: Bezig met laden…
       merge: Bezig met samenvoegen…
+      open: Opening item …
+      preview: Loading preview …
       print: Bezig met verwerken…
       restore: Bezig met herstellen…
       save: Bezig met opslaan…
+      split: Splitting item …
       tag:
         create: Item labelen
+        delete: Removing tag from items …
         toggle: Bezig met labelen…
         clear: Bezig met opruimen…
+      template:
+        change: Changing item template …
     metadata:
+      add: Adding metadata …
+      copy: Copying metadata …
+      delete: Deleting metadata …
       load: Bezig met laden…
+      restore: Restoring metadata …
       save: Bezig met opslaan…
     ontology:
       load: Bezig met laden…
       import: Bezig met importeren…
+      class:
+        load: Loading classes …
+      props:
+        load: Loading properties …
       vocab:
+        delete: Deleting vocabulary …
+        export: Exporting vocabulary …
+        load: Loading vocabularies …
+        restore: Restoring vocabulary …
         save: Bezig met opslaan…
       label:
         save: Bezig met opslaan…
       template:
+        create: Creating template …
+        delete: Deleting template …
+        export: Exporting templates …
         import: Bezig met importeren…
+        save: Saving template …
+        field:
+          add: Adding template field …
+          order: Sorting template fields …
+          remove: Removing template field …
+          save: Saving template field …
     photo:
-      consolidate: >-
+      consolidate: |-
         {hasProgressBar, select,
-
-        true {Bezig met samenvoegen van foto {progress, number} van {total,
-        number}…}
-
-        other {Bezig met samenvoegen…}
-
+          true {Consolidated {progress, number} of {total, number} photos …}
+          other {Consolidating photos …}
         }
-      create: >-
+      create: |-
         {hasProgressBar, select,
-
-        true {Bezig met importeren van foto {progress, number} van {total,
-        number}…}
-
-        other {Bezig met importeren…}
-
+          true {Imported {progress, number} of {total, number} photos …}
+          other {Importing photos …}
         }
       delete: Bezig met verwijderen…
-      duplicate: >-
+      duplicate: |-
         {hasProgressBar, select,
-
-        true {Bezig met dupliceren van foto {progress, number} van {total,
-        number}…}
-
-        other {Bezig met dupliceren…}
-
+          true {Duplicated {progress, number} of {total, number} photos …}
+          other {Duplicating photos …}
         }
-      transcribe: >-
+      transcribe: |-
         {hasProgressBar, select,
-
-        true {Bezig met transcriberen van foto {progress, number} van {total,
-        number}…}
-
-        other {Bezig met transcriberen…}
-
+          true {Created {progress, number} of {total, number} transcriptions …}
+          other {Creating transcriptions …}
         }
       load: Bezig met laden…
       move: Bezig met verplaatsen…
       order: Bezig met sorteren…
       save: Bezig met opslaan…
       restore: Bezig met herstellen…
+      rotate: Rotating photo …
       extract: Bezig met extraheren…
+      template:
+        change: Changing photo template …
     note:
       create: Bezig met maken…
       delete: Bezig met verwijderen…
+      export: Exporting notes …
       load: Bezig met laden…
+      open: Opening note …
       order: Bezig met sorteren…
       restore: Bezig met herstellen…
+      save: Saving note …
+      update: Saving note …
     selection:
       create: Bezig met samenstellen van selectie…
+      delete: Deleting photo selection …
       load: Bezig met laden van selecties…
+      order: Sorting photo selections …
+      restore: Restoring photo selection …
+      save: Saving photo selection …
       extract: Bezig met extraheren…
-    api:
-      photo:
-        extract: Bezig met extraheren…
-      selection:
-        extract: Bezig met extraheren…
+      template:
+        change: Changing selection template …
+    transcription:
+      process: |-
+        {hasProgressBar, select,
+          true {Processed {progress, number} of {total, number} transcriptions …}
+          other {Processing transcriptions …}
+        }
   editor:
     commands:
       bold: Vetgedrukt
@@ -677,21 +798,38 @@ nl-NL:
       sinkListItem: Lijstitem omlaag
       liftListItem: Lijstitem omhoog
   transcription:
+    config:
+      title: Transcription Settings
+      cancel: Cancel
+      submit: Transcribe
     error: De transcriptie is mislukt
     retry: Opnieuw proberen
     pending: Bezig met verwerken van transcriptie…
+    empty: No text recognized
     title: |-
       {name, select,
       true {{name}}
       other {Transcription}
       }
   error:
+    account:
+      link:
+        invalid: Invalid username or password.
+        unknown: Something went wrong. Please try again.
+      network: Could not reach the Tropy server.
+      offline: Tropy is offline.
+      profile:
+        token: Your session has expired. Please sign in again.
+        http: Something went wrong. Please try again.
+        id_token: Something went wrong. Please try again.
+        unknown: Something went wrong. Please try again.
     cache:
       prune: De projectcache kan niet worden geoptimaliseerd.
       purge: De oude projectcaches kunnen niet worden gewist.
     project:
       created: Het project kan niet worden aangemaakt.
       convert: Het project kan niet worden geconverteerd.
+      optimize: Project optimization failed.
     item:
       export: De items kunnen niet worden geëxporteerd.
       merge: De items kunnen niet worden samengevoegd.
