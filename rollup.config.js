@@ -99,6 +99,10 @@ export default [
       format: 'es',
       generatedCode: 'es2015',
       chunkFileNames: '[name].js',
+      manualChunks (id) {
+        if (id.includes('@modelcontextprotocol'))
+          return 'mcp'
+      },
       sourcemap: true
     },
     treeshake: 'recommended',

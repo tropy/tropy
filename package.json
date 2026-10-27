@@ -140,6 +140,7 @@
   "dependencies": {
     "@fastify/send": "^4.2.0",
     "@inukshuk/exif": "^2.0.0",
+    "@modelcontextprotocol/server": "^2.4.0",
     "@reduxjs/toolkit": "^2.0.1",
     "@tweenjs/tween.js": "^25.0.0",
     "ajv": "^8.20.0",
