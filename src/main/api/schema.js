@@ -5,6 +5,20 @@
  * so describe each route and any parameter that is not obvious.
  */
 
+export const validation = {
+  body: {
+    allErrors: true,
+    allowUnionTypes: true,
+    useDefaults: true
+  },
+  strings: {
+    allErrors: true,
+    allowUnionTypes: true,
+    useDefaults: true,
+    coerceTypes: 'array'
+  }
+}
+
 export const id = { type: 'integer', minimum: 1 }
 export const ids = { type: 'array', items: id }
 
@@ -44,9 +58,7 @@ export const one = (...names) => ({
 })
 
 // Params of routes under /projects/:urlId.
-export const withUrlId = (properties) => ({
-  type: 'object',
-  properties: { urlId, ...properties }
-})
+export const withUrlId = (properties) =>
+  object({ urlId, ...properties })
 
 export const idParams = withUrlId({ id })
