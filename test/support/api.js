@@ -60,7 +60,6 @@ export function mkapi () {
     api.app = create({
       loggerInstance: logger.child({}, { level: 'silent' }),
       projects,
-      version: '2.0.0',
       wm: { rsvp: api.rsvp }
     })
   })

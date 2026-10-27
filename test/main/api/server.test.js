@@ -3,8 +3,7 @@ import { Server } from '#tropy/main/api/server.js'
 describe('api.Server', () => {
   let mkserver = () => new Server({
     opts: { port: 0 },
-    state: { recent: [] },
-    version: '2.0.0'
+    state: { recent: [] }
   })
 
   let status = (port) =>
