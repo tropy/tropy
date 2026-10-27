@@ -2,7 +2,6 @@ import fp from 'fastify-plugin'
 import { fail } from './errors.js'
 
 export default fp(async (fastify, { projects, wm }) => {
-  fastify.decorateRequest('project', null)
   fastify.decorateRequest('rsvp', null)
 
   fastify.addHook('onRequest', async (request) => {
@@ -17,8 +16,6 @@ export default fp(async (fastify, { projects, wm }) => {
 
     if (win == null)
       throw fail(409, `project is not open, open it with ${project.url}`)
-
-    request.project = project
 
     let agent = request.headers['user-agent'] || 'http-api'
 

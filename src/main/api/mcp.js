@@ -38,8 +38,7 @@ async function load (fastify, proto) {
       .filter(route => route.schema.mcp !== false)
       .map(route => [route.schema.operationId, httpTool(fastify, route)]))
 
-  if (proto)
-    tools.set('open', openTool(proto))
+  tools.set('open', openTool(proto))
 
   let list = [...tools.values()].map(({ call, ...tool }) => tool)
 
@@ -134,22 +133,14 @@ function httpTool (fastify, { method, url, schema }) {
       if (unknown.length)
         return error(`unknown arguments: ${unknown.join(', ')}`)
 
-      let path = url.replace(/:(\w+)/g, (_, name) =>
-        encodeURIComponent(args[name]))
-
-      let query = new URLSearchParams()
-
-      for (let name of parts.query)
-        for (let value of [args[name]].flat())
-          if (value != null) query.append(name, value)
-
-      let body = isOpenBody ? args.body : pick(args, parts.body)
-
       let res = await fastify.inject({
         method,
-        url: query.size ? `${path}?${query}` : path,
+        url: url.replace(/:(\w+)/g, (_, name) => encodeURIComponent(args[name])),
+        query: pick(args, parts.query),
         headers: { accept: args.accept ?? '*/*', 'user-agent': agent },
-        ...(schema.body && { payload: body })
+        ...(schema.body && {
+          payload: isOpenBody ? args.body : pick(args, parts.body)
+        })
       })
 
       return toResult(res)
@@ -235,4 +226,4 @@ const names = (schema) =>
   Object.keys(schema?.properties ?? {})
 
 const pick = (args, keys) =>
-  Object.fromEntries(keys.filter(k => k in args).map(k => [k, args[k]]))
+  Object.fromEntries(keys.filter(k => args[k] != null).map(k => [k, args[k]]))
