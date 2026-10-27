@@ -13,9 +13,9 @@ export const findItems = ({ operationId, summary, params }) => ({
       q: { type: 'string', description: 'Full-text search query' },
       sort: {
         type: 'string',
-        default: 'item.created',
         description: 'Sort by item.created, item.modified, item.template, ' +
-          'added (list position) or a metadata property URI'
+          'added (list position) or a metadata property URI; ' +
+          'defaults to the title, or added in lists, like the app'
       },
       reverse: {
         type: 'boolean',
