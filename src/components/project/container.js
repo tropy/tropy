@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDropProjectFiles } from '../../hooks/use-drop-project-files.js'
 import { useEvent } from '../../hooks/use-event.js'
+import { useIpcSend } from '../../hooks/use-ipc.js'
 import { Project } from './project.js'
 import { NoProject } from './none.js'
 import { Fade, SwitchTransition } from '../fx.js'
@@ -15,10 +16,10 @@ export const ProjectContainer = ({
   let dispatch = useDispatch()
 
   let project = useSelector(state => state.project)
+  let openProject = useIpcSend(['cmd', 'app:open-project'])
 
   let handleProjectOpen = useEvent((path, meta) => {
-    if (path !== project.path)
-      dispatch(act.project.open(path, meta))
+    openProject({ path, ...meta })
   })
 
   let onDrop = useEvent(({ projects, templates }) => {
@@ -28,10 +29,8 @@ export const ProjectContainer = ({
       }, { prompt: true }))
     }
 
-    if (projects.length) {
-      // Subtle: currently handling only the first project file!
-      handleProjectOpen(projects[0])
-    }
+    for (let path of projects)
+      handleProjectOpen(path)
   })
 
   let [{ isOver }, drop] = useDropProjectFiles({ onDrop })
