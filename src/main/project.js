@@ -17,7 +17,7 @@ const warnOpenFailed = (err) =>
 
 export class ProjectRegistry {
   #projects = new WeakMap()  // win -> project
-  #pending = new Map()       // path -> { win, window, opened }
+  #pending = new Map()       // path -> { win, opened }
 
   constructor (app) {
     this.app = app
@@ -129,15 +129,12 @@ export class ProjectRegistry {
     if (path) {
       path = resolve(path)
 
-      // No await unless pending:
-      // concurrent calls must see the new pending open
-      // before this call tracks another one.
-      let pending = this.#pending.get(path)
-      let open = this.window(path) ?? (pending && await pending.window)
+      let open = this.window(path) ?? this.#pending.get(path)?.win
 
       if (open) {
         info({ path }, 'focus existing project window')
-        open.show()
+        // Windows still loading show themselves.
+        this.wm.whenReady(open, () => open.show())
         return open
       }
     }
@@ -145,11 +142,18 @@ export class ProjectRegistry {
     win ??= this.#empty()
 
     if (win == null) {
+      info({ path }, 'open project in new window')
+
+      // Using open, not show, to track the new window right away;
+      // it shows itself on init.
+      let args = { recent: this.recent }
+      let opts = { show: 'init' }
+
       if (meta.create) {
-        win = this.#createWindow()
+        win = this.wm.open('project', args, opts)
         this.app.dispatch(act.project.open(path, meta), win)
       } else {
-        win = this.#createWindow(path)
+        win = this.wm.open('project', { ...args, file: path }, opts)
       }
 
     } else {
@@ -316,46 +320,28 @@ export class ProjectRegistry {
     if (win == null || this.get(win))
       return null
 
-    // Windows still being created are not known yet:
-    // the current window might be one of them.
     for (let pending of this.#pending.values()) {
-      if (pending.win === win || pending.win == null)
+      if (pending.win === win)
         return null
     }
 
     return win
   }
 
-  // Tracks opening path in win, or the window being created,
+  // Tracks opening path in win,
   // until the window reports the project open or closed.
   #track (path, win) {
-    let pending = {
-      // Known right away for existing windows, so that
-      // they no longer count as empty.
-      win: (win instanceof Promise) ? null : win,
-      opened: Promise.withResolvers()
-    }
+    let pending = { win, opened: Promise.withResolvers() }
 
-    pending.window = Promise.resolve(win).then(
-      (w) => (pending.win = w),
-      (err) => {
-        this.#settle(path, err)
-        throw err
-      })
-
-    // Nobody may wait for these, e.g. after show.
-    pending.window.catch(() => {})
+    // Nobody may wait for it, e.g. after show.
     pending.opened.promise.catch(() => {})
 
     this.#pending.set(path, pending)
   }
 
   // Whether win is opening path.
-  // Renderers may report a new window's project
-  // before main knows the window.
   #isPending (path, win) {
-    let pending = this.#pending.get(path)
-    return pending != null && (pending.win ?? win) === win
+    return this.#pending.get(path)?.win === win
   }
 
   #settle (path, error) {
@@ -372,29 +358,9 @@ export class ProjectRegistry {
       pending.opened.resolve()
   }
 
-  #createWindow (file) {
-    info({ file }, 'open new project window')
-
-    return this.wm.open('project', {
-      file,
-      recent: this.recent,
-      ...this.app.hash
-    }, {
-      show: 'init',
-      title: 'Tropy',
-      // TODO fixed size if no file (and small size if no recent)
-      fixedSize: file ? undefined : {
-        width: 440 * (this.recent.length ? 2 : 1),
-        height: 580,
-        animate: false
-      },
-      ...(this.wm.has('project') ? {} : this.app.state.win.bounds)
-    })
-  }
-
   #setRecent (list) {
     this.app.state.recent = list
-    this.wm.send('project', 'recent', list)
+    this.wm.sendEach('project', 'recent', list)
     this.app.menu.reload()
   }
 

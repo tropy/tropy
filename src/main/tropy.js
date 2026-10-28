@@ -8,7 +8,6 @@ import {
   app,
   clipboard,
   ipcMain as ipc,
-  nativeTheme,
   BrowserWindow,
   systemPreferences as prefs
 } from 'electron'
@@ -29,7 +28,7 @@ import { Cache } from '../common/cache.js'
 import { Plugins } from '../common/plugins.js'
 import { debounce, delay, once } from '../common/util.js'
 
-import { defaultLocale, isRightToLeft, getLocale } from './locale.js'
+import { defaultLocale, getLocale } from './locale.js'
 import { AccountService } from './account.js'
 import { Strings } from './res.js'
 import { AppMenu, ContextMenu } from './menu.js'
@@ -92,7 +91,7 @@ export class Tropy extends EventEmitter {
       enable: app.isPackaged && opts.autoUpdates
     })
 
-    this.wm = new WindowManager({
+    this.wm = new WindowManager(this, {
       contextIsolation: opts.contextIsolation
     })
   }
@@ -188,7 +187,7 @@ export class Tropy extends EventEmitter {
   }
 
   async showAboutWindow () {
-    await this.wm.show('about', this.hash, {
+    await this.wm.show('about', {}, {
       title: this.dict.window.about.title,
       parent: this.wm.current(),
       modal: linux
@@ -199,15 +198,10 @@ export class Tropy extends EventEmitter {
     let win = this.wm.current()
     let project = this.projects.get(win)
 
-    let args = {
-      file: project?.path,
-      ...this.hash
-    }
-
     win?.showInactive()
     win?.moveTop()
 
-    await this.wm.show('prefs', args, {
+    await this.wm.show('prefs', { file: project?.path }, {
       isExclusive: !darwin,
       title: this.dict.window.prefs.title,
       parent: win
@@ -237,7 +231,6 @@ export class Tropy extends EventEmitter {
       this.updater.start()
     }
 
-    nativeTheme.themeSource = this.state.theme
     dialog.lastDefaultPath = this.state.lastDefaultPath
 
     info('app state restored')
@@ -292,10 +285,7 @@ export class Tropy extends EventEmitter {
         return
       }
 
-      var win = this.wm.open('print', {
-        ...this.hash,
-        frameless: false
-      })
+      var win = this.wm.open('print', { frameless: false })
 
       let isReactReady = once(win, 'react:ready')
 
@@ -624,20 +614,6 @@ export class Tropy extends EventEmitter {
       }
     })
 
-    this.on('app:switch-theme', (_, theme) => {
-      nativeTheme.themeSource = theme
-    })
-
-    this.on('app:change-font-size', (_, fontSize) => {
-      this.state.fontSize = fontSize
-      this.wm.broadcast('fontSize', this.state.fontSize)
-    })
-
-    this.on('app:toggle-frameless-flag', (_, frameless) => {
-      this.state.frameless =
-        (frameless == null) ? !this.state.frameless : frameless
-    })
-
 
     this.on('app:switch-locale', async (_, locale) => {
       info(`switch to "${locale}" locale`)
@@ -778,18 +754,6 @@ export class Tropy extends EventEmitter {
       }), this.wm.current())
     })
 
-    this.on('app:zoom-in', () => {
-      this.state.zoom = this.wm.zoom(this.state.zoom + 0.25)
-    })
-
-    this.on('app:zoom-out', () => {
-      this.state.zoom = this.wm.zoom(this.state.zoom - 0.25)
-    })
-
-    this.on('app:zoom-reset', () => {
-      this.state.zoom = this.wm.zoom(1)
-    })
-
     this.plugins.on('change', () => {
       this.wm.broadcast('plugins-reload')
       this.emit('app:reload-menu')
@@ -800,9 +764,6 @@ export class Tropy extends EventEmitter {
         warn({ details }, `child process gone: ${details?.reason}`)
     })
 
-    nativeTheme.on('updated', async () => {
-      await this.setTheme(nativeTheme.themeSource)
-    })
 
     if (darwin) {
       app.on('activate', () => this.open())
@@ -865,14 +826,9 @@ export class Tropy extends EventEmitter {
       })
     })
 
+    this.wm.on('theme', () => this.menu.handleThemeChange())
     this.wm.on('show', this.menu.handleWindowChange)
     this.wm.on('focus-change', this.menu.handleWindowChange)
-
-    this.wm.on('close', (type, win) => {
-      if (type === 'project' && win.isResizable()) {
-        this.state.win.bounds = win.getNormalBounds()
-      }
-    })
 
     this.wm.on('close', (type, win) => {
       if (type === 'prefs') {
@@ -880,10 +836,10 @@ export class Tropy extends EventEmitter {
         let project = this.projects.get(parent)
 
         if (project)
-          parent.webContents.send('dispatch', act.project.reload())
+          this.dispatch(act.project.reload(), parent)
 
         // All project windows
-        this.wm.send('project', 'dispatch',
+        this.wm.sendEach('project', 'dispatch',
           act.ontology.load(null, { replace: true }),
           act.storage.reload([['settings']]))
       }
@@ -958,7 +914,7 @@ export class Tropy extends EventEmitter {
       })
   }
 
-  get hash () {
+  get env () {
     return {
       account: this.account.status,
       api: this.api.status,
@@ -968,19 +924,11 @@ export class Tropy extends EventEmitter {
       cache: this.cache.root,
       plugins: this.plugins.root,
       port: this.api.port,
-      fontSize: this.state.fontSize,
-      frameless: this.state.frameless,
-      theme: this.state.theme,
       level: logger.level,
-      locale: this.state.locale,
       log: this.log,
-      rtl: isRightToLeft(),
       uuid: this.state.uuid,
       update: this.updater.release,
-      version,
-      rendererPreference:
-        this.opts.rendererPreference || this.state.rendererPreference,
-      zoom: this.state.zoom
+      version
     }
   }
 
@@ -988,23 +936,6 @@ export class Tropy extends EventEmitter {
     this.wm.setTitle('about', this.dict.window.about.title)
     this.wm.setTitle('prefs', this.dict.window.prefs.title)
     this.wm.broadcast('locale', this.state.locale)
-  }
-
-  async setTheme (theme = this.state.theme) {
-    info(`switch to "${theme}" theme`)
-    this.state.theme = theme
-
-    if (theme !== nativeTheme.themeSource)
-      nativeTheme.themeSource = theme
-
-    this.wm.broadcast('theme', theme, {
-      dark: nativeTheme.shouldUseDarkColors,
-      contrast: nativeTheme.shouldUseHighContrastColors,
-      vibrancy: false // !nativeTheme.prefersReducedTransparency
-    })
-
-    this.menu.handleThemeChange()
-    this.wm.handleThemeChange(this.state.frameless)
   }
 
   dispatch (action, win = BrowserWindow.getFocusedWindow()) {

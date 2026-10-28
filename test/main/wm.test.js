@@ -1,16 +1,23 @@
 import fs from 'node:fs'
 import assert from 'node:assert/strict'
 import { mock } from 'node:test'
-import { once } from 'node:events'
+import { EventEmitter, once } from 'node:events'
 import { join } from 'node:path'
 import { env } from 'node:process'
 import { app, BrowserWindow } from 'electron'
 import { WindowManager } from '#tropy/main/wm.js'
 import { Plugins } from '#tropy/common/plugins.js'
 
+// A minimal app: no environment, default settings.
+const mkapp = () => Object.assign(new EventEmitter(), {
+  env: {},
+  opts: {},
+  state: { theme: 'system', zoom: 1 }
+})
+
 describe('WindowManager', () => {
   describe('instance', () => {
-    let wm = new WindowManager()
+    let wm = new WindowManager(mkapp())
     let plugins = new Plugins(join(app.getPath('userData'), 'plugins'))
 
     before(() => plugins.init())
@@ -56,6 +63,7 @@ describe('WindowManager', () => {
         it('returns the window before it is ready', () => {
           let other = wm.open(type, {
             plugins: plugins.root,
+            log: join(app.getPath('userData'), `wm-test-${type}.log`),
             data: app.getPath('userData')
           })
 
@@ -72,6 +80,7 @@ describe('WindowManager', () => {
         it('queues actions until the window is ready', async () => {
           let other = wm.open(type, {
             plugins: plugins.root,
+            log: join(app.getPath('userData'), `wm-test-${type}.log`),
             data: app.getPath('userData')
           })
           let send = mock.method(other.webContents, 'send')
@@ -188,7 +197,7 @@ describe('WindowManager', () => {
       let { promise, resolve } = Promise.withResolvers()
       let win = { webContents: { send: mock.fn(resolve) } }
 
-      new WindowManager().handleShowDialog(win, { id: 1, type: 'unknown' })
+      new WindowManager(mkapp()).handleShowDialog(win, { id: 1, type: 'unknown' })
 
       await promise
       expect(win.webContents.send.mock.calls[0].arguments).to.eql([
@@ -202,8 +211,32 @@ describe('WindowManager', () => {
     })
   })
 
+  describe('configure', () => {
+    it('gives project windows without a project a fixed size', () => {
+      let wm = new WindowManager(mkapp())
+      let size = (args) => wm.configure('project', {}, args).fixedSize
+
+      expect(size({})).to.include({ width: 440, height: 580 })
+      expect(size({ recent: ['/a.tropy'] })).to.include({ width: 880 })
+      expect(size({ file: '/a.tropy' })).to.be.undefined
+    })
+  })
+
+  describe('args', () => {
+    it('combines the app environment and appearance settings', () => {
+      let app = mkapp()
+      app.env = { data: '/data' }
+      app.state.locale = 'de'
+
+      let wm = new WindowManager(app)
+      wm.zoom(1.5)
+
+      expect(wm.args).to.include({ data: '/data', locale: 'de', zoom: 1.5 })
+    })
+  })
+
   describe('rsvp', () => {
-    let wm = new WindowManager()
+    let wm = new WindowManager(mkapp())
     let win = { webContents: { send () {} } }
     let action = () => ({ type: 'test', meta: {} })
 

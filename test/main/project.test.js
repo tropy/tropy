@@ -37,7 +37,8 @@ describe('ProjectRegistry', () => {
         has: () => wins.length > 0,
         is: () => true,
         close () {},
-        send () {},
+        sendEach () {},
+        whenReady: (win, resolve) => resolve(),
         open: mock.fn(() => {
           let win = fakeWindow()
           wins.push(win)
