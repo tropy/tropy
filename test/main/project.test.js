@@ -106,6 +106,56 @@ describe('ProjectRegistry', () => {
     expect(projects.wm.open.mock.callCount()).to.equal(1)
   })
 
+  it('does not reuse a window that is still being created', async () => {
+    let created = fakeWindow()
+
+    // The new window is current before wm.open resolves.
+    projects.wm.open.mock.mockImplementation(() => {
+      current = created
+      return new Promise(() => {})
+    })
+
+    projects.show(file)
+
+    projects.wm.open.mock.mockImplementation(async () => fakeWindow())
+    await projects.show('/other.tpy')
+
+    expect(projects.app.dispatch.mock.callCount()).to.equal(0)
+    expect(projects.wm.open.mock.callCount()).to.equal(2)
+  })
+
+  it('creates projects in a new empty window', async () => {
+    projects.wm.open.mock.mockImplementation(async (type, props) => {
+      let win = fakeWindow()
+      expect(props.file).to.be.undefined
+      setImmediate(() => opened(win, '/new.tropy'))
+      return win
+    })
+
+    let win = await projects.open('/new.tropy', null, { create: { name: 'New' } })
+    let [action, target] = projects.app.dispatch.mock.calls[0].arguments
+
+    expect(target).to.equal(win)
+    expect(action).to.deep.include({
+      payload: '/new.tropy',
+      meta: { create: { name: 'New' } }
+    })
+  })
+
+  it('rejects a create when its new window closes before it is ready', async () => {
+    let win = fakeWindow()
+    win.ready = new Promise(() => {})
+    projects.wm.open.mock.mockImplementation(async () => win)
+
+    let opening = projects.open('/new.tropy', null, { create: {} })
+    // The window exists, but never becomes ready.
+    await new Promise(setImmediate)
+    projects.handleWindowClosed('project', win)
+
+    let err = await opening.catch(e => e)
+    expect(err).to.have.property('message', 'window closed')
+  })
+
   it('resolves unknown URL ids to null', async () => {
     expect(await projects.openById('unknown')).to.be.null
   })

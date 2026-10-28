@@ -47,7 +47,7 @@ export default async function items (fastify) {
       params: withUrlId(),
       body: {
         ...object({
-          files: { ...strings, description: 'Paths of image files' },
+          files: { ...strings, description: 'Paths of image or JSON-LD files' },
           data: {
             type: ['object', 'array'],
             items: { type: 'object' },

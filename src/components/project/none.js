@@ -1,16 +1,16 @@
-import React from 'react'
 import cx from 'classnames'
 import { useArgs } from '../../hooks/use-args.js'
 import { useWindowSize } from '../../hooks/use-window-size.js'
 import { NewProject } from './new.js'
 import { RecentProjects } from './recent.js'
 
-export const NoProject = React.forwardRef(({
+export const NoProject = ({
   isOver,
   onProjectOpen,
   height = 580,
-  width = 440
-}, ref) => {
+  width = 440,
+  ref
+}) => {
   let recent = useArgs('recent')
 
   useWindowSize(width * (recent.length ? 2 : 1), height)
@@ -21,7 +21,9 @@ export const NoProject = React.forwardRef(({
         files={recent}
         onSelect={onProjectOpen}/>
       <NewProject
-        onCreated={onProjectOpen}/>
+        onCreate={(path, props) => {
+          onProjectOpen(path, { create: props })
+        }}/>
     </div>
   )
-})
+}

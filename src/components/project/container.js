@@ -16,9 +16,9 @@ export const ProjectContainer = ({
 
   let project = useSelector(state => state.project)
 
-  let handleProjectOpen = useEvent(path => {
+  let handleProjectOpen = useEvent((path, meta) => {
     if (path !== project.path)
-      dispatch(act.project.open(path))
+      dispatch(act.project.open(path, meta))
   })
 
   let onDrop = useEvent(({ projects, templates }) => {

@@ -835,6 +835,7 @@ en:
       prune: Failed to optimize project cache.
       purge: Failed to remove old project caches.
     project:
+      open: Project could not be opened.
       created: Project creation failed.
       convert: Project conversion failed.
       optimize: Project optimization failed.

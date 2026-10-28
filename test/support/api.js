@@ -79,6 +79,7 @@ export function mkapi () {
   }
 
   let projects = fakeProjects(api)
+  api.projects = projects
 
   before(() => {
     api.app = create({
@@ -116,6 +117,7 @@ const fakeProjects = (api) => {
   })
 
   return {
+    open: mock.fn(async () => {}),
     find: (id) => (id === 'missing') ? null : `/projects/${id}.tropy`,
     window,
     describe,

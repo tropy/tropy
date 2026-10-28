@@ -1,3 +1,4 @@
+import { basename, extname } from 'node:path'
 import { PROJECT, IDLE } from '../constants/index.js'
 import { Cache } from '../common/cache.js'
 import { Store } from '../asset/index.js'
@@ -17,8 +18,8 @@ import { watch } from './watch.js'
 import { handleDatabaseErrors } from './db.js'
 import { transcribe } from './transcriptions.js'
 import ARGS, { update } from '../args.js'
-import { open as openProject } from '../common/project.js'
-import { Migrations } from '../res.js'
+import { create, open as openProject } from '../common/project.js'
+import { Migrations, Resource, Schema } from '../res.js'
 import { Storage } from '../storage.js'
 
 import '../commands/index.js'
@@ -48,9 +49,24 @@ const dbErrorActions = {
 const FORCE_SHUTDOWN_DELAY = 120000
 
 
+// Opens and loads existing projects.
+//
+// If the action carries `meta.create`, the project will be created first.
+// Existing files will be replaced if `overwrite` is set!
 export function *open (opts, action) {
   try {
-    var [db, project] = yield call(openProject, action.payload, {
+    var { payload: path, meta } = action
+
+    if (meta?.create) {
+      let { name, overwrite = false } = meta.create
+
+      yield call(create, path, Schema.expand('project'), Resource.base, {
+        name: name || basename(path, extname(path)),
+        overwrite
+      })
+    }
+
+    var [db, project] = yield call(openProject, path, {
       user: ARGS.uuid,
       ...opts
     })
@@ -88,7 +104,9 @@ export function *open (opts, action) {
     }
   } catch (err) {
     warn({ err }, 'unexpected error in *project.open')
-    yield call(fail, err, action.payload)
+
+    if (!meta?.silent)
+      yield call(fail, err, action.type)
 
     var error = err
 

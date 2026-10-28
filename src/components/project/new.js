@@ -1,30 +1,28 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar } from '../toolbar.js'
 import { Button, ToggleButtonGroup } from '../button.js'
 import { Form, FormGroup } from '../form.js'
 import { TYPES } from '../../common/project.js'
-import { create } from '../../slices/project-files.js'
+import { save } from '../../dialog.js'
 
 
 export const NewProject = ({
   accept = TYPES,
-  onCreated
+  onCreate
 }) => {
-  let dispatch = useDispatch()
-
   let [name, setName] = useState('')
   let [type, setType] = useState(accept[0])
 
-  let handleProjectCreate = useEvent((event) => {
+  let handleProjectCreate = useEvent(async (event) => {
     event.preventDefault()
 
-    dispatch(create({ name, type }))
-      .then(action => {
-        if (action?.payload?.path)
-          onCreated?.(action.payload.path)
+    let path = await save.project(type, name)
+    if (path)
+      onCreate?.(path, {
+        name,
+        overwrite: true
       })
   })
 
