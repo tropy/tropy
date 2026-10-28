@@ -8,6 +8,7 @@ import { papersize } from './papersize.js'
 import dialog from './dialog.js'
 import { debug, error, trace, warn } from '../common/log.js'
 import { darwin, linux, win32 } from '../common/os.js'
+import { isRightToLeft } from './locale.js'
 import { channel } from '../common/release.js'
 import { Resource, Icon, View } from './res.js'
 import { MIME, SASS } from '../constants/index.js'
@@ -38,8 +39,10 @@ const { BODY, PANEL, ESPER } = SASS
 const READY = new WeakMap()
 
 export class WindowManager extends EventEmitter {
-  constructor (defaults = {}) {
+  constructor (app, defaults = {}) {
     super()
+
+    this.app = app
 
     this.defaults = {
       disableAutoHideCursor: darwin,
@@ -51,7 +54,6 @@ export class WindowManager extends EventEmitter {
         nodeIntegration: false,
         sandbox: false,
         preload: join(Resource.base, 'lib/bootstrap.mjs'),
-
         defaultEncoding: 'UTF-8',
         enableRemoteModule: false,
         experimentalFeatures: false,
@@ -71,32 +73,47 @@ export class WindowManager extends EventEmitter {
   }
 
   broadcast (...args) {
-    this.each(win => win.webContents.send(...args))
+    this.each(win => this.send(win, ...args))
   }
 
   center () {
     this.each(win => win.center())
   }
 
-  configure (type, opts = {}) {
-    return {
+  configure (type, opts = {}, args = {}) {
+    let defaults = WindowManager.defaults[type]
+
+    let config = {
       ...this.defaults,
-      ...WindowManager.defaults[type],
+      ...defaults,
       ...opts,
       webPreferences: {
         ...this.defaults.webPreferences,
-        ...WindowManager.defaults[type].webPreferences,
+        ...defaults.webPreferences,
         ...opts.webPreferences
       }
     }
-  }
 
+    // Without a project, the window shows the recent projects
+    // and the new project form, at a fixed size (see NoProject).
+    if (type === 'project' && !args.file && !opts.fixedSize) {
+      let { width, height } = defaults.empty
+
+      config.fixedSize = {
+        width: width * (args.recent?.length ? 2 : 1),
+        height,
+        animate: false
+      }
+    }
+
+    return config
+  }
 
   create (type, args = {}, opts) {
     let NOW = Date.now()
 
     try {
-      opts = this.configure(type, opts)
+      opts = this.configure(type, opts, args)
 
       if (args.zoom) {
         if (!opts.resizable) {
@@ -171,8 +188,12 @@ export class WindowManager extends EventEmitter {
       ready.promise.then(() => { state.isReady = true }, () => {})
 
       win.webContents.once('did-finish-load', async () => {
-        win.webContents.zoomFactor = args.zoom || 1
-        await win.webContents.setVisualZoomLevelLimits(1, 1)
+        try {
+          win.webContents.zoomFactor = this.app.state.zoom || 1
+          await win.webContents.setVisualZoomLevelLimits(1, 1)
+        } catch (err) {
+          if (!win.isDestroyed()) throw err
+        }
       })
 
       if (opts.isExclusive) {
@@ -264,7 +285,6 @@ export class WindowManager extends EventEmitter {
       this.emit('focus-change', type, win)
     }
   }
-
 
   handleIpcMessage = async (event, type, ...args) => {
     trace({ args }, `ipc.${type} received`)
@@ -405,12 +425,66 @@ export class WindowManager extends EventEmitter {
     this.broadcast('scrollbars', !WindowManager.hasOverlayScrollBars())
   }
 
-  handleThemeChange = (frameless) => {
-    if (frameless && win32) {
+  get args () {
+    let { env, opts, state } = this.app
+
+    return {
+      ...env,
+      fontSize: state.fontSize,
+      frameless: state.frameless,
+      locale: state.locale,
+      rendererPreference: opts.rendererPreference || state.rendererPreference,
+      rtl: isRightToLeft(),
+      theme: state.theme,
+      zoom: state.zoom
+    }
+  }
+
+  handleNativeThemeUpdated = () => {
+    let theme = nativeTheme.themeSource
+    debug(`switch to "${theme}" theme`)
+
+    this.app.state.theme = theme
+
+    this.broadcast('theme', theme, {
+      dark: nativeTheme.shouldUseDarkColors,
+      contrast: nativeTheme.shouldUseHighContrastColors,
+      vibrancy: false // !nativeTheme.prefersReducedTransparency
+    })
+
+    if (this.app.state.frameless && win32) {
       this.each(win => {
         win.setTitleBarOverlay(getTitleBarOverlay())
       })
     }
+
+    this.emit('theme', theme)
+  }
+
+  handleSwitchTheme = (_, theme) => {
+    nativeTheme.themeSource = theme
+  }
+
+  handleChangeFontSize = (_, fontSize) => {
+    this.app.state.fontSize = fontSize
+    this.broadcast('fontSize', fontSize)
+  }
+
+  handleToggleFrameless = (_, frameless) => {
+    let { state } = this.app
+    state.frameless = (frameless == null) ? !state.frameless : frameless
+  }
+
+  handleZoomIn = () => {
+    this.zoom(this.app.state.zoom + 0.25)
+  }
+
+  handleZoomOut = () => {
+    this.zoom(this.app.state.zoom - 0.25)
+  }
+
+  handleZoomReset = () => {
+    this.zoom(1)
   }
 
   async handleShowDialog (win, { id, type, options }) {
@@ -451,6 +525,7 @@ export class WindowManager extends EventEmitter {
       // performance fixed (or new tag widget has landed)
       vibrancy: false, // !nativeTheme.prefersReducedTransparency,
       motion: !WindowManager.preferReducedMotion(),
+      ...this.args,
       ...args
     }
 
@@ -541,15 +616,19 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  send (type, ...args) {
-    this.each(type, win => win.webContents.send(...args))
+  sendEach (type, ...args) {
+    this.each(type, win => this.send(win, ...args))
   }
 
-  // Dispatch sync (preserving order!) or when ready.
   dispatch (win, action) {
+    this.send(win, 'dispatch', action)
+  }
+
+  // Send sync to window (preserving order!) or when ready.
+  send (win, ...args) {
     this.whenReady(win, () => {
       if (!win.isDestroyed())
-        win.webContents.send('dispatch', action)
+        win.webContents.send(...args)
     })
   }
 
@@ -668,23 +747,27 @@ export class WindowManager extends EventEmitter {
   } = {}) {
     let { isFixedSize = false } = this.props.get(win) || {}
 
-    if (fixedSize) {
-      if (!isFixedSize)
-        await this.enterFixedSize(win)
+    try {
+      if (fixedSize) {
+        if (!isFixedSize)
+          await this.enterFixedSize(win)
 
-      if (width || height) {
-        try {
-          let size = win.getContentSize()
-          win.setResizable(true)
-          win.setContentSize(width || size[0], height || size[1], animate)
-        } finally {
-          win.setResizable(false)
+        if (width || height) {
+          try {
+            let size = win.getContentSize()
+            win.setResizable(true)
+            win.setContentSize(width || size[0], height || size[1], animate)
+          } finally {
+            win.setResizable(false)
+          }
         }
-      }
 
-    } else {
-      if (isFixedSize)
-        this.leaveFixedSize(win, animate)
+      } else {
+        if (isFixedSize)
+          this.leaveFixedSize(win, animate)
+      }
+    } catch (err) {
+      if (!win.isDestroyed()) throw err
     }
   }
 
@@ -706,11 +789,33 @@ export class WindowManager extends EventEmitter {
 
   async start () {
     ipc.on('wm', this.handleIpcMessage)
+
+    // The restored theme, before listening to changes.
+    nativeTheme.themeSource = this.app.state.theme
+    nativeTheme.on('updated', this.handleNativeThemeUpdated)
+
+    this.app
+      .on('app:switch-theme', this.handleSwitchTheme)
+      .on('app:change-font-size', this.handleChangeFontSize)
+      .on('app:toggle-frameless-flag', this.handleToggleFrameless)
+      .on('app:zoom-in', this.handleZoomIn)
+      .on('app:zoom-out', this.handleZoomOut)
+      .on('app:zoom-reset', this.handleZoomReset)
   }
 
   async stop (destroy = false) {
     await this.close(undefined, destroy)
     ipc.removeListener('wm', this.handleIpcMessage)
+
+    nativeTheme.off('updated', this.handleNativeThemeUpdated)
+
+    this.app
+      .off('app:switch-theme', this.handleSwitchTheme)
+      .off('app:change-font-size', this.handleChangeFontSize)
+      .off('app:toggle-frameless-flag', this.handleToggleFrameless)
+      .off('app:zoom-in', this.handleZoomIn)
+      .off('app:zoom-out', this.handleZoomOut)
+      .off('app:zoom-reset', this.handleZoomReset)
   }
 
   unref (type, win) {
@@ -722,6 +827,7 @@ export class WindowManager extends EventEmitter {
 
   zoom (factor) {
     factor = restrict(factor, this.MIN_ZOOM, this.MAX_ZOOM)
+    this.app.state.zoom = factor
 
     for (let win of this.values()) {
       let old = win.webContents.zoomFactor
@@ -743,7 +849,7 @@ export class WindowManager extends EventEmitter {
           Math.round((height / old) * factor))
       }
 
-      win.webContents.send('zoom', factor)
+      this.send(win, 'zoom', factor)
     }
 
     return factor
@@ -785,11 +891,14 @@ export class WindowManager extends EventEmitter {
       plugins: false
     },
     project: {
+      title: 'Tropy',
       width: 1280,
       height: 720,
       minWidth: PANEL.MIN_WIDTH + ESPER.MIN_WIDTH * 2,
       minHeight: PANEL.MIN_HEIGHT * 3 + PANEL.TOOLBAR + PANEL.HEADER_MARGIN,
-      vibrancy: 'sidebar'
+      vibrancy: 'sidebar',
+      // Without a project; twice as wide with recent projects.
+      empty: { width: 440, height: 580 }
     }
   }
 
