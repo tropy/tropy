@@ -21,7 +21,7 @@ import transcriptions from './routes/transcriptions.js'
 
 export function create ({
   loggerInstance,
-  projects,
+  pm,
   proto,
   wm
 }) {
@@ -45,12 +45,12 @@ export function create ({
   app.register(guard)
   app.register(legacy)
   app.register(status)
-  app.register(projectsRoutes, { projects })
+  app.register(projectsRoutes, { pm })
   app.register(mcp, { proto })
   app.register(openapi, { proto })
 
   app.register(async (fastify) => {
-    fastify.register(project, { projects, wm })
+    fastify.register(project, { pm, wm })
 
     // Commands without results respond with No Content.
     fastify.addHook('onSend', async (request, reply, payload) => {

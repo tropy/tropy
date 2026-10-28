@@ -10,7 +10,7 @@ describe('AppMenu', () => {
       defaults: { locale: 'en' },
       state: { locale: 'en' },
       getHistory: () => ({}),
-      projects: { recent: [], get: () => null },
+      pm: { recent: [], get: () => null },
       plugins: { available: mock.fn(() => []) },
       wm: { windows: {} },
       updater: {}

@@ -223,18 +223,18 @@ export class ProtocolHandler {
   }
 
   handleCopyProjectURL = (win) => {
-    this.copy(this.app.projects.get(win))
+    this.copy(this.app.pm.get(win))
   }
 
   handleCopyItemLink = (win, { target }) => {
-    this.copy(this.app.projects.get(win), {
+    this.copy(this.app.pm.get(win), {
       item: target.id,
       photo: target.photos[0]
     })
   }
 
   handleCopyPhotoLink = (win, { target }) => {
-    this.copy(this.app.projects.get(win), {
+    this.copy(this.app.pm.get(win), {
       item: target.item,
       photo: target.id,
       selection: target.selection
@@ -243,31 +243,31 @@ export class ProtocolHandler {
 }
 
 async function openProject (app, urlId, { prompt }) {
-  let win = await app.projects.openById(urlId)
+  let win = await app.pm.openById(urlId)
 
   if (win == null) {
     if (!prompt)
       throw fail(404, `unknown project: ${urlId}`)
 
     if (urlId === 'current') {
-      await app.projects.show()
+      await app.pm.show()
       return null
     }
 
-    let file = await app.projects.pick(app.wm.current())
+    let file = await app.pm.pick(app.wm.current())
 
     if (!file)
       return null
 
-    win = await app.projects.open(file)
+    win = await app.pm.open(file)
   }
 
-  let path = app.projects.get(win)?.path
+  let path = app.pm.get(win)?.path
 
   if (path == null)
     throw fail(409, `project closed while opening: ${urlId}`)
 
-  return { win, project: app.projects.describe(path) }
+  return { win, project: app.pm.describe(path) }
 }
 
 function decode (groups) {
