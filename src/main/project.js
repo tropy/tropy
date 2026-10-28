@@ -147,15 +147,7 @@ export class ProjectRegistry {
     if (win == null) {
       if (meta.create) {
         win = this.#createWindow()
-
-        // Track the window right away, so that closing it settles the open,
-        // but send the action once it is ready: earlier actions are lost.
-        win
-          .then(async w => {
-            await w.ready
-            this.app.dispatch(act.project.open(path, meta), w)
-          })
-          .catch(() => {})
+        this.app.dispatch(act.project.open(path, meta), win)
       } else {
         win = this.#createWindow(path)
       }

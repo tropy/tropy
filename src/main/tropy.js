@@ -292,18 +292,18 @@ export class Tropy extends EventEmitter {
         return
       }
 
-      var win = await this.wm.open('print', {
+      var win = this.wm.open('print', {
         ...this.hash,
         frameless: false
       })
 
+      let isReactReady = once(win, 'react:ready')
+
       if (process.env.TROPY_PRINT_DEBUG)
         win.show()
 
-      await Promise.race([
-        once(win, 'ready', 'react:ready'),
-        delay(2000)
-      ])
+      await this.wm.ready(win)
+      await Promise.race([isReactReady, delay(2000)])
 
       sender.focus()
 
@@ -1009,7 +1009,7 @@ export class Tropy extends EventEmitter {
 
   dispatch (action, win = BrowserWindow.getFocusedWindow()) {
     if (win != null) {
-      win.webContents.send('dispatch', action)
+      this.wm.dispatch(win, action)
       return true
     }
     return false
