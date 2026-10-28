@@ -529,14 +529,15 @@ export class WindowManager extends EventEmitter {
         .on('show', () => {
           this.emit('show', type, win)
         })
+        // Deferred because Windows sets the normal bounds after the event.
         .on('unmaximize', () => {
-          this.applyPendingSize(win)
+          setImmediate(() => this.applyPendingSize(win))
         })
         .on('leave-full-screen', () => {
-          this.applyPendingSize(win)
+          setImmediate(() => this.applyPendingSize(win))
         })
         .on('restore', () => {
-          this.applyPendingSize(win)
+          setImmediate(() => this.applyPendingSize(win))
         })
         .on('close', (event) => {
           this.persistBounds(win)
@@ -678,7 +679,8 @@ export class WindowManager extends EventEmitter {
   applyPendingSize (win, animate) {
     let bounds = this.pendingBounds.get(win)
 
-    if (bounds == null || !win.isNormal() || this.props.get(win)?.isFixedSize)
+    if (bounds == null || win.isDestroyed() || !win.isNormal() ||
+      this.props.get(win)?.isFixedSize)
       return false
 
     this.pendingBounds.delete(win)

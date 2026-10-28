@@ -2,7 +2,8 @@ import fs from 'node:fs'
 import { mock } from 'node:test'
 import { once } from 'node:events'
 import { join } from 'node:path'
-import { env } from 'node:process'
+import { setImmediate as tick } from 'node:timers/promises'
+import { env, platform } from 'node:process'
 import { app, BrowserWindow, screen } from 'electron'
 import { WindowManager } from '#tropy/main/wm.js'
 import { Plugins } from '#tropy/common/plugins.js'
@@ -112,6 +113,7 @@ describe('WindowManager', () => {
         let { x, y } = win.getBounds()
         wm.pendingBounds.set(win, bounds)
         win.emit('restore')
+        await tick()
         expect(win.getContentSize()).to.eql([400, 300])
 
         await wm.setFixedSize(win, false, { animate: false })
@@ -213,7 +215,10 @@ describe('WindowManager', () => {
         expect(wm.geometry['test:a']).to.eql(a)
       })
 
-      describe('when the window is maximized', () => {
+      // xvfb has no window manager to maximize windows
+      describe('when the window is maximized', {
+        skip: platform === 'linux' && env.CI ? 'needs a window manager' : false
+      }, () => {
         let win
 
         beforeEach(async () => {
@@ -235,6 +240,7 @@ describe('WindowManager', () => {
           let unmaximized = once(win, 'unmaximize')
           win.unmaximize()
           await unmaximized
+          await tick()
 
           expect(win.getBounds()).to.eql({ ...b, x: a.x, y: a.y })
         })
