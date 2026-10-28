@@ -1,15 +1,13 @@
 import { mock } from 'node:test'
-import { BrowserWindow } from 'electron'
 import { ProjectRegistry } from '#tropy/main/project.js'
 
 const fakeWindow = () => ({
-  show: mock.fn(),
-  setTitle: mock.fn()
+  show: mock.fn()
 })
 
 describe('ProjectRegistry', () => {
   let file = import.meta.filename
-  let wins, current, projects, fromWebContents
+  let wins, current, projects
 
   // Simulates the renderer of win reporting its project.
   let opened = (win, path) => {
@@ -23,11 +21,8 @@ describe('ProjectRegistry', () => {
     wins = []
     current = null
 
-    fromWebContents = mock.method(BrowserWindow, 'fromWebContents', (wc) => wc)
-
     projects = new ProjectRegistry({
-      state: { recent: [file], frameless: true, win: {} },
-      hash: {},
+      state: { recent: [file], win: {} },
       menu: { reload () {}, handleWindowChange () {} },
       dispatch: mock.fn(),
       setHistory () {},
@@ -36,6 +31,8 @@ describe('ProjectRegistry', () => {
         map: (_, fn = x => x) => wins.map(fn),
         has: () => wins.length > 0,
         is: () => true,
+        fromEvent: ({ sender }) => sender,
+        setTitle () {},
         close () {},
         sendEach () {},
         whenReady: (win, resolve) => resolve(),
@@ -47,10 +44,6 @@ describe('ProjectRegistry', () => {
         })
       }
     })
-  })
-
-  afterEach(() => {
-    fromWebContents.mock.restore()
   })
 
   it('opens a project once for concurrent requests', async () => {

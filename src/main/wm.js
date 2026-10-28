@@ -280,6 +280,23 @@ export class WindowManager extends EventEmitter {
     return this.windows[type]?.includes(win)
   }
 
+  // Get window that sent event (if matches type)
+  fromEvent (event, type) {
+    let win = BrowserWindow.fromWebContents(event.sender)
+    let t = this.types.get(win)
+
+    return (t != null && (type == null || t === type)) ? win : null
+  }
+
+  // Sets the window's title (default: its type's title)
+  // and, on macOS unless frameless, its represented file.
+  setTitle (win, title, path) {
+    win.setTitle(title ?? WindowManager.defaults[this.types.get(win)].title ?? '')
+
+    if (darwin && !this.app.state.frameless)
+      win.setRepresentedFilename(path ?? '')
+  }
+
   handleFocus = (type, win) => {
     if (this._cid !== win.id) {
       this._cid = win.id
@@ -775,10 +792,6 @@ export class WindowManager extends EventEmitter {
     } catch (err) {
       if (!win.isDestroyed()) throw err
     }
-  }
-
-  setTitle (type, title) {
-    this.each(type, win => win.setTitle(title))
   }
 
   async show (type, args, opts) {
