@@ -40,6 +40,8 @@ const { BODY, PANEL, ESPER } = SASS
 const READY = new WeakMap()
 
 export class WindowManager extends EventEmitter {
+  #focusedWindow = null
+
   constructor (app, defaults = {}) {
     super()
 
@@ -257,6 +259,10 @@ export class WindowManager extends EventEmitter {
     return this.windows[type]?.[0]
   }
 
+  get focusedWindow () {
+    return this.#focusedWindow ?? this.current()
+  }
+
   each (...args) {
     return this.map(...args), this
   }
@@ -298,8 +304,8 @@ export class WindowManager extends EventEmitter {
   }
 
   handleFocus = (type, win) => {
-    if (this._cid !== win.id) {
-      this._cid = win.id
+    if (this.#focusedWindow !== win) {
+      this.#focusedWindow = win
 
       if (this.windows[type][0] !== win) {
         this.windows[type] = [win, ...remove(this.windows[type], win)]
@@ -838,6 +844,9 @@ export class WindowManager extends EventEmitter {
   }
 
   unref (type, win) {
+    if (this.#focusedWindow === win)
+      this.#focusedWindow = null
+
     this.windows[type] = remove(array(this.windows[type]), win)
     this.types.delete(win)
     this.props.delete(win)

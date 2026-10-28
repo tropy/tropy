@@ -241,6 +241,22 @@ describe('WindowManager', () => {
     })
   })
 
+  describe('focusedWindow', () => {
+    it('is the last focused window, or else the current project window', () => {
+      let wm = new WindowManager(mkapp())
+      let project = {}
+      let prefs = {}
+
+      wm.windows = { project: [project], prefs: [prefs] }
+
+      wm.handleFocus('prefs', prefs)
+      expect(wm.focusedWindow).to.equal(prefs)
+
+      wm.unref('prefs', prefs)
+      expect(wm.focusedWindow).to.equal(project)
+    })
+  })
+
   describe('configure', () => {
     it('gives project windows without a project a fixed size', () => {
       let wm = new WindowManager(mkapp())
