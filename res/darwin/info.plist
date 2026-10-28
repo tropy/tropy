@@ -53,7 +53,6 @@
       <key>CFBundleTypeExtensions</key>
       <array>
         <string>tropy</string>
-        <string>mtpy</string>
       </array>
       <key>CFBundleTypeName</key>
       <string>Managed Tropy Project</string>
@@ -327,7 +326,6 @@
         <key>public.filename-extension</key>
         <array>
           <string>tropy</string>
-          <string>mtpy</string>
         </array>
         <key>public.mime-type</key>
         <string>application/vnd.tropy.mtpy</string>

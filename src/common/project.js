@@ -461,9 +461,6 @@ export function getProjectType (path) {
     case '.tpy':
       return TPY
     case '.tropy':
-    case '.mtpy':
-    case '.mpy':
-    case '':
       return MANAGED
     default:
       throw new Error(`unknown project file extension ${path}`)

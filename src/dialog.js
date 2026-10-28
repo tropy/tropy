@@ -254,7 +254,7 @@ open.dir = (opts) => open({
 
 open.project = (path) => {
   let defaultPath
-  let extensions = ['tpy', 'tropy', 'mtpy']
+  let extensions = ['tpy', 'tropy']
   let properties = ['openFile']
 
   if (path) {

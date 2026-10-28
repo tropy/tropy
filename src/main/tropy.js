@@ -46,7 +46,7 @@ import { ProjectRegistry } from './project.js'
 import { ProtocolHandler } from './protocol.js'
 
 import {
-  FLASH, HISTORY, TAG, CONTEXT
+  FLASH, HISTORY, IMAGE, TAG, CONTEXT
 } from '../constants/index.js'
 
 const H = new WeakMap()
@@ -131,30 +131,35 @@ export class Tropy extends EventEmitter {
     for (let url of urls) {
       switch (url.protocol) {
         case 'file:':
-          await this.projects.show(fileURLToPath(url))
+          await this.openFile(fileURLToPath(url))
           break
         case 'tropy:':
           await this.proto.handleRequest(url)
           break
         default:
-          throw new Error(`protocol not supported: ${url}`)
+          warn(`ignoring unsupported url: ${url}`)
       }
     }
   }
 
   async openFile (...files) {
     for (let file of files) {
-      switch (extname(file)) {
-        case '.tpy':
-        case '.mtpy':
-        case '.tropy':
+      let ext = extname(file).slice(1).toLowerCase()
+
+      switch (ext) {
+        case 'tpy':
+        case 'tropy':
           await this.projects.show(file)
           break
-        case '.ttp':
+        case 'ttp':
           await this.importTemplates([file])
           break
         default:
-          if (this.wm.current())
+          if (!IMAGE.EXT.includes(ext))
+            warn(`ignoring unsupported file: ${file}`)
+          else if (!this.wm.current())
+            warn(`no project window, ignoring file: ${file}`)
+          else
             this.import({ files: [file] })
       }
     }
