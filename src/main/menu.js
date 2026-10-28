@@ -576,7 +576,7 @@ Menu.ItemCompiler = {
     }
 
     if (condition in Menu.ItemConditions)
-      item.enabled = Menu.ItemConditions[condition]({ app, event })
+      item.enabled = Menu.ItemConditions[condition]({ app, win, event })
     else
       item.enabled = !!event?.target?.[condition]
 
@@ -621,6 +621,11 @@ Menu.ItemConditions = {
 
   isProjectOpen ({ app, win }) {
     return app.pm.get(win) != null
+  },
+
+  // Whether the target project (e.g. a recent project) is open.
+  isTargetProjectOpen ({ app, event }) {
+    return app.pm.window(event?.target?.path) != null
   }
 }
 
