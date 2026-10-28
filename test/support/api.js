@@ -78,13 +78,13 @@ export function mkapi () {
     delete: (url) => api.request('DELETE', url)
   }
 
-  let projects = fakeProjects(api)
-  api.projects = projects
+  let pm = fakeProjectManager(api)
+  api.pm = pm
 
   before(() => {
     api.app = create({
       loggerInstance: logger.child({}, { level: 'silent' }),
-      projects,
+      pm,
       proto: api.proto,
       wm: { rsvp: api.rsvp }
     })
@@ -102,8 +102,8 @@ export function mkapi () {
   return api
 }
 
-// A fake ProjectRegistry for the projects in mkapi.
-const fakeProjects = (api) => {
+// A fake ProjectManager for the projects in mkapi.
+const fakeProjectManager = (api) => {
   let window = (path) => {
     let id = basename(path, '.tropy')
     return (id === 'closed') ? null : api.window(id)

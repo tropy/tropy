@@ -74,7 +74,7 @@ describe('api', () => {
       expect(res.headers.location).to.equal('/projects/New%20Atlas')
       expect(res.json()).to.include({ path, open: true })
       // Without error dialogs in the app.
-      expect(api.projects.open.mock.calls[0].arguments[2])
+      expect(api.pm.open.mock.calls[0].arguments[2])
         .to.eql({ create: { name: 'Atlas' }, silent: true })
 
       await writeFile(path, '')

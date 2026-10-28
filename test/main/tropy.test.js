@@ -34,7 +34,7 @@ describe('Tropy', () => {
   })
 
   it('opens files by type and ignores others', async () => {
-    let show = mock.method(tropy.projects, 'show', async () => {})
+    let show = mock.method(tropy.pm, 'show', async () => {})
     let templates = mock.method(tropy, 'importTemplates', async () => {})
     let imports = mock.method(tropy, 'import', () => {})
     mock.method(tropy.wm, 'current', () => ({}))

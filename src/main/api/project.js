@@ -1,18 +1,18 @@
 import fp from 'fastify-plugin'
 import { fail } from './errors.js'
 
-export default fp(async (fastify, { projects, wm }) => {
+export default fp(async (fastify, { pm, wm }) => {
   fastify.decorateRequest('rsvp', null)
 
   fastify.addHook('onRequest', async (request) => {
     let id = request.params.urlId
-    let path = projects.find(id)
+    let path = pm.find(id)
 
     if (path == null)
       throw fail(404, `unknown project: ${id}`)
 
-    let win = projects.window(path)
-    let project = projects.describe(path)
+    let win = pm.window(path)
+    let project = pm.describe(path)
 
     if (win == null)
       throw fail(409, `project is not open, open it with ${project.url}`)

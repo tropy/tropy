@@ -9,7 +9,7 @@ import dialog from './dialog.js'
 import * as act from './actions.js'
 import * as shell from './shell.js'
 
-export class ProjectRegistry {
+export class ProjectManager {
   #projects = new WeakMap()  // win -> project
   #pending = new Map()       // path -> { win, opened }
 

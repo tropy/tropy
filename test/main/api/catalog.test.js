@@ -9,7 +9,7 @@ describe('api.catalog', () => {
   before(async () => {
     let app = create({
       loggerInstance: logger.child({}, { level: 'silent' }),
-      projects: {},
+      pm: {},
       proto: new ProtocolHandler({}),
       wm: {}
     })

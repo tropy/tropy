@@ -368,11 +368,11 @@ Menu.ItemCompiler = {
   // dynamically (#527), therefore we currently populate
   // recent projects only in the translation loop.
   recent: (item, app) => {
-    if (app.projects.recent.length) {
+    if (app.pm.recent.length) {
       item.enabled = true
 
       item.submenu = [
-        ...app.projects.recent.map((file, idx) => ({
+        ...app.pm.recent.map((file, idx) => ({
           label: `${idx + 1}. ${basename(file)}`,
           click: () => app.openFile(file)
         })),
@@ -610,17 +610,17 @@ Menu.ItemConditions = {
   },
 
   isProjectReadOnly ({ app, win }) {
-    let project = app.projects.get(win)
+    let project = app.pm.get(win)
     return project == null || project.isReadOnly
   },
 
   isProjectManaged ({ app, win }) {
-    let project = app.projects.get(win)
+    let project = app.pm.get(win)
     return project?.isManaged
   },
 
   isProjectOpen ({ app, win }) {
-    return app.projects.get(win) != null
+    return app.pm.get(win) != null
   }
 }
 

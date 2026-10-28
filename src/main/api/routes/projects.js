@@ -5,7 +5,7 @@ import { object, withUrlId } from '../schema.js'
 
 // The known projects, open or not.
 // Projects that are not open can be opened via their tropy:// url.
-export default async function projects (fastify, { projects: registry }) {
+export default async function projects (fastify, { pm }) {
   fastify.get('/projects', {
     schema: {
       operationId: 'projects.list',
@@ -19,7 +19,7 @@ export default async function projects (fastify, { projects: registry }) {
       })
     }
   }, ({ query }) =>
-    registry.list().filter(project =>
+    pm.list().filter(project =>
       query.open == null || project.open === query.open))
 
   fastify.post('/projects', {
@@ -52,12 +52,12 @@ export default async function projects (fastify, { projects: registry }) {
     if (!existsSync(dirname(path)))
       throw fail(400, `folder does not exist: ${dirname(path)}`)
 
-    await registry.open(path, null, {
+    await pm.open(path, null, {
       create: { name: body.name },
       silent: true
     })
 
-    let project = registry.describe(path)
+    let project = pm.describe(path)
 
     reply.code(201).header('location', `/projects/${project.urlId}`)
     return project
@@ -70,11 +70,11 @@ export default async function projects (fastify, { projects: registry }) {
       params: withUrlId()
     }
   }, ({ params }) => {
-    let path = registry.find(params.urlId)
+    let path = pm.find(params.urlId)
 
     if (path == null)
       throw fail(404, `unknown project: ${params.urlId}`)
 
-    return registry.describe(path)
+    return pm.describe(path)
   })
 }

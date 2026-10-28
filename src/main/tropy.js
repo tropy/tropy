@@ -41,7 +41,7 @@ import * as shell from './shell.js'
 import { addIdleObserver } from './idle.js'
 import { migrate } from './migrate.js'
 import * as act from './actions.js'
-import { ProjectRegistry } from './project.js'
+import { ProjectManager } from './project.js'
 import { ProtocolHandler } from './protocol.js'
 
 import {
@@ -84,7 +84,7 @@ export class Tropy extends EventEmitter {
     this.ctx = new ContextMenu(this)
     this.menu = new AppMenu(this)
     this.plugins = new Plugins(join(opts.data, 'plugins'))
-    this.projects = new ProjectRegistry(this)
+    this.pm = new ProjectManager(this)
     this.proto = new ProtocolHandler(this)
     this.store = new Storage(opts.data)
     this.updater = new Updater({
@@ -99,7 +99,7 @@ export class Tropy extends EventEmitter {
   async start () {
     await this.restore()
     this.listen()
-    this.projects.start()
+    this.pm.start()
     this.proto.start()
     this.account.start()
     this.wm.start()
@@ -112,7 +112,7 @@ export class Tropy extends EventEmitter {
     await this.api.stop()
     this.updater.stop()
     this.plugins.stop()
-    this.projects.stop()
+    this.pm.stop()
     this.proto.stop()
     this.persist()
     await this.persist.flush()
@@ -124,7 +124,7 @@ export class Tropy extends EventEmitter {
       if (win != null)
         return win.show()
       else
-        return this.projects.openLatest()
+        return this.pm.openLatest()
     }
 
     for (let url of urls) {
@@ -148,7 +148,7 @@ export class Tropy extends EventEmitter {
       switch (ext) {
         case 'tpy':
         case 'tropy':
-          await this.projects.show(file)
+          await this.pm.show(file)
           break
         case 'ttp':
           await this.importTemplates([file])
@@ -165,7 +165,7 @@ export class Tropy extends EventEmitter {
   }
 
   async import (...args) {
-    if (this.projects.get())
+    if (this.pm.get())
       return this.dispatch(act.item.import(...args), this.wm.current())
   }
 
@@ -196,7 +196,7 @@ export class Tropy extends EventEmitter {
 
   async showPreferencesWindow () {
     let win = this.wm.current()
-    let project = this.projects.get(win)
+    let project = this.pm.get(win)
 
     win?.showInactive()
     win?.moveTop()
@@ -833,7 +833,7 @@ export class Tropy extends EventEmitter {
     this.wm.on('close', (type, win) => {
       if (type === 'prefs') {
         let parent = win.getParentWindow()
-        let project = this.projects.get(parent)
+        let project = this.pm.get(parent)
 
         if (project)
           this.dispatch(act.project.reload(), parent)
