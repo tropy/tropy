@@ -75,11 +75,6 @@ describe('args', () => {
           .to.have.property('protocol', 'tropy:')
       })
 
-      it('passes https:// URLs through', () => {
-        expect(parse(['https://tropy.test/photo.jpg']).args[0])
-          .to.have.property('protocol', 'https:')
-      })
-
       it('passes file:// URLs through', () => {
         expect(parse(['file:///tmp/photo.jpg']).args[0])
           .to.have.property('protocol', 'file:')
@@ -170,9 +165,9 @@ describe('args', () => {
         .to.have.property('pathname', '/tmp/photo.jpg')
     })
 
-    it('parses https:// URLs', () => {
+    it('treats other URLs as paths', () => {
       expect(argToURL('https://tropy.test/photo.jpg'))
-        .to.have.property('protocol', 'https:')
+        .to.have.property('protocol', 'file:')
     })
 
     it('falls back to file URL for invalid URLs', () => {
