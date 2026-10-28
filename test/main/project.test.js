@@ -149,6 +149,40 @@ describe('ProjectRegistry', () => {
     expect(err).to.have.property('message', 'window closed')
   })
 
+  it('opens projects for a renderer in its window', async () => {
+    let win = fakeWindow()
+    let create = { name: 'New' }
+
+    projects.handleOpenProject(win, { path: '/new.tropy', create })
+
+    let [action, target] = projects.app.dispatch.mock.calls[0].arguments
+    expect(target).to.equal(win)
+    expect(action).to.deep.include({ payload: '/new.tropy', meta: { create } })
+  })
+
+  it('opens further projects for a renderer in new windows', () => {
+    let win = fakeWindow()
+    current = win
+    wins.push(win)
+
+    projects.handleOpenProject(win, { path: '/a.tpy' })
+    projects.handleOpenProject(win, { path: '/b.tpy' })
+
+    expect(projects.app.dispatch.mock.calls[0].arguments[1]).to.equal(win)
+    expect(projects.wm.open.mock.calls[0].arguments[1])
+      .to.include({ file: '/b.tpy' })
+  })
+
+  it('focuses a project open in another window instead', async () => {
+    let other = fakeWindow()
+    opened(other, file)
+
+    projects.handleOpenProject(fakeWindow(), { path: file })
+
+    expect(other.show.mock.callCount()).to.equal(1)
+    expect(projects.app.dispatch.mock.callCount()).to.equal(0)
+  })
+
   it('resolves unknown URL ids to null', async () => {
     expect(await projects.openById('unknown')).to.be.null
   })

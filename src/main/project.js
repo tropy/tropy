@@ -9,10 +9,6 @@ import dialog from './dialog.js'
 import * as act from './actions.js'
 import * as shell from './shell.js'
 
-// The renderer reports failures to open a project itself.
-const warnOpenFailed = (err) =>
-  warn({ err }, `failed to open project: ${err.message}`)
-
 export class ProjectRegistry {
   #projects = new WeakMap()  // win -> project
   #pending = new Map()       // path -> { win, opened }
@@ -37,6 +33,7 @@ export class ProjectRegistry {
     this.app
       .on('app:create-project', this.handleCreateProject)
       .on('app:open-dialog', this.handleOpenDialog)
+      .on('app:open-project', this.handleOpenProject)
       .on('app:show-project-file', this.handleShowProjectFile)
       .on('app:clear-recent-projects', this.handleClearRecentProjects)
   }
@@ -53,6 +50,7 @@ export class ProjectRegistry {
     this.app
       .off('app:create-project', this.handleCreateProject)
       .off('app:open-dialog', this.handleOpenDialog)
+      .off('app:open-project', this.handleOpenProject)
       .off('app:show-project-file', this.handleShowProjectFile)
       .off('app:clear-recent-projects', this.handleClearRecentProjects)
   }
@@ -279,18 +277,26 @@ export class ProjectRegistry {
   // Opens a converted or optimized copy in place of the original.
   handleSwitchProject = async (_, path, old) => {
     await this.wm.close('prefs')
-    await this.show(path, this.window(old)).catch(warnOpenFailed)
+    await this.show(path, this.window(old))
   }
 
-  handleCreateProject = async () => {
-    await this.show().catch(warnOpenFailed)
+  handleCreateProject = () => {
+    this.show()
   }
 
   handleOpenDialog = async () => {
     let file = await this.pick(this.wm.current())
 
     if (file)
-      await this.show(file).catch(warnOpenFailed)
+      await this.show(file)
+  }
+
+  // Opens a project the renderer asked for in its window,
+  // unless the window is opening another project already
+  // (e.g. when dropping several projects) or the project
+  // is open elsewhere.
+  handleOpenProject = (win, { path, create }) => {
+    this.show(path, this.#isOpening(win) ? null : win, { create })
   }
 
   handleShowProjectFile = (win, { target } = {}) => {
@@ -307,13 +313,8 @@ export class ProjectRegistry {
   #empty () {
     let win = this.wm.current('project')
 
-    if (win == null || this.get(win))
+    if (win == null || this.get(win) || this.#isOpening(win))
       return null
-
-    for (let pending of this.#pending.values()) {
-      if (pending.win === win)
-        return null
-    }
 
     return win
   }
@@ -327,6 +328,11 @@ export class ProjectRegistry {
     pending.opened.promise.catch(() => {})
 
     this.#pending.set(path, pending)
+  }
+
+  // Whether win is opening any project.
+  #isOpening (win) {
+    return this.#pending.values().some(pending => pending.win === win)
   }
 
   // Whether win is opening path.
