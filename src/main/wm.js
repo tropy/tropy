@@ -17,6 +17,7 @@ import {
   array,
   blank,
   counter,
+  omit,
   remove,
   restrict,
   when
@@ -81,7 +82,8 @@ export class WindowManager extends EventEmitter {
   }
 
   configure (type, opts = {}, args = {}) {
-    let defaults = WindowManager.defaults[type]
+    let { empty } = WindowManager.defaults[type]
+    let defaults = omit(WindowManager.defaults[type], ['empty', 'plugins'])
 
     let config = {
       ...this.defaults,
@@ -94,10 +96,9 @@ export class WindowManager extends EventEmitter {
       }
     }
 
-    // Without a project, the window shows the recent projects
-    // and the new project form, at a fixed size (see NoProject).
+    // Override NoProject size if recent list is empty!
     if (type === 'project' && !args.file && !opts.fixedSize) {
-      let { width, height } = defaults.empty
+      let { width, height } = empty
 
       config.fixedSize = {
         width: width * (args.recent?.length ? 2 : 1),
@@ -113,68 +114,73 @@ export class WindowManager extends EventEmitter {
     let NOW = Date.now()
 
     try {
-      opts = this.configure(type, opts, args)
+      let {
+        fixedSize,
+        isExclusive,
+        show,
+        ...options
+      } = this.configure(type, opts, args)
 
       if (args.zoom) {
-        if (!opts.resizable) {
-          opts.width = Math.round(opts.width * args.zoom)
-          opts.height = Math.round(opts.height * args.zoom)
+        if (!options.resizable) {
+          options.width = Math.round(options.width * args.zoom)
+          options.height = Math.round(options.height * args.zoom)
         }
 
         for (let dim of ['minWidth', 'minHeight']) {
-          if (opts[dim]) opts[dim] = Math.round(opts[dim] * args.zoom)
+          if (options[dim]) options[dim] = Math.round(options[dim] * args.zoom)
         }
       }
 
       if (args.frameless && type !== 'print') {
-        opts.frame = false
+        options.frame = false
       } else {
-        opts.frame = !args.frameless
+        options.frame = !args.frameless
       }
 
-      opts.backgroundColor =
+      options.backgroundColor =
         BODY[process.platform][args.dark ? 'dark' : 'light']
 
       switch (process.platform) {
         case 'linux':
-          opts.icon = Icon.expand(channel, 'tropy', '512x512.png')
-          opts.darkTheme = opts.darkTheme || args.dark
-          opts.vibrancy = false
+          options.icon = Icon.expand(channel, 'tropy', '512x512.png')
+          options.darkTheme = options.darkTheme || args.dark
+          options.vibrancy = false
           break
         case 'darwin':
-          opts.title = ''
-          opts.titleBarStyle = opts.titleBarStyle || 'hidden'
-          opts.trafficLightPosition = getWindowButtonPosition(type)
+          options.title = ''
+          options.titleBarStyle = options.titleBarStyle || 'hidden'
+          options.trafficLightPosition = getWindowButtonPosition(type)
 
-          if (opts.vibrancy && args.vibrancy) {
-            opts.backgroundColor = '#00000000'
+          if (options.vibrancy && args.vibrancy) {
+            options.backgroundColor = '#00000000'
           } else {
-            opts.vibrancy = false
+            options.vibrancy = false
           }
 
           break
         case 'win32':
-          if (!opts.frame) {
-            opts.titleBarStyle = 'hidden'
-            opts.titleBarOverlay = getTitleBarOverlay()
+          if (!options.frame) {
+            options.titleBarStyle = 'hidden'
+            options.titleBarOverlay = getTitleBarOverlay()
           }
-          opts.vibrancy = false
+          options.vibrancy = false
           break
       }
 
-      let { show, parent } = opts
-      opts.show = (show === true)
+      let { parent } = options
+      options.show = (show === true)
 
-      if (parent != null && !opts.modal) {
+      if (parent != null && !options.modal) {
         let { x, y, width, height } = parent.getBounds()
-        opts.x = Math.floor((x + width / 2) - opts.width / 2)
-        opts.y = Math.floor((y + height / 2) - opts.height / 2)
+        options.x = Math.floor((x + width / 2) - options.width / 2)
+        options.y = Math.floor((y + height / 2) - options.height / 2)
       }
 
-      var win = new BrowserWindow(sanitizeWindowBounds(opts))
+      var win = new BrowserWindow(sanitizeWindowBounds(options))
 
-      if (opts.fixedSize) {
-        this.setFixedSize(win, true, opts.fixedSize)
+      if (fixedSize) {
+        this.setFixedSize(win, true, fixedSize)
       }
 
       let ready = Promise.withResolvers()
@@ -196,7 +202,7 @@ export class WindowManager extends EventEmitter {
         }
       })
 
-      if (opts.isExclusive) {
+      if (isExclusive) {
         win
           .once('show', () => {
             this.each(w => {
