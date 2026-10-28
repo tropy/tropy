@@ -8,7 +8,6 @@ import {
   app,
   clipboard,
   ipcMain as ipc,
-  BrowserWindow,
   systemPreferences as prefs
 } from 'electron'
 
@@ -892,7 +891,7 @@ export class Tropy extends EventEmitter {
     return this
   }
 
-  handleUncaughtException (e, win = BrowserWindow.getFocusedWindow()) {
+  handleUncaughtException (e, win = this.wm.focusedWindow) {
     fatal(e)
 
     dialog
@@ -941,7 +940,7 @@ export class Tropy extends EventEmitter {
     this.wm.broadcast('locale', this.state.locale)
   }
 
-  dispatch (action, win = BrowserWindow.getFocusedWindow()) {
+  dispatch (action, win = this.wm.focusedWindow) {
     if (win != null) {
       this.wm.dispatch(win, action)
       return true
@@ -949,11 +948,11 @@ export class Tropy extends EventEmitter {
     return false
   }
 
-  getHistory (win = BrowserWindow.getFocusedWindow()) {
+  getHistory (win = this.wm.focusedWindow) {
     return H.get(win)
   }
 
-  setHistory (history, win = BrowserWindow.getFocusedWindow()) {
+  setHistory (history, win = this.wm.focusedWindow) {
     if (history == null)
       H.delete(win)
     else
@@ -963,11 +962,11 @@ export class Tropy extends EventEmitter {
       this.menu.handleHistoryChange(history)
   }
 
-  getTags (win = BrowserWindow.getFocusedWindow()) {
+  getTags (win = this.wm.focusedWindow) {
     return T.get(win) || []
   }
 
-  setTags (tags, win = BrowserWindow.getFocusedWindow()) {
+  setTags (tags, win = this.wm.focusedWindow) {
     return T.set(win, tags)
   }
 
