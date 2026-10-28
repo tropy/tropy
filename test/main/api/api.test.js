@@ -1,3 +1,6 @@
+import { mkdtemp, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { mkapi } from '../../support/api.js'
 import { version } from '#tropy/common/release.js'
 import { API, ITEM, METADATA, TAG } from '#tropy/constants/index.js'
@@ -59,6 +62,34 @@ describe('api', () => {
         .to.eql(['foo'])
       expect((await api.get('/projects?open=false')).json().map(p => p.urlId))
         .to.eql(['closed'])
+    })
+
+    it('creates and opens projects', async () => {
+      let dir = await mkdtemp(join(tmpdir(), 'tropy-api-'))
+      let path = join(dir, 'New Atlas.tropy')
+
+      let res = await api.post('/projects', { path, name: 'Atlas' })
+
+      expect(res.statusCode).to.equal(201)
+      expect(res.headers.location).to.equal('/projects/New%20Atlas')
+      expect(res.json()).to.include({ path, open: true })
+      // Without error dialogs in the app.
+      expect(api.projects.open.mock.calls[0].arguments[2])
+        .to.eql({ create: { name: 'Atlas' }, silent: true })
+
+      await writeFile(path, '')
+
+      for (let [body, status] of [
+        [{ path }, 409],
+        [{ path: join(dir, 'missing', '..', 'New Atlas.tropy') }, 409],
+        [{ path: 'New Atlas.tropy' }, 400],
+        [{ path: join(dir, 'atlas.txt') }, 400],
+        [{ path: join(dir, '.tropy') }, 400],
+        [{ path: join(dir, 'missing', 'atlas.tropy') }, 400]
+      ]) {
+        expect((await api.post('/projects', body)).statusCode, body.path)
+          .to.equal(status)
+      }
     })
 
     it('shows known projects', async () => {

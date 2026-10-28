@@ -4,37 +4,16 @@ import { ipcRenderer } from 'electron'
 import { pMap } from '../common/util.js'
 import { error, warn } from '../common/log.js'
 import { fail, open, save } from '../dialog.js'
-import { Resource, Schema } from '../res.js'
+import { Resource } from '../res.js'
 
 import {
   pstat,
   convert as convertProject,
-  create as createProject,
   optimizeAssets,
   TYPES
 } from '../common/project.js'
 import { optimizeAsset } from '../image/optimize.js'
 
-
-export const create = createAsyncThunk(
-  'projectFiles/create',
-  async ({ name, type }) => {
-    try {
-      let path = await save.project(type, name)
-
-      if (path)
-        await createProject(path, Schema.expand('project'), Resource.base, {
-          name,
-          overwrite: true
-        })
-
-      return { path }
-
-    } catch (err) {
-      error({ err }, `failed to create project ${name}`)
-      await fail(err, 'project.created')
-    }
-  })
 
 export const reload = createAsyncThunk(
   'projectFiles/reload',

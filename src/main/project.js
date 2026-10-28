@@ -122,7 +122,10 @@ export class ProjectRegistry {
   // Without win, opens it in the current project window if that is empty,
   // otherwise in a new window.
   // Without a path, shows win, the empty current or a new project window.
-  async show (path, win) {
+  // The meta is passed on with the project.open action,
+  // e.g. create ({ name }) to create the project first
+  // or silent to suppress error dialogs.
+  async show (path, win, meta = {}) {
     if (path) {
       path = resolve(path)
 
@@ -142,13 +145,26 @@ export class ProjectRegistry {
     win ??= this.#empty()
 
     if (win == null) {
-      win = this.#createWindow(path)
+      if (meta.create) {
+        win = this.#createWindow()
+
+        // Track the window right away, so that closing it settles the open,
+        // but send the action once it is ready: earlier actions are lost.
+        win
+          .then(async w => {
+            await w.ready
+            this.app.dispatch(act.project.open(path, meta), w)
+          })
+          .catch(() => {})
+      } else {
+        win = this.#createWindow(path)
+      }
 
     } else {
       info({ path }, 'open project in window')
 
       if (path)
-        this.app.dispatch(act.project.open(path), win)
+        this.app.dispatch(act.project.open(path, meta), win)
 
       win.show()
     }
@@ -160,10 +176,10 @@ export class ProjectRegistry {
   }
 
   // Like show, but resolves once the project is open.
-  async open (path, win) {
+  async open (path, win, meta) {
     path = resolve(path)
 
-    let shown = this.show(path, win)
+    let shown = this.show(path, win, meta)
     let pending = this.#pending.get(path)
 
     win = await shown
@@ -193,7 +209,7 @@ export class ProjectRegistry {
     let { cancel, value: files } = await dialog.open(win, {
       filters: [{
         name: this.app.dict.dialog.file.project,
-        extensions: ['tpy', 'tropy', 'mtpy']
+        extensions: ['tpy', 'tropy']
       }]
     })
 
@@ -308,8 +324,10 @@ export class ProjectRegistry {
     if (win == null || this.get(win))
       return null
 
+    // Windows still being created are not known yet:
+    // the current window might be one of them.
     for (let pending of this.#pending.values()) {
-      if (pending.win === win)
+      if (pending.win === win || pending.win == null)
         return null
     }
 
