@@ -153,11 +153,16 @@ function f (message, ...opts) {
 }
 
 async function show (type, { message, values, ...opts } = {}) {
-  if (message) {
-    message = f(message, values)
-  }
+  try {
+    if (message) {
+      message = f(message, values)
+    }
 
-  return instance.show(type, { message, ...opts })
+    return await instance.show(type, { message, ...opts })
+  } catch (err) {
+    warn({ err }, `failed to show ${type} dialog`)
+    return { cancel: true }
+  }
 }
 
 async function notify (id, opts) {
