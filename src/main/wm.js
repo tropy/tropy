@@ -34,6 +34,9 @@ import {
 
 const { BODY, PANEL, ESPER } = SASS
 
+// Window READY state { promise, isReady }
+const READY = new WeakMap()
+
 export class WindowManager extends EventEmitter {
   constructor (defaults = {}) {
     super()
@@ -89,7 +92,7 @@ export class WindowManager extends EventEmitter {
   }
 
 
-  async create (type, args = {}, opts) {
+  create (type, args = {}, opts) {
     let NOW = Date.now()
 
     try {
@@ -120,7 +123,6 @@ export class WindowManager extends EventEmitter {
           opts.icon = Icon.expand(channel, 'tropy', '512x512.png')
           opts.darkTheme = opts.darkTheme || args.dark
           opts.vibrancy = false
-          args.controls = await WindowManager.getButtonLayout()
           break
         case 'darwin':
           opts.title = ''
@@ -158,14 +160,15 @@ export class WindowManager extends EventEmitter {
         this.setFixedSize(win, true, opts.fixedSize)
       }
 
-      // Manage a promise for our IPC ready event. Handling this here
-      // immediately after creation makes it easier to avoid potential
-      // race conditions.
-      win.ready = new Promise((resolve) => {
-        win.once('ready', () => {
-          resolve(Date.now())
-        })
-      })
+      let ready = Promise.withResolvers()
+      let state = { promise: ready.promise, isReady: false }
+
+      READY.set(win, state)
+
+      win.once('ready', () => ready.resolve())
+      win.once('closed', () => ready.reject(new Error('window closed')))
+
+      ready.promise.then(() => { state.isReady = true }, () => {})
 
       win.webContents.once('did-finish-load', async () => {
         win.webContents.zoomFactor = args.zoom || 1
@@ -434,7 +437,7 @@ export class WindowManager extends EventEmitter {
     return Array.from(this.values(type), fn)
   }
 
-  async open (type, args, opts = {}) {
+  open (type, args, opts = {}) {
     let props = {
       app: Resource.base,
       documents: getPath('documents', 'home'),
@@ -454,19 +457,8 @@ export class WindowManager extends EventEmitter {
     if (WindowManager.defaults[type].plugins === false)
       props.plugins = null
 
-    let win = await this.create(type, props, opts)
-
-    // On Linux minimizable/maximizable is always true,
-    // so we use our default config instead.
-    let mmx = linux ? WindowManager.defaults[type] : win
-
-    await win.loadFile(View.expand(type), {
-      hash: encodeURIComponent(JSON.stringify({
-        ...props,
-        maximizable: mmx.maximizable !== false,
-        minimizable: mmx.minimizable !== false
-      }))
-    })
+    let win = this.create(type, props, opts)
+    loadView(win, type, props)
 
     return win
   }
@@ -553,6 +545,32 @@ export class WindowManager extends EventEmitter {
     this.each(type, win => win.webContents.send(...args))
   }
 
+  // Dispatch sync (preserving order!) or when ready.
+  dispatch (win, action) {
+    this.whenReady(win, () => {
+      if (!win.isDestroyed())
+        win.webContents.send('dispatch', action)
+    })
+  }
+
+  isReady (win) {
+    return READY.get(win)?.isReady ?? false
+  }
+
+  ready (win) {
+    return READY.get(win)?.promise ??
+      Promise.reject(new Error('unknown window'))
+  }
+
+  // Calls resolve right away if the window is ready,
+  // otherwise once it is ready (or reject if it closes before).
+  whenReady (win, resolve, reject = () => {}) {
+    if (this.isReady(win))
+      resolve()
+    else
+      this.ready(win).then(resolve, reject)
+  }
+
   rsvp (win, action, { timeout = 60000 } = {}) {
     let id
     let timer
@@ -566,7 +584,7 @@ export class WindowManager extends EventEmitter {
       action.meta.rsvp = id
       this.pending[id] = { win, resolve, reject }
 
-      win.webContents.send('dispatch', action)
+      this.dispatch(win, action)
 
       if (timeout > 0)
         timer = setTimeout(() => {
@@ -679,8 +697,9 @@ export class WindowManager extends EventEmitter {
     if (win) {
       win.show()
     } else {
-      win = await this.open(type, args, { show: 'init', ...opts })
-      await when(win, 'show', { timeout: 3000 })
+      // Shown on init, which comes before ready.
+      win = this.open(type, args, { show: 'init', ...opts })
+      await this.ready(win)
     }
     return win
   }
@@ -929,6 +948,31 @@ function handleWillNavigate (event, url) {
   } catch (err) {
     event.preventDefault()
     error(err)
+  }
+}
+
+async function loadView (win, type, props) {
+  try {
+    if (linux)
+      props.controls = await WindowManager.getButtonLayout()
+
+    // On Linux minimizable/maximizable is always true,
+    // so we use our default config instead.
+    let mmx = linux ? WindowManager.defaults[type] : win
+
+    await win.loadFile(View.expand(type), {
+      hash: encodeURIComponent(JSON.stringify({
+        ...props,
+        maximizable: mmx.maximizable !== false,
+        minimizable: mmx.minimizable !== false
+      }))
+    })
+  } catch (err) {
+    if (win.isDestroyed())
+      return
+
+    warn({ err }, `failed to load ${type} window`)
+    win.destroy()
   }
 }
 

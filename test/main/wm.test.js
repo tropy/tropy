@@ -53,8 +53,50 @@ describe('WindowManager', () => {
           expect([...wm]).to.contain(win)
         })
 
-        it('resolves "ready" promise', async () => {
-          expect(await win.ready).to.be.a('number')
+        it('returns the window before it is ready', () => {
+          let other = wm.open(type, {
+            plugins: plugins.root,
+            data: app.getPath('userData')
+          })
+
+          expect(other).to.be.instanceOf(BrowserWindow)
+          expect(wm.current(type)).to.equal(other)
+          other.destroy()
+        })
+
+        it('becomes ready', async () => {
+          await wm.ready(win)
+          expect(wm.isReady(win)).to.be.true
+        })
+
+        it('queues actions until the window is ready', async () => {
+          let other = wm.open(type, {
+            plugins: plugins.root,
+            data: app.getPath('userData')
+          })
+          let send = mock.method(other.webContents, 'send')
+
+          wm.dispatch(other, { type: 'a' })
+          wm.dispatch(other, { type: 'b' })
+          expect(wm.isReady(other)).to.be.false
+
+          await wm.ready(other)
+
+          expect(send.mock.calls
+            .filter(c => c.arguments[0] === 'dispatch')
+            .map(c => c.arguments[1].type)).to.eql(['a', 'b'])
+
+          other.destroy()
+        })
+
+        it('dispatches to ready windows right away', async () => {
+          await wm.ready(win)
+          let send = mock.method(win.webContents, 'send', () => {})
+
+          wm.dispatch(win, { type: 'test' })
+          expect(send.mock.callCount()).to.equal(1)
+
+          send.mock.restore()
         })
 
         it('can be closed', async () => {
@@ -77,7 +119,7 @@ describe('WindowManager', () => {
 
       it('cleans up unloading state after close', async () => {
         let win = await openWindow()
-        await win.ready
+        await wm.ready(win)
         expect(wm.unloading.has(win)).to.be.false
 
         await wm.close('about')
@@ -87,7 +129,7 @@ describe('WindowManager', () => {
 
       it('handles concurrent close calls', async () => {
         let win = await openWindow()
-        await win.ready
+        await wm.ready(win)
 
         await Promise.all([
           wm.close('about'),
@@ -100,7 +142,7 @@ describe('WindowManager', () => {
 
       it('reloads and returns to idle state', async () => {
         let win = await openWindow()
-        await win.ready
+        await wm.ready(win)
 
         let loaded = once(win.webContents, 'did-finish-load')
         wm.handleUnload(win, 'reload')
@@ -115,7 +157,7 @@ describe('WindowManager', () => {
 
       it('can close after reload', async () => {
         let win = await openWindow()
-        await win.ready
+        await wm.ready(win)
 
         let loaded = once(win.webContents, 'did-finish-load')
         wm.handleUnload(win, 'reload')
@@ -128,7 +170,7 @@ describe('WindowManager', () => {
 
       it('ignores close during unload', async () => {
         let win = await openWindow()
-        await win.ready
+        await wm.ready(win)
 
         let closed = once(win, 'closed')
         win.close()

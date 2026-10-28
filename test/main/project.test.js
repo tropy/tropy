@@ -38,7 +38,7 @@ describe('ProjectRegistry', () => {
         is: () => true,
         close () {},
         send () {},
-        open: mock.fn(async () => {
+        open: mock.fn(() => {
           let win = fakeWindow()
           wins.push(win)
           setImmediate(() => opened(win, file))
@@ -64,7 +64,7 @@ describe('ProjectRegistry', () => {
   })
 
   it('rejects when the project fails to open', async () => {
-    projects.wm.open.mock.mockImplementation(async () => {
+    projects.wm.open.mock.mockImplementation(() => {
       let win = fakeWindow()
       setImmediate(() => closed(win, file, { message: 'corrupt' }))
       return win
@@ -100,7 +100,7 @@ describe('ProjectRegistry', () => {
     expect(projects.app.dispatch.mock.calls[0].arguments[1]).to.equal(current)
 
     opened(current, file)
-    projects.wm.open.mock.mockImplementation(async () => fakeWindow())
+    projects.wm.open.mock.mockImplementation(() => fakeWindow())
 
     await projects.show('/other.tpy')
     expect(projects.wm.open.mock.callCount()).to.equal(1)
@@ -109,15 +109,15 @@ describe('ProjectRegistry', () => {
   it('does not reuse a window that is still being created', async () => {
     let created = fakeWindow()
 
-    // The new window is current before wm.open resolves.
+    // The new window is current before it has loaded.
     projects.wm.open.mock.mockImplementation(() => {
       current = created
-      return new Promise(() => {})
+      return created
     })
 
     projects.show(file)
 
-    projects.wm.open.mock.mockImplementation(async () => fakeWindow())
+    projects.wm.open.mock.mockImplementation(() => fakeWindow())
     await projects.show('/other.tpy')
 
     expect(projects.app.dispatch.mock.callCount()).to.equal(0)
@@ -125,7 +125,7 @@ describe('ProjectRegistry', () => {
   })
 
   it('creates projects in a new empty window', async () => {
-    projects.wm.open.mock.mockImplementation(async (type, props) => {
+    projects.wm.open.mock.mockImplementation((type, props) => {
       let win = fakeWindow()
       expect(props.file).to.be.undefined
       setImmediate(() => opened(win, '/new.tropy'))
@@ -144,8 +144,7 @@ describe('ProjectRegistry', () => {
 
   it('rejects a create when its new window closes before it is ready', async () => {
     let win = fakeWindow()
-    win.ready = new Promise(() => {})
-    projects.wm.open.mock.mockImplementation(async () => win)
+    projects.wm.open.mock.mockImplementation(() => win)
 
     let opening = projects.open('/new.tropy', null, { create: {} })
     // The window exists, but never becomes ready.
