@@ -16,7 +16,7 @@ en:
     project: &project
       - label: 'Rename Project'
         command: 'app:rename-project'
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: 'Copy Project URL'
         command: 'app:copy-project-url'
       - label: 'Show Project File…'
@@ -30,10 +30,11 @@ en:
         condition: '!isMissing'
       - label: 'Remove Project from List'
         command: 'app:clear-recent-projects'
+        condition: '!isTargetProjectOpen'
     lists: &lists
       - label: 'New List'
         command: 'app:create-list'
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: 'CmdOrCtrl+Shift+L'
       - label: 'Export Lists …'
         command: 'app:export-lists'
@@ -42,14 +43,14 @@ en:
     list: &list
       - label: 'Rename List'
         command: 'app:rename-list'
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: 'Delete List'
         command: 'app:delete-list'
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags: &tags
       - label: 'New Tag'
         command: 'app:create-tag'
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: 'CmdOrCtrl+Shift+A'
       - label: 'Export Tags …'
         command: 'app:export-tags'
@@ -87,7 +88,7 @@ en:
     tag: &tag
       - &tag-color
         label: 'Tag Color'
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 'None'
             color: [null, 'color', 'app:save-tag-color']
@@ -118,10 +119,10 @@ en:
             color: ['lavender', 'color', 'app:save-tag-color']
       - label: 'Rename Tag'
         command: 'app:rename-tag'
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: 'Delete Tag'
         command: 'app:delete-tag'
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag: &item-tag
       - label: 'Remove Tag From This Item'
         command: 'app:delete-item-tag'
@@ -354,7 +355,7 @@ en:
     trash: &trash
       - label: 'Permanently Delete Items'
         command: 'app:destroy-item'
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     dev: &dev
       - label: 'Reload'
         command: 'app:reload'

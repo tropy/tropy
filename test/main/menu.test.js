@@ -1,6 +1,6 @@
 import { mock } from 'node:test'
 import { Menu } from 'electron'
-import { AppMenu } from '#tropy/main/menu.js'
+import { AppMenu, Menu as TropyMenu } from '#tropy/main/menu.js'
 
 describe('AppMenu', () => {
   let menu
@@ -35,5 +35,33 @@ describe('AppMenu', () => {
       expect(menu).to.have.property('template')
       expect(setApplicationMenu.mock.callCount()).to.be.greaterThan(0)
     })
+  })
+})
+
+describe('Menu conditions', () => {
+  let win = {}
+  let other = {}
+
+  let app = {
+    pm: {
+      get: (w) => (w === win) ? { isReadOnly: false } : null,
+      window: (path) => (path === '/open.tpy') ? other : undefined
+    }
+  }
+
+  let enabled = (condition, event) => {
+    let item = { condition }
+    TropyMenu.ItemCompiler.condition(item, app, win, event)
+    return item.enabled
+  }
+
+  it('resolves project conditions for the menu\'s window', () => {
+    expect(enabled('isProjectOpen')).to.be.true
+    expect(enabled('!isProjectReadOnly')).to.be.true
+  })
+
+  it('checks whether a target project is open', () => {
+    expect(enabled('!isTargetProjectOpen', { target: { path: '/open.tpy' } })).to.be.false
+    expect(enabled('!isTargetProjectOpen', { target: { path: '/closed.tpy' } })).to.be.true
   })
 })
