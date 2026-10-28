@@ -116,6 +116,36 @@ describe('WindowManager', () => {
       })
     }
 
+    describe('titles and events', () => {
+      let win
+
+      before(() => {
+        win = wm.open('project', {
+          file: '/a.tropy',
+          log: join(app.getPath('userData'), 'wm-test-document.log'),
+          data: app.getPath('userData')
+        })
+      })
+
+      after(() => win.destroy())
+
+      it('maps IPC events to windows', () => {
+        let event = { sender: win.webContents }
+
+        expect(wm.fromEvent(event)).to.equal(win)
+        expect(wm.fromEvent(event, 'project')).to.equal(win)
+        expect(wm.fromEvent(event, 'prefs')).to.be.null
+      })
+
+      it('sets titles', () => {
+        wm.setTitle(win, 'Atlas', '/a.tropy')
+        expect(win.getTitle()).to.equal('Atlas')
+
+        wm.setTitle(win)
+        expect(win.getTitle()).to.equal('Tropy')
+      })
+    })
+
     describe('unload lifecycle', {
       timeout: env.CI ? 20000 : 2000
     }, () => {

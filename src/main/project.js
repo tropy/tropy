@@ -1,15 +1,13 @@
 import fs from 'node:fs'
 import { resolve } from 'node:path'
-import { app, ipcMain as ipc, BrowserWindow } from 'electron'
+import { app, ipcMain as ipc } from 'electron'
 import { info, warn } from '../common/log.js'
+import { darwin, win32 } from '../common/os.js'
 import { protocolURL, urlId as getUrlId } from '../common/util.js'
 import { PROJECT } from '../constants/index.js'
 import dialog from './dialog.js'
 import * as act from './actions.js'
 import * as shell from './shell.js'
-
-const fromEvent = (event) =>
-  BrowserWindow.fromWebContents(event.sender)
 
 // The renderer reports failures to open a project itself.
 const warnOpenFailed = (err) =>
@@ -215,9 +213,9 @@ export class ProjectRegistry {
   // Handlers
 
   handleProjectOpened = (event, project) => {
-    let win = fromEvent(event)
+    let win = this.wm.fromEvent(event, 'project')
 
-    if (!this.wm.is(win, 'project'))
+    if (win == null)
       return
 
     this.#projects.set(win, project)
@@ -227,16 +225,8 @@ export class ProjectRegistry {
 
     this.wm.close(['prefs'])
 
-    switch (process.platform) {
-      case 'darwin':
-        if (!this.app.state.frameless)
-          win.setRepresentedFilename(project.path)
-        app.addRecentDocument(project.path)
-        break
-      case 'win32':
-        app.addRecentDocument(project.path)
-        break
-    }
+    if (darwin || win32)
+      app.addRecentDocument(project.path)
 
     if (project.isManaged)
       shell.setProjectFolderIcon(project.path)
@@ -251,9 +241,9 @@ export class ProjectRegistry {
   }
 
   handleProjectUpdated = (event, project) => {
-    let win = fromEvent(event)
+    let win = this.wm.fromEvent(event, 'project')
 
-    if (!this.wm.is(win, 'project'))
+    if (win == null)
       return
 
     this.#projects.set(win, project)
@@ -262,7 +252,7 @@ export class ProjectRegistry {
   }
 
   handleProjectClosed = (event, { path, error }) => {
-    let win = fromEvent(event)
+    let win = this.wm.fromEvent(event)
 
     if (error)
       warn({ error, path }, `project closed with error: ${error.message}`)
@@ -365,15 +355,13 @@ export class ProjectRegistry {
   }
 
   #setTitle (win, project) {
-    if (this.app.state.frameless)
-      return
+    if (project == null)
+      return this.wm.setTitle(win)
 
-    win.setTitle(project == null ?
-      this.app.name :
-      [
-        project.name,
-        project.isReadOnly ? this.app.dict.window.project.readOnly : ''
-      ].join(''))
+    this.wm.setTitle(win, [
+      project.name,
+      project.isReadOnly ? this.app.dict.window.project.readOnly : ''
+    ].join(''), project.path)
   }
 
   #updateMenu (win) {

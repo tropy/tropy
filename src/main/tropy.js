@@ -780,17 +780,17 @@ export class Tropy extends EventEmitter {
     }
 
     ipc.on('cmd', (event, cmd, ...args) => {
-      this.emit(cmd, BrowserWindow.fromWebContents(event.sender), ...args)
+      this.emit(cmd, this.wm.fromEvent(event), ...args)
     })
 
     ipc.handle('print', async (event, opts) => {
-      await this.print(opts, BrowserWindow.fromWebContents(event.sender))
+      await this.print(opts, this.wm.fromEvent(event))
     })
 
     ipc.on('error', (event, error) => {
       this.handleUncaughtException(
         error,
-        BrowserWindow.fromWebContents(event.sender))
+        this.wm.fromEvent(event))
     })
 
     ipc.on(FLASH.HIDE, (_, { id, confirm }) => {
@@ -800,15 +800,15 @@ export class Tropy extends EventEmitter {
     })
 
     ipc.on(HISTORY.CHANGED, (event, history) => {
-      this.setHistory(history, BrowserWindow.fromWebContents(event.sender))
+      this.setHistory(history, this.wm.fromEvent(event))
     })
 
     ipc.on(TAG.CHANGED, (event, tags) => {
-      this.setTags(tags, BrowserWindow.fromWebContents(event.sender))
+      this.setTags(tags, this.wm.fromEvent(event))
     })
 
     ipc.on(CONTEXT.SHOW, (event, payload) => {
-      this.showContextMenu(payload, BrowserWindow.fromWebContents(event.sender))
+      this.showContextMenu(payload, this.wm.fromEvent(event))
     })
 
     this.account.on('change', () => {
@@ -933,8 +933,11 @@ export class Tropy extends EventEmitter {
   }
 
   updateWindowLocale () {
-    this.wm.setTitle('about', this.dict.window.about.title)
-    this.wm.setTitle('prefs', this.dict.window.prefs.title)
+    let about = this.wm.first('about')
+    let prefs = this.wm.first('prefs')
+
+    if (about) this.wm.setTitle(about, this.dict.window.about.title)
+    if (prefs) this.wm.setTitle(prefs, this.dict.window.prefs.title)
     this.wm.broadcast('locale', this.state.locale)
   }
 
