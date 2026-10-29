@@ -243,6 +243,19 @@ describe('WindowManager', () => {
     })
   })
 
+  describe('handleIpcMessage', () => {
+    it('ignores windows it does not manage', async (t) => {
+      let wm = new WindowManager(mkapp())
+      let win = new BrowserWindow({ show: false })
+      t.after(() => win.destroy())
+
+      let emit = mock.method(win, 'emit')
+
+      await wm.handleIpcMessage({ sender: win.webContents }, 'test')
+      expect(emit.mock.callCount()).to.equal(0)
+    })
+  })
+
   describe('handleShowDialog', () => {
     it('replies with an error for unknown dialog types', async () => {
       let { promise, resolve } = Promise.withResolvers()
