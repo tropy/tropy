@@ -1,6 +1,7 @@
 import { mock } from 'node:test'
 import { app } from 'electron'
-import { URL } from 'node:url'
+import { resolve } from 'node:path'
+import { URL, pathToFileURL } from 'node:url'
 import { Tropy } from '#tropy/main/tropy.js'
 
 describe('Tropy', () => {
@@ -39,13 +40,15 @@ describe('Tropy', () => {
     let imports = mock.method(tropy, 'import', () => {})
     mock.method(tropy.wm, 'current', () => ({}))
 
-    await tropy.open(...[
+    let paths = [
       '/a.tropy', '/b.TPY', '/c.ttp', '/d.jpg', '/e.txt', '/f', '/g.mtpy'
-    ].map(path => new URL(`file://${path}`)))
+    ].map(path => resolve(path))
 
-    expect(show.mock.calls.map(c => c.arguments[0])).to.eql(['/a.tropy', '/b.TPY'])
-    expect(templates.mock.calls[0].arguments[0]).to.eql(['/c.ttp'])
-    expect(imports.mock.calls.map(c => c.arguments[0])).to.eql([{ files: ['/d.jpg'] }])
+    await tropy.open(...paths.map(path => pathToFileURL(path)))
+
+    expect(show.mock.calls.map(c => c.arguments[0])).to.eql(paths.slice(0, 2))
+    expect(templates.mock.calls[0].arguments[0]).to.eql([paths[2]])
+    expect(imports.mock.calls.map(c => c.arguments[0])).to.eql([{ files: [paths[3]] }])
 
     mock.restoreAll()
   })
