@@ -363,6 +363,14 @@ describe('WindowManager', () => {
       expect(win.getBounds()).to.include({ width: a.width, height: a.height })
     })
 
+    it('ignores persistence ids of closed windows', () => {
+      let win = create(undefined, { persistence: 'a' })
+      win.destroy()
+
+      wm.setPersistenceId(win, null)
+      expect(wm.props.has(win)).to.be.false
+    })
+
     it('prunes saved geometry of a type', () => {
       app.state.win = { 'project:a': a, 'project:b': b, prefs: a }
       wm.prune('project', ['a'])

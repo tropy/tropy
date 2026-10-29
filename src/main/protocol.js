@@ -244,7 +244,7 @@ export class ProtocolHandler {
 
 async function openProject (app, urlId, { prompt }) {
   // Without prompt (e.g. from the API), no error dialogs either.
-  let opened = await app.pm.openById(urlId, { silent: !prompt })
+  let opened = await app.pm.openByUrlId(urlId, { silent: !prompt })
 
   if (opened == null) {
     if (!prompt)

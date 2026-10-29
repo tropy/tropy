@@ -17,7 +17,7 @@ describe('ProtocolHandler', () => {
         rsvp: mock.fn(async () => ({ payload: {} }))
       },
       pm: {
-        openById: mock.fn(async (id) =>
+        openByUrlId: mock.fn(async (id) =>
           (id === 'Kraków Atlas' || id === 'current') ?
             { win, project: { path: '/Kraków Atlas.tropy' } } :
             null),
@@ -115,7 +115,7 @@ describe('ProtocolHandler', () => {
       .to.be.null
     expect(app.pm.pick.mock.callCount()).to.equal(1)
 
-    app.pm.openById.mock.mockImplementation(async () => null)
+    app.pm.openByUrlId.mock.mockImplementation(async () => null)
 
     expect(await proto.handle('tropy://project', { prompt: true }))
       .to.be.null
@@ -123,7 +123,7 @@ describe('ProtocolHandler', () => {
   })
 
   it('reports failures to open projects', async () => {
-    app.pm.openById.mock.mockImplementation(async () => {
+    app.pm.openByUrlId.mock.mockImplementation(async () => {
       throw new Error('corrupt')
     })
     let err = await proto.handle(base).catch(e => e)
@@ -149,6 +149,6 @@ describe('ProtocolHandler', () => {
       expect(err, url).to.have.property('status', status)
     }
 
-    expect(app.pm.openById.mock.callCount()).to.equal(0)
+    expect(app.pm.openByUrlId.mock.callCount()).to.equal(0)
   })
 })

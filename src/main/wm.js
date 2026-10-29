@@ -670,7 +670,12 @@ export class WindowManager extends EventEmitter {
   // Changes a window's persistence id mid-flight:
   // persists current, restores new one.
   setPersistenceId (win, id) {
-    id = persistenceId(this.types.get(win), id)
+    let type = this.types.get(win)
+
+    if (type == null)
+      return
+
+    id = persistenceId(type, id)
 
     if (this.getProps(win).persistenceId === id)
       return

@@ -40,12 +40,18 @@ describe('ProjectManager', () => {
         fromEvent: ({ sender }) => sender,
         first: () => null,
         setTitle () {},
+        setPersistenceId: mock.fn(),
+        prune: mock.fn(),
         close: async () => {},
         sendEach () {},
         whenReady: (win, resolve) => resolve(),
         open: mock.fn(register(() => {
           let win = fakeWindow()
-          setImmediate(() => opened(win, file))
+          // Reports to this project manager, even after its test.
+          let self = pm
+          setImmediate(() => {
+            self.handleProjectOpened({ sender: win }, { path: file })
+          })
           return win
         }))
       }
@@ -54,7 +60,7 @@ describe('ProjectManager', () => {
 
   it('opens a project once for concurrent requests', async () => {
     let [a, b] = await Promise.all([
-      pm.openById('pm.test'),
+      pm.openByUrlId('pm.test'),
       pm.open(file)
     ])
 
@@ -321,14 +327,14 @@ describe('ProjectManager', () => {
   })
 
   it('resolves unknown URL ids to null', async () => {
-    expect(await pm.openById('unknown')).to.be.null
+    expect(await pm.openByUrlId('unknown')).to.be.null
   })
 
   it('uses the active project window for the current project', async () => {
     current = fakeWindow()
     opened(current, file)
 
-    expect(await pm.openById('current')).to.include({ win: current })
+    expect(await pm.openByUrlId('current')).to.include({ win: current })
     expect(pm.wm.open.mock.callCount()).to.equal(0)
   })
 
@@ -374,6 +380,46 @@ describe('ProjectManager', () => {
 
     expect(pm.recent.slice(0, 2)).to.eql(['/a.tpy', '/b.tpy'])
     expect(pm.app.menu.reload.mock.callCount()).to.equal(reloads)
+  })
+
+  it('opens new windows with the persistence id of their project', () => {
+    pm.show(file)
+    expect(pm.wm.open.mock.calls[0].arguments[2])
+      .to.include({ persistence: 'pm.test' })
+  })
+
+  it('switches persistence ids with the project of a window', () => {
+    let ids = () => pm.wm.setPersistenceId.mock.calls.map(c => c.arguments[1])
+    let win = fakeWindow()
+
+    opened(win, '/a.tpy')
+    pm.handleProjectUpdated({ sender: win }, { path: '/a.tpy', name: 'A' })
+    opened(win, '/b.tpy')
+    closed(win, '/b.tpy')
+
+    expect(ids()).to.eql(['a', 'b', null])
+  })
+
+  it('clears the persistence id of new windows that fail to open', async () => {
+    let win = fakeWindow()
+    pm.wm.open.mock.mockImplementation(register(() => {
+      setImmediate(() => closed(win, '/a.tpy', { message: 'corrupt' }))
+      return win
+    }))
+
+    await pm.open('/a.tpy').catch(() => {})
+
+    let [target, id] = pm.wm.setPersistenceId.mock.calls[0].arguments
+    expect(target).to.equal(win)
+    expect(id).to.be.null
+  })
+
+  it('prunes saved geometry to the recent projects', () => {
+    opened(fakeWindow(), '/a.tpy')
+
+    let [type, ids] = pm.wm.prune.mock.calls.at(-1).arguments
+    expect(type).to.equal('project')
+    expect(ids).to.include('a')
   })
 
   it('keeps open projects when clearing recent projects', () => {
