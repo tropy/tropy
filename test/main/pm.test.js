@@ -39,7 +39,7 @@ describe('ProjectManager', () => {
         is: (win, type) => type === 'project' && wins.includes(win),
         fromEvent: ({ sender }) => sender,
         first: () => null,
-        setTitle () {},
+        setTitle: mock.fn(),
         setPersistenceId: mock.fn(),
         prune: mock.fn(),
         close: async () => {},
@@ -380,6 +380,22 @@ describe('ProjectManager', () => {
 
     expect(pm.recent.slice(0, 2)).to.eql(['/a.tpy', '/b.tpy'])
     expect(pm.app.menu.reload.mock.callCount()).to.equal(reloads)
+  })
+
+  it('updates the titles of project windows when the locale changes', () => {
+    let win = fakeWindow()
+    pm.app.dict = { window: { project: { readOnly: ' (read-only)' } } }
+    opened(win, '/a.tpy')
+    pm.handleProjectUpdated({ sender: win }, {
+      path: '/a.tpy', name: 'A', isReadOnly: true
+    })
+
+    pm.app.dict = { window: { project: { readOnly: ' (schreibgeschützt)' } } }
+    pm.handleLocaleChange()
+
+    let [target, title] = pm.wm.setTitle.mock.calls.at(-1).arguments
+    expect(target).to.equal(win)
+    expect(title).to.equal('A (schreibgeschützt)')
   })
 
   it('opens new windows with the persistence id of their project', () => {

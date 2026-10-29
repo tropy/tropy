@@ -923,6 +923,7 @@ export class Tropy extends EventEmitter {
 
     if (about) this.wm.setTitle(about, this.dict.window.about.title)
     if (prefs) this.wm.setTitle(prefs, this.dict.window.prefs.title)
+    this.pm.handleLocaleChange()
     this.wm.broadcast('locale', this.state.locale)
   }
 
