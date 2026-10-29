@@ -1,4 +1,5 @@
 import { mock } from 'node:test'
+import { resolve } from 'node:path'
 import { ProjectManager } from '#tropy/main/pm.js'
 
 const fakeWindow = () => ({
@@ -139,12 +140,13 @@ describe('ProjectManager', () => {
 
   it('switches projects in the window of the old project', async () => {
     let win = fakeWindow()
+    let path = resolve('/new.tpy')
     opened(win, '/old.tpy')
 
-    await pm.handleSwitchProject(null, { path: '/new.tpy', old: '/old.tpy' })
+    await pm.handleSwitchProject(null, { path, old: '/old.tpy' })
 
     let [action, target] = pm.app.dispatch.mock.calls[0].arguments
-    expect(action).to.have.property('payload', '/new.tpy')
+    expect(action).to.have.property('payload', path)
     expect(target).to.equal(win)
   })
 
@@ -167,19 +169,21 @@ describe('ProjectManager', () => {
   })
 
   it('creates projects in a new empty window', async () => {
+    let path = resolve('/new.tropy')
+
     pm.wm.open.mock.mockImplementation(register((type, props) => {
       let win = fakeWindow()
       expect(props.file).to.be.undefined
-      setImmediate(() => opened(win, '/new.tropy'))
+      setImmediate(() => opened(win, path))
       return win
     }))
 
-    let { win } = await pm.open('/new.tropy', { create: { name: 'New' } })
+    let { win } = await pm.open(path, { create: { name: 'New' } })
     let [action, target] = pm.app.dispatch.mock.calls[0].arguments
 
     expect(target).to.equal(win)
     expect(action).to.deep.include({
-      payload: '/new.tropy',
+      payload: path,
       meta: { create: { name: 'New' } }
     })
   })
@@ -199,14 +203,15 @@ describe('ProjectManager', () => {
 
   it('opens projects for a renderer in its window', () => {
     let win = fakeWindow()
+    let path = resolve('/new.tropy')
     let create = { name: 'New' }
     wins.push(win)
 
-    pm.handleOpenProject(win, { path: '/new.tropy', create })
+    pm.handleOpenProject(win, { path, create })
 
     let [action, target] = pm.app.dispatch.mock.calls[0].arguments
     expect(target).to.equal(win)
-    expect(action).to.deep.include({ payload: '/new.tropy', meta: { create } })
+    expect(action).to.deep.include({ payload: path, meta: { create } })
   })
 
   it('opens further projects for a renderer in new windows', () => {
@@ -214,12 +219,14 @@ describe('ProjectManager', () => {
     current = win
     wins.push(win)
 
+    let path = resolve('/b.tpy')
+
     pm.handleOpenProject(win, { path: '/a.tpy' })
-    pm.handleOpenProject(win, { path: '/b.tpy' })
+    pm.handleOpenProject(win, { path })
 
     expect(pm.app.dispatch.mock.calls[0].arguments[1]).to.equal(win)
     expect(pm.wm.open.mock.calls[0].arguments[1])
-      .to.include({ file: '/b.tpy' })
+      .to.include({ file: path })
   })
 
   it('focuses a project open in another window instead', () => {
@@ -233,19 +240,21 @@ describe('ProjectManager', () => {
   })
 
   it('passes meta like silent to new windows', async () => {
+    let path = resolve('/a.tpy')
+
     pm.wm.open.mock.mockImplementation(register((type, props, opts) => {
       let win = fakeWindow()
       expect(props.file).to.be.undefined
       // The project's window, not a fixed size one without project.
       expect(opts.fixedSize).to.be.false
-      setImmediate(() => opened(win, '/a.tpy'))
+      setImmediate(() => opened(win, path))
       return win
     }))
 
-    await pm.open('/a.tpy', { silent: true })
+    await pm.open(path, { silent: true })
 
     expect(pm.app.dispatch.mock.calls[0].arguments[0])
-      .to.deep.include({ payload: '/a.tpy', meta: { silent: true } })
+      .to.deep.include({ payload: path, meta: { silent: true } })
   })
 
   it('cancels opens and forgets the project when a window crashes', async () => {
@@ -418,12 +427,14 @@ describe('ProjectManager', () => {
 
   it('clears the persistence id of new windows that fail to open', async () => {
     let win = fakeWindow()
+    let path = resolve('/a.tpy')
+
     pm.wm.open.mock.mockImplementation(register(() => {
-      setImmediate(() => closed(win, '/a.tpy', { message: 'corrupt' }))
+      setImmediate(() => closed(win, path, { message: 'corrupt' }))
       return win
     }))
 
-    await pm.open('/a.tpy').catch(() => {})
+    await pm.open(path).catch(() => {})
 
     let [target, id] = pm.wm.setPersistenceId.mock.calls[0].arguments
     expect(target).to.equal(win)
