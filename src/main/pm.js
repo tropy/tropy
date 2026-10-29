@@ -91,11 +91,7 @@ export class ProjectManager {
       this.wm.setPersistenceId(win, getUrlId(project.path))
 
     this.#projects.set(win, project)
-
-    this.wm.setTitle(win, [
-      project.name,
-      project.isReadOnly ? this.app.dict.window.project.readOnly : ''
-    ].join(''), project.path)
+    this.#setTitle(win, project)
 
     if (win === this.wm.current())
       this.app.menu.handleWindowChange()
@@ -291,15 +287,15 @@ export class ProjectManager {
   }
 
   handleProjectClosed = (event, { path, error }) => {
-    let win = this.wm.fromEvent(event)
+    let win = this.wm.fromEvent(event, 'project')
 
     if (error)
       warn({ error, path }, `project closed with error: ${error.message}`)
 
     if (this.#isPending(path, win))
-      this.#settle(path, error ?
-        new IpcError(error) :
-        new CodeError('ECANCELED', 'project open canceled'))
+      this.#settle(path, error
+        ? new IpcError(error)
+        : new CodeError('ECANCELED', 'project open canceled'))
 
     if (this.get(win)?.path === path)
       this.delete(win)
@@ -374,6 +370,13 @@ export class ProjectManager {
     this.show(path, { win, create })
   }
 
+  handleLocaleChange = () => {
+    for (let win of this.wm.values('project')) {
+      let project = this.get(win)
+      if (project) this.#setTitle(win, project)
+    }
+  }
+
   handleShowProjectFile = (win, { target } = {}) => {
     let path = target?.path ?? this.get(win)?.path
     if (path) shell.show(path)
@@ -381,6 +384,13 @@ export class ProjectManager {
 
   handleClearRecentProjects = (_, { target } = {}) => {
     this.clearRecent(target ? [target.path] : undefined)
+  }
+
+  #setTitle (win, project) {
+    this.wm.setTitle(win, [
+      project.name,
+      project.isReadOnly ? this.app.dict.window.project.readOnly : ''
+    ].join(''), project.path)
   }
 
   // The current project window,
