@@ -318,7 +318,10 @@ export class WindowManager extends EventEmitter {
 
   handleIpcMessage = async (event, type, ...args) => {
     trace({ args }, `ipc.${type} received`)
-    let win = BrowserWindow.fromWebContents(event.sender)
+    let win = this.fromEvent(event)
+
+    if (win == null)
+      return
 
     if (type === 'titlebar-action')
       type = await WindowManager.getTitlebarActionFor(args.shift())
