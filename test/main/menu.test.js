@@ -35,6 +35,17 @@ describe('AppMenu', () => {
       expect(menu).to.have.property('template')
       expect(setApplicationMenu.mock.callCount()).to.be.greaterThan(0)
     })
+
+    it('rebuilds the menu once for bursts of reloads', async () => {
+      await menu.load()
+      setApplicationMenu.mock.resetCalls()
+
+      menu.reload()
+      menu.reload()
+      menu.reload.flush()
+
+      expect(setApplicationMenu.mock.callCount()).to.equal(1)
+    })
   })
 })
 
@@ -45,7 +56,7 @@ describe('Menu conditions', () => {
   let app = {
     pm: {
       get: (w) => (w === win) ? { isReadOnly: false } : null,
-      window: (path) => (path === '/open.tpy') ? other : undefined
+      window: (path) => (path === '/open.tpy') ? other : null
     }
   }
 

@@ -3,7 +3,7 @@ import { Menu as M } from 'electron'
 import { Icon, Menu as MR } from './res.js'
 import { getLocale } from './locale.js'
 import { error, warn } from '../common/log.js'
-import { blank } from '../common/util.js'
+import { blank, debounce } from '../common/util.js'
 
 const SEPARATOR = { type: 'separator' }
 
@@ -91,11 +91,10 @@ export class AppMenu extends Menu {
     this.update()
   }
 
-  reload () {
-    this.update()
-  }
+  reload = debounce(() => { this.update() }, 25)
 
   update () {
+    this.reload.cancel()
     M.setApplicationMenu(this.build(this.template))
   }
 
