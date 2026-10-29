@@ -19,6 +19,7 @@ import {
   blank,
   counter,
   omit,
+  promote,
   remove,
   restrict,
   when
@@ -109,8 +110,7 @@ export class WindowManager extends EventEmitter {
       }
     }
 
-    // Override NoProject size if recent list is empty!
-    if (type === 'project' && !args.file && !opts.fixedSize) {
+    if (type === 'project' && !args.file && opts.fixedSize === undefined) {
       let { width, height } = empty
 
       config.fixedSize = {
@@ -314,7 +314,7 @@ export class WindowManager extends EventEmitter {
       this.#focusedWindow = win
 
       if (this.windows[type][0] !== win) {
-        this.windows[type] = [win, ...remove(this.windows[type], win)]
+        this.windows[type] = promote(this.windows[type], win)
       }
 
       this.emit('focus-change', type, win)

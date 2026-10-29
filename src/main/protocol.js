@@ -244,31 +244,29 @@ export class ProtocolHandler {
 
 async function openProject (app, urlId, { prompt }) {
   // Without prompt (e.g. from the API), no error dialogs either.
-  let win = await app.pm.openById(urlId, { silent: !prompt })
+  let opened = await app.pm.openById(urlId, { silent: !prompt })
 
-  if (win == null) {
+  if (opened == null) {
     if (!prompt)
       throw fail(404, `unknown project: ${urlId}`)
 
     if (urlId === 'current') {
-      await app.pm.show()
+      app.pm.show()
       return null
     }
 
-    let file = await app.pm.pick(app.wm.current())
+    let file = await app.pm.pick()
 
     if (!file)
       return null
 
-    win = await app.pm.open(file)
+    opened = await app.pm.open(file)
   }
 
-  let path = app.pm.get(win)?.path
-
-  if (path == null)
-    throw fail(409, `project closed while opening: ${urlId}`)
-
-  return { win, project: app.pm.describe(path) }
+  return {
+    win: opened.win,
+    project: app.pm.describe(opened.project.path)
+  }
 }
 
 function decode (groups) {

@@ -7,9 +7,9 @@ import { HttpError, statusOf } from '../../common/error.js'
 export const fail = (status, body) =>
   new HttpError({ status, body })
 
-export const found = (payload) => {
+export const found = (payload, message = 'not found') => {
   if (payload == null)
-    throw fail(404, 'not found')
+    throw fail(404, message)
   return payload
 }
 

@@ -123,7 +123,7 @@ export class Tropy extends EventEmitter {
       if (win != null)
         return win.show()
       else
-        return this.pm.openLatest()
+        return this.pm.show(this.pm.mostRecent())
     }
 
     for (let url of urls) {
@@ -147,7 +147,7 @@ export class Tropy extends EventEmitter {
       switch (ext) {
         case 'tpy':
         case 'tropy':
-          await this.pm.show(file)
+          this.pm.show(file)
           break
         case 'ttp':
           await this.importTemplates([file])
@@ -164,7 +164,7 @@ export class Tropy extends EventEmitter {
   }
 
   async import (...args) {
-    if (this.pm.get())
+    if (this.pm.has())
       return this.dispatch(act.item.import(...args), this.wm.current())
   }
 
@@ -829,21 +829,7 @@ export class Tropy extends EventEmitter {
     this.wm.on('show', this.menu.handleWindowChange)
     this.wm.on('focus-change', this.menu.handleWindowChange)
 
-    this.wm.on('close', (type, win) => {
-      if (type === 'prefs') {
-        let parent = win.getParentWindow()
-        let project = this.pm.get(parent)
-
-        if (project)
-          this.dispatch(act.project.reload(), parent)
-
-        // All project windows
-        this.wm.sendEach('project', 'dispatch',
-          act.ontology.load(null, { replace: true }),
-          act.storage.reload([['settings']]))
-      }
-      this.menu.handleWindowChange()
-    })
+    this.wm.on('closed', this.menu.handleWindowChange)
 
     this.wm.on('unresponsive', (_, win) => {
       dialog

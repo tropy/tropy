@@ -1,5 +1,4 @@
 import React from 'react'
-import { ipcRenderer as ipc } from 'electron'
 import {
   Form, FormElement, FormField, FormSlider, FormToggle, FormToggleGroup
 } from '../form.js'
@@ -12,6 +11,7 @@ import { convert, optimize } from '../../slices/project-files.js'
 import { useDispatch } from 'react-redux'
 import { useIntl } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
+import { useIpcSend } from '../../hooks/use-ipc.js'
 import { useWindow } from '../../hooks/use-window.js'
 
 
@@ -32,6 +32,7 @@ export const ProjectSettings = React.memo(({
   let dispatch = useDispatch()
   let intl = useIntl()
   let win = useWindow()
+  let switchProject = useIpcSend(['cmd', 'app:switch-project'])
 
   let handleProjectOptimize = useEvent(() => busy(win, async () => {
     let action = await dispatch(optimize({
@@ -42,7 +43,7 @@ export const ProjectSettings = React.memo(({
 
     if (action?.payload?.path) {
       await notify('project.optimize')
-      ipc.send('switch-project', action.payload.path, project.path)
+      switchProject({ path: action.payload.path, old: project.path })
     }
   }))
 
@@ -60,7 +61,7 @@ export const ProjectSettings = React.memo(({
         })
       })
 
-      ipc.send('switch-project', action.payload.path, project.path)
+      switchProject({ path: action.payload.path, old: project.path })
     }
   }))
 

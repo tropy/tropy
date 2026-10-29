@@ -283,6 +283,14 @@ describe('util', () => {
     })
   })
 
+  describe('promote', () => {
+    it('moves or adds items to the front', () => {
+      expect(util.promote([1, 2, 3], 3)).to.eql([3, 1, 2])
+      expect(util.promote([1, 2], 3)).to.eql([3, 1, 2])
+      expect(util.promote([1, 2, 3], 2, 3)).to.eql([2, 3, 1])
+    })
+  })
+
   describe('shallow', () => {
     it('returns true if params are shallowly equal', () => {
       const a = { a: 1, b: [], c: 'foo' }
