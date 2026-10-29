@@ -19,6 +19,7 @@ import {
   blank,
   counter,
   omit,
+  pick,
   promote,
   remove,
   restrict,
@@ -38,18 +39,10 @@ import {
 
 const { BODY, PANEL, ESPER } = SASS
 
-// Window READY state { promise, reject, isReady }
-const READY = new WeakMap()
-
-// Reset on load and reload
-const resetReadyState = (win) => {
-  let { promise, resolve, reject } = Promise.withResolvers()
-  let state = { promise, reject, isReady: false }
-
-  READY.set(win, state)
-  win.once('ready', resolve)
-  promise.then(() => { state.isReady = true }, () => {})
-}
+// The id to save window geometry under:
+// the window type for true, type:id for an id, none for null.
+const persistenceId = (type, id) =>
+  (id === true) ? type : (id ? `${type}:${id}` : null)
 
 export class WindowManager extends EventEmitter {
   #focusedWindow = null
@@ -81,9 +74,10 @@ export class WindowManager extends EventEmitter {
 
     this.windows = {}
     this.types = new WeakMap()
+    // Additional state the WM keeps per window: readiness, unloading,
+    // persistence id, fixed size and the size to return to.
     this.props = new WeakMap()
     this.pending = {}
-    this.unloading = new WeakMap()
     this.seq = counter()
   }
 
@@ -130,6 +124,7 @@ export class WindowManager extends EventEmitter {
       let {
         fixedSize,
         isExclusive,
+        persistence,
         show,
         ...options
       } = this.configure(type, opts, args)
@@ -181,6 +176,13 @@ export class WindowManager extends EventEmitter {
           break
       }
 
+      let id = persistenceId(type, persistence)
+      let saved = id ? this.app.state.win[id] : null
+
+      if (saved) {
+        pick(saved, ['x', 'y', 'width', 'height'], options)
+      }
+
       let { parent } = options
       options.show = (show === true)
 
@@ -191,14 +193,18 @@ export class WindowManager extends EventEmitter {
       }
 
       var win = new BrowserWindow(sanitizeWindowBounds(options))
+      this.setProps(win, { persistenceId: id })
+
+      if (saved?.isMaximized)
+        win.once('show', () => win.maximize())
 
       if (fixedSize) {
         this.setFixedSize(win, true, fixedSize)
       }
 
-      resetReadyState(win)
+      this.resetReadyState(win)
       win.once('closed', () => {
-        READY.get(win).reject(new Error('window closed'))
+        this.getProps(win).ready.reject(new Error('window closed'))
       })
 
       win.webContents.once('did-finish-load', async () => {
@@ -300,10 +306,9 @@ export class WindowManager extends EventEmitter {
     return (t != null && (type == null || t === type)) ? win : null
   }
 
-  // Sets the window's title (default: its type's title)
-  // and, on macOS unless frameless, its represented file.
   setTitle (win, title, path) {
-    win.setTitle(title ?? WindowManager.defaults[this.types.get(win)].title ?? '')
+    win.setTitle(
+      title ?? WindowManager.defaults[this.types.get(win)].title ?? '')
 
     if (darwin && !this.app.state.frameless)
       win.setRepresentedFilename(path ?? '')
@@ -392,29 +397,29 @@ export class WindowManager extends EventEmitter {
   }
 
   handleUnload (win, action) {
-    if (!this.unloading.has(win)) {
-      this.unloading.set(win, action)
+    if (this.getProps(win).unloading == null) {
+      this.setProps(win, { unloading: action })
       debug(`will ${action} ${this.types.get(win)} window`)
       win.webContents.send('unload')
     }
   }
 
   handleUnloaded (win) {
-    let state = this.unloading.get(win)
+    let state = this.getProps(win).unloading
     let type = this.types.get(win)
 
     this.cancel(win, 'unloaded')
 
     if (state === 'close') {
       debug(`${type} window unloaded, will close`)
-      this.unloading.set(win, 'done')
+      this.setProps(win, { unloading: 'done' })
       win.close()
     } else if (state === 'reload') {
       debug(`${type} window unloaded, will reload`)
-      this.unloading.delete(win)
+      this.setProps(win, { unloading: null })
 
       if (this.isReady(win))
-        resetReadyState(win)
+        this.resetReadyState(win)
 
       win.reload()
       this.emit('reload', type, win)
@@ -590,7 +595,7 @@ export class WindowManager extends EventEmitter {
           warn(`${type}[${win.id}] has become unresponsive`)
           this.emit('unresponsive', type, win)
 
-          if (this.unloading.has(win)) {
+          if (this.getProps(win).unloading != null) {
             warn(`${type}[${win.id}] unresponsive during unload, forcing destroy`)
             win.destroy()
           }
@@ -622,7 +627,7 @@ export class WindowManager extends EventEmitter {
 
           this.cancel(win, 'crashed')
 
-          if (this.unloading.has(win)) {
+          if (this.getProps(win).unloading != null) {
             warn(`${type}[${win.id}] crashed during unload, forcing destroy`)
             win.destroy()
           }
@@ -632,8 +637,14 @@ export class WindowManager extends EventEmitter {
         .on('show', () => {
           this.emit('show', type, win)
         })
+        .on('maximize', () => this.persist(win, { bounds: true }))
+        .on('enter-full-screen', () => this.persist(win, { bounds: true }))
+        .on('unmaximize', () => this.restore(win))
+        .on('leave-full-screen', () => this.restore(win))
         .on('close', (event) => {
-          if (this.unloading.get(win) === 'done') {
+          this.persist(win)
+
+          if (this.getProps(win).unloading === 'done') {
             debug(`closing ${type} window`)
             this.emit('close', type, win)
           } else {
@@ -656,6 +667,76 @@ export class WindowManager extends EventEmitter {
     }
   }
 
+  // Changes a window's persistence id mid-flight:
+  // persists current, restores new one.
+  setPersistenceId (win, id) {
+    id = persistenceId(this.types.get(win), id)
+
+    if (this.getProps(win).persistenceId === id)
+      return
+
+    this.persist(win)
+    this.setProps(win, { persistenceId: id })
+    this.restore(win)
+  }
+
+  prune (type, ids = []) {
+    let keep = new Set(ids.map(id => persistenceId(type, id)))
+    let saved = this.app.state.win
+
+    for (let key of Object.keys(saved)) {
+      if (key.startsWith(`${type}:`) && !keep.has(key))
+        delete saved[key]
+    }
+  }
+
+  // Saves current bounds and maximized state to app.state.
+  // Bounds are saved when the window is normal
+  // or just after entering full-sreen or maximized state.
+  persist (win, { bounds = win.isNormal() } = {}) {
+    let { persistenceId: id, isFixedSize } = this.getProps(win)
+
+    if (id == null || isFixedSize || win.isDestroyed())
+      return
+
+    let saved = this.app.state.win
+
+    saved[id] = {
+      ...((bounds || saved[id] == null) ? win.getNormalBounds() : saved[id]),
+      isMaximized: win.isMaximized()
+    }
+  }
+
+  restore (win) {
+    let { persistenceId: id, isFixedSize } = this.getProps(win)
+    let saved = (id == null) ? null : this.app.state.win[id]
+
+    if (saved == null)
+      return
+
+    let { x, y, width, height, isMaximized } = saved
+
+    if (isFixedSize) {
+      // The size to return to is a content size.
+      let [cw, ch] = win.getContentSize()
+      let bounds = win.getBounds()
+
+      this.setProps(win, {
+        width: width - (bounds.width - cw),
+        height: height - (bounds.height - ch)
+      })
+
+    } else if (!win.isVisible()) {
+      win.setBounds(sanitizeWindowBounds({ x, y, width, height }))
+
+      if (isMaximized)
+        win.once('show', () => win.maximize())
+
+    } else if (win.isNormal()) {
+      win.setBounds(sanitizeWindowBounds({ ...win.getBounds(), width, height }))
+    }
+  }
+
   sendEach (type, ...args) {
     this.each(type, win => this.send(win, ...args))
   }
@@ -673,11 +754,11 @@ export class WindowManager extends EventEmitter {
   }
 
   isReady (win) {
-    return READY.get(win)?.isReady ?? false
+    return this.getProps(win).ready?.isReady ?? false
   }
 
   ready (win) {
-    return READY.get(win)?.promise ??
+    return this.getProps(win).ready?.promise ??
       Promise.reject(new Error('unknown window'))
   }
 
@@ -688,6 +769,17 @@ export class WindowManager extends EventEmitter {
       resolve()
     else
       this.ready(win).then(resolve, reject)
+  }
+
+  // Waits for the renderer of win to report ready,
+  // when created and again after each reload.
+  resetReadyState (win) {
+    let { promise, resolve, reject } = Promise.withResolvers()
+    let ready = { promise, reject, isReady: false }
+
+    this.setProps(win, { ready })
+    win.once('ready', resolve)
+    promise.then(() => { ready.isReady = true }, () => {})
   }
 
   rsvp (win, action, { timeout = 60000 } = {}) {
@@ -725,6 +817,16 @@ export class WindowManager extends EventEmitter {
     }
   }
 
+  // The additional state the WM keeps for win.
+  getProps (win) {
+    return this.props.get(win) ?? {}
+  }
+
+  // Merges props into the additional state the WM keeps for win.
+  setProps (win, props) {
+    this.props.set(win, { ...this.props.get(win), ...props })
+  }
+
   async enterFixedSize (win) {
     if (!win.isNormal())
       await WindowManager.setNormal(win)
@@ -739,7 +841,7 @@ export class WindowManager extends EventEmitter {
     win.setFullScreenable(false)
     win.setResizable(false)
 
-    this.props.set(win, {
+    this.setProps(win, {
       isFixedSize: true,
       width,
       height,
@@ -760,7 +862,7 @@ export class WindowManager extends EventEmitter {
       minHeight = 16,
       maximizable,
       fullscreenable = true
-    } = this.props.get(win) || WindowManager.defaults[type]
+    } = { ...WindowManager.defaults[type], ...this.getProps(win) }
 
     win.setResizable(true)
     win.setContentSize(width, height, animate)
@@ -771,9 +873,7 @@ export class WindowManager extends EventEmitter {
     if (win.isMinimized())
       win.restore()
 
-    this.props.set(win, {
-      isFixedSize: false
-    })
+    this.setProps(win, { isFixedSize: false })
   }
 
   async setFixedSize (win, fixedSize = false, {
@@ -781,7 +881,7 @@ export class WindowManager extends EventEmitter {
     height,
     animate = true
   } = {}) {
-    let { isFixedSize = false } = this.props.get(win) || {}
+    let { isFixedSize = false } = this.getProps(win)
 
     try {
       if (fixedSize) {
@@ -857,7 +957,6 @@ export class WindowManager extends EventEmitter {
     this.windows[type] = remove(array(this.windows[type]), win)
     this.types.delete(win)
     this.props.delete(win)
-    this.unloading.delete(win)
   }
 
   zoom (factor) {

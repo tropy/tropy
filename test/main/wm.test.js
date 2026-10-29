@@ -4,7 +4,7 @@ import { mock } from 'node:test'
 import { EventEmitter, once } from 'node:events'
 import { join } from 'node:path'
 import { env } from 'node:process'
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, screen } from 'electron'
 import { WindowManager } from '#tropy/main/wm.js'
 import { Plugins } from '#tropy/common/plugins.js'
 
@@ -12,7 +12,7 @@ import { Plugins } from '#tropy/common/plugins.js'
 const mkapp = () => Object.assign(new EventEmitter(), {
   env: {},
   opts: {},
-  state: { theme: 'system', zoom: 1 }
+  state: { theme: 'system', zoom: 1, win: {} }
 })
 
 describe('WindowManager', () => {
@@ -159,7 +159,7 @@ describe('WindowManager', () => {
       it('cleans up unloading state after close', async () => {
         let win = await openWindow()
         await wm.ready(win)
-        expect(wm.unloading.has(win)).to.be.false
+        expect(wm.getProps(win).unloading).not.to.exist
 
         await wm.close('about')
         expect(wm.has('about')).to.be.false
@@ -188,7 +188,7 @@ describe('WindowManager', () => {
         await loaded
 
         expect(wm.has('about')).to.be.true
-        expect(wm.unloading.has(win)).to.be.false
+        expect(wm.getProps(win).unloading).not.to.exist
         expect(win.isDestroyed()).to.be.false
 
         await wm.close('about')
@@ -275,6 +275,98 @@ describe('WindowManager', () => {
 
       wm.unref('prefs', prefs)
       expect(wm.focusedWindow).to.equal(project)
+    })
+  })
+
+  describe('persistence', () => {
+    let app, wm, wins
+
+    // Hidden project windows, without loading their views.
+    let create = (args = { file: '/a.tropy' }, opts) => {
+      let win = wm.create('project', args, opts)
+      wins.push(win)
+      return win
+    }
+
+    let { x, y } = screen.getPrimaryDisplay().workArea
+    let a = { x: x + 20, y: y + 30, width: 900, height: 600 }
+    let b = { x: x + 40, y: y + 10, width: 960, height: 640 }
+
+    beforeEach(() => {
+      app = mkapp()
+      wm = new WindowManager(app)
+      wins = []
+    })
+
+    afterEach(() => {
+      for (let win of wins) win.destroy()
+    })
+
+    it('restores saved bounds on creation', () => {
+      app.state.win['project:a'] = { ...a, isMaximized: false }
+      expect(create(undefined, { persistence: 'a' }).getBounds()).to.eql(a)
+    })
+
+    it('saves and restores geometry when switching ids', () => {
+      app.state.win['project:b'] = { ...b, isMaximized: false }
+
+      let win = create(undefined, { persistence: 'a' })
+      win.setBounds(a)
+
+      wm.setPersistenceId(win, 'b')
+      expect(app.state.win['project:a']).to.include(a)
+      expect(win.getBounds()).to.eql(b)
+
+      win.setBounds(a)
+      wm.setPersistenceId(win, null)
+      expect(app.state.win['project:b']).to.include(a)
+    })
+
+    it('saves geometry when a window is asked to close', () => {
+      let win = create(undefined, { persistence: 'a' })
+      win.setBounds(a)
+
+      win.emit('close', { preventDefault () {} })
+      expect(app.state.win['project:a']).to.include(a)
+    })
+
+    it('saves normal bounds on maximize, only the flag while maximized', () => {
+      app.state.win['project:a'] = { ...a, isMaximized: false }
+      let win = create(undefined, { persistence: 'a' })
+
+      // Maximized, without showing the window.
+      let maximize = () => {
+        mock.method(win, 'isNormal', () => false)
+        mock.method(win, 'isMaximized', () => true)
+      }
+
+      win.setBounds(b)
+      maximize()
+      win.emit('maximize')
+      expect(app.state.win['project:a']).to.eql({ ...b, isMaximized: true })
+
+      app.state.win['project:a'] = { ...a, isMaximized: false }
+      win.emit('close', { preventDefault () {} })
+      expect(app.state.win['project:a']).to.eql({ ...a, isMaximized: true })
+    })
+
+    it('restores the size of fixed size windows when they leave it', async () => {
+      // Without project: fixed size.
+      let win = create({})
+      await new Promise(setImmediate)
+
+      app.state.win['project:a'] = { ...a, isMaximized: false }
+      wm.setPersistenceId(win, 'a')
+      expect(win.getBounds()).not.to.include({ width: a.width })
+
+      await wm.setFixedSize(win, false)
+      expect(win.getBounds()).to.include({ width: a.width, height: a.height })
+    })
+
+    it('prunes saved geometry of a type', () => {
+      app.state.win = { 'project:a': a, 'project:b': b, prefs: a }
+      wm.prune('project', ['a'])
+      expect(Object.keys(app.state.win)).to.eql(['project:a', 'prefs'])
     })
   })
 
