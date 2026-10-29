@@ -194,6 +194,21 @@ describe('WindowManager', () => {
         await wm.close('about')
       })
 
+      it('waits for the renderer to be ready again after reload', async () => {
+        let win = await openWindow()
+        await wm.ready(win)
+
+        let reloaded = once(wm, 'reload')
+        wm.handleUnload(win, 'reload')
+        await reloaded
+
+        expect(wm.isReady(win)).to.be.false
+        await wm.ready(win)
+        expect(wm.isReady(win)).to.be.true
+
+        await wm.close('about')
+      })
+
       it('can close after reload', async () => {
         let win = await openWindow()
         await wm.ready(win)
@@ -211,11 +226,17 @@ describe('WindowManager', () => {
         let win = await openWindow()
         await wm.ready(win)
 
+        let closing = []
+        let onClose = (type) => { closing.push(type) }
+        wm.on('close', onClose)
+
         let closed = once(win, 'closed')
         win.close()
         win.close()
         await closed
+        wm.off('close', onClose)
 
+        expect(closing).to.eql(['about'])
         expect(wm.has('about')).to.be.false
         expect(win.isDestroyed()).to.be.true
       })

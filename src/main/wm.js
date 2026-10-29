@@ -37,8 +37,18 @@ import {
 
 const { BODY, PANEL, ESPER } = SASS
 
-// Window READY state { promise, isReady }
+// Window READY state { promise, reject, isReady }
 const READY = new WeakMap()
+
+// Reset on load and reload
+const resetReadyState = (win) => {
+  let { promise, resolve, reject } = Promise.withResolvers()
+  let state = { promise, reject, isReady: false }
+
+  READY.set(win, state)
+  win.once('ready', resolve)
+  promise.then(() => { state.isReady = true }, () => {})
+}
 
 export class WindowManager extends EventEmitter {
   #focusedWindow = null
@@ -186,15 +196,10 @@ export class WindowManager extends EventEmitter {
         this.setFixedSize(win, true, fixedSize)
       }
 
-      let ready = Promise.withResolvers()
-      let state = { promise: ready.promise, isReady: false }
-
-      READY.set(win, state)
-
-      win.once('ready', () => ready.resolve())
-      win.once('closed', () => ready.reject(new Error('window closed')))
-
-      ready.promise.then(() => { state.isReady = true }, () => {})
+      resetReadyState(win)
+      win.once('closed', () => {
+        READY.get(win).reject(new Error('window closed'))
+      })
 
       win.webContents.once('did-finish-load', async () => {
         try {
@@ -407,7 +412,12 @@ export class WindowManager extends EventEmitter {
     } else if (state === 'reload') {
       debug(`${type} window unloaded, will reload`)
       this.unloading.delete(win)
+
+      if (this.isReady(win))
+        resetReadyState(win)
+
       win.reload()
+      this.emit('reload', type, win)
     }
   }
 
@@ -625,11 +635,11 @@ export class WindowManager extends EventEmitter {
         .on('close', (event) => {
           if (this.unloading.get(win) === 'done') {
             debug(`closing ${type} window`)
+            this.emit('close', type, win)
           } else {
             event.preventDefault()
             this.handleUnload(win, 'close')
           }
-          this.emit('close', type, win)
         })
         .once('closed', () => {
           this.cancel(win, 'closed')
