@@ -1,6 +1,6 @@
 import { STATUS_CODES } from 'node:http'
 import fp from 'fastify-plugin'
-import { HttpError } from '../../common/error.js'
+import { HttpError, statusOf } from '../../common/error.js'
 
 // API fails with RFC 9457 problem details.
 
@@ -19,7 +19,7 @@ export default fp(async (fastify) => {
   })
 
   fastify.setErrorHandler((error, request, reply) => {
-    let status = error.status || error.statusCode
+    let status = statusOf(error)
 
     if (!(status >= 400))
       status = 500

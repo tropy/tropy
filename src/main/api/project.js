@@ -19,23 +19,14 @@ export default fp(async (fastify, { pm, wm }) => {
 
     let agent = request.headers['user-agent'] || 'http-api'
 
-    request.rsvp = async (action, options) => {
-      try {
-        return (await wm.rsvp(win, {
-          ...action,
-          meta: {
-            ...action.meta,
-            silent: true,
-            agent
-          }
-        }, options)).payload
-      } catch (err) {
-        if (err.code === 'ETIMEDOUT')
-          throw fail(504, err.message)
-        if (err.code === 'ECANCELED')
-          throw fail(503, err.message)
-        throw err
-      }
-    }
+    request.rsvp = async (action, options) =>
+      (await wm.rsvp(win, {
+        ...action,
+        meta: {
+          ...action.meta,
+          silent: true,
+          agent
+        }
+      }, options)).payload
   })
 }, { name: 'project' })
