@@ -619,7 +619,7 @@ Menu.ItemConditions = {
   },
 
   isProjectOpen ({ app, win }) {
-    return app.pm.get(win) != null
+    return app.pm.has(win)
   },
 
   // Whether the target project (e.g. a recent project) is open.

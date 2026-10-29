@@ -4,12 +4,17 @@ import { app, ipcMain as ipc } from 'electron'
 import { CodeError } from '../common/error.js'
 import { info, warn } from '../common/log.js'
 import { darwin, win32 } from '../common/os.js'
-import { protocolURL, urlId as getUrlId } from '../common/util.js'
+import { promote, protocolURL, urlId as getUrlId } from '../common/util.js'
 import { PROJECT } from '../constants/index.js'
 import dialog from './dialog.js'
 import * as act from './actions.js'
 import * as shell from './shell.js'
 
+/**
+ * ProjectManager manages all known projects,
+ * based on the `app.state.recent` list,
+ * and tracks open projects and their windows.
+ */
 export class ProjectManager {
   #projects = new WeakMap()  // win -> project
   #pending = new Map()       // path -> { win, opened }
@@ -18,26 +23,24 @@ export class ProjectManager {
     this.app = app
   }
 
-  get wm () {
-    return this.app.wm
-  }
-
   start () {
     ipc
       .on(PROJECT.OPENED, this.handleProjectOpened)
       .on(PROJECT.UPDATE, this.handleProjectUpdated)
       .on(PROJECT.CLOSED, this.handleProjectClosed)
-      .on('switch-project', this.handleSwitchProject)
 
     this.wm
+      .on('close', this.handleWindowClose)
       .on('closed', this.handleWindowClosed)
       .on('crashed', this.handleWindowCrashed)
+      .on('reload', this.handleWindowReload)
       .on('focus-change', this.handleWindowFocus)
 
     this.app
       .on('app:create-project', this.handleCreateProject)
       .on('app:open-dialog', this.handleOpenDialog)
       .on('app:open-project', this.handleOpenProject)
+      .on('app:switch-project', this.handleSwitchProject)
       .on('app:show-project-file', this.handleShowProjectFile)
       .on('app:clear-recent-projects', this.handleClearRecentProjects)
   }
@@ -47,17 +50,19 @@ export class ProjectManager {
       .off(PROJECT.OPENED, this.handleProjectOpened)
       .off(PROJECT.UPDATE, this.handleProjectUpdated)
       .off(PROJECT.CLOSED, this.handleProjectClosed)
-      .off('switch-project', this.handleSwitchProject)
 
     this.wm
+      .off('close', this.handleWindowClose)
       .off('closed', this.handleWindowClosed)
       .off('crashed', this.handleWindowCrashed)
+      .off('reload', this.handleWindowReload)
       .off('focus-change', this.handleWindowFocus)
 
     this.app
       .off('app:create-project', this.handleCreateProject)
       .off('app:open-dialog', this.handleOpenDialog)
       .off('app:open-project', this.handleOpenProject)
+      .off('app:switch-project', this.handleSwitchProject)
       .off('app:show-project-file', this.handleShowProjectFile)
       .off('app:clear-recent-projects', this.handleClearRecentProjects)
   }
@@ -66,24 +71,65 @@ export class ProjectManager {
     return this.app.state.recent
   }
 
-  // The path of the most recent existing project with the URL id.
-  // The legacy id 'current' is the project in the current project window.
-  find (urlId) {
-    if (urlId === 'current')
-      return this.get(this.wm.current('project'))?.path ?? null
-
-    let id = encodeURIComponent(urlId.toWellFormed().normalize())
-
-    return this.recent.find(file =>
-      getUrlId(file) === id && fs.existsSync(file)) ?? null
+  get wm () {
+    return this.app.wm
   }
 
-  // The path of the most recent existing project.
-  latest () {
+  // Returns the project for a given window
+  get (win = this.wm.current()) {
+    return this.#projects.get(win) ?? null
+  }
+
+  // Check if window has a project associated with it
+  has (win = this.wm.current()) {
+    return this.#projects.has(win)
+  }
+
+  // Associates the project with the window
+  set (win, project) {
+    this.#projects.set(win, project)
+    this.#setTitle(win, project)
+    this.#updateMenu(win)
+  }
+
+  // Removes the window-project mapping
+  delete (win) {
+    if (!this.#projects.delete(win))
+      return false
+
+    this.#setTitle(win, null)
+    this.#updateMenu(win)
+    return true
+  }
+
+  // Reverse lookup to get the window for a project path
+  window (path) {
+    if (path == null)
+      return null
+    else
+      return this.wm.values('project').find(win =>
+        this.get(win)?.path === path
+      ) ?? null
+  }
+
+  // Finds recent project via urlId (with legacy 'current' fallback)
+  // Returned match is either open in a window or exists on disk!
+  find (urlId) {
+    if (urlId === 'current')
+      return this.get(this.wm.current('project'))?.path ?? this.mostRecent()
+
+    let id = encodeURIComponent(urlId.toWellFormed().normalize())
+    let matches = this.recent.filter(file => getUrlId(file) === id)
+
+    return matches.find(file => this.window(file) != null) ??
+      matches.find(file => fs.existsSync(file)) ?? null
+  }
+
+  mostRecent () {
     return this.recent.find(file => fs.existsSync(file)) ?? null
   }
 
-  // What Tropy knows about the project at path.
+  // Inferred project info (without opening the file)
   describe (path) {
     return {
       urlId: getUrlId(path),
@@ -93,34 +139,33 @@ export class ProjectManager {
     }
   }
 
-  // The recent projects, most recent first.
+  // The recent projects that still exist, most recent first.
   list () {
-    return this.recent.map(path => this.describe(path))
+    return this.recent
+      .filter(file => fs.existsSync(file))
+      .map(path => this.describe(path))
   }
 
-  // Removes projects from the recent projects; open projects stay.
-  clear (paths) {
-    let open = new Set(this.wm.map('project', win => this.get(win)?.path))
+  // Adds path to the top of the recent projects.
+  addRecent (path) {
+    if (darwin || win32)
+      app.addRecentDocument(path)
+
+    this.#setRecent(promote(this.recent, path))
+  }
+
+  // Removes projects from the recent projects (open projects are kept).
+  clearRecent (paths) {
+    let open = new Set(this.wm.values('project').map(win =>
+      this.get(win)?.path))
 
     this.#setRecent(this.recent.filter(file =>
       open.has(file) || (paths && !paths.includes(file))))
   }
 
-  // Projects in windows
-
-  // The project open in win.
-  get (win = this.wm.current()) {
-    return this.#projects.get(win) ?? null
-  }
-
-  // The window that has the project at path open.
-  window (path) {
-    return this.wm.map('project').find(win => this.get(win)?.path === path)
-  }
-
   // Opening projects
 
-  // Shows the window of the project at path.
+  // Shows and returns the window of the project at path.
   // If the project is not open or opening, opens it in win.
   // Without win, opens it in the current project window if that is empty,
   // otherwise in a new window.
@@ -128,7 +173,7 @@ export class ProjectManager {
   // The meta is passed on with the project.open action,
   // e.g. create ({ name }) to create the project first
   // or silent to suppress error dialogs.
-  async show (path, win, meta = {}) {
+  show (path, { win, ...meta } = {}) {
     if (path) {
       path = resolve(path)
 
@@ -142,25 +187,11 @@ export class ProjectManager {
       }
     }
 
-    win ??= this.#empty()
+    win ??= this.#noProjectWindow()
 
     if (win == null) {
       info({ path }, 'open project in new window')
-
-      // Using open, not show, to track the new window right away;
-      // it shows itself on init.
-      let args = { recent: this.recent }
-      let opts = { show: 'init' }
-
-      // Plain opens pass the project as window argument,
-      // so the window opens at its project size right away.
-      // Otherwise the action carries the meta (e.g. create, silent).
-      if (Object.values(meta).some(Boolean)) {
-        win = this.wm.open('project', args, opts)
-        this.app.dispatch(act.project.open(path, meta), win)
-      } else {
-        win = this.wm.open('project', { ...args, file: path }, opts)
-      }
+      win = this.#openWindow(path, meta)
 
     } else {
       info({ path }, 'open project in window')
@@ -177,37 +208,25 @@ export class ProjectManager {
     return win
   }
 
-  // Like show, but resolves once the project is open.
-  async open (path, win, meta) {
-    path = resolve(path)
+  // Like show, but resolves once the project is open,
+  // to the project and its window.
+  async open (path, options) {
+    let win = this.show(path, options)
+    await this.#pending.get(resolve(path))?.opened.promise
 
-    let shown = this.show(path, win, meta)
-    let pending = this.#pending.get(path)
-
-    win = await shown
-    await pending?.opened.promise
-
-    return win
+    return { win, project: this.get(win) }
   }
 
-  // Resolves a project URL id to a project window,
+  // Resolves a project URL id to the project and its window,
   // opening the project if necessary.
   // Returns null if there is no such project.
-  // The legacy id 'current' is the active project window
-  // or else the most recent project.
   async openById (urlId, meta) {
-    let path = this.find(urlId) ??
-      ((urlId === 'current') ? this.latest() : null)
-
-    return path ? this.open(path, undefined, meta) : null
-  }
-
-  async openLatest () {
-    return this.show(this.latest())
+    let path = this.find(urlId)
+    return path ? this.open(path, meta) : null
   }
 
   // Lets the user pick a project file; null if cancelled.
-  async pick (win = null) {
+  async pick (win = this.wm.current()) {
     let { cancel, value: files } = await dialog.open(win, {
       filters: [{
         name: this.app.dict.dialog.file.project,
@@ -218,15 +237,13 @@ export class ProjectManager {
     return cancel ? null : files[0]
   }
 
-  // Handlers
-
   handleProjectOpened = (event, project) => {
     let win = this.wm.fromEvent(event, 'project')
 
     if (win == null)
       return
 
-    this.#projects.set(win, project)
+    this.set(win, project)
 
     if (this.#isPending(project.path, win))
       this.#settle(project.path)
@@ -235,27 +252,20 @@ export class ProjectManager {
     let prefs = this.wm.first('prefs')
     if (prefs?.getParentWindow() === win) prefs.close()
 
-    if (darwin || win32)
-      app.addRecentDocument(project.path)
-
     if (project.isManaged)
       shell.setProjectFolderIcon(project.path)
 
     this.app.setHistory(null, win)
-    this.#setTitle(win, project)
-
-    this.#setRecent(this.#bump(project.path))
+    this.addRecent(project.path)
   }
 
   handleProjectUpdated = (event, project) => {
     let win = this.wm.fromEvent(event, 'project')
 
-    if (win == null)
-      return
-
-    this.#projects.set(win, project)
-    this.#setTitle(win, project)
-    this.#updateMenu(win)
+    // Only updates of the project the window has open:
+    // reports can arrive after it was closed or replaced.
+    if (win != null && this.get(win)?.path === project.path)
+      this.set(win, project)
   }
 
   handleProjectClosed = (event, { path, error }) => {
@@ -269,11 +279,8 @@ export class ProjectManager {
         Object.assign(new Error(error.message), error) :
         new CodeError('ECANCELED', 'project open canceled'))
 
-    if (this.get(win)?.path === path) {
-      this.#projects.delete(win)
-      this.#setTitle(win, null)
-      this.#updateMenu(win)
-    }
+    if (this.get(win)?.path === path)
+      this.delete(win)
   }
 
   // Recent projects follow use: the focused project comes first.
@@ -282,28 +289,44 @@ export class ProjectManager {
     let path = this.get(win)?.path
 
     if (path != null && this.recent[0] !== path)
-      this.#setRecent(this.#bump(path), { reloadMenu: false })
+      this.#setRecent(promote(this.recent, path), { reloadMenu: false })
+  }
+
+  // Prefs may have changed the settings of their parent window's project,
+  // and the vocabularies and settings of all projects.
+  handleWindowClose = (type, win) => {
+    if (type !== 'prefs')
+      return
+
+    let parent = win.getParentWindow()
+
+    if (this.get(parent))
+      this.app.dispatch(act.project.reload(), parent)
+
+    this.wm.sendEach('project', 'dispatch',
+      act.ontology.load(null, { replace: true }),
+      act.storage.reload([['settings']]))
   }
 
   handleWindowClosed = (type, win) => {
     this.#release(win, 'window closed')
   }
 
+  // Reloaded windows start over: opens in progress are lost.
+  handleWindowReload = (type, win) => {
+    this.#release(win, 'window reloaded')
+  }
+
   // Crashed windows report nothing: their project is gone.
   handleWindowCrashed = (type, win) => {
     this.#release(win, 'window crashed')
-
-    if (this.get(win)) {
-      this.#projects.delete(win)
-      this.#setTitle(win, null)
-      this.#updateMenu(win)
-    }
+    this.delete(win)
   }
 
   // Opens a converted or optimized copy in place of the original.
-  handleSwitchProject = async (_, path, old) => {
+  handleSwitchProject = async (_, { path, old }) => {
     await this.wm.close('prefs')
-    await this.show(path, this.window(old))
+    this.show(path, { win: this.window(old) })
   }
 
   handleCreateProject = () => {
@@ -311,18 +334,22 @@ export class ProjectManager {
   }
 
   handleOpenDialog = async () => {
-    let file = await this.pick(this.wm.current())
+    let file = await this.pick()
 
     if (file)
-      await this.show(file)
+      this.show(file)
   }
 
   // Opens a project the renderer asked for in its window,
   // unless the window is opening another project already
   // (e.g. when dropping several projects) or the project
   // is open elsewhere.
+  // Other windows (e.g. prefs) do not open projects themselves.
   handleOpenProject = (win, { path, create }) => {
-    this.show(path, this.#isOpening(win) ? null : win, { create })
+    if (!this.wm.is(win, 'project') || this.#isOpening(win))
+      win = null
+
+    this.show(path, { win, create })
   }
 
   handleShowProjectFile = (win, { target } = {}) => {
@@ -331,17 +358,36 @@ export class ProjectManager {
   }
 
   handleClearRecentProjects = (_, { target } = {}) => {
-    this.clear(target ? [target.path] : undefined)
+    this.clearRecent(target ? [target.path] : undefined)
   }
 
   // The current project window,
   // if it has no project and is not opening one.
-  #empty () {
+  #noProjectWindow () {
     let win = this.wm.current('project')
 
-    if (win == null || this.get(win) || this.#isOpening(win))
+    if (win == null || this.has(win) || this.#isOpening(win))
       return null
 
+    return win
+  }
+
+  // Opens a new project window for path.
+  // Using open, not show, to track the new window right away;
+  // it shows itself on init.
+  #openWindow (path, meta) {
+    let args = { recent: this.recent }
+    let opts = { show: 'init' }
+
+    // Plain opens pass the project as window argument.
+    // Otherwise the action carries the meta (e.g. create, silent);
+    // without the argument, the window must not start at the
+    // fixed size of windows without project.
+    if (!Object.values(meta).some(Boolean))
+      return this.wm.open('project', { ...args, file: path }, opts)
+
+    let win = this.wm.open('project', args, { ...opts, fixedSize: false })
+    this.app.dispatch(act.project.open(path, meta), win)
     return win
   }
 
@@ -388,11 +434,6 @@ export class ProjectManager {
       pending.opened.resolve()
   }
 
-  // The recent projects with path first.
-  #bump (path) {
-    return [path, ...this.recent.filter(file => file !== path)]
-  }
-
   // Without reloading the menu, its recent projects
   // are updated with its next reload.
   #setRecent (list, { reloadMenu = true } = {}) {
@@ -415,6 +456,6 @@ export class ProjectManager {
 
   #updateMenu (win) {
     if (win === this.wm.current())
-      this.app.menu.handleWindowChange(win)
+      this.app.menu.handleWindowChange()
   }
 }

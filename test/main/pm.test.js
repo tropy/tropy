@@ -17,32 +17,37 @@ describe('ProjectManager', () => {
   let closed = (win, path, error) =>
     pm.handleProjectClosed({ sender: win }, { path, error })
 
+  // Registers new windows, like the WM's open.
+  let register = (open) => (...args) => {
+    let win = open(...args)
+    if (!wins.includes(win)) wins.push(win)
+    return win
+  }
+
   beforeEach(() => {
     wins = []
     current = null
 
     pm = new ProjectManager({
-      state: { recent: [file], win: {} },
+      state: { recent: [file] },
       menu: { reload: mock.fn(), handleWindowChange () {} },
       dispatch: mock.fn(),
       setHistory () {},
       wm: {
         current: () => current,
-        map: (_, fn = x => x) => wins.map(fn),
-        has: () => wins.length > 0,
-        is: () => true,
+        values: () => wins.values(),
+        is: (win, type) => type === 'project' && wins.includes(win),
         fromEvent: ({ sender }) => sender,
         first: () => null,
         setTitle () {},
-        close () {},
+        close: async () => {},
         sendEach () {},
         whenReady: (win, resolve) => resolve(),
-        open: mock.fn(() => {
+        open: mock.fn(register(() => {
           let win = fakeWindow()
-          wins.push(win)
           setImmediate(() => opened(win, file))
           return win
-        })
+        }))
       }
     })
   })
@@ -53,81 +58,117 @@ describe('ProjectManager', () => {
       pm.open(file)
     ])
 
-    expect(a).to.equal(b)
+    expect(a.win).to.equal(b.win)
     expect(pm.wm.open.mock.callCount()).to.equal(1)
-    expect(pm.get(a)).to.include({ path: file })
+    expect(a.project).to.include({ path: file })
   })
 
   it('rejects when the project fails to open', async () => {
-    pm.wm.open.mock.mockImplementation(() => {
+    pm.wm.open.mock.mockImplementation(register(() => {
       let win = fakeWindow()
       setImmediate(() => closed(win, file, { message: 'corrupt' }))
       return win
-    })
+    }))
 
     let err = await pm.open(file).catch(e => e)
     expect(err).to.have.property('message', 'corrupt')
   })
 
-  it('focuses the window of an open project', async () => {
+  it('focuses the window of an open project', () => {
     let win = fakeWindow()
     opened(win, file)
 
-    expect(await pm.show(file, null)).to.equal(win)
+    expect(pm.show(file)).to.equal(win)
     expect(win.show.mock.callCount()).to.equal(1)
     expect(pm.wm.open.mock.callCount()).to.equal(0)
   })
 
-  it('opens projects in a given window', async () => {
+  it('opens projects in a given window', () => {
     let win = fakeWindow()
-    await pm.show(file, win)
+    pm.show(file, { win })
 
     let [action, target] = pm.app.dispatch.mock.calls[0].arguments
     expect(action).to.have.property('payload', file)
     expect(target).to.equal(win)
   })
 
-  it('opens projects in the empty current window or a new one', async () => {
+  it('opens projects in the empty current window or a new one', () => {
     current = fakeWindow()
     wins.push(current)
 
-    await pm.show(file)
+    pm.show(file)
     expect(pm.app.dispatch.mock.calls[0].arguments[1]).to.equal(current)
 
     opened(current, file)
-    pm.wm.open.mock.mockImplementation(() => fakeWindow())
+    pm.wm.open.mock.mockImplementation(register(() => fakeWindow()))
 
-    await pm.show('/other.tpy')
+    pm.show('/other.tpy')
     expect(pm.wm.open.mock.callCount()).to.equal(1)
   })
 
-  it('does not reuse a window that is still being created', async () => {
+  it('shows the empty current window or a new one without a path', () => {
+    current = fakeWindow()
+    wins.push(current)
+
+    expect(pm.show()).to.equal(current)
+    expect(current.show.mock.callCount()).to.equal(1)
+
+    opened(current, file)
+    pm.wm.open.mock.mockImplementation(register(() => fakeWindow()))
+
+    expect(pm.show()).not.to.equal(current)
+    expect(pm.wm.open.mock.callCount()).to.equal(1)
+  })
+
+  it('resolves opens of open projects right away', async () => {
+    let win = fakeWindow()
+    opened(win, file)
+
+    let { win: shown, project } = await pm.open(file)
+
+    expect(shown).to.equal(win)
+    expect(project).to.include({ path: file })
+    expect(pm.wm.open.mock.callCount()).to.equal(0)
+  })
+
+  it('switches projects in the window of the old project', async () => {
+    let win = fakeWindow()
+    opened(win, '/old.tpy')
+
+    await pm.handleSwitchProject(null, { path: '/new.tpy', old: '/old.tpy' })
+
+    let [action, target] = pm.app.dispatch.mock.calls[0].arguments
+    expect(action).to.have.property('payload', '/new.tpy')
+    expect(target).to.equal(win)
+  })
+
+  it('does not reuse a window that is opening a project', () => {
     let created = fakeWindow()
 
     // The new window is current before it has loaded.
-    pm.wm.open.mock.mockImplementation(() => {
+    pm.wm.open.mock.mockImplementation(register(() => {
       current = created
       return created
-    })
+    }))
 
     pm.show(file)
 
-    pm.wm.open.mock.mockImplementation(() => fakeWindow())
-    await pm.show('/other.tpy')
+    pm.wm.open.mock.mockImplementation(register(() => fakeWindow()))
+    pm.show('/other.tpy')
 
     expect(pm.app.dispatch.mock.callCount()).to.equal(0)
     expect(pm.wm.open.mock.callCount()).to.equal(2)
   })
 
   it('creates projects in a new empty window', async () => {
-    pm.wm.open.mock.mockImplementation((type, props) => {
+    pm.wm.open.mock.mockImplementation(register((type, props) => {
       let win = fakeWindow()
       expect(props.file).to.be.undefined
       setImmediate(() => opened(win, '/new.tropy'))
       return win
-    })
+    }))
 
-    let win = await pm.open('/new.tropy', null, { create: { name: 'New' } })
+    let { win } = await pm.open('/new.tropy', { create: { name: 'New' } })
     let [action, target] = pm.app.dispatch.mock.calls[0].arguments
 
     expect(target).to.equal(win)
@@ -137,22 +178,23 @@ describe('ProjectManager', () => {
     })
   })
 
-  it('rejects a create when its new window closes before it is ready', async () => {
+  it('rejects a create when its new window closes', async () => {
     let win = fakeWindow()
-    pm.wm.open.mock.mockImplementation(() => win)
+    pm.wm.open.mock.mockImplementation(register(() => win))
 
-    let opening = pm.open('/new.tropy', null, { create: {} })
+    let opening = pm.open('/new.tropy', { create: {} })
     // The window exists, but never becomes ready.
     await new Promise(setImmediate)
     pm.handleWindowClosed('project', win)
 
     let err = await opening.catch(e => e)
-    expect(err).to.have.property('message', 'window closed')
+    expect(err).to.include({ code: 'ECANCELED' })
   })
 
-  it('opens projects for a renderer in its window', async () => {
+  it('opens projects for a renderer in its window', () => {
     let win = fakeWindow()
     let create = { name: 'New' }
+    wins.push(win)
 
     pm.handleOpenProject(win, { path: '/new.tropy', create })
 
@@ -174,7 +216,7 @@ describe('ProjectManager', () => {
       .to.include({ file: '/b.tpy' })
   })
 
-  it('focuses a project open in another window instead', async () => {
+  it('focuses a project open in another window instead', () => {
     let other = fakeWindow()
     opened(other, file)
 
@@ -185,14 +227,16 @@ describe('ProjectManager', () => {
   })
 
   it('passes meta like silent to new windows', async () => {
-    pm.wm.open.mock.mockImplementation((type, props) => {
+    pm.wm.open.mock.mockImplementation(register((type, props, opts) => {
       let win = fakeWindow()
       expect(props.file).to.be.undefined
+      // The project's window, not a fixed size one without project.
+      expect(opts.fixedSize).to.be.false
       setImmediate(() => opened(win, '/a.tpy'))
       return win
-    })
+    }))
 
-    await pm.open('/a.tpy', null, { silent: true })
+    await pm.open('/a.tpy', { silent: true })
 
     expect(pm.app.dispatch.mock.calls[0].arguments[0])
       .to.deep.include({ payload: '/a.tpy', meta: { silent: true } })
@@ -200,7 +244,7 @@ describe('ProjectManager', () => {
 
   it('cancels opens and forgets the project when a window crashes', async () => {
     let win = fakeWindow()
-    pm.wm.open.mock.mockImplementation(() => win)
+    pm.wm.open.mock.mockImplementation(register(() => win))
 
     let opening = pm.open('/a.tpy')
     pm.handleWindowCrashed('project', win)
@@ -211,6 +255,46 @@ describe('ProjectManager', () => {
     opened(win, '/b.tpy')
     pm.handleWindowCrashed('project', win)
     expect(pm.get(win)).to.be.null
+  })
+
+  it('cancels opens when a window reloads', async () => {
+    let win = fakeWindow()
+    pm.wm.open.mock.mockImplementation(register(() => win))
+
+    let opening = pm.open('/a.tpy')
+    pm.handleWindowReload('project', win)
+
+    let err = await opening.catch(e => e)
+    expect(err).to.include({ code: 'ECANCELED' })
+  })
+
+  it('ignores updates of projects a window does not have open', () => {
+    let win = fakeWindow()
+    let update = (path) =>
+      pm.handleProjectUpdated({ sender: win }, { path, name: 'New' })
+
+    update('/a.tpy')
+    expect(pm.get(win)).to.be.null
+
+    opened(win, '/a.tpy')
+    update('/b.tpy')
+    expect(pm.get(win)).to.include({ path: '/a.tpy' })
+
+    update('/a.tpy')
+    expect(pm.get(win)).to.include({ path: '/a.tpy', name: 'New' })
+  })
+
+  it('finds no window without a path', () => {
+    wins.push(fakeWindow())
+    expect(pm.window(undefined)).to.be.null
+  })
+
+  it('opens projects requested by other windows elsewhere', () => {
+    let prefs = fakeWindow()
+    pm.handleOpenProject(prefs, { path: file })
+
+    expect(pm.app.dispatch.mock.callCount()).to.equal(0)
+    expect(pm.wm.open.mock.callCount()).to.equal(1)
   })
 
   it('closes only the prefs of the window opening a project', () => {
@@ -225,6 +309,17 @@ describe('ProjectManager', () => {
     expect(prefs.close.mock.callCount()).to.equal(1)
   })
 
+  it('reloads the project of closed prefs', () => {
+    let win = fakeWindow()
+    opened(win, file)
+
+    pm.handleWindowClose('prefs', { getParentWindow: () => win })
+
+    let [action, target] = pm.app.dispatch.mock.calls[0].arguments
+    expect(action.name).to.equal('project.reload')
+    expect(target).to.equal(win)
+  })
+
   it('resolves unknown URL ids to null', async () => {
     expect(await pm.openById('unknown')).to.be.null
   })
@@ -233,8 +328,26 @@ describe('ProjectManager', () => {
     current = fakeWindow()
     opened(current, file)
 
-    expect(await pm.openById('current')).to.equal(current)
+    expect(await pm.openById('current')).to.include({ win: current })
     expect(pm.wm.open.mock.callCount()).to.equal(0)
+  })
+
+  it('prefers open projects when finding URL ids', () => {
+    let other = '/elsewhere/pm.test.js'
+    opened(fakeWindow(), other)
+    pm.app.state.recent = [file, other]
+
+    expect(pm.find('pm.test')).to.equal(other)
+  })
+
+  it('lists only existing recent projects', () => {
+    pm.app.state.recent = ['/missing.tpy', file]
+    expect(pm.list().map(p => p.path)).to.eql([file])
+  })
+
+  it('falls back to the most recent project for the current project', () => {
+    pm.app.state.recent = ['/missing.tpy', file]
+    expect(pm.find('current')).to.equal(file)
   })
 
   it('tracks the project of each window', () => {
@@ -268,10 +381,10 @@ describe('ProjectManager', () => {
     opened(win, '/b.tpy')
 
     pm.app.state.recent = ['/a.tpy', '/b.tpy', '/c.tpy']
-    pm.clear(['/a.tpy', '/b.tpy'])
+    pm.clearRecent(['/a.tpy', '/b.tpy'])
     expect(pm.recent).to.eql(['/b.tpy', '/c.tpy'])
 
-    pm.clear()
+    pm.clearRecent()
     expect(pm.recent).to.eql(['/b.tpy'])
   })
 })

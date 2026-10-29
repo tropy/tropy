@@ -56,6 +56,7 @@ describe('Menu conditions', () => {
   let app = {
     pm: {
       get: (w) => (w === win) ? { isReadOnly: false } : null,
+      has: (w) => w === win,
       window: (path) => (path === '/open.tpy') ? other : null
     }
   }

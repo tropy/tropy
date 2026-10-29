@@ -117,7 +117,7 @@ const fakeProjectManager = (api) => {
   })
 
   return {
-    open: mock.fn(async () => {}),
+    open: mock.fn(async (path) => ({ win: window(path), project: { path } })),
     find: (id) => (id === 'missing') ? null : `/projects/${id}.tropy`,
     window,
     describe,

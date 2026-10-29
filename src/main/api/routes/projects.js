@@ -1,10 +1,8 @@
 import { existsSync } from 'node:fs'
 import { dirname, isAbsolute, resolve } from 'node:path'
-import { fail } from '../errors.js'
+import { fail, found } from '../errors.js'
 import { object, withUrlId } from '../schema.js'
 
-// The known projects, open or not.
-// Projects that are not open can be opened via their tropy:// url.
 export default async function projects (fastify, { pm }) {
   fastify.get('/projects', {
     schema: {
@@ -52,7 +50,7 @@ export default async function projects (fastify, { pm }) {
     if (!existsSync(dirname(path)))
       throw fail(400, `folder does not exist: ${dirname(path)}`)
 
-    await pm.open(path, null, {
+    await pm.open(path, {
       create: { name: body.name },
       silent: true
     })
@@ -69,12 +67,6 @@ export default async function projects (fastify, { pm }) {
       summary: 'Show a known project',
       params: withUrlId()
     }
-  }, ({ params }) => {
-    let path = pm.find(params.urlId)
-
-    if (path == null)
-      throw fail(404, `unknown project: ${params.urlId}`)
-
-    return pm.describe(path)
-  })
+  }, ({ params }) =>
+    pm.describe(found(pm.find(params.urlId), `unknown project: ${params.urlId}`)))
 }

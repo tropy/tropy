@@ -281,11 +281,13 @@ describe('WindowManager', () => {
   describe('configure', () => {
     it('gives project windows without a project a fixed size', () => {
       let wm = new WindowManager(mkapp())
-      let size = (args) => wm.configure('project', {}, args).fixedSize
+      let size = (args, opts = {}) =>
+        wm.configure('project', opts, args).fixedSize
 
       expect(size({})).to.include({ width: 440, height: 580 })
       expect(size({ recent: ['/a.tropy'] })).to.include({ width: 880 })
       expect(size({ file: '/a.tropy' })).to.be.undefined
+      expect(size({}, { fixedSize: false })).to.be.false
     })
   })
 

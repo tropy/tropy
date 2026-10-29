@@ -18,7 +18,9 @@ describe('ProtocolHandler', () => {
       },
       pm: {
         openById: mock.fn(async (id) =>
-          (id === 'Kraków Atlas' || id === 'current') ? win : null),
+          (id === 'Kraków Atlas' || id === 'current') ?
+            { win, project: { path: '/Kraków Atlas.tropy' } } :
+            null),
         get: mock.fn(() => ({ path: '/Kraków Atlas.tropy' })),
         describe: (path) => ({ path }),
         pick: mock.fn(async () => null),
@@ -121,14 +123,10 @@ describe('ProtocolHandler', () => {
   })
 
   it('reports failures to open projects', async () => {
-    app.pm.get.mock.mockImplementation(() => null)
-    let err = await proto.handle(base).catch(e => e)
-    expect(err).to.have.property('status', 409)
-
     app.pm.openById.mock.mockImplementation(async () => {
       throw new Error('corrupt')
     })
-    err = await proto.handle(base).catch(e => e)
+    let err = await proto.handle(base).catch(e => e)
     expect(err).to.include({ status: 500, message: 'corrupt' })
   })
 

@@ -150,6 +150,11 @@ export function remove (array, ...items) {
   return array.filter(it => items.indexOf(it) < 0)
 }
 
+// A copy of array with items moved (or added) to the front.
+export function promote (array, ...items) {
+  return [...items, ...remove(array, ...items)]
+}
+
 export function sample (array) {
   return array[Math.floor(Math.random() * array.length)]
 }
