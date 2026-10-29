@@ -1,18 +1,24 @@
 import { product, version } from '../../common/release.js'
+import { pick } from '../../common/util.js'
 
-// Serves the OpenAPI description of the documented routes,
+// Serves the OpenAPI description of all pertinent API routes,
 // and of the tropy:// URLs as x-tropy-urls.
 export default async function openapi (fastify, { proto }) {
   let spec
 
-  fastify.get('/openapi.json', { schema: { hide: true } }, () =>
-    (spec ??= build(fastify.catalog, proto.routes)))
+  fastify.get('/openapi.json', {
+    schema: {
+      hide: true
+    }
+  }, () => (
+    spec ??= describe(fastify.catalog, proto.routes)
+  ))
 }
 
-function build (routes, urls) {
+function describe (apiRoutes, protoRoutes) {
   let paths = {}
 
-  for (let { method, url, schema } of routes) {
+  for (let { method, url, schema } of apiRoutes) {
     let path = url.replace(/:(\w+)/g, '{$1}')
 
     paths[path] ??= {}
@@ -46,8 +52,13 @@ function build (routes, urls) {
     openapi: '3.1.0',
     info: { title: `${product} API`, version },
     paths,
-    'x-tropy-urls': urls.map(({ url, operationId, summary, params, query }) =>
-      ({ url, operationId, summary, params, query }))
+    'x-tropy-urls': protoRoutes.map((route) => pick(route, [
+      'url',
+      'operationId',
+      'summary',
+      'params',
+      'query'
+    ]))
   }
 }
 
