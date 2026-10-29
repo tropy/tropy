@@ -19,7 +19,6 @@ import {
   blank,
   counter,
   omit,
-  pick,
   promote,
   remove,
   restrict,
@@ -176,13 +175,6 @@ export class WindowManager extends EventEmitter {
           break
       }
 
-      let id = persistenceId(type, persistence)
-      let saved = id ? this.app.state.win[id] : null
-
-      if (saved) {
-        pick(saved, ['x', 'y', 'width', 'height'], options)
-      }
-
       let { parent } = options
       options.show = (show === true)
 
@@ -193,10 +185,8 @@ export class WindowManager extends EventEmitter {
       }
 
       var win = new BrowserWindow(sanitizeWindowBounds(options))
-      this.setProps(win, { persistenceId: id })
-
-      if (saved?.isMaximized)
-        win.once('show', () => win.maximize())
+      this.setProps(win, { persistenceId: persistenceId(type, persistence) })
+      this.restore(win)
 
       if (fixedSize) {
         this.setFixedSize(win, true, fixedSize)
