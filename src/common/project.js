@@ -8,6 +8,7 @@ import { home, normalize } from './os.js'
 import { into, select, update } from './query.js'
 import { version } from './release.js'
 import { empty, pMap } from './util.js'
+import { CodeError } from './error.js'
 import { info, warn } from './log.js'
 
 import { Asset } from '../asset/asset.js'
@@ -74,7 +75,7 @@ export async function create (path, schema, appDir, {
 async function checkProjectPath (path, overwrite = false) {
   if (existsSync(path)) {
     if (!overwrite)
-      throw new Error(`project file exists: "${path}"`)
+      throw new CodeError('EEXIST', `project file exists: "${path}"`)
 
     warn(`trashing old project previously at "${path}"`)
     await moveToTrash(path)

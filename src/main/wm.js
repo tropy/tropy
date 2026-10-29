@@ -8,6 +8,7 @@ import { papersize } from './papersize.js'
 import dialog from './dialog.js'
 import { debug, error, trace, warn } from '../common/log.js'
 import { darwin, linux, win32 } from '../common/os.js'
+import { CodeError } from '../common/error.js'
 import { isRightToLeft } from './locale.js'
 import { channel } from '../common/release.js'
 import { Resource, Icon, View } from './res.js'
@@ -696,9 +697,7 @@ export class WindowManager extends EventEmitter {
 
       if (timeout > 0)
         timer = setTimeout(() => {
-          reject(Object.assign(new Error(`no response after ${timeout}ms`), {
-            code: 'ETIMEDOUT'
-          }))
+          reject(new CodeError('ETIMEDOUT', `no response after ${timeout}ms`))
         }, timeout)
 
     }).finally(() => {
@@ -712,9 +711,7 @@ export class WindowManager extends EventEmitter {
   cancel (win, reason) {
     for (let { win: w, reject } of Object.values(this.pending)) {
       if (w === win)
-        reject(Object.assign(new Error(`window ${reason}`), {
-          code: 'ECANCELED'
-        }))
+        reject(new CodeError('ECANCELED', `window ${reason}`))
     }
   }
 
