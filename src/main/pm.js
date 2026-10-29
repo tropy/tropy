@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import { app, ipcMain as ipc } from 'electron'
-import { CodeError } from '../common/error.js'
+import { CodeError, IpcError } from '../common/error.js'
 import { info, warn } from '../common/log.js'
 import { darwin, win32 } from '../common/os.js'
 import { promote, protocolURL, urlId as getUrlId } from '../common/util.js'
@@ -87,9 +87,18 @@ export class ProjectManager {
 
   // Associates the project with the window
   set (win, project) {
+    if (this.get(win)?.path !== project.path)
+      this.wm.setPersistenceId(win, getUrlId(project.path))
+
     this.#projects.set(win, project)
-    this.#setTitle(win, project)
-    this.#updateMenu(win)
+
+    this.wm.setTitle(win, [
+      project.name,
+      project.isReadOnly ? this.app.dict.window.project.readOnly : ''
+    ].join(''), project.path)
+
+    if (win === this.wm.current())
+      this.app.menu.handleWindowChange()
   }
 
   // Removes the window-project mapping
@@ -97,8 +106,12 @@ export class ProjectManager {
     if (!this.#projects.delete(win))
       return false
 
-    this.#setTitle(win, null)
-    this.#updateMenu(win)
+    this.wm.setPersistenceId(win, null)
+    this.wm.setTitle(win)
+
+    if (win === this.wm.current())
+      this.app.menu.handleWindowChange()
+
     return true
   }
 
@@ -151,7 +164,7 @@ export class ProjectManager {
     if (darwin || win32)
       app.addRecentDocument(path)
 
-    this.#setRecent(promote(this.recent, path))
+    this.setRecent(promote(this.recent, path))
   }
 
   // Removes projects from the recent projects (open projects are kept).
@@ -159,8 +172,17 @@ export class ProjectManager {
     let open = new Set(this.wm.values('project').map(win =>
       this.get(win)?.path))
 
-    this.#setRecent(this.recent.filter(file =>
+    this.setRecent(this.recent.filter(file =>
       open.has(file) || (paths && !paths.includes(file))))
+  }
+
+  setRecent (list, { reloadMenu = true } = {}) {
+    this.app.state.recent = list
+    this.wm.sendEach('project', 'recent', list)
+    this.wm.prune('project', list.map(getUrlId))
+
+    if (reloadMenu)
+      this.app.menu.reload()
   }
 
   // Opening projects
@@ -220,7 +242,7 @@ export class ProjectManager {
   // Resolves a project URL id to the project and its window,
   // opening the project if necessary.
   // Returns null if there is no such project.
-  async openById (urlId, meta) {
+  async openByUrlId (urlId, meta) {
     let path = this.find(urlId)
     return path ? this.open(path, meta) : null
   }
@@ -276,7 +298,7 @@ export class ProjectManager {
 
     if (this.#isPending(path, win))
       this.#settle(path, error ?
-        Object.assign(new Error(error.message), error) :
+        new IpcError(error) :
         new CodeError('ECANCELED', 'project open canceled'))
 
     if (this.get(win)?.path === path)
@@ -289,7 +311,7 @@ export class ProjectManager {
     let path = this.get(win)?.path
 
     if (path != null && this.recent[0] !== path)
-      this.#setRecent(promote(this.recent, path), { reloadMenu: false })
+      this.setRecent(promote(this.recent, path), { reloadMenu: false })
   }
 
   // Prefs may have changed the settings of their parent window's project,
@@ -377,7 +399,7 @@ export class ProjectManager {
   // it shows itself on init.
   #openWindow (path, meta) {
     let args = { recent: this.recent }
-    let opts = { show: 'init' }
+    let opts = { show: 'init', persistence: path && getUrlId(path) }
 
     // Plain opens pass the project as window argument.
     // Otherwise the action carries the meta (e.g. create, silent);
@@ -428,34 +450,13 @@ export class ProjectManager {
 
     this.#pending.delete(path)
 
-    if (error)
+    if (error) {
+      if (!this.has(pending.win))
+        this.wm.setPersistenceId(pending.win, null)
+
       pending.opened.reject(error)
-    else
+    } else {
       pending.opened.resolve()
-  }
-
-  // Without reloading the menu, its recent projects
-  // are updated with its next reload.
-  #setRecent (list, { reloadMenu = true } = {}) {
-    this.app.state.recent = list
-    this.wm.sendEach('project', 'recent', list)
-
-    if (reloadMenu)
-      this.app.menu.reload()
-  }
-
-  #setTitle (win, project) {
-    if (project == null)
-      return this.wm.setTitle(win)
-
-    this.wm.setTitle(win, [
-      project.name,
-      project.isReadOnly ? this.app.dict.window.project.readOnly : ''
-    ].join(''), project.path)
-  }
-
-  #updateMenu (win) {
-    if (win === this.wm.current())
-      this.app.menu.handleWindowChange()
+    }
   }
 }
