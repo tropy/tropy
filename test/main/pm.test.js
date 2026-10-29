@@ -1,5 +1,5 @@
 import { mock } from 'node:test'
-import { ProjectManager } from '#tropy/main/project.js'
+import { ProjectManager } from '#tropy/main/pm.js'
 
 const fakeWindow = () => ({
   show: mock.fn()
@@ -49,7 +49,7 @@ describe('ProjectManager', () => {
 
   it('opens a project once for concurrent requests', async () => {
     let [a, b] = await Promise.all([
-      pm.openById('project.test'),
+      pm.openById('pm.test'),
       pm.open(file)
     ])
 

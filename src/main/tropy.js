@@ -40,7 +40,7 @@ import * as shell from './shell.js'
 import { addIdleObserver } from './idle.js'
 import { migrate } from './migrate.js'
 import * as act from './actions.js'
-import { ProjectManager } from './project.js'
+import { ProjectManager } from './pm.js'
 import { ProtocolHandler } from './protocol.js'
 
 import {
