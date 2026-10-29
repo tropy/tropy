@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import { app, ipcMain as ipc } from 'electron'
+import { CodeError } from '../common/error.js'
 import { info, warn } from '../common/log.js'
 import { darwin, win32 } from '../common/os.js'
 import { protocolURL, urlId as getUrlId } from '../common/util.js'
@@ -28,7 +29,10 @@ export class ProjectManager {
       .on(PROJECT.CLOSED, this.handleProjectClosed)
       .on('switch-project', this.handleSwitchProject)
 
-    this.wm.on('closed', this.handleWindowClosed)
+    this.wm
+      .on('closed', this.handleWindowClosed)
+      .on('crashed', this.handleWindowCrashed)
+      .on('focus-change', this.handleWindowFocus)
 
     this.app
       .on('app:create-project', this.handleCreateProject)
@@ -45,7 +49,10 @@ export class ProjectManager {
       .off(PROJECT.CLOSED, this.handleProjectClosed)
       .off('switch-project', this.handleSwitchProject)
 
-    this.wm.off('closed', this.handleWindowClosed)
+    this.wm
+      .off('closed', this.handleWindowClosed)
+      .off('crashed', this.handleWindowCrashed)
+      .off('focus-change', this.handleWindowFocus)
 
     this.app
       .off('app:create-project', this.handleCreateProject)
@@ -145,7 +152,10 @@ export class ProjectManager {
       let args = { recent: this.recent }
       let opts = { show: 'init' }
 
-      if (meta.create) {
+      // Plain opens pass the project as window argument,
+      // so the window opens at its project size right away.
+      // Otherwise the action carries the meta (e.g. create, silent).
+      if (Object.values(meta).some(Boolean)) {
         win = this.wm.open('project', args, opts)
         this.app.dispatch(act.project.open(path, meta), win)
       } else {
@@ -185,11 +195,11 @@ export class ProjectManager {
   // Returns null if there is no such project.
   // The legacy id 'current' is the active project window
   // or else the most recent project.
-  async openById (urlId) {
+  async openById (urlId, meta) {
     let path = this.find(urlId) ??
       ((urlId === 'current') ? this.latest() : null)
 
-    return path ? this.open(path) : null
+    return path ? this.open(path, undefined, meta) : null
   }
 
   async openLatest () {
@@ -221,7 +231,9 @@ export class ProjectManager {
     if (this.#isPending(project.path, win))
       this.#settle(project.path)
 
-    this.wm.close(['prefs'])
+    // Prefs show the settings of their parent window's project.
+    let prefs = this.wm.first('prefs')
+    if (prefs?.getParentWindow() === win) prefs.close()
 
     if (darwin || win32)
       app.addRecentDocument(project.path)
@@ -232,10 +244,7 @@ export class ProjectManager {
     this.app.setHistory(null, win)
     this.#setTitle(win, project)
 
-    this.#setRecent([
-      project.path,
-      ...this.recent.filter(file => file !== project.path)
-    ])
+    this.#setRecent(this.#bump(project.path))
   }
 
   handleProjectUpdated = (event, project) => {
@@ -258,7 +267,7 @@ export class ProjectManager {
     if (this.#isPending(path, win))
       this.#settle(path, error ?
         Object.assign(new Error(error.message), error) :
-        new Error('project open canceled'))
+        new CodeError('ECANCELED', 'project open canceled'))
 
     if (this.get(win)?.path === path) {
       this.#projects.delete(win)
@@ -267,10 +276,27 @@ export class ProjectManager {
     }
   }
 
+  // Recent projects follow use: the focused project comes first.
+  // Skips the menu reload, which rebuilds the whole app menu.
+  handleWindowFocus = (type, win) => {
+    let path = this.get(win)?.path
+
+    if (path != null && this.recent[0] !== path)
+      this.#setRecent(this.#bump(path), { reloadMenu: false })
+  }
+
   handleWindowClosed = (type, win) => {
-    for (let [path, pending] of this.#pending) {
-      if (pending.win === win)
-        this.#settle(path, new Error('window closed'))
+    this.#release(win, 'window closed')
+  }
+
+  // Crashed windows report nothing: their project is gone.
+  handleWindowCrashed = (type, win) => {
+    this.#release(win, 'window crashed')
+
+    if (this.get(win)) {
+      this.#projects.delete(win)
+      this.#setTitle(win, null)
+      this.#updateMenu(win)
     }
   }
 
@@ -340,6 +366,14 @@ export class ProjectManager {
     return this.#pending.get(path)?.win === win
   }
 
+  // Settles all opens pending in win.
+  #release (win, reason) {
+    for (let [path, pending] of this.#pending) {
+      if (pending.win === win)
+        this.#settle(path, new CodeError('ECANCELED', reason))
+    }
+  }
+
   #settle (path, error) {
     let pending = this.#pending.get(path)
 
@@ -354,10 +388,19 @@ export class ProjectManager {
       pending.opened.resolve()
   }
 
-  #setRecent (list) {
+  // The recent projects with path first.
+  #bump (path) {
+    return [path, ...this.recent.filter(file => file !== path)]
+  }
+
+  // Without reloading the menu, its recent projects
+  // are updated with its next reload.
+  #setRecent (list, { reloadMenu = true } = {}) {
     this.app.state.recent = list
     this.wm.sendEach('project', 'recent', list)
-    this.app.menu.reload()
+
+    if (reloadMenu)
+      this.app.menu.reload()
   }
 
   #setTitle (win, project) {
