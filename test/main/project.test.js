@@ -23,7 +23,7 @@ describe('ProjectManager', () => {
 
     pm = new ProjectManager({
       state: { recent: [file], win: {} },
-      menu: { reload () {}, handleWindowChange () {} },
+      menu: { reload: mock.fn(), handleWindowChange () {} },
       dispatch: mock.fn(),
       setHistory () {},
       wm: {
@@ -32,6 +32,7 @@ describe('ProjectManager', () => {
         has: () => wins.length > 0,
         is: () => true,
         fromEvent: ({ sender }) => sender,
+        first: () => null,
         setTitle () {},
         close () {},
         sendEach () {},
@@ -183,6 +184,47 @@ describe('ProjectManager', () => {
     expect(pm.app.dispatch.mock.callCount()).to.equal(0)
   })
 
+  it('passes meta like silent to new windows', async () => {
+    pm.wm.open.mock.mockImplementation((type, props) => {
+      let win = fakeWindow()
+      expect(props.file).to.be.undefined
+      setImmediate(() => opened(win, '/a.tpy'))
+      return win
+    })
+
+    await pm.open('/a.tpy', null, { silent: true })
+
+    expect(pm.app.dispatch.mock.calls[0].arguments[0])
+      .to.deep.include({ payload: '/a.tpy', meta: { silent: true } })
+  })
+
+  it('cancels opens and forgets the project when a window crashes', async () => {
+    let win = fakeWindow()
+    pm.wm.open.mock.mockImplementation(() => win)
+
+    let opening = pm.open('/a.tpy')
+    pm.handleWindowCrashed('project', win)
+
+    let err = await opening.catch(e => e)
+    expect(err).to.include({ code: 'ECANCELED' })
+
+    opened(win, '/b.tpy')
+    pm.handleWindowCrashed('project', win)
+    expect(pm.get(win)).to.be.null
+  })
+
+  it('closes only the prefs of the window opening a project', () => {
+    let win = fakeWindow()
+    let prefs = { close: mock.fn(), getParentWindow: () => win }
+    pm.wm.first = () => prefs
+
+    opened(fakeWindow(), '/a.tpy')
+    expect(prefs.close.mock.callCount()).to.equal(0)
+
+    opened(win, '/b.tpy')
+    expect(prefs.close.mock.callCount()).to.equal(1)
+  })
+
   it('resolves unknown URL ids to null', async () => {
     expect(await pm.openById('unknown')).to.be.null
   })
@@ -204,6 +246,21 @@ describe('ProjectManager', () => {
 
     closed(win, file)
     expect(pm.get(win)).to.be.null
+  })
+
+  it('moves the focused project to the front of the recent projects', () => {
+    let a = fakeWindow()
+    let b = fakeWindow()
+
+    opened(a, '/a.tpy')
+    opened(b, '/b.tpy')
+    expect(pm.recent.slice(0, 2)).to.eql(['/b.tpy', '/a.tpy'])
+
+    let reloads = pm.app.menu.reload.mock.callCount()
+    pm.handleWindowFocus('project', a)
+
+    expect(pm.recent.slice(0, 2)).to.eql(['/a.tpy', '/b.tpy'])
+    expect(pm.app.menu.reload.mock.callCount()).to.equal(reloads)
   })
 
   it('keeps open projects when clearing recent projects', () => {

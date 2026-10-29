@@ -92,3 +92,14 @@ export class HttpError extends Error {
     this.instance = problem?.instance
   }
 }
+
+const ERROR_STATUS = {
+  EACCES: 403,
+  EPERM: 403,
+  EEXIST: 409,
+  ECANCELED: 503,
+  ETIMEDOUT: 504
+}
+
+export const statusOf = (error) =>
+  error.status || error.statusCode || ERROR_STATUS[error.code]

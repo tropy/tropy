@@ -92,6 +92,17 @@ describe('api', () => {
       }
     })
 
+    it('maps failed creates to their status', async () => {
+      let dir = await mkdtemp(join(tmpdir(), 'tropy-api-'))
+
+      api.pm.open.mock.mockImplementationOnce(async () => {
+        throw Object.assign(new Error('permission denied'), { code: 'EACCES' })
+      })
+
+      let res = await api.post('/projects', { path: join(dir, 'a.tropy') })
+      expect(res.statusCode).to.equal(403)
+    })
+
     it('shows known projects', async () => {
       // URL ids are decoded for lookup, encoded in responses
       expect((await api.get('/projects/Krak%C3%B3w%20Atlas')).json())
