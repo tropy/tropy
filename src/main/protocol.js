@@ -1,5 +1,5 @@
 import { clipboard } from 'electron'
-import { HttpError } from '../common/error.js'
+import { HttpError, statusOf } from '../common/error.js'
 import { info, warn } from '../common/log.js'
 import { protocolURL } from '../common/util.js'
 import * as act from './actions.js'
@@ -190,7 +190,7 @@ export class ProtocolHandler {
           return await route.handler(this.app, { ...query, ...params }, { prompt })
         } catch (err) {
           throw (err.status) ? err : new HttpError({
-            status: 500,
+            status: statusOf(err) || 500,
             body: err.message
           }, { cause: err })
         }
@@ -243,7 +243,8 @@ export class ProtocolHandler {
 }
 
 async function openProject (app, urlId, { prompt }) {
-  let win = await app.pm.openById(urlId)
+  // Without prompt (e.g. from the API), no error dialogs either.
+  let win = await app.pm.openById(urlId, { silent: !prompt })
 
   if (win == null) {
     if (!prompt)

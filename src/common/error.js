@@ -8,6 +8,14 @@ export class DuplicateError extends Error {
   }
 }
 
+export class CodeError extends Error {
+  name = 'CodeError'
+  constructor (code, message, options) {
+    super(message, options)
+    this.code = code
+  }
+}
+
 export class AccountError extends Error {
   name = 'AccountError'
   constructor (code, message = code, type = 'error', ...args) {
