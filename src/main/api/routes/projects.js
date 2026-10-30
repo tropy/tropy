@@ -57,7 +57,7 @@ export default async function projects (fastify, { pm }) {
 
     let project = pm.describe(path)
 
-    reply.code(201).header('location', `/projects/${project.urlId}`)
+    reply.code(201).header('location', `/projects/${encodeURIComponent(project.urlId)}`)
     return project
   })
 

@@ -127,7 +127,7 @@ export class ProjectManager {
     if (urlId === 'current')
       return this.get(this.wm.current('project'))?.path ?? this.mostRecent()
 
-    let id = encodeURIComponent(urlId.toWellFormed().normalize())
+    let id = urlId.toWellFormed().normalize()
     let matches = this.recent.filter(file => getUrlId(file) === id)
 
     return matches.find(file => this.window(file) != null) ??

@@ -712,12 +712,11 @@ export function throttle (fn, ms) {
 
 export function urlId (path) {
   let file = String(path ?? '')
-  return encodeURIComponent(
-    basename(file, extname(file)).toWellFormed().normalize())
+  return basename(file, extname(file)).toWellFormed().normalize()
 }
 
 export function protocolURL (path, { item, photo, selection } = {}) {
-  let url = `tropy://project/${urlId(path)}`
+  let url = `tropy://project/${encodeURIComponent(urlId(path))}`
 
   if (item == null)
     return url

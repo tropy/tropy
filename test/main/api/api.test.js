@@ -104,10 +104,10 @@ describe('api', () => {
     })
 
     it('shows known projects', async () => {
-      // URL ids are decoded for lookup, encoded in responses
+      // URL ids are encoded in paths, plain in responses
       expect((await api.get('/projects/Krak%C3%B3w%20Atlas')).json())
         .to.include({
-          urlId: 'Krak%C3%B3w%20Atlas',
+          urlId: 'Kraków Atlas',
           path: '/projects/Kraków Atlas.tropy'
         })
 

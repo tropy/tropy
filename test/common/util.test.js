@@ -643,36 +643,28 @@ describe('util', () => {
 describe('url', () => {
   describe('urlId', () => {
     it('derives the id from the file basename', () => {
-      expect(util.urlId('/path/to/My Project.tpy')).to.equal('My%20Project')
+      expect(util.urlId('/path/to/My Project.tpy')).to.equal('My Project')
       expect(util.urlId('/path/to/research.tropy')).to.equal('research')
     })
 
     it('ignores the directory and extension', () => {
       expect(util.urlId('/Users/x/Archivo Historico.tpy'))
-        .to.equal('Archivo%20Historico')
-    })
-
-    it('percent-encodes unsafe characters', () => {
-      expect(util.urlId('/x/Über Café.tpy')).to.equal('%C3%9Cber%20Caf%C3%A9')
-      expect(util.urlId('/x/50%.tpy')).to.equal('50%25')
-      expect(util.urlId('/x/a&b.tpy')).to.equal('a%26b')
+        .to.equal('Archivo Historico')
     })
 
     it('keeps non-latin names distinct', () => {
       expect(util.urlId('/x/עברית.tpy')).to.not.equal(util.urlId('/x/研究.tpy'))
-      expect(util.urlId('/x/עברית.tpy')).to.equal('%D7%A2%D7%91%D7%A8%D7%99%D7%AA')
-      expect(util.urlId('/x/研究.tpy')).to.equal('%E7%A0%94%E7%A9%B6')
     })
 
     it('normalizes unicode composition', () => {
       // NFD (as stored by APFS/HFS+) and NFC must yield the same id
-      expect(util.urlId('/x/Krako\u0301w.tpy')).to.equal('Krak%C3%B3w')
-      expect(util.urlId('/x/Krak\u00f3w.tpy')).to.equal('Krak%C3%B3w')
+      expect(util.urlId('/x/Krako\u0301w.tpy')).to.equal('Krak\u00f3w')
+      expect(util.urlId('/x/Krak\u00f3w.tpy')).to.equal('Krak\u00f3w')
     })
 
     it('does not throw on malformed utf-16 in filenames', () => {
-      // NTFS allows unpaired surrogates; encodeURIComponent alone throws
-      expect(util.urlId('/x/notes\uD800.tpy')).to.equal('notes%EF%BF%BD')
+      // NTFS allows unpaired surrogates; encodeURIComponent throws on them
+      expect(util.urlId('/x/notes\uD800.tpy')).to.equal('notes\uFFFD')
     })
 
     it('returns an empty id when there is no path', () => {
@@ -685,6 +677,13 @@ describe('url', () => {
     it('derives the id from the file basename', () => {
       expect(util.protocolURL('/path/to/My Project.tpy'))
         .to.equal('tropy://project/My%20Project')
+    })
+
+    it('percent-encodes unsafe characters', () => {
+      expect(util.protocolURL('/x/Über Café.tpy'))
+        .to.equal('tropy://project/%C3%9Cber%20Caf%C3%A9')
+      expect(util.protocolURL('/x/50%.tpy')).to.equal('tropy://project/50%25')
+      expect(util.protocolURL('/x/a&b.tpy')).to.equal('tropy://project/a%26b')
     })
 
     it('builds item, photo and selection urls', () => {
@@ -705,11 +704,11 @@ describe('url', () => {
 
     it('round-trips through the WHATWG URL parser', () => {
       // ids must survive URL parsing so the protocol handler can
-      // match them against urlId() of recent project paths
+      // match them (decoded) against urlId() of recent project paths
       for (let name of ['My Project', '研究', 'Kraków', '50%']) {
         let url = new URL(util.protocolURL(`/x/${name}.tpy`))
         let [, id] = url.pathname.split('/')
-        expect(id).to.equal(util.urlId(`/x/${name}.tpy`))
+        expect(decodeURIComponent(id)).to.equal(util.urlId(`/x/${name}.tpy`))
       }
     })
   })

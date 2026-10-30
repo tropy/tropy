@@ -355,6 +355,14 @@ describe('ProjectManager', () => {
     expect(pm.find('pm.test')).to.equal(other)
   })
 
+  it('finds projects by the URL ids it describes', () => {
+    let other = '/elsewhere/Krako\u0301w 50%.tropy'
+    opened(fakeWindow(), other)
+    pm.app.state.recent = [file, other]
+
+    expect(pm.find(pm.describe(other).urlId)).to.equal(other)
+  })
+
   it('lists only existing recent projects', () => {
     pm.app.state.recent = ['/missing.tpy', file]
     expect(pm.list().map(p => p.path)).to.eql([file])
