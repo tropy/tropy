@@ -1,6 +1,7 @@
 import assert from 'node:assert'
 import { EventEmitter } from 'node:events'
 import { writeFile } from 'node:fs/promises'
+import { release } from 'node:os'
 import { join } from 'node:path'
 import { URL } from 'node:url'
 import { get } from './gsettings.js'
@@ -124,6 +125,7 @@ export class WindowManager extends EventEmitter {
         fixedSize,
         isExclusive,
         persistence,
+        quicklook,
         show,
         ...options
       } = this.configure(type, opts, args)
@@ -190,6 +192,10 @@ export class WindowManager extends EventEmitter {
 
       if (fixedSize) {
         this.setFixedSize(win, true, fixedSize)
+      }
+
+      if (quicklook) {
+        this.enableQuickLook(win, args.quicklook)
       }
 
       this.resetReadyState(win)
@@ -345,8 +351,8 @@ export class WindowManager extends EventEmitter {
       case 'dialog':
         this.handleShowDialog(win, ...args)
         break
-      case 'preview':
-        win.previewFile(...args)
+      case 'quicklook':
+        this.handleQuickLook(win, ...args)
         break
       case 'toggle-maximize':
       case 'maximize':
@@ -389,6 +395,78 @@ export class WindowManager extends EventEmitter {
     }
   }
 
+  // Lets the renderer open its quicklook companion with
+  // window.open('', 'quicklook'): a hidden child window
+  // in the same renderer process, for the parent to render into.
+  enableQuickLook (win, { vibrancy } = {}) {
+    win.webContents.setWindowOpenHandler(({ url, frameName }) => {
+      if (url !== 'about:blank' || frameName !== 'quicklook') {
+        warn(`prevented loading ${url}`)
+        return { action: 'deny' }
+      }
+
+      return {
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          ...(vibrancy ?
+            WindowManager.defaults.quicklook :
+            omit(WindowManager.defaults.quicklook, VIBRANCY)),
+          backgroundColor: vibrancy ? '#00000000' :
+            BODY[process.platform][nativeTheme.shouldUseDarkColors ? 'dark' : 'light'],
+          // Native window controls; on macOS this enables the
+          // Window Controls Overlay API for the titlebar layout.
+          titleBarOverlay: getTitleBarOverlay(),
+          trafficLightPosition: getWindowButtonPosition('quicklook'),
+          parent: win,
+          show: false
+        }
+      }
+    })
+
+    win.webContents.on('did-create-window', (child) => {
+      this.setProps(win, { quicklook: child })
+
+      // Child windows close with their parent, but survive its destruction.
+      win.once('closed', () => {
+        if (!child.isDestroyed()) child.destroy()
+      })
+
+      child
+        .on('close', (event) => {
+          if (this.getProps(win).unloading !== 'done') {
+            event.preventDefault()
+            child.hide()
+          }
+        })
+        .on('show', () => this.send(win, 'quicklook', { isVisible: true }))
+        .on('hide', () => this.send(win, 'quicklook', { isVisible: false }))
+        .once('closed', () => {
+          if (!win.isDestroyed())
+            this.setProps(win, { quicklook: null })
+        })
+    })
+  }
+
+  handleQuickLook (win, action, size) {
+    let child = this.getProps(win).quicklook
+
+    if (child == null || child.isDestroyed())
+      return
+
+    switch (action) {
+      case 'show':
+        if (!(size?.width > 0 && size?.height > 0))
+          return
+
+        fitQuickLook(child, win, size)
+        child.showInactive()
+        break
+      case 'hide':
+        child.hide()
+        break
+    }
+  }
+
   handleUnload (win, action) {
     if (this.getProps(win).unloading == null) {
       this.setProps(win, { unloading: action })
@@ -414,6 +492,7 @@ export class WindowManager extends EventEmitter {
       if (this.isReady(win))
         this.resetReadyState(win)
 
+      this.getProps(win).quicklook?.hide()
       win.reload()
       this.emit('reload', type, win)
     }
@@ -490,9 +569,16 @@ export class WindowManager extends EventEmitter {
       vibrancy: false // !nativeTheme.prefersReducedTransparency
     })
 
-    if (this.app.state.frameless && win32) {
+    if (!darwin) {
+      let overlay = getTitleBarOverlay()
+
       this.each(win => {
-        win.setTitleBarOverlay(getTitleBarOverlay())
+        if (win32 && this.app.state.frameless)
+          win.setTitleBarOverlay(overlay)
+
+        let { quicklook } = this.getProps(win)
+        if (quicklook != null && !quicklook.isDestroyed())
+          quicklook.setTitleBarOverlay(overlay)
       })
     }
 
@@ -569,6 +655,9 @@ export class WindowManager extends EventEmitter {
 
     if (WindowManager.defaults[type].plugins === false)
       props.plugins = null
+
+    if (WindowManager.defaults[type].quicklook)
+      props.quicklook = { vibrancy: hasVibrancy('quicklook') }
 
     let win = this.create(type, props, opts)
     loadView(win, type, props)
@@ -1030,7 +1119,22 @@ export class WindowManager extends EventEmitter {
       minHeight: PANEL.MIN_HEIGHT * 3 + PANEL.TOOLBAR + PANEL.HEADER_MARGIN,
       vibrancy: 'sidebar',
       // Without a project; twice as wide with recent projects.
-      empty: { width: 440, height: 580 }
+      empty: { width: 440, height: 580 },
+      quicklook: true
+    },
+    quicklook: {
+      width: 640,
+      height: 480,
+      titleBarStyle: 'hidden',
+      focusable: false,
+      fullscreenable: false,
+      maximizable: false,
+      minimizable: false,
+      skipTaskbar: true,
+      type: darwin ? 'panel' : undefined,
+      vibrancy: 'under-window',
+      visualEffectState: 'active',
+      backgroundMaterial: 'acrylic'
     }
   }
 
@@ -1159,6 +1263,24 @@ const getWindowButtonPosition = (type) => {
   }
 }
 
+const VIBRANCY = ['vibrancy', 'visualEffectState', 'backgroundMaterial']
+
+// Whether windows of type get the native material they opt into:
+// vibrancy on macOS, a background material on Windows 11 22H2+.
+const hasVibrancy = (type) => {
+  let { vibrancy, backgroundMaterial } = WindowManager.defaults[type]
+
+  if (nativeTheme.prefersReducedTransparency)
+    return false
+  if (darwin)
+    return vibrancy != null
+  if (win32)
+    return backgroundMaterial != null &&
+      Number(release().split('.')[2]) >= 22621
+
+  return false
+}
+
 const getTitleBarOverlay = () => ({
   height: 33, // 32px
   color: '#ffffff00',
@@ -1221,6 +1343,32 @@ function webContentsForward (win, events) {
   for (let type of events) {
     win.on(type, () => { win.webContents.send('win', type) })
   }
+}
+
+function fitQuickLook (win, parent, { width, height, header = 0 }) {
+  let display = screen.getDisplayMatching(parent.getBounds())
+  let { workArea } = display
+
+  let anchor = (win.isVisible() &&
+    screen.getDisplayMatching(win.getBounds()).id === display.id) ?
+    win.getBounds() :
+    workArea
+
+  let scale = Math.min(1,
+    0.9 * workArea.width / width,
+    (0.95 * workArea.height - header) / height)
+
+  win.setAspectRatio(width / height, { width: 0, height: header })
+
+  width = Math.round(width * scale)
+  height = Math.round(height * scale + header)
+
+  win.setBounds(sanitizeWindowBounds({
+    x: Math.round(anchor.x + (anchor.width - width) / 2),
+    y: Math.round(anchor.y + (anchor.height - height) / 2),
+    width,
+    height
+  }))
 }
 
 export function sanitizeWindowBounds (opts = {}, display) {
