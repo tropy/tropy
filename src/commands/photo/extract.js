@@ -7,6 +7,7 @@ import { Cache } from '../../common/cache.js'
 import { addOrientation } from '../../common/iiif.js'
 import { warn, info } from '../../common/log.js'
 import Esper from '../../esper/index.js'
+import { clamp } from '../../esper/util.js'
 import { fail, save } from '../../dialog.js'
 import { toBuffer, toFile } from '../../image/index.js'
 import { dc, dcterms } from '../../ontology/ns.js'
@@ -19,7 +20,15 @@ export class Extract extends Command {
     try {
       let { cache } = this.options
       let { meta, payload } = this.action
-      var { format = 'png', target, plugin, width, height, quality } = meta
+      var {
+        format = 'png',
+        target,
+        plugin,
+        region,
+        width,
+        height,
+        quality
+      } = meta
 
       if (plugin)
         target = ':plugin:'
@@ -52,7 +61,15 @@ export class Extract extends Command {
 
       switch (target) {
         case ':buffer:': {
+          // Region of the rendered image, i.e. the photo as shown.
+          if (region) {
+            region = clamp(region, raw)
+            if (!(region.width > 0 && region.height > 0))
+              return null
+          }
+
           let data = yield call(toBuffer, format, buffer, { raw }, {
+            region,
             width,
             height,
             quality

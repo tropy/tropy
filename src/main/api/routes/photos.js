@@ -8,9 +8,9 @@ import { id, idParams, object, withUrlId } from '../schema.js'
 const size = { type: 'integer', minimum: 1 }
 
 const description = {
-  photo: 'Renders the whole photo as shown in Tropy, with its adjustments, ' +
-    'e.g. rotation. Regions are not supported: parts of a photo can only ' +
-    'be extracted as existing selections.',
+  photo: 'Renders the photo as shown in Tropy, with its adjustments, ' +
+    'e.g. rotation, or a region of it. Not found if the region lies ' +
+    'outside the photo.',
   selection: 'Renders the selection with its own adjustments, e.g. ' +
     'rotation, which are independent of the photo.'
 }
@@ -29,6 +29,15 @@ const extract = (type) => ({
     description: description[type],
     params: withUrlId({ id, format: { enum: ['jpg', 'png', 'webp'] } }),
     querystring: object({
+      ...(type === 'photo' && {
+        region: {
+          type: 'string',
+          pattern: '^\\d+,\\d+,[1-9]\\d*,[1-9]\\d*$',
+          description: 'Crop to x,y,width,height in pixels of the photo ' +
+            'as shown, i.e. after rotation and mirroring; ' +
+            'clipped to the photo. Applied before width and height.'
+        }
+      }),
       width: { ...size, description: 'Fit within this width (no enlarging)' },
       height: { ...size, description: 'Fit within this height (no enlarging)' },
       quality: {
@@ -43,13 +52,19 @@ const extract = (type) => ({
     let payload = found(await rsvp(act.photo.extract({
       [type]: params.id,
       format: params.format
-    }, query)))
+    }, { ...query, region: parseRegion(query.region) })))
 
     return reply
       .type(MIME[payload.format.toUpperCase()] || 'application/octet-stream')
       .send(Buffer.from(payload.data))
   }
 })
+
+const parseRegion = (region) => {
+  if (region == null) return
+  let [x, y, width, height] = region.split(',').map(Number)
+  return { x, y, width, height }
+}
 
 export default async function photos (fastify) {
   fastify.get('/photos/:id', {

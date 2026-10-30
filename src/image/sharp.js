@@ -40,11 +40,20 @@ export async function toFile (file, ...args) {
 }
 
 export async function toBuffer (format, input, options, {
+  region,
   width,
   height,
   quality
 } = {}) {
   let image = await open(input, options)
+
+  if (region)
+    image.extract({
+      left: region.x,
+      top: region.y,
+      width: region.width,
+      height: region.height
+    })
 
   if (width || height)
     image.resize(width, height, {

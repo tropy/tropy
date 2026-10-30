@@ -436,6 +436,20 @@ describe('api', () => {
         .to.equal(400)
     })
 
+    it('extracts photo regions', async () => {
+      api.respond({ data: [1], format: 'png' })
+      await api.get('/projects/foo/photos/7/file.png?region=10,20,30,40')
+      expect(api.action.meta.region)
+        .to.eql({ x: 10, y: 20, width: 30, height: 40 })
+
+      for (let region of ['10,20,0,40', '10,20,30', '-1,0,5,5'])
+        expect((await api.get(`/projects/foo/photos/7/file.png?region=${region}`))
+          .statusCode).to.equal(400)
+
+      expect((await api.get('/projects/foo/selections/7/file.png?region=0,0,5,5'))
+        .statusCode).to.equal(400)
+    })
+
     it('serves original photo files', async () => {
       api.respond({
         protocol: 'file',

@@ -18,4 +18,14 @@ describe('sharp', () => {
     expect((await size({ width: 100, height: 10 })).height).to.equal(10)
     expect(await size({ width: width * 2 })).to.include({ width, height })
   })
+  it('crops a region before resizing', async () => {
+    let input = F.image.path('PA140105.JPG')
+    let size = async (opts) =>
+      (await (await open(await toBuffer('png', input, {}, opts))).metadata())
+
+    let region = { x: 10, y: 20, width: 40, height: 30 }
+
+    expect(await size({ region })).to.include({ width: 40, height: 30 })
+    expect(await size({ region, width: 20 })).to.include({ width: 20, height: 15 })
+  })
 })
