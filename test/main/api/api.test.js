@@ -450,6 +450,23 @@ describe('api', () => {
         .statusCode).to.equal(400)
     })
 
+    it('rotates photos and selections', async () => {
+      api.respond({ 7: { angle: 90 } })
+      let res = await api.post('/projects/foo/photos/7/rotate', { by: 90 })
+      expect(res.json()).to.eql({ id: 7, angle: 90 })
+      expect(api.action.payload).to.eql({ id: 7, by: 90, type: 'photo' })
+
+      await api.post('/projects/foo/selections/7/rotate', { by: -90 })
+      expect(api.action.payload).to.include({ type: 'selection' })
+
+      expect((await api.post('/projects/foo/photos/7/rotate', { by: 45 })).statusCode)
+        .to.equal(400)
+
+      api.respond(null)
+      expect((await api.post('/projects/foo/photos/7/rotate', { by: 90 })).statusCode)
+        .to.equal(404)
+    })
+
     it('serves original photo files', async () => {
       api.respond({
         protocol: 'file',

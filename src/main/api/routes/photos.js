@@ -1,6 +1,7 @@
 import { basename, dirname } from 'node:path'
 import send from '@fastify/send'
 import act from '../../../actions/api.js'
+import photo from '../../../actions/photo.js'
 import { MIME } from '../../../constants/index.js'
 import { fail, found } from '../errors.js'
 import { id, idParams, object, withUrlId } from '../schema.js'
@@ -60,6 +61,33 @@ const extract = (type) => ({
   }
 })
 
+// Shared by /photos and /selections.
+const rotate = (type) => ({
+  schema: {
+    operationId: `${type}s.rotate`,
+    summary: `Rotate the ${type}`,
+    description: type === 'photo' ?
+      'Rotates the photo as shown in Tropy; its selections keep their own rotation.' :
+      'Rotates the selection independently of its photo.',
+    params: idParams,
+    body: object({
+      by: {
+        enum: [90, 180, 270, -90, -180, -270],
+        description: 'Degrees clockwise'
+      }
+    }, ['by'])
+  },
+  async handler ({ body, params, rsvp }) {
+    let images = found(await rsvp(photo.rotate({
+      id: params.id,
+      by: body.by,
+      type
+    })))
+
+    return { id: params.id, ...images[params.id] }
+  }
+})
+
 const parseRegion = (region) => {
   if (region == null) return
   let [x, y, width, height] = region.split(',').map(Number)
@@ -78,6 +106,7 @@ export default async function photos (fastify) {
     found(await rsvp(act.photo.show({ id: params.id }))))
 
   fastify.get('/photos/:id/file.:format', extract('photo'))
+  fastify.post('/photos/:id/rotate', rotate('photo'))
 
   fastify.get('/photos/:id/original', {
     schema: {
@@ -134,4 +163,5 @@ export default async function photos (fastify) {
     found(await rsvp(act.selection.show({ id: params.id }))))
 
   fastify.get('/selections/:id/file.:format', extract('selection'))
+  fastify.post('/selections/:id/rotate', rotate('selection'))
 }
