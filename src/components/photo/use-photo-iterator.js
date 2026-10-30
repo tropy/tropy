@@ -10,6 +10,7 @@ import { move as reorder, pick, pluck } from '../../common/util.js'
 import { adjacent, indexOf } from '../../common/sequence.js'
 import { getExpandedPhotos, getVisiblePhotos } from '../../selectors/index.js'
 import * as act from '../../actions/index.js'
+import { usePhotoPreview } from './use-photo-preview.js'
 
 // The photo list container logic shared by list and grid:
 // selects the photos, the current photo and selection,
@@ -25,6 +26,7 @@ export function usePhotoIterator ({
   onCreate
 }, { isGrid = false } = {}) {
   let dispatch = useDispatch()
+  let preview = usePhotoPreview()
   let scroll = useRef()
 
   let photos = useSelector(getVisiblePhotos)
@@ -162,13 +164,6 @@ export function usePhotoIterator ({
 
     if (photo != null)
       dispatch(act.photo.extract({ id: photo.id, selection }, meta))
-  }
-
-  let preview = (el) => {
-    let { photo } = resolve(el)
-
-    if (photo != null)
-      dispatch(act.item.preview({ id: photo.item, photos: [photo.id] }))
   }
 
   let consolidate = useEvent((photo) => {

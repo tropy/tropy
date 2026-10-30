@@ -391,6 +391,139 @@ describe('WindowManager', () => {
     })
   })
 
+  describe('quicklook', () => {
+    let wm, win, wins
+
+    // Hidden windows with a blank page to call window.open from.
+    let create = async () => {
+      let w = wm.create('project', { file: '/a.tropy' })
+      wins.push(w)
+      await w.loadURL('about:blank')
+      return w
+    }
+
+    let open = (w, name = 'quicklook') =>
+      w.webContents.executeJavaScript(`window.open('', '${name}') != null`)
+
+    let size = { width: 400, height: 300 }
+
+    beforeEach(async () => {
+      wm = new WindowManager(mkapp())
+      wins = []
+      win = await create()
+    })
+
+    afterEach(() => {
+      for (let w of wins) if (!w.isDestroyed()) w.destroy()
+    })
+
+    it('lets opted-in windows open a hidden child companion', async () => {
+      expect(await open(win)).to.be.true
+
+      let { quicklook } = wm.getProps(win)
+      expect(quicklook).to.be.instanceOf(BrowserWindow)
+      expect(quicklook.getParentWindow()).to.equal(win)
+      expect(quicklook.isVisible()).to.be.false
+      expect([...wm]).not.to.contain(quicklook)
+    })
+
+    it('denies other window names', async () => {
+      expect(await open(win, 'other')).to.be.false
+    })
+
+    it('fits the companion to the content size on show', async () => {
+      await open(win)
+      let { quicklook } = wm.getProps(win)
+      let showInactive = mock.method(quicklook, 'showInactive', () => {})
+
+      let event = { sender: win.webContents }
+
+      wm.handleQuickLook(event, 'show', null)
+      expect(showInactive.mock.callCount()).to.equal(0)
+
+      wm.handleQuickLook(event, 'fit', size)
+      expect(showInactive.mock.callCount()).to.equal(0)
+
+      let { width, height } = quicklook.getBounds()
+      expect(width / height).to.be.closeTo(4 / 3, 0.01)
+
+      wm.handleQuickLook(event, 'show', size)
+      expect(showInactive.mock.callCount()).to.equal(1)
+    })
+
+    it('scales small content up to a usable size', async () => {
+      await open(win)
+      let { quicklook } = wm.getProps(win)
+
+      wm.handleQuickLook({ sender: win.webContents }, 'fit', {
+        width: 40,
+        height: 30
+      })
+
+      expect(quicklook.getBounds()).to.include({ width: 267, height: 200 })
+    })
+
+    it('reports visibility to the parent', async () => {
+      await open(win)
+      let { quicklook } = wm.getProps(win)
+      let send = mock.method(wm, 'send', () => {})
+
+      quicklook.emit('show')
+      quicklook.emit('hide')
+      quicklook.emit('show')
+      quicklook.destroy()
+
+      expect(send.mock.calls.map(c => c.arguments)).to.eql([
+        [win, 'quicklook', { isVisible: true }],
+        [win, 'quicklook', { isVisible: false }],
+        [win, 'quicklook', { isVisible: true }],
+        [win, 'quicklook', { isVisible: false }]
+      ])
+    })
+
+    it('hides the companion when the parent reloads', async () => {
+      await open(win)
+      let { quicklook } = wm.getProps(win)
+      let hide = mock.method(quicklook, 'hide')
+
+      wm.setProps(win, { unloading: 'reload' })
+      wm.handleUnloaded(win)
+
+      expect(hide.mock.callCount()).to.equal(1)
+    })
+
+    it('hides the companion instead of closing it', async () => {
+      await open(win)
+      let { quicklook } = wm.getProps(win)
+      let hide = mock.method(quicklook, 'hide')
+
+      quicklook.close()
+      await new Promise(resolve => setImmediate(resolve))
+
+      expect(quicklook.isDestroyed()).to.be.false
+      expect(hide.mock.callCount()).to.equal(1)
+    })
+
+    it('closes the companion with its parent', async () => {
+      await open(win)
+      let { quicklook } = wm.getProps(win)
+      let closed = Promise.all([once(quicklook, 'closed'), once(win, 'closed')])
+
+      wm.setProps(win, { unloading: 'done' })
+      win.close()
+      await closed
+      expect(quicklook.isDestroyed()).to.be.true
+    })
+
+    it('destroys the companion with its parent', async () => {
+      await open(win)
+      let { quicklook } = wm.getProps(win)
+
+      win.destroy()
+      expect(quicklook.isDestroyed()).to.be.true
+    })
+  })
+
   describe('configure', () => {
     it('gives project windows without a project a fixed size', () => {
       let wm = new WindowManager(mkapp())
