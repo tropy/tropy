@@ -155,7 +155,7 @@ export class ProjectManager {
       .map(path => this.describe(path))
   }
 
-  // Adds path to the top of the recent projects.
+  // Adds path to the top of recent projects.
   addRecent (path) {
     if (darwin || win32)
       app.addRecentDocument(path)
@@ -163,13 +163,13 @@ export class ProjectManager {
     this.setRecent(promote(this.recent, path))
   }
 
-  // Removes projects from the recent projects (open projects are kept).
-  clearRecent (paths) {
+  // Removes path, or all, from recent projects (open projects are kept).
+  clearRecent (path) {
     let open = new Set(this.wm.values('project').map(win =>
       this.get(win)?.path))
 
     this.setRecent(this.recent.filter(file =>
-      open.has(file) || (paths && !paths.includes(file))))
+      open.has(file) || (path != null && file !== path)))
   }
 
   setRecent (list, { reloadMenu = true } = {}) {
@@ -193,6 +193,7 @@ export class ProjectManager {
   // or silent to suppress error dialogs.
   show (path, { win, ...meta } = {}) {
     if (path) {
+      // NB: may want canonical paths (realpath) here for case / symlink issues!
       path = resolve(path)
 
       let open = this.window(path) ?? this.#pending.get(path)?.win
@@ -383,7 +384,7 @@ export class ProjectManager {
   }
 
   handleClearRecentProjects = (_, { target } = {}) => {
-    this.clearRecent(target ? [target.path] : undefined)
+    this.clearRecent(target?.path)
   }
 
   #setTitle (win, project) {

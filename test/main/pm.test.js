@@ -454,7 +454,8 @@ describe('ProjectManager', () => {
     opened(win, '/b.tpy')
 
     pm.app.state.recent = ['/a.tpy', '/b.tpy', '/c.tpy']
-    pm.clearRecent(['/a.tpy', '/b.tpy'])
+    pm.clearRecent('/a.tpy')
+    pm.clearRecent('/b.tpy')
     expect(pm.recent).to.eql(['/b.tpy', '/c.tpy'])
 
     pm.clearRecent()
