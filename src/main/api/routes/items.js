@@ -1,5 +1,6 @@
 import act from '../../../actions/api.js'
 import { found } from '../errors.js'
+import { photoFields } from './photos.js'
 import { id, idParams, ids, object, some, strings, withUrlId } from '../schema.js'
 
 // Shared by /items and /lists/:id/items.
@@ -93,6 +94,7 @@ export default async function items (fastify) {
     schema: {
       operationId: 'items.photos.find',
       summary: 'List the photos of an item',
+      description: photoFields,
       params: idParams
     }
   }, async ({ params, rsvp }) =>

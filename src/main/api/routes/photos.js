@@ -7,12 +7,26 @@ import { id, idParams, object, withUrlId } from '../schema.js'
 
 const size = { type: 'integer', minimum: 1 }
 
+const description = {
+  photo: 'Renders the whole photo as shown in Tropy, with its adjustments, ' +
+    'e.g. rotation. Regions are not supported: parts of a photo can only ' +
+    'be extracted as existing selections.',
+  selection: 'Renders the selection with its own adjustments, e.g. ' +
+    'rotation, which are independent of the photo.'
+}
+
+// Shared by photos.show and items.photos.find.
+export const photoFields =
+  'width and height are the pixel size of the file, ' +
+  'before EXIF orientation. angle and mirror are the rotation and ' +
+  'mirroring shown in Tropy, on top of the EXIF orientation.'
+
 // Shared by /photos and /selections.
 const extract = (type) => ({
   schema: {
     operationId: `${type}s.extract`,
     summary: `Extract the ${type} image`,
-    description: 'Renders the image with its adjustments, e.g. rotation.',
+    description: description[type],
     params: withUrlId({ id, format: { enum: ['jpg', 'png', 'webp'] } }),
     querystring: object({
       width: { ...size, description: 'Fit within this width (no enlarging)' },
@@ -39,7 +53,12 @@ const extract = (type) => ({
 
 export default async function photos (fastify) {
   fastify.get('/photos/:id', {
-    schema: { operationId: 'photos.show', summary: 'Show a photo', params: idParams }
+    schema: {
+      operationId: 'photos.show',
+      summary: 'Show a photo',
+      description: photoFields,
+      params: idParams
+    }
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.photo.show({ id: params.id }))))
 
@@ -87,7 +106,15 @@ export default async function photos (fastify) {
   })
 
   fastify.get('/selections/:id', {
-    schema: { operationId: 'selections.show', summary: 'Show a selection', params: idParams }
+    schema: {
+      operationId: 'selections.show',
+      summary: 'Show a selection',
+      description: 'x, y, width and height are pixels in the photo before ' +
+        'its angle and mirror are applied; for photos with an EXIF ' +
+        'orientation, the space depends on the file type. angle, mirror ' +
+        'and adjustments are the selection\'s own, independent of the photo.',
+      params: idParams
+    }
   }, async ({ params, rsvp }) =>
     found(await rsvp(act.selection.show({ id: params.id }))))
 
