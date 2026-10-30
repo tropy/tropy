@@ -58,8 +58,8 @@ export const PhotoList = (props) => {
     open () {
       iterator.open(iterator.current())
     },
-    preview () {
-      iterator.preview(iterator.current())
+    preview (event) {
+      iterator.preview(event.shiftKey ? -1 : 1)
     },
     rotateLeft () {
       iterator.rotate(-90)

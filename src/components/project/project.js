@@ -12,6 +12,8 @@ import { ModalLayer } from '../modal-layer.js'
 import { MessageBox } from '../message-box.js'
 import { TranscriptionConfig } from '../transcription/config.js'
 import { DragLayer } from '../drag-layer.js'
+import { PhotoPreview } from '../photo/preview.js'
+import { QuickLook } from '../quicklook.js'
 import { MODE } from '../../constants/nav.js'
 import * as act from '../../actions/index.js'
 import { IconTropyLarge } from '../icons.js'
@@ -24,10 +26,14 @@ const MODALS = {
 const modeToString = (mode) =>
   `${mode}-mode`
 
-
 export const ProjectClosed = () =>
   <div className="project closed"/>
 
+export const ProjectCover = () => (
+  <div className="cover">
+    <IconTropyLarge/>
+  </div>
+)
 
 export const Project = ({
   isOver,
@@ -117,9 +123,12 @@ export const Project = ({
 
       <DragLayer/>
       <ModalLayer modals={MODALS}/>
-      <div className="cover">
-        <IconTropyLarge/>
-      </div>
+
+      <QuickLook>
+        <PhotoPreview/>
+      </QuickLook>
+
+      <ProjectCover/>
     </div>
   )
 }

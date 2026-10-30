@@ -1,0 +1,93 @@
+/* stylelint-disable max-empty-lines, no-invalid-position-at-import-rule */
+
+//
+// Quicklook companion window
+// --------------------------------------------------
+
+
+// Scaffolding
+// --------------------------------------------------
+
+@use "../abstracts/config" as *;
+@use "../base/reset" as *;
+@use "../base/base" as *;
+@use "../base/type" as *;
+
+
+// Partials
+// --------------------------------------------------
+
+@use "../partials/orientation" as *;
+
+
+// Layout
+// --------------------------------------------------
+
+#quicklook {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: $quicklook-bg;
+
+  .vibrancy & {
+    background-color: transparent;
+  }
+
+  // Fills the titlebar area next to the native window controls.
+  // Counter-zoomed to stay aligned with the controls.
+  .quicklook-title {
+    flex: 0 0 auto;
+    height: zoom($toolbar-frameless-height-sm);
+    line-height: zoom($toolbar-frameless-height-sm);
+    // Unit required: calc() would turn a unitless 0 into a number.
+    // stylelint-disable-next-line length-zero-no-unit
+    margin-left: zoom(env(titlebar-area-x, 0px));
+    width: zoom(env(titlebar-area-width, 100vw));
+    padding: 0 $default-spacing-x;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    -webkit-app-region: drag;
+
+    .darwin & {
+      font-weight: 700;
+    }
+
+    .win32 &,
+    .linux & {
+      height: zoom(env(titlebar-area-height, 33px));
+      line-height: zoom(env(titlebar-area-height, 33px));
+    }
+
+    .win32 & {
+      font-size: zoom(12px);
+    }
+
+    .linux & {
+      font-size: zoom(14.667px);
+      font-weight: 700;
+    }
+  }
+
+  .quicklook-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    container-type: size;
+  }
+
+  img {
+    flex: 0 0 auto;
+    width: 100cqw;
+    height: 100cqh;
+    object-fit: contain;
+
+    &.rotated {
+      width: 100cqh;
+      height: 100cqw;
+    }
+  }
+}

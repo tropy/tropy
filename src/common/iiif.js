@@ -49,9 +49,8 @@ export class Rotation {
         (h ? 'landscape' : 'portrait')
   }
 
-  ratio ({ width, height }) {
-    if (!this.isHorizontal)
-      [width, height] = [height, width]
+  ratio (image) {
+    let { width, height } = this.size(image)
 
     if (width > height)
       return [1, round(height / width, 100)]
@@ -59,6 +58,12 @@ export class Rotation {
       return [round(width / height, 100), 1]
     else
       return [1, 1]
+  }
+
+  size ({ width, height }) {
+    return this.isHorizontal ?
+      { width, height } :
+      { width: height, height: width }
   }
 
   get isHorizontal () {

@@ -16,7 +16,6 @@ export default {
   SELECT: 'item.select',
   SPLIT: 'item.split',
   UPDATE: 'item.update',
-  PREVIEW: 'item.preview',
   PRINT: 'item.print',
 
   BULK: {
