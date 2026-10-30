@@ -1,6 +1,7 @@
+import { ipcRenderer as ipc } from 'electron'
 import { existsSync as exists } from 'node:fs'
 import { join } from 'node:path'
-import { isInput, off, on, stylesheet, toggle } from './dom.js'
+import { isInput, nextFrame, off, on, stylesheet } from './dom.js'
 import { StyleSheet } from './res.js'
 
 export class QuickLook {
@@ -13,9 +14,6 @@ export class QuickLook {
     win.on('settings.update', () => this.sync())
   }
 
-  // Opens the quicklook companion window, or reattaches to it
-  // after a reload, and returns its (cleared) body to render into.
-  // Returns null if this window has no quicklook.
   open () {
     if (this.popup == null || this.popup.closed) {
       this.popup = window.open('', 'quicklook')
@@ -27,15 +25,13 @@ export class QuickLook {
     return this.popup?.document.body ?? null
   }
 
-  // Sets up the blank (or stale) document like a window of its own.
   setup (doc) {
     let user = join(this.win.args.data, 'style.css')
 
     doc.documentElement.className = process.platform
-    toggle(doc.documentElement, 'vibrancy', this.win.args.quicklook?.vibrancy === true)
     doc.head.replaceChildren(
       stylesheet(StyleSheet.expand('quicklook')),
-      ...[user].filter(exists).map(stylesheet))
+      ...(exists(user) ? [stylesheet(user)] : []))
 
     doc.body.id = 'quicklook'
     doc.body.replaceChildren()
@@ -56,29 +52,39 @@ export class QuickLook {
     style.setProperty('--zoom', zoom)
   }
 
-  // The title's height, to keep when fitting the window to the content.
-  get header () {
-    return this.popup?.document
-      .querySelector('.quicklook-title')
-      ?.getBoundingClientRect().height ?? 0
-  }
+  // Fits the window to the content size, or hides it without content.
+  // Resolves in the window's next frame after main applied the bounds,
+  // so that content can be swapped in sync with the new size.
+  async fit (size) {
+    if (size?.width === this.size?.width && size?.height === this.size?.height)
+      return
 
-  resize (size) {
     this.size = size
 
-    if (size == null)
-      this.hide()
-    else if (this.isVisible)
-      this.show()
+    if (size == null) {
+      await this.hide()
+    } else {
+      await this.invoke('fit')
+
+      // Hidden windows may not get animation frames.
+      if (this.isVisible) await nextFrame(this.popup)
+    }
   }
 
-  show () {
+  async show () {
     if (this.size != null)
-      this.win.send('quicklook', 'show', { ...this.size, header: this.header })
+      await this.invoke('show')
   }
 
+  // Hidden right away: a pending fit must not wait for
+  // a frame of the window being hidden.
   hide () {
-    this.win.send('quicklook', 'hide')
+    this.setVisible(false)
+    return this.invoke('hide')
+  }
+
+  invoke (action) {
+    return ipc.invoke('quicklook', action, this.size)
   }
 
   setVisible (isVisible) {

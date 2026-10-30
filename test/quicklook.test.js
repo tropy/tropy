@@ -1,4 +1,5 @@
 import { mock } from 'node:test'
+import { ipcRenderer } from 'electron'
 import { QuickLook } from '#tropy/quicklook.js'
 
 describe('QuickLook', () => {
@@ -14,13 +15,14 @@ describe('QuickLook', () => {
     return event
   }
 
-  let sent = () => ql.win.send.mock.calls.map(c => c.arguments)
+  let sent = () => ipcRenderer.invoke.mock.calls.map(c => c.arguments)
 
   beforeEach(() => {
+    mock.method(ipcRenderer, 'invoke', async () => {})
+
     ql = new QuickLook({
       args: { data: '/data', fontSize: '13px', zoom: 1.5 },
-      on () {},
-      send: mock.fn()
+      on () {}
     })
   })
 
@@ -55,17 +57,9 @@ describe('QuickLook', () => {
 
       expect(root.id).to.equal('quicklook')
       expect(html.classList.contains(process.platform)).to.be.true
-      expect(html.classList.contains('vibrancy')).to.be.false
       expect(html.style.zoom).to.equal('1.5')
       expect(popup.document.head.querySelector('link').href)
         .to.match(/quicklook\.css$/)
-    })
-
-    it('marks the window for vibrancy', () => {
-      ql.win.args.quicklook = { vibrancy: true }
-      ql.open()
-      expect(popup.document.documentElement.classList.contains('vibrancy'))
-        .to.be.true
     })
 
     it('reopens the window once closed', () => {
@@ -84,26 +78,48 @@ describe('QuickLook', () => {
     })
   })
 
-  it('shows only with content', () => {
-    ql.show()
+  it('shows only with content', async () => {
+    await ql.show()
     expect(sent()).to.eql([])
 
-    ql.resize({ width: 4, height: 3 })
-    ql.show()
+    await ql.fit({ width: 4, height: 3 })
+    await ql.show()
     expect(sent()).to.eql([
-      ['quicklook', 'show', { width: 4, height: 3, header: 0 }]
+      ['quicklook', 'fit', { width: 4, height: 3 }],
+      ['quicklook', 'show', { width: 4, height: 3 }]
     ])
   })
 
-  it('refits while visible and hides without content', () => {
-    ql.setVisible(true)
-    ql.resize({ width: 4, height: 3 })
-    ql.resize(null)
+  it('fits only changed sizes and hides without content', async () => {
+    await ql.fit({ width: 4, height: 3 })
+    await ql.fit({ width: 4, height: 3 })
+    await ql.fit(null)
 
     expect(sent()).to.eql([
-      ['quicklook', 'show', { width: 4, height: 3, header: 0 }],
-      ['quicklook', 'hide']
+      ['quicklook', 'fit', { width: 4, height: 3 }],
+      ['quicklook', 'hide', null]
     ])
+  })
+
+  it('resolves fit after the reply, and the next frame while visible', async () => {
+    let steps = []
+
+    ipcRenderer.invoke.mock.mockImplementation(async () => {
+      steps.push('reply')
+    })
+    ql.popup = {
+      requestAnimationFrame (fn) {
+        steps.push('frame')
+        fn()
+      }
+    }
+
+    await ql.fit({ width: 4, height: 3 })
+    expect(steps).to.eql(['reply'])
+
+    ql.setVisible(true)
+    await ql.fit({ width: 3, height: 4 })
+    expect(steps).to.eql(['reply', 'reply', 'frame'])
   })
 
   it('hides on Escape before other key handlers', () => {
@@ -117,7 +133,8 @@ describe('QuickLook', () => {
 
     expect(event.defaultPrevented).to.be.true
     expect(onKeyDown.mock.callCount()).to.equal(0)
-    expect(sent()).to.eql([['quicklook', 'hide']])
+    expect(ql.isVisible).to.be.false
+    expect(sent()).to.eql([['quicklook', 'hide', null]])
   })
 
   it('leaves Escape to inputs and when not visible', () => {
