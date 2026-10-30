@@ -1,6 +1,6 @@
 import { mock } from 'node:test'
 import { act, render } from '@testing-library/react'
-import { QuickLook, useQuickLookContent } from '#tropy/components/quicklook.js'
+import { QuickLook, useQuickLookTitle } from '#tropy/components/quicklook.js'
 import { WindowContext } from '#tropy/components/window.js'
 
 describe('QuickLook', () => {
@@ -10,56 +10,47 @@ describe('QuickLook', () => {
     root = document.implementation.createHTMLDocument().body
     win = {
       quicklook: {
-        open: mock.fn(() => root),
-        resize: mock.fn()
+        open: () => root,
+        fit: mock.fn()
       }
     }
   })
 
-  let Content = ({ content }) => {
-    useQuickLookContent(content)
-    return content ? <p>{content.title}</p> : null
+  let Content = ({ title }) => {
+    useQuickLookTitle(title)
+    return <p>{title}</p>
   }
 
-  let ui = (content) => (
+  let ui = (title) => (
     <WindowContext.Provider value={win}>
       <QuickLook>
-        <Content content={content}/>
+        <Content title={title}/>
       </QuickLook>
     </WindowContext.Provider>
   )
 
-  let last = (fn) => fn.mock.calls.at(-1)?.arguments
-
-  it('renders into the quicklook window', async () => {
+  it('renders the title and content into the quicklook window', async () => {
     await act(async () => {
-      render(ui({ title: 'a', width: 400, height: 300 }))
+      render(ui('a'))
     })
 
-    expect(root.querySelector('h1').textContent).to.equal('a')
-    expect(last(win.quicklook.resize)).to.eql([{ width: 400, height: 300 }])
+    let titlebar = root.querySelector('.quicklook-titlebar')
+    expect(titlebar.textContent).to.equal('a')
+    expect(titlebar.classList.contains('visible')).to.be.true
+    expect(root.querySelector('.quicklook-content').textContent).to.equal('a')
   })
 
-  it('reports no size without content and on unmount', async () => {
-    let result
+  it('hides the window on unmount', () => {
+    let { unmount } = render(ui('a'))
+    unmount()
 
-    await act(async () => {
-      result = render(ui({ title: 'a', width: 400, height: 300 }))
-    })
-
-    await act(async () => {
-      result.rerender(ui(null))
-    })
-    expect(last(win.quicklook.resize)).to.eql([null])
-
-    result.unmount()
-    expect(last(win.quicklook.resize)).to.eql([null])
+    expect(win.quicklook.fit.mock.calls.at(-1).arguments).to.eql([null])
     expect(root.innerHTML).to.equal('')
   })
 
   it('renders nothing without a quicklook window', () => {
     win.quicklook.open = () => null
-    let { container } = render(ui({ title: 'a', width: 400, height: 300 }))
+    let { container } = render(ui('a'))
     expect(container.innerHTML).to.equal('')
   })
 })

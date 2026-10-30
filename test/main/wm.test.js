@@ -427,24 +427,6 @@ describe('WindowManager', () => {
       expect([...wm]).not.to.contain(quicklook)
     })
 
-    it('makes the companion transparent for vibrancy', () => {
-      let options = (args) => {
-        let handler
-        wm.enableQuickLook({
-          webContents: { setWindowOpenHandler (fn) { handler = fn }, on () {} }
-        }, args)
-
-        return handler({ url: 'about:blank', frameName: 'quicklook' })
-          .overrideBrowserWindowOptions
-      }
-
-      expect(options()).not.to.have.any.keys('vibrancy', 'backgroundMaterial')
-      expect(options().backgroundColor).not.to.equal('#00000000')
-
-      expect(options({ vibrancy: true }))
-        .to.include({ vibrancy: 'under-window', backgroundColor: '#00000000' })
-    })
-
     it('denies other window names', async () => {
       expect(await open(win, 'other')).to.be.false
     })
@@ -454,14 +436,31 @@ describe('WindowManager', () => {
       let { quicklook } = wm.getProps(win)
       let showInactive = mock.method(quicklook, 'showInactive', () => {})
 
-      wm.handleQuickLook(win, 'show', null)
+      let event = { sender: win.webContents }
+
+      wm.handleQuickLook(event, 'show', null)
       expect(showInactive.mock.callCount()).to.equal(0)
 
-      wm.handleQuickLook(win, 'show', { ...size, header: 30 })
-      expect(showInactive.mock.callCount()).to.equal(1)
+      wm.handleQuickLook(event, 'fit', size)
+      expect(showInactive.mock.callCount()).to.equal(0)
 
       let { width, height } = quicklook.getBounds()
-      expect(width / (height - 30)).to.be.closeTo(4 / 3, 0.01)
+      expect(width / height).to.be.closeTo(4 / 3, 0.01)
+
+      wm.handleQuickLook(event, 'show', size)
+      expect(showInactive.mock.callCount()).to.equal(1)
+    })
+
+    it('scales small content up to a usable size', async () => {
+      await open(win)
+      let { quicklook } = wm.getProps(win)
+
+      wm.handleQuickLook({ sender: win.webContents }, 'fit', {
+        width: 40,
+        height: 30
+      })
+
+      expect(quicklook.getBounds()).to.include({ width: 267, height: 200 })
     })
 
     it('reports visibility to the parent', async () => {
@@ -471,8 +470,12 @@ describe('WindowManager', () => {
 
       quicklook.emit('show')
       quicklook.emit('hide')
+      quicklook.emit('show')
+      quicklook.destroy()
 
       expect(send.mock.calls.map(c => c.arguments)).to.eql([
+        [win, 'quicklook', { isVisible: true }],
+        [win, 'quicklook', { isVisible: false }],
         [win, 'quicklook', { isVisible: true }],
         [win, 'quicklook', { isVisible: false }]
       ])

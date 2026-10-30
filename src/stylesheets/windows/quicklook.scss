@@ -24,21 +24,42 @@
 // --------------------------------------------------
 
 #quicklook {
-  display: flex;
-  flex-direction: column;
+  position: relative;
   overflow: hidden;
   background-color: $quicklook-bg;
 
-  .vibrancy & {
-    background-color: transparent;
+  // Covers the top of the content, like the Esper toolbar,
+  // sliding in for a while when shown or the content changes.
+  // Counter-zoomed to stay aligned with the native controls.
+  .quicklook-titlebar {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 1;
+    height: zoom($toolbar-frameless-height-sm);
+    line-height: zoom($toolbar-frameless-height-sm);
+    background: $esper-overlay-bg;
+    backdrop-filter: blur($esper-blur-radius);
+    box-shadow: 0 1px 0 $esper-shadow;
+    transform: translate3d(0, -100%, 0);
+    transition: transform $esper-toolbar-transition-out;
+    -webkit-app-region: drag;
+
+    &.visible {
+      transform: translate3d(0, 0, 0);
+      transition: transform $esper-toolbar-transition-in-focus;
+    }
+
+    .win32 &,
+    .linux & {
+      height: zoom(env(titlebar-area-height, 33px));
+      line-height: zoom(env(titlebar-area-height, 33px));
+    }
   }
 
   // Fills the titlebar area next to the native window controls.
-  // Counter-zoomed to stay aligned with the controls.
   .quicklook-title {
-    flex: 0 0 auto;
-    height: zoom($toolbar-frameless-height-sm);
-    line-height: zoom($toolbar-frameless-height-sm);
+    height: 100%;
+    line-height: inherit;
     // Unit required: calc() would turn a unitless 0 into a number.
     // stylelint-disable-next-line length-zero-no-unit
     margin-left: zoom(env(titlebar-area-x, 0px));
@@ -48,16 +69,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
-    -webkit-app-region: drag;
 
     .darwin & {
       font-weight: 700;
-    }
-
-    .win32 &,
-    .linux & {
-      height: zoom(env(titlebar-area-height, 33px));
-      line-height: zoom(env(titlebar-area-height, 33px));
     }
 
     .win32 & {
@@ -70,17 +84,16 @@
     }
   }
 
+  // Stacks the shown and the pending layer in one cell.
   .quicklook-content {
-    flex: 1 1 auto;
-    min-height: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 100%;
+    display: grid;
+    place-items: center;
     container-type: size;
   }
 
   img {
-    flex: 0 0 auto;
+    grid-area: 1 / 1;
     width: 100cqw;
     height: 100cqh;
     object-fit: contain;
@@ -89,5 +102,9 @@
       width: 100cqh;
       height: 100cqw;
     }
+  }
+
+  .quicklook-pending {
+    visibility: hidden;
   }
 }
