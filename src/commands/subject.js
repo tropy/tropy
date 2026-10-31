@@ -9,7 +9,7 @@ import { ITEM, PHOTO, SELECTION } from '../constants/index.js'
 
 
 export class Save extends Command {
-  static subject = 'item'
+  subject = 'item'
 
   get isUndo () {
     return Array.isArray(this.action.payload)
@@ -17,7 +17,7 @@ export class Save extends Command {
 
   *getOriginals (ids, props) {
     let [subjects, metadata] = yield select(state => [
-      state[`${this.constructor.subject}s`],
+      state[`${this.subject}s`],
       state.metadata
     ])
 
@@ -31,7 +31,7 @@ export class Save extends Command {
   *restore (originals) {
     let { db } = this.options
     let { meta } = this.action
-    let { subject } = this.constructor
+    let { subject } = this
     let changes = { [subject]: {} }
     let tmp = {}
 
@@ -60,7 +60,7 @@ export class Save extends Command {
   *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
-    let { subject } = this.constructor
+    let { subject } = this
 
     if (this.isUndo) {
       let changes = yield this.restore(payload)
@@ -113,21 +113,21 @@ export class Save extends Command {
 }
 
 export class PhotoTemplateChange extends Save {
-  static subject = 'photo'
+  subject = 'photo'
 }
 
 PhotoTemplateChange.register(PHOTO.TEMPLATE.CHANGE)
 
 
 export class ItemTemplateChange extends Save {
-  static subject = 'item'
+  subject = 'item'
 }
 
 ItemTemplateChange.register(ITEM.TEMPLATE.CHANGE)
 
 
 export class SelectionTemplateChange extends Save {
-  static subject = 'selection'
+  subject = 'selection'
 }
 
 SelectionTemplateChange.register(SELECTION.TEMPLATE.CHANGE)
