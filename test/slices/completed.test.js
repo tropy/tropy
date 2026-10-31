@@ -36,6 +36,7 @@ describe('completed', () => {
     let state = reduce(run('a', { now: 200 }), run('b', { now: 900 }))
     let action = { ...restore(state), meta: { now: 1500 } }
     expect(reducer([], action).map(r => r.type)).to.eql(['b'])
+    expect(reducer(state, { ...restore({}), meta: { now: 0 } })).to.eql([])
   })
 
   it('aggregates live runs per type', () => {

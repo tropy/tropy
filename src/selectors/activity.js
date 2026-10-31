@@ -1,4 +1,4 @@
-import { createSelector as memo } from 'reselect'
+import { createSelector as memo, lruMemoize } from 'reselect'
 import { into, compose, map, filter } from 'transducers.js'
 import { isExpired } from '../slices/completed.js'
 
@@ -26,6 +26,7 @@ export const getCompletedActivities = memo(
         a = {
           type: run.type,
           init: run.init,
+          expires: Infinity,
           refs: new Set(),
           errors: 0,
           cancelled: false,
@@ -36,6 +37,7 @@ export const getCompletedActivities = memo(
 
       a.init = Math.min(a.init, run.init)
       a.done = run.done
+      a.expires = Math.min(a.expires, run.done + run.keep)
       a.errors += run.errors ?? 0
       a.cancelled ||= !!run.cancelled
       a.agent ||= !!run.agent
@@ -48,6 +50,10 @@ export const getCompletedActivities = memo(
       refs: [...refs],
       count: refs.size
     })).sort((a, b) => b.done - a.done)
+  }, {
+    // Bounded caches: `now` differs from call to call.
+    memoize: lruMemoize,
+    argsMemoize: lruMemoize
   }
 )
 

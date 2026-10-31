@@ -22,6 +22,7 @@ import {
 } from 'redux-saga/effects'
 
 const POLL_INTERVAL = 20_000
+const KEEP = 24 * 60 * 60 * 1000
 
 const onAccountChanged = ({ type, payload }) =>
   type === SETTINGS.UPDATE && 'account' in payload
@@ -42,8 +43,16 @@ const canPoll = () =>
 // as more transcriptions become pending.
 export function *track (batch, pending) {
   if (!(isLinked() && pending.length)) {
-    if (batch)
-      yield put(done(batch.handle))
+    if (batch) {
+      let result = yield select(getBatchResult, batch.seen)
+
+      yield put(done(batch.handle, null, {
+        keep: KEEP,
+        search: true,
+        cancelled: pending.length > 0,
+        ...result
+      }))
+    }
     return null
   }
 
@@ -69,6 +78,33 @@ export function *track (batch, pending) {
   }
 
   return batch
+}
+
+// The items of a batch's finished transcriptions
+// and the number of failed ones.
+function getBatchResult (state, ids) {
+  let refs = new Set()
+  let errors = 0
+
+  for (let id of ids) {
+    let tr = state.transcriptions[id]
+
+    if (tr == null || tr.status === 0)
+      continue
+
+    if (tr.status < 0) {
+      errors++
+      continue
+    }
+
+    let photo = state.photos[tr.parent] ??
+      state.photos[state.selections[tr.parent]?.photo]
+
+    if (photo != null)
+      refs.add(photo.item)
+  }
+
+  return { refs: [...refs], errors }
 }
 
 function *poll () {

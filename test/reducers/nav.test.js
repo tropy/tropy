@@ -1,6 +1,7 @@
 import { ITEM, NAV, TAG } from '#tropy/constants/index.js'
 import { nav } from '#tropy/reducers/nav.js'
 import { create, has } from '#tropy/common/selection.js'
+import { dismiss } from '#tropy/slices/completed.js'
 
 describe('Nav Reducer', () => {
   it('restores selected items persisted as an array', () => {
@@ -39,5 +40,11 @@ describe('Nav Reducer', () => {
     expect(tags(state, 3, 'merge')).to.eql([1, 2, 3])
     expect(tags(state, 1, 'remove')).to.eql([2])
     expect(tags(state, 1, 'clear')).to.eql([])
+  })
+
+  it('clears the completed activity shown when it is dismissed', () => {
+    let state = { ...nav(undefined, {}), activity: 'item.import' }
+    expect(nav(state, dismiss('tag.export')).activity).to.equal('item.import')
+    expect(nav(state, dismiss('item.import')).activity).to.be.null
   })
 })

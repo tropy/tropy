@@ -30,11 +30,16 @@ const completed = createSlice({
   initialState: [],
 
   reducers: {
-    dismiss: (state, { payload: type }) =>
-      state.filter(run => run.type !== type),
+    dismiss: {
+      prepare: (type, meta) => ({ payload: type, meta }),
+      reducer: (state, { payload: type }) =>
+        state.filter(run => run.type !== type)
+    },
 
+    // Replaces the runs, as the window may switch projects.
     restore: (_, { payload, meta }) =>
-      (payload ?? []).filter(run => !isExpired(run, meta.now))
+      Array.isArray(payload) ?
+        payload.filter(run => !isExpired(run, meta.now)) : []
   },
 
   extraReducers: (builder) => {

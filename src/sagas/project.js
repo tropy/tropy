@@ -138,6 +138,7 @@ function *setup ({ db, project }) {
 
     yield all([
       call(restore, 'nav', project.id),
+      call(restore, 'completed', project.id),
       call(restore, 'notepad', project.id),
       call(restore, 'esper', project.id),
       call(restore, 'imports', project.id),
@@ -176,6 +177,7 @@ function *setup ({ db, project }) {
 function *teardown ({ db, project, store }) {
   yield all([
     call(persist, 'nav', project.id),
+    call(persist, 'completed', project.id),
     call(persist, 'notepad', project.id),
     call(persist, 'esper', project.id),
     call(persist, 'imports', project.id),

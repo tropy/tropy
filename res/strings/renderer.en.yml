@@ -634,6 +634,27 @@ en:
       {count, plural,
         one {1 activity in progress …}
         other {# activities in progress …}}
+    completed:
+      item:
+        import: >-
+          {count, plural,
+            =0 {{errors, plural, =0 {No items imported} other {Import failed}}}
+            one {1 item imported}
+            other {# items imported}}{count, plural,
+            =0 {}
+            other {{errors, plural, =0 {} other {, # failed}}}}{cancelled, select,
+            true { (cancelled)}
+            other {}}
+      transcription:
+        process: >-
+          {count, plural,
+            =0 {{errors, plural, =0 {No transcriptions completed} other {Transcription failed}}}
+            one {Transcribed 1 item}
+            other {Transcribed # items}}{count, plural,
+            =0 {}
+            other {{errors, plural, =0 {} other {, # failed}}}}{cancelled, select,
+            true { (stopped)}
+            other {}}
     cache:
       prune: Optimizing project cache …
       purge: Purging old caches …

@@ -1,14 +1,17 @@
 import { call, put, select } from 'redux-saga/effects'
 import { warn } from '../common/log.js'
-import { getSortColumn } from '../selectors/index.js'
+import { getCompletedActivities, getSortColumn } from '../selectors/index.js'
 import * as mod from '../models/index.js'
 import * as act from '../actions/index.js'
 
 export function *search (db) {
   try {
-    let { nav, imports, sort } = yield select(state => ({
+    let { nav, imports, activity, sort } = yield select(state => ({
       nav: state.nav,
       imports: state.imports,
+      activity: state.nav.activity != null &&
+        getCompletedActivities(state, Date.now())
+          .find(a => a.type === state.nav.activity),
       sort: getSortColumn(state)
     }))
 
@@ -19,6 +22,12 @@ export function *search (db) {
     let result
 
     switch (true) {
+      case (activity?.count > 0):
+        result = yield call(mod.item.find, db, {
+          ids: activity.refs, query, sort
+        })
+        break
+
       case (nav.imports && imports.length > 0): {
         let ids = imports[0].items
         result = yield call(mod.item.find, db, { ids, query, sort })
@@ -62,4 +71,3 @@ export function *search (db) {
     }, '*search failed')
   }
 }
-
