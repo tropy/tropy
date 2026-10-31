@@ -2,17 +2,18 @@ import { mock } from 'node:test'
 import { fireEvent, waitFor } from '@testing-library/react'
 import { render, createStore, withStore } from '../../support/react.js'
 import { ActivityPane } from '#tropy/components/activity/index.js'
-import { cancel } from '#tropy/slices/activities.js'
+import { cancel, start } from '#tropy/slices/activities.js'
 
 const activity = (id, init, props) => ({
   id, init, due: init + 400, type: 'test', ...props
 })
 
 // Started activities become due after 20ms.
-const start = (seq) => ({
-  type: 'test',
-  meta: { cmd: 'project', seq, now: Date.now() - 380 }
-})
+const started = (seq) => {
+  let action = start({ type: 'test', meta: { seq } })
+  action.meta.now = Date.now() - 380
+  return action
+}
 
 describe('ActivityPane', () => {
   it('renders only activities exceeding the delay', async () => {
@@ -70,14 +71,14 @@ describe('ActivityPane', () => {
     let store = createStore()
     let { container } = render(<ActivityPane/>, withStore(store))
 
-    store.dispatch(start(1))
+    store.dispatch(started(1))
     await waitFor(() => {
       expect(container.querySelectorAll('.activity')).to.have.length(1)
     })
 
     await new Promise(resolve => setTimeout(resolve, 50))
 
-    store.dispatch(start(2))
+    store.dispatch(started(2))
     expect(container.querySelectorAll('.activity')).to.have.length(1)
     await waitFor(() => {
       expect(container.querySelectorAll('.activity')).to.have.length(2)
@@ -93,7 +94,7 @@ describe('ActivityPane', () => {
       </>,
       withStore(store))
 
-    store.dispatch(start(1))
+    store.dispatch(started(1))
 
     await waitFor(() => {
       expect(container.querySelectorAll('.activity')).to.have.length.above(0)

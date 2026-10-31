@@ -1,7 +1,8 @@
 import {
-  create, insert, load, remove, restore, update
+  create, insert, load, collect, remove, restore, update
 } from '../slices/transcriptions.js'
 import * as activity from '../slices/activities.js'
+import { done } from '../slices/cmd.js'
 import { OnlineChannel } from './online.js'
 import { getPendingTranscriptions } from '../selectors/transcriptions.js'
 import { SETTINGS } from '../constants/index.js'
@@ -42,18 +43,16 @@ const canPoll = () =>
 export function *track (batch, pending) {
   if (!(isLinked() && pending.length)) {
     if (batch)
-      yield put(activity.done(batch.handle))
+      yield put(done(batch.handle))
     return null
   }
 
   if (!batch) {
     batch = {
-      handle: activity.start('transcription.process', {
-        statusIcon: 'TranscriptionStatus'
-      }),
+      handle: yield put(collect()),
       seen: new Set()
     }
-    yield put(batch.handle)
+    yield put(activity.start(batch.handle))
   }
 
   let { size } = batch.seen
@@ -101,7 +100,7 @@ function *poll () {
     }
   } finally {
     if (batch)
-      yield put(activity.done(batch.handle))
+      yield put(done(batch.handle))
 
     online.close()
     debug('*poll terminated')

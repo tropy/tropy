@@ -105,7 +105,6 @@ export class Command {
     return this
   }
 
-  // Stores the dispatched action that finished the command.
   finalize (action) {
     this.done = action
     return Object.freeze(this)

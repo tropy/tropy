@@ -21,6 +21,7 @@ describe('track saga', () => {
   it('starts a batch for pending transcriptions', () => {
     expect(puts(null, 1)).to.eql([
       'transcription.process',
+      'activities/start',
       { total: 1, progress: 1 }
     ])
   })

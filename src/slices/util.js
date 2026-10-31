@@ -11,9 +11,6 @@ export const createMetaReducer = (props, reducer) => ({
   reducer
 })
 
-export const cmdReducer = (reducer, name = 'project') =>
-  createMetaReducer({ cmd: name }, reducer)
-
 export const createIpcAction = (type, prepare, opts) => {
   let [channel, cmd] = type.split('/', 2)
 

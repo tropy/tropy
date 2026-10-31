@@ -1,5 +1,5 @@
-import { createNextState, createSlice } from '@reduxjs/toolkit'
-import { cmdReducer } from './util.js'
+import { createAction, createNextState, createSlice } from '@reduxjs/toolkit'
+import { cmdReducer } from './cmd.js'
 
 
 const transcriptions = createSlice({
@@ -79,6 +79,12 @@ export const nested = {
       })
   }
 }
+
+// Handle for the activity of processing pending transcriptions.
+export const collect = createAction('transcription.process', () => ({
+  payload: undefined,
+  meta: { statusIcon: 'TranscriptionStatus' }
+}))
 
 export const {
   activate,

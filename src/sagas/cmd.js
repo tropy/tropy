@@ -3,20 +3,16 @@ import { info, trace, warn } from '../common/log.js'
 import { Command } from '../commands/command.js'
 import { fail } from '../dialog.js'
 import { activity, history } from '../actions/index.js'
+import { done } from '../slices/cmd.js'
 
 const cancellation = (id) => ({ payload, type }) => (
   type === activity.cancel.type && payload.id === id
 )
 
-export function commands (scope) {
-  return ({ error, meta }) => (
-    !error && meta && !meta.done && meta.cmd === scope
-  )
-}
-
 export function *exec (options, action) {
   try {
     var cmd = Command.create(action, options)
+    yield put(activity.start(action))
 
     var [cancelled] = yield race([
       take(cancellation(action.meta.seq)),
@@ -40,7 +36,7 @@ export function *exec (options, action) {
     }
 
     cmd.finalize(
-      yield put(activity.done(
+      yield put(done(
         action,
         cmd.error || cmd.result,
         cmd.meta

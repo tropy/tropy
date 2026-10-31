@@ -1,53 +1,57 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { pick } from '../common/util.js'
+import { done } from './cmd.js'
+
+/*
+ * Activities track long-running tasks for display in the UI.
+ *
+ * Each activity follows a dispatched trigger action,
+ * keyed by the trigger's meta.seq:
+ *   1. start(action) when the task actually begins;
+ *   2. update, suspend or resume with the same action while it runs;
+ *   3. the task's done(action) response stops the activity.
+ *
+ * Whoever starts an activity must guarantee to dispatch done(action).
+ * Commands do this in *exec; other tasks dispatch their own trigger,
+ * like the transcription collector or a thunk via dispatch().
+ *
+ * Activity props (agent, cancel, hidden, statusIcon)
+ * are taken from the trigger's meta.
+ */
 
 const PROPS = [
+  'agent',
   'cancel',
   'hidden',
   'statusIcon'
 ]
 
-export const start = (type, meta) => ({
-  type,
-  meta: { ...meta, activity: true }
-})
-
-// Matches all actions starting an activity, including commands.
-start.match = ({ meta }) =>
-  (meta?.cmd != null || meta?.activity === true) && !meta.done
-
-export function done (action, result, meta) {
-  let error = result instanceof Error
-  let payload = !error ?
-    result :
-    pick(result, ['code', 'message', 'stack', 'type'])
-
-  return {
-    type: action.type,
-    payload,
-    error,
-    meta: {
-      idx: action.meta.idx,
-      ipc: action.meta.ipc,
-      log: action.meta.log,
-      rsvp: action.meta.rsvp,
-      search: action.meta.search,
-      ...meta,
-      done: true,
-      rel: action.meta.seq,
-      was: action.meta.now
-    }
-  }
-}
-
-// Matches all actions finishing an activity.
-done.match = ({ meta }) => !!meta?.done
+// Matches the done action that ends an activity.
+export const stop = { match: done.match }
 
 const activities = createSlice({
   name: 'activities',
   initialState: {},
 
   reducers: {
+    start: {
+      prepare: (action, meta) => ({
+        payload: { type: action.type, ...pick(action.meta, PROPS) },
+        meta: { ...meta, rel: action.meta.seq }
+      }),
+      reducer (state, { payload: { type, ...props }, meta }) {
+        let activity = state[meta.rel] = {
+          id: meta.rel,
+          type,
+          due: meta.now + 400
+        }
+
+        for (let prop of PROPS)
+          if (props[prop] !== undefined)
+            activity[prop] = props[prop]
+      }
+    },
+
     cancel: {
       prepare: (id, meta) => ({
         payload: { id },
@@ -97,29 +101,16 @@ const activities = createSlice({
         }
       }),
       reducer (state, { payload, meta }) {
-        state[meta.rel] = {
-          ...state[meta.rel],
-          ...payload
-        }
+        if (meta.rel in state)
+          Object.assign(state[meta.rel], payload)
       }
     }
   },
 
   extraReducers: (builder) => {
     builder
-      .addMatcher(done.match, (state, { meta }) => {
+      .addMatcher(stop.match, (state, { meta }) => {
         delete state[meta.rel]
-      })
-      .addMatcher(start.match, (state, { type, meta }) => {
-        let activity = state[meta.seq] = {
-          id: meta.seq,
-          type,
-          due: meta.now + 400
-        }
-
-        for (let prop of PROPS)
-          if (meta[prop] !== undefined)
-            activity[prop] = meta[prop]
       })
   }
 })
@@ -127,6 +118,7 @@ const activities = createSlice({
 export const {
   cancel,
   resume,
+  start,
   suspend,
   update
 } = activities.actions
