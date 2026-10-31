@@ -8,11 +8,10 @@ import { SASS } from '../../constants/index.js'
 import * as act from '../../actions/index.js'
 
 export const ActivityPane = memo(({
-  delay,
   height = SASS.ACTIVITY.HEIGHT
 }) => {
   let dispatch = useDispatch()
-  let busy = useBusyActivities(delay)
+  let busy = useBusyActivities()
 
   let handleCancel = useEvent((id) => {
     dispatch(act.activity.cancel(id))

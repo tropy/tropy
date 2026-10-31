@@ -1,5 +1,5 @@
 import reducer, {
-  cancel, done, start, update
+  cancel, done, resume, start, suspend, update
 } from '#tropy/slices/activities.js'
 
 describe('activities', () => {
@@ -14,7 +14,7 @@ describe('activities', () => {
   it('starts an activity for each command', () => {
     expect(reduce(cmd('item.import', { cancel: true })))
       .to.eql({
-        1: { id: 1, type: 'item.import', init: 100, cancel: true }
+        1: { id: 1, type: 'item.import', due: 500, cancel: true }
       })
   })
 
@@ -23,7 +23,13 @@ describe('activities', () => {
     action.meta = { ...action.meta, seq: 1, now: 100 }
 
     expect(reduce(action)).to.eql({
-      1: { id: 1, type: 'test', init: 100, hidden: true, statusIcon: 'Status' }
+      1: {
+        id: 1,
+        type: 'test',
+        due: 500,
+        hidden: true,
+        statusIcon: 'Status'
+      }
     })
     expect(reduce(action, done(action))).to.eql({})
   })
@@ -37,6 +43,29 @@ describe('activities', () => {
     let action = cmd('item.import')
     expect(reduce(action, update(action, { progress: 1, total: 2 })))
       .to.have.nested.property('1.progress', 1)
+  })
+
+  it('postpones activities suspended before they are due', () => {
+    let action = cmd('item.import')
+    let at = (now, a) => ({ ...a, meta: { ...a.meta, now } })
+
+    let state = reduce(action, at(200, suspend(action)))
+    expect(state).to.have.nested.property('1.suspended', 200)
+
+    state = reducer(state, at(1000, resume(action)))
+    expect(state[1]).to.not.have.property('suspended')
+    expect(state[1]).to.have.property('due', 1300)
+  })
+
+  it('does not postpone activities suspended after they are due', () => {
+    let action = cmd('item.import')
+    let at = (now, a) => ({ ...a, meta: { ...a.meta, now } })
+
+    let state = reduce(
+      action,
+      at(600, suspend(action)),
+      at(1000, resume(action)))
+    expect(state).to.have.nested.property('1.due', 500)
   })
 
   it('removes activities when their command is done', () => {

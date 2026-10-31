@@ -5,8 +5,8 @@ const ICON = 'Status'
 const STYLE = { '--indeterminate': 'true' }
 const TITLE = 'activity.status'
 
-export const ActivityStatus = ({ delay }) => {
-  let busy = useBusyActivities(delay)
+export const ActivityStatus = () => {
+  let busy = useBusyActivities()
 
   if (busy.length === 0)
     return null

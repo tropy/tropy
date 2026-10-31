@@ -3,7 +3,7 @@ import { render, createStore, withStore } from '../../support/react.js'
 import { ActivityStatus } from '#tropy/components/activity/index.js'
 
 const busy = (id, props) => ({
-  id, init: Date.now() - 1000, type: 'test', ...props
+  id, init: Date.now() - 1000, due: Date.now() - 600, type: 'test', ...props
 })
 
 const renderStatus = async (...activities) => {

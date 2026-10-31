@@ -31,17 +31,22 @@ function getNow () {
   return NOW
 }
 
-export function useBusyActivities (delay = 400) {
+const isSuspended = (activity) =>
+  activity.suspended != null
+
+export function useBusyActivities () {
   let activities = useSelector(getActivities)
   let now = useSyncExternalStore(subscribe, getNow)
 
-  let busy = activities.filter(activity => (now - activity.init) > delay)
+  let busy = activities
+    .filter(a => now >= a.due && !isSuspended(a))
 
-  // When the next pending activity exceeds the delay.
+  // When the next pending activity becomes due.
   let next = Math.min(
     ...activities
-      .map(activity => activity.init + delay)
-      .filter(due => due >= now))
+      .filter(a => !isSuspended(a))
+      .map(a => a.due)
+      .filter(due => due > now))
 
   useEffect(() => {
     if (Number.isFinite(next)) tick(next)

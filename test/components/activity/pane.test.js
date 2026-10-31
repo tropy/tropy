@@ -5,12 +5,13 @@ import { ActivityPane } from '#tropy/components/activity/index.js'
 import { cancel } from '#tropy/slices/activities.js'
 
 const activity = (id, init, props) => ({
-  id, init, type: 'test', ...props
+  id, init, due: init + 400, type: 'test', ...props
 })
 
+// Started activities become due after 20ms.
 const start = (seq) => ({
   type: 'test',
-  meta: { cmd: 'project', seq, now: Date.now() }
+  meta: { cmd: 'project', seq, now: Date.now() - 380 }
 })
 
 describe('ActivityPane', () => {
@@ -67,7 +68,7 @@ describe('ActivityPane', () => {
 
   it('shows pending activities once they exceed the delay', async () => {
     let store = createStore()
-    let { container } = render(<ActivityPane delay={20}/>, withStore(store))
+    let { container } = render(<ActivityPane/>, withStore(store))
 
     store.dispatch(start(1))
     await waitFor(() => {
@@ -87,8 +88,8 @@ describe('ActivityPane', () => {
     let store = createStore()
     let { container } = render(
       <>
-        <ActivityPane delay={20}/>
-        <ActivityPane delay={20}/>
+        <ActivityPane/>
+        <ActivityPane/>
       </>,
       withStore(store))
 

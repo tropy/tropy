@@ -56,6 +56,37 @@ const activities = createSlice({
       reducer () {}
     },
 
+    suspend: {
+      prepare: (action, meta) => ({
+        meta: {
+          ...meta,
+          rel: action.meta.seq
+        }
+      }),
+      reducer (state, { meta }) {
+        let activity = state[meta.rel]
+        if (activity && meta.now < activity.due)
+          activity.suspended = meta.now
+      }
+    },
+
+    resume: {
+      prepare: (action, meta) => ({
+        meta: {
+          ...meta,
+          rel: action.meta.seq
+        }
+      }),
+      reducer (state, { meta }) {
+        let activity = state[meta.rel]
+        if (activity?.suspended == null)
+          return
+
+        activity.due += meta.now - activity.suspended
+        delete activity.suspended
+      }
+    },
+
     update: {
       prepare: (action, payload, meta) => ({
         payload,
@@ -83,7 +114,7 @@ const activities = createSlice({
         let activity = state[meta.seq] = {
           id: meta.seq,
           type,
-          init: meta.now
+          due: meta.now + 400
         }
 
         for (let prop of PROPS)
@@ -95,6 +126,8 @@ const activities = createSlice({
 
 export const {
   cancel,
+  resume,
+  suspend,
   update
 } = activities.actions
 
