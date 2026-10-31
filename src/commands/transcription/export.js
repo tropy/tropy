@@ -19,7 +19,7 @@ export class Export extends Command {
       ]))
 
       if (!target)
-        target = yield call(save.transcription, { alto: !!tr?.data })
+        target = yield this.dialog(save.transcription, { alto: !!tr?.data })
       if (!target)
         return
 

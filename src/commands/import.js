@@ -50,42 +50,37 @@ export class ImportCommand extends Command {
     }
   }
 
-  async promptForFilesToImport (type) {
-    try {
-      this.suspend()
-      switch (type) {
-        case 'dir':
-          return open.dir()
-        case 'items':
-          return open.items()
-        default:
-          return open.images()
-      }
-    } finally {
-      this.resume()
+  *promptForFilesToImport (type) {
+    switch (type) {
+      case 'dir':
+        return yield this.dialog(open.dir)
+      case 'items':
+        return yield this.dialog(open.items)
+      default:
+        return yield this.dialog(open.images)
     }
   }
 
   canImportFile = (file) => (
     IMAGE.EXT.includes(extname(file.name).slice(1).toLowerCase())
-  )
+  );
 
-  getFilesToImport = async () => {
+  *getFilesToImport () {
     let { payload, meta } = this.action
     let { files = [], urls = [] } = payload
 
     if (!files.length && !urls.length && meta.prompt)
-      files = await this.promptForFilesToImport(meta.prompt)
+      files = yield * this.promptForFilesToImport(meta.prompt)
 
     let json = files.filter(f => (/^\.json(ld)?$/i).test(extname(f)))
 
-    let images = await expand(files, {
+    let images = yield call(expand, files, {
       filter: this.canImportFile,
       recursive: true
     })
 
     return [...json, ...images, ...urls]
-  };
+  }
 
   *openImage (path) {
     let settings = yield select(state => state.settings)
@@ -166,12 +161,11 @@ export class ImportCommand extends Command {
     if (yield * this.isDuplicate(image)) {
       switch (handler) {
         case 'prompt': {
-          this.isInteractive = true
           const name = basename(image.original?.path ?? image.path)
           const message = image.numPages > 1
             ? `${name} (page ${image.page + 1})`
             : name
-          const { ok, isChecked } = yield call(prompt, 'dup', {
+          const { ok, isChecked } = yield this.dialog(prompt, 'dup', {
             message
           })
 

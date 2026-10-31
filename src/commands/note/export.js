@@ -18,7 +18,7 @@ export class Export extends Command {
       var { target, format } = this.action.meta
 
       if (!target)
-        target = yield call(save.notes)
+        target = yield this.dialog(save.notes)
       if (!target)
         return
 

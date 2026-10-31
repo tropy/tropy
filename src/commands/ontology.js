@@ -23,11 +23,10 @@ export class Import extends Command {
     let { files, isProtected } = this.action.payload
 
     if (!files) {
-      files = yield call(open.vocab)
-      this.init = performance.now()
+      files = yield this.dialog(open.vocab)
     }
 
-    if (!files) return
+    if (!files.length) return
 
     let vocabs = []
 
@@ -120,9 +119,7 @@ export class VocabExport extends Command {
       state.ontology
     ])
 
-    this.isInteractive = true
-
-    let path = yield call(save.vocab)
+    let path = yield this.dialog(save.vocab)
     if (!path) return
 
     let data = yield call(Vocabulary.toN3, vocab[0], ontology)
@@ -237,11 +234,10 @@ export class TemplateImport extends Command {
     let { files, isProtected } = payload
 
     if (!files) {
-      files = yield call(open.templates)
-      this.init = performance.now()
+      files = yield this.dialog(open.templates)
     }
 
-    if (!files) return
+    if (!files.length) return
 
     let templates = yield select(state => state.ontology.template)
 
@@ -263,8 +259,10 @@ export class TemplateImport extends Command {
         } = yield call(Template.open, file)
 
         if (id in templates) {
-          let response = yield call(prompt, 'template.import', { detail: id })
-          if (response.isCancel) continue
+          let response = yield this.dialog(prompt, 'template.import', {
+            detail: id
+          })
+          if (response.cancel) continue
         }
 
         ids.push(yield call(createTemplate, db, {
@@ -291,7 +289,9 @@ export class TemplateImport extends Command {
       this.redo = act.ontology.template.create(temps)
 
       if (meta.prompt) {
-        yield call(prompt, 'template.imported', { detail: ids.join('\n') })
+        yield this.dialog(prompt, 'template.imported', {
+          detail: ids.join('\n')
+        })
       }
     }
 
@@ -311,8 +311,7 @@ export class TemplateExport extends Command {
       assert(data != null, 'missing template')
 
       if (!path) {
-        this.isInteractive = true
-        path = yield call(save.template, {
+        path = yield this.dialog(save.template, {
           defaultPath: join(
             ARGS.documents,
             data.name ? sanitize(`${data.name}.ttp`) : ''

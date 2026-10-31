@@ -50,7 +50,12 @@ export class Prune extends Command {
       }, `found ${files.length} orphaned file(s) in project store`)
 
       if (meta.prompt) {
-        let { cancel } = yield call(this.confirm, files)
+        let count = files.length
+        let { cancel } = yield this.dialog(prompt, PROJECT.PRUNE, {
+          detail: files.slice(0, 100).join(count < 10 ? '\n' : ', '),
+          values: { count }
+        })
+
         if (cancel) {
           return 0
         }
@@ -62,19 +67,6 @@ export class Prune extends Command {
     } else {
       info('no orphaned files found in project store')
       return 0
-    }
-  }
-
-  confirm = async (files) => {
-    let count = files.length
-    try {
-      this.suspend()
-      return prompt(PROJECT.PRUNE, {
-        detail: files.slice(0, 100).join(count < 10 ? '\n' : ', '),
-        values: { count }
-      })
-    } finally {
-      this.resume()
     }
   }
 

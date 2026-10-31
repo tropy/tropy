@@ -47,7 +47,7 @@ export class Extract extends Command {
         return
 
       if (!target)
-        target = yield call(save.image, { filename })
+        target = yield this.dialog(save.image, { filename })
       if (!target)
         return
 

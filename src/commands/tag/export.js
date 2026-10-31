@@ -1,5 +1,5 @@
 import { writeFile as write } from 'node:fs'
-import { call, cps, select } from 'redux-saga/effects'
+import { cps, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { TAG } from '../../constants/index.js'
 import { copy } from '../../clipboard.js'
@@ -13,8 +13,7 @@ export class Export extends Command {
     let { target } = this.action.meta
 
     if (!target) {
-      this.isInteractive = true
-      target = yield call(save.csv, { defaultPath: 'tags.csv' })
+      target = yield this.dialog(save.csv, { defaultPath: 'tags.csv' })
     }
 
     if (!target) return

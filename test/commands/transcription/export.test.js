@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import { run } from '../../support/saga.js'
+import { Command } from '#tropy/commands/command.js'
 import { Export } from '#tropy/commands/transcription/export.js'
 import * as slice from '#tropy/slices/transcriptions.js'
 import { copy } from '#tropy/clipboard.js'
@@ -9,6 +10,7 @@ describe('Export transcription', () => {
   let alto = { text: 'Text', data: '<alto/>' }
   let text = { text: 'Text' }
   let { writeFile } = fs.promises
+  let { showDialog: dialog } = Command.prototype
 
   let exec = (tr, meta, saveAs, copyFormat = 'text') => run(
     new Export(slice.export(1, meta)).exec(), {
@@ -16,56 +18,38 @@ describe('Export transcription', () => {
         transcriptions: { 1: tr },
         settings: { export: { transcription: { copyFormat } } }
       },
-      mocks: [[save.transcription, () => saveAs]]
+      mocks: [[dialog, () => saveAs]]
     })
 
   let args = ({ calls }) => calls.map(c => c.arguments)
 
-  it('prompts for a target offering ALTO', () => {
-    expect(args(exec(alto).calls(save.transcription)))
-      .to.eql([[{ alto: true }]])
+  it('prompts for a target offering ALTO if available', () => {
+    expect(args(exec(alto).calls(dialog)))
+      .to.eql([[save.transcription, { alto: true }]])
+    expect(args(exec(text).calls(dialog)))
+      .to.eql([[save.transcription, { alto: false }]])
   })
 
-  it('prompts for a target without ALTO if there is none', () => {
-    expect(args(exec(text).calls(save.transcription)))
-      .to.eql([[{ alto: false }]])
-  })
-
-  it('writes to the chosen target', () => {
+  it('writes to the chosen target, if any', () => {
     expect(args(exec(alto, {}, 'a.xml').calls(writeFile)))
       .to.eql([['a.xml', '<alto/>']])
-  })
-
-  it('writes nothing if the prompt is cancelled', () => {
     expect(exec(alto).calls(writeFile).callCount()).to.equal(0)
   })
 
-  it('exports ALTO to .xml without prompting', () => {
-    let t = exec(alto, { target: 'a.xml' })
-    expect(t.calls(save.transcription).callCount()).to.equal(0)
-    expect(args(t.calls(writeFile))).to.eql([['a.xml', '<alto/>']])
+  it('writes ALTO to .xml and text otherwise', () => {
+    let write = (tr, target) => args(exec(tr, { target }).calls(writeFile))
+
+    expect(write(alto, 'a.xml')).to.eql([['a.xml', '<alto/>']])
+    expect(write(alto, 'a.txt')).to.eql([['a.txt', 'Text']])
+    expect(write(text, 'a.xml')).to.eql([['a.xml', 'Text']])
   })
 
-  it('exports text to other files', () => {
-    expect(args(exec(alto, { target: 'a.txt' }).calls(writeFile)))
-      .to.eql([['a.txt', 'Text']])
-  })
+  it('copies the preferred format, if available', () => {
+    let copied = (tr, format) =>
+      args(exec(tr, { target: ':clipboard:' }, null, format).calls(copy))
 
-  it('falls back to text if there is no ALTO', () => {
-    expect(args(exec(text, { target: 'a.xml' }).calls(writeFile)))
-      .to.eql([['a.xml', 'Text']])
-  })
-
-  it('copies using the preferred format', () => {
-    let meta = { target: ':clipboard:' }
-    expect(args(exec(alto, meta).calls(copy)))
-      .to.eql([[{ text: 'Text' }]])
-    expect(args(exec(alto, meta, null, 'alto').calls(copy)))
-      .to.eql([[{ text: '<alto/>' }]])
-  })
-
-  it('copies text if there is no ALTO', () => {
-    let t = exec(text, { target: ':clipboard:' }, null, 'alto')
-    expect(args(t.calls(copy))).to.eql([[{ text: 'Text' }]])
+    expect(copied(alto, 'text')).to.eql([[{ text: 'Text' }]])
+    expect(copied(alto, 'alto')).to.eql([[{ text: '<alto/>' }]])
+    expect(copied(text, 'alto')).to.eql([[{ text: 'Text' }]])
   })
 })

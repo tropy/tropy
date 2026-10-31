@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { cancel, put } from 'redux-saga/effects'
+import { call, cancel, cancelled, put } from 'redux-saga/effects'
 import * as activity from '../slices/activities.js'
 import { pick } from '../common/util.js'
 import { parallel } from '../sagas/util.js'
@@ -7,8 +7,9 @@ import { parallel } from '../sagas/util.js'
 export const Registry = new Map()
 
 export class Command {
-  #adjtime = 0
   #suspended
+  #numSuspended = 0
+  #timeSuspended = 0
 
   #total = 0
   #progress = 0
@@ -19,8 +20,9 @@ export class Command {
   }
 
   get duration () {
-    return this.done ?
-        (this.done - this.init - this.#adjtime) : 0
+    return this.done
+      ? (this.done - this.init - this.#timeSuspended)
+      : undefined
   }
 
   get id () {
@@ -43,15 +45,50 @@ export class Command {
     return this.action.type
   }
 
-  suspend () {
+  *suspend () {
+    if (this.#numSuspended++ > 0)
+      return
+
     this.#suspended = Date.now()
+    yield put(activity.suspend(this.action))
   }
 
-  resume () {
-    this.#adjtime += (Date.now() - this.#suspended)
+  *resume () {
+    if (--this.#numSuspended > 0)
+      return
+
+    this.#timeSuspended += (Date.now() - this.#suspended)
+    yield put(activity.resume(this.action))
   }
 
-  run = function* () {
+  dialog (fn, ...args) {
+    return call([this, this.showDialog], fn, ...args)
+  }
+
+  // Shows a dialog using the dialog function `fn`
+  // Subtle: assumes dialog functions take options as last argument!
+  *showDialog (fn, ...args) {
+    let ctrl = new AbortController()
+    let opts = args.at(-1)
+
+    if (opts != null && typeof opts === 'object')
+      args[args.length - 1] = { ...opts, signal: ctrl.signal }
+    else
+      args.push({ signal: ctrl.signal })
+
+    try {
+      yield * this.suspend()
+      return yield call(fn, ...args)
+
+    } finally {
+      if (yield cancelled())
+        ctrl.abort()
+
+      yield * this.resume()
+    }
+  }
+
+  *run () {
     try {
       this.init = Date.now()
       this.result = yield this.exec()
@@ -73,7 +110,7 @@ export class Command {
     }
 
     return this
-  };
+  }
 
   *parallel (items, proc) {
     yield this.progress({ total: items.length })

@@ -59,7 +59,7 @@ export class Import extends ImportCommand {
       yield * this.importFromJSON(payload.data)
 
     } else {
-      let files = yield call(this.getFilesToImport)
+      let files = yield * this.getFilesToImport()
 
       if (files.length === 0)
         return this.result

@@ -20,9 +20,7 @@ export class Export extends Command {
 
     try {
       if (!target) {
-        this.suspend()
-        target = yield call(save.items, {})
-        this.resume()
+        target = yield this.dialog(save.items)
       }
 
       if (!target) return

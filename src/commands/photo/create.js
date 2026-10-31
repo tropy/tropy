@@ -39,7 +39,7 @@ export class Create extends ImportCommand {
     this.result = []
     this.backlog = []
 
-    let files = yield call(this.getFilesToImport)
+    let files = yield * this.getFilesToImport()
 
     if (files.length === 0)
       return this.result

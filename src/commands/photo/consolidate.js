@@ -46,28 +46,22 @@ export class Consolidate extends ImportCommand {
     let path = yield call(lookup, photo, meta.paths, true)
 
     if (!path && meta.prompt) {
-      try {
-        this.suspend()
+      path = (yield this.dialog(open.image, {
+        message: photo.path
+      }))?.[0]
 
-        path = (yield call(open.image, {
-          message: photo.path
-        }))?.[0]
+      if (path) {
+        let from = win32.parse(photo.path)
+        let to = parse(path)
 
-        if (path) {
-          let from = win32.parse(photo.path)
-          let to = parse(path)
-
-          if (from.dir !== to.dir && from.base === to.base) {
-            let res = yield call(prompt, 'photo.consolidate')
-            if (res.ok) {
-              yield put(act.photo.consolidate(null, {
-                paths: { [from.dir]: [to.dir] }
-              }))
-            }
+        if (from.dir !== to.dir && from.base === to.base) {
+          let res = yield this.dialog(prompt, 'photo.consolidate')
+          if (res.ok) {
+            yield put(act.photo.consolidate(null, {
+              paths: { [from.dir]: [to.dir] }
+            }))
           }
         }
-      } finally {
-        this.resume()
       }
     }
 

@@ -17,8 +17,7 @@ export class Import extends Command {
     let { db } = this.options
 
     if (!paths) {
-      this.isInteractive = true
-      let [file] = yield call(open.csv)
+      let [file] = yield this.dialog(open.csv)
       if (!file) return
 
       const text = yield call(readFile, file, 'utf-8')

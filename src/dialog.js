@@ -257,7 +257,7 @@ open.dir = (opts) => open({
   ...opts
 })
 
-open.project = (path) => {
+open.project = (path, opts) => {
   let defaultPath
   let extensions = ['tpy', 'tropy']
   let properties = ['openFile']
@@ -279,7 +279,8 @@ open.project = (path) => {
       }
     ],
     defaultPath,
-    properties
+    properties,
+    ...opts
   })
 }
 

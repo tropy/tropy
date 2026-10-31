@@ -1,10 +1,11 @@
-import { call, cancelled, put, select } from 'redux-saga/effects'
+import { call, put, select } from 'redux-saga/effects'
 import { Document } from 'alto-xml'
 import { Command } from '../command.js'
 import { array } from '../../common/util.js'
 import { create } from '../../models/transcription.js'
 import * as slice from '../../slices/transcriptions.js'
 import { settings } from '../../actions/index.js'
+import { show } from '../../dialog.js'
 import win from '../../window.js'
 
 export class Create extends Command {
@@ -71,22 +72,8 @@ export class Create extends Command {
       return true
 
     let config = yield select(state => state.settings.ocr)
-    let ctrl = new AbortController()
-
-    try {
-      this.suspend()
-
-      var { cancel, data } = yield call(
-        [win.dialog, win.dialog.show],
-        'transcription-config',
-        { config, signal: ctrl.signal })
-
-    } finally {
-      this.resume()
-
-      if (yield cancelled())
-        ctrl.abort()
-    }
+    let { cancel, data } = yield this.dialog(
+      show, 'transcription-config', { config })
 
     if (cancel)
       return false
