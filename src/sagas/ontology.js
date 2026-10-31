@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { call, fork, take } from 'redux-saga/effects'
+import { call, fork, put, take } from 'redux-saga/effects'
 import ARGS from '../args.js'
 import { debug, warn } from '../common/log.js'
 import { Database } from '../common/db.js'
@@ -26,7 +26,8 @@ export function *ontology ({
       }
     }
 
-    yield call(exec, { db }, act.load())
+    // Subtle: calls exec before cmd loop starts.
+    yield call(exec, { db }, yield put(act.load()))
 
     while (true) {
       let action = yield take(commands('ontology'))
