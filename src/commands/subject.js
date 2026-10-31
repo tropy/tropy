@@ -9,7 +9,7 @@ import { ITEM, PHOTO, SELECTION } from '../constants/index.js'
 
 
 export class Save extends Command {
-  type = 'item'
+  static subject = 'item'
 
   get isUndo () {
     return Array.isArray(this.action.payload)
@@ -17,7 +17,7 @@ export class Save extends Command {
 
   *getOriginals (ids, props) {
     let [subjects, metadata] = yield select(state => [
-      state[`${this.type}s`],
+      state[`${this.constructor.subject}s`],
       state.metadata
     ])
 
@@ -31,13 +31,13 @@ export class Save extends Command {
   *restore (originals) {
     let { db } = this.options
     let { meta } = this.action
-    let { type } = this
-    let changes = { [type]: {} }
+    let { subject } = this.constructor
+    let changes = { [subject]: {} }
     let tmp = {}
 
     yield call(db.transaction, async tx => {
       for (let [id, template, data] of originals) {
-        changes[type][id] = { template, modified: new Date(meta.now) }
+        changes[subject][id] = { template, modified: new Date(meta.now) }
 
         await mod.subject.update(tx, {
           id,
@@ -60,11 +60,11 @@ export class Save extends Command {
   *exec () {
     let { db } = this.options
     let { payload, meta } = this.action
-    let { type } = this
+    let { subject } = this.constructor
 
     if (this.isUndo) {
       let changes = yield this.restore(payload)
-      yield put(act[type].bulk.update(changes[type]))
+      yield put(act[subject].bulk.update(changes[subject]))
 
       if (changes.data) {
         yield put(act.metadata.merge(changes.data))
@@ -95,7 +95,7 @@ export class Save extends Command {
         }
       })
 
-      yield put(act[type].bulk.update([id, {
+      yield put(act[subject].bulk.update([id, {
         template,
         modified: new Date(meta.now)
       }]))
@@ -113,21 +113,21 @@ export class Save extends Command {
 }
 
 export class PhotoTemplateChange extends Save {
-  type = 'photo'
+  static subject = 'photo'
 }
 
 PhotoTemplateChange.register(PHOTO.TEMPLATE.CHANGE)
 
 
 export class ItemTemplateChange extends Save {
-  type = 'item'
+  static subject = 'item'
 }
 
 ItemTemplateChange.register(ITEM.TEMPLATE.CHANGE)
 
 
 export class SelectionTemplateChange extends Save {
-  type = 'selection'
+  static subject = 'selection'
 }
 
 SelectionTemplateChange.register(SELECTION.TEMPLATE.CHANGE)
