@@ -1,11 +1,9 @@
 import assert from 'node:assert'
 import { all, call, put, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
-import { fail } from '../../dialog.js'
 import * as mod from '../../models/index.js'
 import * as act from '../../actions/index.js'
 import { PHOTO } from '../../constants/index.js'
-import { warn } from '../../common/log.js'
 import { blank, splice } from '../../common/util.js'
 
 
@@ -51,8 +49,7 @@ export class Duplicate extends Command {
         photos.push(photo.id)
 
       } catch (err) {
-        warn({ err }, `failed to duplicate photo ${source}`)
-        fail(err, this.action.type)
+        this.addError(err, `failed to duplicate photo ${source}`)
       }
     }
 

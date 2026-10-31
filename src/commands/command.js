@@ -2,6 +2,8 @@ import assert from 'assert'
 import { call, cancel, cancelled, put } from 'redux-saga/effects'
 import * as activity from '../slices/activities.js'
 import { parallel } from '../sagas/util.js'
+import { warn } from '../common/log.js'
+import { fail } from '../dialog.js'
 
 export const Registry = new Map()
 
@@ -9,6 +11,10 @@ export class Command {
   #total = 0
   #progress = 0
 
+  // Errors of individual parts, e.g. files of an import.
+  // The command itself succeeded unless this.error is set.
+  errors = []
+  maxAlerts = 3
   suspended = 0
 
   constructor (action, options = {}) {
@@ -110,13 +116,24 @@ export class Command {
     return Object.freeze(this)
   }
 
+  // Records the error of a failed part of the command.
+  // The first errors (up to maxAlerts) are shown, unless silent.
+  addError (err, message = `${this} failed in part`) {
+    warn({ err }, message)
+    this.errors.push(err)
+
+    let { maxAlerts = this.maxAlerts, silent } = this.action.meta
+
+    if (this.errors.length <= maxAlerts && !silent)
+      fail(err, this.action.type)
+  }
+
   *parallel (items, proc) {
     yield this.progress({ total: items.length })
 
     let { meta } = this.action
     let self = this
 
-    let errors = []
     let concurrency = meta.concurrency || Infinity
 
     yield parallel(items, function* (item) {
@@ -124,12 +141,9 @@ export class Command {
         yield self.progress()
         yield proc(item, self)
       } catch (err) {
-        errors.push(err)
+        self.addError(err)
       }
     }, { concurrency })
-
-    if (errors.length > 0)
-      throw new AggregateError(errors, 'too many errors')
   }
 
   *progress ({ total, progress = 1 } = {}) {

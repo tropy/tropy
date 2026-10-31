@@ -6,7 +6,6 @@ import { normalize, eachItem } from '../../common/import.js'
 import { info, warn } from '../../common/log.js'
 import { Image } from '../../image/index.js'
 import { extractPdfEmbeddedFiles } from '../../image/pdf.js'
-import { fail } from '../../dialog.js'
 import { fromHTML } from '../../editor/serialize.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
@@ -66,9 +65,6 @@ export class Import extends ImportCommand {
 
       yield this.progress({ total: files.length })
 
-      let maxFail = 15
-      let failures = 0
-
       for (let file of files) {
         try {
           if ((/json(ld)?$/i).test(extname(file))) {
@@ -79,11 +75,7 @@ export class Import extends ImportCommand {
             yield * this.importFromImage(file)
 
         } catch (err) {
-          warn({ err }, `failed to import "${file}"`)
-
-          if (++failures < maxFail && !this.action.meta.silent) {
-            fail(err, this.action.type)
-          }
+          this.addError(err, `failed to import "${file}"`)
         }
       }
     }

@@ -48,4 +48,19 @@ describe('Command', () => {
       expect(puts).to.eql([suspend.type, resume.type])
     })
   })
+
+  describe('addError', () => {
+    it('collects errors of parallel items', async () => {
+      let cmd = new Command({ type: 'test', meta: { seq: 1, silent: true } })
+
+      await runSaga({ dispatch () {} }, function* () {
+        yield * cmd.parallel([1, 2, 3], (item) => {
+          if (item !== 2) throw new Error(`failed ${item}`)
+        })
+      }).toPromise()
+
+      expect(cmd.errors.map(e => e.message))
+        .to.eql(['failed 1', 'failed 3'])
+    })
+  })
 })

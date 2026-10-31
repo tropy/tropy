@@ -15,6 +15,8 @@ import { save } from '../../models/transcription.js'
 const PENDING = new Set()
 
 export class Transcribe extends Command {
+  maxAlerts = 1;
+
   *exec () {
     let { payload } = this.action
 

@@ -4,7 +4,7 @@ import { cpus } from 'node:os'
 import { call, put, select } from 'redux-saga/effects'
 import { parallel } from '../../sagas/util.js'
 import { ImportCommand } from '../import.js'
-import { fail, open, prompt } from '../../dialog.js'
+import { open, prompt } from '../../dialog.js'
 import * as mod from '../../models/index.js'
 import * as act from '../../actions/index.js'
 import { PHOTO } from '../../constants/index.js'
@@ -41,6 +41,8 @@ async function lookup (photo, paths = {}, checkFileSize) {
 }
 
 export class Consolidate extends ImportCommand {
+  maxAlerts = 2;
+
   *resolve (photo) {
     let { meta } = this.action
     let path = yield call(lookup, photo, meta.paths, true)
@@ -96,9 +98,6 @@ export class Consolidate extends ImportCommand {
       { consolidating: true }
     ]))
 
-    let maxFail = 3
-    let failures = 0
-
     let concurrency = meta.prompt ? 1 : meta.concurrency ||
       Math.max(1, cpus().length)
 
@@ -110,11 +109,7 @@ export class Consolidate extends ImportCommand {
         yield self.consolidate(photo, selections)
 
       } catch (err) {
-        warn({ err }, `failed to consolidate photo ${photo.path}`)
-
-        if (++failures < maxFail) {
-          fail(err, self.action.type)
-        }
+        self.addError(err, `failed to consolidate photo ${photo.path}`)
       }
     }, { concurrency })
 

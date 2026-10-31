@@ -1,10 +1,9 @@
 import { ImportCommand } from '../import.js'
-import { fail } from '../../dialog.js'
 import * as mod from '../../models/index.js'
 import * as act from '../../actions/index.js'
 import { MIME, PHOTO } from '../../constants/index.js'
 import { DuplicateError } from '../../common/error.js'
-import { info, warn } from '../../common/log.js'
+import { info } from '../../common/log.js'
 import { getPhotoTemplate } from '../../selectors/index.js'
 import { Image } from '../../image/image.js'
 import { extractPdfEmbeddedFiles } from '../../image/pdf.js'
@@ -48,19 +47,12 @@ export class Create extends ImportCommand {
 
     this.configure(yield select())
 
-    let maxFail = 15
-    let failures = 0
-
     for (let file of files) {
       try {
         yield * this.importFromFile(file)
 
       } catch (err) {
-        warn({ err }, `failed to import "${file}"`)
-
-        if (++failures < maxFail) {
-          fail(err, this.action.type)
-        }
+        this.addError(err, `failed to import "${file}"`)
       }
     }
 

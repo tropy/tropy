@@ -38,8 +38,12 @@ export function *exec (options, action) {
     cmd.finalize(
       yield put(done(
         action,
-        cmd.error || cmd.result,
-        cmd.meta
+        cmd.error || cmd.result, {
+          keep: cmd.keep,
+          cancelled: cmd.cancelled || undefined,
+          errors: cmd.errors.length || undefined,
+          ...cmd.meta
+        }
       )))
 
     if (cmd.after) {
