@@ -1,11 +1,8 @@
 import { call, put, race, take } from 'redux-saga/effects'
-import ARGS from '../args.js'
 import { info, trace, warn } from '../common/log.js'
 import { Command } from '../commands/command.js'
 import { fail } from '../dialog.js'
 import { activity, history } from '../actions/index.js'
-
-const TOO_LONG = ARGS.dev ? 500 : 1500
 
 const cancellation = (id) => ({ payload, type }) => (
   type === activity.cancel.type && payload.id === id
@@ -30,23 +27,24 @@ export function *exec (options, action) {
       yield put(history.tick(cmd.history))
     if (cmd.error && !action.meta.silent)
       fail(cmd.error, action.type)
-    if (cmd.duration > TOO_LONG)
-      warn(`SLOW: ${cmd}`)
 
   } catch (err) {
     warn({ err }, `${action.type} failed in *exec`)
-    if (!cmd) cmd = { error: err }
+    if (!cmd) cmd = Command.fail(action, err)
 
   } finally {
     if (cmd.cancelled && !cmd.error) {
       info(`${cmd} was cancelled ${
-        cancelled ?
-          `by #${cancelled.meta.seq}` :
-          'implicitly'
+        cancelled ? `by #${cancelled.meta.seq}` : 'implicitly'
       }`)
     }
 
-    yield put(activity.done(action, cmd.error || cmd.result, cmd.meta))
+    cmd.finalize(
+      yield put(activity.done(
+        action,
+        cmd.error || cmd.result,
+        cmd.meta
+      )))
 
     if (cmd.after) {
       yield put(cmd.after)

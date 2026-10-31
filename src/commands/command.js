@@ -1,27 +1,28 @@
 import assert from 'assert'
 import { call, cancel, cancelled, put } from 'redux-saga/effects'
 import * as activity from '../slices/activities.js'
-import { pick } from '../common/util.js'
 import { parallel } from '../sagas/util.js'
 
 export const Registry = new Map()
 
 export class Command {
-  #suspended
-  #numSuspended = 0
-  #timeSuspended = 0
-
   #total = 0
   #progress = 0
+
+  suspended = 0
 
   constructor (action, options = {}) {
     this.action = action
     this.options = options
   }
 
+  get init () {
+    return this.action.meta.now
+  }
+
   get duration () {
     return this.done
-      ? (this.done - this.init - this.#timeSuspended)
+      ? (this.done.meta.now - this.init)
       : undefined
   }
 
@@ -46,18 +47,16 @@ export class Command {
   }
 
   *suspend () {
-    if (this.#numSuspended++ > 0)
+    if (this.suspended++ > 0)
       return
 
-    this.#suspended = Date.now()
     yield put(activity.suspend(this.action))
   }
 
   *resume () {
-    if (--this.#numSuspended > 0)
+    if (--this.suspended > 0)
       return
 
-    this.#timeSuspended += (Date.now() - this.#suspended)
     yield put(activity.resume(this.action))
   }
 
@@ -90,7 +89,6 @@ export class Command {
 
   *run () {
     try {
-      this.init = Date.now()
       this.result = yield this.exec()
       var hasRunToCompletion = true
 
@@ -102,14 +100,15 @@ export class Command {
 
     } finally {
       this.cancelled = !hasRunToCompletion
-
-      yield this.finally()
-
-      this.done = Date.now()
-      Object.freeze(this)
     }
 
     return this
+  }
+
+  // Stores the dispatched action that finished the command.
+  finalize (action) {
+    this.done = action
+    return Object.freeze(this)
   }
 
   *parallel (items, proc) {
@@ -151,25 +150,19 @@ export class Command {
   *abort () {
   }
 
-  *finally () {
-  }
-
-  toJSON () {
-    return pick(this, [
-      'action',
-      'done',
-      'error',
-      'init',
-      'result'
-    ])
-  }
-
   toString () {
     return `${this.type}#${this.id}`
   }
 
   static create (action, options) {
+    assert(Registry.has(action.type), `unknown command ${action.type}`)
     return new (Registry.get(action.type))(action, { ...options })
+  }
+
+  static fail (action, error) {
+    let cmd = new this(action)
+    cmd.error = error
+    return cmd
   }
 
   static register (type, Cmd = this) {
