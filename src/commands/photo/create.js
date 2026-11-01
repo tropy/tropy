@@ -172,7 +172,7 @@ export class Create extends ImportCommand {
       image.rewind()
 
       this.backlog.push(
-        yield fork(ImportCommand.consolidate, {
+        yield fork(ImportCommand.createThumbnails, {
           cache,
           image,
           photos: photosByPage
@@ -242,7 +242,7 @@ export class Create extends ImportCommand {
       if (imageData[i] == null) continue
 
       this.backlog.push(
-        yield fork(ImportCommand.consolidate, {
+        yield fork(ImportCommand.createThumbnails, {
           cache,
           image: images[i],
           photos: [ids[photoIdx++]]
