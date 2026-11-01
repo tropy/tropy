@@ -77,15 +77,11 @@ export class Store {
       if (!this.root)
         throw new Error('missing store root')
 
-      if (!(asset instanceof Asset))
-        asset = new Asset(asset)
-
-      let path = this.getPathFor(asset)
-      if (path !== asset.path)
+      if (!this.owns(asset))
         throw new Error('unexpected asset path')
 
-      debug(`removing "${path}" from store...`)
-      await rm(path, { force: true, maxRetries: 3 })
+      debug(`removing "${asset.path}" from store...`)
+      await rm(asset.path, { force: true, maxRetries: 3 })
 
     } catch (err) {
       warn({
@@ -103,6 +99,20 @@ export class Store {
     }
 
     await mod.purge(db)
+  }
+
+  // True if the asset's path is owned by this store.
+  owns (asset) {
+    if (!this.root || !asset.path || !asset.checksum)
+      return false
+
+    if ((asset.protocol ?? 'file') !== 'file')
+      return false
+
+    let path = this.getPathFor(
+      (asset instanceof Asset) ? asset : new Asset(asset))
+
+    return path === asset.path && dirname(path) === this.root
   }
 
   getPathFor (asset) {
