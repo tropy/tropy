@@ -16,17 +16,17 @@ import { getTemplateValues, getTemplateProperties } from '../selectors/index.js'
 
 
 export class ImportCommand extends Command {
-  static *consolidate (args = {}) {
-    let { cache, image, photos, overwrite = true } = args
+  static *createThumbnails (args = {}) {
+    let { cache, image, photos, selections = [], overwrite = true } = args
 
-    // Subtle: when importing, *consolidation is forked
+    // Subtle: when importing, *createThumbnails is forked
     // in order not to block importing the next item.
-    // The backlog of consolidation process is retained
+    // The backlog of thumbnail processes is retained
     // so that the import command can wait for it to finish.
-    // Because of this, the arguments passed to consolidate
+    // Because of this, the arguments passed to createThumbnails
     // can't be garbage collected.
     // We clear the image reference here so that
-    // the allocated memory can be freed after consolidation,
+    // the allocated memory can be freed after the thumbnails are created,
     // not at the end of the import command.
     args.image = null
 
@@ -37,6 +37,14 @@ export class ImportCommand extends Command {
         yield call(cache.consolidate, photo, image, {
           overwrite
         })
+
+        for (let selection of selections) {
+          if (selection.photo === photo)
+            yield call(cache.consolidate, selection.id, image, {
+              overwrite,
+              selection
+            })
+        }
 
         yield put(act.photo.update({
           id: photo,

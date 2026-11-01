@@ -110,8 +110,7 @@ export class Import extends ImportCommand {
       yield this.progress()
 
       let {
-        basePath, store, density, db, templates, useLocalTimezone,
-        optimizeOnImport, optimizeQuality
+        basePath, density, db, templates, useLocalTimezone, optimizeOnImport
       } = this.options
 
       let { list: activeList } = this.action.payload
@@ -138,36 +137,13 @@ export class Import extends ImportCommand {
 
       let data = yield * this.getMetadata(image, templates)
 
-      let pageData = []
+      let pageData = yield * this.storePages(
+        image,
+        Array.from({ length: image.numPages }, (_, page) => page),
+        (img) => this.handleDuplicate(img))
 
-      if (optimizeOnImport) {
-        while (!image.done) {
-          let optimized = yield call([image, image.optimize], { quality: optimizeQuality })
-          try {
-            yield * this.handleDuplicate(image)
-            yield call(store.add, image)
-            pageData.push({
-              ...image.toJSON(),
-              ...(optimized ? { page: 0 } : {})
-            })
-          } catch (err) {
-            if (err instanceof DuplicateError) {
-              info(`skipping duplicate page ${image.page + 1} of "${path}"...`)
-              pageData.push(null)
-            } else {
-              throw err
-            }
-          }
-          image.next()
-        }
-
-        if (pageData.every(p => p == null)) {
-          throw new DuplicateError(path)
-        }
-
-        image.rewind()
-      } else {
-        yield call(store.add, image)
+      if (pageData.every(p => p == null)) {
+        throw new DuplicateError(path)
       }
 
       let photosByPage = new Array(image.numPages).fill(null)
@@ -176,9 +152,7 @@ export class Import extends ImportCommand {
         item = await mod.item.create(tx, templates.item.id, data.item)
 
         while (!image.done) {
-          let imageData = optimizeOnImport
-            ? pageData[image.page]
-            : image.toJSON()
+          let imageData = pageData[image.page]
 
           if (imageData == null) {
             image.next()
@@ -221,7 +195,7 @@ export class Import extends ImportCommand {
       image.rewind()
 
       this.backlog.push(
-        yield fork(ImportCommand.consolidate, {
+        yield fork(ImportCommand.createThumbnails, {
           cache: this.options.cache,
           image,
           photos: photosByPage
@@ -233,6 +207,50 @@ export class Import extends ImportCommand {
       else
         throw err
     }
+  }
+
+  // Adds an opened image to the store and returns the photo data
+  // of the pages, by page. If enabled, each page is optimized first;
+  // then `check` may skip the optimized page by throwing a DuplicateError.
+  *storePages (image, pages, check) {
+    let { store, optimizeOnImport, optimizeQuality } = this.options
+    let data = []
+
+    if (!optimizeOnImport) {
+      yield call(store.add, image)
+
+      for (let page of pages) {
+        image.page = page
+        data[page] = image.toJSON()
+      }
+
+    } else {
+      for (let page of pages) {
+        image.page = page
+
+        let optimized = yield call([image, image.optimize], {
+          quality: optimizeQuality
+        })
+
+        try {
+          if (check) yield * check(image)
+          yield call(store.add, image)
+          data[page] = {
+            ...image.toJSON(),
+            ...(optimized ? { page: 0 } : {})
+          }
+
+        } catch (err) {
+          if (!(err instanceof DuplicateError)) throw err
+
+          info(`skipping duplicate page ${page + 1} of "${image.original.path}"...`)
+          data[page] = null
+        }
+      }
+    }
+
+    image.rewind()
+    return data
   }
 
   *importFromPdfEmbeddedFiles (source, embedded) {
@@ -295,7 +313,7 @@ export class Import extends ImportCommand {
       if (imageData[i] == null) continue
 
       this.backlog.push(
-        yield fork(ImportCommand.consolidate, {
+        yield fork(ImportCommand.createThumbnails, {
           cache: this.options.cache,
           image: images[i],
           photos: [item.photos[photoIdx++]]
@@ -336,14 +354,12 @@ export class Import extends ImportCommand {
         ? { ...(yield select(state => state.lists)) }
         : null
 
-      let stored = []
-
       for (let { image } of obj.photos) {
         if (rel && image.protocol === 'file' && !isAbsolute(image.path))
           image.path = join(rel, image.path)
-
-        stored.push(yield* this.storeJSONPhoto(image))
       }
+
+      let stored = yield* this.storeJSONPhotos(obj.photos)
 
       yield call(db.transaction, async tx => {
         item = await mod.item.create(
@@ -374,18 +390,18 @@ export class Import extends ImportCommand {
 
         for (let i = 0; i < obj.photos.length; ++i) {
           let { template, image, data } = obj.photos[i]
-          let file = stored[i]
+          let entry = stored.get(image)
 
           if (!template)
             template = templates.photo.id
 
           // Subtle: keep the photo's adjustments and original
           // filename, but use the file's data and store path.
-          if (file)
+          if (entry)
             image = {
               ...image,
-              ...file.data,
-              filename: image.filename ?? file.image.filename
+              ...entry.data,
+              filename: image.filename ?? entry.file.image.filename
             }
 
           let photo = await mod.photo.create(tx, { basePath, template }, {
@@ -424,7 +440,14 @@ export class Import extends ImportCommand {
 
           item.photos.push(photo.id)
 
-          photos.push(file ? { ...photo, consolidating: true } : photo)
+          // Subtle: thumbnails are created once per page of a file.
+          let consolidating =
+            entry != null && entry.file.photos[entry.page] == null
+
+          if (consolidating)
+            entry.file.photos[entry.page] = photo.id
+
+          photos.push(consolidating ? { ...photo, consolidating } : photo)
         }
       })
 
@@ -446,14 +469,14 @@ export class Import extends ImportCommand {
         ]))
       ])
 
-      for (let [i, file] of stored.entries()) {
-        if (file)
-          this.backlog.push(
-            yield fork(ImportCommand.consolidate, {
-              cache: this.options.cache,
-              image: file.image,
-              photos: { [file.image.page]: item.photos[i] }
-            }))
+      for (let { image, photos } of new Set([...stored.values()].map(e => e.file))) {
+        this.backlog.push(
+          yield fork(ImportCommand.createThumbnails, {
+            cache: this.options.cache,
+            image,
+            photos,
+            selections
+          }))
       }
 
     } catch (err) {
@@ -461,39 +484,51 @@ export class Import extends ImportCommand {
     }
   }
 
-  // Adds a photo's file to the project's store,
-  // optimized if enabled, and returns the opened image and data.
-  // Returns null for photos if the photo is already in the store,
-  // and for files that can't be opened.
-  *storeJSONPhoto (photo) {
-    let { store, optimizeOnImport, optimizeQuality } = this.options
+  // Adds the files of photos not yet in the project's store,
+  // opening each file once for all its pages. Returns, by photo,
+  // the stored file, the photo's page, and its data. Skips photos
+  // already in the store, and files that can't be opened.
+  *storeJSONPhotos (photos) {
+    let { store, density, useLocalTimezone } = this.options
+    let stored = new Map()
 
-    if (!store.root || store.owns(photo))
-      return null
+    if (!store.root)
+      return stored
 
-    try {
-      let image = yield call([Image, Image.open], {
-        path: photo.path,
-        protocol: photo.protocol,
-        page: photo.page ?? 0,
-        density: photo.density || this.options.density,
-        useLocalTimezone: this.options.useLocalTimezone
-      })
+    let files = Map.groupBy(
+      photos.map(photo => photo.image).filter(image => !store.owns(image)),
+      ({ protocol, path }) => `${protocol}:${path}`)
 
-      let optimized = optimizeOnImport &&
-        (yield call([image, image.optimize], { quality: optimizeQuality }))
+    for (let images of files.values()) {
+      let [{ path, protocol }] = images
+      let pages = new Set(images.map(image => image.page))
 
-      yield call(store.add, image)
+      try {
+        let image = yield call([Image, Image.open], {
+          path,
+          protocol,
+          page: (pages.size === 1) ? images[0].page : undefined,
+          density: images[0].density || density,
+          useLocalTimezone
+        })
 
-      return {
-        image,
-        data: { ...image.toJSON(), ...(optimized && { page: 0 }) }
+        let primary = image.page
+        let pageOf = (img) => img.page ?? primary
+
+        let data = yield* this.storePages(image, [...new Set(images.map(pageOf))])
+        let file = { image, photos: [] }
+
+        for (let img of images) {
+          let page = pageOf(img)
+          stored.set(img, { file, page, data: data[page] })
+        }
+
+      } catch (err) {
+        warn({ err }, `failed to add "${path}" to the store`)
       }
-
-    } catch (err) {
-      warn({ err }, `failed to add photo "${photo.path}" to the store`)
-      return null
     }
+
+    return stored
   }
 
   *findOrCreateTags (names) {
