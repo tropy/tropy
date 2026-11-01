@@ -33,7 +33,7 @@ export function NavItem ({ name, icon, isDisabled }) {
         name={name}
         disabled={isDisabled}
         onClick={handleChange}>
-        <Icon name={icon}/>
+        {typeof icon === 'string' ? <Icon name={icon}/> : icon}
         <div className="truncate">
           <FormattedMessage id={`prefs.${name}.label`}/>
         </div>

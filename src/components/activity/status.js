@@ -1,4 +1,4 @@
-import { Icon } from '../icons.js'
+import { FormattedIcon } from '../icons.js'
 import { useBusyActivities } from './use-busy-activities.js'
 
 const ICON = 'Status'
@@ -25,7 +25,7 @@ export const ActivityStatus = () => {
     : null
 
   return (
-    <Icon
+    <FormattedIcon
       name={statusIcon || ICON}
       style={style || STYLE}
       title={title || TITLE}

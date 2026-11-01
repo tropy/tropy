@@ -12,7 +12,7 @@ import { PluginConfig } from '../plugin/config.js'
 import { useIpcEvent, useIpcSend } from '../../hooks/use-ipc.js'
 import * as act from '../../actions/index.js'
 import { Button } from '../button.js'
-import { IconPlus } from '../icons.js'
+import { IconMaze, IconPlus } from '../icons.js'
 import { FormattedMessage } from 'react-intl'
 import { Titlebar, Toolbar } from '../toolbar.js'
 
@@ -56,7 +56,10 @@ export function PrefsContainer () {
           <Nav>
             <NavItem name="account" icon="User"/>
             <NavItem name="app" icon="Gear"/>
-            <NavItem name="project" icon="Maze" isDisabled={!project?.id}/>
+            <NavItem
+              name="project"
+              icon={<IconMaze seed={project?.id}/>}
+              isDisabled={!project?.id}/>
             <NavItem name="template" icon="Document"/>
             <NavItem name="vocab" icon="Book"/>
             <NavItem name="plugins" icon="Plugin"/>

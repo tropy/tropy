@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { NodeContainer } from '../tree/node-container.js'
-import { Icon } from '../icons.js'
+import { FormattedIcon, IconMaze } from '../icons.js'
 import { Editable } from '../editable.js'
 
 
@@ -20,7 +20,7 @@ export function ProjectName (props) {
         over: isOver && canDrop
       })}
       onClick={props.onClick}>
-      <NodeContainer icon="Maze">
+      <NodeContainer icon={<IconMaze seed={props.id}/>}>
         <div className="name">
           <Editable
             value={props.name}
@@ -32,9 +32,9 @@ export function ProjectName (props) {
             onChange={props.onChange}/>
         </div>
         {props.warnings?.length > 0 &&
-          <Icon name="WarningSm" title={`project.${props.warnings[0]}`}/>}
+          <FormattedIcon name="WarningSm" title={`project.${props.warnings[0]}`}/>}
         {props.isReadOnly &&
-          <Icon name="Lock" title="project.readOnly"/>}
+          <FormattedIcon name="Lock" title="project.readOnly"/>}
       </NodeContainer>
     </li>
   )

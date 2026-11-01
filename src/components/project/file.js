@@ -62,7 +62,7 @@ export const ProjectFile = ({
       onClick={handleClick}
       onContextMenu={handleContextMenu}
       title={hint}>
-      <Icon name="Maze"/>
+      <Icon name="Maze" seed={stats?.id}/>
       <div className="flex-col">
         <div className="name">
           <div className="truncate">{name}</div>

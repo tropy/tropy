@@ -251,6 +251,7 @@ class ProjectSidebar extends React.PureComponent {
               <nav>
                 <ol>
                   <ProjectName
+                    id={this.props.project.id}
                     name={this.props.project.name}
                     warnings={this.props.project.warnings}
                     isReadOnly={this.props.project.isReadOnly}

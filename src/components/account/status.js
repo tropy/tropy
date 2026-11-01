@@ -1,6 +1,6 @@
 import { useArgs } from '../../hooks/use-args.js'
 import { useOnline } from '../../hooks/use-online.js'
-import { Icon } from '../icons.js'
+import { FormattedIcon } from '../icons.js'
 
 export const AccountStatus = () => {
   let account = useArgs('account')
@@ -10,12 +10,12 @@ export const AccountStatus = () => {
     return null
   }
   if (account.error) {
-    return <Icon name="WarningSignSm" title={account.error}/>
+    return <FormattedIcon name="WarningSignSm" title={account.error}/>
   }
   if (online) {
     return null
   }
   return (
-    <Icon name="WifiWarning" title="error.account.offline"/>
+    <FormattedIcon name="WifiWarning" title="error.account.offline"/>
   )
 }

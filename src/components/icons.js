@@ -2,51 +2,54 @@ import React from 'react'
 import cx from 'classnames'
 import { useIntl } from 'react-intl'
 import { lispcase } from '../common/util.js'
+import { maze } from '../common/maze.js'
 
-const icons = Object.create({})
+const ICONS = Object.create(null)
 
-export function Icon ({ name, ...props }) {
-  return React.createElement(icons[name], props)
-}
-
-export function IconContainer ({
-  children,
+function renderIcon ({ iconClass, render }, {
   className,
-  name,
   style,
   title,
-  values
+  ...props
 }) {
-  let intl = useIntl()
-
-  if (title)
-    title = intl.formatMessage({ id: title }, values)
-
   return (
     <span
-      className={cx('icon', `icon-${lispcase(name)}`, className)}
+      className={cx(iconClass, className)}
       style={style}
       title={title}>
-      {children}
+      {render(props)}
     </span>
   )
 }
 
-function i (name, svg) {
-  let IconComponent = React.memo(({ className, style, title, values }) => (
-    <IconContainer
-      className={className}
-      name={name}
-      style={style}
-      title={title}
-      values={values}>
-      {svg}
-    </IconContainer>
-  ))
+export const Icon = React.memo(({ name, ...props }) => {
+  let icon = ICONS[name]
+  return (icon == null) ? null : renderIcon(icon, props)
+})
 
+Icon.displayName = 'Icon'
+
+export function FormattedIcon ({ title, values, ...props }) {
+  let intl = useIntl()
+
+  return (
+    <Icon {...props} title={
+      title && intl.formatMessage({ id: title }, values)
+    }/>
+  )
+}
+
+function i (name, svg) {
+  let icon = {
+    iconClass: `icon icon-${lispcase(name)}`,
+    render: (typeof svg === 'function') ? svg : () => svg
+  }
+
+  ICONS[name] = ICONS[`Icon${name}`] = icon
+
+  let IconComponent = React.memo(props => renderIcon(icon, props))
   IconComponent.displayName = `Icon${name}`
 
-  icons[name] = IconComponent
   return IconComponent
 }
 
@@ -491,10 +494,12 @@ export const IconMaximize = i('Maximize', (
   </svg>
 ))
 
-export const IconMaze = i('Maze', (
+const DEFAULT_MAZE = 'M16,0v15H9v-1h4v-2h1v2h1v-3h-3v2h-1V8h1v2h3V5h-4V4h4V1h-5v1h4v1H9V0H16z M5,13h5V8H5v1h4v3H6v-1h2v-1H4V7h9v2h1V6h-4V4H8V0H1v15h7v-1H4v-2H3v2H2V1h5v3H6V2H5v3h4v1H4V2H3v9h2V13L5,13z'
+
+export const IconMaze = i('Maze', ({ seed }) => (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
-      <path d="M16,0v15H9v-1h4v-2h1v2h1v-3h-3v2h-1V8h1v2h3V5h-4V4h4V1h-5v1h4v1H9V0H16z M5,13h5V8H5v1h4v3H6v-1h2v-1H4V7h9v2h1V6h-4V4H8V0H1v15h7v-1H4v-2H3v2H2V1h5v3H6V2H5v3h4v1H4V2H3v9h2V13L5,13z"/>
+      <path d={seed ? maze(seed).toPath() : DEFAULT_MAZE }/>
     </g>
   </svg>
 ))

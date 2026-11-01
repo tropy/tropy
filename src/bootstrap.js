@@ -2,6 +2,7 @@ import { basename } from 'node:path'
 import { parse } from './args.js'
 import { createLogger, fatal, info } from './common/log.js'
 import { measure, pick } from './common/util.js'
+import { maze } from './common/maze.js'
 import { contextBridge, ipcRenderer as ipc } from 'electron'
 import { idle, ready } from './dom.js'
 import win, { createWindowInstance } from './window.js'
@@ -57,6 +58,7 @@ window.ELECTRON_DISABLE_SECURITY_WARNINGS = !ARGS.debug
 
       if (ARGS.dev || ARGS.debug)
         contextBridge.exposeInMainWorld('tropy', {
+          maze: () => maze().toString(),
           state: globalThis.tropy.state
         })
 

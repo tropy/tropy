@@ -30,7 +30,7 @@ export const NodeContainer = ({
           onClick={handleExpandButtonClick}/>
       )}
       <div className="icon-truncate">
-        <Icon name={icon}/>
+        {typeof icon === 'string' ? <Icon name={icon}/> : icon}
       </div>
       {children}
     </div>
