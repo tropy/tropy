@@ -44,8 +44,11 @@ export const getLayout = ({
   // split evenly above and below the view at that position.
   // Scrolled less than the tolerance away, the page still covers
   // the view (it starts at a full row: one row less below).
+  // The tolerance is one row at most:
+  // the page moves a few rows at a time instead of rendering
+  // the overscan at once, but not when scrolling back and forth.
   let pageOffset = Math.floor(overscanRows / 2) * itemHeight
-  let tolerance = (Math.ceil(overscanRows / 2) - 1) * itemHeight
+  let tolerance = Math.min(Math.ceil(overscanRows / 2) - 1, 1) * itemHeight
 
   let runway = rows * itemHeight + (gap?.height ?? 0)
 

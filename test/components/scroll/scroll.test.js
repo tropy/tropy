@@ -170,6 +170,18 @@ describe('Scroll', () => {
     expect($('#item-76')).to.exist
   })
 
+  it('renders new rows a few at a time', () => {
+    let { $ } = render(renderScroll())
+    let container = $('.scroll-container')
+
+    fakeResizeObserver.resize(container, { height: '400px' })
+    scroll(container, 600)
+    expect($('#item-60')).not.to.exist
+
+    scroll(container, 650)
+    expect($('#item-60')).to.exist
+  })
+
   it('does not render rows when scrolling a little', () => {
     let onRender = mock.fn()
     let { $ } = render(renderScroll({}, onRender))
