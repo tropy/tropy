@@ -40,15 +40,13 @@ export const getLayout = ({
   // the items in the rows fully in view.
   let pageSize = columns * Math.max(Math.floor(height / itemHeight), 1)
 
-  // The page is rendered for a scroll position: the overscan is
-  // split evenly above and below the view at that position.
-  // Scrolled less than the tolerance away, the page still covers
-  // the view (it starts at a full row: one row less below).
+  // The page is rendered for a scroll position and direction.
+  // Scrolled less than the tolerance away, in either direction,
+  // the page still covers the view.
   // The tolerance is one row at most:
   // the page moves a few rows at a time instead of rendering
   // the overscan at once, but not when scrolling back and forth.
-  let pageOffset = Math.floor(overscanRows / 2) * itemHeight
-  let tolerance = Math.min(Math.ceil(overscanRows / 2) - 1, 1) * itemHeight
+  let tolerance = Math.min(overscanRows - 2, 1) * itemHeight
 
   let runway = rows * itemHeight + (gap?.height ?? 0)
 
@@ -63,7 +61,7 @@ export const getLayout = ({
     itemHeight,
     length: items.length,
     maxOffset,
-    pageOffset,
+    overscanRows,
     pageSize,
     rowsPerPage,
     runway,
@@ -142,9 +140,21 @@ export const getRowAt = (layout, offset) => {
 
 // The page at the scroll position: its items (`from` inclusive,
 // `to` exclusive) and the offset of the first one.
-export const getPage = (top, layout) => {
-  let { columns, length, maxOffset, pageOffset, rowsPerPage } = layout
-  let from = getRowAt(layout, restrict(top - pageOffset, 0, maxOffset))
+// The overscan lies ahead in the scroll direction,
+// except for one row behind the view: the page still covers it
+// when turning back within the tolerance.
+export const getPage = (top, layout, isUp = false) => {
+  let {
+    columns,
+    itemHeight,
+    length,
+    maxOffset,
+    overscanRows,
+    rowsPerPage
+  } = layout
+
+  let above = (isUp ? overscanRows - 2 : 1) * itemHeight
+  let from = getRowAt(layout, restrict(top - above, 0, maxOffset))
 
   return {
     from,

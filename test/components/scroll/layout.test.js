@@ -95,8 +95,8 @@ describe('Scroll layout', () => {
     })
   })
 
-  // The page rendered for one scroll position covers the view
-  // at every position within the tolerance.
+  // The page rendered for one scroll position and direction
+  // covers the view at every position within the tolerance.
   it('renders pages covering the view', () => {
     for (let overscan of [0, 0.75, 1]) {
       for (let height of [50, 55]) {
@@ -115,15 +115,17 @@ describe('Scroll layout', () => {
           let { length, runway, tolerance } = geometry
           let max = runway - height
 
-          for (let pageTop = 0; pageTop <= max; pageTop++) {
-            let { to, offset } = getPage(pageTop, geometry)
-            let bottom = to < length ? getOffset(geometry, to) : runway
+          for (let isUp of [false, true]) {
+            for (let pageTop = 0; pageTop <= max; pageTop++) {
+              let { to, offset } = getPage(pageTop, geometry, isUp)
+              let bottom = to < length ? getOffset(geometry, to) : runway
 
-            let lo = Math.max(pageTop - tolerance, 0)
-            let hi = Math.min(pageTop + tolerance, max)
+              let lo = Math.max(pageTop - tolerance, 0)
+              let hi = Math.min(pageTop + tolerance, max)
 
-            expect(offset, `${pageTop}`).to.be.at.most(lo)
-            expect(bottom, `${pageTop}`).to.be.at.least(hi + height)
+              expect(offset, `${pageTop}`).to.be.at.most(lo)
+              expect(bottom, `${pageTop}`).to.be.at.least(hi + height)
+            }
           }
         }
       }

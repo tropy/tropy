@@ -10,15 +10,17 @@ import { useEvent } from '../../hooks/use-event.js'
 
 export const useScrollTop = (container, layout) => {
   let tracked = useRef(0)
-  let [pageScrollTop, setPageScrollTop] = useState(0)
+
+  // The scroll position and direction the page is rendered for.
+  let [page, setPage] = useState({ top: 0, isUp: false })
 
   // Without a position, reads the container's.
   let sync = useEvent((position) => {
     let scrollTop = position ?? container.current.scrollTop
     tracked.current = scrollTop
 
-    if (Math.abs(scrollTop - pageScrollTop) > layout.tolerance)
-      setPageScrollTop(scrollTop)
+    if (Math.abs(scrollTop - page.top) > layout.tolerance)
+      setPage({ top: scrollTop, isUp: scrollTop < page.top })
   })
 
   // Programmatic scrolls update the rendered rows right away:
@@ -29,7 +31,7 @@ export const useScrollTop = (container, layout) => {
   }
 
   return {
-    pageScrollTop,
+    page,
     scroll,
     scrollTop: () => tracked.current,
     sync

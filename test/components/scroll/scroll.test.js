@@ -176,10 +176,25 @@ describe('Scroll', () => {
 
     fakeResizeObserver.resize(container, { height: '400px' })
     scroll(container, 600)
-    expect($('#item-60')).not.to.exist
+    expect($('#item-66')).not.to.exist
 
     scroll(container, 650)
-    expect($('#item-60')).to.exist
+    expect($('#item-66')).to.exist
+  })
+
+  it('renders the overscan ahead of the scroll direction', () => {
+    let { $ } = render(renderScroll())
+    let container = $('.scroll-container')
+
+    fakeResizeObserver.resize(container, { height: '400px' })
+
+    scroll(container, 1000)
+    expect($('#item-84')).to.exist
+    expect($('#item-49')).not.to.exist
+
+    scroll(container, 900)
+    expect($('#item-33')).to.exist
+    expect($('#item-68')).not.to.exist
   })
 
   it('does not render rows when scrolling a little', () => {

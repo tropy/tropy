@@ -36,7 +36,8 @@ export const Scroll = ({
   })
 
   let position = useScrollTop(container, layout)
-  let { from, to, offset } = getPage(position.pageScrollTop, layout)
+  let { from, to, offset } =
+    getPage(position.page.top, layout, position.page.isUp)
 
   // Zooming or resizing keeps the view stable; other layout changes
   // (measured or shown again, items changed) catch up with the
