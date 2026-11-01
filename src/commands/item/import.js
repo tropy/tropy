@@ -336,6 +336,15 @@ export class Import extends ImportCommand {
         ? { ...(yield select(state => state.lists)) }
         : null
 
+      let stored = []
+
+      for (let { image } of obj.photos) {
+        if (rel && image.protocol === 'file' && !isAbsolute(image.path))
+          image.path = join(rel, image.path)
+
+        stored.push(yield* this.storeJSONPhoto(image))
+      }
+
       yield call(db.transaction, async tx => {
         item = await mod.item.create(
           tx,
@@ -365,12 +374,19 @@ export class Import extends ImportCommand {
 
         for (let i = 0; i < obj.photos.length; ++i) {
           let { template, image, data } = obj.photos[i]
+          let file = stored[i]
 
           if (!template)
             template = templates.photo.id
 
-          if (rel && image.protocol === 'file' && !isAbsolute(image.path))
-            image.path = join(rel, image.path)
+          // Subtle: keep the photo's adjustments and original
+          // filename, but use the file's data and store path.
+          if (file)
+            image = {
+              ...image,
+              ...file.data,
+              filename: image.filename ?? file.image.filename
+            }
 
           let photo = await mod.photo.create(tx, { basePath, template }, {
             item: item.id,
@@ -408,7 +424,7 @@ export class Import extends ImportCommand {
 
           item.photos.push(photo.id)
 
-          photos.push(photo)
+          photos.push(file ? { ...photo, consolidating: true } : photo)
         }
       })
 
@@ -430,8 +446,53 @@ export class Import extends ImportCommand {
         ]))
       ])
 
+      for (let [i, file] of stored.entries()) {
+        if (file)
+          this.backlog.push(
+            yield fork(ImportCommand.consolidate, {
+              cache: this.options.cache,
+              image: file.image,
+              photos: { [file.image.page]: item.photos[i] }
+            }))
+      }
+
     } catch (err) {
       warn({ err }, 'skipping item due to import error')
+    }
+  }
+
+  // Adds a photo's file to the project's store,
+  // optimized if enabled, and returns the opened image and data.
+  // Returns null for photos if the photo is already in the store,
+  // and for files that can't be opened.
+  *storeJSONPhoto (photo) {
+    let { store, optimizeOnImport, optimizeQuality } = this.options
+
+    if (!store.root || store.owns(photo))
+      return null
+
+    try {
+      let image = yield call([Image, Image.open], {
+        path: photo.path,
+        protocol: photo.protocol,
+        page: photo.page ?? 0,
+        density: photo.density || this.options.density,
+        useLocalTimezone: this.options.useLocalTimezone
+      })
+
+      let optimized = optimizeOnImport &&
+        (yield call([image, image.optimize], { quality: optimizeQuality }))
+
+      yield call(store.add, image)
+
+      return {
+        image,
+        data: { ...image.toJSON(), ...(optimized && { page: 0 }) }
+      }
+
+    } catch (err) {
+      warn({ err }, `failed to add photo "${photo.path}" to the store`)
+      return null
     }
   }
 
