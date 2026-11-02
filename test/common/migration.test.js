@@ -1,3 +1,6 @@
+import { writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
+import { mkdtmp } from '../support/tmp.js'
 import { Migration } from '#tropy/common/migration.js'
 
 describe('Migration', () => {
@@ -16,6 +19,17 @@ describe('Migration', () => {
         .to.have.property('type', 'sql')
       expect(new Migration('/tmp/1234.sql'))
         .to.have.property('type', 'sql')
+    })
+  })
+
+  describe('compatibility', () => {
+    let dir = mkdtmp()
+
+    it('is read from the SQL directive', async () => {
+      await writeFile(join(dir, '1.a.sql'), 'SELECT 1;')
+      await writeFile(join(dir, '2.b.sql'), '-- compatibility: 2\nSELECT 2;')
+
+      expect(await Migration.compatibility(dir)).to.equal(2)
     })
   })
 

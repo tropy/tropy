@@ -16,6 +16,14 @@ export class Migration {
     return (await Migration.all(dir)).filter(m => m.fresh(number))
   }
 
+  // Returns the highest compatibility number
+  // declared by the migrations in `dir`.
+  static async compatibility (dir) {
+    return Math.max(0, ...await Promise.all(
+      (await Migration.all(dir)).map(m => m.compatibility())
+    ))
+  }
+
 
   // The Migration Number is a 10-digit number
   // corresponding to the migration's time of creation
@@ -42,6 +50,19 @@ export class Migration {
     this.#number = value
   }
 
+  // Breaking migrations declare a compatibility number:
+  // SQL migrations using a `-- compatibility: 2` comment line,
+  // JS migrations using a `compatibility` export.
+  async compatibility () {
+    if (this.type === 'js')
+      return (await import(this.path)).compatibility ?? 0
+
+    let [, number = 0] = String(await read(this.path))
+      .match(/^--\s*compatibility:\s*(\d+)\s*$/m) ?? []
+
+    return Number(number)
+  }
+
   up (db) {
     info(`migrating ${basename(db.path)} to #${this.number}`)
 
@@ -55,7 +76,7 @@ export class Migration {
           await tx.exec(String(await read(path)))
         }
 
-        await tx.version(number)
+        await tx.version(number, await this.compatibility())
       })
   }
 

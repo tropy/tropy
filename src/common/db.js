@@ -285,6 +285,10 @@ export class Database extends EventEmitter {
     return this.seq(conn => conn.version(...args))
   }
 
+  compatibility () {
+    return this.seq(conn => conn.compatibility())
+  }
+
   check = (...args) =>
     this.seq(conn => conn.check(...args))
 
@@ -381,16 +385,28 @@ export class Connection {
   //
   // Until Tropy version 1.12 this number was stored
   // using the user_version PRAGMA, a signed 32-bit integer.
+  //
+  // Compatibility numbers were added in Tropy 1.18;
+  // missing numbers are treated as 0.
 
-  async version (version) {
+  async version (version, compatibility) {
     if (version) {
-      assert(typeof version === 'number' && version > 0,
+      assert(Number.isInteger(version) && version > 0,
         `not a valid version number: ${version}`)
 
-      if (version > 2131122400)
-        await this.run(`INSERT INTO migrations (number) VALUES (${version})`)
-      else
+      if (compatibility) {
+        assert(Number.isInteger(compatibility) && compatibility > 0,
+          `not a valid compatibility number: ${compatibility}`)
+
+        await this.run(
+          'INSERT INTO migrations (number, compatibility) VALUES (?, ?)',
+          version, compatibility)
+
+      } else if (version > 2131122400) {
+        await this.run('INSERT INTO migrations (number) VALUES (?)', version)
+      } else {
         await this.exec(`PRAGMA user_version = ${version}`)
+      }
 
       return this
 
@@ -409,6 +425,19 @@ export class Connection {
         let { user_version } = await this.get('PRAGMA user_version')
         return user_version
       }
+    }
+  }
+
+  async compatibility () {
+    try {
+      let { number } = await this.get(
+        'SELECT max(compatibility) AS number FROM migrations')
+
+      return number ?? 0
+
+    } catch (err) {
+      debug({ err }, 'failed to fetch compatibility number')
+      return 0
     }
   }
 
