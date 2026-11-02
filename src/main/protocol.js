@@ -83,7 +83,9 @@ const ROUTES = Object.freeze([
     operationId: 'tropy.items',
     summary: 'Show all items, or search them (q)',
     params: object({ urlId }, ['urlId']),
-    query: object({ q: { type: 'string', description: 'Search query' } })
+    query: object({
+      q: { type: 'string', maxLength: 1024, description: 'Search query' }
+    })
   }, ({ q = '' }, win) =>
     win.dispatch(act.nav.select({ query: q }))),
 

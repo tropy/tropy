@@ -72,16 +72,21 @@ const TERMS = /"([^"]*)("?)|([^\s"]+)/g
 // An unterminated phrase extends to the end of the query
 // and matches as a prefix (user still typing presumably).
 function parse (query) {
-  let terms = []
+  let terms = new Map()
 
   for (let [, phrase, end, term] of query.matchAll(TERMS)) {
-    if (term != null)
-      terms.push({ text: term, prefix: true })
-    else if (!blank(phrase.trim()))
-      terms.push({ text: phrase, prefix: !end })
+    if (terms.size === 32)
+      break
+
+    let t = (term != null)
+      ? { text: term, prefix: true }
+      : { text: phrase, prefix: !end }
+
+    if (!blank(t.text.trim()))
+      terms.set(`${t.prefix}:${t.text.toLowerCase()}`, t)
   }
 
-  return terms
+  return [...terms.values()]
 }
 
 function prep ({ query, sort, tags }, params = {}) {

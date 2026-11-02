@@ -140,6 +140,7 @@ describe('ProtocolHandler', () => {
       ['tropy://project?urlId=x', 400],
       ['tropy://project/x/items?foo=1', 400],
       ['tropy://about?x=1', 400],
+      [`tropy://project/x/items?q=${'x'.repeat(1025)}`, 400],
       ['tropy://project/x/notes/1', 404],
       ['tropy://project/x/', 404],
       ['tropy://prefs/x', 404],

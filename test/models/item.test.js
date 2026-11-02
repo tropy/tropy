@@ -62,5 +62,12 @@ describe('models/item', () => {
       expect(await search('box letter')).to.eql([])
       expect(await search('wor_d')).to.eql([])
     })
+
+    it('accepts long queries', async () => {
+      let words = Array.from({ length: 600 }, (_, i) => `w${i}`)
+
+      expect(await search('box BOX '.repeat(300))).to.eql([ids[2]])
+      expect(await search(words.join(' '))).to.eql([])
+    })
   })
 })

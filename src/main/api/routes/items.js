@@ -11,7 +11,11 @@ export const findItems = ({ operationId, summary, params }) => ({
     params,
     querystring: object({
       tag: { ...ids, description: 'Only items with all of these tags' },
-      q: { type: 'string', description: 'Full-text search query' },
+      q: {
+        type: 'string',
+        maxLength: 1024,
+        description: 'Full-text search query'
+      },
       sort: {
         type: 'string',
         description: 'Sort by item.created, item.modified, item.template, ' +

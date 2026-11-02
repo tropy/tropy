@@ -200,6 +200,7 @@ describe('api', () => {
         await api.get('/projects/foo/photos/1/file.raw'),
         await api.get('/projects/foo/items/0'),
         await api.get('/projects/foo/lists/1?expand'),
+        await api.get(`/projects/foo/items?q=${'x'.repeat(1025)}`),
         await api.post('/projects/foo/lists', { name: 'Foo', parent: '2' }),
         await api.post('/projects/foo/tags', { color: 'red' }),
         await api.post('/projects/foo/notes', { html: 'x', photo: 0 }),
