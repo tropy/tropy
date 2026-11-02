@@ -167,7 +167,7 @@ function *setup ({ db, project }) {
 
   } catch (err) {
     warn({ err }, 'unexpected error in *project.setup')
-    yield call(fail, err, project.path)
+    yield call(fail, err, PROJECT.OPEN)
 
   } finally {
     debug('*project.setup terminated')
