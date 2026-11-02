@@ -219,6 +219,14 @@ export default [
           'cssChecked.has(view)': 'true'
         }
       }),
+      replace({
+        include: '**/@react-dnd/invariant/**',
+        preventAssignment: true,
+        delimiters: ['', ''],
+        values: {
+          'process.env[\'NODE_ENV\']': JSON.stringify(NODE_ENV)
+        }
+      }),
       nodeResolve({
         exportConditions: ['node'],
         preferBuiltins: true
