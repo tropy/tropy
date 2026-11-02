@@ -2,7 +2,7 @@
 
 setup() {
   rm -f ./db/test/project.tpy
-  node scripts/db create -- project ./db/test/project.tpy "Test Project"
+  node scripts/db.js create -F ./db/test/project.tpy -N "Test Project"
 }
 
 run() {

@@ -1,24 +1,24 @@
 PRAGMA foreign_keys = on;
 
 INSERT INTO lists (parent_list_id, list_id, name) VALUES
-  (0, 1, "uno"),
-  (0, 2, " due"),
-  (0, 3, "tre "),
-  (0, 4, "quattro"),
-  (0, NULL, "cinque"),
-  (1, NULL, "sei"),
-  (1, 7, "sette");
+  (0, 1, 'uno'),
+  (0, 2, ' due'),
+  (0, 3, 'tre '),
+  (0, 4, 'quattro'),
+  (0, NULL, 'cinque'),
+  (1, NULL, 'sei'),
+  (1, 7, 'sette');
 
 
 -- Constraints
 INSERT OR IGNORE
-  INTO lists (parent_list_id, name) VALUES (0, "uno");
+  INTO lists (parent_list_id, name) VALUES (0, 'uno');
 INSERT OR IGNORE
-  INTO lists (parent_list_id, name) VALUES (0, "");
+  INTO lists (parent_list_id, name) VALUES (0, '');
 UPDATE OR IGNORE lists
   SET parent_list_id = list_id WHERE list_id = 3;
 UPDATE OR IGNORE lists
-  SET name = "" WHERE list_id = 3;
+  SET name = '' WHERE list_id = 3;
 
 -- Cycles (raises abort!)
 --UPDATE lists SET parent_list_id = 1 WHERE list_id = 0;
