@@ -1,0 +1,1 @@
+ALTER TABLE migrations ADD COLUMN compatibility INTEGER NOT NULL DEFAULT 0;
