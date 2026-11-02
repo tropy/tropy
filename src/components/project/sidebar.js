@@ -252,7 +252,7 @@ class ProjectSidebar extends React.PureComponent {
                 <ol>
                   <ProjectName
                     name={this.props.project.name}
-                    isCorrupted={this.props.project.isCorrupted}
+                    warnings={this.props.project.warnings}
                     isReadOnly={this.props.project.isReadOnly}
                     isSelected={!this.hasSelection}
                     isEditing={this.isEditing}

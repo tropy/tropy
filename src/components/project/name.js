@@ -31,8 +31,8 @@ export function ProjectName (props) {
             onCancel={props.onEditCancel}
             onChange={props.onChange}/>
         </div>
-        {props.isCorrupted &&
-          <Icon name="WarningSm" title="project.corrupted"/>}
+        {props.warnings?.length > 0 &&
+          <Icon name="WarningSm" title={`project.${props.warnings[0]}`}/>}
         {props.isReadOnly &&
           <Icon name="Lock" title="project.readOnly"/>}
       </NodeContainer>

@@ -4,6 +4,7 @@ import { chmod, cp, stat, mkdir } from 'node:fs/promises'
 import { basename, dirname, extname, join, resolve, relative } from 'node:path'
 import { randomUUID as uuid } from 'node:crypto'
 import { Database } from './db.js'
+import { Migration } from './migration.js'
 import { home, normalize } from './os.js'
 import { into, select, update } from './query.js'
 import { version } from './release.js'
@@ -209,6 +210,14 @@ export async function convert (src, path, appDir, {
  * If there are no migrations,
  * an integrity check will be performed instead.
  *
+ * Projects cannot be opened
+ * if their compatibility number is higher
+ * than the one declared by the migrations in the `migrate` folder.
+ *
+ * Projects with a schema version
+ * newer than the latest migration in the `migrate` folder
+ * are flagged with a warning.
+ *
  * Additionally, the following database event handlers are attached:
  * - After the first write (or immediately after migrations)
  *   an access row will be created using the given `user` id.
@@ -232,6 +241,17 @@ export async function open (path, {
     ...dbOptions
   })
 
+  if (migrate) {
+    let compatibility = await db.compatibility()
+
+    if (compatibility > 0 &&
+      compatibility > await Migration.compatibility(migrate)) {
+      await db.close()
+      throw new CodeError('ENEWER',
+        `project file requires newer version: ${compatibility}`)
+    }
+  }
+
   if (migrate && !db.isReadOnly) {
     var migrations = await db.migrate(migrate)
     await optimize(db)
@@ -239,6 +259,18 @@ export async function open (path, {
 
   let project = await load(db)
   let accessId
+
+  project.warnings = []
+
+  if (migrate) {
+    let number = await db.version()
+    let latest = (await Migration.all(migrate)).at(-1)?.number
+
+    if (number > latest) {
+      warn(`db schema version #${number} is newer than #${latest}`)
+      project.warnings.push('newer')
+    }
+  }
 
   if (migrations?.length > 0) {
     accessId = await beginProjectAccess(db, user)
@@ -250,7 +282,7 @@ export async function open (path, {
 
     if (!skipIntegrityCheck) {
       await db.check().catch(() => {
-        project.isCorrupted = true
+        project.warnings.push('corrupted')
       })
     }
   }

@@ -165,6 +165,50 @@ describe('common/project', () => {
     })
   })
 
+  describe('open', () => {
+    let tpy = mkprojtmp('test.tpy', { name: 'Daedalus' })
+    let migrate = join(F.appDir, 'db', 'migrate', 'project')
+
+    it('flags projects newer than the latest migration', async () => {
+      let { db, path } = tpy.current
+      let version = await db.version()
+      await db.version(version + 1)
+      await db.close()
+
+      let [other, project] = await open(path, { migrate })
+
+      expect(project.warnings).to.include('newer')
+      expect(await other.version()).to.equal(version + 1)
+
+      await other.close()
+    })
+
+    describe('Tropy 1.16 projects', () => {
+      let path = mktmp('old.tpy')
+
+      it('are migrated to the latest version', async () => {
+        await create(path, F.join('db', 'project-1.16.0.sql'), F.appDir)
+
+        let [db, project] = await open(path, { migrate })
+
+        expect(project.warnings).to.be.empty
+        expect(await db.version())
+          .to.equal(await tpy.current.db.version())
+        expect(await db.compatibility()).to.equal(0)
+
+        await db.close()
+      })
+    })
+
+    it('refuses projects with a higher compatibility number', async () => {
+      let { db, path } = tpy.current
+      await db.version(await db.version() + 1, 99)
+      await db.close()
+
+      await assert.rejects(() => open(path, { migrate }), { code: 'ENEWER' })
+    })
+  })
+
   describe('convert', () => {
     let tpy = mkprojtmp('a.tpy', { name: 'Daedalus' })
     let tpm = mktmp('b.tropy')

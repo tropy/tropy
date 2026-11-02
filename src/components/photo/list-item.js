@@ -71,7 +71,7 @@ export const PhotoListItem = memo(({
   })
 
   // TODO: buttons must stop the mouse-down, too, or the
-  // item selects on press (see chaining in ITERATOR-PLAN.md).
+  // item selects on press (see buttons inside rows in TODO/seq.md).
   let stopPropagation = (event) => {
     event.stopPropagation()
   }

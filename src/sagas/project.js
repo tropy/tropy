@@ -107,7 +107,8 @@ export function *open (opts, action) {
     warn({ err }, 'unexpected error in *project.open')
 
     if (!meta?.silent)
-      yield call(fail, err, action.type)
+      yield call(fail, err,
+        err.code === 'ENEWER' ? 'project.newer' : action.type)
 
     var error = err
 
