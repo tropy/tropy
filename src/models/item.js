@@ -50,10 +50,27 @@ const ORDER = {
   [NAV.COLUMN.POSITION.id]: 'list_items.added'
 }
 
-const FTS_PATTERN = /[*+'"{(})^-]| (AND|OR|NOT) /
+// Matches a "quoted phrase" (with optional closing quote) or a bare term.
+// Neither capture can contain a quote, so quoting them is safe for FTS5.
+const TERMS = /"([^"]*)("?)|([^\s"]+)/g
 
-const prefix = (query) =>
-  (!FTS_PATTERN.test(query)) ? query + '*' : query
+// Splits the query into quoted phrases and terms,
+// so user input is never FTS5 syntax.
+// Terms match as prefixes, phrases match exactly.
+// An unterminated phrase extends to the end of the query
+// and matches as a prefix (user still typing presumably).
+function fts (query) {
+  let terms = []
+
+  for (let [, phrase, end, term] of query.matchAll(TERMS)) {
+    if (term != null)
+      terms.push(`"${term}"*`)
+    else if (!blank(phrase.trim()))
+      terms.push(`"${phrase}"${end ? '' : '*'}`)
+  }
+
+  return terms.join(' ')
+}
 
 function prep ({ query, sort, tags }, params = {}) {
   if (!(sort.column in ORDER)) {
@@ -61,9 +78,9 @@ function prep ({ query, sort, tags }, params = {}) {
   }
 
   if (query != null) {
-    query = query.trim()
+    query = fts(query)
     if (query.length > 0) {
-      params.$query = prefix(query)
+      params.$query = query
     }
   }
 
