@@ -33,7 +33,7 @@ import {
   delay,
   put,
   take,
-  takeEvery as every,
+  takeLatest,
   race
 } from 'redux-saga/effects'
 
@@ -134,7 +134,7 @@ export function *open (opts, action) {
 
 function *setup ({ db, project }) {
   try {
-    yield every(has('search'), search, db)
+    yield takeLatest(has('search'), search, db)
     yield fork(transcribe)
 
     yield all([
