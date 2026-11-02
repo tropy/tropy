@@ -16,18 +16,19 @@ const skel = (id, lists = [], photos = [], tags = []) => ({
   id, lists, photos, tags
 })
 
-const SEARCH = `
+// Items matching term i in any FTS index or tag name.
+const MATCH = (i) => `
   SELECT item_id AS id
     FROM fts_transcriptions t
       LEFT OUTER JOIN selections USING (id)
       LEFT OUTER JOIN photos p ON (p.id = t.id OR p.id = photo_id)
-    WHERE fts_transcriptions MATCH $query
+    WHERE fts_transcriptions MATCH $fts${i}
   UNION
   SELECT item_id AS id
     FROM fts_notes n
       LEFT OUTER JOIN selections USING (id)
       LEFT OUTER JOIN photos p ON (p.id = n.id OR p.id = photo_id)
-    WHERE fts_notes MATCH $query
+    WHERE fts_notes MATCH $fts${i}
   UNION
   SELECT coalesce(i.id, p.item_id) AS id
     FROM metadata m
@@ -35,7 +36,18 @@ const SEARCH = `
       LEFT OUTER JOIN items i USING (id)
       LEFT OUTER JOIN selections USING (id)
       LEFT OUTER JOIN photos p ON (p.id = m.id OR p.id = photo_id)
-    WHERE fts_metadata MATCH $query`
+    WHERE fts_metadata MATCH $fts${i}
+  UNION
+  SELECT id
+    FROM taggings JOIN tags USING (tag_id)
+    WHERE name LIKE $tag${i} ESCAPE '\\'`
+
+// Items matching every term: terms are ANDed per item,
+// not per FTS document, so they can match different fields.
+// Compound operators bind left to right, hence the subqueries.
+const SEARCH = (n) =>
+  Array.from({ length: n }, (_, i) => `SELECT id FROM (${MATCH(i)})`)
+    .join(' INTERSECT ')
 
 const SORT = `
   WITH sort(id, text) AS (
@@ -59,29 +71,29 @@ const TERMS = /"([^"]*)("?)|([^\s"]+)/g
 // Terms match as prefixes, phrases match exactly.
 // An unterminated phrase extends to the end of the query
 // and matches as a prefix (user still typing presumably).
-function fts (query) {
+function parse (query) {
   let terms = []
 
   for (let [, phrase, end, term] of query.matchAll(TERMS)) {
     if (term != null)
-      terms.push(`"${term}"*`)
+      terms.push({ text: term, prefix: true })
     else if (!blank(phrase.trim()))
-      terms.push(`"${phrase}"${end ? '' : '*'}`)
+      terms.push({ text: phrase, prefix: !end })
   }
 
-  return terms.join(' ')
+  return terms
 }
 
 function prep ({ query, sort, tags }, params = {}) {
+  let terms = (query == null) ? [] : parse(query)
+
   if (!(sort.column in ORDER)) {
     params.$sort = sort.column
   }
 
-  if (query != null) {
-    query = fts(query)
-    if (query.length > 0) {
-      params.$query = query
-    }
+  for (let [i, { text, prefix }] of terms.entries()) {
+    params[`$fts${i}`] = `"${text}"${prefix ? '*' : ''}`
+    params[`$tag${i}`] = `%${text.replace(/[\\%_]/g, '\\$&')}%`
   }
 
   if (!blank(tags)) {
@@ -93,7 +105,8 @@ function prep ({ query, sort, tags }, params = {}) {
   return {
     dir: sort.asc ? 'ASC' : 'DESC',
     order: ORDER[sort.column] || 'sort.text',
-    params
+    params,
+    match: (terms.length > 0) ? SEARCH(terms.length) : null
   }
 }
 
@@ -112,7 +125,7 @@ async function search (db, query, params) {
 
 mod.item = {
   all (db, { trash, ...options }) {
-    let { dir, order, params } = prep(options)
+    let { dir, order, params, match } = prep(options)
     return search(db, `
       ${params.$sort ? SORT : ''}
       SELECT DISTINCT id
@@ -124,7 +137,7 @@ mod.item = {
           LEFT OUTER JOIN trash USING (id)
         WHERE
           ${params.$tags ? `tag_id IN (${lst(options.tags)}) AND` : ''}
-          ${params.$query ? `id IN (${SEARCH}) AND` : ''}
+          ${match ? `id IN (${match}) AND` : ''}
           deleted ${trash ? 'NOT' : 'IS'} NULL
         ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
         ORDER BY ${order} ${dir}, id ${dir}`,
@@ -132,7 +145,7 @@ mod.item = {
   },
 
   async find (db, { ids, ...options }) {
-    let { dir, order, params } = prep(options)
+    let { dir, order, params, match } = prep(options)
     return search(db, `
       ${params.$sort ? SORT : ''}
       SELECT DISTINCT id
@@ -143,13 +156,13 @@ mod.item = {
           LEFT OUTER JOIN trash USING (id)
         WHERE
           id IN (${lst(ids)}) AND deleted IS NULL
-          ${params.$query ? `AND id IN (${SEARCH})` : ''}
+          ${match ? `AND id IN (${match})` : ''}
         ORDER BY ${order} ${dir}, id ${dir}`,
     params)
   },
 
   async trash (db, options) {
-    let { dir, order, params } = prep(options)
+    let { dir, order, params, match } = prep(options)
     return search(db, `
       ${params.$sort ? SORT : ''}
       SELECT DISTINCT id
@@ -159,14 +172,14 @@ mod.item = {
             'LEFT OUTER JOIN sort USING (id)' :
             'JOIN subjects USING (id)'}
         WHERE
-          ${params.$query ? `id IN (${SEARCH}) AND` : ''}
+          ${match ? `id IN (${match}) AND` : ''}
           reason = 'user'
         ORDER BY ${order} ${dir}, id ${dir}`,
     params)
   },
 
   async list (db, list, options) {
-    let { dir, order, params } = prep(options, { $list: list })
+    let { dir, order, params, match } = prep(options, { $list: list })
     return search(db, `
       ${params.$sort ? SORT : ''}
       SELECT DISTINCT id, added
@@ -179,7 +192,7 @@ mod.item = {
           LEFT OUTER JOIN trash USING (id)
         WHERE
           list_id = $list AND list_items.deleted IS NULL AND
-          ${params.$query ? `id IN (${SEARCH}) AND` : ''}
+          ${match ? `id IN (${match}) AND` : ''}
           ${params.$tags ? `tag_id IN (${lst(options.tags)}) AND` : ''}
           trash.deleted IS NULL
         ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
@@ -188,7 +201,7 @@ mod.item = {
   },
 
   async unlisted (db, options) {
-    let { dir, order, params } = prep(options)
+    let { dir, order, params, match } = prep(options)
     return search(db, `
       ${params.$sort ? SORT : ''}
       SELECT DISTINCT id
@@ -201,7 +214,7 @@ mod.item = {
           ${params.$tags ? 'JOIN taggings USING (id)' : ''}
         WHERE
           (list_items.id IS NULL OR list_items.deleted NOT NULL) AND
-          ${params.$query ? `id IN (${SEARCH}) AND` : ''}
+          ${match ? `id IN (${match}) AND` : ''}
           ${params.$tags ? `tag_id IN (${lst(options.tags)}) AND` : ''}
           trash.deleted IS NULL
         ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}

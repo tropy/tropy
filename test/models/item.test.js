@@ -1,6 +1,7 @@
 import { mkprojtmp } from '../support/project.js'
 import item from '#tropy/models/item.js'
 import metadata from '#tropy/models/metadata.js'
+import tag from '#tropy/models/tag.js'
 import { TYPE } from '#tropy/constants/index.js'
 
 const TEMPLATE = 'https://tropy.org/v1/templates/generic'
@@ -50,6 +51,16 @@ describe('models/item', () => {
       expect(await search('"letter from"')).to.eql([ids[0]])
       expect(await search('"from letter"')).to.eql([])
       expect(await search('"folder 1')).to.eql([ids[2]])
+    })
+
+    it('matches terms per item, across fields and tags', async () => {
+      let { id } = await tag.create(db, { name: 'World_War' })
+      await item.tags.add(db, { id: [ids[2]], tag: id })
+
+      expect(await search('box war')).to.eql([ids[2]])
+      expect(await search('folder ld_wa')).to.eql([ids[2]])
+      expect(await search('box letter')).to.eql([])
+      expect(await search('wor_d')).to.eql([])
     })
   })
 })
