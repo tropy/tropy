@@ -19,7 +19,8 @@ export const ItemGrid = (props) => {
     <div
       {...iterator.handlers}
       className={cx('item-grid', { over: iterator.isOver })}
-      data-size={size}>
+      data-size={size}
+      style={{ '--size': size }}>
       <Scroll
         ref={scroll}
         {...iterator.scrollProps}
