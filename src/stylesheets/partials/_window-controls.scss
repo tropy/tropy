@@ -222,7 +222,7 @@
       }
 
       .not-maximizable &,
-      :has(.no-project) & {
+      body:has(> main > .no-project) & {
         display: none;
       }
     }

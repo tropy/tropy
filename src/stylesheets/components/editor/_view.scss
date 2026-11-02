@@ -21,7 +21,7 @@
     width: 100%;
     height: 100%;
 
-    :has(.drag-layer) &,
+    .project:has(> .drag-layer) &,
     .dragging & {
       pointer-events: none;
     }
