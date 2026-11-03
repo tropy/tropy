@@ -43,10 +43,7 @@ export function project (state = init, { type, payload, meta, error }) {
         closed: new Date()
       }
     case ITEM.INSERT:
-      return (state.lastAccess != null) ? state : {
-        ...state,
-        lastAccess: Date.now()
-      }
+      return state.isBlank ? { ...state, isBlank: false } : state
     default:
       return state
   }
