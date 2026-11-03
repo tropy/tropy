@@ -1,4 +1,13 @@
-import { Cursor, adjacent, createIndex, createSequence, indexOf, range, seek } from '#tropy/common/sequence.js'
+import {
+  Cursor,
+  adjacent,
+  createIndex,
+  createSequence,
+  indexOf,
+  range,
+  seek,
+  stable
+} from '#tropy/common/sequence.js'
 
 describe('sequence', () => {
   describe('indexOf', () => {
@@ -42,6 +51,16 @@ describe('sequence', () => {
       expect(indexOf(seq, 7)).to.equal(0)
       expect(indexOf(seq, 9)).to.equal(1)
       expect(indexOf(seq, 'x')).to.equal(2)
+    })
+  })
+
+  describe('stable', () => {
+    it('keeps the previous sequence if nothing changed', () => {
+      let prev = [1, 2, 3]
+
+      expect(stable([1, 2, 3], prev)).to.equal(prev)
+      expect(stable([1, 3, 2], prev)).to.eql([1, 3, 2])
+      expect(stable([1, 2], prev)).to.eql([1, 2])
     })
   })
 

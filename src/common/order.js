@@ -1,3 +1,5 @@
+import { stable } from './sequence.js'
+
 /*
  * Orders sequences of ids by key.
  *
@@ -118,5 +120,5 @@ export function update (seq, { changed = [], removed = [] }, key, options) {
 
   while (pos < rest.length) res.push(rest[pos++])
 
-  return res
+  return stable(res, seq)
 }

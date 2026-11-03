@@ -31,6 +31,11 @@ describe('order', () => {
   })
 
   describe('update', () => {
+    it('returns the same sequence if nothing moved', () => {
+      let seq = build([1, 2, 3, 4], key, { compare })
+      expect(update(seq, { changed: [2] }, key, { compare })).to.equal(seq)
+    })
+
     // A small deterministic PRNG, so failures can be reproduced.
     let random = (seed => () =>
       (seed = (seed * 16807) % 2147483647) / 2147483647)(42)
