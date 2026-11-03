@@ -1,13 +1,13 @@
 import ARGS from './args.js'
 
-function sort (locale = ARGS.locale) {
-  if (!(locale in sort)) {
-    sort[locale] = new Intl.Collator(locale, {
+export function collator (locale = ARGS.locale) {
+  if (!(locale in collator)) {
+    collator[locale] = new Intl.Collator(locale, {
       numeric: true
     })
   }
 
-  return sort[locale]
+  return collator[locale]
 }
 
 function search (locale = ARGS.locale) {
@@ -36,11 +36,11 @@ export function match (string, term, at = /^(\p{Alpha}|\d)/gmu) {
 }
 
 export function compare (a, b) {
-  return sort().compare(a, b)
+  return collator().compare(a, b)
 }
 
 export function by (...keys) {
-  return (a, b, cmp = sort().compare) => {
+  return (a, b, cmp = collator().compare) => {
     for (let key of keys) {
       let res = cmp(a[key], b[key])
       if (0 !== res) return res
