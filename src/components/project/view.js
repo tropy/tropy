@@ -28,8 +28,8 @@ export const ProjectView = ({
   let zoom = useSelector(state => state.ui.zoom)
   let items = useSelector(getVisibleItems)
 
-  let list = typeof nav.list === 'number' && nav.list > 0 ?
-    nav.list : null
+  let list = typeof nav.list === 'number' &&
+    nav.list > 0 ? nav.list : null
 
   let iterator = useRef()
 
@@ -42,7 +42,7 @@ export const ProjectView = ({
 
   let ItemIterator = zoom ? ItemGrid : ItemTable
 
-  let isBlank = (project.id && !project.lastAccess) && !nav.trash
+  let isBlank = project.isBlank && !project.lasAccess && !nav.trash
   let isReadOnly = project.isReadOnly || nav.trash
 
   let style = useMemo(() => ({
