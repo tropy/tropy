@@ -91,6 +91,14 @@ describe('common/project', () => {
         expect(project.store).to.be.null
         expect(project.isManaged).to.be.false
       })
+
+      it('is blank without access or subjects', async () => {
+        let { db } = tpy.current
+        expect((await load(db)).isBlank).to.be.true
+
+        await db.run('INSERT INTO subjects DEFAULT VALUES')
+        expect((await load(db)).isBlank).to.be.false
+      })
     })
 
     describe('managed', () => {

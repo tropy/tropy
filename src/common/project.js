@@ -341,6 +341,9 @@ export async function load (db) {
   project.isReadOnly = db.isReadOnly
   project.basePath = resolveBasePath(db, project.base)
 
+  project.isBlank = project.lastAccess == null &&
+    (await db.get('SELECT 1 FROM subjects LIMIT 1')) == null
+
   project.isManaged = project.store != null
 
   if (project.isManaged) {
