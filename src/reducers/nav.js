@@ -1,6 +1,7 @@
 import { create, has, ids } from '../common/selection.js'
 import { array, merge, insert, omit, splice } from '../common/util.js'
 import { dc } from '../ontology/ns.js'
+import { dismiss } from '../slices/completed.js'
 
 import {
   EDIT,
@@ -38,7 +39,7 @@ const init = {
 export function nav (state = init, { type, payload, meta, error }) {
   switch (type) {
     case NAV.RESTORE: {
-      let { items, ...nav } = omit(payload || {}, ['query', 'tags'])
+      let { items, ...nav } = omit(payload || {}, ['query', 'tags', 'activity'])
       let state = merge(init, nav)
 
       // Restore item selection from legacy `items` array or previous state
@@ -150,12 +151,17 @@ export function nav (state = init, { type, payload, meta, error }) {
           tags: state.tags.filter(id => id !== payload)
         }
 
+    case dismiss.type:
+      return (state.activity === payload) ?
+        { ...state, activity: null } : state
+
     case TAG.SELECT:
       return {
         ...state,
         ...reset,
         trash: null,
         imports: null,
+        activity: null,
         tags: selectTag(state.tags, payload, meta.mod)
       }
 
@@ -206,6 +212,7 @@ export function nav (state = init, { type, payload, meta, error }) {
         list: null,
         trash: null,
         imports: null,
+        activity: null,
         tags: [],
         ...payload
       }

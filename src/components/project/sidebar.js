@@ -31,7 +31,8 @@ class ProjectSidebar extends React.PureComponent {
 
   get hasSelection () {
     return this.props.list != null ||
-      this.props.isTrashSelected || (
+      this.props.isTrashSelected ||
+      this.props.isActivitySelected || (
       this.props.isLastImportSelected && this.props.hasLastImport
     )
   }
@@ -345,6 +346,7 @@ const ProjectSidebarContainer = connect(
   (state, { root }) => ({
     edit: state.edit,
     hasLastImport: state.imports.length > 0,
+    isActivitySelected: state.nav.activity != null,
     isLastImportSelected: state.nav.imports,
     isTrashSelected: state.nav.trash,
     keymap: state.keymap,

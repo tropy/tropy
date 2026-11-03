@@ -49,6 +49,10 @@
     min-width: 0;
   }
 
+  &.active .activity-text {
+    font-weight: 600;
+  }
+
   .flex-row {
     justify-content: space-between;
   }
@@ -64,6 +68,10 @@
   .activity-text {
     @include css-truncation;
     margin-right: auto;
+
+    &.link {
+      cursor: pointer;
+    }
 
     .is-blurred & {
       opacity: $sidebar-blurred-name-opacity;
