@@ -5,6 +5,18 @@
  * To make indexOf O(1) a sequence creator registers an index.
  * Indexed sequences are not supposed to change afterwards!
  */
+
+// Returns a new, indexed sequence and its push() function.
+export const createSequence = () => {
+  let seq = []
+  let idx = createIndex(seq)
+
+  return [seq, (element, id = element.id ?? element) => {
+    idx.set(id, seq.length)
+    seq.push(element)
+  }]
+}
+
 const IDX = new WeakMap()
 
 // Creates the index of seq, to be filled by the sequence creator
