@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { Popover } from './popover.js'
 import { OptionList } from './option.js'
 import * as collate from '../collate.js'
-import { createIndex, indexOf } from '../common/sequence.js'
+import { createSequence, indexOf } from '../common/sequence.js'
 import cx from 'classnames'
 import memoize from 'memoize-one'
 import { SASS } from '../constants/index.js'
@@ -68,8 +68,7 @@ export class Completions extends React.Component {
       toId,
       toText
     ) => {
-      let options = []
-      let idx = createIndex(options)
+      let [options, push] = createSequence()
 
       completions.forEach((value, pos) => {
         let id = toId(value)
@@ -80,8 +79,7 @@ export class Completions extends React.Component {
         if (!isHidden) {
           let m = !query.length || match(value, query)
           if (m != null && m !== false) {
-            idx.set(id, options.length)
-            options.push({
+            push({
               id, idx: pos, value, text: toText(value, { isSelected, matchData: m })
             })
           }

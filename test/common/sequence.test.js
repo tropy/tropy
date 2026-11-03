@@ -1,4 +1,4 @@
-import { Cursor, adjacent, createIndex, indexOf, range, seek } from '#tropy/common/sequence.js'
+import { Cursor, adjacent, createIndex, createSequence, indexOf, range, seek } from '#tropy/common/sequence.js'
 
 describe('sequence', () => {
   describe('indexOf', () => {
@@ -29,6 +29,19 @@ describe('sequence', () => {
 
       expect(indexOf(seq, seq[1])).to.equal(1)
       expect(indexOf(seq, {})).to.equal(-1)
+    })
+  })
+
+  describe('createSequence', () => {
+    it('indexes elements by id or explicit key', () => {
+      let [seq, push] = createSequence()
+      push(7)
+      push({ id: 9 })
+      push({}, 'x')
+
+      expect(indexOf(seq, 7)).to.equal(0)
+      expect(indexOf(seq, 9)).to.equal(1)
+      expect(indexOf(seq, 'x')).to.equal(2)
     })
   })
 

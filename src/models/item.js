@@ -1,7 +1,7 @@
 import { array, blank, list as lst, uniq } from '../common/util.js'
 import { select } from '../common/query.js'
 import { NAV } from '../constants/index.js'
-import { createIndex } from '../common/sequence.js'
+import { createSequence } from '../common/sequence.js'
 
 import modMetadata from './metadata.js'
 import modPhoto from './photo.js'
@@ -117,12 +117,10 @@ function prep ({ query, sort, tags }, params = {}) {
 }
 
 async function search (db, query, params) {
-  const items = []
-  const idx = createIndex(items)
+  const [items, push] = createSequence()
 
   await db.each(query, params, ({ id }) => {
-    idx.set(id, items.length)
-    items.push(id)
+    push(id)
   })
 
   return { items: Object.freeze(items) }

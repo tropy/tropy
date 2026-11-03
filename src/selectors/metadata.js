@@ -5,7 +5,7 @@ import { selectItemSequence } from '../slices/qr.js'
 import { own } from '../common/util.js'
 import { equal } from '../value.js'
 import { compare } from '../collate.js'
-import { createIndex } from '../common/sequence.js'
+import { createSequence, getIndex } from '../common/sequence.js'
 
 import {
   cat,
@@ -76,8 +76,7 @@ export const getMetadataFields = memo(
   (_, { props }) => props,
   (_, { compact }) => compact,
   (data, template, props, compact) => {
-    let fld = []
-    let idx = createIndex(fld)
+    let [fld, push] = createSequence()
 
     if (template != null) {
       for (let f of template.fields) {
@@ -85,9 +84,7 @@ export const getMetadataFields = memo(
           continue
         }
 
-        idx.set(f.property, fld.length)
-
-        fld.push({
+        push({
           isExtra: false,
           isRequired: f.isRequired,
           isReadOnly: f.isConstant,
@@ -96,19 +93,20 @@ export const getMetadataFields = memo(
           property: getProperty(f.property, props, compact),
           type: f.datatype,
           value: (data != null && data[f.property]) || {}
-        })
+        }, f.property)
       }
     }
 
     if (data != null) {
+      let idx = getIndex(fld)
+
       for (let id in data) {
         if (id === 'id' || idx.has(id)) continue
-        idx.set(id, fld.length)
-        fld.push({
+        push({
           isExtra: true,
           property: props[id] || { id },
           value: data[id]
-        })
+        }, id)
       }
 
       fld.id = data.id
