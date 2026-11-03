@@ -83,6 +83,7 @@ export function mkapi () {
 
   before(() => {
     api.app = create({
+      locale: () => 'de',
       loggerInstance: logger.child({}, { level: 'silent' }),
       pm,
       proto: api.proto,

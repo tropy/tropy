@@ -5,6 +5,7 @@ async function createServer (app, port) {
   let { create } = await import('./api.js')
 
   let api = create({
+    locale: () => app.state.locale,
     loggerInstance: logger.child({ name: 'api' }),
     pm: app.pm,
     proto: app.proto,

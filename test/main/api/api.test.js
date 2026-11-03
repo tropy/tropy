@@ -14,7 +14,8 @@ describe('api', () => {
         status: 'ok',
         name: 'Tropy',
         version,
-        apiVersion: 1
+        apiVersion: 1,
+        locale: 'de'
       }).and.to.have.property('channel')
 
     })
