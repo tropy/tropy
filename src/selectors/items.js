@@ -2,10 +2,11 @@ import { createSelector as memo } from 'reselect'
 import { pluck } from './util.js'
 import { BLANK } from '../common/util.js'
 import { Selection } from '../common/selection.js'
+import { selectItemSequence } from '../slices/qr.js'
 
 export const getItemSelection = memo(
   ({ nav }) => nav.item,
-  ({ qr }) => qr.items,
+  selectItemSequence,
   (state, seq) => new Selection(state, seq)
 )
 
@@ -25,7 +26,7 @@ export const getPrimaryItemId = memo(
 )
 
 export const getVisibleItems = memo(
-  ({ items }) => items, ({ qr }) => (qr.items), pluck
+  ({ items }) => items, selectItemSequence, pluck
 )
 
 export const getListHoldIndex = memo(

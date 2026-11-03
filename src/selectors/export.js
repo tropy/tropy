@@ -5,6 +5,7 @@ import { compact, blank, URI, get, pick } from '../common/util.js'
 import { serialize } from '../editor/serialize.js'
 import { getListPath } from './lists.js'
 import { getItemSelection } from './items.js'
+import { selectItemSequence } from '../slices/qr.js'
 
 const RESERVED = Object.fromEntries(properties.all.map(prop => ([prop, true])))
 
@@ -13,7 +14,7 @@ export const getExportItemIds = (state, { id } = {}) => {
     return id
 
   let ids = getItemSelection(state).elements()
-  return (ids.length > 0) ? ids : state.qr.items
+  return (ids.length > 0) ? ids : selectItemSequence(state)
 }
 
 export const getExportItems = (state, props = {}) => {

@@ -1,6 +1,7 @@
 import { createSelector as memo } from 'reselect'
 import { pluck } from './util.js'
 import { getItemSelection } from './items.js'
+import { selectItemSequence } from '../slices/qr.js'
 import { own } from '../common/util.js'
 import { equal } from '../value.js'
 import { compare } from '../collate.js'
@@ -60,7 +61,7 @@ export const getItemMetadata = memo(
 )
 
 export const getVisibleMetadata = memo(
-  ({ items }) => items, ({ qr }) => (qr.items), pluck
+  ({ items }) => items, selectItemSequence, pluck
 )
 
 const getProperty = (id, props, compact) =>
