@@ -1,4 +1,4 @@
-import { Cursor, adjacent, indexOf, range, seek } from '#tropy/common/sequence.js'
+import { Cursor, adjacent, createIndex, indexOf, range, seek } from '#tropy/common/sequence.js'
 
 describe('sequence', () => {
   describe('indexOf', () => {
@@ -9,7 +9,9 @@ describe('sequence', () => {
 
     it('matches ids and elements in indexed sequences', () => {
       let seq = [{ id: 7 }, { id: 9 }]
-      seq.idx = { 7: 0, 9: 1 }
+      let idx = createIndex(seq)
+      idx.set(7, 0)
+      idx.set(9, 1)
 
       expect(indexOf(seq, 9)).to.equal(1)
       expect(indexOf(seq, seq[1])).to.equal(1)

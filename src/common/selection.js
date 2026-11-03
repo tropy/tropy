@@ -10,13 +10,15 @@ const toMap = (elements = []) => {
   return map
 }
 
-// Selection state of a sequence:
-//   - selected: maps (numeric!) id -> true
-//   - anchor: id where current range starts
-//   - cursor: id of current position in sequence
-//
-// Selection state is plain and may live in Redux.
-// Selection class is a thin wrapper on top of it.
+/*
+ * Selection state of a sequence:
+ *   - selected: maps (numeric!) id -> true
+ *   - anchor: id where current range starts
+ *   - cursor: id of current position in sequence
+ *
+ * Selection state is plain and may live in Redux.
+ * Selection class is a thin wrapper on top of it.
+ */
 
 export const create = (ids = [], {
   anchor = toId(ids.at(-1)) ?? null,

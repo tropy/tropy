@@ -1,7 +1,8 @@
 import { createSelector as memo } from 'reselect'
-import { seq, compose, filter, into, map, cat, keep } from 'transducers.js'
+import { seq, compose, filter, into, map } from 'transducers.js'
 import { getSelectedItems } from './items.js'
 import { blank, pluck } from '../common/util.js'
+import { createIndex } from '../common/sequence.js'
 
 
 const withErrors = ([, photo]) =>
@@ -23,17 +24,18 @@ export const getSelectedPhoto = memo(
 )
 
 const expandItemPhotos = (items, photos) => {
-  let k = 0
-  let idx = {}
-  let lst = seq(items, compose(
-    map(item => item.photos),
-    cat,
-    map(id => photos[id]),
-    keep(),
-    map(photo => (idx[photo.id] = k++, photo))
-  ))
+  let lst = []
+  let idx = createIndex(lst)
 
-  lst.idx = idx
+  for (let item of items) {
+    for (let id of item.photos) {
+      let photo = photos[id]
+      if (photo == null) continue
+      idx.set(photo.id, lst.length)
+      lst.push(photo)
+    }
+  }
+
   return lst
 }
 
