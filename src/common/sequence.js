@@ -1,13 +1,35 @@
+/*
+ * Sequences are plain arrays.
+ * Each element of a sequence is either an `id` or of form `{ id }`.
+ *
+ * To make indexOf O(1) a sequence creator registers an index.
+ * Indexed sequences are not supposed to change afterwards!
+ */
+const IDX = new WeakMap()
+
+// Creates the index of seq, to be filled by the sequence creator
+// with idx.set(key, position) as it adds each element.
+export const createIndex = (seq) => {
+  let idx = new Map()
+  IDX.set(seq, idx)
+  return idx
+}
+
+// Returns the index of seq.
+export const getIndex = (seq) => IDX.get(seq)
+
 // Sequence elements match by their `id` property,
 // or by identity if they have none.
+// NB: Uses index if available!
 export const indexOf = (seq, element) => {
   if (element == null)
     return -1
 
   let id = element.id ?? element
+  let idx = IDX.get(seq)
 
-  return (seq.idx != null)
-    ? seq.idx[id] ?? -1
+  return (idx != null)
+    ? idx.get(id) ?? -1
     : seq.findIndex(it => it === id || it.id === id)
 }
 

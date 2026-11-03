@@ -5,6 +5,7 @@ import { selectItemSequence } from '../slices/qr.js'
 import { own } from '../common/util.js'
 import { equal } from '../value.js'
 import { compare } from '../collate.js'
+import { createIndex } from '../common/sequence.js'
 
 import {
   cat,
@@ -76,7 +77,7 @@ export const getMetadataFields = memo(
   (_, { compact }) => compact,
   (data, template, props, compact) => {
     let fld = []
-    let idx = {}
+    let idx = createIndex(fld)
 
     if (template != null) {
       for (let f of template.fields) {
@@ -84,7 +85,7 @@ export const getMetadataFields = memo(
           continue
         }
 
-        idx[f.property] = fld.length
+        idx.set(f.property, fld.length)
 
         fld.push({
           isExtra: false,
@@ -101,8 +102,8 @@ export const getMetadataFields = memo(
 
     if (data != null) {
       for (let id in data) {
-        if (id === 'id' || idx[id] != null) continue
-        idx[id] = fld.length
+        if (id === 'id' || idx.has(id)) continue
+        idx.set(id, fld.length)
         fld.push({
           isExtra: true,
           property: props[id] || { id },
@@ -112,8 +113,6 @@ export const getMetadataFields = memo(
 
       fld.id = data.id
     }
-
-    fld.idx = idx
 
     return fld
   }

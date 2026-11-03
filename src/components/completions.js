@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import { Popover } from './popover.js'
 import { OptionList } from './option.js'
 import * as collate from '../collate.js'
+import { createIndex, indexOf } from '../common/sequence.js'
 import cx from 'classnames'
 import memoize from 'memoize-one'
 import { SASS } from '../constants/index.js'
@@ -68,10 +69,9 @@ export class Completions extends React.Component {
       toText
     ) => {
       let options = []
+      let idx = createIndex(options)
 
-      options.idx = {}
-
-      completions.forEach((value, idx) => {
+      completions.forEach((value, pos) => {
         let id = toId(value)
         let isSelected = selection.includes(id)
         let isHidden = (isSelectionHidden && isSelected) ||
@@ -80,9 +80,9 @@ export class Completions extends React.Component {
         if (!isHidden) {
           let m = !query.length || match(value, query)
           if (m != null && m !== false) {
-            options.idx[id] = options.length
+            idx.set(id, options.length)
             options.push({
-              id, idx, value, text: toText(value, { isSelected, matchData: m })
+              id, idx: pos, value, text: toText(value, { isSelected, matchData: m })
             })
           }
         }
@@ -124,8 +124,8 @@ export class Completions extends React.Component {
   }
 
   get active () {
-    let idx = this.state.options.idx[this.state.active]
-    return (idx == null) ? null : this.state.options[idx]
+    let { options, active } = this.state
+    return options[indexOf(options, active)] ?? null
   }
 
   select () {

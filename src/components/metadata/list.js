@@ -2,6 +2,7 @@ import React from 'react'
 import { MetadataField } from './field.js'
 import { FieldSelect } from './select.js'
 import { shallow } from '../../common/util.js'
+import { getIndex } from '../../common/sequence.js'
 
 
 export class MetadataList extends React.PureComponent {
@@ -22,8 +23,9 @@ export class MetadataList extends React.PureComponent {
 
   indexOf (id) {
     const { fields } = this.props
-    return (fields.idx != null)
-      ? fields.idx[id]
+    const idx = getIndex(fields)
+    return (idx != null)
+      ? idx.get(id)
       : fields.findIndex(f => f.property.id === id)
   }
 
