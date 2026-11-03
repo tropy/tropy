@@ -12,35 +12,33 @@
   contain: strict;
 
   // The grid sets the thumbnail size: `--size`.
-  [data-size] & {
-    height: round(var(--size) * #{$tile-factor} * 1px, 1px);
+  height: round(var(--size) * #{$tile-factor} * 1px, 1px);
 
-    .thumbnail,
-    img {
-      --width: var(--x) * var(--size) * 1px;
-      --height: var(--y) * var(--size) * 1px;
-      width: calc(var(--width));
-      height: calc(var(--height));
-      min-width: 28px;
-      min-height: 18px;
-    }
+  .thumbnail,
+  img {
+    --width: var(--x) * var(--size) * 1px;
+    --height: var(--y) * var(--size) * 1px;
+    width: calc(var(--width));
+    height: calc(var(--height));
+    min-width: 28px;
+    min-height: 18px;
+  }
 
-    .thumbnail {
-      [class*="90"],
-      [class*="270"] {
-        img {
-          --width: var(--y) * var(--size) * 1px;
-          --height: var(--x) * var(--size) * 1px + 1px;
-          min-width: 18px;
-          min-height: 28px;
-        }
+  .thumbnail {
+    [class*="90"],
+    [class*="270"] {
+      img {
+        --width: var(--y) * var(--size) * 1px;
+        --height: var(--x) * var(--size) * 1px + 1px;
+        min-width: 18px;
+        min-height: 28px;
       }
     }
+  }
 
-    .rotation-container {
-      width: calc(var(--size) * 1px);
-      height: calc(var(--size) * 1px);
-    }
+  .rotation-container {
+    width: calc(var(--size) * 1px);
+    height: calc(var(--size) * 1px);
   }
 
   &.photo,
