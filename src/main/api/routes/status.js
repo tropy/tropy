@@ -2,7 +2,7 @@ import { channel, product, version } from '../../../common/release.js'
 
 const API_VERSION = 1
 
-export default async function status (fastify) {
+export default async function status (fastify, { locale }) {
   fastify.get('/', {
     schema: {
       operationId: 'status',
@@ -14,6 +14,7 @@ export default async function status (fastify) {
     version,
     channel,
     apiVersion: API_VERSION,
+    locale: locale(),
     links: { 'service-desc': '/openapi.json' }
   }))
 }

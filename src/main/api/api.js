@@ -20,6 +20,7 @@ import tags from './routes/tags.js'
 import transcriptions from './routes/transcriptions.js'
 
 export function create ({
+  locale,
   loggerInstance,
   pm,
   proto,
@@ -44,7 +45,7 @@ export function create ({
   app.register(accept)
   app.register(guard)
   app.register(legacy)
-  app.register(status)
+  app.register(status, { locale })
   app.register(projectsRoutes, { pm })
   app.register(mcp, { proto })
   app.register(openapi, { proto })
