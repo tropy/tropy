@@ -22,42 +22,60 @@ export default async function projects (fastify, { pm }) {
 
   fastify.post('/projects', {
     schema: {
-      operationId: 'projects.create',
-      summary: 'Create a project and open it',
-      description: 'Like New Project in the app. ' +
+      operationId: 'projects.open',
+      summary: 'Open a project, or create a new one',
+      description: 'Like Open and New Project in the app. ' +
+        'A project that is open already is returned as it is. ' +
         'Managed projects end in .tropy, standard projects in .tpy.',
       body: object({
         path: {
           type: 'string',
           pattern: '[^/\\\\]\\.(tropy|tpy)$',
-          description: 'Absolute path of the new project file'
+          description: 'Absolute path of the project file'
+        },
+        create: {
+          type: 'boolean',
+          description: 'Create a new project; fails if the file exists'
         },
         name: {
           type: 'string',
           minLength: 1,
-          description: 'Project name; defaults to the file name'
+          description: 'Name of a new project; defaults to the file name'
         }
       }, ['path'])
     }
   }, async ({ body }, reply) => {
     if (!isAbsolute(body.path))
       throw fail(400, `path must be absolute: ${body.path}`)
+    if (body.name != null && !body.create)
+      throw fail(400, 'name is only for new projects: use create')
 
     let path = resolve(body.path)
 
-    if (existsSync(path))
-      throw fail(409, `file exists: ${path}`)
-    if (!existsSync(dirname(path)))
-      throw fail(400, `folder does not exist: ${dirname(path)}`)
+    if (body.create) {
+      if (existsSync(path))
+        throw fail(409, `file exists: ${path}`)
+      if (!existsSync(dirname(path)))
+        throw fail(400, `folder does not exist: ${dirname(path)}`)
 
-    await pm.open(path, {
-      create: { name: body.name },
-      silent: true
-    })
+      await pm.open(path, {
+        create: { name: body.name },
+        silent: true
+      })
+
+      reply.code(201)
+
+    } else {
+      if (!existsSync(path))
+        throw fail(404, `no project at ${path}`)
+
+      if (pm.window(path) == null)
+        await pm.open(path, { silent: true })
+    }
 
     let project = pm.describe(path)
 
-    reply.code(201).header('location', `/projects/${encodeURIComponent(project.urlId)}`)
+    reply.header('location', `/projects/${encodeURIComponent(project.urlId)}`)
     return project
   })
 

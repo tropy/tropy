@@ -69,7 +69,7 @@ describe('api', () => {
       let dir = await mkdtemp(join(tmpdir(), 'tropy-api-'))
       let path = join(dir, 'New Atlas.tropy')
 
-      let res = await api.post('/projects', { path, name: 'Atlas' })
+      let res = await api.post('/projects', { path, name: 'Atlas', create: true })
 
       expect(res.statusCode).to.equal(201)
       expect(res.headers.location).to.equal('/projects/New%20Atlas')
@@ -88,6 +88,36 @@ describe('api', () => {
         [{ path: join(dir, '.tropy') }, 400],
         [{ path: join(dir, 'missing', 'atlas.tropy') }, 400]
       ]) {
+        expect((await api.post('/projects', { ...body, create: true })).statusCode, body.path)
+          .to.equal(status)
+      }
+    })
+
+    it('opens existing projects', async () => {
+      let dir = await mkdtemp(join(tmpdir(), 'tropy-api-'))
+      let closed = join(dir, 'closed.tropy')
+      let open = join(dir, 'foo.tropy')
+
+      await writeFile(closed, '')
+      await writeFile(open, '')
+
+      let res = await api.post('/projects', { path: closed })
+
+      expect(res.statusCode).to.equal(200)
+      expect(res.headers.location).to.equal('/projects/closed')
+      expect(api.pm.open.mock.calls.at(-1).arguments)
+        .to.eql([closed, { silent: true }])
+
+      // Open projects are returned, without focusing their window.
+      let calls = api.pm.open.mock.callCount()
+      expect((await api.post('/projects', { path: open })).json())
+        .to.include({ path: open, open: true })
+      expect(api.pm.open.mock.callCount()).to.equal(calls)
+
+      for (let [body, status] of [
+        [{ path: join(dir, 'missing.tropy') }, 404],
+        [{ path: closed, name: 'Atlas' }, 400]
+      ]) {
         expect((await api.post('/projects', body)).statusCode, body.path)
           .to.equal(status)
       }
@@ -100,7 +130,7 @@ describe('api', () => {
         throw Object.assign(new Error('permission denied'), { code: 'EACCES' })
       })
 
-      let res = await api.post('/projects', { path: join(dir, 'a.tropy') })
+      let res = await api.post('/projects', { path: join(dir, 'a.tropy'), create: true })
       expect(res.statusCode).to.equal(403)
     })
 
