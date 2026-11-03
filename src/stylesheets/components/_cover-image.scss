@@ -99,82 +99,80 @@
   }
 
   // The grid sets the thumbnail size: `--size`.
-  &[data-size] {
-    .cover-image {
-      --stack-line-height: round(var(--size) * 1px / 32, 1px);
+  .cover-image {
+    --stack-line-height: round(var(--size) * 1px / 32, 1px);
 
-      .thumbnail,
-      .thumbnail img {
-        min-width: round(var(--size) * 0.375px, 1px);
-        min-height: round(var(--size) * 0.375px, 1px);
+    .thumbnail,
+    .thumbnail img {
+      min-width: round(var(--size) * 0.375px, 1px);
+      min-height: round(var(--size) * 0.375px, 1px);
+    }
+
+    .thumbnail {
+      [class*="90"],
+      [class*="270"] {
+        img {
+          min-height: calc(round(var(--size) * 0.375px, 1px) + 0.5px);
+        }
+      }
+    }
+
+    .stack-lines {
+      .line {
+        // Tinting and gap: small sizes tint less and show the gap.
+        $range: $tile-thumbnail-size-max - $tile-thumbnail-size-min;
+        $factor: calc(2.25 / $range);
+
+        --tint: min(1, (var(--size) - #{$tile-thumbnail-size-min}) * #{$factor});
+        height: var(--stack-line-height);
+
+        // Stack line widths
+        @for $i from 1 through $stack-size-max {
+          &.line-#{$i} {
+            margin-left: round(var(--size) * #{calc($i / 16)} * 1px, 1px);
+            margin-right: round(var(--size) * #{calc($i / 16)} * 1px, 1px);
+          }
+        }
+
+        &.line-1 {
+          &::before {
+            opacity: calc(var(--tint) * #{$stack-line-tint-opacity});
+          }
+        }
+
+        &.line-2 {
+          &::before {
+            opacity: calc(var(--tint) * #{1.5 * $stack-line-tint-opacity});
+          }
+        }
+
+        &::after {
+          opacity: calc(1 - var(--tint));
+        }
       }
 
-      .thumbnail {
+      & + .thumbnail,
+      & + .thumbnail img {
+        --stack-lines-height: 2 * var(--stack-line-height);
+        --stack-height: var(--size) * 1px - var(--stack-lines-height);
+        --width: var(--x) * var(--size) * 1px;
+        --height: var(--y) * var(--size) * 1px;
+        --max-width: var(--width) + (var(--stack-height) - var(--height)) * (var(--x) / var(--y));
+        --max-height: var(--stack-height);
+        width: calc(var(--width));
+        height: calc(var(--height));
+        max-width: calc(var(--max-width));
+        max-height: calc(var(--max-height));
+      }
+
+      & + .thumbnail {
         [class*="90"],
         [class*="270"] {
           img {
-            min-height: calc(round(var(--size) * 0.375px, 1px) + 0.5px);
-          }
-        }
-      }
-
-      .stack-lines {
-        .line {
-          // Tinting and gap: small sizes tint less and show the gap.
-          $range: $tile-thumbnail-size-max - $tile-thumbnail-size-min;
-          $factor: calc(2.25 / $range);
-
-          --tint: min(1, (var(--size) - #{$tile-thumbnail-size-min}) * #{$factor});
-          height: var(--stack-line-height);
-
-          // Stack line widths
-          @for $i from 1 through $stack-size-max {
-            &.line-#{$i} {
-              margin-left: round(var(--size) * #{calc($i / 16)} * 1px, 1px);
-              margin-right: round(var(--size) * #{calc($i / 16)} * 1px, 1px);
-            }
-          }
-
-          &.line-1 {
-            &::before {
-              opacity: calc(var(--tint) * #{$stack-line-tint-opacity});
-            }
-          }
-
-          &.line-2 {
-            &::before {
-              opacity: calc(var(--tint) * #{1.5 * $stack-line-tint-opacity});
-            }
-          }
-
-          &::after {
-            opacity: calc(1 - var(--tint));
-          }
-        }
-
-        & + .thumbnail,
-        & + .thumbnail img {
-          --stack-lines-height: 2 * var(--stack-line-height);
-          --stack-height: var(--size) * 1px - var(--stack-lines-height);
-          --width: var(--x) * var(--size) * 1px;
-          --height: var(--y) * var(--size) * 1px;
-          --max-width: var(--width) + (var(--stack-height) - var(--height)) * (var(--x) / var(--y));
-          --max-height: var(--stack-height);
-          width: calc(var(--width));
-          height: calc(var(--height));
-          max-width: calc(var(--max-width));
-          max-height: calc(var(--max-height));
-        }
-
-        & + .thumbnail {
-          [class*="90"],
-          [class*="270"] {
-            img {
-              --width: var(--y) * var(--size) * 1px + 0.5px;
-              --height: var(--x) * var(--size) * 1px;
-              --max-width: var(--stack-height);
-              --max-height: var(--height) + (var(--stack-height) - var(--width)) * (var(--x) / var(--y)) + 0.5px;
-            }
+            --width: var(--y) * var(--size) * 1px + 0.5px;
+            --height: var(--x) * var(--size) * 1px;
+            --max-width: var(--stack-height);
+            --max-height: var(--height) + (var(--stack-height) - var(--width)) * (var(--x) / var(--y)) + 0.5px;
           }
         }
       }

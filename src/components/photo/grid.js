@@ -74,7 +74,6 @@ export const PhotoGrid = (props) => {
   return iterator.connect(
     <div
       className={cx('photo-grid', iterator.classes)}
-      data-size={size}
       style={{ '--size': size }}>
       <Scroll
         ref={scroll}
