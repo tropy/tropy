@@ -1,6 +1,7 @@
 export * from './create.js'
 export * from './explode.js'
 export * from './export.js'
+export * from './find.js'
 export * from './import.js'
 export * from './load.js'
 export * from './merge.js'

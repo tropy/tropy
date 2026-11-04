@@ -22,7 +22,7 @@ export default {
   item: {
     find ({ tags, ...payload }, meta) {
       return {
-        type: API.ITEM.FIND,
+        type: ITEM.FIND,
         payload: {
           ...payload,
           tags: array(tags)

@@ -173,7 +173,7 @@ function *hydrate ({ db, project }) {
 }
 
 function *start ({ db, sorted }) {
-  yield fork(matches, db, has('search'))
+  yield fork(matches, has('search'))
   yield fork(order, db, sorted)
   yield fork(autosave, db)
   yield fork(transcribe)

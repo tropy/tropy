@@ -4,6 +4,7 @@ export default {
   DESTROY: 'item.destroy',
   EXPLODE: 'item.explode',
   EXPORT: 'item.export',
+  FIND: 'item.find',
   INSERT: 'item.insert',
   IMPORT: 'item.import',
   IMPLODE: 'item.implode',
