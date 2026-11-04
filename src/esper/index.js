@@ -3,6 +3,7 @@ import { Application, RenderTexture, Ticker } from 'pixi.js'
 import TWEEN from '@tweenjs/tween.js'
 import { debug, error, info, warn } from '../common/log.js'
 import { Photo, FILTERS } from './photo.js'
+import { KEYSTONE } from './keystone.js'
 import { Selection } from './selection.js'
 import { Loader } from './loader.js'
 import { ESPER, SASS } from '../constants/index.js'
@@ -54,7 +55,8 @@ Ticker.shared.autoStart = false
 Ticker.shared.stop()
 
 export {
-  FILTERS
+  FILTERS,
+  KEYSTONE
 }
 
 export default class Esper extends EventEmitter {
@@ -161,6 +163,8 @@ export default class Esper extends EventEmitter {
     remove(this.app.canvas)
   }
 
+  // Renders the image (a photo, or a selection given by its x, y,
+  // width and height) with its correction, filters and orientation.
   extract = async (src, props) => {
     try {
       let photo = new Photo({
@@ -171,14 +175,15 @@ export default class Esper extends EventEmitter {
       let { width, height } = props
       let { renderer } = this.app
 
-      photo.bg.texture = await this.loader.loadTexture(src)
+      let texture = await this.loader.loadTexture(src)
+      photo.bg.texture = texture
+      photo.keystone(props, { width: texture.width, height: texture.height })
       photo.filter(props)
       photo.rotation = rad(props.angle)
       photo.scale.set(props.mirror ? -1 : 1, 1)
 
       if (!isHorizontal(props.angle)) {
-        width = props.height
-        height = props.width
+        [width, height] = [height, width]
       }
 
       photo.position.set(width / 2, height / 2)
@@ -306,10 +311,11 @@ export default class Esper extends EventEmitter {
     let { x, y } = this.getDefaultPosition(props)
 
     setScaleMode(photo.bg.texture, zoom)
+
     photo.sync(props, state)
 
     let next = {
-      pivot: center(props.selection || state),
+      pivot: this.getDefaultPivot(props),
       rotation: rad(angle),
       x,
       y,
@@ -353,6 +359,7 @@ export default class Esper extends EventEmitter {
       this.photo.pivot.copyFrom(next.pivot)
       this.photo.position.copyFrom(next)
       this.photo.filter(state)
+      this.refresh()
       this.render()
     }
   }
@@ -410,13 +417,21 @@ export default class Esper extends EventEmitter {
       for (let tween of this.tweens)
         tween.update(now)
 
-      let drag = this.drag.current
-      this.photo?.update(drag, drag?.textSelection ?? this.textSelection)
+      this.refresh()
 
     } catch (err) {
       this.halt()
       error({ err }, 'esper: update cycle failed, halting!')
     }
+  }
+
+  // Applies the current drag and text selection state to the photo.
+  // This happens on every tick; but it must be done explicitly
+  // after a sync, which rebuilds the photo's children, if we render
+  // before the next tick, or the text selection flickers.
+  refresh () {
+    let drag = this.drag.current
+    this.photo?.update(drag, drag?.textSelection ?? this.textSelection)
   }
 
   get resolution () {
@@ -562,6 +577,35 @@ export default class Esper extends EventEmitter {
       this.photo.filter(next)
       this.render()
     }
+  }
+
+  // Returns the centre of what is shown: the selection, or the
+  // whole warped photo, which lies around the image's rectangle.
+  getDefaultPivot ({ selection }) {
+    return center(selection || this.photo.correction?.bounds || this.photo)
+  }
+
+  // Applies a changed perspective correction. This changes the
+  // extent of the photo, so we re-center the pivot and constrain
+  // the view.
+  keystone (props, state) {
+    let { photo } = this
+    if (photo == null) return
+
+    let { mirror, zoom } = state
+
+    photo.sync(props, state)
+    photo.pivot.copyFrom(this.getDefaultPivot(props))
+
+    if (zoom !== photo.scale.y) {
+      setScaleMode(photo.bg.texture, zoom)
+      photo.scale.set(mirror ? -zoom : zoom, zoom)
+    }
+
+    this.constrain()
+    this.refresh()
+    this.emit('change')
+    this.render()
   }
 
   move ({ x, y, zoom }, {

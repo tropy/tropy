@@ -58,6 +58,7 @@ export const props = {
     'contrast',
     'height',
     'hue',
+    'keystone',
     'mirror',
     'negative',
     'saturation',

@@ -41,6 +41,7 @@ async function load (db, ids, { basePath } = {}) {
         'hue',
         'saturation',
         'sharpen',
+        'keystone',
         'width',
         'height',
         'path',

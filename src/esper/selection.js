@@ -152,8 +152,13 @@ export class SelectionOverlay extends Container {
     if (this.active == null || this.parent == null) return
 
     let scale = 1 / this.parent.scale.y
-    let { bg } = this.parent
+    let { bg, correction } = this.parent
     let { x, y, width, height } = this.active
+
+    // Subtle: a corrected photo is drawn beyond the image's
+    // rectangle (see keystone.js); dim all of it.
+    let extent = correction?.bounds ??
+      { x: 0, y: 0, width: bg.width, height: bg.height }
 
     this.children[1]
       .rect(x, y, width, height)
@@ -161,7 +166,7 @@ export class SelectionOverlay extends Container {
       .stroke({ width: scale, ...ESPER.COLOR.mask.line })
 
     this.children[0]
-      .rect(0, 0, bg.width, bg.height)
+      .rect(extent.x, extent.y, extent.width, extent.height)
       .fill(ESPER.COLOR.mask.fill)
       .rect(x, y, width, height)
       .cut()

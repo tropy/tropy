@@ -1,8 +1,10 @@
-import { Container, ColorMatrixFilter, Sprite, Rectangle } from 'pixi.js'
+import { Container, ColorMatrixFilter, Rectangle } from 'pixi.js'
 import { AdjustmentFilter } from 'pixi-filters'
 import { SharpenFilter } from './filter/index.js'
+import { KeystoneMesh } from './mesh.js'
 import { SelectionLayer, SelectionOverlay } from './selection.js'
 import { TextLayer } from './text-layer.js'
+import { equals, keystone } from './keystone.js'
 import { constrain } from './util.js'
 import { getResolution } from '../dom.js'
 import { deg, isHorizontal } from '../common/math.js'
@@ -29,6 +31,11 @@ export class Photo extends Container {
   #pivot
   #tool = ESPER.TOOL.ARROW
 
+  // The photo's perspective correction, see keystone.js. The
+  // corrected image has the same size as the photo, so the local
+  // coordinates are its pixels, corrected or not.
+  correction = null
+
   constructor ({ x = 0, y = 0, width, height, resolution }) {
     super()
 
@@ -37,7 +44,7 @@ export class Photo extends Container {
 
     this.pivot.set(x + width / 2, y + height / 2)
 
-    this.bg = new Sprite()
+    this.bg = new KeystoneMesh()
     this.addChild(this.bg)
 
     this.bg.filters = [
@@ -184,6 +191,24 @@ export class Photo extends Container {
     }
   }
 
+  // Applies the perspective correction; the source is the size
+  // of the texture.
+  keystone (params, source) {
+    let { correction } = this
+
+    if (correction != null &&
+      equals(correction, params) &&
+      sameRect(correction.source, source))
+      return correction
+
+    correction = keystone(params, source)
+
+    this.correction = correction
+    this.bg.sync(correction)
+
+    return correction
+  }
+
   filter ({
     brightness = 0,
     contrast = 0,
@@ -228,6 +253,8 @@ export class Photo extends Container {
   }
 
   destroy () {
+    this.correction = null
+
     super.destroy({
       children: true,
       texture: true,
@@ -265,6 +292,15 @@ export class Photo extends Container {
   sync (props, state = {}) {
     let { width, height } = props.selection || state
 
+    if (state.source != null) {
+      let { bounds } = this.keystone(state, state.source)
+
+      // The view of a corrected photo fits its whole warped extent,
+      // not just the image's rectangle (see Esper#sync).
+      if (props.selection == null)
+        ({ width, height } = bounds)
+    }
+
     this.#width = width
     this.#height = height
 
@@ -288,3 +324,6 @@ export class Photo extends Container {
     }
   }
 }
+
+const sameRect = (a, b) =>
+  a === b || (a.width === b.width && a.height === b.height)

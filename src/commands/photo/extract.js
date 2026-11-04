@@ -6,6 +6,7 @@ import { PHOTO, MIME } from '../../constants/index.js'
 import { Cache } from '../../common/cache.js'
 import { addOrientation } from '../../common/iiif.js'
 import { warn, info } from '../../common/log.js'
+import { pick } from '../../common/util.js'
 import Esper from '../../esper/index.js'
 import { fail, save } from '../../dialog.js'
 import { toBuffer, toFile } from '../../image/index.js'
@@ -45,9 +46,11 @@ export class Extract extends Command {
       var image = selection || photo
       let src = Cache.url(cache.root, 'full', photo)
 
+      // Subtle: the correction is always the photo's!
       let { buffer, ...raw } = yield call(Esper.instance.extract, src, {
         ...image,
-        ...addOrientation(image, photo)
+        ...addOrientation(image, photo),
+        ...pick(photo, ['keystone'])
       })
 
       switch (target) {

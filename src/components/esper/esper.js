@@ -3,7 +3,8 @@ import cx from 'classnames'
 import { debounce, throttle } from '../../common/util.js'
 import { copy } from '../../clipboard.js'
 import { Toolbar } from '../toolbar.js'
-import { FILTERS } from '../../esper/index.js'
+import { FILTERS, KEYSTONE } from '../../esper/index.js'
+import { keystone } from '../../esper/keystone.js'
 import { EsperContainer } from './container.js'
 import { EsperError } from './error.js'
 import { EsperHeader } from './header.js'
@@ -121,7 +122,18 @@ export class Esper extends React.Component {
         state[prop] = image[prop]
       }
 
+      // Subtle: the correction is always the photo's;
+      // selections cannot be corrected independently!
+      for (let prop in KEYSTONE) {
+        state[prop] = photo[prop]
+      }
+
       Object.assign(state, addOrientation(image, photo))
+
+      // The size of the texture, for the correction, and the
+      // extent of the warped photo, which the view has to fit
+      state.source = { width: photo.width, height: photo.height }
+      state.bounds = getExtent(state)
     }
 
     return state
@@ -178,7 +190,19 @@ export class Esper extends React.Component {
     let image = this.props.selection || this.props.photo
     let nextImage = nextProps.selection || nextProps.photo
 
-    if (nextImage == null || nextImage === image)
+    if (nextImage == null)
+      return false
+
+    // The correction of a selection is its photo's, which may
+    // change while the selection is active (e.g., via undo).
+    if (nextProps.selection != null && nextProps.photo !== this.props.photo) {
+      for (let prop in KEYSTONE) {
+        if (nextProps.photo[prop] !== nextState[prop])
+          return true
+      }
+    }
+
+    if (nextImage === image)
       return false
 
     if (nextImage.mirror !== image.mirror || nextImage.angle !== image.angle) {
@@ -192,7 +216,7 @@ export class Esper extends React.Component {
         return true
     }
 
-    for (let prop in FILTERS) {
+    for (let prop in IMAGE_PROPS) {
       if (nextImage[prop] !== image[prop] &&
         nextImage[prop] !== nextState[prop]) {
         return true
@@ -656,9 +680,11 @@ export class Esper extends React.Component {
   handleImageChange = debounce(() => {
     try {
       if (this.state.id != null) {
+        // Subtle: the correction belongs to the photo only!
         var data = {
           ...subOrientation(this.state, this.props.photo),
-          ...pick(this.state, Object.keys(FILTERS))
+          ...pick(this.state, Object.keys(
+            this.isSelectionActive ? FILTERS : IMAGE_PROPS))
         }
 
         this.props.onChange({
@@ -813,10 +839,17 @@ export class Esper extends React.Component {
   static defaultImageProps = {
     angle: 0,
     mirror: false,
-    ...FILTERS
+    ...FILTERS,
+    ...KEYSTONE
   }
 }
 
+const IMAGE_PROPS = { ...FILTERS, ...KEYSTONE }
+
+// Returns the extent of the photo as it is drawn: the whole warped
+// photo, if it is corrected; or the photo itself.
+const getExtent = ({ source, keystone: params }) =>
+  (source == null) ? null : keystone({ keystone: params }, source).bounds
 
 const getActiveTool = ({ selection, tool }, { quicktool }) => {
   tool = quicktool || tool
@@ -831,8 +864,9 @@ const getZoomBounds = (props, state, screen = {}) => {
   let minZoom = MIN_ZOOM / getResolution()
   let zoom = state.zoom
   let zoomToFill = minZoom
-  let image = props.selection || state
 
+  // Subtle: the view of a corrected photo fits its whole warped extent!
+  let image = props.selection || state.bounds || state
   if (image) {
     let { width, height } = image
 
