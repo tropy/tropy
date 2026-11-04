@@ -4,7 +4,9 @@ import { debounce, throttle } from '../../common/util.js'
 import { copy } from '../../clipboard.js'
 import { Toolbar } from '../toolbar.js'
 import { FILTERS, KEYSTONE } from '../../esper/index.js'
-import { keystone } from '../../esper/keystone.js'
+import {
+  adjust, fit, initial, isConvex, keystone, measure, parse, stringify
+} from '../../esper/keystone.js'
 import { EsperContainer } from './container.js'
 import { EsperError } from './error.js'
 import { EsperHeader } from './header.js'
@@ -525,6 +527,20 @@ export class Esper extends React.Component {
     this.setState(next)
   }
 
+  // Called by the sliders, which adjust the corners as a whole;
+  // the corrected photo follows, whether the corners are shown or not.
+  // Subtle: the quad is scaled down to stay within the photo, or
+  // corners on its edges could not be adjusted!
+  handleKeystoneAdjust = (values) => {
+    if (this.props.isReadOnly || this.isSelectionActive) return
+
+    let { source } = this.state
+    let points = adjust(getCorners(this.state), values)
+
+    if (isConvex(points))
+      this.handleKeystoneChange(stringify(fit(points, source)))
+  }
+
   // Called while the corners are being dragged in Esper.
   handleKeystoneChange = (keystone) => {
     if (this.props.isReadOnly || this.isSelectionActive) return
@@ -773,6 +789,10 @@ export class Esper extends React.Component {
     let { isDisabled } = this
     let { hasSideBySideLayout, overlay, transcription } = this.props
 
+    let corners = (this.state.source && !this.isSelectionActive) ?
+      measure(getCorners(this.state)) :
+      NO_CORNERS
+
     let isOverlayVisible =
       overlay && transcription != null
     let isOverlaySplit = overlay === OVERLAY.SPLIT
@@ -862,7 +882,9 @@ export class Esper extends React.Component {
               keystone={this.isSelectionActive ? null : this.state.keystone}
               isVisible={this.props.isPanelVisible}
               onChange={this.handleFilterChange}
+              onKeystoneAdjust={this.handleKeystoneAdjust}
               onKeystoneToggle={this.handleKeystoneToggle}
+              {...corners}
               onRevert={this.handleRevertToOriginal}/>
           </EsperView>
         </div>
@@ -918,6 +940,16 @@ const getExtent = ({ source, keystone: params, isKeystoneVisible }) =>
   (source == null) ?
     null :
     keystone(isKeystoneVisible ? KEYSTONE : { keystone: params }, source).bounds
+
+// Returns the photo's corners, or the initial ones if there is no
+// (usable) correction.
+const getCorners = ({ source, keystone: params }) => {
+  let points = parse(params)
+  return (points != null && isConvex(points)) ? points : initial(source)
+}
+
+const NO_CORNERS = { rotate: 0, vertical: 0, horizontal: 0 }
+
 
 const getActiveTool = ({ selection, tool }, { quicktool }) => {
   tool = quicktool || tool

@@ -9,14 +9,18 @@ export const FilterControls = ({
   brightness,
   contrast,
   hasKeystone = true,
+  horizontal,
   hue,
   isDisabled,
   isKeystoneVisible = false,
   negative,
   onChange,
+  onKeystoneAdjust,
   onKeystoneToggle,
+  rotate,
   saturation,
-  sharpen
+  sharpen,
+  vertical
 }) => (
   <ul className="filter-controls" tabIndex="-1">
     <RangeFilter
@@ -66,6 +70,37 @@ export const FilterControls = ({
         onChange={onKeystoneToggle}
         value={isKeystoneVisible}/>
     )}
+    {hasKeystone && !isKeystoneVisible && (
+      <>
+        <RangeFilter
+          icon="Rotate"
+          isDisabled={isDisabled}
+          max={45}
+          min={-45}
+          name="rotate"
+          onChange={onKeystoneAdjust}
+          precision={10}
+          value={rotate}/>
+        <RangeFilter
+          icon="KeystoneVertical"
+          isDisabled={isDisabled}
+          max={50}
+          min={-50}
+          name="vertical"
+          onChange={onKeystoneAdjust}
+          precision={10}
+          value={vertical}/>
+        <RangeFilter
+          icon="KeystoneHorizontal"
+          isDisabled={isDisabled}
+          max={50}
+          min={-50}
+          name="horizontal"
+          onChange={onKeystoneAdjust}
+          precision={10}
+          value={horizontal}/>
+      </>
+    )}
   </ul>
 )
 
@@ -77,6 +112,7 @@ export const RangeFilter = ({
   isDisabled = false,
   onChange,
   origin = 0,
+  precision = 1,
   tabIndex = TABS.EsperPanel,
   value
 }) => {
@@ -103,6 +139,7 @@ export const RangeFilter = ({
         max={max}
         min={min}
         origin={origin}
+        precision={precision}
         tabIndex={tabIndex}
         value={value}
         onChange={handleChange}/>

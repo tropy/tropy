@@ -672,6 +672,22 @@ export const IconSelection = i('Selection', (
   </svg>
 ))
 
+export const IconKeystoneVertical = i('KeystoneVertical', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M1.5,2h13a.5.5,0,0,1,.48.64l-3,11a.5.5,0,0,1-.48.36h-7a.5.5,0,0,1-.48-.36l-3-11A.5.5,0,0,1,1.5,2ZM2.155,3l2.727,10h6.236l2.727-10Z"/>
+    </g>
+  </svg>
+))
+
+export const IconKeystoneHorizontal = i('KeystoneHorizontal', (
+  <svg width="16" height="16" viewBox="0 0 16 16">
+    <g className="line" fill="currentColor">
+      <path d="M14,1.5v13a.5.5,0,0,1-.64.48l-11-3A.5.5,0,0,1,2,11.5v-7a.5.5,0,0,1,.36-.48l11-3A.5.5,0,0,1,14,1.5ZM13,2.155,3,4.882v6.236l10,2.727Z"/>
+    </g>
+  </svg>
+))
+
 export const IconSharpen = i('Sharpen', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">

@@ -155,12 +155,117 @@ export function isConvex (points) {
 
 const dist = (a, b) => Math.hypot(b.x - a.x, b.y - a.y)
 
+const mid = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 })
+
 const center = ({ x, y, width, height }) =>
   ({ x: x + width / 2, y: y + height / 2 })
+
+const deg = (rad) => rad * 180 / Math.PI
+const rad = (deg) => deg * Math.PI / 180
 
 // Without a correction, the corners start on the photo's corners.
 export const initial = ({ width, height }) =>
   corners({ x: 0, y: 0, width, height })
+
+// Returns the slider values of a quad: its rotation (the tilt of the
+// line through the midpoints of its left and right edges, in degrees,
+// clockwise) and its vertical and horizontal perspective (how much
+// wider the top edge is than the bottom edge, and the right edge
+// taller than the left one, in percent of their sum). These are
+// exact for symmetric trapezoids and a fair approximation otherwise.
+export function measure ([a, b, c, d]) {
+  let left = mid(a, d)
+  let right = mid(b, c)
+
+  let top = dist(a, b)
+  let bottom = dist(d, c)
+  let lh = dist(a, d)
+  let rh = dist(b, c)
+
+  return {
+    rotate: deg(Math.atan2(right.y - left.y, right.x - left.x)),
+    vertical: 100 * (top - bottom) / (top + bottom),
+    horizontal: 100 * (rh - lh) / (rh + lh)
+  }
+}
+
+const rotateAbout = (p, c, t) => ({
+  x: c.x + (p.x - c.x) * Math.cos(t) - (p.y - c.y) * Math.sin(t),
+  y: c.y + (p.x - c.x) * Math.sin(t) + (p.y - c.y) * Math.cos(t)
+})
+
+const scaleAbout = (p, c, k) => ({
+  x: c.x + (p.x - c.x) * k,
+  y: c.y + (p.y - c.y) * k
+})
+
+// Returns the quad scaled down about its centre, if necessary, so
+// that it lies within the source. The shape (and thus the slider
+// values) stays the same.
+export function fit (points, { width, height }) {
+  let [a, b, c, d] = points
+  let o = mid(mid(a, b), mid(d, c))
+  let k = 1
+
+  for (let p of points) {
+    let dx = p.x - o.x
+    let dy = p.y - o.y
+
+    if (dx < 0) k = Math.min(k, o.x / -dx)
+    if (dx > 0) k = Math.min(k, (width - o.x) / dx)
+    if (dy < 0) k = Math.min(k, o.y / -dy)
+    if (dy > 0) k = Math.min(k, (height - o.y) / dy)
+  }
+
+  return (k < 1) ? points.map(p => scaleAbout(p, o, k)) : points
+}
+
+// Returns the quad adjusted to the given slider values (see
+// `measure`): rotated about its centre, its top and bottom edges
+// scaled about their midpoints (keeping their sum), and likewise
+// its left and right edges. Values left out are kept as they are.
+export function adjust (points, { rotate, vertical, horizontal }) {
+  let current = measure(points)
+  let [a, b, c, d] = points
+
+  if (rotate != null && rotate !== current.rotate) {
+    let o = mid(mid(a, b), mid(d, c))
+    let t = rad(rotate - current.rotate);
+    [a, b, c, d] = [a, b, c, d].map(p => rotateAbout(p, o, t))
+  }
+
+  if (vertical != null && vertical !== current.vertical) {
+    let sum = dist(a, b) + dist(d, c)
+    let top = sum * (1 + vertical / 100) / 2
+    let bottom = sum - top
+    let mt = mid(a, b)
+    let mb = mid(d, c)
+    let kt = top / dist(a, b)
+    let kb = bottom / dist(d, c)
+
+    a = scaleAbout(a, mt, kt)
+    b = scaleAbout(b, mt, kt)
+    c = scaleAbout(c, mb, kb)
+    d = scaleAbout(d, mb, kb)
+  }
+
+  if (horizontal != null && horizontal !== current.horizontal) {
+    let sum = dist(a, d) + dist(b, c)
+    let right = sum * (1 + horizontal / 100) / 2
+    let left = sum - right
+    let ml = mid(a, d)
+    let mr = mid(b, c)
+    let kl = left / dist(a, d)
+    let kr = right / dist(b, c)
+
+    a = scaleAbout(a, ml, kl)
+    d = scaleAbout(d, ml, kl)
+    b = scaleAbout(b, mr, kr)
+    c = scaleAbout(c, mr, kr)
+  }
+
+  return [a, b, c, d]
+}
 
 // Returns the frame of the corners: the rectangle they are mapped to.
 export function frame ([a, b, c, d]) {

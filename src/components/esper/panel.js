@@ -6,13 +6,17 @@ import { TABS } from '../../constants/index.js'
 
 export const EsperPanel = ({
   hasKeystone,
+  horizontal,
   isDisabled,
   isKeystoneVisible,
   isVisible,
   keystone,
   onChange,
+  onKeystoneAdjust,
   onKeystoneToggle,
   onRevert,
+  rotate,
+  vertical,
   ...props
 }) => {
   let isPristine = shallow(FILTERS, props) && keystone == null
@@ -24,7 +28,11 @@ export const EsperPanel = ({
         isDisabled={isDisabled || !isVisible}
         isKeystoneVisible={isKeystoneVisible}
         {...props}
+        horizontal={horizontal}
+        rotate={rotate}
+        vertical={vertical}
         onChange={onChange}
+        onKeystoneAdjust={onKeystoneAdjust}
         onKeystoneToggle={onKeystoneToggle}/>
 
       <ButtonContainer className="revert">

@@ -1,16 +1,19 @@
 import {
   IDENTITY,
+  adjust,
   apply,
   bounds,
   corners,
   crop,
   equals,
+  fit,
   frame,
   homography,
   initial,
   invert,
   isConvex,
   keystone,
+  measure,
   multiply,
   parse,
   stringify
@@ -77,6 +80,14 @@ describe('esper/keystone', () => {
       expect(stringify([
         { x: 1.4, y: 2.666 }, { x: 3, y: 4 }, { x: 5, y: 6 }, { x: 7, y: 8.005 }
       ])).to.equal('[1.4,2.67,3,4,5,6,7,8.01]')
+    })
+
+    it('keeps the sliders\' smallest steps', () => {
+      let source = { width: 1240, height: 1754 }
+      let points = adjust(initial(source), { vertical: 0.1 })
+
+      expect(measure(parse(stringify(points))).vertical)
+        .to.be.closeTo(0.1, 0.01)
     })
 
     it('keeps the corners of the source', () => {
@@ -189,6 +200,100 @@ describe('esper/keystone', () => {
     it('is the source itself', () => {
       let points = initial({ width: 200, height: 100 })
       expect(points).to.eql(corners({ x: 0, y: 0, width: 200, height: 100 }))
+      expect(measure(points)).to.eql({ rotate: 0, vertical: 0, horizontal: 0 })
+    })
+  })
+
+  describe('measure', () => {
+    it('is zero for a straight rectangle', () => {
+      expect(measure(corners(SOURCE)))
+        .to.eql({ rotate: 0, vertical: 0, horizontal: 0 })
+    })
+
+    it('measures rotation, clockwise', () => {
+      // The quad's top edge points up the photo's left edge: the
+      // document lies turned counter-clockwise.
+      expect(measure(parse(ROTATED)).rotate).to.be.closeTo(-90, 1e-6)
+
+      let tilted = adjust(corners(SOURCE), { rotate: 12.5 })
+      expect(measure(tilted).rotate).to.be.closeTo(12.5, 1e-6)
+    })
+
+    it('measures perspective', () => {
+      let m = measure(parse(TRAPEZOID))
+      expect(m.vertical).to.be.closeTo(100 * (80 - 100) / 180, 1e-6)
+      expect(m.horizontal).to.be.closeTo(0, 1e-6)
+      expect(m.rotate).to.be.closeTo(0, 1e-6)
+
+      m = measure(parse('[0,0,100,10,100,90,0,100]'))
+      expect(m.horizontal).to.be.closeTo(100 * (80 - 100) / 180, 1e-6)
+      expect(m.vertical).to.be.closeTo(0, 1e-6)
+    })
+  })
+
+  describe('adjust', () => {
+    it('rotates about the centre', () => {
+      let points = adjust(corners(SOURCE), { rotate: 90 })
+
+      closeTo(points[0], { x: 100, y: 0 })
+      closeTo(points[1], { x: 100, y: 100 })
+      closeTo(points[2], { x: 0, y: 100 })
+      closeTo(points[3], { x: 0, y: 0 })
+      expect(isConvex(points)).to.be.true
+    })
+
+    it('scales the top and bottom edges against each other', () => {
+      let points = adjust(corners(SOURCE), { vertical: 20 })
+
+      expect(measure(points).vertical).to.be.closeTo(20, 1e-6)
+      closeTo(points[0], { x: -10, y: 0 })
+      closeTo(points[1], { x: 110, y: 0 })
+      closeTo(points[2], { x: 90, y: 100 })
+      closeTo(points[3], { x: 10, y: 100 })
+    })
+
+    it('scales the left and right edges against each other', () => {
+      let points = adjust(corners(SOURCE), { horizontal: -20 })
+
+      expect(measure(points).horizontal).to.be.closeTo(-20, 1e-6)
+      closeTo(points[0], { x: 0, y: -10 })
+      closeTo(points[1], { x: 100, y: 10 })
+      closeTo(points[2], { x: 100, y: 90 })
+      closeTo(points[3], { x: 0, y: 110 })
+    })
+
+    it('fits the quad into the source', () => {
+      let points = adjust(corners(SOURCE), { rotate: 45 })
+      expect(fit(points, SOURCE)).to.not.eql(points)
+
+      let fitted = fit(points, SOURCE)
+      let m = measure(fitted)
+
+      expect(m.rotate).to.be.closeTo(45, 1e-6)
+      expect(m.vertical).to.be.closeTo(0, 1e-6)
+
+      for (let { x, y } of fitted) {
+        expect(x).to.be.within(-1e-6, 100 + 1e-6)
+        expect(y).to.be.within(-1e-6, 100 + 1e-6)
+      }
+
+      // The diagonal of the turned square spans the source
+      expect(Math.max(...fitted.map(p => p.x))).to.be.closeTo(100, 1e-6)
+      expect(Math.min(...fitted.map(p => p.y))).to.be.closeTo(0, 1e-6)
+
+      expect(fit(initial(SOURCE), SOURCE)).to.eql(initial(SOURCE))
+    })
+
+    it('leaves the other values alone', () => {
+      let points = parse(TRAPEZOID)
+      let before = measure(points)
+      let after = measure(adjust(points, { rotate: 5 }))
+
+      expect(after.rotate).to.be.closeTo(5, 1e-6)
+      expect(after.vertical).to.be.closeTo(before.vertical, 1e-6)
+      expect(after.horizontal).to.be.closeTo(before.horizontal, 1e-6)
+
+      expect(adjust(points, {})).to.eql(points)
     })
   })
 

@@ -416,6 +416,15 @@ en:
         label: Sharpen
         value: "{value, number}"
       keystone: Adjust corners
+      rotate:
+        label: Rotate
+        value: "{value, number, ::.0}°"
+      vertical:
+        label: Vertical
+        value: "{value, number, ::.0}%"
+      horizontal:
+        label: Horizontal
+        value: "{value, number, ::.0}%"
   notepad:
     placeholder: Add your notes here …
   completions:
