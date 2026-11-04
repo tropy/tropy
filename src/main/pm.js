@@ -25,7 +25,7 @@ export class ProjectManager {
 
   start () {
     ipc
-      .on(PROJECT.OPENED, this.handleProjectOpened)
+      .on(PROJECT.READY, this.handleProjectReady)
       .on(PROJECT.UPDATE, this.handleProjectUpdated)
       .on(PROJECT.CLOSED, this.handleProjectClosed)
 
@@ -47,7 +47,7 @@ export class ProjectManager {
 
   stop () {
     ipc
-      .off(PROJECT.OPENED, this.handleProjectOpened)
+      .off(PROJECT.READY, this.handleProjectReady)
       .off(PROJECT.UPDATE, this.handleProjectUpdated)
       .off(PROJECT.CLOSED, this.handleProjectClosed)
 
@@ -256,7 +256,7 @@ export class ProjectManager {
     return cancel ? null : files[0]
   }
 
-  handleProjectOpened = (event, project) => {
+  handleProjectReady = (event, project) => {
     let win = this.wm.fromEvent(event, 'project')
 
     if (win == null)

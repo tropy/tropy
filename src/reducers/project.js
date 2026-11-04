@@ -14,8 +14,11 @@ export function project (state = init, { type, payload, meta, error }) {
   switch (type) {
     case PROJECT.RELOAD:
       return (!error && meta.done)
-        ? merge(init, payload)
+        ? { ...state, ...merge(init, payload) }
         : state
+
+    case PROJECT.READY:
+      return { ...state, isReady: true }
 
     case PROJECT.UPDATE:
       return { ...state, ...payload }

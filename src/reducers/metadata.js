@@ -19,8 +19,10 @@ import {
 
 export function metadata (state = {}, { type, payload, meta, error }) {
   switch (type) {
-    case PROJECT.OPENED:
+    case PROJECT.OPEN:
       return {}
+    case PROJECT.HYDRATE:
+      return payload.metadata
     case METADATA.LOAD:
       return load(state, payload, meta, error)
     case METADATA.MERGE:

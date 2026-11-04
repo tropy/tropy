@@ -5,6 +5,8 @@ export function tags (state = {}, { type, payload, error, meta }) {
   switch (type) {
     case PROJECT.OPEN:
       return {}
+    case PROJECT.HYDRATE:
+      return payload.tags
     case TAG.LOAD:
       return load(state, payload, meta, error)
     case TAG.CREATE:

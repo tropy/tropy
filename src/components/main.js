@@ -11,6 +11,7 @@ const IntlProvider = connect(
 
 export class Main extends React.Component {
   componentDidMount () {
+    this.props.window.toggle('react')
     this.props.window.send('react:ready')
   }
 

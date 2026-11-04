@@ -6,6 +6,8 @@ export function lists (state = {}, { type, payload, error, meta }) {
   switch (type) {
     case PROJECT.OPEN:
       return {}
+    case PROJECT.HYDRATE:
+      return payload.lists
     case LIST.LOAD:
       return replace(state, payload, meta, error)
 

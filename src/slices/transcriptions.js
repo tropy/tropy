@@ -1,5 +1,6 @@
 import { createAction, createNextState, createSlice } from '@reduxjs/toolkit'
 import { cmdReducer } from './cmd.js'
+import { PROJECT } from '../constants/index.js'
 
 
 const transcriptions = createSlice({
@@ -44,6 +45,11 @@ const transcriptions = createSlice({
       let { id, ...props } = payload
       Object.assign(state[id], props)
     }
+  },
+
+  extraReducers: (builder) => {
+    builder.addCase(PROJECT.HYDRATE, (_, { payload }) =>
+      payload.transcriptions)
   }
 })
 

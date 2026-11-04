@@ -226,6 +226,25 @@ mod.item = {
     params)
   },
 
+  // All item ids in an order close to the sort,
+  // to seed the sort in JS (see common/order.js).
+  async seed (db, sort) {
+    let { dir, order, params } = prep({ sort })
+    let ids = []
+
+    await db.each(`
+      ${params.$sort ? SORT : ''}
+      SELECT id
+        FROM items
+          ${params.$sort ?
+            'LEFT OUTER JOIN sort USING (id)' :
+            'JOIN subjects USING (id)'}
+        ORDER BY ${order} COLLATE NOCASE ${dir} NULLS LAST, id ${dir}`,
+    params, ({ id }) => { ids.push(id) })
+
+    return ids
+  },
+
   async load (db, ids) {
     const items = {}
     if (ids != null) ids = ids.join(',')

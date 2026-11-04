@@ -10,6 +10,8 @@ export function selections (state = init, { type, payload, error, meta }) {
     case PROJECT.OPEN:
       return init
 
+    case PROJECT.HYDRATE:
+      return payload.selections
     case SELECTION.LOAD:
       return (error || !meta.done) ? state : replace(state, payload)
     case SELECTION.CREATE:

@@ -66,8 +66,10 @@ function *closeProject (watcher) {
   yield call(touchProjectWatchFolder)
 }
 
+// Once the project is loaded, so that files added meanwhile
+// are imported into a ready project.
 const freshProject = ({ type, meta, error }) =>
-  type === PROJECT.OPENED || (
+  type === PROJECT.READY || (
     type === PROJECT.RELOAD && !error && meta.done
   )
 

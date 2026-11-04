@@ -69,5 +69,14 @@ describe('models/item', () => {
       expect(await search('box BOX '.repeat(300))).to.eql([ids[2]])
       expect(await search(words.join(' '))).to.eql([])
     })
+
+    it('seeds all items in case-insensitive order, empty last', async () => {
+      let { id } = await item.create(db, TEMPLATE)
+
+      expect(await item.seed(db, { column: TITLE, asc: true }))
+        .to.eql([ids[2], ids[1], ids[0], id])
+      expect(await item.seed(db, { column: TITLE, asc: false }))
+        .to.eql([ids[0], ids[1], ids[2], id])
+    })
   })
 })

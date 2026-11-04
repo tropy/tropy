@@ -6,7 +6,7 @@ import { warn, debug } from '../common/log.js'
 import { ipc } from './ipc.js'
 import { consolidator } from './consolidator.js'
 import { history } from './history.js'
-import { search } from './search.js'
+import { matches, order, search, sync } from './search.js'
 import { ontology } from './ontology.js'
 import { exec } from './cmd.js'
 import { commands } from '../slices/cmd.js'
@@ -26,6 +26,7 @@ import { Storage } from '../storage.js'
 import '../commands/index.js'
 
 import {
+  actionChannel,
   all,
   fork,
   cancel,
@@ -33,7 +34,6 @@ import {
   delay,
   put,
   take,
-  takeLatest,
   race
 } from 'redux-saga/effects'
 
@@ -49,11 +49,12 @@ const dbErrorActions = {
 
 const FORCE_SHUTDOWN_DELAY = 120000
 
-
 // Opens and loads existing projects.
 //
 // If the action carries `meta.create`, the project will be created first.
 // Existing files will be replaced if `overwrite` is set!
+//
+// Prefs windows use `opts.skipFullSetup`.
 export function *open (opts, action) {
   try {
     var { payload: path, meta } = action
@@ -92,16 +93,25 @@ export function *open (opts, action) {
 
     try {
       if (!opts.skipFullSetup)
-        yield fork(setup, { db, project })
+        var sorted = yield call(hydrate, { db, project })
+
+      var cchan = yield actionChannel(commands('project'))
+
+      if (!opts.skipFullSetup) {
+        yield fork(start, { db, sorted })
+        yield put(act.project.ready(project))
+      }
 
       while (true) {
-        let cmd = yield take(commands('project'))
+        let cmd = yield take(cchan)
         yield fork(exec, { db, id: project.id, cache, store }, cmd)
       }
 
     } finally {
+      cchan?.close()
+
       if (!opts.skipFullSetup)
-        yield call(teardown, { db, project, cache, store })
+        yield call(stop, { db, project, cache, store })
     }
   } catch (err) {
     warn({ err }, 'unexpected error in *project.open')
@@ -131,50 +141,57 @@ export function *open (opts, action) {
   }
 }
 
+function *hydrate ({ db, project }) {
+  yield all([
+    call(restore, 'nav', project.id),
+    call(restore, 'notepad', project.id),
+    call(restore, 'esper', project.id),
+    call(restore, 'imports', project.id),
+    call(restore, 'sidebar', project.id),
+    call(restore, 'panel', project.id)
+  ])
 
-function *setup ({ db, project }) {
+  yield put(act.history.drop())
+
+  let data = yield all({
+    items: call(mod.item.load, db),
+    metadata: call(mod.metadata.load, db),
+    photos: call(mod.photo.load, db, undefined, project),
+    lists: call(mod.list.all, db),
+    tags: call(mod.tag.load, db),
+    selections: call(mod.selection.load, db),
+    notes: call(mod.note.load, db),
+    transcriptions: call(mod.transcription.load, db)
+  })
+
+  yield put(act.project.hydrate(data))
+
+  let sorted = yield call(sync, db)
+  yield call(search, db)
+
+  return sorted
+}
+
+function *start ({ db, sorted }) {
+  yield fork(matches, db, has('search'))
+  yield fork(order, db, sorted)
+  yield fork(autosave, db)
+  yield fork(transcribe)
+  yield fork(maintenance)
+}
+
+function *maintenance () {
   try {
-    yield takeLatest(has('search'), search, db)
-    yield fork(transcribe)
-
-    yield all([
-      call(restore, 'nav', project.id),
-      call(restore, 'notepad', project.id),
-      call(restore, 'esper', project.id),
-      call(restore, 'imports', project.id),
-      call(restore, 'sidebar', project.id),
-      call(restore, 'panel', project.id)
-    ])
-
-    yield all([
-      put(act.history.drop()),
-      put(act.list.load()),
-      put(act.tag.load()),
-      put(act.item.load()),
-      put(act.photo.load()),
-      put(act.metadata.load()),
-      put(act.selection.load()),
-      put(act.note.load()),
-      put(act.transcriptions.load())
-    ])
-
-    yield fork(autosave, db)
-    yield call(search, db)
-
     yield take(IDLE.IDLE)
     yield put(act.cache.prune())
     yield put(act.cache.purge())
 
   } catch (err) {
-    warn({ err }, 'unexpected error in *project.setup')
-    yield call(fail, err, PROJECT.OPEN)
-
-  } finally {
-    debug('*project.setup terminated')
+    warn({ err }, 'unexpected error in *project.maintenance')
   }
 }
 
-function *teardown ({ db, project, store }) {
+function *stop ({ db, project, store }) {
   yield all([
     call(persist, 'nav', project.id),
     call(persist, 'notepad', project.id),
@@ -197,7 +214,7 @@ function *teardown ({ db, project, store }) {
     yield call(store.prune, db, project)
   }
 
-  debug('*project.teardown terminated')
+  debug('*project.stop terminated')
 }
 
 

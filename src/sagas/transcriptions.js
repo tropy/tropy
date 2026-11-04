@@ -118,6 +118,11 @@ function *submit ({ payload }) {
 
 export function *transcribe () {
   try {
+    // Submits what was left unsubmitted when the project opens.
+    yield call(submit, {
+      payload: yield select(state => state.transcriptions)
+    })
+
     yield all([
       call(poll),
       every(onTranscriptionAdded, submit)

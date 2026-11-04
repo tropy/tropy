@@ -10,6 +10,8 @@ export function notes (state = init, { type, payload, error, meta }) {
       return { ...init }
 
     case NOTE.CREATE:
+    case PROJECT.HYDRATE:
+      return payload.notes
     case NOTE.LOAD:
     case NOTE.RESTORE:
       return (meta.done && !error) ? { ...state, ...payload } : state

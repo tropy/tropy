@@ -412,6 +412,9 @@ export class Window extends EventEmitter {
       case 'ready':
         toggle(this.html, 'ready', true)
         break
+      case 'react':
+        toggle(this.html, 'react', true)
+        break
       case 'disable':
       case 'unload':
         toggle(this.html, 'inactive', true)

@@ -13,17 +13,7 @@
   z-index: $zindex-cover;
   background-color: $cover-bg;
 
-  @keyframes tropy-icon {
-    100% {
-      fill: $cover-icon-color;
-    }
-  }
-
   .icon-tropy-large {
-    polygon {
-      animation: tropy-icon 0s linear forwards 0.5s;
-    }
-
     .inactive &,
     .closing & {
       display: none;
@@ -44,7 +34,7 @@
 }
 
 #cover {
-  .ready & {
+  .react & {
     display: none;
   }
 
@@ -69,7 +59,6 @@
 }
 
 .project .cover {
-  --content: "";
   display: none;
 
   .project.opening :is(&) {
@@ -77,7 +66,6 @@
   }
 
   .project.closing :is(&) {
-    --content: none;
     display: flex;
     opacity: 0.6;
 
@@ -93,14 +81,25 @@
     }
   }
 
+  @keyframes cover-in {
+    0% {
+      opacity: 0;
+    }
+  }
+
   .icon-tropy-large {
+    animation: cover-in 0.15s linear 0.75s backwards;
+
     polygon {
       fill: $cover-icon-color;
     }
   }
 
   &::before {
-    content: var(--content);
+    content: "";
     top: max(calc(50% + 101px), calc(66.67% - $space-lg / 2));
+    animation:
+      spin 1s linear infinite,
+      cover-in 0.15s linear 2.25s backwards;
   }
 }
