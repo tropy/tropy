@@ -18,6 +18,8 @@ function itemsReducer (state = {}, { type, payload, meta, error }) {
     case PROJECT.OPEN:
       return {}
 
+    case PROJECT.HYDRATE:
+      return payload.items
     case ITEM.LOAD:
       return load(state, payload, meta, error)
 

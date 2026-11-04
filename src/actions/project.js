@@ -2,16 +2,36 @@ import { PROJECT } from '../constants/index.js'
 
 
 export default {
+  open (payload, meta) {
+    return {
+      type: PROJECT.OPEN,
+      payload,
+      meta
+    }
+  },
+
+  hydrate (payload, meta) {
+    return {
+      type: PROJECT.HYDRATE,
+      payload,
+      meta
+    }
+  },
+
   opened (payload, meta) {
     return {
       type: PROJECT.OPENED,
       payload,
-      meta: { ipc: true, ...meta }
+      meta
     }
   },
 
-  open (payload, meta) {
-    return { type: PROJECT.OPEN, payload, meta }
+  ready (payload, meta) {
+    return {
+      type: PROJECT.READY,
+      payload,
+      meta: { ipc: true, ...meta }
+    }
   },
 
   closed (payload, meta) {

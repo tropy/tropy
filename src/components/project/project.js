@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import { useDraftState } from '../../hooks/use-draft-state.js'
@@ -29,16 +29,21 @@ export const ProjectClosed = () =>
   <div className="project closed"/>
 
 
-export const Project = React.forwardRef(({
+export const Project = ({
   isOver,
   project,
+  ref,
   timeout = 3000
-}, ref) => {
+}) => {
 
   let dispatch = useDispatch()
 
   let nav = useSelector(state => state.nav)
-  let mode = useTransitionState(ref, nav.mode, timeout, modeToString)
+  let mode = useTransitionState(ref, nav.mode, {
+    timeout,
+    toString: modeToString,
+    skipTransition: !project.isReady
+  })
 
   let isItemMode = !!(
     (mode.current === MODE.ITEM) ^ mode.isChanging
@@ -75,10 +80,10 @@ export const Project = React.forwardRef(({
   // because these typically coincide
   // with the component's fade transition classes
   // which are overwritten by changing the className prop!
-  useEffect(() => {
+  useLayoutEffect(() => {
     ref?.current?.classList.toggle('closing', !!project.isClosing)
-    ref?.current?.classList.toggle('opening', project.id == null)
-  }, [project.id, project.isClosing, ref])
+    ref?.current?.classList.toggle('opening', !project.isReady)
+  }, [ref, project.isReady, project.isClosing])
 
   if (project.closed)
     return <ProjectClosed/>
@@ -114,4 +119,4 @@ export const Project = React.forwardRef(({
       </div>
     </div>
   )
-})
+}

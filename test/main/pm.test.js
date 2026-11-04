@@ -13,7 +13,7 @@ describe('ProjectManager', () => {
   // Simulates the renderer of win reporting its project.
   let opened = (win, path) => {
     if (!wins.includes(win)) wins.push(win)
-    pm.handleProjectOpened({ sender: win }, { path })
+    pm.handleProjectReady({ sender: win }, { path })
   }
   let closed = (win, path, error) =>
     pm.handleProjectClosed({ sender: win }, { path, error })
@@ -51,7 +51,7 @@ describe('ProjectManager', () => {
           // Reports to this project manager, even after its test.
           let self = pm
           setImmediate(() => {
-            self.handleProjectOpened({ sender: win }, { path: file })
+            self.handleProjectReady({ sender: win }, { path: file })
           })
           return win
         }))

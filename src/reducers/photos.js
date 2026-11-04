@@ -8,6 +8,8 @@ export function photos (state = {}, { type, payload, error, meta }) {
     case PROJECT.OPEN:
       return {}
 
+    case PROJECT.HYDRATE:
+      return payload.photos
     case PHOTO.LOAD:
       return load(state, payload, meta, error)
 

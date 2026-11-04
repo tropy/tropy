@@ -6,9 +6,14 @@ import { ensure, reflow } from '../dom.js'
 // Returns the `state` and object.
 // Set `ref` and `state.className` on the DOM element that will transition.
 // Use `timeout` to set the fallback timeout.
-// Use `toString` parameter to customize how prop values are mapped in `state.className`.
+// Use `toString` option to customize how prop values are mapped in `state.className`.
+// With `skipTransition`, changes apply at once (e.g. while restoring state).
 
-export function useTransitionState (node, prop, timeout = 1000, toString) {
+export function useTransitionState (node, prop, {
+  timeout = 1000,
+  toString,
+  skipTransition = false
+} = {}) {
   let [state, setState] = useState({
     current: prop,
     isChanging: false,
@@ -33,7 +38,7 @@ export function useTransitionState (node, prop, timeout = 1000, toString) {
 
   useLayoutEffect(() => {
     if (willChange) {
-      if (node.current) {
+      if (node.current && !skipTransition) {
         reflow(node.current)
         setState(s => ({ ...s, isChanging: true }))
 
@@ -48,7 +53,7 @@ export function useTransitionState (node, prop, timeout = 1000, toString) {
         handleTransitionEnd()
       }
     }
-  }, [willChange, handleTransitionEnd, timeout, node])
+  }, [willChange, handleTransitionEnd, timeout, node, skipTransition])
 
   return {
     ...state,

@@ -1,9 +1,15 @@
-import { LIST, PHOTO } from '#tropy/constants/index.js'
+import { LIST, PHOTO, PROJECT } from '#tropy/constants/index.js'
 import { items as itemsReducer } from '#tropy/reducers/items.js'
 
 describe('Items Reducer', () => {
   let state
   let action
+
+  it('takes the items of a hydrated project', () => {
+    let items = { 1: { id: 1 } }
+    expect(itemsReducer({}, { type: PROJECT.HYDRATE, payload: { items } }))
+      .to.equal(items)
+  })
 
   describe(LIST.ITEM.ADD, () => {
     beforeEach(() => {

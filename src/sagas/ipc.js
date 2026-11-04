@@ -44,7 +44,7 @@ const filters = {
     return yield select(getAllTags)
   },
 
-  [PROJECT.OPENED] ({ payload }) {
+  [PROJECT.READY] ({ payload }) {
     return projectInfo(payload)
   },
 

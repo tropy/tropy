@@ -6,16 +6,16 @@ const ACTIVITY = {
 
 const BODY = {
   linux: {
-    dark: '#333333',
+    dark: '#292929',
     light: '#f6f6f6'
   },
   darwin: {
-    dark: '#333333',
+    dark: '#292929',
     light: '#f6f6f6'
   },
   win32: {
-    dark: '#333333',
-    light: '#f0f0f0'
+    dark: '#292929',
+    light: '#f6f6f6'
   }
 }
 
