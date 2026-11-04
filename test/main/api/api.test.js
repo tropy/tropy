@@ -282,6 +282,13 @@ describe('api', () => {
       })
     })
 
+    it('sorts by list position only in lists', async () => {
+      let res = await api.get('/projects/foo/items?sort=added')
+
+      expect(res.statusCode).to.equal(400)
+      expect(api.actions).to.be.empty
+    })
+
     it('clears all tags when no tag is given', async () => {
       let res = await api.delete('/projects/foo/items/1/tags')
 

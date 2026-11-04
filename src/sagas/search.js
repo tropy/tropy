@@ -36,6 +36,20 @@ const filter = (order, matches) => {
   return seq
 }
 
+// Returns ids in list order (from find) by position:
+// reversed, as an indexed sequence, when descending.
+const byPosition = (ids, sort) => {
+  if (sort.asc)
+    return ids
+
+  let [seq, push] = createSequence()
+
+  for (let i = ids.length - 1; i >= 0; --i)
+    push(ids[i])
+
+  return seq
+}
+
 const isSameSet = (ids, matches) => {
   if (matches == null)
     return false
@@ -91,34 +105,33 @@ const getView = (state) => ({
   trash: state.nav.trash,
   query: state.nav.query,
   imports: (state.nav.imports && state.imports.length > 0) ?
-    state.imports[0].items : null,
-  sort: getSortColumn(state)
+    state.imports[0].items : null
 })
 
-// Returns the ids of the items in a view, as a set.
-// The ids come in SQL order: the order when sorting by position.
-export function *find (db, { list, tags = [], trash, imports, query, sort }) {
+// Returns the ids of the items in a view, as a set;
+// in list order (ascending position) for lists.
+export function *find (db, { list, tags = [], trash, imports, query }) {
   let START = Date.now()
   let result
 
   switch (true) {
     case (imports != null):
-      result = yield call(mod.item.find, db, { ids: imports, query, sort })
+      result = yield call(mod.item.find, db, { ids: imports, query })
       break
 
     case (!!trash):
-      result = yield call(mod.item.trash, db, { sort, query })
+      result = yield call(mod.item.trash, db, { query })
       break
 
     case (list != null):
       if (list < 0)
-        result = yield call(mod.item.unlisted, db, { tags, query, sort })
+        result = yield call(mod.item.unlisted, db, { tags, query })
       else
-        result = yield call(mod.item.list, db, list, { tags, query, sort })
+        result = yield call(mod.item.list, db, list, { tags, query })
       break
 
     default:
-      result = yield call(mod.item.all, db, { tags, sort, query })
+      result = yield call(mod.item.all, db, { tags, query })
   }
 
   let ms = Date.now() - START
@@ -139,7 +152,7 @@ export function *find (db, { list, tags = [], trash, imports, query, sort }) {
 // from qr.order if it is the UI's sort, otherwise seeded and built.
 export function *ordered (db, ids, sort) {
   if (isPosition(sort))
-    return ids
+    return byPosition(ids, sort)
 
   let qr = yield select(state => state.qr)
   let set = {}
@@ -191,7 +204,7 @@ export function *search (db) {
     // it writes the items once it has.
     // Otherwise the items only change with the matches.
     if (isPosition(current))
-      yield* commit({ matches, items: ids })
+      yield* commit({ matches, items: byPosition(ids, current) })
     else if (isSameSort(qr.sort, current) && matches !== qr.matches)
       yield* commit({ matches, items: filter(qr.order, matches) })
     else

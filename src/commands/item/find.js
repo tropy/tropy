@@ -18,7 +18,7 @@ export class Find extends Command {
       locale: yield select(state => state.intl.locale)
     }
 
-    let ids = yield* find(db, { list, tags, trash, imports, query, sort })
+    let ids = yield* find(db, { list, tags, trash, imports, query })
     ids = yield* ordered(db, ids, sort)
 
     let items = yield select(state => state.items)

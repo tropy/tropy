@@ -1,5 +1,6 @@
 import act from '../../../actions/api.js'
-import { found } from '../errors.js'
+import { NAV } from '../../../constants/index.js'
+import { fail, found } from '../errors.js'
 import { photoFields } from './photos.js'
 import { id, idParams, ids, object, some, strings, withUrlId } from '../schema.js'
 
@@ -30,6 +31,9 @@ export const findItems = ({ operationId, summary, params }) => ({
     })
   },
   async handler ({ params, query, rsvp }) {
+    if (query.sort === NAV.COLUMN.POSITION.id && params.id == null)
+      throw fail(400, 'sort by added (list position) needs a list')
+
     return rsvp(act.item.find({
       tags: query.tag,
       list: params.id,

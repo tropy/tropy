@@ -47,7 +47,9 @@ export default {
         ...payload,
         list: payload.list ?? LIST.ROOT
       },
-      meta: { search: true, ...meta }
+      // Only position needs a search (list order from SQL);
+      // the order saga follows other columns by itself.
+      meta: { search: payload.column === NAV.COLUMN.POSITION.id, ...meta }
     }
   },
 
