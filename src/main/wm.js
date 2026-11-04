@@ -490,6 +490,14 @@ export class WindowManager extends EventEmitter {
       vibrancy: false // !nativeTheme.prefersReducedTransparency
     })
 
+    let bg = BODY[process.platform][
+      nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
+    ]
+
+    this.each(win => {
+      win.setBackgroundColor(bg)
+    })
+
     if (this.app.state.frameless && win32) {
       this.each(win => {
         win.setTitleBarOverlay(getTitleBarOverlay())
