@@ -50,17 +50,11 @@ const SEARCH = (n) =>
   Array.from({ length: n }, (_, i) => `SELECT id FROM (${MATCH(i)})`)
     .join(' INTERSECT ')
 
-const SORT = `
-  WITH sort(id, text) AS (
-    SELECT id, text
-    FROM metadata JOIN metadata_values USING (value_id)
-    WHERE property = $sort)`
-
+// Seed order for the subject columns; metadata columns join their values.
 const ORDER = {
   [NAV.COLUMN.CREATED.id]: 'subjects.created',
   [NAV.COLUMN.MODIFIED.id]: 'subjects.modified',
-  [NAV.COLUMN.TEMPLATE.id]: 'subjects.template',
-  [NAV.COLUMN.POSITION.id]: 'list_items.added'
+  [NAV.COLUMN.TEMPLATE.id]: 'subjects.template'
 }
 
 // Matches a "quoted phrase" (with optional closing quote) or a bare term.
@@ -90,12 +84,9 @@ function parse (query) {
   return [...terms.values()]
 }
 
-function prep ({ query, sort, tags }, params = {}) {
+function prep ({ query, tags }, params = {}) {
   let terms = (query == null) ? [] : parse(query)
-
-  if (!(sort.column in ORDER)) {
-    params.$sort = sort.column
-  }
+  tags = uniq(array(tags))
 
   for (let [i, { text, prefix }] of terms.entries()) {
     params[`$fts${i}`] = `"${text}"${prefix ? '*' : ''}`
@@ -109,9 +100,8 @@ function prep ({ query, sort, tags }, params = {}) {
   }
 
   return {
-    dir: sort.asc ? 'ASC' : 'DESC',
-    order: ORDER[sort.column] || 'sort.text',
     params,
+    tags,
     match: (terms.length > 0) ? SEARCH(terms.length) : null
   }
 }
@@ -128,119 +118,98 @@ async function search (db, query, params) {
 
 
 mod.item = {
-  all (db, { trash, ...options }) {
-    let { dir, order, params, match } = prep(options)
+  all (db, options) {
+    let { params, tags, match } = prep(options)
     return search(db, `
-      ${params.$sort ? SORT : ''}
-      SELECT DISTINCT id
+      SELECT id
         FROM items
           ${params.$tags ? 'JOIN taggings USING (id)' : ''}
-          ${params.$sort ?
-            'LEFT OUTER JOIN sort USING (id)' :
-            'JOIN subjects USING (id)'}
           LEFT OUTER JOIN trash USING (id)
         WHERE
-          ${params.$tags ? `tag_id IN (${lst(options.tags)}) AND` : ''}
+          ${params.$tags ? `tag_id IN (${lst(tags)}) AND` : ''}
           ${match ? `id IN (${match}) AND` : ''}
-          deleted ${trash ? 'NOT' : 'IS'} NULL
-        ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
-        ORDER BY ${order} ${dir}, id ${dir}`,
+          deleted IS NULL
+        ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}`,
     params)
   },
 
   async find (db, { ids, ...options }) {
-    let { dir, order, params, match } = prep(options)
+    let { params, match } = prep(options)
     return search(db, `
-      ${params.$sort ? SORT : ''}
-      SELECT DISTINCT id
+      SELECT id
         FROM items
-          ${params.$sort ?
-            'LEFT OUTER JOIN sort USING (id)' :
-            'JOIN subjects USING (id)'}
           LEFT OUTER JOIN trash USING (id)
         WHERE
           id IN (${lst(ids)}) AND deleted IS NULL
-          ${match ? `AND id IN (${match})` : ''}
-        ORDER BY ${order} ${dir}, id ${dir}`,
+          ${match ? `AND id IN (${match})` : ''}`,
     params)
   },
 
   async trash (db, options) {
-    let { dir, order, params, match } = prep(options)
+    let { params, match } = prep(options)
     return search(db, `
-      ${params.$sort ? SORT : ''}
-      SELECT DISTINCT id
+      SELECT id
         FROM items
           JOIN trash USING (id)
-          ${params.$sort ?
-            'LEFT OUTER JOIN sort USING (id)' :
-            'JOIN subjects USING (id)'}
         WHERE
           ${match ? `id IN (${match}) AND` : ''}
-          reason = 'user'
-        ORDER BY ${order} ${dir}, id ${dir}`,
+          reason = 'user'`,
     params)
   },
 
+  // In list order: the order when sorting by position.
   async list (db, list, options) {
-    let { dir, order, params, match } = prep(options, { $list: list })
+    let { params, tags, match } = prep(options, { $list: list })
     return search(db, `
-      ${params.$sort ? SORT : ''}
-      SELECT DISTINCT id, added
+      SELECT id
         FROM list_items
-          ${params.$sort ?
-            'LEFT OUTER JOIN sort USING (id)' :
-            'JOIN subjects USING (id)'}
           ${params.$tags ? 'JOIN taggings USING (id)' : ''}
-          LEFT OUTER JOIN items USING (id)
           LEFT OUTER JOIN trash USING (id)
         WHERE
           list_id = $list AND list_items.deleted IS NULL AND
           ${match ? `id IN (${match}) AND` : ''}
-          ${params.$tags ? `tag_id IN (${lst(options.tags)}) AND` : ''}
+          ${params.$tags ? `tag_id IN (${lst(tags)}) AND` : ''}
           trash.deleted IS NULL
         ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
-        ORDER BY ${order} ${dir}, id ${dir}`,
+        ORDER BY added, id`,
     params)
   },
 
   async unlisted (db, options) {
-    let { dir, order, params, match } = prep(options)
+    let { params, tags, match } = prep(options)
     return search(db, `
-      ${params.$sort ? SORT : ''}
-      SELECT DISTINCT id
+      SELECT id
         FROM items
           LEFT OUTER JOIN trash USING (id)
-          LEFT OUTER JOIN list_items USING (id)
-          ${params.$sort ?
-            'LEFT OUTER JOIN sort USING (id)' :
-            'JOIN subjects USING (id)'}
           ${params.$tags ? 'JOIN taggings USING (id)' : ''}
         WHERE
-          (list_items.id IS NULL OR list_items.deleted NOT NULL) AND
+          id NOT IN (SELECT id FROM list_items WHERE deleted IS NULL) AND
           ${match ? `id IN (${match}) AND` : ''}
-          ${params.$tags ? `tag_id IN (${lst(options.tags)}) AND` : ''}
+          ${params.$tags ? `tag_id IN (${lst(tags)}) AND` : ''}
           trash.deleted IS NULL
-        ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
-        ORDER BY ${order} ${dir}, id ${dir}`,
+        ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}`,
     params)
   },
 
   // All item ids in an order close to the sort,
   // to seed the sort in JS (see common/order.js).
+  // Not for position: lists keep their own order (see list).
   async seed (db, sort) {
-    let { dir, order, params } = prep({ sort })
+    let dir = sort.asc ? 'ASC' : 'DESC'
     let ids = []
 
-    await db.each(`
-      ${params.$sort ? SORT : ''}
+    await db.each((sort.column in ORDER) ? `
       SELECT id
+        FROM items JOIN subjects USING (id)
+        ORDER BY ${ORDER[sort.column]} ${dir} NULLS LAST, id ${dir}` : `
+      SELECT items.id AS id
         FROM items
-          ${params.$sort ?
-            'LEFT OUTER JOIN sort USING (id)' :
-            'JOIN subjects USING (id)'}
-        ORDER BY ${order} COLLATE NOCASE ${dir} NULLS LAST, id ${dir}`,
-    params, ({ id }) => { ids.push(id) })
+          LEFT OUTER JOIN metadata
+            ON (metadata.id = items.id AND property = $sort)
+          LEFT OUTER JOIN metadata_values USING (value_id)
+        ORDER BY text COLLATE NOCASE ${dir} NULLS LAST, items.id ${dir}`,
+    (sort.column in ORDER) ? {} : { $sort: sort.column },
+    ({ id }) => { ids.push(id) })
 
     return ids
   },

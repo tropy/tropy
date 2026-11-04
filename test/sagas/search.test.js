@@ -111,6 +111,24 @@ describe('search saga', () => {
       mocks: [[mod.item.all, () => ({ items: ids })]]
     })
 
+  it('reverses the list order when sorting by position descending', () => {
+    let s = {
+      ...state({ matches: null }),
+      nav: {
+        list: 1,
+        sort: { 1: { column: 'added', asc: false } },
+        tags: [],
+        query: ''
+      }
+    }
+    let { puts: [{ payload }] } = run(search(null), {
+      state: s,
+      mocks: [[mod.item.list, () => ({ items: [1, 2, 3] })]]
+    })
+
+    expect(payload.items).to.eql([3, 2, 1])
+  })
+
   it('writes nothing when it finds the same results', () => {
     let { puts: [{ payload }] } = search$(state({ matches: null }), [1, 2])
 

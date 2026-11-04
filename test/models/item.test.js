@@ -2,6 +2,7 @@ import { mkprojtmp } from '../support/project.js'
 import item from '#tropy/models/item.js'
 import metadata from '#tropy/models/metadata.js'
 import tag from '#tropy/models/tag.js'
+import list from '#tropy/models/list.js'
 import { TYPE } from '#tropy/constants/index.js'
 
 const TEMPLATE = 'https://tropy.org/v1/templates/generic'
@@ -33,8 +34,7 @@ describe('models/item', () => {
     })
 
     const search = async (query) =>
-      (await item.all(db, { query, sort: { column: TITLE, asc: true } }))
-        .items
+      (await item.all(db, { query })).items
 
     it('treats user input as terms, not FTS5 syntax', async () => {
       expect(await search('1990-12')).to.eql([ids[0]])
@@ -68,6 +68,35 @@ describe('models/item', () => {
 
       expect(await search('box BOX '.repeat(300))).to.eql([ids[2]])
       expect(await search(words.join(' '))).to.eql([])
+    })
+
+    it('returns list items in list order, ties by id', async () => {
+      let { id } = await list.create(db, { name: 'List' })
+      await list.items.add(db, id, ids)
+      await db.run(
+        'UPDATE list_items SET added = ? WHERE id = ?', '2026-01-02', ids[0])
+      await db.run(
+        'UPDATE list_items SET added = ? WHERE id != ?', '2026-01-01', ids[0])
+
+      expect((await item.list(db, id, {})).items)
+        .to.eql([ids[1], ids[2], ids[0]])
+    })
+
+    it('finds unlisted items by their live memberships', async () => {
+      let a = await list.create(db, { name: 'A' })
+      let b = await list.create(db, { name: 'B' })
+      await list.items.add(db, a.id, [ids[0]])
+      await list.items.add(db, b.id, [ids[0], ids[1]])
+      await list.items.remove(db, b.id, [ids[0], ids[1]])
+
+      expect((await item.unlisted(db, {})).items).to.have.members(ids.slice(1))
+    })
+
+    it('ignores duplicate tags', async () => {
+      let { id } = await tag.create(db, { name: 'Dup' })
+      await item.tags.add(db, { id: [ids[1]], tag: id })
+
+      expect((await item.all(db, { tags: [id, id] })).items).to.eql([ids[1]])
     })
 
     it('seeds all items in case-insensitive order, empty last', async () => {

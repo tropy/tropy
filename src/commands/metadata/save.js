@@ -3,7 +3,6 @@ import { Command } from '../command.js'
 import { pick } from '../../common/util.js'
 import mod from '../../models/metadata.js'
 import act from '../../actions/metadata.js'
-import { getSortColumn } from '../../selectors/index.js'
 import { METADATA, TYPE } from '../../constants/index.js'
 
 
@@ -15,12 +14,8 @@ export class Save extends Command {
 
     this.original = {}
 
+    // No search for the sort column: the order saga moves the items.
     yield select(state => {
-      let sort = getSortColumn(state)
-
-      if (sort.column in data)
-        meta.search = true
-
       let props = Object.keys(data)
 
       for (let id of ids) {
