@@ -8,10 +8,13 @@ import { TABS } from '../../constants/index.js'
 export const FilterControls = ({
   brightness,
   contrast,
+  hasKeystone = true,
   hue,
   isDisabled,
+  isKeystoneVisible = false,
   negative,
   onChange,
+  onKeystoneToggle,
   saturation,
   sharpen
 }) => (
@@ -56,6 +59,13 @@ export const FilterControls = ({
       isDisabled={isDisabled}
       onChange={onChange}
       value={negative}/>
+    {hasKeystone && (
+      <ToggleFilter
+        name="keystone"
+        isDisabled={isDisabled}
+        onChange={onKeystoneToggle}
+        value={isKeystoneVisible}/>
+    )}
   </ul>
 )
 

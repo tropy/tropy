@@ -5,20 +5,27 @@ import { FILTERS } from '../../esper/photo.js'
 import { TABS } from '../../constants/index.js'
 
 export const EsperPanel = ({
+  hasKeystone,
   isDisabled,
+  isKeystoneVisible,
   isVisible,
+  keystone,
   onChange,
+  onKeystoneToggle,
   onRevert,
   ...props
 }) => {
-  let isPristine = shallow(FILTERS, props)
+  let isPristine = shallow(FILTERS, props) && keystone == null
 
   return (
     <div className="esper-panel">
       <FilterControls
+        hasKeystone={hasKeystone}
         isDisabled={isDisabled || !isVisible}
+        isKeystoneVisible={isKeystoneVisible}
         {...props}
-        onChange={onChange}/>
+        onChange={onChange}
+        onKeystoneToggle={onKeystoneToggle}/>
 
       <ButtonContainer className="revert">
         <Button

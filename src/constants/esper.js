@@ -31,6 +31,11 @@ export default {
     textLayer: {
       fill: { color: 0x00ffff, alpha: 0.33 }
     },
+    keystone: {
+      line: { color: 0x5c93e5, alpha: 1 },
+      grid: { color: 0x5c93e5, alpha: 0.5 },
+      fill: { color: 0xffffff, alpha: 1 }
+    },
     selection: {
       default: {
         line: { color: 0x5c93e5, alpha: 1 },

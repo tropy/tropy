@@ -4,7 +4,8 @@ import { SharpenFilter } from './filter/index.js'
 import { KeystoneMesh } from './mesh.js'
 import { SelectionLayer, SelectionOverlay } from './selection.js'
 import { TextLayer } from './text-layer.js'
-import { equals, keystone } from './keystone.js'
+import { KeystoneLayer } from './keystone-layer.js'
+import { KEYSTONE, equals, keystone } from './keystone.js'
 import { constrain } from './util.js'
 import { getResolution } from '../dom.js'
 import { deg, isHorizontal } from '../common/math.js'
@@ -65,6 +66,9 @@ export class Photo extends Container {
 
     this.textLayer = new TextLayer()
     this.addChild(this.textLayer)
+
+    this.corners = new KeystoneLayer()
+    this.addChild(this.corners)
   }
 
   get adjust () {
@@ -292,8 +296,12 @@ export class Photo extends Container {
   sync (props, state = {}) {
     let { width, height } = props.selection || state
 
+    // Subtle: while the corners are being adjusted, the photo
+    // is shown without its correction!
     if (state.source != null) {
-      let { bounds } = this.keystone(state, state.source)
+      let { bounds } = this.keystone(
+        state.isKeystoneVisible ? KEYSTONE : state,
+        state.source)
 
       // The view of a corrected photo fits its whole warped extent,
       // not just the image's rectangle (see Esper#sync).
@@ -308,11 +316,16 @@ export class Photo extends Container {
     this.overlay.sync(props, state)
     this.tool = state.quicktool || props.tool
     this.textLayer.sync(props, state)
+    this.corners.sync(props, state)
   }
 
   update (dragState, textSelection) {
     if (this.selections.visible) {
       this.selections.update(dragState)
+    }
+
+    if (this.corners.visible) {
+      this.corners.update(dragState)
     }
 
     if (this.overlay.visible) {

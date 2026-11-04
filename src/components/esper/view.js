@@ -6,6 +6,7 @@ import { useResizeObserver } from '../../hooks/use-resize-observer.js'
 export const EsperView = React.forwardRef(({
   children,
   onChange,
+  onKeystoneChange,
   onPhotoError,
   onResize,
   onResolutionChange,
@@ -42,6 +43,7 @@ export const EsperView = React.forwardRef(({
   useEffect(() => {
     Esper.instance
       .on('change', onChange)
+      .on('keystone-change', onKeystoneChange)
       .on('photo-error', onPhotoError)
       .on('resolution-change', onResolutionChange)
       .on('selection-activate', onSelectionActivate)
@@ -55,6 +57,7 @@ export const EsperView = React.forwardRef(({
     return () => {
       Esper.instance
         .off('change', onChange)
+        .off('keystone-change', onKeystoneChange)
         .off('photo-error', onPhotoError)
         .off('resolution-change', onResolutionChange)
         .off('selection-activate', onSelectionActivate)
@@ -68,6 +71,7 @@ export const EsperView = React.forwardRef(({
     }
   }, [
     onChange,
+    onKeystoneChange,
     onPhotoError,
     onResolutionChange,
     onSelectionActivate,

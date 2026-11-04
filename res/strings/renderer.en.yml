@@ -415,6 +415,7 @@ en:
       sharpen:
         label: Sharpen
         value: "{value, number}"
+      keystone: Adjust corners
   notepad:
     placeholder: Add your notes here …
   completions:

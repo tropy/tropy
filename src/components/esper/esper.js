@@ -37,6 +37,7 @@ const {
   MIN_WIDTH,
   MIN_HEIGHT,
   MIN_ZOOM,
+  PANEL_WIDTH,
   PAN_DURATION,
   PAN_STEP_SIZE,
   ROTATE_DURATION,
@@ -69,6 +70,9 @@ export class Esper extends React.Component {
     over: false,
     quicktool: null,
 
+    // Shows the corners of the correction; reset with the image
+    isKeystoneVisible: false,
+
     // Derived from props; constrained by photo/selection and resize
     minZoom: MIN_ZOOM,
     zoom: 1,
@@ -83,7 +87,14 @@ export class Esper extends React.Component {
   static getDerivedStateFromProps (props, prevState) {
     let id
     let src
-    let image = Esper.getDerivedImageStateFromProps(props)
+
+    if (props.photo && !props.photo.pending) {
+      id = props.selection?.id ?? props.photo.id
+      src = Cache.url(props.cache, 'full', props.photo)
+    }
+
+    let isKeystoneVisible = prevState.isKeystoneVisible && id === prevState.id
+    let image = Esper.getDerivedImageStateFromProps(props, isKeystoneVisible)
 
     let text = parseAltoDocument(
       props.transcription?.data,
@@ -91,12 +102,6 @@ export class Esper extends React.Component {
       image.height,
       props.transcription?.angle,
       props.transcription?.mirror)
-
-    if (props.photo && !props.photo.pending) {
-      id = props.selection?.id ?? props.photo.id
-      src = Cache.url(props.cache, 'full', props.photo)
-    }
-
 
     if (id === prevState.id && src === prevState.src && text === prevState.text)
       return null
@@ -109,11 +114,15 @@ export class Esper extends React.Component {
         id,
         src,
         zoom: props.zoom || prevState.zoom,
+        isKeystoneVisible,
         ...image
       }
   }
 
-  static getDerivedImageStateFromProps ({ photo, selection }) {
+  static getDerivedImageStateFromProps (
+    { photo, selection },
+    isKeystoneVisible = false
+  ) {
     let image = selection || photo
     let state = { ...Esper.defaultImageProps }
 
@@ -127,6 +136,8 @@ export class Esper extends React.Component {
       for (let prop in KEYSTONE) {
         state[prop] = photo[prop]
       }
+
+      state.isKeystoneVisible = isKeystoneVisible && selection == null
 
       Object.assign(state, addOrientation(image, photo))
 
@@ -167,7 +178,9 @@ export class Esper extends React.Component {
       return true
 
     if (this.didImageChange(nextProps, nextState)) {
-      let state = Esper.getDerivedImageStateFromProps(nextProps)
+      let state = Esper.getDerivedImageStateFromProps(
+        nextProps,
+        nextState.isKeystoneVisible)
       let duration = !this.state.isVisible ? 0 : undefined // -> default
 
       this.esper.current.sync({
@@ -358,6 +371,7 @@ export class Esper extends React.Component {
 
   handleRevertToOriginal = () => {
     this.handleFilterChange(FILTERS)
+    this.handleKeystoneChange(null)
     this.focus()
   }
 
@@ -481,6 +495,49 @@ export class Esper extends React.Component {
 
     this.esper.current.filter({ ...this.state, ...opts })
     this.setState(opts)
+    this.handleImageChange()
+  }
+
+  // Shows or hides the corners of the correction. While they are
+  // shown, the photo is displayed without its correction, with a
+  // margin around it; the view moves there like it does to a
+  // selection.
+  handleKeystoneToggle = ({ keystone: isKeystoneVisible }) => {
+    if (this.isSelectionActive) return
+
+    let props = {
+      ...this.props,
+      x: this.esper.current.x,
+      y: this.esper.current.y
+    }
+
+    let next = { isKeystoneVisible }
+    next.bounds = getExtent({ ...this.state, ...next })
+    Object.assign(next, getZoomBounds(props, { ...this.state, ...next }, this.screen))
+
+    // Subtle: zoom out to show all four corners, whatever the mode!
+    if (isKeystoneVisible) {
+      next.zoom = next.minZoom
+      props.mode = MODE.FIT
+    }
+
+    this.esper.current.sync(props, { ...this.state, ...next })
+    this.setState(next)
+  }
+
+  // Called while the corners are being dragged in Esper.
+  handleKeystoneChange = (keystone) => {
+    if (this.props.isReadOnly || this.isSelectionActive) return
+    if (keystone === this.state.keystone) return
+
+    // Subtle: set only what changes here, because other state
+    // changes may be pending in the same batch (see revert)!
+    let next = { keystone }
+    next.bounds = getExtent({ ...this.state, ...next })
+    Object.assign(next, getZoomBounds(this.props, { ...this.state, ...next }, this.screen))
+
+    this.esper.current.keystone(this.props, { ...this.state, ...next })
+    this.setState(next)
     this.handleImageChange()
   }
 
@@ -776,6 +833,7 @@ export class Esper extends React.Component {
             ref={this.esper}
             textSelection={this.state.textSelection}
             onChange={this.handleViewChange}
+            onKeystoneChange={this.handleKeystoneChange}
             onPhotoError={this.handlePhotoError}
             onResize={this.handleResize}
             onResolutionChange={this.handleResolutionChange}
@@ -798,9 +856,13 @@ export class Esper extends React.Component {
               negative={this.state.negative}
               saturation={this.state.saturation}
               sharpen={this.state.sharpen}
+              hasKeystone={!this.isSelectionActive}
               isDisabled={isDisabled || this.props.isReadOnly}
+              isKeystoneVisible={this.state.isKeystoneVisible}
+              keystone={this.isSelectionActive ? null : this.state.keystone}
               isVisible={this.props.isPanelVisible}
               onChange={this.handleFilterChange}
+              onKeystoneToggle={this.handleKeystoneToggle}
               onRevert={this.handleRevertToOriginal}/>
           </EsperView>
         </div>
@@ -846,10 +908,16 @@ export class Esper extends React.Component {
 
 const IMAGE_PROPS = { ...FILTERS, ...KEYSTONE }
 
+// The margin around the photo while its corners are adjusted, so
+// that the handles stay clear of the edges of the view.
+const KEYSTONE_MARGIN = 24
+
 // Returns the extent of the photo as it is drawn: the whole warped
 // photo, if it is corrected; or the photo itself.
-const getExtent = ({ source, keystone: params }) =>
-  (source == null) ? null : keystone({ keystone: params }, source).bounds
+const getExtent = ({ source, keystone: params, isKeystoneVisible }) =>
+  (source == null) ?
+    null :
+    keystone(isKeystoneVisible ? KEYSTONE : { keystone: params }, source).bounds
 
 const getActiveTool = ({ selection, tool }, { quicktool }) => {
   tool = quicktool || tool
@@ -872,6 +940,25 @@ const getZoomBounds = (props, state, screen = {}) => {
 
     if (!isHorizontal(state.angle)) {
       [width, height] = [height, width]
+    }
+
+    // Leave room for the corner handles while the corners are
+    // adjusted; and for the toolbar and the panel, if they overlay
+    // the view. Subtle: the photo is centred in the whole view, so
+    // the room is left on both sides!
+    if (state.isKeystoneVisible) {
+      let dx = KEYSTONE_MARGIN
+      let dy = KEYSTONE_MARGIN
+
+      if (props.hasOverlayToolbar) {
+        dy += TOOLBAR
+        if (props.isPanelVisible) dx += PANEL_WIDTH
+      }
+
+      screen = {
+        width: Math.max(MIN_WIDTH, (screen.width ?? MIN_WIDTH) - 2 * dx),
+        height: Math.max(MIN_HEIGHT, (screen.height ?? MIN_HEIGHT) - 2 * dy)
+      }
     }
 
     minZoom = getZoomToFit(screen, width, height, minZoom)

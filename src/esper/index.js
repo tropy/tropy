@@ -3,7 +3,8 @@ import { Application, RenderTexture, Ticker } from 'pixi.js'
 import TWEEN from '@tweenjs/tween.js'
 import { debug, error, info, warn } from '../common/log.js'
 import { Photo, FILTERS } from './photo.js'
-import { KEYSTONE } from './keystone.js'
+import { KEYSTONE, isConvex, stringify } from './keystone.js'
+import { KeystoneHandle, KEYSTONE_TOOL } from './keystone-layer.js'
 import { Selection } from './selection.js'
 import { Loader } from './loader.js'
 import { ESPER, SASS } from '../constants/index.js'
@@ -94,7 +95,8 @@ export default class Esper extends EventEmitter {
       autoStart: false,
       sharedTicker: true,
       preference: ARGS.rendererPreference || 'webgl',
-      antialias: false,
+      // For the quad and grid of the corner adjustment
+      antialias: true,
       autoDensity: true,
       backgroundAlpha: 0,
       powerPreference: 'low-power',
@@ -785,6 +787,19 @@ export default class Esper extends EventEmitter {
       return this.emit('selection-activate', event.target.data)
     }
 
+    if (target instanceof KeystoneHandle) {
+      this.drag.start()
+      this.drag.current = {
+        data,
+        target,
+        tool: KEYSTONE_TOOL,
+        index: target.index,
+        points: [...this.photo.corners.points],
+        source: this.photo.correction.source
+      }
+      return
+    }
+
     let tool = this.photo?.tool
     let modifier = event.shiftKey ? 'SHIFT' : isMeta(event) ? 'META' : null
 
@@ -816,7 +831,7 @@ export default class Esper extends EventEmitter {
     }
   }
 
-  handleDrag = () => {
+  handleDrag = (event) => {
     switch (this.drag.current?.tool) {
       case ESPER.TOOL.PAN:
         this.handlePanMove()
@@ -825,13 +840,18 @@ export default class Esper extends EventEmitter {
       case ESPER.TOOL.SELECT:
         this.handleSelectMove()
         break
+      case KEYSTONE_TOOL:
+        this.handleKeystoneMove(event)
+        break
     }
   }
 
   handleDragStop = (event, wasCancelled) => {
     try {
       let { origin, target, tool } = this.drag.current
-      target.cursor = this.photo?.tool
+
+      if (tool !== KEYSTONE_TOOL)
+        target.cursor = this.photo?.tool
 
       if (wasCancelled) return
 
@@ -842,6 +862,9 @@ export default class Esper extends EventEmitter {
         case ESPER.TOOL.ARROW:
         case ESPER.TOOL.SELECT:
           this.handleSelectStop()
+          break
+        case KEYSTONE_TOOL:
+          this.handleKeystoneStop()
           break
         case ESPER.TOOL.ZOOM_IN:
           this.emit('zoom-in', origin.mov, false)
@@ -902,6 +925,41 @@ export default class Esper extends EventEmitter {
         break
     }
   }
+
+  // Moves the dragged corner, keeping it inside the texture and the
+  // quad convex; the corners are only committed when the quad is
+  // valid, so that the handle sticks where it was otherwise.
+  //
+  // Subtle: the position is taken from the DOM event, so that the
+  // drag goes on when the pointer leaves the canvas!
+  handleKeystoneMove (event) {
+    let { index, points, source } = this.drag.current
+
+    let global = { x: 0, y: 0 }
+    this.app.renderer.events.mapPositionToPoint(
+      global, event.clientX, event.clientY)
+    let { x, y } = this.photo.toLocal(global)
+
+    let next = [...points]
+    next[index] = {
+      x: restrict(x, 0, source.width),
+      y: restrict(y, 0, source.height)
+    }
+
+    if (isConvex(next)) {
+      this.drag.current.points = next
+      this.commitKeystone(stringify(next))
+    }
+  }
+
+  handleKeystoneStop () {
+    this.commitKeystone(stringify(this.drag.current.points))
+    this.commitKeystone.flush()
+  }
+
+  commitKeystone = throttle((keystone) => {
+    this.emit('keystone-change', keystone)
+  }, 75)
 
   commitTextSelection = throttle((selection) => {
     this.emit('select-text', selection)
