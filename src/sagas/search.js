@@ -52,72 +52,126 @@ const isSameSet = (ids, matches) => {
   return true
 }
 
+const getOptions = (sort) => ({
+  asc: sort.asc,
+  compare: isDate(sort) ? undefined : collator(sort.locale).compare
+})
+
 const getData = ({ items, metadata, ontology }) => ({
   items, metadata, template: ontology.template
 })
 
+const isDone = (cmd) => ({ type, meta }) =>
+  type === cmd.type && meta?.done && meta.rel === cmd.meta.seq
+
 // Keeps qr.matches (and qr.items) up to date with the search in state,
-// after each action that asks for it, one search at a time:
+// after each action that asks for it, one search (qr.search) at a time:
 // actions taken while a search is busy leave one in the buffer,
 // so the next search catches up with all of them.
-export function *matches (db, pattern) {
+export function *matches (pattern) {
   let chan = yield actionChannel(pattern, buffers.sliding(1))
 
   try {
     while (true) {
       yield take(chan)
-      yield call(search, db)
+
+      let cmd = act.qr.search()
+      yield put(cmd)
+      yield take(isDone(cmd))
     }
   } finally {
     chan.close()
   }
 }
 
+// The view the user is looking at: the items the search returns.
+const getView = (state) => ({
+  list: state.nav.list,
+  tags: state.nav.tags,
+  trash: state.nav.trash,
+  query: state.nav.query,
+  imports: (state.nav.imports && state.imports.length > 0) ?
+    state.imports[0].items : null,
+  sort: getSortColumn(state)
+})
+
+// Returns the ids of the items in a view, as a set.
+// The ids come in SQL order: the order when sorting by position.
+export function *find (db, { list, tags = [], trash, imports, query, sort }) {
+  let START = Date.now()
+  let result
+
+  switch (true) {
+    case (imports != null):
+      result = yield call(mod.item.find, db, { ids: imports, query, sort })
+      break
+
+    case (!!trash):
+      result = yield call(mod.item.trash, db, { sort, query })
+      break
+
+    case (list != null):
+      if (list < 0)
+        result = yield call(mod.item.unlisted, db, { tags, query, sort })
+      else
+        result = yield call(mod.item.list, db, list, { tags, query, sort })
+      break
+
+    default:
+      result = yield call(mod.item.all, db, { tags, sort, query })
+  }
+
+  let ms = Date.now() - START
+  if (ms > 300) {
+    warn({
+      ms,
+      list,
+      query,
+      tags: tags.length > 0,
+      trash
+    }, `SLOW: *search query "${query}" took ${ms}ms`)
+  }
+
+  return result.items
+}
+
+// Returns ids in the given sort (column, asc and locale):
+// from qr.order if it is the UI's sort, otherwise seeded and built.
+export function *ordered (db, ids, sort) {
+  if (isPosition(sort))
+    return ids
+
+  let qr = yield select(state => state.qr)
+  let set = {}
+  for (let id of ids) set[id] = true
+
+  if (isSameSort(qr.sort, sort))
+    return filter(qr.order, set)
+
+  let seed = yield call(mod.item.seed, db, sort)
+  let key = yield select(selectSortKey, sort.column)
+  let options = getOptions(sort)
+  let pre = []
+
+  for (let id of seed) {
+    if (set[id]) {
+      pre.push(id)
+      delete set[id]
+    }
+  }
+
+  // Items the seed missed (created meanwhile).
+  let missing = Object.keys(set).map(Number)
+
+  return update(build(pre, key, options), { changed: missing }, key, options)
+}
+
+// Updates the current results in qr (matches and items)
+// for the view the user is looking at.
 export function *search (db) {
   try {
-    let { nav, imports, sort } = yield select(state => ({
-      nav: state.nav,
-      imports: state.imports,
-      sort: getSortColumn(state)
-    }))
-
-    var { list, tags, trash, query } = nav
-
-    let START = Date.now()
-
-    let result
-
-    switch (true) {
-      case (nav.imports && imports.length > 0): {
-        let ids = imports[0].items
-        result = yield call(mod.item.find, db, { ids, query, sort })
-        break
-      }
-      case (trash):
-        result = yield call(mod.item.trash, db, { sort, query })
-        break
-
-      case (list != null):
-        if (list < 0)
-          result = yield call(mod.item.unlisted, db, { tags, query, sort })
-        else
-          result = yield call(mod.item.list, db, list, { tags, query, sort })
-        break
-
-      default:
-        result = yield call(mod.item.all, db, { tags, sort, query })
-    }
-
-    let ms = Date.now() - START
-    if (ms > 300) {
-      warn({
-        ms,
-        list,
-        query,
-        tags: tags.length > 0,
-        trash
-      }, `SLOW: *search query "${query}" took ${ms}ms`)
-    }
+    var view = yield select(getView)
+    let ids = yield* find(db, view)
 
     let { qr, current } = yield select(state => ({
       qr: state.qr,
@@ -127,9 +181,9 @@ export function *search (db) {
     // The same results (e.g. after an edit) keep their identity.
     let matches = qr.matches
 
-    if (!isSameSet(result.items, matches)) {
+    if (!isSameSet(ids, matches)) {
       matches = {}
-      for (let id of result.items) matches[id] = true
+      for (let id of ids) matches[id] = true
     }
 
     // The order saga owns qr.order:
@@ -137,7 +191,7 @@ export function *search (db) {
     // it writes the items once it has.
     // Otherwise the items only change with the matches.
     if (isPosition(current))
-      yield* commit({ matches, items: result.items })
+      yield* commit({ matches, items: ids })
     else if (isSameSort(qr.sort, current) && matches !== qr.matches)
       yield* commit({ matches, items: filter(qr.order, matches) })
     else
@@ -146,14 +200,13 @@ export function *search (db) {
   } catch (err) {
     warn({
       err,
-      list,
-      query,
-      tags: tags?.length > 0,
-      trash
+      list: view?.list,
+      query: view?.query,
+      tags: view?.tags?.length > 0,
+      trash: view?.trash
     }, '*search failed')
   }
 }
-
 
 // Keeps qr.order in sync with the sort and the sort keys in state,
 // after each action, starting from the cache of a first sync.
@@ -187,10 +240,7 @@ export function *sync (db, prev = {}) {
       return { sort }
     }
 
-    let options = {
-      asc: sort.asc,
-      compare: isDate(sort) ? undefined : collator(sort.locale).compare
-    }
+    let options = getOptions(sort)
 
     if (isSameSort(prev.sort, sort)) {
       let data = yield select(getData)

@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { NAV } from '../constants/index.js'
+import { createMetaReducer } from './util.js'
 
 const qr = createSlice({
   name: 'qr',
@@ -11,6 +12,9 @@ const qr = createSlice({
   },
 
   reducers: {
+    search: createMetaReducer({ cmd: 'project', hidden: true },
+      (state) => state),
+
     update: {
       prepare: (payload = {}, meta) => ({
         payload,
@@ -26,6 +30,7 @@ const qr = createSlice({
 })
 
 export const {
+  search,
   update
 } = qr.actions
 

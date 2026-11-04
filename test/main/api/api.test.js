@@ -275,7 +275,7 @@ describe('api', () => {
       let res = await api.get('/projects/foo/items?tag=1&tag=2&reverse=true')
 
       expect(res.json()).to.eql([{ id: 1 }])
-      expect(api.action.type).to.equal(API.ITEM.FIND)
+      expect(api.action.type).to.equal(ITEM.FIND)
       expect(api.action.payload).to.deep.include({
         tags: [1, 2],
         sort: { column: undefined, asc: false }

@@ -1,6 +1,5 @@
 export default {
   ITEM: {
-    FIND: 'api.item.find',
     SHOW: 'api.item.show'
   },
 
