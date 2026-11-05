@@ -1,7 +1,7 @@
 import { actionChannel, call, put, select, take } from 'redux-saga/effects'
 import { buffers } from 'redux-saga'
 import { warn } from '../common/log.js'
-import { build, update } from '../common/order.js'
+import { build, reverse, update } from '../common/order.js'
 import { createSequence, stable } from '../common/sequence.js'
 import { collator } from '../collate.js'
 import { NAV } from '../constants/index.js'
@@ -18,6 +18,10 @@ const getSort = (state) => ({
 const isSameSort = (a, b) =>
   a != null && b != null &&
   a.column === b.column && a.asc === b.asc && a.locale === b.locale
+
+const isReverse = (a, b) =>
+  a != null && b != null &&
+  a.column === b.column && a.asc !== b.asc && a.locale === b.locale
 
 const isPosition = (sort) =>
   sort.column === NAV.COLUMN.POSITION.id
@@ -254,6 +258,12 @@ export function *sync (db, prev = {}) {
     }
 
     let options = getOptions(sort)
+
+    if (isReverse(prev.sort, sort) && prev.order != null) {
+      let order = reverse(prev.order, (id) => prev.keys.get(id))
+      yield* write(order, sort)
+      prev = { ...prev, sort, order }
+    }
 
     if (isSameSort(prev.sort, sort)) {
       let data = yield select(getData)

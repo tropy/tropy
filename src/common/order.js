@@ -62,6 +62,21 @@ export function build (ids, key, { compare = natural, asc = true } = {}) {
   return seq
 }
 
+// Returns seq, built by key, in the opposite direction:
+// the keyed ids reversed, then the empty ones reversed (still last).
+// Same as a build with the other direction, ties by id included.
+export function reverse (seq, key) {
+  let n = seq.length
+  while (n > 0 && isEmpty(key(seq[n - 1]))) --n
+
+  let res = []
+
+  for (let i = n - 1; i >= 0; --i) res.push(seq[i])
+  for (let i = seq.length - 1; i >= n; --i) res.push(seq[i])
+
+  return res
+}
+
 // Pads digit runs, so that binary order approximates numeric order.
 const fold = (key) =>
   String(key).toLowerCase().replace(/\d+/g, d => d.padStart(16, '0'))

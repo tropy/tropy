@@ -1,4 +1,4 @@
-import { build, presort, update } from '#tropy/common/order.js'
+import { build, presort, reverse, update } from '#tropy/common/order.js'
 
 describe('order', () => {
   let { compare } = new Intl.Collator('en', { numeric: true })
@@ -27,6 +27,16 @@ describe('order', () => {
     it('sorts NaN keys as empty', () => {
       let dates = { 1: 2020, 2: NaN, 3: 2019, 4: 2021 }
       expect(build([1, 2, 3, 4], id => dates[id])).to.eql([3, 1, 4, 2])
+    })
+  })
+
+  describe('reverse', () => {
+    it('equals a build in the other direction', () => {
+      let ids = Object.keys(keys).map(Number)
+
+      for (let asc of [true, false])
+        expect(reverse(build(ids, key, { compare, asc }), key))
+          .to.eql(build(ids, key, { compare, asc: !asc }))
     })
   })
 
