@@ -176,17 +176,17 @@ const ontology = {
       return props
     },
 
-    create (db, ...properties) {
-      return db.prepare(`
-        REPLACE INTO properties (
-          property_id,
-          vocabulary_id,
-          domain,
-          range,
-          parent,
-          description,
-          comment) VALUES (?, ?, ?, ?, ?, ?, ?)`, stmt =>
-        Promise.all(properties.map(p => stmt.run([
+    async create (db, ...properties) {
+      for (let p of properties) {
+        await db.run(`
+          REPLACE INTO properties (
+            property_id,
+            vocabulary_id,
+            domain,
+            range,
+            parent,
+            description,
+            comment) VALUES (?, ?, ?, ?, ?, ?, ?)`, [
           p.id,
           p.vocabulary,
           p.domain,
@@ -195,8 +195,7 @@ const ontology = {
           p.description,
           p.comment
         ])
-        ))
-      )
+      }
     }
   },
 
@@ -228,23 +227,22 @@ const ontology = {
       return classes
     },
 
-    create (db, ...classes) {
-      return db.prepare(`
-        REPLACE INTO classes (
-          class_id,
-          vocabulary_id,
-          parent,
-          description,
-          comment) VALUES (?, ?, ?, ?, ?)`, stmt =>
-        Promise.all(classes.map(c => stmt.run([
+    async create (db, ...classes) {
+      for (let c of classes) {
+        await db.run(`
+          REPLACE INTO classes (
+            class_id,
+            vocabulary_id,
+            parent,
+            description,
+            comment) VALUES (?, ?, ?, ?, ?)`, [
           c.id,
           c.vocabulary,
           c.parent,
           c.description,
           c.comment
         ])
-        ))
-      )
+      }
     }
   },
 
@@ -276,36 +274,34 @@ const ontology = {
       return types
     },
 
-    create (db, ...types) {
-      return db.prepare(`
-        REPLACE INTO datatypes (
-          datatype_id,
-          vocabulary_id,
-          description,
-          comment) VALUES (?, ?, ?, ?)`, stmt =>
-        Promise.all(types.map(dt => stmt.run([
+    async create (db, ...types) {
+      for (let dt of types) {
+        await db.run(`
+          REPLACE INTO datatypes (
+            datatype_id,
+            vocabulary_id,
+            description,
+            comment) VALUES (?, ?, ?, ?)`, [
           dt.id,
           dt.vocabulary,
           dt.description,
           dt.comment
         ])
-        ))
-      )
+      }
     }
   },
 
   label: {
-    save (db, ...labels) {
-      return db.prepare(`
-        REPLACE INTO labels (id, language, label)
-          VALUES (?, ?, ?)`, stmt =>
-        Promise.all(labels.map(lbl => stmt.run([
+    async save (db, ...labels) {
+      for (let lbl of labels) {
+        await db.run(`
+          REPLACE INTO labels (id, language, label)
+            VALUES (?, ?, ?)`, [
           lbl.id,
           lbl.language || ARGS.locale,
           lbl.label
         ])
-        ))
-      )
+      }
     },
 
     prune (db) {
@@ -450,32 +446,33 @@ const ontology = {
     },
 
     field: {
-      add (db, id, ...fields) {
+      async add (db, id, ...fields) {
         const hasId = (fields[0].id != null)
+        const res = []
 
-        return db.prepare(`
-          INSERT INTO fields (
-              ${hasId ? 'field_id,\n' : ''}
-              template_id,
-              property_id,
-              datatype_id,
-              required,
-              hint,
-              value,
-              constant,
-              position
-            ) VALUES (
-              ${hasId ? '$id,\n' : ''}
-              $template,
-              $property,
-              $datatype,
-              $isRequired,
-              $hint,
-              $value,
-              $isConstant,
-              $position
-            )`, stmt =>
-          Promise.all(fields.map((f, idx) => stmt.run({
+        for (let [idx, f] of fields.entries()) {
+          let field = await db.run(`
+            INSERT INTO fields (
+                ${hasId ? 'field_id,\n' : ''}
+                template_id,
+                property_id,
+                datatype_id,
+                required,
+                hint,
+                value,
+                constant,
+                position
+              ) VALUES (
+                ${hasId ? '$id,\n' : ''}
+                $template,
+                $property,
+                $datatype,
+                $isRequired,
+                $hint,
+                $value,
+                $isConstant,
+                $position
+              )`, {
             $id: f.id,
             $template: id,
             $property: f.property,
@@ -486,16 +483,17 @@ const ontology = {
             $isConstant: !!f.isConstant,
             $position: (f.position != null) ? f.position : idx
           })
-          ))
-        ).then(res =>
-          db.prepare(`
-            INSERT INTO field_labels (field_id, language, label)
-              VALUES (?,?,?)`, addLabel =>
-            Promise.all(res.map((f, idx) => blank(fields[idx].label) ?
-              null :
-              addLabel.run([f.id, ARGS.locale, fields[idx].label])))
-          ).then(() => res)
-        )
+
+          if (!blank(f.label)) {
+            await db.run(`
+              INSERT INTO field_labels (field_id, language, label)
+                VALUES (?,?,?)`, [field.id, ARGS.locale, f.label])
+          }
+
+          res.push(field)
+        }
+
+        return res
       },
 
       remove (db, id, ...fields) {

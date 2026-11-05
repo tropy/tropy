@@ -253,13 +253,6 @@ export class Database extends EventEmitter {
     )
 
 
-  prepare (...args) {
-    let fn = args.pop()
-
-    return this.seq(conn =>
-      using(Statement.disposable(conn, ...args), stmt => fn(stmt, conn)))
-  }
-
   all (...args) {
     return this.seq(conn => conn.all(...args))
   }
@@ -350,11 +343,6 @@ export class Connection {
 
   serialize (...args) {
     return this.db.serialize(...args), this
-  }
-
-  prepare (...args) {
-    const fn = args.pop()
-    return using(Statement.disposable(this, ...args), stmt => fn(stmt, this))
   }
 
   all (sql, ...params) {
@@ -501,53 +489,6 @@ export class Connection {
     foreign_keys: 'on',
     synchronous: 'full',
     temp_store: 'memory'
-  }
-}
-
-
-export class Statement {
-  static disposable (conn, sql, ...params) {
-    return new DisposableResource(
-      conn.db.prepareAsync(sql, flatten(params))
-        .then(stmt => new Statement(stmt)),
-
-      stmt => stmt.finalize()
-    )
-  }
-
-  constructor (stmt) {
-    this.stmt = stmt
-  }
-
-  async bind (...params) {
-    await this.stmt.bindAsync(flatten(params))
-    return this
-  }
-
-  async reset () {
-    await this.stmt.resetAsync()
-    return this
-  }
-
-  async finalize () {
-    await this.stmt.finalizeAsync()
-    return this
-  }
-
-  run (...params) {
-    return this.stmt.runAsync(flatten(params))
-  }
-
-  get (...params) {
-    return this.stmt.getAsync(flatten(params))
-  }
-
-  all (...params) {
-    return this.stmt.allAsync(flatten(params))
-  }
-
-  each (...args) {
-    return this.stmt.eachAsync(...args)
   }
 }
 
