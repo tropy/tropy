@@ -108,6 +108,15 @@ describe('order saga', () => {
 
     expect(qr(puts)[0].order).to.eql([3, 1, 2, ...untitled])
   })
+
+  it('adds items created while seeding', () => {
+    let { puts } = run(sync(null), {
+      state: state(metadata),
+      mocks: [[mod.item.seed, () => [3, 1, ...untitled]]]
+    })
+
+    expect(qr(puts)[0].order).to.eql([3, 1, 2, ...untitled])
+  })
 })
 
 describe('search saga', () => {
