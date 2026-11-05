@@ -25,10 +25,6 @@ export const getPrimaryItemId = memo(
   (selection) => selection.ids()[0] ?? null
 )
 
-export const getVisibleItems = memo(
-  ({ items }) => items, selectItemSequence, pluck
-)
-
 export const getListHoldIndex = memo(
   getSelectedItems,
   (items) => items.reduce((holdIndex, item) => {

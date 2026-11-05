@@ -7,12 +7,14 @@ import { useEventHandler } from '../../hooks/use-event-handler.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useSequence } from '../../hooks/use-sequence.js'
 import { indexOf } from '../../common/sequence.js'
-import { blank, get } from '../../common/util.js'
-import { getItemSelection, getVisibleItems } from '../../selectors/index.js'
+import { blank } from '../../common/util.js'
+import { getItemSelection } from '../../selectors/index.js'
+import { selectItemSequence } from '../../slices/qr.js'
 import * as act from '../../actions/index.js'
 
 // The item list container logic shared by grid and table:
 // selects the items and the selection, navigates them
+// (the sequence is qr.items, the ids; items are looked up by id)
 // (a Cursor with Scroll's layout), dispatches the item actions,
 // handles the clicks on the leaves (tiles, rows) by delegation,
 // and hands the leaves stable handlers for drag and drop.
@@ -27,7 +29,8 @@ export function useItemIterator ({
   let dispatch = useDispatch()
   let scroll = useRef()
 
-  let items = useSelector(getVisibleItems)
+  let items = useSelector(selectItemSequence)
+  let data = useSelector(state => state.items)
   let selection = useSelector(getItemSelection)
   let isTrashSelected = useSelector(state => state.nav.trash)
 
@@ -37,10 +40,10 @@ export function useItemIterator ({
     }
   }), [])
 
-  let select = (item, { mode, throttle } = {}) => {
-    if (item == null) return
+  let select = (id, { mode, throttle } = {}) => {
+    if (id == null) return
 
-    let next = selection.select(item.id, { mode })
+    let next = selection.select(id, { mode })
 
     if (next !== selection.state)
       dispatch(act.item.select({ item: next }, { throttle }))
@@ -50,7 +53,7 @@ export function useItemIterator ({
 
   let getSelectedPhotos = () =>
     seq(selection.ids(), compose(
-      map(id => get(items, [indexOf(items, id), 'photos'])),
+      map(id => (indexOf(items, id) === -1) ? null : data[id]?.photos),
       keep(),
       cat))
 
@@ -60,16 +63,16 @@ export function useItemIterator ({
   let adjacent = (cursor) => {
     let [prev, next] = cursor.adjacent()
 
-    for (let it of [next, prev])
-      if (it != null && !selection.has(it.id)) return it
+    for (let id of [next, prev])
+      if (id != null && !selection.has(id)) return id
   }
 
   let clearSelection = () => {
     dispatch(act.item.select({ items: [] }))
   }
 
-  let open = (item) => {
-    dispatch(act.item.open(item))
+  let open = (id) => {
+    if (id != null) dispatch(act.item.open({ id }))
   }
 
   // Handlers for the leaves (memoized tiles and rows).
@@ -81,10 +84,11 @@ export function useItemIterator ({
     dispatch(act.photo.move(payload))
   })
 
-  let contextMenu = (event, item) => {
+  let contextMenu = (event, id) => {
+    let item = data[id]
     let context = ['item']
     let target = {
-      id: item.id,
+      id,
       photos: item.photos,
       tags: item.tags,
       list
@@ -122,7 +126,7 @@ export function useItemIterator ({
         open(cursor.current())
       },
       preview ({ cursor }) {
-        let item = cursor.current()
+        let item = data[cursor.current()]
         if (item != null)
           dispatch(act.item.preview({ id: item.id, photos: item.photos }))
       },
@@ -199,10 +203,10 @@ export function useItemIterator ({
   let connect = (element) =>
     isReadOnly ? element : dropFile(element)
 
-  let getIterableProps = (item, index) => ({
-    item,
+  let getIterableProps = (id, index) => ({
+    item: data[id],
     index,
-    isSelected: selection.has(item.id),
+    isSelected: selection.has(id),
     isReadOnly,
     getSelection,
     onDropItems: merge,
