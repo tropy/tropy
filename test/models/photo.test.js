@@ -5,6 +5,7 @@ import note from '#tropy/models/note.js'
 import photo from '#tropy/models/photo.js'
 import selection from '#tropy/models/selection.js'
 import * as transcription from '#tropy/models/transcription.js'
+import { sql } from '#tropy/common/sql.js'
 
 const TEMPLATE = 'https://tropy.org/v1/templates/photo'
 
@@ -85,6 +86,79 @@ describe('models/photo', () => {
     it('leaves the original intact', async () => {
       expect((await photo.load(db, [original.id]))[original.id])
         .to.eql(original)
+    })
+  })
+
+  describe('order', () => {
+    let item_
+    let photos
+
+    const add = async (parent) =>
+      (await photo.create(db, { template: TEMPLATE }, {
+        item: parent, data: {}, image: { path: 'p.jpg', checksum: '1', mimetype: 'image/jpeg' }
+      })).id
+
+    const ordered = async (id) =>
+      (await item.load(db, [id]))[id].photos
+
+    beforeEach(async () => {
+      item_ = (await item.create(db, TEMPLATE)).id
+      photos = [await add(item_), await add(item_), await add(item_)]
+    })
+
+    it('orders photos', async () => {
+      let [a, b, c] = photos
+      await photo.order(db, item_, [c, a, b])
+      expect(await ordered(item_)).to.eql([c, a, b])
+    })
+
+    it('treats a null offset as 0', async () => {
+      let [a, b, c] = photos
+      await photo.order(db, item_, [c, a, b], null)
+      expect(await db.all(sql`
+        SELECT id, position FROM photos WHERE item_id = ${item_}
+          ORDER BY position`)).to.eql([
+        { id: c, position: 1 },
+        { id: a, position: 2 },
+        { id: b, position: 3 }
+      ])
+    })
+
+    it('keeps the order through delete and restore', async () => {
+      let [a, b, c] = photos
+      await photo.delete(db, [a])
+      await photo.order(db, item_, [c, b])
+      expect(await ordered(item_)).to.eql([c, b])
+
+      await photo.restore(db, { ids: [a] })
+      await photo.order(db, item_, [c, a, b])
+      expect(await ordered(item_)).to.eql([c, a, b])
+    })
+
+    it('merges and splits photos', async () => {
+      let [a, b, c] = photos
+      let other = (await item.create(db, TEMPLATE)).id
+      let d = await add(other)
+      await photo.order(db, other, [d])
+
+      await photo.merge(db, other, [b, a], 1)
+      expect(await ordered(other)).to.eql([d, b, a])
+      expect(await ordered(item_)).to.eql([c])
+
+      await photo.split(db, other, [{ id: item_, photos: [a, b] }])
+      expect(await ordered(other)).to.eql([d])
+      expect((await ordered(item_)).filter(id => id !== c)).to.eql([a, b])
+    })
+
+    it('orders selections', async () => {
+      let [s1] = original.selections
+      let { id: s2 } = await selection.create(db, {
+        template: TEMPLATE, photo: original.id, x: 0, y: 0, width: 1, height: 1
+      })
+
+      await selection.order(db, original.id, [s2, s1])
+      expect((await photo.load(db, [original.id]))[original.id].selections)
+        .to.eql([s2, s1])
     })
   })
 

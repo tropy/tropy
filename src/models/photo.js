@@ -7,6 +7,7 @@ import selection from './selection.js'
 import subject from './subject.js'
 import * as transcription from './transcription.js'
 import { into, select, update } from '../common/query.js'
+import { sql } from '../common/sql.js'
 import { normalize } from '../common/os.js'
 import { blank, empty, pick, pMap } from '../common/util.js'
 import { props } from '../common/export.js'
@@ -228,42 +229,33 @@ export default {
     item, JSON.stringify(ids))
   },
 
-  async order (db, item, photos, offset = 0) {
+  async order (db, item, photos, offset) {
     if (!blank(photos)) {
-      return db.run(`
+      return db.run(sql`
         UPDATE photos
-          SET position = CASE id
-            ${photos.map((_, idx) =>
-              (`WHEN ? THEN ${offset + idx + 1}`)).join(' ')}
-            END
-          WHERE item_id = ?`,
-      ...photos, item)
+          SET position = ${offset ?? 0} + o.key + 1
+          FROM json_each(${JSON.stringify(photos)}) AS o
+          WHERE photos.id = o.value AND item_id = ${item}`)
     }
   },
 
-  async merge (db, item, photos, offset = 0) {
+  async merge (db, item, photos, offset) {
     if (!blank(photos)) {
-      return db.run(`
+      return db.run(sql`
         UPDATE photos
-          SET item_id = ?, position = CASE id
-            ${photos.map((_, idx) =>
-              (`WHEN ? THEN ${offset + idx + 1}`)).join(' ')}
-            END
-          WHERE id IN (SELECT value FROM json_each(?))`,
-      item, ...photos, JSON.stringify(photos))
+          SET item_id = ${item}, position = ${offset ?? 0} + o.key + 1
+          FROM json_each(${JSON.stringify(photos)}) AS o
+          WHERE photos.id = o.value`)
     }
   },
 
   async split (db, item, items, concurrency = 4) {
     return pMap(items, ({ id, photos }) =>
-      db.run(`
+      db.run(sql`
         UPDATE photos
-          SET item_id = ?, position = CASE id
-            ${photos.map((_, idx) =>
-              (`WHEN ? THEN ${idx + 1}`)).join(' ')}
-            END
-          WHERE id IN (SELECT value FROM json_each(?))`,
-      id, ...photos, JSON.stringify(photos)), { concurrency })
+          SET item_id = ${id}, position = o.key + 1
+          FROM json_each(${JSON.stringify(photos)}) AS o
+          WHERE photos.id = o.value`), { concurrency })
   },
 
   async delete (db, ids) {

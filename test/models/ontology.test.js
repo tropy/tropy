@@ -79,5 +79,21 @@ describe('models.ontology', () => {
         { id: res[1].id, position: 1, label: null }
       ])
     })
+
+    it('orders template fields', async () => {
+      let id = 'https://example.com/template'
+      await mod.template.create(db, {
+        id, type: 'https://tropy.org/v1/tropy#Item', name: 'Test'
+      })
+
+      let [a, b] = await mod.template.field.add(db, id,
+        { property: 'http://purl.org/dc/elements/1.1/title' },
+        { property: 'http://purl.org/dc/elements/1.1/date' })
+
+      await mod.template.field.order(db, id, [b.id, a.id])
+
+      expect((await mod.template.load(db, id))[id].fields.map(f => f.id))
+        .to.eql([b.id, a.id])
+    })
   })
 })

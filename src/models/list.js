@@ -1,5 +1,6 @@
 import { LIST } from '../constants/index.js'
 import { into, select, update } from '../common/query.js'
+import { sql } from '../common/sql.js'
 import { pick, remove, toId } from '../common/util.js'
 
 async function itemsRestore (db, id, items) {
@@ -76,13 +77,11 @@ export default {
 
   order (db, parent, order) {
     if (order.length) {
-      return db.run(`
+      return db.run(sql`
         UPDATE lists
-        SET position = CASE list_id
-          ${order.map((_, idx) => (`WHEN ? THEN ${idx + 1}`)).join(' ')}
-          END
-        WHERE parent_list_id = ?`,
-      ...order, parent)
+        SET position = o.key + 1
+        FROM json_each(${JSON.stringify(order)}) AS o
+        WHERE lists.list_id = o.value AND parent_list_id = ${parent}`)
     }
   },
 

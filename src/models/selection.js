@@ -1,6 +1,7 @@
 import { empty, pick } from '../common/util.js'
 import { props } from '../common/export.js'
 import { into, select } from '../common/query.js'
+import { sql } from '../common/sql.js'
 import image from './image.js'
 import metadata from './metadata.js'
 import note from './note.js'
@@ -156,16 +157,13 @@ export default {
     }
   },
 
-  async order (db, photo, selections, offset = 0) {
+  async order (db, photo, selections, offset) {
     if (selections.length) {
-      return db.run(`
+      return db.run(sql`
         UPDATE selections
-          SET position = CASE id
-            ${selections.map((_, idx) =>
-              (`WHEN ? THEN ${offset + idx + 1}`)).join(' ')}
-            END
-          WHERE photo_id = ?`,
-      ...selections, photo)
+          SET position = ${offset ?? 0} + o.key + 1
+          FROM json_each(${JSON.stringify(selections)}) AS o
+          WHERE selections.id = o.value AND photo_id = ${photo}`)
     }
   },
 
