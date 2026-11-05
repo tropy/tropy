@@ -7,7 +7,12 @@ async function load (db, ids) {
   let notes = {}
 
   let conditions = ['deleted IS NULL']
-  if (ids != null) conditions.push(`note_id IN (${ids.join(',')})`)
+  let params = []
+
+  if (ids != null) {
+    conditions.push('note_id IN (SELECT value FROM json_each(?))')
+    params.push(JSON.stringify(ids))
+  }
 
   await db.each(`
     SELECT
@@ -23,7 +28,7 @@ async function load (db, ids) {
         LEFT OUTER JOIN photos USING (id)
         LEFT OUTER JOIN selections USING (id)
       WHERE ${conditions.join(' AND ')}
-      ORDER BY created ASC`,
+      ORDER BY created ASC`, params,
 
   ({ note: id, created, modified, state, ...data }) => {
     try {

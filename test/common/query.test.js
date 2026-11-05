@@ -55,11 +55,14 @@ describe('Query Builder', () => {
     })
 
     it('lists', () => {
-      expect(select().where({ a: [1, 2, 3] }).WHERE)
-        .to.equal('WHERE a IN (1, 2, 3)')
+      let q = select().where({ a: [1, 2, 3] })
+
+      expect(q.WHERE)
+        .to.equal('WHERE a IN (SELECT value FROM json_each($a))')
+      expect(q.params).to.eql({ $a: '[1,2,3]' })
 
       expect(select().unless({ a: [1, 2, 3] }).WHERE)
-        .to.equal('WHERE a NOT IN (1, 2, 3)')
+        .to.equal('WHERE a NOT IN (SELECT value FROM json_each($a))')
     })
 
     it('params', () => {
@@ -157,7 +160,7 @@ describe('Query Builder', () => {
           .where({ id: [1, 2, 3] })
           .query
       ).to.equal(
-        'UPDATE list_items SET mod = datetime("now") WHERE id IN (1, 2, 3)'
+        'UPDATE list_items SET mod = datetime("now") WHERE id IN (SELECT value FROM json_each($id))'
       ))
 
     it('filtered', () =>
@@ -197,7 +200,8 @@ describe('Query Builder', () => {
       expect([
         ...deleteFrom('subjects').where({ id: [1, 2, 3] })
       ]).to.eql([
-        'DELETE FROM subjects WHERE id IN (1, 2, 3)'
+        'DELETE FROM subjects WHERE id IN (SELECT value FROM json_each($id))',
+        { $id: '[1,2,3]' }
       ]))
 
     it('sub-query', () =>

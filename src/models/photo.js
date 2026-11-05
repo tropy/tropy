@@ -222,8 +222,10 @@ export default {
 
   async move (db, { ids, item }) {
     return db.run(`
-      UPDATE photos SET item_id = ?  WHERE id in (${ids.join(',')})`,
-    item)
+      UPDATE photos
+        SET item_id = ?
+        WHERE id IN (SELECT value FROM json_each(?))`,
+    item, JSON.stringify(ids))
   },
 
   async order (db, item, photos, offset = 0) {
@@ -247,8 +249,8 @@ export default {
             ${photos.map((_, idx) =>
               (`WHEN ? THEN ${offset + idx + 1}`)).join(' ')}
             END
-          WHERE id IN (${photos.join(',')})`,
-      item, ...photos)
+          WHERE id IN (SELECT value FROM json_each(?))`,
+      item, ...photos, JSON.stringify(photos))
     }
   },
 
@@ -260,19 +262,20 @@ export default {
             ${photos.map((_, idx) =>
               (`WHEN ? THEN ${idx + 1}`)).join(' ')}
             END
-          WHERE id IN (${photos.join(',')})`,
-      id, ...photos), { concurrency })
+          WHERE id IN (SELECT value FROM json_each(?))`,
+      id, ...photos, JSON.stringify(photos)), { concurrency })
   },
 
   async delete (db, ids) {
     return db.run(`
       INSERT INTO trash (id)
-        VALUES ${ids.map(id => `(${id})`).join(',')}`)
+        SELECT value FROM json_each(?)`, JSON.stringify(ids))
   },
 
   async restore (db, { ids }) {
     return db.run(`
-      DELETE FROM trash WHERE id IN (${ids.join(',')})`)
+      DELETE FROM trash WHERE id IN (SELECT value FROM json_each(?))`,
+    JSON.stringify(ids))
   },
 
   async prune (db) {

@@ -1,4 +1,4 @@
-import { list, pick } from '../common/util.js'
+import { pick } from '../common/util.js'
 import { into, select, update } from '../common/query.js'
 
 const COLUMNS = [
@@ -41,7 +41,8 @@ export default {
 
   async delete (db, ids) {
     return db.run(`
-      DELETE FROM tags WHERE tag_id IN (${list(ids)})`)
+      DELETE FROM tags WHERE tag_id IN (SELECT value FROM json_each(?))`,
+    JSON.stringify(ids))
   },
 
   async items (db, id) {

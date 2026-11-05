@@ -476,14 +476,6 @@ export function lispcase (str) {
     .join('-')
 }
 
-export function quote (string) {
-  return `"${string.replace(/\\"/, 'g')}"`
-}
-
-export function list (params, fn = Number, comma = ',') {
-  return params.map(fn).join(comma)
-}
-
 export function diff (a, b) {
   const delta = []
 

@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { join } from 'node:path'
 import ARGS from '../args.js'
 import { TYPE } from '../constants/index.js'
-import { blank, list, quote } from '../common/util.js'
+import { blank } from '../common/util.js'
 
 const ontology = {
   create (db) {
@@ -20,9 +20,11 @@ const ontology = {
     async load (db, ...args) {
       const vocabs = {}
       const cond = ['deleted is NULL']
+      const params = []
 
       if (args.length > 0) {
-        cond.push(`vocabulary_id IN (${list(args, quote)})`)
+        cond.push('vocabulary_id IN (SELECT value FROM json_each(?))')
+        params.push(JSON.stringify(args))
       }
 
       await db.each(`
@@ -35,7 +37,7 @@ const ontology = {
             see_also AS seeAlso,
             protected AS isProtected
           FROM vocabularies
-          WHERE ${cond.join(' AND ')}`, (data) => {
+          WHERE ${cond.join(' AND ')}`, params, (data) => {
         vocabs[data.id] = {
           ...data,
           isProtected: !!data.isProtected,
@@ -49,19 +51,19 @@ const ontology = {
         db.each(`
           SELECT vocabulary_id AS id, property_id AS prop
             FROM properties JOIN vocabularies USING (vocabulary_id)
-            WHERE ${cond.join(' AND ')}`, ({ id, prop }) => {
+            WHERE ${cond.join(' AND ')}`, params, ({ id, prop }) => {
           vocabs[id].properties.push(prop)
         }),
         db.each(`
           SELECT vocabulary_id AS id, class_id AS klass
             FROM classes JOIN vocabularies USING (vocabulary_id)
-            WHERE ${cond.join(' AND ')}`, ({ id, klass }) => {
+            WHERE ${cond.join(' AND ')}`, params, ({ id, klass }) => {
           vocabs[id].classes.push(klass)
         }),
         db.each(`
           SELECT vocabulary_id AS id, datatype_id AS datatype
             FROM datatypes JOIN vocabularies USING (vocabulary_id)
-            WHERE ${cond.join(' AND ')}`, ({ id, datatype }) => {
+            WHERE ${cond.join(' AND ')}`, params, ({ id, datatype }) => {
           vocabs[id].datatypes.push(datatype)
         })
       ])
@@ -152,9 +154,11 @@ const ontology = {
     async load (db, ...args) {
       const props = {}
       const cond = ['deleted is NULL']
+      const params = []
 
       if (args.length > 0) {
-        cond.push(`vocabulary_id IN (${list(args, quote)})`)
+        cond.push('vocabulary_id IN (SELECT value FROM json_each(?))')
+        params.push(JSON.stringify(args))
       }
 
       await db.each(`
@@ -167,7 +171,7 @@ const ontology = {
           FROM properties p
             JOIN vocabularies v USING (vocabulary_id)
             LEFT JOIN labels ON (property_id = id AND language = ?)
-          WHERE ${cond.join(' AND ')}`, [ARGS.locale],
+          WHERE ${cond.join(' AND ')}`, [ARGS.locale, ...params],
       (data) => {
         props[data.id] = data
       }
@@ -203,9 +207,11 @@ const ontology = {
     async load (db, ...args) {
       const classes = {}
       const cond = ['deleted is NULL']
+      const params = []
 
       if (args.length > 0) {
-        cond.push(`vocabulary_id IN (${list(args, quote)})`)
+        cond.push('vocabulary_id IN (SELECT value FROM json_each(?))')
+        params.push(JSON.stringify(args))
       }
 
       await db.each(`
@@ -218,7 +224,7 @@ const ontology = {
           FROM classes c
             JOIN vocabularies v USING (vocabulary_id)
             LEFT JOIN labels ON (class_id = id AND language = ?)
-          WHERE ${cond.join(' AND ')}`, [ARGS.locale],
+          WHERE ${cond.join(' AND ')}`, [ARGS.locale, ...params],
       (data) => {
         classes[data.id] = data
       }
@@ -250,9 +256,11 @@ const ontology = {
     async load (db, ...args) {
       const types = {}
       const cond = ['deleted is NULL']
+      const params = []
 
       if (args.length > 0) {
-        cond.push(`vocabulary_id IN (${list(args, quote)})`)
+        cond.push('vocabulary_id IN (SELECT value FROM json_each(?))')
+        params.push(JSON.stringify(args))
       }
 
       await db.each(`
@@ -265,7 +273,7 @@ const ontology = {
           FROM datatypes dt
             JOIN vocabularies v USING (vocabulary_id)
             LEFT OUTER JOIN labels ON (datatype_id = id AND language = ?)
-          WHERE ${cond.join(' AND ')}`, [ARGS.locale],
+          WHERE ${cond.join(' AND ')}`, [ARGS.locale, ...params],
       (data) => {
         types[data.id] = data
       }
@@ -319,7 +327,8 @@ const ontology = {
     async load (db, ...ids) {
       const temps = {}
       const cons = (ids.length > 0) ?
-        `template_id IN (${list(ids, quote)})` : null
+        'template_id IN (SELECT value FROM json_each(?))' : null
+      const params = (ids.length > 0) ? [JSON.stringify(ids)] : []
 
       await db.each(`
         SELECT
@@ -332,7 +341,7 @@ const ontology = {
             protected AS isProtected,
             created
           FROM templates
-          ${cons == null ? '' : `WHERE ${cons}`}`, (data) => {
+          ${cons == null ? '' : `WHERE ${cons}`}`, params, (data) => {
         temps[data.id] = {
           ...data, isProtected: !!data.isProtected, domain: [], fields: []
         }
@@ -343,7 +352,7 @@ const ontology = {
           SELECT class_id AS klass, template_id AS tpl
             FROM domains
             ${cons == null ? '' : `WHERE ${cons}`}
-            ORDER BY position`, ({ tpl, klass }) => {
+            ORDER BY position`, params, ({ tpl, klass }) => {
           temps[tpl].domain.push(klass)
         }),
         db.each(`
@@ -361,7 +370,7 @@ const ontology = {
               LEFT OUTER JOIN field_labels l
                 ON (f.field_id = l.field_id AND language = ?)
             ${cons == null ? '' : `WHERE ${cons}`}
-            ORDER BY position, f.field_id`, ARGS.locale,
+            ORDER BY position, f.field_id`, [ARGS.locale, ...params],
         ({ tpl, isRequired, isConstant, ...data }) => {
           temps[tpl].fields.push({
             ...data,
@@ -423,8 +432,8 @@ const ontology = {
     delete (db, ...ids) {
       return db.run(`
         DELETE FROM templates
-          WHERE template_id IN (${list(ids, quote)}) AND NOT protected`
-      )
+          WHERE template_id IN (SELECT value FROM json_each(?))
+            AND NOT protected`, JSON.stringify(ids))
     },
 
     save (db, { id, ...data }) {
@@ -499,7 +508,11 @@ const ontology = {
       remove (db, id, ...fields) {
         return db.run(`
           DELETE FROM fields
-            WHERE template_id = ? AND field_id IN (${list(fields)})`, id)
+            WHERE template_id = ?
+              AND field_id IN (SELECT value FROM json_each(?))`, [
+          id,
+          JSON.stringify(fields)
+        ])
       },
 
       save (db, { id, ...data }) {
