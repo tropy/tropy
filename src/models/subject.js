@@ -46,7 +46,7 @@ const subject = {
   prune (db) {
     return db.run(
       ...deleteFrom('subjects')
-        .where('id IN (SELECT id FROM trash WHERE reason = "auto")')
+        .where("id IN (SELECT id FROM trash WHERE reason = 'auto')")
     )
   }
 }

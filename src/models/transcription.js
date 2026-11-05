@@ -148,8 +148,8 @@ export async function prune (db, since = '-1 day') {
   return db.run(`
     DELETE FROM transcriptions
     WHERE deleted is NOT NULL OR (
-      status < 0 AND datetime(modified) < datetime('now', '${since}')
-    )`)
+      status < 0 AND datetime(modified) < datetime('now', ?)
+    )`, since)
 }
 
 export async function touch (db, id) {

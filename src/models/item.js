@@ -222,8 +222,8 @@ mod.item = {
         SELECT
             id,
             template,
-            strftime("%Y-%m-%dT%H:%M:%f", created, "localtime") AS created,
-            strftime("%Y-%m-%dT%H:%M:%f", modified, "localtime") AS modified,
+            strftime('%Y-%m-%dT%H:%M:%f', created, 'localtime') AS created,
+            strftime('%Y-%m-%dT%H:%M:%f', modified, 'localtime') AS modified,
             deleted
           FROM subjects
             JOIN items USING (id)

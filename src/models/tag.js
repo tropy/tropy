@@ -35,7 +35,7 @@ export default {
     return db.run(
       ...update('tags')
         .set(data)
-        .set('modified = datetime("now")')
+        .set("modified = datetime('now')")
         .where({ tag_id: id }))
   },
 

@@ -1,8 +1,9 @@
 import assert from 'node:assert'
 import subject from './subject.js'
 import { props } from '../common/export.js'
-import { select, update } from '../common/query.js'
-import { empty, pick } from '../common/util.js'
+import { update } from '../common/query.js'
+import { sql } from '../common/sql.js'
+import { array, empty, pick } from '../common/util.js'
 
 const COLUMNS = props.image.join(', ')
 
@@ -21,16 +22,16 @@ export default {
     assert(id != null, 'missing image id')
     assert(!isNaN(by), 'invalid angle')
 
-    await db.run(
-      ...update('images')
-        .set(`angle = ((360 + (angle + ${by})) % 360)`)
-        .where({ id }))
+    await db.run(sql`
+      UPDATE images
+        SET angle = ((360 + (angle + ${by})) % 360)
+        WHERE id IN ${array(id)}`)
 
     let images = {}
 
-    await db.each(
-      ...select('id', 'angle').from('images').where({ id }),
-      (image) => images[image.id] = { angle: image.angle })
+    await db.each(sql`
+      SELECT id, angle FROM images WHERE id IN ${array(id)}`,
+    (image) => images[image.id] = { angle: image.angle })
 
     return images
   },

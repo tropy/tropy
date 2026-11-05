@@ -576,7 +576,7 @@ export async function beginProjectAccess (db, user) {
 export async function endProjectAccess (db, id, prune = false) {
   await db.run(
     ...update('access')
-      .set('closed = datetime("now")')
+      .set("closed = datetime('now')")
       .where({ rowid: id }))
 
   if (prune) {

@@ -22,8 +22,8 @@ async function load (db, ids) {
         state,
         text,
         language,
-        datetime(modified, "localtime") AS modified,
-        datetime(created, "localtime") AS created
+        datetime(modified, 'localtime') AS modified,
+        datetime(created, 'localtime') AS created
       FROM notes
         LEFT OUTER JOIN photos USING (id)
         LEFT OUTER JOIN selections USING (id)
@@ -97,7 +97,7 @@ export default {
   async delete (db, id) {
     let deleted = await db.all(
       ...update('notes')
-        .set('deleted = datetime("now")')
+        .set("deleted = datetime('now')")
         .where({ note_id: id })
         .returning('note_id'))
     return deleted.map(n => n.note_id)
