@@ -92,6 +92,19 @@ describe('models/item', () => {
       expect((await item.unlisted(db, {})).items).to.have.members(ids.slice(1))
     })
 
+    it('sets tags across items', async () => {
+      let a = (await tag.create(db, { name: 'a' })).id
+      let b = (await tag.create(db, { name: 'b' })).id
+      await item.tags.set(db, [
+        { id: ids[0], tag: a },
+        { id: ids[1], tag: a },
+        { id: ids[1], tag: b }
+      ])
+
+      expect((await item.all(db, { tags: [a] })).items).to.have.members(ids.slice(0, 2))
+      expect((await item.all(db, { tags: [a, b] })).items).to.eql([ids[1]])
+    })
+
     it('ignores duplicate tags', async () => {
       let { id } = await tag.create(db, { name: 'Dup' })
       await item.tags.add(db, { id: [ids[1]], tag: id })

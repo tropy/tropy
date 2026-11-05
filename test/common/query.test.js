@@ -133,9 +133,9 @@ describe('Query Builder', () => {
       expect(
         update('project')
           .set({ base: null })
-          .set('modified = datetime("now")')
+          .set("modified = datetime('now')")
           .query
-      ).to.equal('UPDATE project SET base = NULL, modified = datetime("now")'))
+      ).to.equal("UPDATE project SET base = NULL, modified = datetime('now')"))
 
     it('conditional', () => {
       let q = update('project').set({ name: 'new' }).where({ name: 'old' })
@@ -156,11 +156,11 @@ describe('Query Builder', () => {
     it('lists', () =>
       expect(
         update('list_items')
-          .set('mod = datetime("now")')
+          .set("mod = datetime('now')")
           .where({ id: [1, 2, 3] })
           .query
       ).to.equal(
-        'UPDATE list_items SET mod = datetime("now") WHERE id IN (SELECT value FROM json_each($id))'
+        "UPDATE list_items SET mod = datetime('now') WHERE id IN (SELECT value FROM json_each($id))"
       ))
 
     it('filtered', () =>

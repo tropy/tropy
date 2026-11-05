@@ -222,11 +222,10 @@ export default {
   },
 
   async move (db, { ids, item }) {
-    return db.run(`
+    return db.run(sql`
       UPDATE photos
-        SET item_id = ?
-        WHERE id IN (SELECT value FROM json_each(?))`,
-    item, JSON.stringify(ids))
+        SET item_id = ${item}
+        WHERE id IN ${sql.list(ids)}`)
   },
 
   async order (db, item, photos, offset) {
@@ -259,15 +258,14 @@ export default {
   },
 
   async delete (db, ids) {
-    return db.run(`
+    return db.run(sql`
       INSERT INTO trash (id)
-        SELECT value FROM json_each(?)`, JSON.stringify(ids))
+        SELECT value FROM json_each(${ids})`)
   },
 
   async restore (db, { ids }) {
-    return db.run(`
-      DELETE FROM trash WHERE id IN (SELECT value FROM json_each(?))`,
-    JSON.stringify(ids))
+    return db.run(sql`
+      DELETE FROM trash WHERE id IN ${sql.list(ids)}`)
   },
 
   async prune (db) {

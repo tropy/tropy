@@ -1,20 +1,13 @@
 import assert from 'node:assert'
 import { json, stringify } from '../common/util.js'
 import { into, update } from '../common/query.js'
+import { sql } from '../common/sql.js'
 import { warn } from '../common/log.js'
 
 async function load (db, ids) {
   let notes = {}
 
-  let conditions = ['deleted IS NULL']
-  let params = []
-
-  if (ids != null) {
-    conditions.push('note_id IN (SELECT value FROM json_each(?))')
-    params.push(JSON.stringify(ids))
-  }
-
-  await db.each(`
+  await db.each(sql`
     SELECT
         note_id AS note,
         photos.id AS photo,
@@ -27,8 +20,10 @@ async function load (db, ids) {
       FROM notes
         LEFT OUTER JOIN photos USING (id)
         LEFT OUTER JOIN selections USING (id)
-      WHERE ${conditions.join(' AND ')}
-      ORDER BY created ASC`, params,
+      WHERE deleted IS NULL${
+        (ids != null) ? sql` AND note_id IN ${sql.list(ids)}` : sql``
+      }
+      ORDER BY created ASC`,
 
   ({ note: id, created, modified, state, ...data }) => {
     try {

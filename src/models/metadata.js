@@ -1,16 +1,13 @@
 import { array, blank } from '../common/util.js'
+import { sql } from '../common/sql.js'
 import { touch } from './subject.js'
 import { save } from './value.js'
 
 async function insert (db, { id, property, value, language = null }) {
-  return db.run(`
+  return db.run(sql`
     INSERT INTO metadata (id, property, value_id, language)
-      SELECT value, ?, ?, ? FROM json_each(?)`, [
-    property,
-    value,
-    language,
-    JSON.stringify(array(id))
-  ])
+      SELECT value, ${property}, ${value}, ${language}
+        FROM json_each(${array(id)})`)
 }
 
 async function update (db, { id, data, timestamp }, replace = false) {
@@ -37,15 +34,12 @@ async function update (db, { id, data, timestamp }, replace = false) {
 }
 
 async function remove (db, { id, property }) {
-  let params = [JSON.stringify(array(id))]
-  if (property != null) params.push(JSON.stringify(array(property)))
-
-  return db.run(`
+  return db.run(sql`
     DELETE FROM metadata
-      WHERE id IN (SELECT value FROM json_each(?))${
+      WHERE id IN ${sql.list(array(id))}${
         (property == null) ?
-          '' : ' AND property IN (SELECT value FROM json_each(?))'
-      }`, params)
+          sql`` : sql` AND property IN ${sql.list(array(property))}`
+      }`)
 }
 
 export default {
@@ -56,14 +50,13 @@ export default {
   async load (db, ids) {
     let data = {}
 
-    await db.each(`
+    await db.each(sql`
       SELECT id, property, text, datatype AS type
         FROM subjects
           JOIN metadata USING (id)
           JOIN metadata_values USING (value_id)${
-            (ids != null) ? ' WHERE id IN (SELECT value FROM json_each(?))' : ''
+            (ids != null) ? sql` WHERE id IN ${sql.list(ids)}` : sql``
           } ORDER BY id, metadata.created ASC`,
-    (ids != null) ? [JSON.stringify(ids)] : [],
     ({ id, property, type, text }) => {
       if (id in data) data[id][property] = { type, text }
       else data[id] = { id, [property]: { type, text } }

@@ -1,6 +1,7 @@
 import { array, blank, uniq } from '../common/util.js'
 import { NAV } from '../constants/index.js'
 import { createSequence } from '../common/sequence.js'
+import { sql } from '../common/sql.js'
 
 import modMetadata from './metadata.js'
 import modPhoto from './photo.js'
@@ -215,10 +216,11 @@ mod.item = {
 
   async load (db, ids) {
     const items = {}
-    const params = (ids != null) ? { $ids: JSON.stringify(ids) } : {}
+    const where = (col) => (ids != null) ?
+      sql`WHERE ${sql.id(col)} IN ${sql.list(ids)}` : sql``
 
     await Promise.all([
-      db.each(`
+      db.each(sql`
         SELECT
             id,
             template,
@@ -227,9 +229,8 @@ mod.item = {
             deleted
           FROM subjects
             JOIN items USING (id)
-            LEFT OUTER JOIN trash USING (id)${
-              (ids != null) ? ' WHERE id IN (SELECT value FROM json_each($ids))' : ''
-            }`, params,
+            LEFT OUTER JOIN trash USING (id)
+          ${where('id')}`,
       ({ id, created, modified, deleted, ...data }) => {
         data.created = new Date(created)
         data.modified = new Date(modified)
@@ -240,36 +241,33 @@ mod.item = {
       }
       ),
 
-      db.each(`
+      db.each(sql`
         SELECT id, tag_id AS tag
-          FROM taggings${
-            (ids != null) ? ' WHERE id IN (SELECT value FROM json_each($ids))' : ''
-          }`, params,
+          FROM taggings
+          ${where('id')}`,
       ({ id, tag }) => {
         if (id in items) items[id].tags.push(tag)
         else items[id] = skel(id, [], [], [tag])
       }
       ),
 
-      db.each(`
+      db.each(sql`
         SELECT id AS photo, item_id AS id
           FROM photos
             LEFT OUTER JOIN trash USING (id)
-          WHERE ${(ids != null) ?
-            'item_id IN (SELECT value FROM json_each($ids)) AND' : ''}
-            deleted IS NULL
-          ORDER BY item_id, position, id`, params,
+          ${where('item_id')}
+          ${(ids != null) ? sql`AND` : sql`WHERE`} deleted IS NULL
+          ORDER BY item_id, position, id`,
       ({ id, photo }) => {
         if (id in items) items[id].photos.push(photo)
         else items[id] = skel(id, [], [photo])
       }
       ),
 
-      db.each(`
+      db.each(sql`
         SELECT id, list_id AS list
-          FROM list_items${
-            (ids != null) ? ' WHERE id IN (SELECT value FROM json_each($ids))' : ''
-          }`, params,
+          FROM list_items
+          ${where('id')}`,
       ({ id, list }) => {
         if (id in items) items[id].lists.push(list)
         else items[id] = skel(id, [list])
@@ -368,19 +366,15 @@ mod.item = {
     ])
   },
 
-  delete (db, ids, $reason = 'user') {
-    return db.run(`
+  delete (db, ids, reason = 'user') {
+    return db.run(sql`
       INSERT INTO trash (id, reason)
-        SELECT value, $reason FROM json_each($ids)`, {
-      $ids: JSON.stringify(ids),
-      $reason
-    })
+        SELECT value, ${reason} FROM json_each(${ids})`)
   },
 
   restore (db, ids) {
-    return db.run(`
-      DELETE FROM trash WHERE id IN (SELECT value FROM json_each(?))`,
-    JSON.stringify(ids))
+    return db.run(sql`
+      DELETE FROM trash WHERE id IN ${sql.list(ids)}`)
   },
 
   destroy (db, ids) {
@@ -401,16 +395,15 @@ mod.item = {
 
   tags: {
     async add (db, { id, tag }) {
-      return db.run(`
+      return db.run(sql`
         INSERT INTO taggings (tag_id, id)
-          SELECT ?, value FROM json_each(?)`, [tag, JSON.stringify(id)])
+          SELECT ${tag}, value FROM json_each(${id})`)
     },
 
     async set (db, values) {
-      for (let { tag, id } of values) {
-        await db.run(`
-          INSERT INTO taggings (tag_id, id) VALUES (?, ?)`, [tag, id])
-      }
+      return db.run(sql`
+        INSERT INTO taggings (tag_id, id)
+          SELECT value ->> 'tag', value ->> 'id' FROM json_each(${values})`)
     },
 
     async clear (db, id) {
@@ -418,13 +411,10 @@ mod.item = {
     },
 
     async remove (db, { id, tags }) {
-      return db.run(`
+      return db.run(sql`
         DELETE FROM taggings
-          WHERE id IN (SELECT value FROM json_each(?))
-            AND tag_id IN (SELECT value FROM json_each(?))`, [
-        JSON.stringify(array(id)),
-        JSON.stringify(tags)
-      ])
+          WHERE id IN ${sql.list(array(id))}
+            AND tag_id IN ${sql.list(tags)}`)
     },
 
     async copy (db, { source, target }) {
@@ -437,24 +427,21 @@ mod.item = {
 
   lists: {
     async merge (db, id, items, lists) {
-      return db.run(`
+      return db.run(sql`
         INSERT INTO list_items (list_id, id, position, added)
-          SELECT list_id, ? AS id, position, added
+          SELECT list_id, ${id} AS id, position, added
             FROM list_items li
-            WHERE list_id IN (SELECT value FROM json_each(?))
-              AND li.id IN (SELECT value FROM json_each(?))
+            WHERE list_id IN ${sql.list(lists)}
+              AND li.id IN ${sql.list(items)}
               AND deleted IS NULL
-            GROUP BY list_id`, [id, JSON.stringify(lists), JSON.stringify(items)])
+            GROUP BY list_id`)
     },
 
     async remove (db, id, lists) {
-      return db.run(`
+      return db.run(sql`
         DELETE FROM list_items
-          WHERE id = ?
-            AND list_id IN (SELECT value FROM json_each(?))`, [
-        id,
-        JSON.stringify(lists)
-      ])
+          WHERE id = ${id}
+            AND list_id IN ${sql.list(lists)}`)
     },
 
     async copy (db, { source, target }) {
