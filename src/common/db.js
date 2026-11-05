@@ -286,6 +286,15 @@ export class Database extends EventEmitter {
   check = (...args) =>
     this.seq(conn => conn.check(...args))
 
+  // Returns ratio of free pages that VACUUM would reclaim.
+  free = async () => {
+    let { free, total } = await this.get(`
+      SELECT freelist_count AS free, page_count AS total
+        FROM pragma_freelist_count, pragma_page_count`)
+
+    return (total > 0) ? free / total : 0
+  }
+
   async read (path) {
     return this.exec(String(await readFile(path)))
   }
