@@ -17,15 +17,4 @@ describe('Project Reducer', () => {
     expect(state).to.include({ name: 'Atlas', isReady: true })
   })
 
-  it('adds each warning once', () => {
-    let warn = (state) =>
-      project(state, { type: PROJECT.WARN, payload: 'corrupted' })
-
-    expect(warn({}).warnings).to.eql(['corrupted'])
-    expect(warn({ warnings: ['newer'] }).warnings)
-      .to.eql(['newer', 'corrupted'])
-
-    let state = { warnings: ['corrupted'] }
-    expect(warn(state)).to.equal(state)
-  })
 })

@@ -177,28 +177,23 @@ function *start ({ db, sorted }) {
   yield fork(order, db, sorted)
   yield fork(autosave, db)
   yield fork(transcribe)
-  yield fork(maintenance, db)
+  yield fork(maintenance)
 }
 
-function *maintenance (db) {
+function *maintenance () {
   try {
-    yield take(IDLE.IDLE)
-    yield put(act.cache.prune())
-    yield put(act.cache.purge())
-
-    let OK = true
-
-    try {
-      yield call(db.check, null, { quick: true })
-    } catch {
-      OK = false
-      yield put(act.project.warn('corrupted'))
-    }
+    let silent = true
 
     yield take(IDLE.IDLE)
+    debug('project maintenance: cache, check')
+    yield put(act.cache.prune(null, { silent }))
+    yield put(act.cache.purge(null, { silent }))
 
-    if (OK && !db.isReadOnly && (yield call(db.free)) >= 0.2)
-      yield put(act.project.optimize())
+    yield put(act.project.check(null, { quick: true, silent }))
+
+    yield take(IDLE.IDLE)
+    debug('project maintenance: optimize')
+    yield put(act.project.optimize(null, { silent }))
 
   } catch (err) {
     warn({ err }, 'unexpected error in *project.maintenance')

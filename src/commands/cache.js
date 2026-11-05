@@ -19,15 +19,14 @@ export class Prune extends Command {
 
   *exec () {
     let { cache } = this.options
+    let START = Date.now()
 
+    let files = yield call(cache.list)
     let state = yield select()
     let stale = []
 
     assert(state.photos != null && state.selections != null,
       'cannot prune project cache without state')
-
-    info(`pruning cache ${cache.name}`)
-    let files = yield call(cache.list)
 
     for (let file of files) {
       try {
@@ -42,9 +41,11 @@ export class Prune extends Command {
       }
     }
 
-    if (stale.length) {
-      info(`cleared ${stale.length} file(s) from cache`)
-    }
+    info({
+      files: files.length,
+      removed: stale.length,
+      ms: Date.now() - START
+    }, `pruned cache ${cache.name}`)
 
     return stale
   }
@@ -67,23 +68,39 @@ export class Purge extends Command {
     assert(exists, 'cache does not exist')
     assert(state.recent != null, 'cannot purge caches without state')
 
-    info(`purging cache ${cache.root}`)
+    let START = Date.now()
     let stats = yield call(cache.stats)
 
     for (let [id, stat] of stats) {
       if (!stat.isDirectory()) continue
       if (!UUID.test(id)) continue
 
-      let timestamp = get(state.recent, [id, 'opened'], stat.ctimeMs)
-      assert(timestamp > 0, 'invalid cache directory timestamp')
+      // Each window purges on its own, and its recent projects
+      // may be stale: a cache opened by another window is touched.
+      let timestamp = Math.max(
+        get(state.recent, [id, 'opened'], 0),
+        stat.mtimeMs)
 
       let date = addMonths(AGE, new Date(timestamp))
       if (date > NOW) continue
 
-      info(`removing old project cache ${id}`)
-      yield call(fs.promises.rm, cache.expand(id), { recursive: true })
-      stale.push(id)
+      try {
+        info(`removing old project cache ${id}`)
+        yield call(fs.promises.rm, cache.expand(id), {
+          recursive: true,
+          force: true
+        })
+        stale.push(id)
+
+      } catch (err) {
+        warn({ err }, `purge: failed removing ${id}`)
+      }
     }
+
+    info({
+      removed: stale.length,
+      ms: Date.now() - START
+    }, `purged cache ${cache.root}`)
 
     return stale
   }

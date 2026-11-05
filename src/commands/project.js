@@ -7,6 +7,7 @@ import { PROJECT } from '../constants/index.js'
 import { prompt } from '../dialog.js'
 import { ls } from '../common/fs.js'
 import { debug, info, warn } from '../common/log.js'
+import { IntegrityError } from '../common/error.js'
 import { pick, pMap } from '../common/util.js'
 import * as act from '../actions/index.js'
 import { Storage } from '../storage.js'
@@ -14,19 +15,82 @@ import photo from '../models/photo.js'
 import { list, load, optimize, reindex, resolveBasePath, save } from '../common/project.js'
 
 
+const isCorrupted = (state) =>
+  !!state.project.warnings?.includes('corrupted')
+
+function *check (db, { quick = false } = {}) {
+  if (yield select(isCorrupted)) {
+    info('skip project check: corrupted')
+    return false
+  }
+
+  let START = Date.now()
+
+  try {
+    yield call(db.check, null, { quick })
+    info({ quick, ms: Date.now() - START }, 'project check passed')
+
+    return true
+
+  } catch (err) {
+    warn({ err, quick, ms: Date.now() - START }, 'project check failed')
+
+    if (err instanceof IntegrityError) {
+      let { warnings = [] } = yield select(state => state.project)
+
+      if (!warnings.includes('corrupted'))
+        yield put(act.project.update({ warnings: [...warnings, 'corrupted'] }))
+    }
+
+    return false
+  }
+}
+
+export class Check extends Command {
+  *exec () {
+    return yield* check(this.options.db, this.action.meta)
+  }
+}
+
+Check.register(PROJECT.CHECK)
+
+
 export class Optimize extends Command {
   *exec () {
     let { db } = this.options
+    let { force } = this.action.meta
 
-    try {
-      yield call(db.check, null, { quick: true })
-    } catch (err) {
-      yield put(act.project.warn('corrupted'))
-      throw err
+    if (db.isReadOnly) {
+      info('skip project optimize: read-only')
+      return
     }
 
-    yield call(db.clear)
+    if (yield select(isCorrupted)) {
+      info('skip project optimize: corrupted')
+      return
+    }
+
+    let free = Math.round(100 * (yield call(db.free)))
+
+    if (!force && free < 20) {
+      info({ free }, 'skip project optimize: too few free pages')
+      return
+    }
+
+    if (!(yield* check(db, { quick: true }))) {
+      info('skip project optimize: check failed')
+      return
+    }
+
+    let START = Date.now()
+    info({ free, force }, 'project optimize')
+
     yield call(db.seq, conn => optimize(conn))
+
+    info({
+      ms: Date.now() - START,
+      free: Math.round(100 * (yield call(db.free)))
+    }, 'project optimized')
   }
 }
 
@@ -95,7 +159,6 @@ Prune.register(PROJECT.PRUNE)
 export class Reindex extends Command {
   *exec () {
     let { db } = this.options
-    yield call(db.clear)
     yield call(db.seq, conn => reindex(conn))
   }
 }

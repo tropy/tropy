@@ -1,4 +1,5 @@
 export default {
+  CHECK: 'project.check',
   CLOSE: 'project.close',
   CLOSED: 'project.closed',
   OPEN: 'project.open',
@@ -10,6 +11,5 @@ export default {
   REINDEX: 'project.reindex',
   RELOAD: 'project.reload',
   SAVE: 'project.save',
-  UPDATE: 'project.update',
-  WARN: 'project.warn'
+  UPDATE: 'project.update'
 }

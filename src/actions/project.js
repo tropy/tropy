@@ -55,12 +55,25 @@ export default {
     }
   },
 
+  check (payload = {}, meta = {}) {
+    return {
+      type: PROJECT.CHECK,
+      payload,
+      meta: {
+        cmd: 'project',
+        quick: false,
+        ...meta
+      }
+    }
+  },
+
   optimize (payload = {}, meta = {}) {
     return {
       type: PROJECT.OPTIMIZE,
       payload,
       meta: {
         cmd: 'project',
+        force: false,
         ...meta
       }
     }
@@ -120,14 +133,6 @@ export default {
         ipc: payload.name != null || payload.isReadOnly != null,
         ...meta
       }
-    }
-  },
-
-  warn (payload, meta = {}) {
-    return {
-      type: PROJECT.WARN,
-      payload,
-      meta
     }
   }
 }

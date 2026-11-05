@@ -9,7 +9,7 @@ import { home, normalize } from './os.js'
 import { into, select, update } from './query.js'
 import { version } from './release.js'
 import { empty, pMap } from './util.js'
-import { CodeError } from './error.js'
+import { CodeError, IntegrityError } from './error.js'
 import { info, warn } from './log.js'
 
 import { Asset } from '../asset/asset.js'
@@ -261,8 +261,9 @@ export async function open (path, {
       await optimize(db)
 
       if (!skipIntegrityCheck) {
-        await db.check().catch(() => {
-          warnings.push('corrupted')
+        await db.check().catch((err) => {
+          warn({ err }, 'project check failed')
+          if (err instanceof IntegrityError) warnings.push('corrupted')
         })
       }
     }
