@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { json, stringify } from '../common/util.js'
 import { into, update } from '../common/query.js'
-import { sql } from '../common/sql.js'
+import sql, { IN } from '../common/sql.js'
 import { warn } from '../common/log.js'
 
 async function load (db, ids) {
@@ -21,7 +21,7 @@ async function load (db, ids) {
         LEFT OUTER JOIN photos USING (id)
         LEFT OUTER JOIN selections USING (id)
       WHERE deleted IS NULL${
-        (ids != null) ? sql` AND note_id IN ${sql.list(ids)}` : sql``
+        (ids != null) ? sql` AND note_id ${IN(ids)}` : sql``
       }
       ORDER BY created ASC`,
 

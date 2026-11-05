@@ -3,10 +3,10 @@ import { join } from 'node:path'
 import ARGS from '../args.js'
 import { TYPE } from '../constants/index.js'
 import { blank } from '../common/util.js'
-import { sql } from '../common/sql.js'
+import sql, { IN, SET } from '../common/sql.js'
 
 const byVocabulary = (ids) => (ids.length > 0) ?
-  sql`deleted IS NULL AND vocabulary_id IN ${sql.list(ids)}` :
+  sql`deleted IS NULL AND vocabulary_id ${IN(ids)}` :
   sql`deleted IS NULL`
 
 const ontology = {
@@ -305,7 +305,7 @@ const ontology = {
     async load (db, ...ids) {
       const temps = {}
       const where = (ids.length > 0) ?
-        sql`WHERE template_id IN ${sql.list(ids)}` : sql``
+        sql`WHERE template_id ${IN(ids)}` : sql``
 
       await db.each(sql`
         SELECT
@@ -409,26 +409,20 @@ const ontology = {
     delete (db, ...ids) {
       return db.run(sql`
         DELETE FROM templates
-          WHERE template_id IN ${sql.list(ids)}
+          WHERE template_id ${IN(ids)}
             AND NOT protected`)
     },
 
     save (db, { id, ...data }) {
-      const assign = []
-      const params = { $id: id }
+      assert(id != null, 'missing template id')
 
-      for (let attr in data) {
-        assign.push(`${attr} = $${attr}`)
-        params[`$${attr}`] = data[attr]
-      }
-
-      assert(id != null, 'missing tag id')
-      assert(assign.length > 0, 'missing assignments')
-
-      return db.run(`
+      return db.run(sql`
         UPDATE templates
-          SET ${assign.join(', ')}, modified = datetime('now')
-          WHERE template_id = $id`, params)
+          ${SET({
+            ...columns(data, COL.TEMPLATE),
+            modified: sql`datetime('now')`
+          })}
+          WHERE template_id = ${id}`)
     },
 
     field: {
@@ -476,25 +470,16 @@ const ontology = {
         return db.run(sql`
           DELETE FROM fields
             WHERE template_id = ${id}
-              AND field_id IN ${sql.list(fields)}`)
+              AND field_id ${IN(fields)}`)
       },
 
       save (db, { id, ...data }) {
-        const assign = []
-        const params = { $id: id }
-
-        for (let attr in data) {
-          assign.push(`${COL.FIELD[attr] || attr} = $${attr}`)
-          params[`$${attr}`] = data[attr]
-        }
-
         assert(id != null, 'missing field id')
-        assert(assign.length > 0, 'missing assignments')
 
-        return db.run(`
+        return db.run(sql`
           UPDATE fields
-            SET ${assign.join(', ')}
-            WHERE field_id = $id`, params)
+            ${SET(columns(data, COL.FIELD))}
+            WHERE field_id = ${id}`)
       },
 
       order (db, id, order) {
@@ -522,13 +507,35 @@ const ontology = {
   }
 }
 
+// Updatable columns by property name.
 const COL = {
+  TEMPLATE: {
+    name: 'name',
+    version: 'version',
+    creator: 'creator',
+    description: 'description'
+  },
   FIELD: {
     property: 'property_id',
     datatype: 'datatype_id',
     isConstant: 'constant',
-    isRequired: 'required'
+    isRequired: 'required',
+    hint: 'hint',
+    value: 'value'
   }
+}
+
+// Renames the properties of data to their columns;
+// properties without a column fail.
+function columns (data, map) {
+  let res = {}
+
+  for (let [key, value] of Object.entries(data)) {
+    assert(Object.hasOwn(map, key), `cannot save ${key}`)
+    res[map[key]] = value
+  }
+
+  return res
 }
 
 export default ontology

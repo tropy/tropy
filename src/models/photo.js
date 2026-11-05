@@ -7,7 +7,7 @@ import selection from './selection.js'
 import subject from './subject.js'
 import * as transcription from './transcription.js'
 import { into, select, update } from '../common/query.js'
-import { sql } from '../common/sql.js'
+import sql, { IN } from '../common/sql.js'
 import { normalize } from '../common/os.js'
 import { blank, empty, pick, pMap } from '../common/util.js'
 import { props } from '../common/export.js'
@@ -225,7 +225,7 @@ export default {
     return db.run(sql`
       UPDATE photos
         SET item_id = ${item}
-        WHERE id IN ${sql.list(ids)}`)
+        WHERE id ${IN(ids)}`)
   },
 
   async order (db, item, photos, offset) {
@@ -265,7 +265,7 @@ export default {
 
   async restore (db, { ids }) {
     return db.run(sql`
-      DELETE FROM trash WHERE id IN ${sql.list(ids)}`)
+      DELETE FROM trash WHERE id ${IN(ids)}`)
   },
 
   async prune (db) {

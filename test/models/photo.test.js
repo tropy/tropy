@@ -5,7 +5,7 @@ import note from '#tropy/models/note.js'
 import photo from '#tropy/models/photo.js'
 import selection from '#tropy/models/selection.js'
 import * as transcription from '#tropy/models/transcription.js'
-import { sql } from '#tropy/common/sql.js'
+import sql from '#tropy/common/sql.js'
 
 const TEMPLATE = 'https://tropy.org/v1/templates/photo'
 

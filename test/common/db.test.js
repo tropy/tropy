@@ -4,7 +4,7 @@ import { unlink } from 'node:fs/promises'
 import { mktmp } from '../support/tmp.js'
 import { pMap, times } from '#tropy/common/util.js'
 import { Database, Connection } from '#tropy/common/db.js'
-import { sql } from '#tropy/common/sql.js'
+import sql, { IN, VALUES } from '#tropy/common/sql.js'
 import { using } from '#tropy/common/disposable.js'
 
 function failure () { throw new Error() }
@@ -77,12 +77,12 @@ describe('Database', () => {
     describe('sql', () => {
       it('runs sql fragments', async () => {
         await db.run(sql`CREATE TABLE s (a, b)`)
-        await db.run(sql`INSERT INTO s ${sql.values({ a: 1, b: 'x' })}`)
-        await db.run(sql`INSERT INTO s ${sql.values({ a: 2, b: 'y' })}`)
+        await db.run(sql`INSERT INTO s ${VALUES({ a: 1, b: 'x' })}`)
+        await db.run(sql`INSERT INTO s ${VALUES({ a: 2, b: 'y' })}`)
 
         expect(await db.get(sql`SELECT b FROM s WHERE a = ${2}`))
           .to.eql({ b: 'y' })
-        expect(await db.all(sql`SELECT a FROM s WHERE a IN ${sql.list([1, 2])}`))
+        expect(await db.all(sql`SELECT a FROM s WHERE a ${IN([1, 2])}`))
           .to.eql([{ a: 1 }, { a: 2 }])
 
         let rows = []
