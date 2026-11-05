@@ -1,5 +1,11 @@
+import { join } from 'node:path'
+import { stat } from 'node:fs/promises'
 import { run } from '../support/saga.js'
-import { Check, Optimize, Reindex } from '#tropy/commands/project.js'
+import { Check, Optimize, Prune as ProjectPrune, Reindex } from '#tropy/commands/project.js'
+import { list } from '#tropy/common/project.js'
+import { ls } from '#tropy/common/fs.js'
+import { pMap } from '#tropy/common/util.js'
+import { Store } from '#tropy/asset/store.js'
 import { Prune } from '#tropy/commands/cache.js'
 import { Database } from '#tropy/common/db.js'
 import { CodeError, IntegrityError } from '#tropy/common/error.js'
@@ -81,6 +87,74 @@ describe('project commands', () => {
       expect(exec(Reindex, act.reindex()).calls(db.seq).callCount())
         .to.equal(1)
     })
+  })
+})
+
+describe('project prune', () => {
+  let path = '/p/x.tropy'
+  let store = join(path, 'assets')
+  let a = `${'a'.repeat(32)}.jpg`
+  let b = `${'b'.repeat(32)}.png`
+  let c = `${'c'.repeat(32)}.tif`
+
+  // Files in the store (name -> mtime) and the referenced names.
+  let prune = ({ files, referenced = [], project = {}, root = store }) => {
+    let removed = []
+    let options = { db: null, store: new Store(root) }
+
+    let res = run(new ProjectPrune(act.prune(null, { prompt: false }), options).exec(), {
+      state: {
+        project: { isManaged: true, path, store, ...project }
+      },
+      mocks: [
+        [list, () => new Set(referenced.map(name => join(store, name)))],
+        [ls, (dir, { filter }) =>
+          Object.keys(files)
+            .filter(name => filter({ name }))
+            .map(name => join(dir, name))],
+        [stat, (file) => ({ mtimeMs: files[file.slice(store.length + 1)] })],
+        [pMap, (orphans) => orphans.map(file => removed.push(file))]
+      ]
+    })
+
+    return { ...res, removed: removed.map(file => file.slice(store.length + 1)) }
+  }
+
+  it('removes unreferenced store files', () => {
+    let { removed, result } = prune({ files: { [a]: 0, [b]: 0 }, referenced: [a] })
+
+    expect(removed).to.eql([b])
+    expect(result).to.equal(1)
+  })
+
+  it('keeps files written since it started', () => {
+    expect(prune({ files: { [b]: 0, [c]: Date.now() + 1000 } }).removed)
+      .to.eql([b])
+  })
+
+  it('keeps files not named like store files', () => {
+    let files = {
+      '.DS_Store': 0,
+      'desktop.ini': 0,
+      [`.${b}.icloud`]: 0,
+      [`${'d'.repeat(32)}.JPG`]: 0
+    }
+
+    expect(prune({ files }).removed).to.eql([])
+  })
+
+  it('skips read-only projects', () => {
+    let res = prune({ files: { [b]: 0 }, project: { isReadOnly: true } })
+
+    expect(res.removed).to.eql([])
+    expect(res.calls(ls).callCount()).to.equal(0)
+  })
+
+  it('refuses a store outside the project folder', () => {
+    let res = prune({ files: { [b]: 0 }, root: path })
+
+    expect(res.removed).to.eql([])
+    expect(res.calls(ls).callCount()).to.equal(0)
   })
 })
 
