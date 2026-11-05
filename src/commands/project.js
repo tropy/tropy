@@ -1,5 +1,4 @@
-import assert from 'node:assert/strict'
-import { rm } from 'node:fs/promises'
+import { rm, stat } from 'node:fs/promises'
 import { basename, dirname, join } from 'node:path'
 import { call, put, select } from 'redux-saga/effects'
 import { Command } from './command.js'
@@ -99,57 +98,89 @@ Optimize.register(PROJECT.OPTIMIZE)
 
 export class Prune extends Command {
   *exec () {
-    let { db } = this.options
+    let { db, store } = this.options
     let { meta } = this.action
+    let START = Date.now()
 
     let { project } = yield select()
+
     if (!project.isManaged)
       return 0
 
-    let managed = yield call(list, db, project)
-    debug(`found ${managed.size} file(s) managed by project`)
+    if (project.isReadOnly) {
+      info('skip project prune: read-only')
+      return 0
+    }
 
-    let orphans = yield call(ls, project.store, {
-      filter: (entry) => !managed.has(join(project.store, entry.name)),
+    if (dirname(store.root) !== project.path) {
+      warn({
+        store: store.root,
+        path: project.path
+      }, 'skip project prune: store not in project folder')
+      return 0
+    }
+
+    let managed = yield call(list, db, project)
+
+    let candidates = yield call(ls, store.root, {
+      filter: (entry) => {
+        let path = join(store.root, entry.name)
+        return store.owns(path) && !managed.has(path)
+      },
       recursive: false
     })
 
-    if (orphans.length > 0) {
-      let files = orphans.map(file => basename(file))
-      info({
-        files,
-        store: project.store
-      }, `found ${files.length} orphaned file(s) in project store`)
+    let orphans = []
 
-      if (meta.prompt) {
-        let count = files.length
-        let { cancel } = yield this.dialog(prompt, PROJECT.PRUNE, {
-          detail: files.slice(0, 100).join(count < 10 ? '\n' : ', '),
-          values: { count }
-        })
-
-        if (cancel) {
-          return 0
-        }
-      }
-
-      yield call(pMap, orphans, this.remove, { concurrency: 5 }, project.store)
-      info(`removed ${orphans.length} orphaned file(s) from project store`)
-      return orphans.length
-    } else {
-      info('no orphaned files found in project store')
-      return 0
+    for (let path of candidates) {
+      let { mtimeMs } = yield call(stat, path)
+      if (mtimeMs < START) orphans.push(path)
     }
+
+    info({
+      store: store.root,
+      managed: managed.size,
+      orphans: orphans.length,
+      sample: orphans.slice(0, 10).map(file => basename(file))
+    }, 'project prune')
+
+    if (orphans.length === 0)
+      return 0
+
+    if (meta.prompt) {
+      let count = orphans.length
+      let files = orphans.map(file => basename(file))
+
+      let { cancel } = yield this.dialog(prompt, PROJECT.PRUNE, {
+        detail: files.join('\n'),
+        values: { count }
+      })
+
+      if (cancel) {
+        return 0
+      }
+    }
+
+    let removed = (yield call(pMap, orphans, this.remove, { concurrency: 5 }))
+      .filter(Boolean).length
+
+    info({
+      removed,
+      failed: orphans.length - removed,
+      ms: Date.now() - START
+    }, 'project pruned')
+
+    return removed
   }
 
-  remove = async (path, _, store) => {
+  remove = async (path) => {
     try {
-      assert(store, 'missing asset folder')
-      assert.equal(dirname(path), store, 'may only remove files in asset folder')
       debug(`removing orphaned file "${basename(path)}" from store`)
       await rm(path, { force: true, maxRetries: 3 })
+      return true
     } catch (err) {
       warn({ err }, `failed removing "${path}" from store`)
+      return false
     }
   }
 }

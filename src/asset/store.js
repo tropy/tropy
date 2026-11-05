@@ -1,9 +1,11 @@
 import assert from 'node:assert'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
-import { basename, isAbsolute, dirname, normalize, join } from 'node:path'
+import { basename, extname, isAbsolute, dirname, normalize, join } from 'node:path'
 import { Asset } from './asset.js'
 import { debug, warn } from '../common/log.js'
 import mod from '../models/store.js'
+
+const MD5 = /^[0-9a-f]{32}$/
 
 export class Store {
   #root
@@ -101,8 +103,15 @@ export class Store {
     await mod.purge(db)
   }
 
-  // True if the asset's path is owned by this store.
+  // True if the asset's *path* is owned by this store.
   owns (asset) {
+    if (typeof asset === 'string') {
+      let checksum = basename(asset, extname(asset))
+      if (!MD5.test(checksum)) return false
+
+      asset = { path: asset, checksum }
+    }
+
     if (!this.root || !asset.path || !asset.checksum)
       return false
 

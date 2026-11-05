@@ -16,6 +16,16 @@ describe('Store', () => {
     expect(store.owns(outside)).to.be.false
   })
 
+  it('owns paths named like its files', () => {
+    let md5 = 'a'.repeat(32)
+
+    expect(store.owns(join(store.root, `${md5}.jpg`))).to.be.true
+    expect(store.owns(join(store.root, `${md5}.JPG`))).to.be.false
+    expect(store.owns(join(dir, `${md5}.jpg`))).to.be.false
+    expect(store.owns(join(store.root, 'desktop.ini'))).to.be.false
+    expect(store.owns(join(store.root, '.DS_Store'))).to.be.false
+  })
+
   it('removes nothing it does not own', async () => {
     writeFileSync(outside.path, '')
     await store.remove(outside)
