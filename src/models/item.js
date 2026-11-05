@@ -1,5 +1,4 @@
 import { array, blank, uniq } from '../common/util.js'
-import { select } from '../common/query.js'
 import { NAV } from '../constants/index.js'
 import { createSequence } from '../common/sequence.js'
 
@@ -389,12 +388,12 @@ mod.item = {
   },
 
   async prune (db, since = '-1 month') {
-    let morituri = select('id').from('trash').join('items', { using: 'id' })
-
-    if (since)
-      morituri.where(`deleted < datetime("now", "${since}")`)
-
-    let items = (await db.all(...morituri)).map(({ id }) => id)
+    let items = (await db.all(`
+      SELECT id
+        FROM trash JOIN items USING (id)
+        WHERE $since IS NULL OR deleted < datetime('now', $since)`, {
+      $since: since || null
+    })).map(({ id }) => id)
     await mod.item.destroy(db, items)
 
     return items

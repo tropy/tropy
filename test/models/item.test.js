@@ -108,4 +108,15 @@ describe('models/item', () => {
         .to.eql([ids[0], ids[1], ids[2], id])
     })
   })
+
+  describe('prune', () => {
+    it('destroys items trashed before since, or all if none', async () => {
+      let db = tpy.current.db
+      let { id } = await item.create(db, TEMPLATE)
+      await item.delete(db, [id])
+
+      expect(await item.prune(db)).to.eql([])
+      expect(await item.prune(db, false)).to.eql([id])
+    })
+  })
 })
