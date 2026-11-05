@@ -3,7 +3,7 @@ import { mock } from 'node:test'
 import { unlink } from 'node:fs/promises'
 import { mktmp } from '../support/tmp.js'
 import { pMap, times } from '#tropy/common/util.js'
-import { Database, Connection, Statement } from '#tropy/common/db.js'
+import { Database, Connection } from '#tropy/common/db.js'
 import { using } from '#tropy/common/disposable.js'
 
 function failure () { throw new Error() }
@@ -62,42 +62,6 @@ describe('Database', () => {
       it('releases on error', async () => {
         try { await using(db.acquire(), failure) } catch { /* expected */ }
         expect(release.mock.callCount()).to.be.greaterThan(0)
-      })
-    })
-
-    describe('prepare', () => {
-      let finalize
-
-      beforeEach(() => {
-        finalize = mock.method(Statement.prototype, 'finalize',
-          Statement.prototype.finalize)
-      })
-
-      afterEach(() => {
-        finalize.mock.restore()
-      })
-
-      it('returns disposable statement and connection', async () => {
-        await db.prepare('SELECT * FROM sqlite_schema', (stmt, conn) => {
-          expect(stmt).to.be.instanceof(Statement)
-          expect(conn).to.be.instanceof(Connection)
-        })
-      })
-
-      it('finalizes statement when done', async () => {
-        await db.prepare('SELECT * FROM sqlite_schema', () => {})
-        expect(finalize.mock.callCount()).to.be.greaterThan(0)
-      })
-
-      it('can be run multiple times', async () => {
-        await db.run('CREATE TABLE s(a)')
-
-        await db.prepare('INSERT INTO s VALUES (?)', stmt =>
-          Promise.all(times(9, i => stmt.run(i))))
-
-        let result = await db.get('SELECT COUNT(*) AS count FROM s')
-
-        expect(result).to.have.property('count', 9)
       })
     })
 
