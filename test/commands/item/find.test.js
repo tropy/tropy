@@ -51,6 +51,17 @@ describe('ItemFind', () => {
     expect(res.calls(mod.item.seed).callCount()).to.equal(0)
   })
 
+  it('reverses the order of the UI for the other direction', () => {
+    let s = state({
+      order: [3, 2, 1, 4],
+      sort: { column: TITLE, asc: true, locale: 'en' }
+    })
+    let res = exec({ sort: { asc: false } }, s)
+
+    expect(ids(res)).to.eql([4, 1, 2])
+    expect(res.calls(mod.item.seed).callCount()).to.equal(0)
+  })
+
   it('keeps the list order when sorting by position', () => {
     let res = exec({ list: 1 })
 

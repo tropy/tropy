@@ -165,6 +165,11 @@ export function *ordered (db, ids, sort) {
   if (isSameSort(qr.sort, sort))
     return filter(qr.order, set)
 
+  if (isReverse(qr.sort, sort)) {
+    let key = yield select(selectSortKey, sort.column)
+    return filter(reverse(qr.order, key), set)
+  }
+
   let seed = yield call(mod.item.seed, db, sort)
   let key = yield select(selectSortKey, sort.column)
   let options = getOptions(sort)
@@ -337,14 +342,17 @@ export function *sync (db, prev = {}) {
     }, options)
 
     // Items created while the seed was loading.
+    // Every key is an item's, so equal counts mean none are missing.
     let missing = []
 
-    for (let id in data.items) {
-      id = Number(id)
+    if (keys.size !== Object.keys(data.items).length) {
+      for (let id in data.items) {
+        id = Number(id)
 
-      if (!keys.has(id)) {
-        keys.set(id, key(id))
-        missing.push(id)
+        if (!keys.has(id)) {
+          keys.set(id, key(id))
+          missing.push(id)
+        }
       }
     }
 
