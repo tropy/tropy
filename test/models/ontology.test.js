@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict'
 import { join } from 'node:path'
 import { Database } from '#tropy/common/db.js'
 import { mkdtmp } from '../support/tmp.js'
@@ -94,6 +95,25 @@ describe('models.ontology', () => {
 
       expect((await mod.template.load(db, id))[id].fields.map(f => f.id))
         .to.eql([b.id, a.id])
+    })
+
+    it('saves templates and fields by column whitelist', async () => {
+      let id = 'https://example.com/template'
+      await mod.template.create(db, {
+        id, type: 'https://tropy.org/v1/tropy#Item', name: 'Test'
+      })
+      let [field] = await mod.template.field.add(db, id,
+        { property: 'http://purl.org/dc/elements/1.1/title' })
+
+      await mod.template.save(db, { id, name: 'Renamed', creator: 'Me' })
+      await mod.template.field.save(db, { id: field.id, isRequired: true, hint: 'H' })
+
+      let template = (await mod.template.load(db, id))[id]
+      expect(template).to.include({ name: 'Renamed', creator: 'Me' })
+      expect(template.fields[0]).to.include({ isRequired: true, hint: 'H' })
+
+      await assert.rejects(async () => mod.template.save(db, { id, protected: 0 }))
+      await assert.rejects(async () => mod.template.field.save(db, { id: field.id, toString: 1 }))
     })
 
     it('loads and removes by id', async () => {

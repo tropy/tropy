@@ -1,6 +1,7 @@
+import assert from 'node:assert'
 import { pick } from '../common/util.js'
-import { into, select, update } from '../common/query.js'
-import { sql } from '../common/sql.js'
+import { select } from '../common/query.js'
+import sql, { IN, SET, VALUES } from '../common/sql.js'
 
 const COLUMNS = [
   'name',
@@ -25,24 +26,27 @@ export default {
   load,
 
   async create (db, data) {
-    let { id } = await db.run(
-      ...into('tags')
-        .insert(pick(data, COLUMNS, { tag_id: data.id })))
+    let { id } = await db.run(sql`
+      INSERT INTO tags ${VALUES(pick(data, COLUMNS, { tag_id: data.id }))}`)
 
     return (await load(db, [id]))[id]
   },
 
   async save (db, { id, ...data }) {
-    return db.run(
-      ...update('tags')
-        .set(data)
-        .set("modified = datetime('now')")
-        .where({ tag_id: id }))
+    assert(id != null, 'missing tag id')
+
+    for (let key in data)
+      assert(key === 'name' || key === 'color', `cannot save ${key}`)
+
+    return db.run(sql`
+      UPDATE tags
+        ${SET({ ...data, modified: sql`datetime('now')` })}
+        WHERE tag_id = ${id}`)
   },
 
   async delete (db, ids) {
     return db.run(sql`
-      DELETE FROM tags WHERE tag_id IN ${sql.list(ids)}`)
+      DELETE FROM tags WHERE tag_id ${IN(ids)}`)
   },
 
   async items (db, id) {

@@ -1,7 +1,7 @@
 import { array, blank, uniq } from '../common/util.js'
 import { NAV } from '../constants/index.js'
 import { createSequence } from '../common/sequence.js'
-import { sql } from '../common/sql.js'
+import sql, { IN } from '../common/sql.js'
 
 import modMetadata from './metadata.js'
 import modPhoto from './photo.js'
@@ -217,7 +217,7 @@ mod.item = {
   async load (db, ids) {
     const items = {}
     const where = (col) => (ids != null) ?
-      sql`WHERE ${sql.id(col)} IN ${sql.list(ids)}` : sql``
+      sql`WHERE ${sql.id(col)} ${IN(ids)}` : sql``
 
     await Promise.all([
       db.each(sql`
@@ -374,7 +374,7 @@ mod.item = {
 
   restore (db, ids) {
     return db.run(sql`
-      DELETE FROM trash WHERE id IN ${sql.list(ids)}`)
+      DELETE FROM trash WHERE id ${IN(ids)}`)
   },
 
   destroy (db, ids) {
@@ -413,8 +413,8 @@ mod.item = {
     async remove (db, { id, tags }) {
       return db.run(sql`
         DELETE FROM taggings
-          WHERE id IN ${sql.list(array(id))}
-            AND tag_id IN ${sql.list(tags)}`)
+          WHERE id ${IN(array(id))}
+            AND tag_id ${IN(tags)}`)
     },
 
     async copy (db, { source, target }) {
@@ -431,8 +431,8 @@ mod.item = {
         INSERT INTO list_items (list_id, id, position, added)
           SELECT list_id, ${id} AS id, position, added
             FROM list_items li
-            WHERE list_id IN ${sql.list(lists)}
-              AND li.id IN ${sql.list(items)}
+            WHERE list_id ${IN(lists)}
+              AND li.id ${IN(items)}
               AND deleted IS NULL
             GROUP BY list_id`)
     },
@@ -441,7 +441,7 @@ mod.item = {
       return db.run(sql`
         DELETE FROM list_items
           WHERE id = ${id}
-            AND list_id IN ${sql.list(lists)}`)
+            AND list_id ${IN(lists)}`)
     },
 
     async copy (db, { source, target }) {

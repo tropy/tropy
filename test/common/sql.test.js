@@ -1,4 +1,4 @@
-import { sql } from '#tropy/common/sql.js'
+import sql, { IN, SET, VALUES } from '#tropy/common/sql.js'
 
 describe('sql', () => {
   it('binds interpolated values', () => {
@@ -14,7 +14,7 @@ describe('sql', () => {
   })
 
   it('builds IN lists via json_each', () => {
-    expect(sql`id IN ${sql.list([1, 2])}`)
+    expect(sql`id ${IN([1, 2])}`)
       .to.include({ text: 'id IN (SELECT value FROM json_each(?))' })
       .and.have.deep.property('params', ['[1,2]'])
   })
@@ -38,12 +38,23 @@ describe('sql', () => {
   it('builds assignments and values from defined properties', () => {
     let data = { name: 'x', color: null, age: undefined }
 
-    expect(sql`UPDATE t SET ${sql.set(data)} WHERE id = ${1}`)
+    expect(sql`UPDATE t ${SET(data)} WHERE id = ${1}`)
       .to.include({ text: 'UPDATE t SET "name" = ?, "color" = ? WHERE id = ?' })
       .and.have.deep.property('params', ['x', null, 1])
 
-    expect(sql`INSERT INTO t ${sql.values(data)}`)
+    expect(sql`INSERT INTO t ${VALUES(data)}`)
       .to.include({ text: 'INSERT INTO t ("name", "color") VALUES (?, ?)' })
       .and.have.deep.property('params', ['x', null])
+  })
+
+  it('interpolates property values like the tag', () => {
+    expect(SET({ a: [1], b: sql`datetime('now')` }))
+      .to.include({ text: 'SET "a" = ?, "b" = datetime(\'now\')' })
+      .and.have.deep.property('params', ['[1]'])
+  })
+
+  it('rejects empty assignments and values', () => {
+    expect(() => SET({ a: undefined })).to.throw()
+    expect(() => VALUES({})).to.throw()
   })
 })

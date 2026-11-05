@@ -1,7 +1,7 @@
 import { empty, pick } from '../common/util.js'
 import { props } from '../common/export.js'
 import { into, select } from '../common/query.js'
-import { sql } from '../common/sql.js'
+import sql, { IN } from '../common/sql.js'
 import image from './image.js'
 import metadata from './metadata.js'
 import note from './note.js'
@@ -175,7 +175,7 @@ export default {
 
   async restore (db, ...ids) {
     return db.run(sql`
-      DELETE FROM trash WHERE id IN ${sql.list(ids)}`)
+      DELETE FROM trash WHERE id ${IN(ids)}`)
   },
 
   async prune (db) {

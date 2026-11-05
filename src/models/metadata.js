@@ -1,5 +1,5 @@
 import { array, blank } from '../common/util.js'
-import { sql } from '../common/sql.js'
+import sql, { IN } from '../common/sql.js'
 import { touch } from './subject.js'
 import { save } from './value.js'
 
@@ -36,9 +36,9 @@ async function update (db, { id, data, timestamp }, replace = false) {
 async function remove (db, { id, property }) {
   return db.run(sql`
     DELETE FROM metadata
-      WHERE id IN ${sql.list(array(id))}${
+      WHERE id ${IN(array(id))}${
         (property == null) ?
-          sql`` : sql` AND property IN ${sql.list(array(property))}`
+          sql`` : sql` AND property ${IN(array(property))}`
       }`)
 }
 
@@ -55,7 +55,7 @@ export default {
         FROM subjects
           JOIN metadata USING (id)
           JOIN metadata_values USING (value_id)${
-            (ids != null) ? sql` WHERE id IN ${sql.list(ids)}` : sql``
+            (ids != null) ? sql` WHERE id ${IN(ids)}` : sql``
           } ORDER BY id, metadata.created ASC`,
     ({ id, property, type, text }) => {
       if (id in data) data[id][property] = { type, text }

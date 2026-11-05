@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import subject from './subject.js'
 import { props } from '../common/export.js'
 import { update } from '../common/query.js'
-import { sql } from '../common/sql.js'
+import sql, { IN } from '../common/sql.js'
 import { array, empty, pick } from '../common/util.js'
 
 const COLUMNS = props.image.join(', ')
@@ -25,12 +25,12 @@ export default {
     await db.run(sql`
       UPDATE images
         SET angle = ((360 + (angle + ${by})) % 360)
-        WHERE id IN ${sql.list(array(id))}`)
+        WHERE id ${IN(array(id))}`)
 
     let images = {}
 
     await db.each(sql`
-      SELECT id, angle FROM images WHERE id IN ${sql.list(array(id))}`,
+      SELECT id, angle FROM images WHERE id ${IN(array(id))}`,
     (image) => images[image.id] = { angle: image.angle })
 
     return images
