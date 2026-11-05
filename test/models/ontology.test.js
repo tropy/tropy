@@ -95,5 +95,32 @@ describe('models.ontology', () => {
       expect((await mod.template.load(db, id))[id].fields.map(f => f.id))
         .to.eql([b.id, a.id])
     })
+
+    it('loads and removes by id', async () => {
+      let vocabulary = 'https://example.com/ns#'
+      await mod.vocab.create(db, { id: vocabulary, title: 'Example' })
+      await mod.props.create(db, { id: `${vocabulary}a`, vocabulary })
+
+      expect((await mod.vocab.load(db, vocabulary))[vocabulary].properties)
+        .to.eql([`${vocabulary}a`])
+      expect(await mod.vocab.load(db, 'https://example.com/none'))
+        .to.eql({})
+
+      let id = 'https://example.com/template'
+      await mod.template.create(db, {
+        id, type: 'https://tropy.org/v1/tropy#Item', name: 'Test'
+      })
+
+      let [a, b] = await mod.template.field.add(db, id,
+        { id: 42, property: 'http://purl.org/dc/elements/1.1/title' },
+        { id: 43, property: 'http://purl.org/dc/elements/1.1/date' })
+
+      await mod.template.field.remove(db, id, a.id)
+      expect((await mod.template.load(db))[id].fields.map(f => f.id))
+        .to.eql([b.id])
+
+      await mod.template.delete(db, id)
+      expect(await mod.template.load(db)).not.to.have.property(id)
+    })
   })
 })

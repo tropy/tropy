@@ -168,15 +168,14 @@ export default {
   },
 
   async delete (db, ...ids) {
-    return db.run(`
+    return db.run(sql`
       INSERT INTO trash (id)
-        SELECT value FROM json_each(?)`, JSON.stringify(ids))
+        SELECT value FROM json_each(${ids})`)
   },
 
   async restore (db, ...ids) {
-    return db.run(`
-      DELETE FROM trash WHERE id IN (SELECT value FROM json_each(?))`,
-    JSON.stringify(ids))
+    return db.run(sql`
+      DELETE FROM trash WHERE id IN ${sql.list(ids)}`)
   },
 
   async prune (db) {

@@ -101,9 +101,9 @@ export default {
 
       let res = (items.length === 0) ?
           { changes: restores.length } :
-        await db.run(`
+        await db.run(sql`
           INSERT INTO list_items (list_id, id)
-            SELECT ?, value FROM json_each(?)`, [id, JSON.stringify(items)])
+            SELECT ${id}, value FROM json_each(${items})`)
 
       return {
         ...res,
