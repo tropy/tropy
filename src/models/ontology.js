@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import ARGS from '../args.js'
 import { TYPE } from '../constants/index.js'
 import { blank } from '../common/util.js'
+import { sql } from '../common/sql.js'
 
 const ontology = {
   create (db) {
@@ -534,13 +535,11 @@ const ontology = {
       },
 
       order (db, id, order) {
-        return db.run(`
+        return db.run(sql`
           UPDATE fields
-            SET position = CASE field_id
-              ${order.map((_, idx) => (`WHEN ? THEN ${idx + 1}`)).join(' ')}
-              END
-            WHERE template_id = ?`,
-        ...order, id)
+            SET position = o.key + 1
+            FROM json_each(${JSON.stringify(order)}) AS o
+            WHERE fields.field_id = o.value AND template_id = ${id}`)
       },
 
       label: {
