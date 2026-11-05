@@ -452,16 +452,15 @@ export class Connection {
     }
   }
 
-  async check (table, { maxIntErrors = 10 } = {}) {
+  async check (table, { maxIntErrors = 10, quick = false } = {}) {
     if (maxIntErrors > 0) {
-      let result = await this.all(
-        `PRAGMA integrity_check(${maxIntErrors})`
-      )
+      let pragma = quick ? 'quick_check' : 'integrity_check'
+      let result = await this.all(`PRAGMA ${pragma}(${maxIntErrors})`)
 
-      if (result.length !== 1 || result[0].integrity_check !== 'ok') {
+      if (result.length !== 1 || result[0][pragma] !== 'ok') {
         warn({
           err: {
-            stack: result.map(f => `${f.integrity_check}`).join('\n')
+            stack: result.map(f => `${f[pragma]}`).join('\n')
           }
         }, 'integrity check failed!')
 
