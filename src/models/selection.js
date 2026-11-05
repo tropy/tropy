@@ -47,8 +47,8 @@ async function load (db, ids) {
         'saturation',
         'sharpen',
         'template',
-        'strftime("%Y-%m-%dT%H:%M:%f", created, "localtime") AS created',
-        'strftime("%Y-%m-%dT%H:%M:%f", modified, "localtime") AS modified')
+        "strftime('%Y-%m-%dT%H:%M:%f', created, 'localtime') AS created",
+        "strftime('%Y-%m-%dT%H:%M:%f', modified, 'localtime') AS modified")
         .from('subjects')
         .join('images', { using: 'id' })
         .join('selections', { using: 'id' })

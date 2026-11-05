@@ -70,7 +70,7 @@ export default {
     return db.run(
       ...update('lists')
         .set(pick(data, ['name', 'parent_list_id']))
-        .set('modified = datetime("now")')
+        .set("modified = datetime('now')")
         .where({ list_id: id }))
   },
 
@@ -115,7 +115,7 @@ export default {
     remove (db, id, items) {
       return db.run(
         ...update('list_items')
-          .set('deleted = datetime("now")')
+          .set("deleted = datetime('now')")
           .where({ list_id: id, id: items.map(Number) }))
     },
 

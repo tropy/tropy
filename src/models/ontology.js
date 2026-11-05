@@ -128,7 +128,7 @@ const ontology = {
     delete (db, id) {
       return db.run(`
         UPDATE vocabularies
-          SET deleted = datetime("now")
+          SET deleted = datetime('now')
           WHERE vocabulary_id = ? AND NOT protected`, id
       )
     },
@@ -450,7 +450,7 @@ const ontology = {
 
       return db.run(`
         UPDATE templates
-          SET ${assign.join(', ')}, modified = datetime("now")
+          SET ${assign.join(', ')}, modified = datetime('now')
           WHERE template_id = $id`, params)
     },
 

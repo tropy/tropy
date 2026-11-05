@@ -1,4 +1,5 @@
 import { mkprojtmp } from '../support/project.js'
+import image from '#tropy/models/image.js'
 import item from '#tropy/models/item.js'
 import note from '#tropy/models/note.js'
 import photo from '#tropy/models/photo.js'
@@ -84,6 +85,29 @@ describe('models/photo', () => {
     it('leaves the original intact', async () => {
       expect((await photo.load(db, [original.id]))[original.id])
         .to.eql(original)
+    })
+  })
+
+  describe('rotate', () => {
+    it('rotates the image angle', async () => {
+      expect(await image.rotate(db, { id: [original.id], by: -180 }))
+        .to.eql({ [original.id]: { angle: 270 } })
+    })
+  })
+
+  describe('transcriptions prune', () => {
+    it('removes failed transcriptions older than since', async () => {
+      let { id: old } = await transcription.create(db, { parent: original.id })
+      let { id: recent } = await transcription.create(db, { parent: original.id })
+
+      await transcription.save(db, {
+        id: old, status: -1, modified: new Date(Date.now() - 2 * 864e5)
+      })
+      await transcription.save(db, { id: recent, status: -1 })
+      await transcription.prune(db)
+
+      expect(await transcription.load(db, [old, recent]))
+        .to.have.keys(String(recent))
     })
   })
 
