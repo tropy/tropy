@@ -4,6 +4,7 @@ import { unlink } from 'node:fs/promises'
 import { mktmp } from '../support/tmp.js'
 import { pMap, times } from '#tropy/common/util.js'
 import { Database, Connection } from '#tropy/common/db.js'
+import { sql } from '#tropy/common/sql.js'
 import { using } from '#tropy/common/disposable.js'
 
 function failure () { throw new Error() }
@@ -70,6 +71,25 @@ describe('Database', () => {
         expect(await db.get('PRAGMA encoding')).to.eql({
           encoding: 'UTF-8'
         })
+      })
+    })
+
+    describe('sql', () => {
+      it('runs sql fragments', async () => {
+        await db.run(sql`CREATE TABLE s (a, b)`)
+        await db.run(sql`INSERT INTO s ${sql.values({ a: 1, b: 'x' })}`)
+        await db.run(sql`INSERT INTO s ${sql.values({ a: 2, b: 'y' })}`)
+
+        expect(await db.get(sql`SELECT b FROM s WHERE a = ${2}`))
+          .to.eql({ b: 'y' })
+        expect(await db.all(sql`SELECT a FROM s WHERE a IN ${[1, 2]}`))
+          .to.eql([{ a: 1 }, { a: 2 }])
+
+        let rows = []
+        await db.each(sql`SELECT a FROM s WHERE b = ${'x'}`, row => {
+          rows.push(row)
+        })
+        expect(rows).to.eql([{ a: 1 }])
       })
     })
 

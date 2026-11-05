@@ -7,6 +7,7 @@ import sqlite from './sqlite.js'
 import { Migration } from './migration.js'
 import { debug, info, trace, warn } from './log.js'
 import { DisposableResource, using } from './disposable.js'
+import { Sql } from './sql.js'
 
 
 const M = {
@@ -346,19 +347,21 @@ export class Connection {
   }
 
   all (sql, ...params) {
-    return this.db.allAsync(sql, flatten(params))
+    return this.db.allAsync(...bind(sql, params))
   }
 
-  each (...args) {
-    return this.db.eachAsync(...args)
+  each (sql, ...args) {
+    return (sql instanceof Sql) ?
+      this.db.eachAsync(sql.text, sql.params, ...args) :
+      this.db.eachAsync(sql, ...args)
   }
 
   get (sql, ...params) {
-    return this.db.getAsync(sql, flatten(params))
+    return this.db.getAsync(...bind(sql, params))
   }
 
   run (sql, ...params) {
-    return this.db.runAsync(sql, flatten(params))
+    return this.db.runAsync(...bind(sql, params))
   }
 
   async exec (sql) {
@@ -527,4 +530,10 @@ async function exclusiveTransaction (conn, callback) {
 
 function flatten (params) {
   return (params.length === 1) ? params[0] : params
+}
+
+function bind (sql, params) {
+  return (sql instanceof Sql) ?
+    [sql.text, sql.params] :
+    [sql, flatten(params)]
 }
