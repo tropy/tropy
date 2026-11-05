@@ -26,12 +26,16 @@ export const ItemGrid = (props) => {
         itemHeight={tileSize}
         itemWidth={tileSize}
         tabIndex={iterator.tabIndex}>
-        {(item, index) => (
-          <ItemTile
-            {...iterator.getIterableProps(item, index)}
-            key={item.id}
-            isLast={index >= items.length - 1}/>
-        )}
+        {(id, index) => {
+          let props = iterator.getIterableProps(id, index)
+
+          return props.item && (
+            <ItemTile
+              {...props}
+              key={id}
+              isLast={index >= items.length - 1}/>
+          )
+        }}
       </Scroll>
     </div>
   )

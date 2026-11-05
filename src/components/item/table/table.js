@@ -55,21 +55,21 @@ export const ItemTable = (props) => {
   })
 
   // A click on a selected item edits the clicked cell.
-  let handleSelectedClick = (item, event) => {
+  let handleSelectedClick = (itemId, event) => {
     let id = event.target.closest('[data-column]')?.dataset.column
     let column = columnState.columns.find(col => col.id === id)
 
     if (isReadOnly || column == null || column.protected) return
-    if (edit?.[item.id] === id) return
+    if (edit?.[itemId] === id) return
 
-    handleEdit({ column: { [item.id]: id } })
+    handleEdit({ column: { [itemId]: id } })
   }
 
   let iterator = useItemIterator(props, {
     tabIndex: TABS.ItemTable,
-    edit (item) {
-      if (item != null && !isReadOnly)
-        handleEdit({ column: { [item.id]: columns.active[0].id } })
+    edit (id) {
+      if (id != null && !isReadOnly)
+        handleEdit({ column: { [id]: columns.active[0].id } })
     },
     onSelectedClick: handleSelectedClick
   })
@@ -158,24 +158,27 @@ export const ItemTable = (props) => {
             {...iterator.scrollProps}
             itemHeight={ROW.HEIGHT}
             tabIndex={iterator.tabIndex}>
-            {(item, index) => (
-              <TableRow
-                {...iterator.getIterableProps(item, index)}
-                key={item.id}
-                columns={columnState.columns}
-                data={data[item.id]}
-                drag={columnDrag.drag}
-                drop={columnDrag.drop}
-                editing={edit?.[item.id]}
-                hasPositionColumn={columnState.hasPositionColumn}
-                isReadOnly={isReadOnly}
-                item={item}
-                position={getPosition(index)}
-                template={templates[item.template]}
-                onCancel={handleEditCancel}
-                onChange={handleChange}
-                onEdit={handleEdit}/>
-            )}
+            {(id, index) => {
+              let props = iterator.getIterableProps(id, index)
+
+              return props.item && (
+                <TableRow
+                  {...props}
+                  key={id}
+                  columns={columnState.columns}
+                  data={data[id]}
+                  drag={columnDrag.drag}
+                  drop={columnDrag.drop}
+                  editing={edit?.[id]}
+                  hasPositionColumn={columnState.hasPositionColumn}
+                  isReadOnly={isReadOnly}
+                  position={getPosition(index)}
+                  template={templates[props.item.template]}
+                  onCancel={handleEditCancel}
+                  onChange={handleChange}
+                  onEdit={handleEdit}/>
+              )
+            }}
           </Scroll>
         </div>
       )}

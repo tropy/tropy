@@ -12,7 +12,7 @@ import { SASS } from '../../constants/index.js'
 
 import * as act from '../../actions/index.js'
 
-import { getVisibleItems } from '../../selectors/index.js'
+import { selectItemSequence } from '../../slices/qr.js'
 
 
 export const ProjectView = ({
@@ -26,7 +26,7 @@ export const ProjectView = ({
 
   let nav = useSelector(state => state.nav)
   let zoom = useSelector(state => state.ui.zoom)
-  let items = useSelector(getVisibleItems)
+  let items = useSelector(selectItemSequence)
 
   let list = typeof nav.list === 'number' &&
     nav.list > 0 ? nav.list : null
