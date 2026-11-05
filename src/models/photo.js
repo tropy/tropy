@@ -234,7 +234,7 @@ export default {
       return db.run(sql`
         UPDATE photos
           SET position = ${offset ?? 0} + o.key + 1
-          FROM json_each(${JSON.stringify(photos)}) AS o
+          FROM json_each(${photos}) AS o
           WHERE photos.id = o.value AND item_id = ${item}`)
     }
   },
@@ -244,7 +244,7 @@ export default {
       return db.run(sql`
         UPDATE photos
           SET item_id = ${item}, position = ${offset ?? 0} + o.key + 1
-          FROM json_each(${JSON.stringify(photos)}) AS o
+          FROM json_each(${photos}) AS o
           WHERE photos.id = o.value`)
     }
   },
@@ -254,7 +254,7 @@ export default {
       db.run(sql`
         UPDATE photos
           SET item_id = ${id}, position = o.key + 1
-          FROM json_each(${JSON.stringify(photos)}) AS o
+          FROM json_each(${photos}) AS o
           WHERE photos.id = o.value`), { concurrency })
   },
 

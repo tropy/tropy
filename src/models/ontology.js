@@ -538,7 +538,7 @@ const ontology = {
         return db.run(sql`
           UPDATE fields
             SET position = o.key + 1
-            FROM json_each(${JSON.stringify(order)}) AS o
+            FROM json_each(${order}) AS o
             WHERE fields.field_id = o.value AND template_id = ${id}`)
       },
 

@@ -80,7 +80,7 @@ export default {
       return db.run(sql`
         UPDATE lists
         SET position = o.key + 1
-        FROM json_each(${JSON.stringify(order)}) AS o
+        FROM json_each(${order}) AS o
         WHERE lists.list_id = o.value AND parent_list_id = ${parent}`)
     }
   },

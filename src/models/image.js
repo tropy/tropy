@@ -25,12 +25,12 @@ export default {
     await db.run(sql`
       UPDATE images
         SET angle = ((360 + (angle + ${by})) % 360)
-        WHERE id IN ${array(id)}`)
+        WHERE id IN ${sql.list(array(id))}`)
 
     let images = {}
 
     await db.each(sql`
-      SELECT id, angle FROM images WHERE id IN ${array(id)}`,
+      SELECT id, angle FROM images WHERE id IN ${sql.list(array(id))}`,
     (image) => images[image.id] = { angle: image.angle })
 
     return images

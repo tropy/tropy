@@ -162,7 +162,7 @@ export default {
       return db.run(sql`
         UPDATE selections
           SET position = ${offset ?? 0} + o.key + 1
-          FROM json_each(${JSON.stringify(selections)}) AS o
+          FROM json_each(${selections}) AS o
           WHERE selections.id = o.value AND photo_id = ${photo}`)
     }
   },

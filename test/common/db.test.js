@@ -82,7 +82,7 @@ describe('Database', () => {
 
         expect(await db.get(sql`SELECT b FROM s WHERE a = ${2}`))
           .to.eql({ b: 'y' })
-        expect(await db.all(sql`SELECT a FROM s WHERE a IN ${[1, 2]}`))
+        expect(await db.all(sql`SELECT a FROM s WHERE a IN ${sql.list([1, 2])}`))
           .to.eql([{ a: 1 }, { a: 2 }])
 
         let rows = []

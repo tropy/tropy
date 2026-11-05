@@ -7,8 +7,14 @@ describe('sql', () => {
       .and.have.deep.property('params', [1, 'x', null])
   })
 
-  it('binds arrays via json_each', () => {
-    expect(sql`id IN ${[1, 2]}`)
+  it('binds arrays as JSON', () => {
+    expect(sql`FROM json_each(${[1, 2]})`)
+      .to.include({ text: 'FROM json_each(?)' })
+      .and.have.deep.property('params', ['[1,2]'])
+  })
+
+  it('builds IN lists via json_each', () => {
+    expect(sql`id IN ${sql.list([1, 2])}`)
       .to.include({ text: 'id IN (SELECT value FROM json_each(?))' })
       .and.have.deep.property('params', ['[1,2]'])
   })
