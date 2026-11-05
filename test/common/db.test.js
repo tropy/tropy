@@ -188,6 +188,20 @@ describe('Database', () => {
       })
     })
 
+    describe('free', () => {
+      it('returns the ratio of free pages', async () => {
+        await db.exec(`
+          CREATE TABLE f (x);
+          WITH RECURSIVE n(i) AS (SELECT 1 UNION ALL SELECT i + 1 FROM n WHERE i < 1000)
+            INSERT INTO f SELECT randomblob(1000) FROM n;`)
+
+        expect(await db.free()).to.equal(0)
+
+        await db.exec('DELETE FROM f')
+        expect(await db.free()).to.be.above(0.5)
+      })
+    })
+
     describe('check', () => {
       beforeEach(() => db.seq(async conn => {
         await conn.exec('CREATE TABLE t1 (id INTEGER PRIMARY KEY, name)')
@@ -241,6 +255,9 @@ describe('Database', () => {
           it('fails with the number of violations', async () => {
             await assert.rejects(
               () => db.check(),
+              { message: '1 integrity check(s) failed' })
+            await assert.rejects(
+              () => db.check(null, { quick: true }),
               { message: '1 integrity check(s) failed' })
           })
         })
