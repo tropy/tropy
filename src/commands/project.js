@@ -17,6 +17,14 @@ import { list, load, optimize, reindex, resolveBasePath, save } from '../common/
 export class Optimize extends Command {
   *exec () {
     let { db } = this.options
+
+    try {
+      yield call(db.check, null, { quick: true })
+    } catch (err) {
+      yield put(act.project.warn('corrupted'))
+      throw err
+    }
+
     yield call(db.clear)
     yield call(db.seq, conn => optimize(conn))
   }

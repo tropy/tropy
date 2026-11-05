@@ -121,5 +121,13 @@ export default {
         ...meta
       }
     }
+  },
+
+  warn (payload, meta = {}) {
+    return {
+      type: PROJECT.WARN,
+      payload,
+      meta
+    }
   }
 }
