@@ -351,9 +351,11 @@ export class Connection {
   }
 
   each (sql, ...args) {
-    return (sql instanceof Sql) ?
-      this.db.eachAsync(sql.text, sql.params, ...args) :
-      this.db.eachAsync(sql, ...args)
+    if (!(sql instanceof Sql))
+      return this.db.eachAsync(sql, ...args)
+
+    assert(args.length === 1, 'sql query takes no extra params')
+    return this.db.eachAsync(sql.text, sql.params, ...args)
   }
 
   get (sql, ...params) {
@@ -533,7 +535,9 @@ function flatten (params) {
 }
 
 function bind (sql, params) {
-  return (sql instanceof Sql) ?
-    [sql.text, sql.params] :
-    [sql, flatten(params)]
+  if (!(sql instanceof Sql))
+    return [sql, flatten(params)]
+
+  assert(params.length === 0, 'sql query takes no extra params')
+  return [sql.text, sql.params]
 }
