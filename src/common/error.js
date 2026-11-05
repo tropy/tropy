@@ -16,6 +16,19 @@ export class CodeError extends Error {
   }
 }
 
+export class IntegrityError extends CodeError {
+  name = 'IntegrityError'
+  constructor (failures, message = 'integrity check failed', options) {
+    super('ECORRUPT', message, options)
+    this.failures = failures
+    this.stack = [
+      `${this.name}: ${message}`,
+      ...failures.map(f => `    ${f}`),
+      ...this.stack.split('\n').slice(1)
+    ].join('\n')
+  }
+}
+
 export class AccountError extends Error {
   name = 'AccountError'
   constructor (code, message = code, type = 'error', ...args) {

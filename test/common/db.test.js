@@ -6,6 +6,7 @@ import { pMap, times } from '#tropy/common/util.js'
 import { Database, Connection } from '#tropy/common/db.js'
 import sql, { IN, VALUES } from '#tropy/common/sql.js'
 import { using } from '#tropy/common/disposable.js'
+import { IntegrityError } from '#tropy/common/error.js'
 
 function failure () { throw new Error() }
 
@@ -238,6 +239,16 @@ describe('Database', () => {
             await assert.rejects(
               () => db.check(),
               { message: '2 foreign key check(s) failed' })
+          })
+
+          it('fails with the violations, also in the stack', async () => {
+            await assert.rejects(() => db.check(), (err) => {
+              expect(err).to.be.instanceOf(IntegrityError)
+              expect(err.code).to.equal('ECORRUPT')
+              expect(err.failures).to.eql(['t2[1] -> t1#0', 't2[3] -> t1#0'])
+              expect(err.stack).to.include('    t2[1] -> t1#0')
+              return true
+            })
           })
         })
 

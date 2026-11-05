@@ -5,6 +5,7 @@ import { mock } from 'node:test'
 // Call effects are answered by node:test mocks:
 // the implementations in `mocks` (Map or [fn, impl] pairs),
 // or, for all other functions, mocks returning undefined.
+// Errors thrown by a mock are thrown into the saga.
 // Put effects are recorded in `puts`.
 
 export function run (saga, { state = {}, mocks = [] } = {}) {
@@ -29,7 +30,12 @@ export function run (saga, { state = {}, mocks = [] } = {}) {
         value = payload.selector(state, ...payload.args)
         break
       case 'CALL':
-        value = mockFor(payload.fn)(...payload.args)
+        try {
+          value = mockFor(payload.fn)(...payload.args)
+        } catch (err) {
+          next = saga.throw(err)
+          continue
+        }
         break
       case 'PUT':
         puts.push(payload.action)

@@ -8,6 +8,7 @@ import { Migration } from './migration.js'
 import { debug, info, trace, warn } from './log.js'
 import { DisposableResource, using } from './disposable.js'
 import { Sql } from './sql.js'
+import { IntegrityError } from './error.js'
 
 
 const M = {
@@ -462,38 +463,34 @@ export class Connection {
   }
 
   async check (table, { maxIntErrors = 10, quick = false } = {}) {
-    if (maxIntErrors > 0) {
-      let pragma = quick ? 'quick_check' : 'integrity_check'
-      let result = await this.all(`PRAGMA ${pragma}(${maxIntErrors})`)
+    try {
+      if (maxIntErrors > 0) {
+        let pragma = quick ? 'quick_check' : 'integrity_check'
+        let result = await this.all(`PRAGMA ${pragma}(${maxIntErrors})`)
 
-      if (result.length !== 1 || result[0][pragma] !== 'ok') {
-        warn({
-          err: {
-            stack: result.map(f => `${f[pragma]}`).join('\n')
-          }
-        }, 'integrity check failed!')
-
-        throw new Error(`${result.length} integrity check(s) failed`)
-      }
-    }
-
-    let violations = await this.all(
-      `PRAGMA foreign_key_check${table ? `('${table}')` : ''}`
-    )
-
-    if (violations.length > 0) {
-      warn({
-        err: {
-          stack: violations
-            .map(v => `${v.table}[${v.rowid}] -> ${v.parent}#${v.fkid}`)
-            .join('\n')
+        if (result.length !== 1 || result[0][pragma] !== 'ok') {
+          throw new IntegrityError(
+            result.map(f => f[pragma]),
+            `${result.length} integrity check(s) failed`)
         }
-      }, 'foreign key check failed!')
+      }
 
-      throw new Error(`${violations.length} foreign key check(s) failed`)
+      let violations = await this.all(
+        `PRAGMA foreign_key_check${table ? `('${table}')` : ''}`
+      )
+
+      if (violations.length > 0) {
+        throw new IntegrityError(
+          violations.map(v => `${v.table}[${v.rowid}] -> ${v.parent}#${v.fkid}`),
+          `${violations.length} foreign key check(s) failed`)
+      }
+
+      return this
+
+    } catch (err) {
+      if (err.code !== 'SQLITE_CORRUPT') throw err
+      throw new IntegrityError([err.message], err.message, { cause: err })
     }
-
-    return this
   }
 
   static defaults = {

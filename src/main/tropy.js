@@ -355,7 +355,9 @@ export class Tropy extends EventEmitter {
       this.dispatch(act.project.reindex(), this.wm.current()))
 
     this.on('app:optimize-project', () =>
-      this.dispatch(act.project.optimize(), this.wm.current()))
+      this.dispatch(
+        act.project.optimize(null, { force: true }),
+        this.wm.current()))
 
     this.on('app:prune-project', () =>
       this.dispatch(act.project.prune(), this.wm.current()))

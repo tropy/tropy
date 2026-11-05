@@ -1,4 +1,4 @@
-import { mkdir, readdir, stat, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, stat, utimes, writeFile } from 'node:fs/promises'
 import { join, extname, basename } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { debug, warn } from './log.js'
@@ -16,6 +16,9 @@ export class Cache {
 
   init = async () => {
     await mkdir(this.root, { recursive: true })
+
+    let now = new Date()
+    await utimes(this.root, now, now)
 
     return this
   }
