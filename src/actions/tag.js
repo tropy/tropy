@@ -19,7 +19,6 @@ export default {
       meta: {
         cmd: 'project',
         history: 'add',
-        ipc: TAG.CHANGED,
         ...meta
       }
     }
@@ -64,7 +63,6 @@ export default {
         cmd: 'project',
         history: 'add',
         search: true,
-        ipc: TAG.CHANGED,
         ...meta
       }
     }
@@ -74,7 +72,7 @@ export default {
     return {
       type: TAG.LOAD,
       payload,
-      meta: { cmd: 'project', ipc: TAG.CHANGED, ...meta }
+      meta: { cmd: 'project', ...meta }
     }
   },
 
@@ -94,11 +92,11 @@ export default {
     }
   },
 
-  update (payload, meta) {
+  update (payload, meta = {}) {
     return {
       type: TAG.UPDATE,
       payload,
-      meta: { ipc: TAG.CHANGED, ...meta }
+      meta
     }
   },
 

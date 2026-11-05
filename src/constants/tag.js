@@ -6,6 +6,5 @@ export default {
   SAVE: 'tag.save',
   SELECT: 'tag.select',
   UPDATE: 'tag.update',
-  LOAD: 'tag.load',
-  CHANGED: 'tag.changed'
+  LOAD: 'tag.load'
 }

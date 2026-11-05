@@ -44,11 +44,10 @@ import { ProjectManager } from './pm.js'
 import { ProtocolHandler } from './protocol.js'
 
 import {
-  FLASH, HISTORY, IMAGE, TAG, CONTEXT
+  FLASH, HISTORY, IMAGE, CONTEXT
 } from '../constants/index.js'
 
 const H = new WeakMap()
-const T = new WeakMap()
 
 
 export class Tropy extends EventEmitter {
@@ -426,14 +425,6 @@ export class Tropy extends EventEmitter {
       this.dispatch(act.photo.create({ item: target.id }), win)
     })
 
-    this.on('app:toggle-item-tag', (win, { id, tag }) => {
-      this.dispatch(act.item.tags.toggle({ id, tags: [tag] }), win)
-    })
-
-    this.on('app:clear-item-tags', (win, { id }) => {
-      this.dispatch(act.item.tags.clear(id), win)
-    })
-
     this.on('app:list-item-remove', (win, { target }) => {
       this.dispatch(act.list.items.remove({
         id: target.list,
@@ -802,10 +793,6 @@ export class Tropy extends EventEmitter {
       this.setHistory(history, this.wm.fromEvent(event))
     })
 
-    ipc.on(TAG.CHANGED, (event, tags) => {
-      this.setTags(tags, this.wm.fromEvent(event))
-    })
-
     ipc.on(CONTEXT.SHOW, (event, payload) => {
       this.showContextMenu(payload, this.wm.fromEvent(event))
     })
@@ -947,14 +934,6 @@ export class Tropy extends EventEmitter {
 
     if (win.isFocused())
       this.menu.handleHistoryChange(history)
-  }
-
-  getTags (win = this.wm.focusedWindow) {
-    return T.get(win) || []
-  }
-
-  setTags (tags, win = this.wm.focusedWindow) {
-    return T.set(win, tags)
   }
 
   get dict () {

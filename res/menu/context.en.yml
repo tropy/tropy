@@ -197,14 +197,6 @@ en:
         condition: 'isMultiplePhotos'
       - label: 'Add Photo …'
         command: 'app:create-item-photo'
-      - label: 'Tags'
-        id: 'tag'
-        submenu:
-          - label: 'None'
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: 'Delete Item'
         command: 'app:delete-item'
     item-read-only: &item-read-only
