@@ -481,40 +481,6 @@ Menu.ItemCompiler = {
     }
   },
 
-  tag: (item, app, win, event) => {
-    let { target } = event
-    let tags = app.getTags(win)
-
-    if (!tags.length) {
-      item.enabled = false
-
-    } else {
-      item.submenu = [
-        ...item.submenu,
-        ...tags.map(tag => ({
-          type: 'checkbox',
-          label: tag.name,
-          checked: target.tags.includes(tag.id),
-          click: createResponder('app:toggle-item-tag', app, win, {
-            id: target.id,
-            tag: tag.id
-          })
-        }))
-      ]
-
-      if (target.tags.length) {
-        item.submenu[0] = {
-          ...item.submenu[0],
-          checked: false,
-          enabled: true,
-          click: createResponder('app:clear-item-tags', app, win, {
-            id: target.id
-          })
-        }
-      }
-    }
-  },
-
   'line-wrap': (item, app, win, event) => {
     item.checked = !!event.target.wrap
   },

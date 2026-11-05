@@ -33,9 +33,7 @@ export const item = {
   print: a('item.print'),
   restore: a('item.restore'),
   tags: {
-    clear: a('item.tags.clear'),
-    delete: a('item.tags.delete'),
-    toggle: a('item.tags.toggle')
+    delete: a('item.tags.delete')
   }
 }
 
