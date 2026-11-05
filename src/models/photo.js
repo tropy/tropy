@@ -57,18 +57,24 @@ async function load (db, ids, { basePath } = {}) {
         .join('photos', { using: 'id' })
         .where({ id: ids }),
 
-      ({ id, created, modified, mirror, negative, path, ...data }) => {
-        data.created = new Date(created)
-        data.modified = new Date(modified)
-        data.mirror = !!mirror
-        data.negative = !!negative
-        data.path = (
-          (basePath && data.protocol === 'file') ?
-            resolve(basePath, normalize(path)) : path
+      (photo) => {
+        photo.created = new Date(photo.created)
+        photo.modified = new Date(photo.modified)
+        photo.mirror = !!photo.mirror
+        photo.negative = !!photo.negative
+        photo.path = (
+          (basePath && photo.protocol === 'file')
+            ? resolve(basePath, normalize(photo.path))
+            : photo.path
         ).normalize()
 
-        if (id in photos) Object.assign(photos[id], data)
-        else photos[id] = Object.assign(skel(id), data)
+        let { selections, notes, transcriptions } =
+          photos[photo.id] ?? skel()
+
+        photo.selections = selections
+        photo.notes = notes
+        photo.transcriptions = transcriptions
+        photos[photo.id] = photo
       }
     ),
 
