@@ -9,8 +9,8 @@ export class Sql {
 }
 
 // Tagged template binding every interpolated value:
-// scalars become `?`, arrays a `json_each` subquery
-// (one SQL text for any list length),
+// scalars become `?`, arrays one `?` bound as JSON text
+// (for json_each: one SQL text for any list length),
 // and Sql fragments are spliced in with their parameters.
 // Identifiers must be passed explicitly via sql.id or sql.raw.
 export function sql (strings, ...values) {
@@ -23,12 +23,9 @@ export function sql (strings, ...values) {
     if (value instanceof Sql) {
       text += value.text
       params.push(...value.params)
-    } else if (isArray(value)) {
-      text += '(SELECT value FROM json_each(?))'
-      params.push(JSON.stringify(value))
     } else {
       text += '?'
-      params.push(value ?? null)
+      params.push(isArray(value) ? JSON.stringify(value) : value ?? null)
     }
 
     text += strings[i + 1]
@@ -36,6 +33,12 @@ export function sql (strings, ...values) {
 
   return new Sql(text, params)
 }
+
+// A json_each subquery for `IN`, e.g. sql`WHERE id IN ${sql.list(ids)}`.
+// Values come back with JSON types and no column affinity:
+// numbers never equal text, so pass ids as stored.
+sql.list = (values) =>
+  sql`(SELECT value FROM json_each(${values}))`
 
 sql.raw = (text) =>
   new Sql(text)
