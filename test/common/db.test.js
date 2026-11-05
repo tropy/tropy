@@ -91,6 +91,11 @@ describe('Database', () => {
         })
         expect(rows).to.eql([{ a: 1 }])
       })
+
+      it('rejects extra params', async () => {
+        await assert.rejects(db.get(sql`SELECT ${1}`, 2))
+        await assert.rejects(db.each(sql`SELECT ${1}`, 2, () => {}))
+      })
     })
 
     describe('exec', () => {
