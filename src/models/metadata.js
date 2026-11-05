@@ -1,15 +1,16 @@
-import { array, blank, list, quote } from '../common/util.js'
+import { array, blank } from '../common/util.js'
 import { touch } from './subject.js'
 import { save } from './value.js'
 
-async function insert (db, { id, property, value, language = 'NULL' }) {
+async function insert (db, { id, property, value, language = null }) {
   return db.run(`
     INSERT INTO metadata (id, property, value_id, language)
-      VALUES ${
-        array(id).map(x =>
-          `(${[x, quote(property), value, language].join(',')})`
-        ).join(', ')
-      }`)
+      SELECT value, ?, ?, ? FROM json_each(?)`, [
+    property,
+    value,
+    language,
+    JSON.stringify(array(id))
+  ])
 }
 
 async function update (db, { id, data, timestamp }, replace = false) {
@@ -36,11 +37,15 @@ async function update (db, { id, data, timestamp }, replace = false) {
 }
 
 async function remove (db, { id, property }) {
+  let params = [JSON.stringify(array(id))]
+  if (property != null) params.push(JSON.stringify(array(property)))
+
   return db.run(`
-    DELETE FROM metadata WHERE id IN (${list(array(id))})${
-      (property == null) ?
-        '' : ` AND property IN (${list(array(property), quote)})`
-    }`)
+    DELETE FROM metadata
+      WHERE id IN (SELECT value FROM json_each(?))${
+        (property == null) ?
+          '' : ' AND property IN (SELECT value FROM json_each(?))'
+      }`, params)
 }
 
 export default {
@@ -56,8 +61,9 @@ export default {
         FROM subjects
           JOIN metadata USING (id)
           JOIN metadata_values USING (value_id)${
-            (ids != null) ? ` WHERE id IN (${list(ids)}) ` : ''
+            (ids != null) ? ' WHERE id IN (SELECT value FROM json_each(?))' : ''
           } ORDER BY id, metadata.created ASC`,
+    (ids != null) ? [JSON.stringify(ids)] : [],
     ({ id, property, type, text }) => {
       if (id in data) data[id][property] = { type, text }
       else data[id] = { id, [property]: { type, text } }
@@ -74,8 +80,8 @@ export default {
   async copy (db, { source, target }) {
     return db.run(`
       INSERT INTO metadata (id, property, value_id, language)
-        SELECT ${Number(target)} AS id, property, value_id, language
+        SELECT ? AS id, property, value_id, language
           FROM metadata
-          WHERE id = ?`, source)
+          WHERE id = ?`, [target, source])
   }
 }

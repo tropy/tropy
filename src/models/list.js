@@ -103,9 +103,8 @@ export default {
       let res = (items.length === 0) ?
           { changes: restores.length } :
         await db.run(`
-          INSERT INTO list_items (list_id, id) VALUES ${
-            items.map(it => `(${id}, ${it})`).join(',')
-          }`)
+          INSERT INTO list_items (list_id, id)
+            SELECT ?, value FROM json_each(?)`, [id, JSON.stringify(items)])
 
       return {
         ...res,

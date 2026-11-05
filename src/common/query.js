@@ -150,7 +150,8 @@ class ConditionalQuery extends Query {
               break
 
             case (isArray(rhs)):
-              rhs = `(${rhs.join(', ')})`
+              params[`$${prefix}${lhs}`] = JSON.stringify(rhs)
+              rhs = `(SELECT value FROM json_each($${prefix}${lhs}))`
               cmp = this.isNegated ? 'NOT IN' : 'IN'
               break
 

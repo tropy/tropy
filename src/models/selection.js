@@ -1,4 +1,4 @@
-import { empty, list, pick } from '../common/util.js'
+import { empty, pick } from '../common/util.js'
 import { props } from '../common/export.js'
 import { into, select } from '../common/query.js'
 import image from './image.js'
@@ -172,13 +172,13 @@ export default {
   async delete (db, ...ids) {
     return db.run(`
       INSERT INTO trash (id)
-        VALUES ${ids.map(id => `(${id})`).join(',')}`)
+        SELECT value FROM json_each(?)`, JSON.stringify(ids))
   },
 
   async restore (db, ...ids) {
     return db.run(`
-      DELETE FROM trash WHERE id IN (${list(ids)})`
-    )
+      DELETE FROM trash WHERE id IN (SELECT value FROM json_each(?))`,
+    JSON.stringify(ids))
   },
 
   async prune (db) {
