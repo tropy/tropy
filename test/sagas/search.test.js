@@ -1,6 +1,7 @@
 import { run } from '../support/saga.js'
 import { search, sync } from '#tropy/sagas/search.js'
 import { update } from '#tropy/slices/qr.js'
+import { getDefaultSort } from '#tropy/selectors/nav.js'
 import * as mod from '#tropy/models/index.js'
 
 const TITLE = 'http://purl.org/dc/elements/1.1/title'
@@ -64,6 +65,18 @@ describe('order saga', () => {
     let { puts: [{ payload }] } = sync$(s)
 
     expect(sync$(state(metadata, payload)).puts).to.eql([])
+  })
+
+  it('reverses the order on a direction change without seeding', () => {
+    let { result } = sync$(state(metadata))
+    let s = state(metadata)
+    s.nav.sort = { 0: { ...getDefaultSort(0), asc: false } }
+
+    let { puts, calls } = sync$(s, result)
+
+    expect(calls(mod.item.seed).callCount()).to.equal(0)
+    expect(qr(puts)[0].order).to.eql([2, 1, 3, ...untitled.toReversed()])
+    expect(qr(puts)[0].sort).to.include({ asc: false })
   })
 
   it('does nothing when the keys did not change', () => {
