@@ -23,6 +23,12 @@ export function project (state = init, { type, payload, meta, error }) {
     case PROJECT.UPDATE:
       return { ...state, ...payload }
 
+    case PROJECT.WARN:
+      return state.warnings?.includes(payload) ? state : {
+        ...state,
+        warnings: [...(state.warnings ?? []), payload]
+      }
+
     case PROJECT.OPEN:
       return {
         ...init,

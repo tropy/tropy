@@ -252,15 +252,26 @@ export async function open (path, {
     }
   }
 
+  let warnings = []
+
   if (migrate && !db.isReadOnly) {
     var migrations = await db.migrate(migrate)
-    await optimize(db)
+
+    if (migrations.length > 0) {
+      await optimize(db)
+
+      if (!skipIntegrityCheck) {
+        await db.check().catch(() => {
+          warnings.push('corrupted')
+        })
+      }
+    }
   }
 
   let project = await load(db)
   let accessId
 
-  project.warnings = []
+  project.warnings = warnings
 
   if (migrate) {
     let number = await db.version()
@@ -279,12 +290,6 @@ export async function open (path, {
     db.once('update', async () => {
       accessId = await beginProjectAccess(db, user)
     })
-
-    if (!skipIntegrityCheck) {
-      await db.check().catch(() => {
-        project.warnings.push('corrupted')
-      })
-    }
   }
 
   db.once('will-close', async () => {
