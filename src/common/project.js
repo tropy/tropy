@@ -6,7 +6,7 @@ import { randomUUID as uuid } from 'node:crypto'
 import { Database } from './db.js'
 import { Migration } from './migration.js'
 import { home, normalize } from './os.js'
-import { into, select, update } from './query.js'
+import sql, { SET } from './sql.js'
 import { empty, pMap } from './util.js'
 import { CodeError, IntegrityError } from './error.js'
 import { info, warn } from './log.js'
@@ -52,12 +52,9 @@ export async function create (path, schema, appDir, {
     })
 
     await db.read(schema)
-    await db.run(...into('project').insert({
-      project_id: id,
-      name,
-      base,
-      store
-    }))
+    await db.run(sql`
+      INSERT INTO project (project_id, name, base, store)
+        VALUES (${id}, ${name}, ${base}, ${store})`)
 
     if (autoclose) {
       await db.close()
@@ -153,13 +150,10 @@ export async function convert (src, path, appDir, {
     })
 
     // Update project base and store
-    await db.run(
-      ...update('project')
-        .set({
-          base: BASE.PROJECT,
-          store: MANAGED_STORE_NAME
-        })
-        .where({ project_id: project.id }))
+    await db.run(sql`
+      UPDATE project
+        SET base = ${BASE.PROJECT}, store = ${MANAGED_STORE_NAME}
+        WHERE project_id = ${project.id}`)
 
     info(`processing ${assets.length} asset(s)`)
     await pMap(assets, async ({ id, ...props }) => {
@@ -185,10 +179,10 @@ export async function convert (src, path, appDir, {
       // Update all local paths regardless of error status,
       // because the project has a new base!
       if (asset.protocol === 'file') {
-        await db.run(
-          ...update('photos')
-            .set({ path: relative(path, asset.path), protocol: 'file' })
-            .where({ id }))
+        await db.run(sql`
+          UPDATE photos
+            SET path = ${relative(path, asset.path)}, protocol = 'file'
+            WHERE id = ${id}`)
       }
     }, { concurrency })
 
@@ -340,7 +334,7 @@ export async function pstat (path, modifiedSince) {
       return null
 
     var db = new Database(dbFile, 'r', { max: 1 })
-    let stats = await db.get(projectStats.query)
+    let stats = await db.get(projectStats)
 
     stats.path = path
     stats.lastModified = mtimeMs
@@ -354,7 +348,7 @@ export async function pstat (path, modifiedSince) {
 
 
 export async function load (db) {
-  let project = await db.get(projectInfo.query)
+  let project = await db.get(projectInfo)
   assert(project?.id != null, 'invalid project info')
 
   project.isReadOnly = db.isReadOnly
@@ -381,7 +375,7 @@ export async function list (db, { basePath }) {
   let assets = new Map
 
   await db.each(
-    ...select('id', 'path', 'protocol').from('photos'),
+    'SELECT id, path, protocol FROM photos',
     ({ id, path, protocol }) => {
       path = (protocol === 'file')
         ? (basePath ? resolve(basePath, normalize(path)) : normalize(path))
@@ -393,13 +387,15 @@ export async function list (db, { basePath }) {
 }
 
 export async function save (db, { id, ...props }, basePath) {
+  for (let key in props)
+    assert(['name', 'base', 'store'].includes(key), `cannot save ${key}`)
+
   if (basePath && props.store)
     props.store = relative(basePath, props.store)
 
   if (!empty(props))
-    return db.run(
-      ...update('project').set(props).where({ project_id: id })
-    )
+    return db.run(sql`
+      UPDATE project ${SET(props)} WHERE project_id = ${id}`)
 }
 
 export async function lock (dbFile) {
@@ -413,7 +409,7 @@ export async function unlock (dbFile) {
 export async function getAssets (db, { basePath }) {
   let assets = []
 
-  await db.each(assetInfo.query, asset => {
+  await db.each(assetInfo, asset => {
     asset.path = (
       (basePath && asset.protocol === 'file') ?
         resolve(basePath, normalize(asset.path)) : asset.path
@@ -472,8 +468,8 @@ export async function optimizeAssets (src, dest, appDir, {
 
       if (updates == null) return
 
-      await db.run(
-        ...update('photos').set(updates).where({ id }))
+      await db.run(sql`
+        UPDATE photos ${SET(updates)} WHERE id = ${id}`)
     }, { concurrency })
 
     await db.optimize()
@@ -483,17 +479,20 @@ export async function optimizeAssets (src, dest, appDir, {
   }
 }
 
+const FTS = ['fts_notes', 'fts_metadata', 'fts_transcriptions']
+
 export async function optimize (db) {
-  await db.exec("INSERT INTO fts_notes(fts_notes) VALUES ('optimize')")
-  await db.exec("INSERT INTO fts_metadata(fts_metadata) VALUES ('optimize')")
+  for (let fts of FTS)
+    await db.exec(`INSERT INTO ${fts}(${fts}) VALUES ('optimize')`)
+
   await db.exec('VACUUM')
 }
 
 export async function reindex (db) {
-  await db.check()
   await db.exec('REINDEX')
-  await db.exec("INSERT INTO fts_notes(fts_notes) VALUES ('rebuild')")
-  await db.exec("INSERT INTO fts_metadata(fts_metadata) VALUES ('rebuild')")
+
+  for (let fts of FTS)
+    await db.exec(`INSERT INTO ${fts}(${fts}) VALUES ('rebuild')`)
 }
 
 
@@ -515,29 +514,32 @@ const BASE = {
 
 export const BASES = [null, BASE.PROJECT, BASE.HOME]
 
-const projectInfo =
-  select({ id: 'project_id' }, 'name', 'base', 'store')
-    .from('project').limit(1)
+const projectInfo = `
+  SELECT project_id AS id, name, base, store
+    FROM project
+    LIMIT 1`
 
-const projectStats =
-  select({ id: 'project_id' }, 'name', {
-    items:
-      select('count(id)')
-        .from('items')
-        .outer.join('trash', { using: 'id' }),
-    photos:
-      select('count(id)')
-        .from('photos')
-        .outer.join('trash', { using: 'id' }),
-    notes: select('count(note_id)').from('notes')
+const projectStats = `
+  SELECT project_id AS id, name,
+      (SELECT count(*) FROM items
+        WHERE id NOT IN (SELECT id FROM trash)) AS items,
+      (SELECT count(*) FROM photos
+        WHERE id NOT IN (SELECT id FROM trash)
+          AND item_id NOT IN (SELECT id FROM trash)) AS photos,
+      (SELECT count(*) FROM notes
+        LEFT JOIN selections AS s ON s.id = notes.id
+        JOIN photos AS p ON p.id = coalesce(s.photo_id, notes.id)
+        WHERE notes.deleted IS NULL
+          AND notes.id NOT IN (SELECT id FROM trash)
+          AND p.id NOT IN (SELECT id FROM trash)
+          AND p.item_id NOT IN (SELECT id FROM trash)) AS notes
+    FROM project
+    LIMIT 1`
 
-  }).from('project').limit(1)
-
-const assetInfo =
-  select('id', 'item_id AS item', 'position',
-    'protocol', 'path', 'checksum', 'mimetype', 'page')
-    .from('photos')
-    .order('item_id, position, id')
+const assetInfo = `
+  SELECT id, item_id AS item, position, protocol, path, checksum, mimetype, page
+    FROM photos
+    ORDER BY item_id, position, id`
 
 // NB delaying the electron import here on purpose
 // so that we can load the utilities from Node.js scripts

@@ -17,8 +17,8 @@ import { list, load, optimize, reindex, resolveBasePath, save } from '../common/
 const isCorrupted = (state) =>
   !!state.project.warnings?.includes('corrupted')
 
-function *check (db, { quick = false } = {}) {
-  if (yield select(isCorrupted)) {
+function *check (db, { quick = false, force = false } = {}) {
+  if (!force && (yield select(isCorrupted))) {
     info('skip project check: corrupted')
     return false
   }
@@ -28,6 +28,13 @@ function *check (db, { quick = false } = {}) {
   try {
     yield call(db.check, null, { quick })
     info({ quick, ms: Date.now() - START }, 'project check passed')
+
+    if (yield select(isCorrupted)) {
+      let { warnings } = yield select(state => state.project)
+      yield put(act.project.update({
+        warnings: warnings.filter(w => w !== 'corrupted')
+      }))
+    }
 
     return true
 
@@ -190,7 +197,20 @@ Prune.register(PROJECT.PRUNE)
 export class Reindex extends Command {
   *exec () {
     let { db } = this.options
+
+    if (db.isReadOnly) {
+      info('skip project reindex: read-only')
+      return false
+    }
+
+    let START = Date.now()
+    info('project reindex')
+
     yield call(db.seq, conn => reindex(conn))
+    info({ ms: Date.now() - START }, 'project reindexed')
+
+    // Checks after the reindex, which may have repaired the project.
+    return yield* check(db, { force: true })
   }
 }
 

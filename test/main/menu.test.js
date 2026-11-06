@@ -72,6 +72,17 @@ describe('Menu conditions', () => {
     expect(enabled('!isProjectReadOnly')).to.be.true
   })
 
+  it('checks whether the project store is writable', () => {
+    let check = (project) => TropyMenu.ItemConditions.isProjectStoreWritable({
+      app: { pm: { get: () => project } }
+    })
+
+    expect(check({ isManaged: true, isReadOnly: false })).to.be.true
+    expect(check({ isManaged: true, isReadOnly: true })).to.be.false
+    expect(check({ isManaged: false, isReadOnly: false })).to.be.false
+    expect(check(null)).to.be.false
+  })
+
   it('checks whether a target project is open', () => {
     expect(enabled('!isTargetProjectOpen', { target: { path: '/open.tpy' } })).to.be.false
     expect(enabled('!isTargetProjectOpen', { target: { path: '/closed.tpy' } })).to.be.true
