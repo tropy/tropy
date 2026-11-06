@@ -18,8 +18,6 @@ const M = {
   'wx+': sqlite.OPEN_CREATE
 }
 
-const IUD = /^\s*(insert|update|delete)/i
-
 {
   // PATCH generic-pool to ensure that no more connections are created
   // while draining the pool!
@@ -136,12 +134,15 @@ export class Database extends EventEmitter {
         this.emit('error', error)
       })
 
-      db.on('profile', (query, ms) => {
-        if (IUD.test(query)) {
-          this.emit('update', query)
+      db.on('query', (query, readonly) => {
+        if (!readonly) {
+          // Technically the write can still fail, we record the intent.
           this.hasBeenModified = true
+          this.emit('update', query)
         }
+      })
 
+      db.on('profile', (query, ms) => {
         if (ms < 100)
           trace({ sql: query, ms }, 'db query')
         else if (ms < 250)

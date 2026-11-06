@@ -52,6 +52,25 @@ describe('Database', () => {
       })
     })
 
+    describe('writes', () => {
+      it('are reported before they run', async () => {
+        let update = mock.fn()
+        db.on('update', update)
+
+        await db.exec('CREATE TABLE t (id)')
+        await db.get('SELECT 1')
+        expect(update.mock.callCount()).to.equal(0)
+        expect(db.hasBeenModified).not.to.be.ok
+
+        await db.transaction(async tx => {
+          let insert = tx.run('INSERT INTO t VALUES (1)')
+          expect(update.mock.callCount()).to.equal(1)
+          await insert
+        })
+        expect(db.hasBeenModified).to.be.true
+      })
+    })
+
     describe('acquire', () => {
       it('returns a disposable connection', async () =>
         using(db.acquire(), c => {

@@ -5,14 +5,25 @@ export default sqlite3
 
 const { Database } = sqlite3
 
-for (let fn of ['close', 'all', 'get', 'exec']) {
-  Database.prototype[`${fn}Async`] = promisify(Database.prototype[fn])
+Database.prototype.closeAsync = promisify(Database.prototype.close)
+
+// TODO better-sqlite3 uses the prepared statement's `readonly`
+const IUD = /^\s*(insert|update|delete)/i
+
+for (let fn of ['all', 'get', 'exec']) {
+  let query = promisify(Database.prototype[fn])
+
+  Database.prototype[`${fn}Async`] = function (sql, ...args) {
+    this.emit('query', sql, !IUD.test(sql))
+    return query.call(this, sql, ...args)
+  }
 }
 
 
-Database.prototype.runAsync = function (...args) {
+Database.prototype.runAsync = function (sql, ...args) {
   return new Promise((resolve, reject) => {
-    this.run(...args, function (error) {
+    this.emit('query', sql, !IUD.test(sql))
+    this.run(sql, ...args, function (error) {
       if (error)
         reject(error)
       else
@@ -28,7 +39,8 @@ Database.prototype.eachAsync = function (...args) {
       throw new RangeError(`expected 1-3 arguments, was: ${args.length}`)
     }
 
-    const cb = args.pop()
+    let cb = args.pop()
+    let sql = args.shift()
 
     if (typeof cb !== 'function') {
       throw new TypeError('callback is not a function')
@@ -36,7 +48,8 @@ Database.prototype.eachAsync = function (...args) {
 
     let failed = false
 
-    this.each(...args,
+    this.emit('query', sql, !IUD.test(sql))
+    this.each(sql, ...args,
       (error, row) => {
         if (failed) return
 

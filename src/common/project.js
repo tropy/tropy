@@ -7,12 +7,12 @@ import { Database } from './db.js'
 import { Migration } from './migration.js'
 import { home, normalize } from './os.js'
 import { into, select, update } from './query.js'
-import { version } from './release.js'
 import { empty, pMap } from './util.js'
 import { CodeError, IntegrityError } from './error.js'
 import { info, warn } from './log.js'
 import { dbPath, getProjectType, projectPath, MANAGED, MANAGED_STORE_NAME } from './project-file.js'
 
+import * as access from '../models/access.js'
 import { Asset } from '../asset/asset.js'
 import { Store } from '../asset/store.js'
 
@@ -221,14 +221,13 @@ export async function convert (src, path, appDir, {
  * Additionally, the following database event handlers are attached:
  * - After the first write (or immediately after migrations)
  *   an access row will be created using the given `user` id.
- *
  * - Before closing the database, the access record will be finalized
  *   and the access table pruned.
  *
  */
 export async function open (path, {
   migrate,
-  pruneAccessTable = false,
+  pruneAccessTable = true,
   skipIntegrityCheck = false,
   user,
   ...dbOptions
@@ -275,7 +274,7 @@ export async function open (path, {
 
   let project = await load(db)
   let schema = await db.version()
-  let accessId
+  let session
 
   project.warnings = warnings
 
@@ -293,18 +292,25 @@ export async function open (path, {
     }
   }
 
-  if (migrations?.length > 0) {
-    accessId = await beginProjectAccess(db, user)
-
-  } else {
-    db.once('update', async () => {
-      accessId = await beginProjectAccess(db, user)
+  let recordAccess = () => {
+    session = access.open(db, user).catch((err) => {
+      warn({ err }, 'failed to record project access')
     })
   }
 
+  if (migrations?.length > 0)
+    recordAccess()
+  else
+    db.once('update', recordAccess)
+
   db.once('will-close', async () => {
-    if (accessId)
-      await endProjectAccess(db, accessId, pruneAccessTable)
+    db.off('update', recordAccess)
+
+    await session?.then(id =>
+      access.close(db, id, { prune: pruneAccessTable })
+    ).catch(err => {
+      warn({ err }, 'failed to finalize project access')
+    })
   })
 
   info({
@@ -354,7 +360,7 @@ export async function load (db) {
   project.isReadOnly = db.isReadOnly
   project.basePath = resolveBasePath(db, project.base)
 
-  project.isBlank = project.lastAccess == null &&
+  project.isBlank =
     (await db.get('SELECT 1 FROM subjects LIMIT 1')) == null
 
   project.isManaged = project.store != null
@@ -510,13 +516,8 @@ const BASE = {
 export const BASES = [null, BASE.PROJECT, BASE.HOME]
 
 const projectInfo =
-  select({ id: 'project_id' }, 'name', 'base', 'store', {
-    lastAccess:
-      select('opened')
-        .from('access')
-        .order('opened desc')
-        .limit(1)
-  }).from('project').limit(1)
+  select({ id: 'project_id' }, 'name', 'base', 'store')
+    .from('project').limit(1)
 
 const projectStats =
   select({ id: 'project_id' }, 'name', {
@@ -537,39 +538,6 @@ const assetInfo =
     'protocol', 'path', 'checksum', 'mimetype', 'page')
     .from('photos')
     .order('item_id, position, id')
-
-export async function beginProjectAccess (db, user) {
-  if (user == null)
-    return null
-
-  let { id } = await db.run(
-    ...into('access')
-      .insert({
-        path: db.path,
-        uuid: user,
-        version
-      }))
-
-  return id
-}
-
-export async function endProjectAccess (db, id, prune = false) {
-  await db.run(
-    ...update('access')
-      .set("closed = datetime('now')")
-      .where({ rowid: id }))
-
-  if (prune) {
-    await db.run(`
-      DELETE FROM access
-        WHERE rowid <= (
-          SELECT rowid FROM (
-            SELECT rowid FROM access ORDER BY rowid DESC LIMIT 1 OFFSET 99
-          )
-        )`
-    )
-  }
-}
 
 // NB delaying the electron import here on purpose
 // so that we can load the utilities from Node.js scripts
