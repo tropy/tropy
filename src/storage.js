@@ -1,4 +1,4 @@
-import { debug } from './common/log.js'
+import { trace } from './common/log.js'
 
 export class Storage {
   static load (name, ...args) {
@@ -14,13 +14,13 @@ export class Storage {
   }
 
   load (name) {
-    debug(`restoring ${this.expand(name)}`)
+    trace({ module: 'storage', ns: this.namespace }, `restoring ${name}`)
     return JSON.parse(localStorage.getItem(this.expand(name)))
   }
 
   save (name, object) {
     if (object != null) {
-      debug(`persisting ${this.expand(name)}`)
+      trace({ module: 'storage', ns: this.namespace }, `persisting ${name}`)
       localStorage.setItem(this.expand(name), JSON.stringify(object))
     }
 

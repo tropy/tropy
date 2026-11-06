@@ -109,7 +109,7 @@ export class Create extends ImportCommand {
             })
           } catch (err) {
             if (err instanceof DuplicateError) {
-              info(`skipping duplicate page ${image.page + 1} of "${path}"...`)
+              info({ path }, `skipping duplicate page ${image.page + 1}`)
               pageData.push(null)
             } else {
               throw err
@@ -182,7 +182,7 @@ export class Create extends ImportCommand {
 
     } catch (err) {
       if (err instanceof DuplicateError)
-        info(`skipping duplicate "${path}"...`)
+        info({ path }, 'skipping duplicate')
       else
         throw err
     }

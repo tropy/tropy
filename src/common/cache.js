@@ -79,7 +79,7 @@ export class Cache {
           await dup.toFile(this.expand(path))
 
         } else {
-          debug(`skipping ${name} image variant for #${id}: already exists`)
+          debug({ photo: id }, `skipping ${name} image variant: already exists`)
         }
       }
     } catch (err) {

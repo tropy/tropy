@@ -4,6 +4,47 @@ import pino from 'pino'
 import { home, system } from './os.js'
 import { version } from './release.js'
 
+/*
+ * Logging Guidelines
+ *
+ * Users send logs recorded at info level,
+ * debug if they enable developer mode,
+ * so logs should let us reconstruct what happened
+ * while staying short and free of user content.
+ *
+ * Messages: short, lowercase descriptions of the event.
+ *
+ * Common fields:
+ *   err      the Error; don't repeat its message in `msg`
+ *   path     the absolute file or folder; `src` and `dest` for two
+ *   url
+ *   ms       durations
+ *
+ *   project, item, photo, selection, note, etc.
+ *            ids, never whole objects
+ *
+ *   module   sub-system: account, esper, watch, etc.
+ *   counts   plural nouns with numbers (files, removed, items)
+ *   sql
+ *   status   HTTP status codes only
+ *
+ * Levels:
+ *   fatal    crashes
+ *   error    failed operations the user started
+ *   warn     recoverable failures
+ *   info     lifecycle and outcomes: app, windows, projects,
+ *            imports, maintenance, updates
+ *   debug    details of each operation: db connections, actions,
+ *            api requests, slow queries
+ *   trace    high-volume output
+ *
+ * Privacy: never log credentials. Above debug, avoid all user content
+ * (search terms, notes, metadata, action payloads) or identifiers
+ * like usernames. Debug may add identifiers, trace anything.
+ *
+ * The home folder in paths is shortened automatically.
+ */
+
 export let logger
 
 const REDACT = [
@@ -11,8 +52,6 @@ const REDACT = [
   '*.headers.authorization'
 ]
 
-// Replaces the home folder in serialized log lines with `~`,
-// matching JSON-escaped paths up to a separator or the string's end.
 export function redactHome (dir = home) {
   if (!dir || dirname(dir) === dir)
     return (s) => s

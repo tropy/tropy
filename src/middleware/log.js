@@ -10,7 +10,7 @@ export function log () {
           action: type,
           meta,
           err: payload
-        }, `${type} failed: ${payload?.message}`)
+        }, `${type} failed`)
         break
       default:
         if (meta.log !== false) {

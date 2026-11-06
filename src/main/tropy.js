@@ -135,7 +135,7 @@ export class Tropy extends EventEmitter {
           await this.proto.handleRequest(url)
           break
         default:
-          warn(`ignoring unsupported url: ${url}`)
+          warn({ url }, 'ignoring unsupported url')
       }
     }
   }
@@ -154,9 +154,9 @@ export class Tropy extends EventEmitter {
           break
         default:
           if (!IMAGE.EXT.includes(ext))
-            warn(`ignoring unsupported file: ${file}`)
+            warn({ path: file }, 'ignoring unsupported file')
           else if (!this.wm.current())
-            warn(`no project window, ignoring file: ${file}`)
+            warn({ path: file }, 'no project window, ignoring file')
           else
             this.import({ files: [file] })
       }
@@ -329,7 +329,7 @@ export class Tropy extends EventEmitter {
           landscape: opts.landscape
         })
 
-        info(`saved pdf ${path}`)
+        info({ path }, 'saved pdf')
 
       } else {
         debug('will open print dialog')

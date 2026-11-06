@@ -16,7 +16,7 @@ const mv = async (oldPath, newPath, name = oldPath) => {
       case 'ENOTEMPTY':
       case 'ENOENT':
       case 'EPERM':
-        warn(`failed to move ${name}: ${err.code} ${err.message}`)
+        warn({ err, name }, 'failed to move')
         break
       default:
         throw err

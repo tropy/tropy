@@ -82,14 +82,15 @@ export class Store {
       if (!this.owns(asset))
         throw new Error('unexpected asset path')
 
-      debug(`removing "${asset.path}" from store...`)
+      debug({ path: asset.path }, 'removing asset from store')
       await rm(asset.path, { force: true, maxRetries: 3 })
 
     } catch (err) {
       warn({
         err,
+        path: asset.path,
         store: this.root
-      }, `failed removing "${asset.path}" from store`)
+      }, 'failed removing asset from store')
     }
   }
 

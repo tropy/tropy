@@ -41,7 +41,7 @@ async function prepForPrinting (photo, _, {
     photo.print = path
 
   } catch (err) {
-    warn({ err, photo }, 'failed to prepare photo for printing')
+    warn({ err, photo: photo.id }, 'failed to prepare photo for printing')
   }
 }
 

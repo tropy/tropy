@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import { basename, join } from 'node:path'
 import electron from 'electron'
 import { load } from 'js-yaml'
-import { debug } from '../common/log.js'
+import { trace } from '../common/log.js'
 import { flatten } from '../common/util.js'
 
 
@@ -24,7 +24,7 @@ export class Resource {
 
   static async open (locale, name, ...args) {
     const res = this.expand(name, locale)
-    debug(`opening resource ${basename(res)}`)
+    trace(`opening resource ${basename(res)}`)
 
     return new this(
       this.parse(

@@ -122,8 +122,8 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
       await tropy.open(...args.map(url => new URL(url)))
     })
 
-    app.on('gpu-info-update', () => {
-      info({ status: app.getGPUFeatureStatus() }, 'gpu-info-update')
+    app.once('gpu-info-update', () => {
+      info({ gpu: app.getGPUFeatureStatus() }, 'gpu-info-update')
     })
 
     app.on('quit', async (_, code) => {
@@ -154,12 +154,12 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
       }
     }
 
-    info(`ready after ${tropy.ready - START}ms`)
+    info({ ms: Math.round(tropy.ready - START) }, 'ready')
   })
 
   app.on('web-contents-created', (_, contents) => {
     contents.setWindowOpenHandler((details) => {
-      warn({ details }, `prevented loading ${details.url}`)
+      warn({ url: details.url }, 'prevented opening window')
       return { action: 'deny' }
     })
   })

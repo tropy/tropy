@@ -175,11 +175,11 @@ export class Prune extends Command {
 
   remove = async (path) => {
     try {
-      debug(`removing orphaned file "${basename(path)}" from store`)
+      debug({ path }, 'removing orphaned file from store')
       await rm(path, { force: true, maxRetries: 3 })
       return true
     } catch (err) {
-      warn({ err }, `failed removing "${path}" from store`)
+      warn({ err, path }, 'failed removing orphaned file from store')
       return false
     }
   }

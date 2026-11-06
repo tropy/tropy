@@ -134,8 +134,10 @@ export class Consolidate extends ImportCommand {
       if (meta.force || image.hasChanged) {
         if (broken) {
           warn({
-            err: image.error
-          }, `failed to open photo ${photo.path}`)
+            err: image.error,
+            photo: photo.id,
+            path: photo.path
+          }, 'failed to open photo')
 
           let path = yield this.resolve(photo)
           if (path) {

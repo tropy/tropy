@@ -1,7 +1,6 @@
 import assert from 'node:assert'
 import { EventEmitter } from 'node:events'
 import { readFile } from 'node:fs/promises'
-import { basename, dirname } from 'node:path'
 import { createPool, Pool } from 'generic-pool'
 import { canWrite } from './fs.js'
 import sqlite from './sqlite.js'
@@ -60,7 +59,7 @@ export class Database extends EventEmitter {
   }
 
   constructor (path = ':memory:', mode = 'w+', { journalMode, ...opts } = {}) {
-    debug({ path, mode }, 'init db')
+    trace({ path, mode }, 'init db')
     super({ captureRejections: true })
 
     this.path = path
@@ -93,7 +92,7 @@ export class Database extends EventEmitter {
     let version = await this.version()
     let migrations = await Migration.since(version, ...args)
 
-    debug(`db schema version #${version}`)
+    trace(`db schema version #${version}`)
     for (let migration of migrations) {
       await migration.up(this)
     }
@@ -111,10 +110,7 @@ export class Database extends EventEmitter {
 
   create (mode = this.mode) {
     return new Promise((resolve, reject) => {
-      debug({
-        mode,
-        path: this.path
-      }, `open db ${basename(dirname(this.path))}/${basename(this.path)}`)
+      trace({ mode, path: this.path }, 'open db')
 
       let db = new sqlite.Database(this.path, M[mode], (error) => {
         if (error) {
@@ -146,27 +142,23 @@ export class Database extends EventEmitter {
           this.hasBeenModified = true
         }
 
-        let msg = `db query took ${ms}ms`
-
         if (ms < 100)
-          trace({ msg, query, ms })
+          trace({ sql: query, ms }, 'db query')
         else if (ms < 250)
-          debug({ msg, query, ms })
+          debug({ sql: query, ms }, 'db query')
         else
-          warn({ query, ms }, `SLOW: ${msg}`)
+          warn({ sql: query, ms }, 'slow db query')
       })
     })
   }
 
   async destroy (conn) {
     try {
-      debug({ path: this.path }, 'close db connection')
+      trace({ path: this.path }, 'close db connection')
 
       if (!this.isReadOnly) {
-        await conn.optimize().catch((e) => {
-          debug({
-            path: this.path
-          }, `optimize connection failed: ${e.message}`)
+        await conn.optimize().catch((err) => {
+          debug({ err, path: this.path }, 'optimize connection failed')
         })
       }
 
@@ -176,7 +168,7 @@ export class Database extends EventEmitter {
     } catch (err) {
       // NB: generic-pool does not wait handle async destroy functions
       // so errors thrown here will likely end up as unhandled rejections.
-      warn({ path: this.path }, `failed to close db connection: ${err.message}`)
+      warn({ err, path: this.path }, 'failed to close db connection')
     }
   }
 

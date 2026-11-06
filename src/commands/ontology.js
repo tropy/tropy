@@ -51,7 +51,7 @@ export class Import extends Command {
               vocabs.push(id)
 
             } catch (err) {
-              warn({ err }, `failed to import "${id}"`)
+              warn({ err, vocab: id }, 'failed to import vocabulary')
               fail(err, this.action.type)
             }
           }
@@ -59,7 +59,7 @@ export class Import extends Command {
 
 
       } catch (err) {
-        warn({ err }, `failed to import "${file}"`)
+        warn({ err, path: file }, 'failed to import file')
         fail(err, this.action.type)
       }
     }
@@ -277,7 +277,7 @@ export class TemplateImport extends Command {
         }, { ...meta, replace: true }))
 
       } catch (err) {
-        warn({ err }, `failed to import "${file}"`)
+        warn({ err, path: file }, 'failed to import file')
         fail(err, this.action.type)
       }
     }
@@ -324,7 +324,7 @@ export class TemplateExport extends Command {
       yield call(Template.save, data, path)
 
     } catch (err) {
-      warn({ err }, `failed to export template ${id} to ${path}`)
+      warn({ err, template: id, path }, 'failed to export template')
       fail(err, this.action.type)
     }
   }
@@ -347,7 +347,7 @@ export class TemplateCreate extends Command {
         ids.push(id)
 
       } catch (err) {
-        warn({ err }, `failed to create template "${id}"`)
+        warn({ err, template: id }, 'failed to create template')
         fail(err, this.action.type)
       }
     }

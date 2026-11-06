@@ -2,7 +2,7 @@ import { basename, extname } from 'node:path'
 import { PROJECT, IDLE } from '../constants/index.js'
 import { Cache } from '../common/cache.js'
 import { Store } from '../asset/index.js'
-import { warn, debug } from '../common/log.js'
+import { debug, info, trace, warn } from '../common/log.js'
 import { ipc } from './ipc.js'
 import { consolidator } from './consolidator.js'
 import { history } from './history.js'
@@ -110,6 +110,7 @@ export function *open (opts, action) {
       }
 
     } finally {
+      var closing = Date.now()
       cchan?.close()
 
       if (!opts.skipFullSetup)
@@ -129,8 +130,16 @@ export function *open (opts, action) {
     yield cancel()
 
   } finally {
-    if (db)
+    if (db) {
+      closing ??= Date.now()
       yield call(db.close)
+
+      info({
+        project: project.id,
+        path: project.path,
+        ms: Date.now() - closing
+      }, 'project closed')
+    }
 
     yield put(act.project.closed(error, {
       project: {
@@ -139,7 +148,7 @@ export function *open (opts, action) {
       }
     }))
 
-    debug('*project.open terminated')
+    trace('*project.open terminated')
   }
 }
 
@@ -225,7 +234,7 @@ function *stop ({ db, project, store }) {
     yield call(store.prune, db, project)
   }
 
-  debug('*project.stop terminated')
+  trace('*project.stop terminated')
 }
 
 
@@ -256,7 +265,7 @@ export function *main () {
     while (true) {
       let action = yield take([PROJECT.OPEN, PROJECT.CLOSE])
 
-      debug(`*main "${action.type}" received`)
+      trace(`*main "${action.type}" received`)
 
       if (task != null && task.isRunning()) {
         yield cancel(task)
@@ -314,6 +323,6 @@ export function *main () {
     if (crash != null)
       process.crash()
 
-    debug('*main terminated')
+    trace('*main terminated')
   }
 }

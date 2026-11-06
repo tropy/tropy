@@ -1,7 +1,7 @@
 import { join } from 'node:path'
 import { call, fork, put, take } from 'redux-saga/effects'
 import ARGS from '../args.js'
-import { debug, warn } from '../common/log.js'
+import { trace, warn } from '../common/log.js'
 import { Database } from '../common/db.js'
 import { exec } from './cmd.js'
 import { commands } from '../slices/cmd.js'
@@ -45,6 +45,6 @@ export function *ontology ({
       yield call(db.close)
     }
 
-    debug('*ontology terminated')
+    trace('*ontology terminated')
   }
 }

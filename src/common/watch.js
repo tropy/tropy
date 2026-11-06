@@ -1,5 +1,4 @@
 import { EventEmitter } from 'node:events'
-import { dirname } from 'node:path'
 import chokidar from 'chokidar'
 import { debug, info, warn } from './log.js'
 import { darwin } from './os.js'
@@ -22,7 +21,7 @@ export class Watcher extends EventEmitter {
       module: 'watch',
       path,
       since
-    }, `start watching ${dirname(path)}`)
+    }, 'start watching')
 
     this.#watcher = chokidar.watch(path, {
       ...opts,
@@ -80,7 +79,7 @@ async function mdItemDateAdded (file) {
     return Date.parse(value)
 
   } catch (err) {
-    warn({ module: 'watch', err }, `mdls failed for ${file}`)
+    warn({ module: 'watch', err, path: file }, 'mdls failed')
   }
 
 }

@@ -143,10 +143,10 @@ export function *find (db, { list, tags = [], trash, imports, query }) {
     warn({
       ms,
       list,
-      query,
+      query: !!query,
       tags: tags.length > 0,
       trash
-    }, `SLOW: *search query "${query}" took ${ms}ms`)
+    }, 'slow search')
   }
 
   return result.items

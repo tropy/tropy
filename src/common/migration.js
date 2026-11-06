@@ -64,7 +64,7 @@ export class Migration {
   }
 
   up (db) {
-    info(`migrating ${basename(db.path)} to #${this.number}`)
+    info({ path: db.path }, `migrating to #${this.number}`)
 
     return db
       .migration(async (tx) => {

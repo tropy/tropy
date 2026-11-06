@@ -193,8 +193,8 @@ export class ImportCommand extends Command {
   *prepareEmbeddedImages (source, embedded, {
     store, useLocalTimezone, optimizeOnImport, optimizeQuality
   }) {
-    info(`extracting ${embedded.length} embedded file(s) ` +
-      `from pdf "${source.path}"`)
+    info({ path: source.path },
+      `extracting ${embedded.length} embedded file(s) from pdf`)
 
     let images = []
     for (let { name, data, mimetype } of embedded) {
@@ -229,7 +229,7 @@ export class ImportCommand extends Command {
 
       } catch (err) {
         if (err instanceof DuplicateError) {
-          info(`skipping duplicate "${image.filename}" in "${source.path}"`)
+          info({ path: source.path, name: image.filename }, 'skipping duplicate')
           imageData[i] = null
         } else {
           throw err

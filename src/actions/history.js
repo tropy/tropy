@@ -43,7 +43,7 @@ export default {
       payload: { undo, redo },
       meta: {
         ipc: HISTORY.CHANGED,
-        log: mode === 'merge' ? false : 'debug',
+        log: mode === 'merge' ? false : 'trace',
         mode,
         ...meta
       }
@@ -56,6 +56,7 @@ export default {
       payload,
       meta: {
         ipc: HISTORY.CHANGED,
+        log: 'trace',
         ...meta
       }
     }

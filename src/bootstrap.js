@@ -40,10 +40,12 @@ window.ELECTRON_DISABLE_SECURITY_WARNINGS = !ARGS.debug
 
       await idle()
 
-      info('%s ready %dms [dom:%dms init:%dms load:%dms]',
-        win.type,
-        Date.now() - START,
-        READY - START, INIT - READY, LOAD - INIT)
+      info({
+        ms: Date.now() - START,
+        dom: READY - START,
+        init: INIT - READY,
+        load: LOAD - INIT
+      }, `${win.type} ready`)
 
 
       try {

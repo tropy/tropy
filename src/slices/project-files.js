@@ -2,7 +2,7 @@ import { basename } from 'node:path'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { ipcRenderer } from 'electron'
 import { pMap } from '../common/util.js'
-import { error, warn } from '../common/log.js'
+import { debug, error, warn } from '../common/log.js'
 import { fail, open, save } from '../dialog.js'
 import { Resource } from '../res.js'
 
@@ -32,7 +32,10 @@ export const reload = createAsyncThunk(
         }
 
       } catch (err) {
-        warn({ err }, `failed to stat project file '${path}'`)
+        if (err.code === 'ENOENT')
+          debug({ path }, 'project file not found')
+        else
+          warn({ err, path }, 'failed to stat project file')
 
         result.push({
           ...prevStats,
@@ -74,7 +77,7 @@ export const convert = createAsyncThunk(
       return { path, errors }
 
     } catch (err) {
-      error({ err }, `failed to convert project ${src}`)
+      error({ err, path: src }, 'failed to convert project')
       await fail(err, 'project.convert')
     }
   })
@@ -95,7 +98,7 @@ export const optimize = createAsyncThunk(
       return { path }
 
     } catch (err) {
-      error({ err }, `failed to optimize project ${src}`)
+      error({ err, path: src }, 'failed to optimize project')
       await fail(err, 'project.optimize')
     }
   })

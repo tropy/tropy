@@ -82,7 +82,7 @@ export default {
         item = get(photos, [photo, 'item'])
 
         if (item == null) {
-          return warn(`cannot select note #${note} without item`)
+          return warn({ note }, 'cannot select note without item')
         }
       }
 
