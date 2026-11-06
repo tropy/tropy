@@ -33,8 +33,9 @@ describe('models/item', () => {
       }
     })
 
+    // The items matching a query, by their hit rows.
     const search = async (query) =>
-      (await item.all(db, { query })).items
+      [...new Set(((await item.hits(db, query)) ?? []).map(r => r.item))]
 
     it('treats user input as terms, not FTS5 syntax', async () => {
       expect(await search('1990-12')).to.eql([ids[0]])
@@ -68,6 +69,43 @@ describe('models/item', () => {
 
       expect(await search('box BOX '.repeat(300))).to.eql([ids[2]])
       expect(await search(words.join(' '))).to.eql([])
+    })
+
+    it('matches without stemming, ignoring diacritics', async () => {
+      let { id } = await item.create(db, TEMPLATE)
+      await metadata.update(db, {
+        id,
+        data: { [TITLE]: { text: 'Lettres du café', type: TYPE.TEXT } }
+      })
+
+      expect(await search('cafe')).to.eql([id])
+      expect(await search('"lettre"')).to.eql([])
+      expect(await search('"lettres"')).to.eql([id])
+    })
+
+    it('returns the subjects and notes that matched', async () => {
+      await db.exec(`
+        INSERT INTO subjects (id) VALUES (101), (102);
+        INSERT INTO images (id) VALUES (101), (102);
+        INSERT INTO photos (id, item_id, path, mimetype, checksum)
+          VALUES (101, ${ids[2]}, 'a', 'image/jpeg', 'a'),
+            (102, ${ids[2]}, 'b', 'image/jpeg', 'b');
+        INSERT INTO notes (note_id, id, text, state, deleted)
+          VALUES (7, 101, 'zebra', '{}', NULL),
+            (8, 101, 'zebu', '{}', datetime('now')),
+            (9, 102, 'zebrafish', '{}', NULL);
+        INSERT INTO trash (id) VALUES (102);`)
+
+      // Not the deleted note, nor the note of the trashed photo.
+      expect(await item.hits(db, 'zeb'))
+        .to.eql([{ item: ids[2], subject: 101, note: 7 }])
+
+      expect(await item.hits(db, 'box zebra')).to.have.deep.members([
+        { item: ids[2], subject: ids[2], note: null },
+        { item: ids[2], subject: 101, note: 7 }
+      ])
+
+      expect(await item.hits(db, ' ')).to.be.null
     })
 
     it('returns list items in list order, ties by id', async () => {

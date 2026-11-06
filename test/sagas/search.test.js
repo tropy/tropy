@@ -127,10 +127,13 @@ describe('search saga', () => {
     qr
   })
 
-  const search$ = (s, ids) =>
+  const search$ = (s, ids, rows = null) =>
     run(search(null), {
       state: s,
-      mocks: [[mod.item.all, () => ({ items: ids })]]
+      mocks: [
+        [mod.item.all, () => ({ items: ids })],
+        [mod.item.hits, () => rows]
+      ]
     })
 
   it('reverses the list order when sorting by position descending', () => {
@@ -149,6 +152,26 @@ describe('search saga', () => {
     })
 
     expect(payload.items).to.eql([3, 2, 1])
+  })
+
+  it('keeps the matches and hits of the items in the view', () => {
+    let rows = [
+      { item: 1, subject: 11, note: 7 },
+      { item: 3, subject: 3, note: null },
+      { item: 4, subject: 41, note: null }
+    ]
+
+    let { puts: [{ payload }] } =
+      search$(state({ matches: null, hits: null }), [1, 2, 3], rows)
+
+    expect(payload.matches).to.eql({ 1: true, 3: true })
+    expect(payload.hits).to.eql({
+      subjects: { 11: true, 3: true },
+      notes: { 7: true }
+    })
+
+    // The same hits keep their identity.
+    expect(search$(state(payload), [1, 2, 3], rows).puts).to.eql([])
   })
 
   it('writes nothing when it finds the same results', () => {
