@@ -82,7 +82,9 @@ export function *open (opts, action) {
     let store = new Store(project.store)
 
     yield call(cache.init)
-    yield call(store.init)
+
+    if (!project.isReadOnly)
+      yield call(store.init)
 
     yield put(act.project.opened(project))
 

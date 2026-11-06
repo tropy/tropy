@@ -1,7 +1,7 @@
 import { clipboard } from 'electron'
 import { HttpError, statusOf } from '../common/error.js'
 import { info, warn } from '../common/log.js'
-import { protocolURL } from '../common/util.js'
+import { protocolURL } from '../common/project-file.js'
 import * as act from './actions.js'
 import { id, object, urlId, validation } from './api/schema.js'
 

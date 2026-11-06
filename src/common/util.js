@@ -1,4 +1,3 @@
-import { basename, extname } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
 import { nanoid } from 'nanoid'
 
@@ -700,27 +699,6 @@ export function throttle (fn, ms) {
   }
 
   return throttled
-}
-
-export function urlId (path) {
-  let file = String(path ?? '')
-  return basename(file, extname(file)).toWellFormed().normalize()
-}
-
-export function protocolURL (path, { item, photo, selection } = {}) {
-  let url = `tropy://project/${encodeURIComponent(urlId(path))}`
-
-  if (item == null)
-    return url
-
-  url += `/items/${item}`
-
-  if (photo == null)
-    return url
-
-  url += `/${photo}`
-
-  return (selection == null) ? url : `${url}/${selection}`
 }
 
 export const BLANK = Object.freeze(Object.create(null))

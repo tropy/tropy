@@ -9,9 +9,9 @@ import { Resource } from '../res.js'
 import {
   pstat,
   convert as convertProject,
-  optimizeAssets,
-  TYPES
+  optimizeAssets
 } from '../common/project.js'
+import { TYPES } from '../common/project-file.js'
 import { optimizeAsset } from '../image/optimize.js'
 
 

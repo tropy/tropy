@@ -1,5 +1,5 @@
 import fp from 'fastify-plugin'
-import { protocolURL } from '../../common/util.js'
+import { protocolURL } from '../../common/project-file.js'
 import { fail, found } from './errors.js'
 
 export default fp(async (fastify, { pm, wm }) => {

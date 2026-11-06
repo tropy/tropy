@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { existsSync } from 'node:fs'
 import { chmod, cp, stat, mkdir } from 'node:fs/promises'
-import { basename, dirname, extname, join, resolve, relative } from 'node:path'
+import { dirname, join, resolve, relative } from 'node:path'
 import { randomUUID as uuid } from 'node:crypto'
 import { Database } from './db.js'
 import { Migration } from './migration.js'
@@ -11,6 +11,7 @@ import { version } from './release.js'
 import { empty, pMap } from './util.js'
 import { CodeError, IntegrityError } from './error.js'
 import { info, warn } from './log.js'
+import { dbPath, getProjectType, projectPath, MANAGED, MANAGED_STORE_NAME } from './project-file.js'
 
 import { Asset } from '../asset/asset.js'
 import { Store } from '../asset/store.js'
@@ -28,14 +29,13 @@ export async function create (path, schema, appDir, {
 } = {}) {
   try {
     let type = getProjectType(path)
-    let dbFile = path
+    let dbFile = dbPath(path)
     let store = null
 
     await checkProjectPath(path, overwrite)
     info(`creating new project at "${path}"`)
 
     if (type === MANAGED) {
-      dbFile = join(path, MANAGED_DB_NAME)
       store = MANAGED_STORE_NAME
       base = BASE.PROJECT
 
@@ -130,7 +130,7 @@ export async function convert (src, path, appDir, {
     await checkProjectPath(path, overwrite)
     info(`converting project "${src}" to "${path}"`)
 
-    let dbFile = join(path, MANAGED_DB_NAME)
+    let dbFile = dbPath(path)
     let store = new Store(join(path, MANAGED_STORE_NAME))
     let errors = []
 
@@ -233,8 +233,10 @@ export async function open (path, {
   user,
   ...dbOptions
 } = {}) {
+  path = projectPath(path)
+
   let type = getProjectType(path)
-  let dbFile = (type === MANAGED) ? join(path, MANAGED_DB_NAME) : path
+  let dbFile = dbPath(path)
 
   let db = await Database.open(dbFile, {
     journalMode: type === MANAGED ? 'wal' : 'delete',
@@ -274,6 +276,11 @@ export async function open (path, {
 
   project.warnings = warnings
 
+  if (project.isManaged && !existsSync(project.store)) {
+    warn(`project store missing: "${project.store}"`)
+    project.warnings.push('store')
+  }
+
   if (migrate) {
     let number = await db.version()
     let latest = (await Migration.all(migrate)).at(-1)?.number
@@ -306,20 +313,8 @@ export async function open (path, {
  */
 export async function pstat (path, modifiedSince) {
   try {
-    let type = getProjectType(path)
-    let dbFile
-
-    if (type === MANAGED) {
-      dbFile = join(path, MANAGED_DB_NAME)
-
-    } else {
-      dbFile = path
-
-      if (isManaged(dbFile)) {
-        type = MANAGED
-        path = dirname(dbFile)
-      }
-    }
+    let dbFile = dbPath(path)
+    path = projectPath(path)
 
     let { mtimeMs } = await stat(dbFile)
 
@@ -352,13 +347,10 @@ export async function load (db) {
 
   project.isManaged = project.store != null
 
-  if (project.isManaged) {
+  if (project.isManaged)
     project.store = resolve(project.basePath, normalize(project.store))
-    project.path = dirname(db.path)
 
-  } else {
-    project.path = db.path
-  }
+  project.path = projectPath(db.path)
 
   return project
 }
@@ -433,8 +425,8 @@ export async function optimizeAssets (src, dest, appDir, {
     await checkProjectPath(dest, overwrite)
     info(`optimizing project "${src}" to "${dest}"`)
 
-    let srcDbFile = join(src, MANAGED_DB_NAME)
-    let destDbFile = join(dest, MANAGED_DB_NAME)
+    let srcDbFile = dbPath(src)
+    let destDbFile = dbPath(dest)
     let store = new Store(join(dest, MANAGED_STORE_NAME))
 
     await makeProjectDir(dest, store.name, appDir)
@@ -498,42 +490,12 @@ export function resolveBasePath (db, base) {
   }
 }
 
-export function getProjectType (path) {
-  switch (extname(path).toLowerCase()) {
-    case '.tpy':
-      return TPY
-    case '.tropy':
-      return MANAGED
-    default:
-      throw new Error(`unknown project file extension ${path}`)
-  }
-}
-
-const isManaged = (dbFile) =>
-  basename(dbFile) === MANAGED_DB_NAME &&
-  getProjectType(dirname(dbFile)) === MANAGED
-
-const TPY = 'tpy'
-const MANAGED = 'managed'
-const MANAGED_DB_NAME = 'project.tpy'
-const MANAGED_STORE_NAME = 'assets'
-
 const BASE = {
   PROJECT: 'project',
   HOME: 'home'
 }
 
-export const TYPES = [MANAGED, TPY]
 export const BASES = [null, BASE.PROJECT, BASE.HOME]
-
-export const pext = (type) => {
-  switch (type) {
-    case TPY: return 'tpy'
-    case MANAGED: return 'tropy'
-    default:
-      throw new Error(`unknown project type ${type}`)
-  }
-}
 
 const projectInfo =
   select({ id: 'project_id' }, 'name', 'base', 'store', {

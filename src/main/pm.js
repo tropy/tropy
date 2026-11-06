@@ -1,10 +1,10 @@
 import fs from 'node:fs'
-import { resolve } from 'node:path'
 import { app, ipcMain as ipc } from 'electron'
 import { CodeError, IpcError } from '../common/error.js'
 import { info, warn } from '../common/log.js'
 import { darwin, win32 } from '../common/os.js'
-import { promote, protocolURL, urlId as getUrlId } from '../common/util.js'
+import { promote } from '../common/util.js'
+import { projectPath, protocolURL, urlId as getUrlId } from '../common/project-file.js'
 import { PROJECT } from '../constants/index.js'
 import dialog from './dialog.js'
 import * as act from './actions.js'
@@ -115,10 +115,11 @@ export class ProjectManager {
   window (path) {
     if (path == null)
       return null
-    else
-      return this.wm.values('project').find(win =>
-        this.get(win)?.path === path
-      ) ?? null
+
+    path = projectPath(path)
+
+    return this.wm.values('project')
+      .find(win => this.get(win)?.path === path) ?? null
   }
 
   // Finds recent project via urlId (with legacy 'current' fallback)
@@ -165,6 +166,9 @@ export class ProjectManager {
 
   // Removes path, or all, from recent projects (open projects are kept).
   clearRecent (path) {
+    if (path != null)
+      path = projectPath(path)
+
     let open = new Set(this.wm.values('project').map(win =>
       this.get(win)?.path))
 
@@ -193,8 +197,7 @@ export class ProjectManager {
   // or silent to suppress error dialogs.
   show (path, { win, ...meta } = {}) {
     if (path) {
-      // NB: may want canonical paths (realpath) here for case / symlink issues!
-      path = resolve(path)
+      path = projectPath(path)
 
       let open = this.window(path) ?? this.#pending.get(path)?.win
 
@@ -230,8 +233,10 @@ export class ProjectManager {
   // Like show, but resolves once the project is open,
   // to the project and its window.
   async open (path, options) {
+    if (path) path = projectPath(path)
+
     let win = this.show(path, options)
-    await this.#pending.get(resolve(path))?.opened.promise
+    await this.#pending.get(path)?.opened.promise
 
     return { win, project: this.get(win) }
   }
