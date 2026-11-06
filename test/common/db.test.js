@@ -35,6 +35,23 @@ describe('Database', () => {
       })
     })
 
+    describe('when read-only', () => {
+      it('closes connections without optimizing', async () => {
+        await db.exec('CREATE TABLE t (id)')
+
+        let ro = new Database(dbFile, 'r')
+        let optimize = mock.method(Connection.prototype, 'optimize')
+
+        try {
+          await ro.get('SELECT 1')
+          await ro.close()
+          expect(optimize.mock.callCount()).to.equal(0)
+        } finally {
+          optimize.mock.restore()
+        }
+      })
+    })
+
     describe('acquire', () => {
       it('returns a disposable connection', async () =>
         using(db.acquire(), c => {
