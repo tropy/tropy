@@ -92,7 +92,7 @@ describe('common/project', () => {
         expect(project.isManaged).to.be.false
       })
 
-      it('is blank without access or subjects', async () => {
+      it('is blank without subjects', async () => {
         let { db } = tpy.current
         expect((await load(db)).isBlank).to.be.true
 
@@ -189,6 +189,29 @@ describe('common/project', () => {
       expect(await other.version()).to.equal(version + 1)
 
       await other.close()
+    })
+
+    it('records access from the first write until close', async () => {
+      let { db, path } = tpy.current
+      await db.close()
+
+      let [other] = await open(path, { migrate, user: 'u1' })
+      expect(await other.all('SELECT * FROM access')).to.be.empty
+
+      // Closes right after the first write.
+      await other.run(`
+        INSERT INTO access (uuid, version, path)
+          WITH RECURSIVE n(i) AS (SELECT 1 UNION ALL SELECT i + 1 FROM n WHERE i < 120)
+          SELECT 'old', '1.0', 'p' FROM n`)
+      await other.close()
+
+      let [check] = await open(path)
+      let rows = await check.all('SELECT uuid, closed FROM access ORDER BY rowid')
+      await check.close()
+
+      expect(rows).to.have.length(100)
+      expect(rows.at(-1).uuid).to.equal('u1')
+      expect(rows.at(-1).closed).to.be.a('string')
     })
 
     describe('Tropy 1.16 projects', () => {

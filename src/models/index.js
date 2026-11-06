@@ -1,3 +1,4 @@
+export * as access from './access.js'
 export { default as image } from './image.js'
 export { default as item } from './item.js'
 export { default as list } from './list.js'
