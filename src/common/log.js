@@ -1,13 +1,29 @@
 import { copyFileSync, truncateSync } from 'node:fs'
+import { dirname } from 'node:path'
 import pino from 'pino'
-import { system } from './os.js'
+import { home, system } from './os.js'
 import { version } from './release.js'
 
 export let logger
 
 const REDACT = [
-  'headers.authorization'
+  'headers.authorization',
+  '*.headers.authorization'
 ]
+
+// Replaces the home folder in serialized log lines with `~`,
+// matching JSON-escaped paths up to a separator or the string's end.
+export function redactHome (dir = home) {
+  if (!dir || dirname(dir) === dir)
+    return (s) => s
+
+  let escaped = JSON.stringify(dir).slice(1, -1)
+    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+  let pattern = new RegExp(String.raw`${escaped}(?=/|\\\\|")`, 'g')
+
+  return (s) => s.replace(pattern, '~')
+}
 
 const dateTimeFormat = new Intl.DateTimeFormat('en-GB', {
   dateStyle: 'short',
@@ -47,6 +63,9 @@ export function createLogger ({
   logger = pino({
     level,
     redact,
+    hooks: {
+      streamWrite: redactHome()
+    },
     base: {
       type: process.type,
       name

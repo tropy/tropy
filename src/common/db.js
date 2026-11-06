@@ -1,11 +1,12 @@
 import assert from 'node:assert'
 import { EventEmitter } from 'node:events'
 import { readFile } from 'node:fs/promises'
+import { basename, dirname } from 'node:path'
 import { createPool, Pool } from 'generic-pool'
 import { canWrite } from './fs.js'
 import sqlite from './sqlite.js'
 import { Migration } from './migration.js'
-import { debug, info, trace, warn } from './log.js'
+import { debug, trace, warn } from './log.js'
 import { DisposableResource, using } from './disposable.js'
 import { Sql } from './sql.js'
 import { IntegrityError } from './error.js'
@@ -92,7 +93,7 @@ export class Database extends EventEmitter {
     let version = await this.version()
     let migrations = await Migration.since(version, ...args)
 
-    info(`db schema version #${version}`)
+    debug(`db schema version #${version}`)
     for (let migration of migrations) {
       await migration.up(this)
     }
@@ -110,7 +111,10 @@ export class Database extends EventEmitter {
 
   create (mode = this.mode) {
     return new Promise((resolve, reject) => {
-      info({ mode }, `open db ${this.path}`)
+      debug({
+        mode,
+        path: this.path
+      }, `open db ${basename(dirname(this.path))}/${basename(this.path)}`)
 
       let db = new sqlite.Database(this.path, M[mode], (error) => {
         if (error) {
@@ -146,8 +150,8 @@ export class Database extends EventEmitter {
 
         if (ms < 100)
           trace({ msg, query, ms })
-        else if (ms < 200)
-          info({ msg, query, ms })
+        else if (ms < 250)
+          debug({ msg, query, ms })
         else
           warn({ query, ms }, `SLOW: ${msg}`)
       })

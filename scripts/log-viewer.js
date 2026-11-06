@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs'
+import { homedir } from 'node:os'
+import { sep } from 'node:path'
 import process from 'node:process'
 import { Transform } from 'node:stream'
 import { inspect, styleText } from 'node:util'
@@ -8,10 +10,21 @@ import pump from 'pump'
 import split from 'split2'
 import ms from 'ms'
 
-const CWD = new RegExp(process.cwd() + '.', 'g')
+const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+// The working directory, also as logged relative to home (~).
+const CWD = (function (cwd, home) {
+  let dirs = [cwd]
+
+  if (cwd.startsWith(home + sep))
+    dirs.push('~' + cwd.slice(home.length))
+
+  return new RegExp(`(?:${dirs.map(escape).join('|')}).`, 'g')
+})(process.cwd(), homedir())
 
 const format = log =>
-  `${header(log)} ${body(log)}${error(log)}${end(log)}`.replace(CWD, '')
+  `${header(log)} ${body(log)}${context(log)}${error(log)}${end(log)}`
+    .replace(CWD, '')
 
 const end = log =>
   log.quit ? '\n\n' : '\n'
@@ -21,6 +34,12 @@ const body = log => {
     return `${log.action} ${styleText('dim', meta(log))}`
   else
     return log.msg || log.message || '??'
+}
+
+// The path or URL a message is about.
+const context = ({ path, url }) => {
+  let value = path ?? url
+  return (typeof value === 'string') ? ` ${styleText('dim', value)}` : ''
 }
 
 const INDENT = ' '.repeat(11)
@@ -45,7 +64,7 @@ const header = log =>
   `${seq(log.time)} ${symbol(log)}`
 
 const symbol = log =>
-  colorize(log.level, SYMBOL[log.name])
+  colorize(log.level, SYMBOL[log.name] ?? '?')
 
 const SYMBOL = {
   about: 'α',

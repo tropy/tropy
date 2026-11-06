@@ -272,6 +272,7 @@ export async function open (path, {
   }
 
   let project = await load(db)
+  let schema = await db.version()
   let accessId
 
   project.warnings = warnings
@@ -282,11 +283,10 @@ export async function open (path, {
   }
 
   if (migrate) {
-    let number = await db.version()
     let latest = (await Migration.all(migrate)).at(-1)?.number
 
-    if (number > latest) {
-      warn(`db schema version #${number} is newer than #${latest}`)
+    if (schema > latest) {
+      warn(`db schema version #${schema} is newer than #${latest}`)
       project.warnings.push('newer')
     }
   }
@@ -301,9 +301,22 @@ export async function open (path, {
   }
 
   db.once('will-close', async () => {
-    if (accessId)
-      await endProjectAccess(db, accessId, pruneAccessTable)
+    try {
+      if (accessId)
+        await endProjectAccess(db, accessId, pruneAccessTable)
+    } finally {
+      info({ id: project.id, path: project.path }, 'project closed')
+    }
   })
+
+  info({
+    id: project.id,
+    path: project.path,
+    schema,
+    migrations: migrations?.length ?? 0,
+    isReadOnly: project.isReadOnly,
+    warnings: project.warnings
+  }, 'project opened')
 
   return [db, project]
 }
