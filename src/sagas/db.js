@@ -1,6 +1,6 @@
 import { eventChannel } from 'redux-saga'
 import { call, put, take } from 'redux-saga/effects'
-import { debug, warn } from '../common/log.js'
+import { trace, warn } from '../common/log.js'
 import { fail } from '../dialog.js'
 
 
@@ -42,6 +42,6 @@ export function *handleDatabaseErrors (db, actions = {}) {
 
   } finally {
     channel.close()
-    debug('*handleDatabaseErrors terminated')
+    trace('*handleDatabaseErrors terminated')
   }
 }

@@ -203,7 +203,7 @@ export class Import extends ImportCommand {
 
     } catch (err) {
       if (err instanceof DuplicateError)
-        info(`skipping duplicate "${path}"...`)
+        info({ path }, 'skipping duplicate')
       else
         throw err
     }
@@ -243,7 +243,7 @@ export class Import extends ImportCommand {
         } catch (err) {
           if (!(err instanceof DuplicateError)) throw err
 
-          info(`skipping duplicate page ${page + 1} of "${image.original.path}"...`)
+          info({ path: image.original.path }, `skipping duplicate page ${page + 1}`)
           data[page] = null
         }
       }
@@ -524,7 +524,7 @@ export class Import extends ImportCommand {
         }
 
       } catch (err) {
-        warn({ err }, `failed to add "${path}" to the store`)
+        warn({ err, path }, 'failed to add file to the store')
       }
     }
 

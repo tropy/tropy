@@ -78,7 +78,7 @@ export class Plugins extends EventEmitter {
         loadcount++
 
       } catch (err) {
-        warn({ err }, `failed to create plugin ${plugin} "${name}"`)
+        warn({ err, name }, `failed to create plugin ${plugin}`)
       }
     }
 

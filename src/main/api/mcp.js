@@ -64,7 +64,7 @@ async function load (fastify, proto) {
         agent,
         protocol: ctx.http?.req?.headers.get('mcp-protocol-version'),
         ms: Math.round(performance.now() - start),
-        error: !!result.isError
+        isError: !!result.isError
       }, 'mcp tool call')
 
       return server.projectCallToolResult(result)

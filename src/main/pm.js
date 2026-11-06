@@ -296,7 +296,7 @@ export class ProjectManager {
     let win = this.wm.fromEvent(event, 'project')
 
     if (error)
-      warn({ error, path }, `project closed with error: ${error.message}`)
+      warn({ err: error, path }, 'project closed with error')
 
     if (this.#isPending(path, win))
       this.#settle(path, error

@@ -46,7 +46,7 @@ function *updateProjectWatchFolder (watcher) {
   } = Storage.load('project.watch', project.id) || {}
 
   if (folder) {
-    debug(`update project watch folder: ${folder}`)
+    debug({ path: folder }, 'update project watch folder')
 
     if (watcher.isWatching(folder))
       yield call([watcher, watcher.watch], folder, { usePolling, ignored })
@@ -83,7 +83,7 @@ export function *watch () {
 
     while (true) {
       let path = yield take(channel)
-      info(`import from watch folder: ${path}`)
+      info({ path }, 'import from watch folder')
 
       yield put(act.item.import({ files: [path] }, {
         prompt: false,

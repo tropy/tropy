@@ -38,7 +38,7 @@ export class Export extends Command {
           yield call(write, target, JSON.stringify(items, null, 2))
       }
     } catch (err) {
-      warn({ err }, `failed to export items to ${target}`)
+      warn({ err, path: target }, 'failed to export items')
       fail(err, this.action.type)
     }
   }

@@ -37,7 +37,7 @@ export class Export extends Command {
         yield call(fs.promises.writeFile, target, data)
 
     } catch (err) {
-      warn({ err }, `failed to export transcription as ${format} to ${target}`)
+      warn({ err, path: target }, `failed to export transcription as ${format}`)
       fail(err, this.action.type)
     }
   }

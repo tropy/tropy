@@ -3,7 +3,8 @@ import { Storage } from '../storage.js'
 import * as act from '../actions/index.js'
 
 export function *restore (name, ...args) {
-  yield put(act[name].restore(Storage.load(name, ...args)))
+  let action = act[name].restore(Storage.load(name, ...args))
+  yield put({ ...action, meta: { ...action.meta, log: 'trace' } })
 }
 
 export function *persist (name, ...args) {

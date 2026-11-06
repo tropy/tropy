@@ -10,7 +10,7 @@ export async function open (target) {
 
   if (protocol === 'file') {
     let err = await shell.openPath(path)
-    if (err) error(`failed to open ${path}: ${err}`)
+    if (err) error({ err, path }, 'failed to open path')
   } else {
     await shell.openExternal(`${protocol}://${path}`)
   }
@@ -75,7 +75,7 @@ async function gioSetAttribute (path, key, value) {
         throw err
     }
   } catch (err) {
-    warn({ err }, `gio: failed to set ${key} on ${path}`)
+    warn({ err, key, path }, 'failed to set gio attribute')
   }
 }
 
@@ -84,7 +84,7 @@ async function attrib (path, ...attrs) {
     await spawn('attrib.exe', [path, ...attrs])
 
   } catch (err) {
-    warn({ err }, `failed to set attrib ${attrs} on ${path}`)
+    warn({ err, attrs, path }, 'failed to set attrib')
   }
 }
 

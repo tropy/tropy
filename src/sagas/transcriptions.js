@@ -8,7 +8,7 @@ import { getPendingTranscriptions } from '../selectors/transcriptions.js'
 import { SETTINGS } from '../constants/index.js'
 import { isLinked } from '../account.js'
 import act from '../actions/photo.js'
-import { debug, warn } from '../common/log.js'
+import { trace, warn } from '../common/log.js'
 
 import {
   all,
@@ -103,7 +103,7 @@ function *poll () {
       yield put(done(batch.handle))
 
     online.close()
-    debug('*poll terminated')
+    trace('*poll terminated')
   }
 }
 
@@ -130,6 +130,6 @@ export function *transcribe () {
   } catch (err) {
     warn({ err }, 'unexpected error in *transcribe')
   } finally {
-    debug('*transcribe terminated')
+    trace('*transcribe terminated')
   }
 }

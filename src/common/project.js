@@ -33,7 +33,7 @@ export async function create (path, schema, appDir, {
     let store = null
 
     await checkProjectPath(path, overwrite)
-    info(`creating new project at "${path}"`)
+    info({ path }, 'creating new project')
 
     if (type === MANAGED) {
       store = MANAGED_STORE_NAME
@@ -78,7 +78,7 @@ async function checkProjectPath (path, overwrite = false) {
     if (!overwrite)
       throw new CodeError('EEXIST', `project file exists: "${path}"`)
 
-    warn(`trashing old project previously at "${path}"`)
+    warn({ path }, 'trashing old project')
     await moveToTrash(path)
   }
 }
@@ -128,7 +128,7 @@ export async function convert (src, path, appDir, {
       throw new Error(`conversion to "${type}" not implemented`)
 
     await checkProjectPath(path, overwrite)
-    info(`converting project "${src}" to "${path}"`)
+    info({ src, dest: path }, 'converting project')
 
     let dbFile = dbPath(path)
     let store = new Store(join(path, MANAGED_STORE_NAME))
@@ -233,6 +233,8 @@ export async function open (path, {
   user,
   ...dbOptions
 } = {}) {
+  let start = Date.now()
+
   path = projectPath(path)
 
   let type = getProjectType(path)
@@ -278,7 +280,7 @@ export async function open (path, {
   project.warnings = warnings
 
   if (project.isManaged && !existsSync(project.store)) {
-    warn(`project store missing: "${project.store}"`)
+    warn({ path: project.store }, 'project store missing')
     project.warnings.push('store')
   }
 
@@ -301,17 +303,14 @@ export async function open (path, {
   }
 
   db.once('will-close', async () => {
-    try {
-      if (accessId)
-        await endProjectAccess(db, accessId, pruneAccessTable)
-    } finally {
-      info({ id: project.id, path: project.path }, 'project closed')
-    }
+    if (accessId)
+      await endProjectAccess(db, accessId, pruneAccessTable)
   })
 
   info({
-    id: project.id,
+    project: project.id,
     path: project.path,
+    ms: Date.now() - start,
     schema,
     migrations: migrations?.length ?? 0,
     isReadOnly: project.isReadOnly,
@@ -436,7 +435,7 @@ export async function optimizeAssets (src, dest, appDir, {
     assert(getProjectType(dest) === MANAGED, 'target must be a managed project')
 
     await checkProjectPath(dest, overwrite)
-    info(`optimizing project "${src}" to "${dest}"`)
+    info({ src, dest }, 'optimizing project')
 
     let srcDbFile = dbPath(src)
     let destDbFile = dbPath(dest)

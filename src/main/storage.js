@@ -33,13 +33,13 @@ export class Storage {
       try {
         string = await encrypt(string)
       } catch (err) {
-        warn({ err }, `storage: encryption failed, skip saving ${name}`)
+        warn({ module: 'storage', err }, `encryption failed, skip saving ${name}`)
         return
       }
     }
 
     write.sync(this.expand(name), string)
-    trace(`storage: ${name} saved`)
+    trace({ module: 'storage' }, `${name} saved`)
   }
 
   async parse (data, { secure = false } = {}) {
@@ -47,7 +47,7 @@ export class Storage {
       try {
         data = await decrypt(data)
       } catch (err) {
-        warn({ err }, 'storage: decryption failed, skip parsing data')
+        warn({ module: 'storage', err }, 'decryption failed, skip parsing data')
         return
       }
     }

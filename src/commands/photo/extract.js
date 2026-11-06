@@ -95,7 +95,7 @@ export class Extract extends Command {
           yield call(toFile, target, buffer, { raw })
       }
 
-      info(`extracted image #${image.id} to ${target}`)
+      info({ photo: image.id, path: target }, 'extracted image')
 
       return {
         target,
@@ -103,7 +103,7 @@ export class Extract extends Command {
       }
 
     } catch (err) {
-      warn({ err }, `failed to extract image #${image?.id} to ${target}`)
+      warn({ err, photo: image?.id, path: target }, 'failed to extract image')
 
       if (target === ':buffer:')
         throw err

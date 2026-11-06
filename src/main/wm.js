@@ -223,7 +223,7 @@ export class WindowManager extends EventEmitter {
       if (typeof show === 'string') {
         win.once(show, () => {
           win.show()
-          debug(`show ${type} win after ${Date.now() - NOW}ms`)
+          debug({ ms: Date.now() - NOW }, `show ${type} window`)
         })
       }
 
@@ -455,7 +455,7 @@ export class WindowManager extends EventEmitter {
         this.pending[id].resolve(action)
 
     } catch (err) {
-      warn({ err }, `failed to resolve pending message ${id}`)
+      warn({ err, id }, 'failed to resolve pending message')
     }
   }
 
@@ -593,11 +593,11 @@ export class WindowManager extends EventEmitter {
           event.preventDefault()
         })
         .on('unresponsive', () => {
-          warn(`${type}[${win.id}] has become unresponsive`)
+          warn({ win: win.id }, `${type} window has become unresponsive`)
           this.emit('unresponsive', type, win)
 
           if (this.getProps(win).unloading != null) {
-            warn(`${type}[${win.id}] unresponsive during unload, forcing destroy`)
+            warn({ win: win.id }, `${type} window unresponsive during unload, forcing destroy`)
             win.destroy()
           }
         })
@@ -621,15 +621,16 @@ export class WindowManager extends EventEmitter {
         .on('render-process-gone', (_, details) => {
           if (details?.reason !== 'clean-exit') {
             warn({
+              win: win.id,
               details
-            }, `${type}[${win.id}] render-process crashed: ${details?.reason}`)
+            }, `${type} window crashed: ${details?.reason}`)
             this.emit('crashed', type, win)
           }
 
           this.cancel(win, 'crashed')
 
           if (this.getProps(win).unloading != null) {
-            warn(`${type}[${win.id}] crashed during unload, forcing destroy`)
+            warn({ win: win.id }, `${type} window crashed during unload, forcing destroy`)
             win.destroy()
           }
         })
@@ -1191,7 +1192,7 @@ function handleWillNavigate (event, url) {
     let next = new URL(url)
 
     if (current.pathname !== next.pathname) {
-      warn(`win#${this.id} attempted to navigate to ${url}`)
+      warn({ win: this.id, url }, 'prevented navigation')
       event.preventDefault()
     }
   } catch (err) {

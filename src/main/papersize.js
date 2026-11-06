@@ -26,7 +26,7 @@ export async function papersize () {
         return 'A4'
     }
   } catch (err) {
-    warn(`failed to fetch system default paper size: ${err.message}`)
+    warn({ err }, 'failed to fetch system default paper size')
   }
 
   return 'A4'

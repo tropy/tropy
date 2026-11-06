@@ -23,8 +23,16 @@ const CWD = (function (cwd, home) {
 })(process.cwd(), homedir())
 
 const format = log =>
-  `${header(log)} ${body(log)}${context(log)}${error(log)}${end(log)}`
+  `${header(log)} ${body(log)}${timing(log)}${context(log)}${error(log)}${end(log)}`
     .replace(CWD, '')
+
+// Durations, with the window ready breakdown.
+const timing = ({ ms, dom, init, load }) => {
+  if (typeof ms !== 'number') return ''
+
+  let steps = (dom == null) ? '' : ` [dom:${dom}ms init:${init}ms load:${load}ms]`
+  return ` ${styleText('dim', `${ms}ms${steps}`)}`
+}
 
 const end = log =>
   log.quit ? '\n\n' : '\n'
@@ -33,7 +41,8 @@ const body = log => {
   if (log.action)
     return `${log.action} ${styleText('dim', meta(log))}`
   else
-    return log.msg || log.message || '??'
+    return (log.module ? `${log.module}: ` : '') +
+      (log.msg || log.message || '??')
 }
 
 // The path or URL a message is about.

@@ -18,7 +18,7 @@ const qr = createSlice({
     update: {
       prepare: (payload = {}, meta) => ({
         payload,
-        meta: { log: 'debug', ...meta }
+        meta: { log: 'trace', ...meta }
       }),
 
       reducer: (state, { payload }) => ({

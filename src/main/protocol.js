@@ -211,12 +211,12 @@ export class ProtocolHandler {
   }
 
   async handleRequest (url) {
-    info(`opening url ${url}`)
+    info({ url }, 'opening url')
 
     try {
       return await this.handle(url, { prompt: true })
     } catch (err) {
-      warn({ err }, `failed to open ${url}: ${err.message}`)
+      warn({ err, url }, 'failed to open url')
     }
   }
 

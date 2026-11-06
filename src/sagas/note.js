@@ -1,5 +1,5 @@
 import { call, delay, fork, put, select, take } from 'redux-saga/effects'
-import { debug, warn } from '../common/log.js'
+import { debug, trace, warn } from '../common/log.js'
 import actions from '../actions/note.js'
 import models from '../models/note.js'
 import NOTE from '../constants/note.js'
@@ -57,6 +57,6 @@ export function *autosave (db, ms = 5000) {
   } finally {
     yield call(flush, db, pending)
 
-    debug('*note.autosave terminated')
+    trace('*note.autosave terminated')
   }
 }

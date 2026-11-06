@@ -32,20 +32,21 @@ export class Prune extends Command {
       try {
         if (!Prune.check(file, state)) continue
 
-        debug(`removing ${file}`)
+        debug({ path: file }, 'removing cache file')
         yield call(fs.promises.unlink, cache.expand(file))
         stale.push(file)
 
       } catch (err) {
-        warn({ err }, `prune: failed removing ${file}`)
+        warn({ err, path: file }, 'failed removing cache file')
       }
     }
 
     info({
       files: files.length,
       removed: stale.length,
-      ms: Date.now() - START
-    }, `pruned cache ${cache.name}`)
+      ms: Date.now() - START,
+      project: cache.name
+    }, 'pruned cache')
 
     return stale
   }
@@ -85,7 +86,7 @@ export class Purge extends Command {
       if (date > NOW) continue
 
       try {
-        info(`removing old project cache ${id}`)
+        info({ project: id }, 'removing old project cache')
         yield call(fs.promises.rm, cache.expand(id), {
           recursive: true,
           force: true
@@ -93,14 +94,15 @@ export class Purge extends Command {
         stale.push(id)
 
       } catch (err) {
-        warn({ err }, `purge: failed removing ${id}`)
+        warn({ err, project: id }, 'failed removing old project cache')
       }
     }
 
     info({
       removed: stale.length,
-      ms: Date.now() - START
-    }, `purged cache ${cache.root}`)
+      ms: Date.now() - START,
+      path: cache.root
+    }, 'purged cache')
 
     return stale
   }

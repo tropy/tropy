@@ -64,7 +64,7 @@ export class AccountService extends EventEmitter {
         }
       }
 
-      debug({ url, headers }, 'account: accessing auth server...')
+      debug({ module: 'account', url, headers }, 'accessing auth server')
 
       res = await fetch(url, {
         ...opts,
@@ -79,20 +79,22 @@ export class AccountService extends EventEmitter {
 
       if (!res.ok) {
         warn({
+          module: 'account',
           status: res.status,
           url: res.url
-        }, `account: response ${res.status} ${res.statusText}`)
+        }, `response ${res.status} ${res.statusText}`)
       } else {
         debug({
+          module: 'account',
           status: res.status,
           url: res.url
-        }, `account: response ${res.status} ${res.statusText}`)
+        }, `response ${res.status} ${res.statusText}`)
       }
 
       return res
 
     } catch (err) {
-      warn({ err, url }, 'account: request failed')
+      warn({ module: 'account', err, url }, 'request failed')
       throw new AccountError('network', 'error.account.network', 'info', { cause: err })
     }
   }
@@ -109,7 +111,7 @@ export class AccountService extends EventEmitter {
 
   async link ({ username, password }) {
     try {
-      debug({ username }, 'account: linking...')
+      debug({ module: 'account', username }, 'linking')
 
       let res = await this.post('/link', {
         username,
@@ -140,11 +142,11 @@ export class AccountService extends EventEmitter {
         }
       }
 
-      info('account: linked')
+      info({ module: 'account' }, 'linked')
       return this.status
 
     } catch (err) {
-      warn({ err }, 'account: failed to link account')
+      warn({ module: 'account', err }, 'failed to link')
       delete this.app.safe?.account
       delete this.tokenSet
       throw err
@@ -232,7 +234,7 @@ export class AccountService extends EventEmitter {
         username: payload.preferred_username
       }
     } catch (err) {
-      warn({ err }, 'account: failed to verify id token')
+      warn({ module: 'account', err }, 'failed to verify id token')
       throw new AccountError('id-token', 'error.account.profile.id_token')
     }
   }

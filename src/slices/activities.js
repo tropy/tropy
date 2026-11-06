@@ -37,7 +37,7 @@ const activities = createSlice({
     start: {
       prepare: (action, meta) => ({
         payload: { type: action.type, ...pick(action.meta, PROPS) },
-        meta: { ...meta, rel: action.meta.seq }
+        meta: { log: 'trace', ...meta, rel: action.meta.seq }
       }),
       reducer (state, { payload: { type, ...props }, meta }) {
         let activity = state[meta.rel] = {

@@ -36,7 +36,7 @@ async function load (db, ids) {
         deleted: false
       }
     } catch (err) {
-      warn({ err }, `failed parsing note ${id}`)
+      warn({ err, note: id }, 'failed parsing note')
     }
   }
   )

@@ -1,5 +1,5 @@
 import { all, call, cancel, delay, fork, take, takeLatest } from 'redux-saga/effects'
-import { debug, warn } from '../common/log.js'
+import { trace, warn } from '../common/log.js'
 import { PROJECT } from '../constants/index.js'
 import { ontology } from './ontology.js'
 import { open } from './project.js'
@@ -32,7 +32,7 @@ export function *main () {
       skipIntegrityCheck: true
     })
 
-    debug('*prefs.main ready')
+    trace('*prefs.main ready')
     yield take(close)
     yield cancel(project)
 
@@ -56,6 +56,6 @@ export function *main () {
     // See redux-saga#1242
     yield delay(200)
 
-    debug('*prefs.main terminated')
+    trace('*prefs.main terminated')
   }
 }

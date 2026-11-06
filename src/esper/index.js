@@ -255,7 +255,7 @@ export default class Esper extends EventEmitter {
             this.emit('photo-error', props.photo, false)
         }
       } catch (err) {
-        warn({ err }, `esper: failed loading ${state.src}`)
+        warn({ module: 'esper', err, url: state.src }, 'failed loading image')
         this.emit('photo-error', props.photo, true)
       }
 
@@ -287,11 +287,11 @@ export default class Esper extends EventEmitter {
       loadTime > duration ||
       texture.width * texture.height > LARGE_TEXTURE
     )) {
-      debug(`delaying texture load by ${duration}ms`)
+      debug({ module: 'esper', ms: duration }, 'delaying texture load')
       await delay(duration)
     }
 
-    debug(`loadTexture took ${loadTime}ms`)
+    debug({ module: 'esper', ms: loadTime }, 'texture loaded')
 
     return texture
   }
@@ -415,7 +415,7 @@ export default class Esper extends EventEmitter {
 
     } catch (err) {
       this.halt()
-      error({ err }, 'esper: update cycle failed, halting!')
+      error({ module: 'esper', err }, 'update cycle failed, halting!')
     }
   }
 
@@ -437,7 +437,7 @@ export default class Esper extends EventEmitter {
       this.resize()
 
       this.emit('resolution-change')
-      debug({ resolution }, `esper: resolution changed to ${resolution}`)
+      debug({ module: 'esper', resolution }, 'resolution changed')
     }
   }
 
