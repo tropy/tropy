@@ -35,7 +35,6 @@ export const Project = ({
   ref,
   timeout = 3000
 }) => {
-
   let dispatch = useDispatch()
 
   let nav = useSelector(state => state.nav)
@@ -49,8 +48,10 @@ export const Project = ({
     (mode.current === MODE.ITEM) ^ mode.isChanging
   )
 
+  let inert = !project.isReady || !!project.isClosing
+
   let keymap = useSelector(state => state.keymap.global)
-  useGlobalKeys(keymap)
+  useGlobalKeys(inert ? null : keymap)
 
   useGlobalEvent('back', () => {
     if (isItemMode)
@@ -97,12 +98,14 @@ export const Project = ({
       onContextMenu={handleContextMenu}>
 
       <ProjectView
+        inert={inert}
         isDisabled={isItemMode}
         offset={offset}
         onContextMenu={handleContextMenu}
         project={project}/>
 
       <ItemView
+        inert={inert}
         isItemMode={isItemMode}
         isProjectClosing={project.isClosing}
         isReadOnly={project.isReadOnly || nav.trash}

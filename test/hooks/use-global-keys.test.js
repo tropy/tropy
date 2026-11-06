@@ -40,6 +40,20 @@ describe('useGlobalKeys', () => {
     unmount()
   })
 
+  it('ignores keys without a keymap', () => {
+    let NoKeys = () => {
+      useGlobalKeys(null)
+      return null
+    }
+
+    let { unmount } = render(<NoKeys/>)
+
+    expect(press(document.body).defaultPrevented).to.be.false
+    expect(handleBack.mock.callCount()).to.equal(0)
+
+    unmount()
+  })
+
   it('ignores keys while a modal is open', () => {
     let { unmount } = render(<Keys/>)
     let dialog = document.createElement('dialog')

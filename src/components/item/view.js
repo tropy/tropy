@@ -16,6 +16,7 @@ import {
 
 
 export const ItemView = ({
+  inert,
   isItemMode,
   isProjectClosing,
   isReadOnly,
@@ -60,7 +61,7 @@ export const ItemView = ({
 
 
   return (
-    <section className="item-view" style={style}>
+    <section className="item-view" inert={inert} style={style}>
       <Resizable
         edge={isItemMode ? 'right' : 'left'}
         value={offset}
