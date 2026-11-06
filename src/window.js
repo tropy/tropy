@@ -2,7 +2,7 @@ import { ipcRenderer as ipc } from 'electron'
 import { EventEmitter } from 'node:events'
 import { existsSync as exists } from 'node:fs'
 import { basename, join } from 'node:path'
-import { warn } from './common/log.js'
+import { logger, warn } from './common/log.js'
 import { darwin, linux } from './common/os.js'
 import { Plugins } from './common/plugins.js'
 import { debounce, delay } from './common/util.js'
@@ -194,6 +194,10 @@ export class Window extends EventEmitter {
       })
       .on('debug', (_, debug) => {
         this.setArgs({ debug })
+      })
+      .on('level', (_, level) => {
+        logger.level = level
+        this.setArgs({ level })
       })
       .on('api', (_, api) => {
         this.setArgs({ api })

@@ -109,6 +109,8 @@ export class AccountService extends EventEmitter {
 
   async link ({ username, password }) {
     try {
+      debug({ username }, 'account: linking...')
+
       let res = await this.post('/link', {
         username,
         password,
@@ -138,11 +140,11 @@ export class AccountService extends EventEmitter {
         }
       }
 
-      info(`account: linked to ${username}`)
+      info('account: linked')
       return this.status
 
     } catch (err) {
-      warn({ err }, `account: failed to link account ${username}`)
+      warn({ err }, 'account: failed to link account')
       delete this.app.safe?.account
       delete this.tokenSet
       throw err

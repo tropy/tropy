@@ -96,6 +96,7 @@ export class Tropy extends EventEmitter {
 
   async start () {
     await this.restore()
+    this.updateLogLevel()
     this.listen()
     this.pm.start()
     this.proto.start()
@@ -617,6 +618,7 @@ export class Tropy extends EventEmitter {
     this.on('app:toggle-debug-flag', () => {
       info('toggling dev/debug mode...')
       this.state.debug = !this.state.debug
+      this.updateLogLevel()
       this.wm.broadcast('debug', this.state.debug)
       this.emit('app:reload-menu')
     })
@@ -903,6 +905,20 @@ export class Tropy extends EventEmitter {
       uuid: this.state.uuid,
       update: this.updater.release,
       version
+    }
+  }
+
+  // Debug logs in developer mode, e.g. for users to send verbose logs.
+  // The --trace flag overrides it.
+  updateLogLevel () {
+    if (this.opts.trace) return
+
+    let level = (this.dev || this.debug) ? 'debug' : 'info'
+
+    if (logger.level !== level) {
+      info(`log level ${level}`)
+      logger.level = level
+      this.wm.broadcast('level', level)
     }
   }
 
