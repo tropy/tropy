@@ -4,7 +4,7 @@ import { useEvent } from '../../hooks/use-event.js'
 import { Titlebar } from '../toolbar.js'
 import { Button, ToggleButtonGroup } from '../button.js'
 import { Form, FormGroup } from '../form.js'
-import { TYPES } from '../../common/project.js'
+import { TYPES } from '../../common/project-file.js'
 import { save } from '../../dialog.js'
 
 

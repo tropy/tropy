@@ -7,7 +7,7 @@ import ARGS from './args.js'
 import { counter, get } from './common/util.js'
 import { copy } from './clipboard.js'
 import { crashReport, warn } from './common/log.js'
-import { pext } from './common/project.js'
+import { pext } from './common/project-file.js'
 import IMAGE from './constants/image.js'
 import { darwin } from './common/os.js'
 

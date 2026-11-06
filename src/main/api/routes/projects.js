@@ -1,7 +1,8 @@
 import { existsSync } from 'node:fs'
-import { dirname, isAbsolute, resolve } from 'node:path'
+import { dirname, isAbsolute } from 'node:path'
 import { fail, found } from '../errors.js'
 import { object, withUrlId } from '../schema.js'
+import { projectPath } from '../../../common/project-file.js'
 
 export default async function projects (fastify, { pm }) {
   fastify.get('/projects', {
@@ -50,7 +51,7 @@ export default async function projects (fastify, { pm }) {
     if (body.name != null && !body.create)
       throw fail(400, 'name is only for new projects: use create')
 
-    let path = resolve(body.path)
+    let path = projectPath(body.path)
 
     if (body.create) {
       if (existsSync(path))

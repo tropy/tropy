@@ -1,7 +1,7 @@
 import { mock } from 'node:test'
 import { basename } from 'node:path'
 import { logger } from '#tropy/common/log.js'
-import { protocolURL, urlId } from '#tropy/common/util.js'
+import { protocolURL, urlId } from '#tropy/common/project-file.js'
 import { create } from '#tropy/main/api/api.js'
 
 // Sets up an API instance whose project windows are fakes:

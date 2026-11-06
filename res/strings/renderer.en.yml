@@ -103,6 +103,9 @@ en:
       Your project file may be damaged and manual steps are necessary to fix it.
       Please consult the user manual for further assistance.
     newer: This project was created by a newer version of Tropy.
+    store: >-
+      The project's assets folder is missing.
+      Photos stored in the project cannot be shown until it is restored.
     readOnly: >-
       Your project file is locked and cannot be modified.
       To unlock, change the file permissions and open the project again.

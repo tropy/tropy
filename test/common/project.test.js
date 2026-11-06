@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { stat, mkdir, writeFile } from 'node:fs/promises'
+import { stat, mkdir, rm, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { isAbsolute, join } from 'node:path'
 import { mkprojtmp } from '../support/project.js'
@@ -205,6 +205,34 @@ describe('common/project', () => {
         expect(await db.compatibility()).to.equal(0)
 
         await db.close()
+      })
+    })
+
+    describe('managed projects', () => {
+      let tpm = mkprojtmp('test.tropy', { name: 'Ariadne' })
+
+      it('open as the folder also by their database file', async () => {
+        let { db, path } = tpm.current
+        await db.close()
+
+        let [other, project] = await open(join(path, 'project.tpy'), { migrate })
+
+        expect(other.journalMode).to.equal('wal')
+        expect(project).to.include({ path, isManaged: true })
+
+        await other.close()
+      })
+
+      it('flags a missing store', async () => {
+        let { db, path } = tpm.current
+        await db.close()
+        await rm(join(path, 'assets'), { recursive: true })
+
+        let [other, project] = await open(path, { migrate })
+
+        expect(project.warnings).to.include('store')
+
+        await other.close()
       })
     })
 
