@@ -162,11 +162,13 @@ export class Database extends EventEmitter {
     try {
       debug({ path: this.path }, 'close db connection')
 
-      await conn.optimize().catch((e) => {
-        // When pool is cleared open connections are destroyed in parallel
-        // so the optimization will often cause a busy timeout.
-        debug({ path: this.path }, `optimize connection failed: ${e.message}`)
-      })
+      if (!this.isReadOnly) {
+        await conn.optimize().catch((e) => {
+          debug({
+            path: this.path
+          }, `optimize connection failed: ${e.message}`)
+        })
+      }
 
       await conn.close()
       this.emit('destroy')
