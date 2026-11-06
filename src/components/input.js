@@ -224,6 +224,7 @@ export class Input extends React.PureComponent {
             className={this.props.className}
             dir={this.props.dir}
             disabled={this.props.isDisabled}
+            aria-invalid={this.props.isInvalid || undefined}
             id={this.props.id}
             placeholder={this.props.placeholder}
             readOnly={this.props.isReadOnly}

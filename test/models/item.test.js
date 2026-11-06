@@ -4,6 +4,7 @@ import metadata from '#tropy/models/metadata.js'
 import tag from '#tropy/models/tag.js'
 import list from '#tropy/models/list.js'
 import { TYPE } from '#tropy/constants/index.js'
+import { parse } from '#tropy/common/search.js'
 
 const TEMPLATE = 'https://tropy.org/v1/templates/generic'
 const TITLE = 'http://purl.org/dc/elements/1.1/title'
@@ -33,9 +34,12 @@ describe('models/item', () => {
       }
     })
 
+    const hits = (query) =>
+      item.hits(db, parse(query).terms)
+
     // The items matching a query, by their hit rows.
     const search = async (query) =>
-      [...new Set(((await item.hits(db, query)) ?? []).map(r => r.item))]
+      [...new Set(((await hits(query)) ?? []).map(r => r.item))]
 
     it('treats user input as terms, not FTS5 syntax', async () => {
       expect(await search('1990-12')).to.eql([ids[0]])
@@ -62,6 +66,17 @@ describe('models/item', () => {
       expect(await search('folder ld_wa')).to.eql([ids[2]])
       expect(await search('box letter')).to.eql([])
       expect(await search('wor_d')).to.eql([])
+    })
+
+    it('matches scoped terms in their scope only', async () => {
+      let { id } = await tag.create(db, { name: 'Boxes' })
+      await item.tags.add(db, { id: [ids[0]], tag: id })
+
+      expect(await search('tag:box')).to.eql([ids[0]])
+      expect(await search('meta:box')).to.eql([ids[2]])
+      expect(await search('tr:box')).to.eql([])
+      expect(await search('note:box')).to.eql([])
+      expect(await search('meta:box tag:box')).to.eql([])
     })
 
     it('accepts long queries', async () => {
@@ -97,15 +112,17 @@ describe('models/item', () => {
         INSERT INTO trash (id) VALUES (102);`)
 
       // Not the deleted note, nor the note of the trashed photo.
-      expect(await item.hits(db, 'zeb'))
+      expect(await hits('zeb'))
         .to.eql([{ item: ids[2], subject: 101, note: 7 }])
+      expect(await hits('note:zeb')).to.eql(await hits('zeb'))
+      expect(await hits('meta:zeb')).to.eql([])
 
-      expect(await item.hits(db, 'box zebra')).to.have.deep.members([
+      expect(await hits('box zebra')).to.have.deep.members([
         { item: ids[2], subject: ids[2], note: null },
         { item: ids[2], subject: 101, note: 7 }
       ])
 
-      expect(await item.hits(db, ' ')).to.be.null
+      expect(await hits(' ')).to.be.null
     })
 
     it('returns list items in list order, ties by id', async () => {

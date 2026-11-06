@@ -42,6 +42,8 @@ export class ProjectToolbar extends React.PureComponent {
         <Toolbar.Right>
           <SearchField
             clearIcon={<IconXSmall/>}
+            error={this.props.queryError &&
+              `toolbar.search.error.${this.props.queryError.code}`}
             focus="find"
             query={this.props.query}
             isDisabled={this.props.isDisabled}

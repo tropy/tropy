@@ -12,7 +12,7 @@ import { SASS } from '../../constants/index.js'
 
 import * as act from '../../actions/index.js'
 
-import { selectItemSequence } from '../../slices/qr.js'
+import { selectItemSequence, selectQuery } from '../../slices/qr.js'
 
 
 export const ProjectView = ({
@@ -28,6 +28,7 @@ export const ProjectView = ({
   let nav = useSelector(state => state.nav)
   let zoom = useSelector(state => state.ui.zoom)
   let items = useSelector(selectItemSequence)
+  let queryError = useSelector(state => selectQuery(state).errors[0])
 
   let list = typeof nav.list === 'number' &&
     nav.list > 0 ? nav.list : null
@@ -92,6 +93,7 @@ export const ProjectView = ({
               isReadOnly={isReadOnly}
               maxZoom={maxZoom}
               query={nav.query}
+              queryError={queryError}
               zoom={zoom}
               onItemCreate={handleItemImport}
               onSearch={handleSearch}

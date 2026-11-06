@@ -1,5 +1,6 @@
 import act from '../../../actions/api.js'
 import { NAV } from '../../../constants/index.js'
+import { parse, SYNTAX } from '../../../common/search.js'
 import { fail, found } from '../errors.js'
 import { photoFields } from './photos.js'
 import { id, idParams, ids, object, some, strings, withUrlId } from '../schema.js'
@@ -15,7 +16,8 @@ export const findItems = ({ operationId, summary, params }) => ({
       q: {
         type: 'string',
         maxLength: 1024,
-        description: 'Full-text search query'
+        description: `Full-text search query. ${SYNTAX} ` +
+          'Invalid queries fail (400).'
       },
       sort: {
         type: 'string',
@@ -33,6 +35,10 @@ export const findItems = ({ operationId, summary, params }) => ({
   async handler ({ params, query, rsvp }) {
     if (query.sort === NAV.COLUMN.POSITION.id && params.id == null)
       throw fail(400, 'sort by added (list position) needs a list')
+
+    let [error] = parse(query.q || '').errors
+    if (error)
+      throw fail(400, `invalid query: ${error.code} at ${error.offset}`)
 
     return rsvp(act.item.find({
       tags: query.tag,

@@ -289,6 +289,14 @@ describe('api', () => {
       expect(api.actions).to.be.empty
     })
 
+    it('rejects invalid queries', async () => {
+      let res = await api.get('/projects/foo/items?q=box%20tag:')
+
+      expect(res.statusCode).to.equal(400)
+      expect(res.json().detail).to.equal('invalid query: empty-scope at 4')
+      expect(api.actions).to.be.empty
+    })
+
     it('clears all tags when no tag is given', async () => {
       let res = await api.delete('/projects/foo/items/1/tags')
 

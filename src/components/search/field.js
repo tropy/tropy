@@ -1,4 +1,5 @@
 import React, { useRef } from 'react'
+import cx from 'classnames'
 import { useIntl } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
 import { useDebounce } from '../../hooks/use-debounce.js'
@@ -11,6 +12,7 @@ import { blank } from '../../common/util.js'
 
 export const SearchField = React.memo(({
   clearIcon,
+  error,
   focus,
   isDisabled,
   onSearch,
@@ -36,12 +38,15 @@ export const SearchField = React.memo(({
   })
 
   return (
-    <div className="search">
+    <div
+      className={cx('search', { invalid: error })}
+      title={error ? intl.formatMessage({ id: error }) : undefined}>
       <IconSearch/>
       <Input
         ref={input}
         className="search-input form-control"
         isDisabled={isDisabled}
+        isInvalid={!!error}
         tabIndex={tabIndex}
         value={query}
         // TODO the Input component should probably do the translation

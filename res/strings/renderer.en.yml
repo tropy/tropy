@@ -14,6 +14,10 @@ en:
         other {# items in this view}}
     search:
       placeholder: Search
+      error:
+        empty-scope: >-
+          Add a search term after "tag:", "note:", "tr:" or "meta:".
+        too-many-terms: Too many search terms (32 at most).
   panel:
     metadata:
       tab: Metadata

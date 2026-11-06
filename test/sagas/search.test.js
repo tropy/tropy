@@ -174,6 +174,16 @@ describe('search saga', () => {
     expect(search$(state(payload), [1, 2, 3], rows).puts).to.eql([])
   })
 
+  it('does not search invalid queries', () => {
+    let s = state({ matches: null })
+    s.nav = { ...s.nav, query: 'box tag:' }
+
+    let res = search$(s, [1])
+
+    expect(res.puts).to.eql([])
+    expect(res.calls(mod.item.all).callCount()).to.equal(0)
+  })
+
   it('writes nothing when it finds the same results', () => {
     let { puts: [{ payload }] } = search$(state({ matches: null }), [1, 2])
 
