@@ -4,6 +4,9 @@ import { emit, isInput } from '../dom.js'
 
 export function useGlobalKeys (keymap) {
   useEventHandler(document, 'keydown', (event) => {
+    if (keymap == null)
+      return
+
     if (isInput(event.target || event.srcElement))
       return
 

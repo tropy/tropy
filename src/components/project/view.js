@@ -16,6 +16,7 @@ import { selectItemSequence } from '../../slices/qr.js'
 
 
 export const ProjectView = ({
+  inert,
   isDisabled,
   offset,
   onContextMenu,
@@ -34,8 +35,8 @@ export const ProjectView = ({
   let iterator = useRef()
 
   useEffect(() => {
-    if (!isDisabled) iterator.current?.focus()
-  }, [isDisabled])
+    if (!(isDisabled || inert)) iterator.current?.focus()
+  }, [isDisabled, inert])
 
   let size = SASS.ITEM.ZOOM[zoom]
   let maxZoom = SASS.ITEM.ZOOM.length - 1
@@ -63,7 +64,7 @@ export const ProjectView = ({
   })
 
   usePasteEvent('application/json', (data) => {
-    handleItemImport({ data })
+    if (!inert) handleItemImport({ data })
   })
 
   let [{ canDrop }, drop] = useDropPhotoFiles({
@@ -74,7 +75,7 @@ export const ProjectView = ({
   let handleItemDelete = useAction(dispatch, 'item.delete')
 
   return (
-    <div id="project-view">
+    <div id="project-view" inert={inert}>
       <ProjectSidebar
         isDisabled={isDisabled}
         project={project}
