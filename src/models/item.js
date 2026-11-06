@@ -17,38 +17,74 @@ const skel = (id, lists = [], photos = [], tags = []) => ({
   id, lists, photos, tags
 })
 
-// Items matching term i in any FTS index or tag name.
-const MATCH = (i) => `
-  SELECT item_id AS id
-    FROM fts_transcriptions t
-      LEFT OUTER JOIN selections USING (id)
-      LEFT OUTER JOIN photos p ON (p.id = t.id OR p.id = photo_id)
-    WHERE fts_transcriptions MATCH $fts${i}
-  UNION
-  SELECT item_id AS id
-    FROM fts_notes n
-      LEFT OUTER JOIN selections USING (id)
-      LEFT OUTER JOIN photos p ON (p.id = n.id OR p.id = photo_id)
-    WHERE fts_notes MATCH $fts${i}
-  UNION
-  SELECT coalesce(i.id, p.item_id) AS id
-    FROM metadata m
-      JOIN fts_metadata ON (value_id = fts_metadata.rowid)
-      LEFT OUTER JOIN items i USING (id)
-      LEFT OUTER JOIN selections USING (id)
-      LEFT OUTER JOIN photos p ON (p.id = m.id OR p.id = photo_id)
-    WHERE fts_metadata MATCH $fts${i}
-  UNION
-  SELECT id
-    FROM taggings JOIN tags USING (tag_id)
-    WHERE name LIKE $tag${i} ESCAPE '\\'`
+// The item of subject x.id: the item itself, or a photo's or selection's.
+// Trashed photos and selections (and selections of trashed photos)
+// contribute nothing; trashed items do (the trash can be searched).
+const OF_ITEM = sql`
+      LEFT JOIN items i ON i.id = x.id
+      LEFT JOIN photos p ON p.id = x.id
+      LEFT JOIN selections s ON s.id = x.id
+      LEFT JOIN photos sp ON sp.id = s.photo_id
+    WHERE i.id IS NOT NULL OR (
+      x.id NOT IN (SELECT id FROM trash) AND
+      coalesce(sp.id, 0) NOT IN (SELECT id FROM trash))`
 
-// Items matching every term: terms are ANDed per item,
-// not per FTS document, so they can match different fields.
-// Compound operators bind left to right, hence the subqueries.
-const SEARCH = (n) =>
-  Array.from({ length: n }, (_, i) => `SELECT id FROM (${MATCH(i)})`)
-    .join(' INTERSECT ')
+const ITEM = sql.raw('coalesce(i.id, p.item_id, sp.item_id)')
+
+// Hit rows (term, item, subject, note) for term k: the subjects
+// (items, photos, selections) and notes matching it in any FTS index,
+// and the items with a tag whose name contains it.
+// Transcriptions count for their subject.
+const HIT = ({ fts, tag }, k) => sql`
+  SELECT ${k} AS term, ${ITEM} AS item, x.id AS subject, NULL AS note
+    FROM (
+      SELECT t.id
+        FROM fts_transcriptions
+          JOIN transcriptions t ON t.transcription_id = fts_transcriptions.rowid
+        WHERE fts_transcriptions MATCH ${fts} AND t.deleted IS NULL
+    ) x ${OF_ITEM}
+  UNION ALL
+  SELECT ${k}, ${ITEM}, x.id, x.note
+    FROM (
+      SELECT n.id, n.note_id AS note
+        FROM fts_notes JOIN notes n ON n.note_id = fts_notes.rowid
+        WHERE fts_notes MATCH ${fts} AND n.deleted IS NULL
+    ) x ${OF_ITEM}
+  UNION ALL
+  SELECT ${k}, ${ITEM}, x.id, NULL
+    FROM (
+      SELECT m.id
+        FROM fts_metadata JOIN metadata m ON m.value_id = fts_metadata.rowid
+        WHERE fts_metadata MATCH ${fts}
+    ) x ${OF_ITEM}
+  UNION ALL
+  SELECT ${k}, ${ITEM}, x.id, NULL
+    FROM (
+      SELECT id
+        FROM taggings JOIN tags USING (tag_id)
+        WHERE name LIKE ${tag} ESCAPE '\\'
+    ) x ${OF_ITEM}`
+
+// The hit rows of the items matching every term:
+// terms are ANDed per item, not per FTS document,
+// so they can match different fields, notes, transcriptions or tags.
+const HITS = (terms) => sql`
+  WITH hits AS (${terms.map(HIT).reduce((a, b) => sql`${a} UNION ALL ${b}`)})
+  SELECT DISTINCT item, subject, note
+    FROM hits
+    WHERE item IN (
+      SELECT item FROM hits GROUP BY item
+        HAVING count(DISTINCT term) = ${terms.length})`
+
+// Restricts a view to the items with every tag.
+const TAGGED = (tags) => {
+  tags = uniq(array(tags))
+
+  return blank(tags) ? sql`` : sql`
+    AND id IN (
+      SELECT id FROM taggings WHERE tag_id ${IN(tags)}
+        GROUP BY id HAVING count(*) = ${tags.length})`
+}
 
 // Seed order for the subject columns; metadata columns join their values.
 const ORDER = {
@@ -84,32 +120,18 @@ function parse (query) {
   return [...terms.values()]
 }
 
-function prep ({ query, tags }, params = {}) {
-  let terms = (query == null) ? [] : parse(query)
-  tags = uniq(array(tags))
-
-  for (let [i, { text, prefix }] of terms.entries()) {
-    params[`$fts${i}`] = `"${text}"${prefix ? '*' : ''}`
-    params[`$tag${i}`] = `%${text.replace(/[\\%_]/g, '\\$&')}%`
-  }
-
-  if (!blank(tags)) {
-    if (tags.length > 0) {
-      params.$tags = tags.length
-      params.$tagIds = JSON.stringify(tags)
-    }
-  }
-
-  return {
-    params,
-    match: (terms.length > 0) ? SEARCH(terms.length) : null
-  }
+// Terms as FTS5 phrases (prefix or exact) and tag name patterns.
+function match (query) {
+  return ((query == null) ? [] : parse(query)).map(({ text, prefix }) => ({
+    fts: `"${text}"${prefix ? '*' : ''}`,
+    tag: `%${text.replace(/[\\%_]/g, '\\$&')}%`
+  }))
 }
 
-async function search (db, query, params) {
+async function search (db, query) {
   const [items, push] = createSequence()
 
-  await db.each(query, params, ({ id }) => {
+  await db.each(query, ({ id }) => {
     push(id)
   })
 
@@ -118,77 +140,57 @@ async function search (db, query, params) {
 
 
 mod.item = {
-  all (db, options) {
-    let { params, match } = prep(options)
-    return search(db, `
+  // The view queries return the items of a view, as a set
+  // (list returns list order); terms are matched by hits.
+  all (db, { tags } = {}) {
+    return search(db, sql`
       SELECT id
         FROM items
-          ${params.$tags ? 'JOIN taggings USING (id)' : ''}
-          LEFT OUTER JOIN trash USING (id)
-        WHERE
-          ${params.$tags ? 'tag_id IN (SELECT value FROM json_each($tagIds)) AND' : ''}
-          ${match ? `id IN (${match}) AND` : ''}
-          deleted IS NULL
-        ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}`,
-    params)
+        WHERE id NOT IN (SELECT id FROM trash) ${TAGGED(tags)}`)
   },
 
-  async find (db, { ids, ...options }) {
-    let { params, match } = prep(options, { $ids: JSON.stringify(ids) })
-    return search(db, `
+  async find (db, { ids }) {
+    return search(db, sql`
       SELECT id
         FROM items
-          LEFT OUTER JOIN trash USING (id)
-        WHERE
-          id IN (SELECT value FROM json_each($ids)) AND deleted IS NULL
-          ${match ? `AND id IN (${match})` : ''}`,
-    params)
+        WHERE id ${IN(ids)} AND id NOT IN (SELECT id FROM trash)`)
   },
 
-  async trash (db, options) {
-    let { params, match } = prep(options)
-    return search(db, `
+  async trash (db) {
+    return search(db, sql`
       SELECT id
-        FROM items
-          JOIN trash USING (id)
-        WHERE
-          ${match ? `id IN (${match}) AND` : ''}
-          reason = 'user'`,
-    params)
+        FROM items JOIN trash USING (id)
+        WHERE reason = 'user'`)
   },
 
   // In list order: the order when sorting by position.
-  async list (db, list, options) {
-    let { params, match } = prep(options, { $list: list })
-    return search(db, `
+  async list (db, list, { tags } = {}) {
+    return search(db, sql`
       SELECT id
         FROM list_items
-          ${params.$tags ? 'JOIN taggings USING (id)' : ''}
-          LEFT OUTER JOIN trash USING (id)
-        WHERE
-          list_id = $list AND list_items.deleted IS NULL AND
-          ${match ? `id IN (${match}) AND` : ''}
-          ${params.$tags ? 'tag_id IN (SELECT value FROM json_each($tagIds)) AND' : ''}
-          trash.deleted IS NULL
-        ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
-        ORDER BY added, id`,
-    params)
+        WHERE list_id = ${list} AND deleted IS NULL
+          AND id NOT IN (SELECT id FROM trash) ${TAGGED(tags)}
+        ORDER BY added, id`)
   },
 
-  async unlisted (db, options) {
-    let { params, match } = prep(options)
-    return search(db, `
+  async unlisted (db, { tags } = {}) {
+    return search(db, sql`
       SELECT id
         FROM items
-          LEFT OUTER JOIN trash USING (id)
-          ${params.$tags ? 'JOIN taggings USING (id)' : ''}
-        WHERE
-          id NOT IN (SELECT id FROM list_items WHERE deleted IS NULL) AND
-          ${match ? `id IN (${match}) AND` : ''}
-          ${params.$tags ? 'tag_id IN (SELECT value FROM json_each($tagIds)) AND' : ''}
-          trash.deleted IS NULL
-        ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}`,
-    params)
+        WHERE id NOT IN (SELECT id FROM list_items WHERE deleted IS NULL)
+          AND id NOT IN (SELECT id FROM trash) ${TAGGED(tags)}`)
+  },
+
+  // The hit rows ({ item, subject, note }) of the items matching
+  // every term of the query (see HITS), or null without terms.
+  // Item level hits (item metadata, tags) have the item as subject.
+  async hits (db, query) {
+    let terms = match(query)
+
+    if (terms.length === 0)
+      return null
+
+    return db.all(HITS(terms))
   },
 
   // All item ids in an order close to the sort,

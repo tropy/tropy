@@ -70,6 +70,46 @@ const isSameSet = (ids, matches) => {
   return true
 }
 
+const isSameKeys = (a, b) => {
+  let n = 0
+
+  for (let k in a) {
+    if (!b[k]) return false
+    ++n
+  }
+
+  return n === Object.keys(b).length
+}
+
+const isSameHits = (a, b) =>
+  a === b || (a != null && b != null &&
+    isSameKeys(a.subjects, b.subjects) && isSameKeys(a.notes, b.notes))
+
+// The ids of the view that are in the hit rows (keeping their order),
+// and the hits of those items as sets of subject and note ids.
+const intersect = (ids, rows) => {
+  let view = {}
+  for (let i = 0; i < ids.length; ++i) view[ids[i]] = true
+
+  let matched = {}
+  let hits = { subjects: {}, notes: {} }
+
+  for (let { item, subject, note } of rows) {
+    if (!view[item]) continue
+
+    matched[item] = true
+    hits.subjects[subject] = true
+    if (note != null) hits.notes[note] = true
+  }
+
+  let [seq, push] = createSequence()
+
+  for (let i = 0; i < ids.length; ++i)
+    if (matched[ids[i]]) push(ids[i])
+
+  return [seq, hits]
+}
+
 const getOptions = (sort) => ({
   asc: sort.asc,
   compare: isDate(sort) ? undefined : collator(sort.locale).compare
@@ -112,31 +152,40 @@ const getView = (state) => ({
     state.imports[0].items : null
 })
 
-// Returns the ids of the items in a view, as a set;
-// in list order (ascending position) for lists.
+// Returns the ids of the items in a view, as a set
+// (in list order, ascending position, for lists),
+// and their hits: the subjects and notes matching the query,
+// or null without query terms.
 export function *find (db, { list, tags = [], trash, imports, query }) {
   let START = Date.now()
   let result
 
   switch (true) {
     case (imports != null):
-      result = yield call(mod.item.find, db, { ids: imports, query })
+      result = yield call(mod.item.find, db, { ids: imports })
       break
 
     case (!!trash):
-      result = yield call(mod.item.trash, db, { query })
+      result = yield call(mod.item.trash, db)
       break
 
     case (list != null):
       if (list < 0)
-        result = yield call(mod.item.unlisted, db, { tags, query })
+        result = yield call(mod.item.unlisted, db, { tags })
       else
-        result = yield call(mod.item.list, db, list, { tags, query })
+        result = yield call(mod.item.list, db, list, { tags })
       break
 
     default:
-      result = yield call(mod.item.all, db, { tags, query })
+      result = yield call(mod.item.all, db, { tags })
   }
+
+  let ids = result.items
+  let hits = null
+  let rows = yield call(mod.item.hits, db, query)
+
+  if (rows != null)
+    [ids, hits] = intersect(ids, rows)
 
   let ms = Date.now() - START
   if (ms > 300) {
@@ -149,7 +198,7 @@ export function *find (db, { list, tags = [], trash, imports, query }) {
     }, 'slow search')
   }
 
-  return result.items
+  return { ids, hits }
 }
 
 // Returns ids in the given sort (column, asc and locale):
@@ -193,7 +242,7 @@ export function *ordered (db, ids, sort) {
 export function *search (db) {
   try {
     var view = yield select(getView)
-    let ids = yield* find(db, view)
+    let { ids, hits } = yield* find(db, view)
 
     let { qr, current } = yield select(state => ({
       qr: state.qr,
@@ -208,16 +257,19 @@ export function *search (db) {
       for (let id of ids) matches[id] = true
     }
 
+    if (isSameHits(hits, qr.hits))
+      hits = qr.hits
+
     // The order saga owns qr.order:
     // if it has not caught up with the sort yet,
     // it writes the items once it has.
     // Otherwise the items only change with the matches.
     if (isPosition(current))
-      yield* commit({ matches, items: byPosition(ids, current) })
+      yield* commit({ matches, hits, items: byPosition(ids, current) })
     else if (isSameSort(qr.sort, current) && matches !== qr.matches)
-      yield* commit({ matches, items: filter(qr.order, matches) })
+      yield* commit({ matches, hits, items: filter(qr.order, matches) })
     else
-      yield* commit({ matches })
+      yield* commit({ matches, hits })
 
   } catch (err) {
     warn({
@@ -378,12 +430,14 @@ function *write (order, sort) {
 // Writes only what changed, or nothing:
 // results that stay the same keep their identity in state,
 // so that nothing downstream sees a new sequence.
-function *commit ({ matches, order, items, sort }) {
+function *commit ({ matches, hits, order, items, sort }) {
   let qr = yield select(state => state.qr)
   let payload = {}
 
   if (matches != null && matches !== qr.matches)
     payload.matches = matches
+  if (hits !== undefined && hits !== qr.hits)
+    payload.hits = hits
   if (order != null && stable(order, qr.order) !== qr.order)
     payload.order = order
   if (items != null && stable(items, qr.items) !== qr.items)

@@ -18,6 +18,7 @@ PRAGMA application_id = -621960955;
 PRAGMA user_version = 2112312400;
 
 -- Load sqlite3 .dump
+/* WARNING: Script requires that SQLITE_DBCONFIG_DEFENSIVE be disabled */
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE project (
@@ -149,36 +150,6 @@ CREATE TABLE trash (
 
   CHECK (reason IN ('user', 'auto', 'merge'))
 ) WITHOUT ROWID;
-PRAGMA writable_schema=ON;
-INSERT INTO sqlite_schema(type,name,tbl_name,rootpage,sql)VALUES('table','fts_notes','fts_notes',0,'CREATE VIRTUAL TABLE fts_notes USING fts5(
-  id UNINDEXED,
-  text,
-  language UNINDEXED,
-  content = ''notes'',
-  content_rowid = ''note_id'',
-  tokenize = ''porter unicode61''
-)');
-CREATE TABLE IF NOT EXISTS 'fts_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO fts_notes_data VALUES(1,X'');
-INSERT INTO fts_notes_data VALUES(10,X'00000000000000');
-CREATE TABLE IF NOT EXISTS 'fts_notes_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
-CREATE TABLE IF NOT EXISTS 'fts_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
-CREATE TABLE IF NOT EXISTS 'fts_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO fts_notes_config VALUES('version',4);
-INSERT INTO sqlite_schema(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata','fts_metadata',0,'CREATE VIRTUAL TABLE fts_metadata USING fts5(
-  datatype UNINDEXED,
-  text,
-  content = ''metadata_values'',
-  content_rowid = ''value_id'',
-  tokenize = ''porter unicode61''
-)');
-CREATE TABLE IF NOT EXISTS 'fts_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO fts_metadata_data VALUES(1,X'');
-INSERT INTO fts_metadata_data VALUES(10,X'00000000000000');
-CREATE TABLE IF NOT EXISTS 'fts_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
-CREATE TABLE IF NOT EXISTS 'fts_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
-CREATE TABLE IF NOT EXISTS 'fts_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO fts_metadata_config VALUES('version',4);
 CREATE TABLE selections (
   id        INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
   photo_id  INTEGER  NOT NULL REFERENCES photos ON DELETE CASCADE,
@@ -202,34 +173,35 @@ CREATE TABLE migrations (
   number      INTEGER  NOT NULL PRIMARY KEY,
   created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 , compatibility INTEGER NOT NULL DEFAULT 0) WITHOUT ROWID;
-INSERT INTO migrations VALUES(1603291819,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1604191233,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1610181540,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1707240933,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1708121306,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1710032150,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1710041250,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1710041315,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1801231006,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1801241335,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1803301510,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1810082056,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1811081017,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1902062123,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1904161246,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1906131635,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1910041503,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(1910311746,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(2005271953,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(2011121230,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(2103121202,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(2103171215,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(2103301553,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(2207140945,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(2302021456,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(2403201717,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(2412161647,'2026-11-02 21:32:26',0);
-INSERT INTO migrations VALUES(2611021200,'2026-11-02 21:32:26',0);
+INSERT INTO migrations VALUES(1603291819,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1604191233,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1610181540,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1707240933,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1708121306,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1710032150,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1710041250,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1710041315,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1801231006,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1801241335,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1803301510,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1810082056,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1811081017,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1902062123,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1904161246,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1906131635,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1910041503,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1910311746,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(2005271953,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(2011121230,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(2103121202,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(2103171215,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(2103301553,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(2207140945,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(2302021456,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(2403201717,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(2412161647,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(2611021200,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(2611061900,'2026-11-06 22:36:41',0);
 CREATE TABLE transcriptions (
   transcription_id  INTEGER PRIMARY KEY,
   id                INTEGER NOT NULL REFERENCES images ON DELETE CASCADE,
@@ -241,16 +213,46 @@ CREATE TABLE transcriptions (
   created           NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified          NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP
 , angle INTEGER NOT NULL DEFAULT 0, mirror BOOLEAN NOT NULL DEFAULT 0);
+PRAGMA writable_schema=ON;
+INSERT INTO sqlite_schema(type,name,tbl_name,rootpage,sql)VALUES('table','fts_notes','fts_notes',0,'CREATE VIRTUAL TABLE fts_notes USING fts5(
+  id UNINDEXED,
+  text,
+  language UNINDEXED,
+  content = ''notes'',
+  content_rowid = ''note_id'',
+  tokenize = ''unicode61 remove_diacritics 2''
+)');
+CREATE TABLE IF NOT EXISTS 'fts_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
+INSERT INTO fts_notes_data VALUES(1,x'00000000');
+INSERT INTO fts_notes_data VALUES(10,x'00000000000000');
+CREATE TABLE IF NOT EXISTS 'fts_notes_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'fts_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE IF NOT EXISTS 'fts_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+INSERT INTO fts_notes_config VALUES('version',4);
+INSERT INTO sqlite_schema(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata','fts_metadata',0,'CREATE VIRTUAL TABLE fts_metadata USING fts5(
+  datatype UNINDEXED,
+  text,
+  content = ''metadata_values'',
+  content_rowid = ''value_id'',
+  tokenize = ''unicode61 remove_diacritics 2''
+)');
+CREATE TABLE IF NOT EXISTS 'fts_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
+INSERT INTO fts_metadata_data VALUES(1,x'000000');
+INSERT INTO fts_metadata_data VALUES(10,x'00000000000000');
+CREATE TABLE IF NOT EXISTS 'fts_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'fts_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE IF NOT EXISTS 'fts_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+INSERT INTO fts_metadata_config VALUES('version',4);
 INSERT INTO sqlite_schema(type,name,tbl_name,rootpage,sql)VALUES('table','fts_transcriptions','fts_transcriptions',0,'CREATE VIRTUAL TABLE fts_transcriptions USING fts5(
   id UNINDEXED,
   text,
   content = ''transcriptions'',
   content_rowid = ''transcription_id'',
-  tokenize = ''unicode61''
+  tokenize = ''unicode61 remove_diacritics 2''
 )');
 CREATE TABLE IF NOT EXISTS 'fts_transcriptions_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO fts_transcriptions_data VALUES(1,X'');
-INSERT INTO fts_transcriptions_data VALUES(10,X'00000000000000');
+INSERT INTO fts_transcriptions_data VALUES(1,x'000000');
+INSERT INTO fts_transcriptions_data VALUES(10,x'00000000000000');
 CREATE TABLE IF NOT EXISTS 'fts_transcriptions_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
 CREATE TABLE IF NOT EXISTS 'fts_transcriptions_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
 CREATE TABLE IF NOT EXISTS 'fts_transcriptions_config'(k PRIMARY KEY, v) WITHOUT ROWID;
@@ -303,32 +305,6 @@ CREATE TRIGGER notes_au_fts
       VALUES ('delete', OLD.note_id, OLD.id, OLD.text, OLD.language);
     INSERT INTO fts_notes (rowid, id, text, language)
       VALUES (NEW.note_id, NEW.id, NEW.text, NEW.language);
-  END;
-CREATE TRIGGER metadata_values_ai_fts
-  AFTER INSERT ON metadata_values
-  FOR EACH ROW WHEN NEW.datatype NOT IN (
-    'http://www.w3.org/2001/XMLSchema#boolean',
-    'http://www.w3.org/2001/XMLSchema#hexBinary',
-    'http://www.w3.org/2001/XMLSchema#base64Binary',
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML',
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral')
-  BEGIN
-    INSERT INTO fts_metadata (rowid, datatype, text)
-      VALUES (NEW.value_id, NEW.datatype, NEW.text);
-  END;
-CREATE TRIGGER metadata_values_ad_fts
-  AFTER DELETE ON metadata_values
-  FOR EACH ROW WHEN OLD.datatype NOT IN (
-    'http://www.w3.org/2001/XMLSchema#boolean',
-    'http://www.w3.org/2001/XMLSchema#hexBinary',
-    'http://www.w3.org/2001/XMLSchema#base64Binary',
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML',
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral')
-  BEGIN
-    INSERT INTO fts_metadata (fts_metadata, rowid, datatype, text)
-      VALUES ('delete', OLD.value_id, OLD.datatype, OLD.text);
   END;
 CREATE TRIGGER delete_photos_prune_images
   AFTER DELETE ON photos
@@ -387,6 +363,18 @@ CREATE TRIGGER transcriptions_ad_fts
   BEGIN
     INSERT INTO fts_transcriptions (fts_transcriptions, rowid, id, text)
       VALUES ('delete', OLD.transcription_id, OLD.id, OLD.text);
+  END;
+CREATE TRIGGER metadata_values_ai_fts
+  AFTER INSERT ON metadata_values
+  BEGIN
+    INSERT INTO fts_metadata (rowid, datatype, text)
+      VALUES (NEW.value_id, NEW.datatype, NEW.text);
+  END;
+CREATE TRIGGER metadata_values_ad_fts
+  AFTER DELETE ON metadata_values
+  BEGIN
+    INSERT INTO fts_metadata (fts_metadata, rowid, datatype, text)
+      VALUES ('delete', OLD.value_id, OLD.datatype, OLD.text);
   END;
 CREATE INDEX idx_photos_checksum ON photos (checksum);
 CREATE INDEX idx_metadata_value_id ON metadata (value_id);

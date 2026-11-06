@@ -7,6 +7,10 @@ const qr = createSlice({
   initialState: {
     items: [],
     matches: null,
+    // The subjects and notes matching the query, per matched item:
+    // { subjects: { id: true }, notes: { id: true } }, null without terms.
+    // Item level hits (metadata, tags) have the item as subject.
+    hits: null,
     order: [],
     sort: null
   },
