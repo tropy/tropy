@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { createSelector as memo } from 'reselect'
+import { parse } from '../common/search.js'
 import { NAV } from '../constants/index.js'
 import { createMetaReducer } from './util.js'
 
@@ -40,6 +42,11 @@ export const {
 
 export const selectItemSequence = (state) =>
   state.qr.items
+
+// The parsed search query: { terms, errors } (see common/search.js).
+export const selectQuery = memo(
+  (state) => state.nav.query,
+  (query) => parse(query || ''))
 
 export const selectSortKey = ({ items, metadata, ontology }, column) => {
   switch (column) {

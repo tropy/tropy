@@ -2,6 +2,7 @@ import { clipboard } from 'electron'
 import { HttpError, statusOf } from '../common/error.js'
 import { info, warn } from '../common/log.js'
 import { protocolURL } from '../common/project-file.js'
+import { SYNTAX } from '../common/search.js'
 import * as act from './actions.js'
 import { id, object, urlId, validation } from './api/schema.js'
 
@@ -84,7 +85,12 @@ const ROUTES = Object.freeze([
     summary: 'Show all items, or search them (q)',
     params: object({ urlId }, ['urlId']),
     query: object({
-      q: { type: 'string', maxLength: 1024, description: 'Search query' }
+      q: {
+        type: 'string',
+        maxLength: 1024,
+        description: `Search query. ${SYNTAX} ` +
+          'Invalid queries open with the error shown in the search field.'
+      }
     })
   }, ({ q = '' }, win) =>
     win.dispatch(act.nav.select({ query: q }))),

@@ -31,45 +31,51 @@ const OF_ITEM = sql`
 
 const ITEM = sql.raw('coalesce(i.id, p.item_id, sp.item_id)')
 
-// Hit rows (term, item, subject, note) for term k: the subjects
-// (items, photos, selections) and notes matching it in any FTS index,
-// and the items with a tag whose name contains it.
-// Transcriptions count for their subject.
-const HIT = ({ fts, tag }, k) => sql`
-  SELECT ${k} AS term, ${ITEM} AS item, x.id AS subject, NULL AS note
-    FROM (
-      SELECT t.id
-        FROM fts_transcriptions
-          JOIN transcriptions t ON t.transcription_id = fts_transcriptions.rowid
-        WHERE fts_transcriptions MATCH ${fts} AND t.deleted IS NULL
-    ) x ${OF_ITEM}
-  UNION ALL
-  SELECT ${k}, ${ITEM}, x.id, x.note
-    FROM (
-      SELECT n.id, n.note_id AS note
-        FROM fts_notes JOIN notes n ON n.note_id = fts_notes.rowid
-        WHERE fts_notes MATCH ${fts} AND n.deleted IS NULL
-    ) x ${OF_ITEM}
-  UNION ALL
-  SELECT ${k}, ${ITEM}, x.id, NULL
-    FROM (
-      SELECT m.id
-        FROM fts_metadata JOIN metadata m ON m.value_id = fts_metadata.rowid
-        WHERE fts_metadata MATCH ${fts}
-    ) x ${OF_ITEM}
-  UNION ALL
-  SELECT ${k}, ${ITEM}, x.id, NULL
-    FROM (
-      SELECT id
-        FROM taggings JOIN tags USING (tag_id)
-        WHERE name LIKE ${tag} ESCAPE '\\'
-    ) x ${OF_ITEM}`
+// The subjects (id) and notes (note) matching a term, per scope:
+// FTS matches in each index, and items with a tag whose name
+// contains the term. Transcriptions count for their subject.
+const SOURCE = {
+  transcription: ({ fts }) => sql`
+    SELECT t.id AS id, NULL AS note
+      FROM fts_transcriptions
+        JOIN transcriptions t ON t.transcription_id = fts_transcriptions.rowid
+      WHERE fts_transcriptions MATCH ${fts} AND t.deleted IS NULL`,
+
+  note: ({ fts }) => sql`
+    SELECT n.id AS id, n.note_id AS note
+      FROM fts_notes JOIN notes n ON n.note_id = fts_notes.rowid
+      WHERE fts_notes MATCH ${fts} AND n.deleted IS NULL`,
+
+  metadata: ({ fts }) => sql`
+    SELECT m.id AS id, NULL AS note
+      FROM fts_metadata JOIN metadata m ON m.value_id = fts_metadata.rowid
+      WHERE fts_metadata MATCH ${fts}`,
+
+  tag: ({ tag }) => sql`
+    SELECT id, NULL AS note
+      FROM taggings JOIN tags USING (tag_id)
+      WHERE name LIKE ${tag} ESCAPE '\\'`
+}
+
+const union = (fragments) =>
+  fragments.reduce((a, b) => sql`${a} UNION ALL ${b}`)
+
+// Hit rows (term, item, subject, note) for term k,
+// from the sources of its scope (all of them for any).
+// Each source maps to items on its own: mapping a union
+// of the sources at once is slower (~1.5x at 10^5).
+const HIT = (term, k) =>
+  union(((term.scope === 'any') ?
+    Object.values(SOURCE) : [SOURCE[term.scope]]
+  ).map(source => sql`
+    SELECT ${k}, ${ITEM}, x.id, x.note
+      FROM (${source(term)}) x ${OF_ITEM}`))
 
 // The hit rows of the items matching every term:
 // terms are ANDed per item, not per FTS document,
 // so they can match different fields, notes, transcriptions or tags.
 const HITS = (terms) => sql`
-  WITH hits AS (${terms.map(HIT).reduce((a, b) => sql`${a} UNION ALL ${b}`)})
+  WITH hits (term, item, subject, note) AS (${union(terms.map(HIT))})
   SELECT DISTINCT item, subject, note
     FROM hits
     WHERE item IN (
@@ -93,40 +99,15 @@ const ORDER = {
   [NAV.COLUMN.TEMPLATE.id]: 'subjects.template'
 }
 
-// Matches a "quoted phrase" (with optional closing quote) or a bare term.
-// Neither capture can contain a quote, so quoting them is safe for FTS5.
-const TERMS = /"([^"]*)("?)|([^\s"]+)/g
-
-// Splits the query into quoted phrases and terms,
-// so user input is never FTS5 syntax.
-// Terms match as prefixes, phrases match exactly.
-// An unterminated phrase extends to the end of the query
-// and matches as a prefix (user still typing presumably).
-function parse (query) {
-  let terms = new Map()
-
-  for (let [, phrase, end, term] of query.matchAll(TERMS)) {
-    if (terms.size === 32)
-      break
-
-    let t = (term != null)
-      ? { text: term, prefix: true }
-      : { text: phrase, prefix: !end }
-
-    if (!blank(t.text.trim()))
-      terms.set(`${t.prefix}:${t.text.toLowerCase()}`, t)
-  }
-
-  return [...terms.values()]
-}
-
-// Terms as FTS5 phrases (prefix or exact) and tag name patterns.
-function match (query) {
-  return ((query == null) ? [] : parse(query)).map(({ text, prefix }) => ({
+// Terms (see common/search.js) as FTS5 phrases (prefix or exact)
+// and tag name patterns: user input is never FTS5 or LIKE syntax.
+// Neither words nor phrases contain quotes, so quoting them is safe.
+const match = (terms) =>
+  terms.map(({ text, prefix, scope }) => ({
+    scope,
     fts: `"${text}"${prefix ? '*' : ''}`,
     tag: `%${text.replace(/[\\%_]/g, '\\$&')}%`
   }))
-}
 
 async function search (db, query) {
   const [items, push] = createSequence()
@@ -182,15 +163,13 @@ mod.item = {
   },
 
   // The hit rows ({ item, subject, note }) of the items matching
-  // every term of the query (see HITS), or null without terms.
+  // every term (see HITS), or null without terms.
   // Item level hits (item metadata, tags) have the item as subject.
-  async hits (db, query) {
-    let terms = match(query)
-
-    if (terms.length === 0)
+  async hits (db, terms) {
+    if (!terms?.length)
       return null
 
-    return db.all(HITS(terms))
+    return db.all(HITS(match(terms)))
   },
 
   // All item ids in an order close to the sort,

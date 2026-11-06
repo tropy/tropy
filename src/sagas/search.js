@@ -4,9 +4,10 @@ import { warn } from '../common/log.js'
 import { build, reverse, update } from '../common/order.js'
 import { createSequence, stable } from '../common/sequence.js'
 import { collator } from '../collate.js'
+import { parse } from '../common/search.js'
 import { NAV } from '../constants/index.js'
 import { getSortColumn } from '../selectors/index.js'
-import { selectSortKey } from '../slices/qr.js'
+import { selectQuery, selectSortKey } from '../slices/qr.js'
 import * as mod from '../models/index.js'
 import * as act from '../actions/index.js'
 
@@ -182,7 +183,7 @@ export function *find (db, { list, tags = [], trash, imports, query }) {
 
   let ids = result.items
   let hits = null
-  let rows = yield call(mod.item.hits, db, query)
+  let rows = yield call(mod.item.hits, db, parse(query || '').terms)
 
   if (rows != null)
     [ids, hits] = intersect(ids, rows)
@@ -241,6 +242,10 @@ export function *ordered (db, ids, sort) {
 // for the view the user is looking at.
 export function *search (db) {
   try {
+    // Invalid queries do not search: the results stay.
+    if ((yield select(selectQuery)).errors.length > 0)
+      return
+
     var view = yield select(getView)
     let { ids, hits } = yield* find(db, view)
 

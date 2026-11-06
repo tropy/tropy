@@ -45,6 +45,12 @@
     }
   }
 
+  &.invalid .search-input {
+    border-color: $input-btn-invalid-color;
+
+    @include input-btn-focus(":focus", $input-btn-invalid-color);
+  }
+
   .btn-icon {
     position: absolute;
     right: $space-min + 1px;
