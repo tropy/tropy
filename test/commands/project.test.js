@@ -14,13 +14,14 @@ import act from '#tropy/actions/project.js'
 describe('project commands', () => {
   // A real database object: calls to missing methods fail.
   let db = new Database(':memory:')
+  let ro = new Database(':memory:', 'r')
   let corrupt = () => { throw new IntegrityError(['t[1] -> p#0']) }
   let busy = () => { throw new CodeError('SQLITE_BUSY', 'database is locked') }
 
-  after(() => db.close())
+  after(() => Promise.all([db.close(), ro.close()]))
 
-  let exec = (Cmd, action, { warnings = [], check, free = 0 } = {}) =>
-    run(new Cmd(action, { db }).exec(), {
+  let exec = (Cmd, action, { warnings = [], check, free = 0, readOnly } = {}) =>
+    run(new Cmd(action, { db: readOnly ? ro : db }).exec(), {
       state: { project: { warnings } },
       mocks: [
         [db.check, check],
@@ -80,12 +81,40 @@ describe('project commands', () => {
       expect(optimized(exec(Optimize, force, { check: corrupt })))
         .to.be.false
     })
+
+    it('skips read-only projects', () => {
+      let res = exec(Optimize, act.optimize(null, { force: true }), { readOnly: true })
+      expect(res.calls(ro.seq).callCount()).to.equal(0)
+    })
   })
 
   describe('Reindex', () => {
-    it('reindexes', () => {
-      expect(exec(Reindex, act.reindex()).calls(db.seq).callCount())
-        .to.equal(1)
+    it('reindexes, then checks', () => {
+      let res = exec(Reindex, act.reindex())
+
+      expect(res.calls(db.seq).callCount()).to.equal(1)
+      expect(res.calls(db.check).callCount()).to.equal(1)
+      expect(res.result).to.be.true
+    })
+
+    it('clears the corrupted warning when repaired', () => {
+      let res = exec(Reindex, act.reindex(), { warnings: ['newer', 'corrupted'] })
+      expect(res.puts[0].payload).to.eql({ warnings: ['newer'] })
+    })
+
+    it('keeps the corrupted warning when not repaired', () => {
+      let res = exec(Reindex, act.reindex(), {
+        warnings: ['corrupted'],
+        check: corrupt
+      })
+
+      expect(res.result).to.be.false
+      expect(res.puts).to.eql([])
+    })
+
+    it('skips read-only projects', () => {
+      let res = exec(Reindex, act.reindex(), { readOnly: true })
+      expect(res.calls(ro.seq).callCount()).to.equal(0)
     })
   })
 })
@@ -98,11 +127,18 @@ describe('project prune', () => {
   let c = `${'c'.repeat(32)}.tif`
 
   // Files in the store (name -> mtime) and the referenced names.
-  let prune = ({ files, referenced = [], project = {}, root = store }) => {
+  let prune = ({
+    files,
+    referenced = [],
+    project = {},
+    root = store,
+    prompt = false,
+    cancel = false
+  }) => {
     let removed = []
     let options = { db: null, store: new Store(root) }
 
-    let res = run(new ProjectPrune(act.prune(null, { prompt: false }), options).exec(), {
+    let res = run(new ProjectPrune(act.prune(null, { prompt }), options).exec(), {
       state: {
         project: { isManaged: true, path, store, ...project }
       },
@@ -113,7 +149,8 @@ describe('project prune', () => {
             .filter(name => filter({ name }))
             .map(name => join(dir, name))],
         [stat, (file) => ({ mtimeMs: files[file.slice(store.length + 1)] })],
-        [pMap, (orphans) => orphans.map(file => removed.push(file))]
+        [pMap, (orphans) => orphans.map(file => removed.push(file))],
+        [ProjectPrune.prototype.showDialog, () => ({ cancel })]
       ]
     })
 
@@ -141,6 +178,13 @@ describe('project prune', () => {
     }
 
     expect(prune({ files }).removed).to.eql([])
+  })
+
+  it('keeps the files when the prompt is cancelled', () => {
+    let res = prune({ files: { [b]: 0 }, prompt: true, cancel: true })
+
+    expect(res.removed).to.eql([])
+    expect(res.result).to.equal(0)
   })
 
   it('skips read-only projects', () => {

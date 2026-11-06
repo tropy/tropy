@@ -584,6 +584,11 @@ Menu.ItemConditions = {
     return project?.isManaged
   },
 
+  isProjectStoreWritable ({ app, win }) {
+    let project = app.pm.get(win)
+    return !!project?.isManaged && !project.isReadOnly
+  },
+
   isProjectOpen ({ app, win }) {
     return app.pm.has(win)
   },

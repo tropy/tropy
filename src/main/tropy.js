@@ -724,15 +724,6 @@ export class Tropy extends EventEmitter {
         })
     })
 
-    this.on('app:reset-ontology-db', async () => {
-      if (this.wm.has(['project', 'prefs']))
-        dialog.warn(this.wm.first(['prefs', 'project']), {
-          message: 'Cannot reset ontology db while in use!'
-        })
-      else
-        await fs.promises.unlink(join(this.opts.data, 'ontology.db'))
-    })
-
     this.on('app:print', () => {
       this.dispatch(act.item.print(), this.wm.current())
     })

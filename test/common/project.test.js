@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs'
 import { isAbsolute, join } from 'node:path'
 import { mkprojtmp } from '../support/project.js'
 import { mkdtmp, mktmp } from '../support/tmp.js'
-import { convert, create, load, open, pstat } from '#tropy/common/project.js'
+import { convert, create, load, open, pstat, save } from '#tropy/common/project.js'
 import { delay } from '#tropy/common/util.js'
 
 describe('common/project', () => {
@@ -130,6 +130,26 @@ describe('common/project', () => {
         expect(stats).to.have.property('notes', 0)
       })
 
+      it('does not count trashed or deleted contents', async () => {
+        let { db, path } = tpy.current
+
+        await db.exec(`
+          INSERT INTO subjects (id) VALUES (1), (2), (11), (12), (21);
+          INSERT INTO images (id) VALUES (11), (12), (21);
+          INSERT INTO items (id) VALUES (1), (2);
+          INSERT INTO photos (id, item_id, path, mimetype, checksum)
+            VALUES (11, 1, 'a', 'image/jpeg', 'a'),
+              (12, 1, 'b', 'image/jpeg', 'b'),
+              (21, 2, 'c', 'image/jpeg', 'c');
+          INSERT INTO notes (id, text, state, deleted)
+            VALUES (11, 'a', '{}', NULL), (11, 'b', '{}', datetime('now')),
+              (12, 'c', '{}', NULL), (21, 'd', '{}', NULL);
+          INSERT INTO trash (id) VALUES (2), (12);`)
+
+        expect(await pstat(path))
+          .to.include({ items: 1, photos: 1, notes: 1 })
+      })
+
       it('returns null if file not modified since', async () => {
         await delay(100)
         expect(await pstat(tpy.current.path, Date.now())).to.be.null
@@ -170,6 +190,23 @@ describe('common/project', () => {
       await assert.rejects(
         () => pstat('test.tpy'),
         { code: 'ENOENT' })
+    })
+  })
+
+  describe('save', () => {
+    let tpy = mkprojtmp('test.tpy', { id: 'abc123', name: 'Daedalus' })
+
+    it('saves project properties', async () => {
+      let { db } = tpy.current
+      await save(db, { id: 'abc123', name: 'Icarus' })
+      expect((await load(db)).name).to.equal('Icarus')
+    })
+
+    it('rejects unknown properties', async () => {
+      let { db } = tpy.current
+      await assert.rejects(
+        () => save(db, { id: 'abc123', project_id: 'x' }),
+        { message: /cannot save project_id/ })
     })
   })
 
