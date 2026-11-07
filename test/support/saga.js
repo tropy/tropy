@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict'
 import { mock } from 'node:test'
 
 // Steps through a saga without running its effects.
@@ -6,6 +7,7 @@ import { mock } from 'node:test'
 // the implementations in `mocks` (Map or [fn, impl] pairs),
 // or, for all other functions, mocks returning undefined.
 // Errors thrown by a mock are thrown into the saga.
+// All effects of call effects are answered the same way.
 // Put effects are recorded in `puts`.
 
 export function run (saga, { state = {}, mocks = [] } = {}) {
@@ -30,8 +32,15 @@ export function run (saga, { state = {}, mocks = [] } = {}) {
         value = payload.selector(state, ...payload.args)
         break
       case 'CALL':
+      case 'ALL':
         try {
-          value = mockFor(payload.fn)(...payload.args)
+          value = (type === 'CALL') ?
+            mockFor(payload.fn)(...payload.args) :
+            Object.entries(payload).reduce((res, [key, effect]) => {
+              assert.equal(effect.type, 'CALL', 'all supports calls only')
+              res[key] = mockFor(effect.payload.fn)(...effect.payload.args)
+              return res
+            }, Array.isArray(payload) ? [] : {})
         } catch (err) {
           next = saga.throw(err)
           continue

@@ -1,4 +1,4 @@
-import { actionChannel, call, put, select, take } from 'redux-saga/effects'
+import { actionChannel, all, call, put, select, take } from 'redux-saga/effects'
 import { buffers } from 'redux-saga'
 import { warn } from '../common/log.js'
 import { build, reverse, update } from '../common/order.js'
@@ -95,7 +95,7 @@ const intersect = (ids, rows) => {
   let matched = {}
   let hits = { subjects: {}, notes: {} }
 
-  for (let { item, subject, note } of rows) {
+  for (let [item, subject, note] of rows) {
     if (!view[item]) continue
 
     matched[item] = true
@@ -159,31 +159,36 @@ const getView = (state) => ({
 // or null without query terms.
 export function *find (db, { list, tags = [], trash, imports, query }) {
   let START = Date.now()
-  let result
+  let view
 
   switch (true) {
     case (imports != null):
-      result = yield call(mod.item.find, db, { ids: imports })
+      view = call(mod.item.find, db, { ids: imports })
       break
 
     case (!!trash):
-      result = yield call(mod.item.trash, db)
+      view = call(mod.item.trash, db)
       break
 
     case (list != null):
       if (list < 0)
-        result = yield call(mod.item.unlisted, db, { tags })
+        view = call(mod.item.unlisted, db, { tags })
       else
-        result = yield call(mod.item.list, db, list, { tags })
+        view = call(mod.item.list, db, list, { tags })
       break
 
     default:
-      result = yield call(mod.item.all, db, { tags })
+      view = call(mod.item.all, db, { tags })
   }
+
+  // The view and the hits run in parallel (on separate connections).
+  let [result, rows] = yield all([
+    view,
+    call(mod.item.hits, db, parse(query || '').terms)
+  ])
 
   let ids = result.items
   let hits = null
-  let rows = yield call(mod.item.hits, db, parse(query || '').terms)
 
   if (rows != null)
     [ids, hits] = intersect(ids, rows)

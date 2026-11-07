@@ -156,9 +156,9 @@ describe('search saga', () => {
 
   it('keeps the matches and hits of the items in the view', () => {
     let rows = [
-      { item: 1, subject: 11, note: 7 },
-      { item: 3, subject: 3, note: null },
-      { item: 4, subject: 41, note: null }
+      [1, 11, 7],
+      [3, 3, null],
+      [4, 41, null]
     ]
 
     let { puts: [{ payload }] } =
