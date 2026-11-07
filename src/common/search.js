@@ -19,8 +19,11 @@ const SCOPE = {
   meta: 'metadata'
 }
 
-// SQLite refuses compound SELECTs with more than 500 terms.
-const MAX_TERMS = 32
+// SQLite refuses compound SELECTs with more than 500 terms, and
+// since 3.53 the hits query (4 sources per term, one statement)
+// nests subqueries too deep from about 24 terms. Temporarily 20:
+// back to 32 once the search query is restructured (db.md).
+const MAX_TERMS = 20
 
 // The grammar, for the API docs (OpenAPI, MCP).
 export const SYNTAX =

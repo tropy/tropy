@@ -53,9 +53,9 @@ describe('common/search', () => {
       let query = Array.from({ length: 40 }, (_, i) => `w${i}`).join(' ')
       let { terms, errors } = parse(query)
 
-      expect(terms).to.have.length(32)
+      expect(terms).to.have.length(20)
       expect(errors).to.eql([
-        { code: 'too-many-terms', offset: query.indexOf('w32'), length: 3 }
+        { code: 'too-many-terms', offset: query.indexOf('w20'), length: 3 }
       ])
 
       expect(parse('box '.repeat(100)).errors).to.eql([])
