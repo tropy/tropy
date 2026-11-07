@@ -53,8 +53,8 @@ program
       }
       case 'ontology': {
         let { Database } = await import('../src/common/db.js')
-        let { create } = await import('../src/models/ontology.js')
-        let path = await Database.create(file, create)
+        let path = await Database.create(file, db =>
+          db.read(join(SCHEMA, 'ontology.sql')))
         say(`created ontology at ${relative(cwd, path)}`)
         break
       }

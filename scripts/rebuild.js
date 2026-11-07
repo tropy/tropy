@@ -107,12 +107,6 @@ class Rebuilder {
           'build',
           'Release',
           `sharp-${this.platform}-${this.arch}.node`))
-      case 'sqlite3':
-        return !fs.existsSync(this.modulePath(
-          'lib',
-          'binding',
-          `napi-v6-${this.platform}-${this.libc}-${this.arch}`,
-          'node_sqlite3.node'))
       case 'better-sqlite3':
         return !fs.existsSync(this.modulePath(
           'build', 'Release', 'better_sqlite3.node'))
@@ -145,56 +139,6 @@ class Rebuilder {
   }
 
   static Steps = {
-    sqlite3: [
-      async (task) => {
-        let url = cat(task.vendorPath('version.txt')).trim()
-        let tar = task.modulePath('deps', url.split('/').pop())
-        let version = (/-(\d+)\.tar\.gz/).exec(url)[1]
-
-        if (!test('-f', tar)) {
-          say(`fetching SQLite version ${version} ...`)
-          await download(url, tar)
-        }
-
-        sed('-i',
-          /'sqlite_version%':'\d+',/,
-          `'sqlite_version%':'${version}',`,
-          task.modulePath('deps', 'common-sqlite.gypi'))
-      },
-
-      async (task) => {
-        if (task.platform === 'darwin') {
-          sed('-i',
-            /"MACOSX_DEPLOYMENT_TARGET":\s*"[\d.]+",/,
-            '"MACOSX_DEPLOYMENT_TARGET": "12.0",',
-            task.modulePath('binding.gyp'))
-        }
-      },
-
-      (task) => {
-        // Filter out VERSION file during extraction to avoid
-        // clash with C++ <version> header on case-insensitive
-        // filesystems (macOS)
-        sed('-i',
-          /tar\.extract\(\{/,
-          'tar.extract({\n    filter(path) { return !path.endsWith("/VERSION") },',
-          task.modulePath('deps', 'extract.js'))
-      },
-
-      (task) => {
-        sed('-i', /'SQLITE_ENABLE_FTS[34]',/, '',
-          task.modulePath('deps', 'sqlite3.gyp'))
-      },
-
-      async (task) => {
-        await task.nodeGypRebuild([
-          `--target=${task.target}`,
-          `--arch=${task.arch}`,
-          task.verbose ? '--verbose' : ''
-        ])
-      }
-    ],
-
     sharp: [
       async (task) => {
         if (env.SHARP_FORCE_GLOBAL_LIBVIPS === 'true') {
@@ -329,7 +273,7 @@ program
     let opts = program.opts()
 
     if (!args.length)
-      args = ['sqlite3', 'sharp']
+      args = ['better-sqlite3', 'sharp']
 
     opts.libc = await family() || 'unknown'
 
