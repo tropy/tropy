@@ -8,6 +8,7 @@ import { InterfaceSettings } from './interface.js'
 import { ImportSettings } from './import.js'
 import { LocaleSettings } from './locale.js'
 import { OCRSettings } from './ocr.js'
+import { SearchSettings } from './search.js'
 import { StyleSettings } from './style.js'
 import { TemplateSettings } from './template.js'
 import act from '../../actions/settings.js'
@@ -37,6 +38,10 @@ export function AppSettings () {
       <hr/>
       <InterfaceSettings
         config={settings}
+        onChange={handleSettingsUpdate}/>
+      <hr/>
+      <SearchSettings
+        config={settings.search}
         onChange={handleSettingsUpdate}/>
       <hr/>
       <ExportSettings
