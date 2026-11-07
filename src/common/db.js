@@ -3,7 +3,7 @@ import { EventEmitter } from 'node:events'
 import { readFile } from 'node:fs/promises'
 import { createPool, Pool } from 'generic-pool'
 import { canWrite } from './fs.js'
-import sqlite from './sqlite.js'
+import Driver from '#better-sqlite3'
 import { Migration } from './migration.js'
 import { debug, trace, warn } from './log.js'
 import { DisposableResource, using } from './disposable.js'
@@ -12,11 +12,14 @@ import { IntegrityError } from './error.js'
 
 
 const M = {
-  r: sqlite.OPEN_READONLY,
-  w: sqlite.OPEN_READWRITE,
-  'w+': sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE,
-  'wx+': sqlite.OPEN_CREATE
+  r: { readonly: true, fileMustExist: true },
+  w: { readonly: false, fileMustExist: true },
+  'w+': { readonly: false, fileMustExist: false },
+  'wx+': { readonly: false, fileMustExist: false }
 }
+
+// Used for exec (several statements); otherwise the statement's `readonly`.
+const IUD = /^\s*(insert|update|delete)/i
 
 {
   // PATCH generic-pool to ensure that no more connections are created
@@ -64,15 +67,21 @@ export class Database extends EventEmitter {
     this.mode = mode
     this.journalMode = journalMode
 
+    // One connection unless the driver can wait for locks without
+    // blocking this thread (a worker: Driver.concurrent). Synchronous
+    // connections on one thread cannot wait for each other's locks:
+    // a writer would block the thread the lock holder needs.
+    let { max = 3, ...rest } = opts
+
     this.pool = createPool({
       create: () => this.create(),
       destroy: (conn) => this.destroy(conn)
     }, {
       min: 0,
-      max: 3,
       idleTimeoutMillis: 1000 * 60 * 3,
       acquireTimeoutMillis: 1000 * 60,
-      ...opts
+      ...rest,
+      max: Driver.concurrent ? max : 1
     })
 
     this.pool
@@ -106,51 +115,34 @@ export class Database extends EventEmitter {
     return this.mode === 'r'
   }
 
-  create (mode = this.mode) {
-    return new Promise((resolve, reject) => {
-      trace({ mode, path: this.path }, 'open db')
+  async create (mode = this.mode) {
+    trace({ mode, path: this.path }, 'open db')
 
-      let db = new sqlite.Database(this.path, M[mode], (error) => {
-        if (error) {
-          return reject(error)
-        }
+    // Like sqlite3: no defensive mode (the schema scripts write
+    // sqlite_schema for the FTS tables), and statements may run
+    // while another one iterates (each).
+    let db = new Driver(this.path, M[mode])
+    await db.unsafeMode(true)
 
-        let options = { ...Connection.defaults }
-
-        if (this.journalMode === 'wal') {
-          options['journal_mode'] = 'wal'
-          options['synchronous'] = 'normal'
-        }
-
-        new Connection(db)
-          .configure(options)
-          .then(conn => {
-            this.emit('create')
-            resolve(conn)
-          }, reject)
-      })
-
-      db.on('error', (error) => {
-        this.emit('error', error)
-      })
-
-      db.on('query', (query, readonly) => {
-        if (!readonly) {
-          // Technically the write can still fail, we record the intent.
-          this.hasBeenModified = true
-          this.emit('update', query)
-        }
-      })
-
-      db.on('profile', (query, ms) => {
-        if (ms < 100)
-          trace({ sql: query, ms }, 'db query')
-        else if (ms < 250)
-          debug({ sql: query, ms }, 'db query')
-        else
-          warn({ sql: query, ms }, 'slow db query')
-      })
+    let conn = new Connection(db, {
+      onWrite: (query) => {
+        // Technically the write can still fail, we record the intent.
+        this.hasBeenModified = true
+        this.emit('update', query)
+      }
     })
+
+    let options = { ...Connection.defaults }
+
+    if (this.journalMode === 'wal') {
+      options['journal_mode'] = 'wal'
+      options['synchronous'] = 'normal'
+    }
+
+    await conn.configure(options)
+    this.emit('create')
+
+    return conn
   }
 
   async destroy (conn) {
@@ -181,7 +173,6 @@ export class Database extends EventEmitter {
   }
 
   release (conn, destroy = false) {
-    conn.parallelize()
     return destroy ?
       this.pool.destroy(conn) :
       this.pool.release(conn)
@@ -325,9 +316,14 @@ export class Database extends EventEmitter {
 }
 
 
+// A better-sqlite3 connection (see #better-sqlite3 in package.json).
+// Driver calls are awaited, so the driver may be synchronous or not.
 export class Connection {
-  constructor (db) {
+  #statements = new Map()
+
+  constructor (db, { onWrite } = {}) {
     this.db = db
+    this.onWrite = onWrite
   }
 
   configure (pragma = Connection.defaults) {
@@ -343,41 +339,85 @@ export class Connection {
   }
 
   async close () {
-    await this.db.closeAsync()
-    this.db.removeAllListeners()
+    this.#statements.clear()
+    await this.db.close()
   }
 
-  parallelize (...args) {
-    return this.db.parallelize(...args), this
+  statement (sql) {
+    let stmt = this.#statements.get(sql)
+
+    if (stmt == null) {
+      stmt = this.db.prepare(sql)
+      this.#statements.set(sql, stmt)
+    }
+
+    return stmt
   }
 
-  serialize (...args) {
-    return this.db.serialize(...args), this
+  async #call (sql, params, fn) {
+    let start = performance.now()
+
+    try {
+      let stmt = this.statement(sql)
+      if (!stmt.readonly) this.onWrite?.(sql)
+
+      return await fn(stmt, args(params))
+
+    } catch (err) {
+      throw normalize(err)
+
+    } finally {
+      profile(sql, performance.now() - start)
+    }
   }
 
   all (sql, ...params) {
-    return this.db.allAsync(...bind(sql, params))
-  }
-
-  each (sql, ...args) {
-    if (!(sql instanceof Sql))
-      return this.db.eachAsync(sql, ...args)
-
-    assert(args.length === 1, 'sql query takes no extra params')
-    return this.db.eachAsync(sql.text, sql.params, ...args)
+    return this.#call(...bind(sql, params), (stmt, values) =>
+      stmt.reader ? stmt.all(...values) : (stmt.run(...values), []))
   }
 
   get (sql, ...params) {
-    return this.db.getAsync(...bind(sql, params))
+    return this.#call(...bind(sql, params), (stmt, values) =>
+      stmt.reader ? stmt.get(...values) : void stmt.run(...values))
   }
 
   run (sql, ...params) {
-    return this.db.runAsync(...bind(sql, params))
+    return this.#call(...bind(sql, params), async (stmt, values) => {
+      let { changes, lastInsertRowid } = await stmt.run(...values)
+      return { id: Number(lastInsertRowid), changes }
+    })
+  }
+
+  // Calls cb for each row; resolves to the number of rows.
+  each (sql, ...params) {
+    let cb = params.pop()
+
+    return this.#call(...bind(sql, params), async (stmt, values) => {
+      let count = 0
+
+      for await (let row of stmt.iterate(...values)) {
+        cb(row)
+        count++
+      }
+
+      return count
+    })
   }
 
   async exec (sql) {
-    await this.db.execAsync(sql)
-    return this
+    let start = performance.now()
+
+    try {
+      if (IUD.test(sql)) this.onWrite?.(sql)
+      await this.db.exec(sql)
+      return this
+
+    } catch (err) {
+      throw normalize(err)
+
+    } finally {
+      profile(sql, performance.now() - start)
+    }
   }
 
   // The version number is a 10-digit migration number
@@ -544,4 +584,44 @@ function bind (sql, params) {
 
   assert(params.length === 0, 'sql query takes no extra params')
   return [sql.text, sql.params]
+}
+
+// Parameters as better-sqlite3 binds them: positional values spread,
+// named ones in an object without their prefix ($, :, @); undefined
+// as NULL, booleans as 0/1 and dates as ms, as sqlite3 did.
+function args (params) {
+  if (params === undefined)
+    return []
+  if (Array.isArray(params))
+    return params.map(value)
+  if (isNamed(params))
+    return [Object.fromEntries(Object.entries(params).map(([k, v]) =>
+      [k.replace(/^[$:@]/, ''), value(v)]))]
+  return [value(params)]
+}
+
+const value = (v) =>
+  (v === undefined) ? null :
+    (typeof v === 'boolean') ? Number(v) :
+      (v instanceof Date) ? v.getTime() : v
+
+const isNamed = (params) =>
+  params != null && typeof params === 'object' &&
+  !ArrayBuffer.isView(params) && !(params instanceof Date)
+
+// Errors keep the primary code (e.g. SQLITE_CONSTRAINT for
+// SQLITE_CONSTRAINT_UNIQUE), as sqlite3 reported them.
+function normalize (err) {
+  if (typeof err.code === 'string')
+    err.code = (/^SQLITE_[A-Z]+/).exec(err.code)?.[0] ?? err.code
+  return err
+}
+
+function profile (sql, ms) {
+  if (ms < 100)
+    trace({ sql, ms }, 'db query')
+  else if (ms < 250)
+    debug({ sql, ms }, 'db query')
+  else
+    warn({ sql, ms }, 'slow db query')
 }
