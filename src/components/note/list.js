@@ -1,5 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { List, ListItem } from '../sequence/list.js'
+import { Highlight } from '../highlight.js'
+import { snippet } from '../../common/matcher.js'
+import { selectMatcher } from '../../slices/qr.js'
 import { TABS, SASS } from '../../constants/index.js'
 import * as act from '../../actions/index.js'
 
@@ -22,6 +25,7 @@ export const NoteList = ({
   let notes = useSelector(getVisibleNotes)
   let selected = useSelector(getSelectedNote)
   let photo = useSelector(getSelectedPhoto)
+  let matcher = useSelector(selectMatcher)
 
   // Notes are not cleared.
   let handleSelect = (note, { throttle }) => {
@@ -83,9 +87,18 @@ export const NoteList = ({
       renderItem={(note, state) => (
         <ListItem {...state}>
           <div className="css-multiline-truncate">
-            {note.text.slice(0, 280)}
+            <Preview text={note.text} matcher={matcher}/>
           </div>
         </ListItem>
       )}/>
   )
+}
+
+// The note's beginning, or its matches of the search query.
+const Preview = ({ text, matcher }) => {
+  let ranges = matcher?.ranges(text, 'note')
+
+  return ranges?.length ?
+    <Highlight {...snippet(text, ranges)}/> :
+    text.slice(0, 280)
 }

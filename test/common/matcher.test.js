@@ -1,5 +1,5 @@
 import { Database } from '#tropy/common/db.js'
-import { createMatcher, tokenize } from '#tropy/common/matcher.js'
+import { createMatcher, snippet, tokenize } from '#tropy/common/matcher.js'
 import { parse } from '#tropy/common/search.js'
 
 describe('common/matcher', () => {
@@ -71,6 +71,27 @@ describe('common/matcher', () => {
       expect(matcher('').ranges('box', 'metadata')).to.eql([])
       expect(matcher('-').ranges('a - b', 'metadata')).to.eql([])
       expect(matcher('box').ranges('', 'metadata')).to.eql([])
+    })
+  })
+
+  describe('snippet', () => {
+    const marked = ({ text, ranges }) =>
+      ranges.map(([start, end]) => text.slice(start, end))
+
+    let text = 'one two three four five six seven eight nine ten'
+
+    it('cuts the text to its matches at whitespace', () => {
+      let s = snippet(text, [[14, 18], [40, 44]], { size: 20, context: 6 })
+
+      expect(s.text).to.equal('…three four five … eight nine ten')
+      expect(marked(s)).to.eql(['four', 'nine'])
+    })
+
+    it('leaves out matches past the size', () => {
+      let s = snippet(text, [[0, 3], [40, 44]], { size: 5, context: 4 })
+
+      expect(s.text).to.equal('one two…')
+      expect(marked(s)).to.eql(['one'])
     })
   })
 
