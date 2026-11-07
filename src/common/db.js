@@ -3,7 +3,7 @@ import { EventEmitter } from 'node:events'
 import { readFile } from 'node:fs/promises'
 import { createPool, Pool } from 'generic-pool'
 import { canWrite } from './fs.js'
-import Driver from '#better-sqlite3'
+import Driver from '#sqlite'
 import { Migration } from './migration.js'
 import { debug, trace, warn } from './log.js'
 import { DisposableResource, using } from './disposable.js'
@@ -316,7 +316,8 @@ export class Database extends EventEmitter {
 }
 
 
-// A better-sqlite3 connection (see #better-sqlite3 in package.json).
+// A connection with better-sqlite3's API (see #sqlite in package.json):
+// better-sqlite3 in process, or src/sqlite/proxy.js backed by a worker.
 // Driver calls are awaited, so the driver may be synchronous or not.
 export class Connection {
   #statements = new Map()
@@ -343,11 +344,13 @@ export class Connection {
     await this.db.close()
   }
 
-  statement (sql) {
+  // Cached only once prepared: a statement may fail now
+  // (e.g. no such table) and succeed after a schema change.
+  async statement (sql) {
     let stmt = this.#statements.get(sql)
 
     if (stmt == null) {
-      stmt = this.db.prepare(sql)
+      stmt = await this.db.prepare(sql)
       this.#statements.set(sql, stmt)
     }
 
@@ -358,7 +361,7 @@ export class Connection {
     let start = performance.now()
 
     try {
-      let stmt = this.statement(sql)
+      let stmt = await this.statement(sql)
       if (!stmt.readonly) this.onWrite?.(sql)
 
       return await fn(stmt, args(params))

@@ -21,6 +21,10 @@
   "main": "lib/main/index.js",
   "type": "module",
   "imports": {
+    "#sqlite": {
+      "tropy": "./src/sqlite/proxy.js",
+      "default": "better-sqlite3"
+    },
     "#better-sqlite3": {
       "tropy": "./src/sqlite/native.js",
       "default": "better-sqlite3"
