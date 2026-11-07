@@ -39,7 +39,7 @@ describe('models/item', () => {
 
     // The items matching a query, by their hit rows.
     const search = async (query) =>
-      [...new Set(((await hits(query)) ?? []).map(r => r.item))]
+      [...new Set(((await hits(query)) ?? []).map(([item]) => item))]
 
     it('treats user input as terms, not FTS5 syntax', async () => {
       expect(await search('1990-12')).to.eql([ids[0]])
@@ -113,13 +113,13 @@ describe('models/item', () => {
 
       // Not the deleted note, nor the note of the trashed photo.
       expect(await hits('zeb'))
-        .to.eql([{ item: ids[2], subject: 101, note: 7 }])
+        .to.eql([[ids[2], 101, 7]])
       expect(await hits('note:zeb')).to.eql(await hits('zeb'))
       expect(await hits('meta:zeb')).to.eql([])
 
       expect(await hits('box zebra')).to.have.deep.members([
-        { item: ids[2], subject: ids[2], note: null },
-        { item: ids[2], subject: 101, note: 7 }
+        [ids[2], ids[2], null],
+        [ids[2], 101, 7]
       ])
 
       expect(await hits(' ')).to.be.null

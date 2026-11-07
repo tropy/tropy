@@ -19,17 +19,17 @@ const skel = (id, lists = [], photos = [], tags = []) => ({
 
 // The item of subject x.id: the item itself, or a photo's or selection's.
 // Trashed photos and selections (and selections of trashed photos)
-// contribute nothing; trashed items do (the trash can be searched).
-const OF_ITEM = sql`
-      LEFT JOIN items i ON i.id = x.id
-      LEFT JOIN photos p ON p.id = x.id
-      LEFT JOIN selections s ON s.id = x.id
-      LEFT JOIN photos sp ON sp.id = s.photo_id
-    WHERE i.id IS NOT NULL OR (
-      x.id NOT IN (SELECT id FROM trash) AND
-      coalesce(sp.id, 0) NOT IN (SELECT id FROM trash))`
-
-const ITEM = sql.raw('coalesce(i.id, p.item_id, sp.item_id)')
+// have none: they contribute nothing; trashed items do (the trash
+// can be searched). Looked up lazily, items first (most hits are),
+// which is much faster than joining all candidates for every hit.
+const ITEM = sql`coalesce(
+  (SELECT id FROM items WHERE id = x.id),
+  (SELECT item_id FROM photos
+    WHERE id = x.id AND id NOT IN (SELECT id FROM trash)),
+  (SELECT p.item_id FROM selections s JOIN photos p ON p.id = s.photo_id
+    WHERE s.id = x.id
+      AND s.id NOT IN (SELECT id FROM trash)
+      AND p.id NOT IN (SELECT id FROM trash)))`
 
 // The subjects (id) and notes (note) matching a term, per scope:
 // FTS matches in each index, and items with a tag whose name
@@ -68,19 +68,21 @@ const HIT = (term, k) =>
   union(((term.scope === 'any') ?
     Object.values(SOURCE) : [SOURCE[term.scope]]
   ).map(source => sql`
-    SELECT ${k}, ${ITEM}, x.id, x.note
-      FROM (${source(term)}) x ${OF_ITEM}`))
+    SELECT ${k}, item, id, note
+      FROM (SELECT x.id, x.note, ${ITEM} AS item FROM (${source(term)}) x)
+      WHERE item IS NOT NULL`))
 
 // The hit rows of the items matching every term:
 // terms are ANDed per item, not per FTS document,
 // so they can match different fields, notes, transcriptions or tags.
+// A single term needs no check (~20% faster at 10^5).
 const HITS = (terms) => sql`
   WITH hits (term, item, subject, note) AS (${union(terms.map(HIT))})
   SELECT DISTINCT item, subject, note
-    FROM hits
+    FROM hits ${(terms.length === 1) ? sql`` : sql`
     WHERE item IN (
       SELECT item FROM hits GROUP BY item
-        HAVING count(DISTINCT term) = ${terms.length})`
+        HAVING count(DISTINCT term) = ${terms.length})`}`
 
 // Restricts a view to the items with every tag.
 const TAGGED = (tags) => {
@@ -109,12 +111,18 @@ const match = (terms) =>
     tag: `%${text.replace(/[\\%_]/g, '\\$&')}%`
   }))
 
-async function search (db, query) {
+// Returns the ids of a query (with an id column) as a sequence,
+// in the given order (an ORDER BY fragment), else in any order.
+// One JSON array, not a row each: per-row callbacks cost ~40 ms
+// of main thread at 10^5, the array ~6 ms.
+async function search (db, query, order = sql``) {
+  let { ids } = await db.get(sql`
+    SELECT json_group_array(id ${order}) AS ids FROM (${query})`)
+
   const [items, push] = createSequence()
 
-  await db.each(query, ({ id }) => {
+  for (let id of JSON.parse(ids))
     push(id)
-  })
 
   return { items: Object.freeze(items) }
 }
@@ -147,11 +155,11 @@ mod.item = {
   // In list order: the order when sorting by position.
   async list (db, list, { tags } = {}) {
     return search(db, sql`
-      SELECT id
+      SELECT id, added
         FROM list_items
         WHERE list_id = ${list} AND deleted IS NULL
-          AND id NOT IN (SELECT id FROM trash) ${TAGGED(tags)}
-        ORDER BY added, id`)
+          AND id NOT IN (SELECT id FROM trash) ${TAGGED(tags)}`,
+    sql`ORDER BY added, id`)
   },
 
   async unlisted (db, { tags } = {}) {
@@ -162,37 +170,40 @@ mod.item = {
           AND id NOT IN (SELECT id FROM trash) ${TAGGED(tags)}`)
   },
 
-  // The hit rows ({ item, subject, note }) of the items matching
+  // The hit rows ([item, subject, note]) of the items matching
   // every term (see HITS), or null without terms.
   // Item level hits (item metadata, tags) have the item as subject.
+  // One JSON array, not a row each (see search).
   async hits (db, terms) {
     if (!terms?.length)
       return null
 
-    return db.all(HITS(match(terms)))
+    let { rows } = await db.get(sql`
+      SELECT json_group_array(json_array(item, subject, note)) AS rows
+        FROM (${HITS(match(terms))})`)
+
+    return JSON.parse(rows)
   },
 
   // All item ids in an order close to the sort,
   // to seed the sort in JS (see common/order.js).
   // Not for position: lists keep their own order (see list).
+  // One JSON array, not a row each (see search).
   async seed (db, sort) {
-    let dir = sort.asc ? 'ASC' : 'DESC'
-    let ids = []
+    let dir = sql.raw(sort.asc ? 'ASC' : 'DESC')
 
-    await db.each((sort.column in ORDER) ? `
-      SELECT id
-        FROM items JOIN subjects USING (id)
-        ORDER BY ${ORDER[sort.column]} ${dir} NULLS LAST, id ${dir}` : `
-      SELECT items.id AS id
+    let { ids } = await db.get((sort.column in ORDER) ? sql`
+      SELECT json_group_array(id ORDER BY
+          ${sql.raw(ORDER[sort.column])} ${dir} NULLS LAST, id ${dir}) AS ids
+        FROM items JOIN subjects USING (id)` : sql`
+      SELECT json_group_array(items.id ORDER BY
+          text COLLATE NOCASE ${dir} NULLS LAST, items.id ${dir}) AS ids
         FROM items
           LEFT OUTER JOIN metadata
-            ON (metadata.id = items.id AND property = $sort)
-          LEFT OUTER JOIN metadata_values USING (value_id)
-        ORDER BY text COLLATE NOCASE ${dir} NULLS LAST, items.id ${dir}`,
-    (sort.column in ORDER) ? {} : { $sort: sort.column },
-    ({ id }) => { ids.push(id) })
+            ON (metadata.id = items.id AND property = ${sort.column})
+          LEFT OUTER JOIN metadata_values USING (value_id)`)
 
-    return ids
+    return JSON.parse(ids)
   },
 
   async load (db, ids) {
