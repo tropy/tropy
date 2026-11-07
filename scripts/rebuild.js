@@ -283,17 +283,32 @@ class Rebuilder {
       },
 
       (task) => {
-        sed('-i', /'SQLITE_ENABLE_FTS[34].*',/, '',
+        // Drop the legacy FTS modules and extras Tropy does not use
+        sed('-i',
+          /'SQLITE_(ENABLE_(FTS[34]\w*|UPDATE_DELETE_LIMIT)|SOUNDEX)',/,
+          '',
           task.modulePath('deps', 'defines.gypi'))
       },
 
       async (task) => {
+        // Subtle: better-sqlite3 skips the build when it ships
+        // a prebuild for the host (with its own SQLite version)!
         await task.nodeGypRebuild([
           `--target=${task.target}`,
           `--arch=${task.arch}`,
           `--nodedir=${nodeGypCache(task.target)}`,
+          '--force_build=1',
           task.verbose ? '--verbose' : ''
         ])
+      },
+
+      async (task) => {
+        // Outside the bundle (tests, scripts) better-sqlite3 would
+        // still load a prebuild over our build: remove them.
+        await fs.promises.rm(task.modulePath('prebuilds'), {
+          force: true,
+          recursive: true
+        })
       }
     ]
   }
