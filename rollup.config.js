@@ -261,6 +261,36 @@ export default [
   },
 
   {
+    // The DB worker (src/sqlite/worker.js): a Web Worker with Node,
+    // loaded by src/sqlite/proxy.js from next to the renderer chunks.
+    input: 'src/sqlite/worker.js',
+    output: {
+      file: 'lib/sqlite-worker.cjs',
+      format: 'cjs',
+      generatedCode: 'es2015',
+      sourcemap: true
+    },
+    plugins: [
+      natives({
+        copyTo: 'lib/node/lib',
+        destDir: './node/lib',
+        target_arch: arch
+      }),
+      nodeResolve({
+        // tropy: see #better-sqlite3 in package.json.
+        exportConditions: ['node', 'tropy'],
+        preferBuiltins: true
+      }),
+      commonjs({
+        ignoreGlobal: true,
+        requireReturnsDefault: 'auto',
+        ignoreTryCatch
+      })
+    ],
+    onwarn
+  },
+
+  {
     output: {
       dir: 'lib/css'
     },

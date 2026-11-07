@@ -59,6 +59,7 @@ export class WindowManager extends EventEmitter {
       webPreferences: {
         contextIsolation: true,
         nodeIntegration: false,
+        nodeIntegrationInWorker: true,
         sandbox: false,
         preload: join(Resource.base, 'lib/bootstrap.mjs'),
         defaultEncoding: 'UTF-8',
