@@ -21,6 +21,10 @@
   "main": "lib/main/index.js",
   "type": "module",
   "imports": {
+    "#better-sqlite3": {
+      "tropy": "./src/sqlite/native.js",
+      "default": "better-sqlite3"
+    },
     "#tropy/*.js": "./src/*.js",
     "#vendor/*.js": "./vendor/*.js"
   },

@@ -228,7 +228,7 @@ export default [
         }
       }),
       nodeResolve({
-        exportConditions: ['node'],
+        exportConditions: ['node', 'tropy'],
         preferBuiltins: true
       }),
       json(),
