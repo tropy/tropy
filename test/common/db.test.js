@@ -251,9 +251,9 @@ describe('Database', () => {
 
       describe('given data', () => {
         beforeEach(() => db.seq(async conn => {
-          await conn.exec('INSERT INTO t1 VALUES (1,"one")')
-          await conn.exec('INSERT INTO t1 VALUES (2,"two")')
-          await conn.exec('INSERT INTO t1 VALUES (3,"two")')
+          await conn.exec("INSERT INTO t1 VALUES (1,'one')")
+          await conn.exec("INSERT INTO t1 VALUES (2,'two')")
+          await conn.exec("INSERT INTO t1 VALUES (3,'two')")
           await conn.exec('INSERT INTO t1 VALUES (4,null)')
           await conn.exec('INSERT INTO t2 VALUES (1)')
           await conn.exec('INSERT INTO t2 VALUES (2)')
