@@ -2,6 +2,7 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Popover } from './popover.js'
 import { OptionList } from './option.js'
+import { Highlight } from './highlight.js'
 import * as collate from '../collate.js'
 import { createSequence, indexOf } from '../common/sequence.js'
 import cx from 'classnames'
@@ -12,16 +13,6 @@ const {
   INPUT: { BORDER_WIDTH },
   POPOVER: { PADDING }
 } = SASS
-
-export const Highlight = ({ text, matchData }) => (
-  (!Array.isArray(matchData)) ? text : (
-    <>
-      {text.slice(0, matchData[0])}
-      <strong>{text.slice(...matchData)}</strong>
-      {text.slice(matchData[1])}
-    </>
-  )
-)
 
 export class Completions extends React.Component {
   optionsList = React.createRef()
@@ -233,6 +224,8 @@ export class Completions extends React.Component {
       return (value.id || String(value))
     },
     toText: (value, { matchData } = {}) =>
-      <Highlight text={value.name || String(value)} matchData={matchData}/>
+      <Highlight
+        text={value.name || String(value)}
+        ranges={Array.isArray(matchData) && [matchData]}/>
   }
 }

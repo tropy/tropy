@@ -60,6 +60,27 @@ export function auto (value, type) {
   }
 }
 
+// The matcher's (see common/matcher.js) ranges in the displayed
+// metadata value (see auto). Values shown as they are match
+// on what is shown. Formatted values match on their raw value,
+// which is what the search indexes, and are marked as a whole.
+export function ranges (value, type, matcher) {
+  if (matcher == null || blank(value))
+    return null
+
+  let text = auto(value, type)
+
+  if (blank(text))
+    return null
+
+  if (text === value)
+    return matcher.ranges(value, 'metadata')
+
+  return matcher.test(String(value), 'metadata') ?
+    [[0, text.length]] :
+    null
+}
+
 function fmtNumber (value, locale = ARGS.locale) {
   if (!(locale in fmtNumber)) {
     fmtNumber[locale] = new Intl.NumberFormat(locale, {

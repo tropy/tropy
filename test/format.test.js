@@ -1,5 +1,7 @@
 import * as format from '#tropy/format.js'
 import { TYPE } from '#tropy/constants/index.js'
+import { createMatcher } from '#tropy/common/matcher.js'
+import { parse } from '#tropy/common/search.js'
 
 describe('format', () => {
   describe('number', () => {
@@ -96,6 +98,20 @@ describe('format', () => {
 
     it('falls back to input', () => {
       expect(format.auto('4200')).to.equal('4200')
+    })
+  })
+
+  describe('ranges', () => {
+    const ranges = (query, value, type) =>
+      format.ranges(value, type, createMatcher(parse(query).terms))
+
+    it('marks matches in values shown as they are', () => {
+      expect(ranges('box', 'Box 3', TYPE.TEXT)).to.eql([[0, 3]])
+    })
+
+    it('matches formatted values on their raw value', () => {
+      expect(ranges('feb', '2019-02-23', TYPE.DATE)).to.equal(null)
+      expect(ranges('2019', '2019-02-23', TYPE.DATE)).to.eql([[0, 12]])
     })
   })
 })

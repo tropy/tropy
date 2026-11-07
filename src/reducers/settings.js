@@ -28,6 +28,9 @@ const defaults = {
   layout: ITEM.LAYOUT.STACKED,
   localtime: true,
   createLists: false,
+  search: {
+    highlight: true
+  },
   maximize: 'none',
   ocr: {
     grayscale: false,

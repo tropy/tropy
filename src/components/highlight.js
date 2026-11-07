@@ -1,14 +1,11 @@
-import { memo } from 'react'
 import { useSelector } from 'react-redux'
 import { selectMatcher } from '../slices/qr.js'
+import { ranges } from '../format.js'
 
-// Renders a text with the matches of the search query marked.
-// The scope is the text's (see common/matcher.js), e.g. metadata.
-export const Highlight = memo(({ scope, text }) => {
-  let matcher = useSelector(selectMatcher)
-  let ranges = matcher?.ranges(text, scope) ?? []
-
-  if (ranges.length === 0)
+// Renders a text with the given [start, end) ranges marked,
+// e.g. search matches or the match of a completion.
+export const Highlight = ({ text, ranges }) => {
+  if (!text || !ranges?.length)
     return text
 
   let parts = []
@@ -23,4 +20,12 @@ export const Highlight = memo(({ scope, text }) => {
   if (i < text.length) parts.push(text.slice(i))
 
   return parts
-})
+}
+
+// The ranges of the search query's matches
+// in the displayed metadata value (see format.js).
+// Null without a value, e.g. for cells that are not highlighted.
+export const useSearchRanges = (value, type) => {
+  let matcher = useSelector(selectMatcher)
+  return ranges(value, type, matcher)
+}
