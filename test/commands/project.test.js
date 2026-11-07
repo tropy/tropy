@@ -1,4 +1,4 @@
-import { join } from 'node:path'
+import { join, normalize } from 'node:path'
 import { stat } from 'node:fs/promises'
 import { run } from '../support/saga.js'
 import { Check, Optimize, Prune as ProjectPrune, Reindex } from '#tropy/commands/project.js'
@@ -120,7 +120,8 @@ describe('project commands', () => {
 })
 
 describe('project prune', () => {
-  let path = '/p/x.tropy'
+  // Native separators: the store normalizes its root (e.g. on Windows).
+  let path = normalize('/p/x.tropy')
   let store = join(path, 'assets')
   let a = `${'a'.repeat(32)}.jpg`
   let b = `${'b'.repeat(32)}.png`
