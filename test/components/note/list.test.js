@@ -31,6 +31,15 @@ describe('NoteList', () => {
     expect(commands()[0].payload.notes).to.eql([2])
   })
 
+  it('previews the matches of the search query', () => {
+    let text = `${'Lorem ipsum. '.repeat(30)}A letter from Paris.`
+    let { $ } = setup({ count: 1, query: 'paris', text })
+    let preview = $('.note-list li .css-multiline-truncate')
+
+    expect(preview.textContent).to.match(/^….* letter from Paris\.$/)
+    expect(preview.querySelector('mark').textContent).to.equal('Paris')
+  })
+
   it('does not open notes in item mode', () => {
     let { $, commands } = setup({}, { isItemOpen: true })
 

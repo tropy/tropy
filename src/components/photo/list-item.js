@@ -2,6 +2,7 @@ import { memo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import { Editable } from '../editable.js'
+import { Highlight, useSearchRanges } from '../highlight.js'
 import { Thumbnail } from './thumbnail.js'
 import { Icon } from '../icons.js'
 import { Button } from '../button.js'
@@ -40,6 +41,7 @@ export const PhotoListItem = memo(({
 
   let titleText = useSelector(state =>
     state.metadata[photo.id]?.[title]?.text)
+  let titleRanges = useSearchRanges(titleText, TYPE.TEXT)
 
   let [{ canDrop, direction, dragType, isDragging, isOver }, dnd] =
     useDragDropPhoto(container, {
@@ -117,6 +119,8 @@ export const PhotoListItem = memo(({
         </div>
         <div className="title">
           <Editable
+            display={titleText &&
+              <Highlight text={titleText} ranges={titleRanges}/>}
             value={titleText}
             resize
             isActive={isEditing}

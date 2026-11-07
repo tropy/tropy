@@ -166,3 +166,73 @@ export function createMatcher (terms = []) {
     }
   }
 }
+
+// Cuts a text down to its matches, e.g. for a preview:
+// each range with about `context` characters around it,
+// cut at whitespace where possible, joined by ellipses,
+// until about `size` characters; the last window
+// takes the rest of the size. Ranges past the size are left out.
+// Returns the snippet and the ranges shifted into it.
+export function snippet (text, ranges, { size = 280, context = 30 } = {}) {
+  let windows = []
+  let length = 0
+
+  for (let [start, end] of ranges) {
+    if (length >= size) break
+
+    let from = wordStart(text, Math.max(0, start - context), start)
+    let to = wordEnd(text, Math.min(text.length, end + context), end)
+    let last = windows.at(-1)
+
+    if (last != null && from <= last.to) {
+      length += Math.max(0, to - last.to)
+      last.to = Math.max(last.to, to)
+    } else {
+      windows.push({ from, to })
+      length += to - from
+    }
+  }
+
+  let last = windows.at(-1)
+
+  if (last == null)
+    return { text, ranges }
+
+  if (length < size)
+    last.to = wordEnd(
+      text, Math.min(text.length, last.to + size - length), last.to)
+
+  let out = ''
+  let shifted = []
+
+  for (let { from, to } of windows) {
+    if (out) out += ' … '
+    else if (from > 0) out += '…'
+
+    let offset = out.length - from
+
+    for (let [start, end] of ranges)
+      if (start >= from && end <= to)
+        shifted.push([start + offset, end + offset])
+
+    out += text.slice(from, to)
+  }
+
+  if (last.to < text.length) out += '…'
+
+  return { text: out, ranges: shifted }
+}
+
+// The first word start in text[i, limit), else i.
+const wordStart = (text, i, limit) => {
+  if (i === 0 || /\s/.test(text[i - 1])) return i
+  let m = /\s+/.exec(text.slice(i, limit))
+  return (m == null) ? i : i + m.index + m[0].length
+}
+
+// The last word end in text(limit, i], else i.
+const wordEnd = (text, i, limit) => {
+  if (i >= text.length || /\s/.test(text[i])) return i
+  let ws = text.slice(limit, i).search(/\s+\S*$/)
+  return (ws === -1) ? i : limit + ws
+}

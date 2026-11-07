@@ -4,9 +4,12 @@ import { nav } from '#tropy/reducers/nav.js'
 
 // A store with item 1 and its photo 1 selected,
 // the photo's `count` notes visible and `note` selected.
+// Notes have their id as text, unless `text` is given.
 export const createNoteStore = ({
   count = 2,
   note = 1,
+  query = '',
+  text,
   keymap = {}
 } = {}) => {
   let ids = Array.from({ length: count }, (_, i) => i + 1)
@@ -15,9 +18,9 @@ export const createNoteStore = ({
     items: { 1: { id: 1, photos: [1], tags: [], lists: [] } },
     photos: { 1: { id: 1, item: 1, selections: [], notes: ids } },
     notes: Object.fromEntries(ids.map(id =>
-      [id, { id, photo: 1, text: `${id}` }])),
+      [id, { id, photo: 1, text: text ?? `${id}` }])),
     qr: { items: [1] },
-    nav: { ...nav(undefined, {}), item: create([1]), photo: 1, note },
+    nav: { ...nav(undefined, {}), item: create([1]), photo: 1, note, query },
     keymap
   })
 }

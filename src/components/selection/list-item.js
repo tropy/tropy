@@ -6,6 +6,7 @@ import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
 import { useElementClicks } from '../../hooks/use-element-clicks.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { Editable } from '../editable.js'
+import { Highlight, useSearchRanges } from '../highlight.js'
 import { Thumbnail } from '../photo/thumbnail.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
 import { pick } from '../../common/util.js'
@@ -66,6 +67,7 @@ export const SelectionListItem = memo(({
 
   let titleText = useSelector(state =>
     state.metadata?.[selection.id]?.[title]?.text)
+  let titleRanges = useSearchRanges(titleText, 'text')
   let placeholder = intl.formatMessage({
     id: 'panel.photo.selection'
   })
@@ -96,7 +98,9 @@ export const SelectionListItem = memo(({
       </div>
       <div className="title">
         <Editable
-          display={titleText || placeholder}
+          display={titleText ?
+            <Highlight text={titleText} ranges={titleRanges}/> :
+            placeholder}
           value={titleText}
           resize
           isActive={isEditing}
