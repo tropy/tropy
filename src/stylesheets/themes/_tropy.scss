@@ -127,6 +127,9 @@ $link-hover-color: --scheme(var(--primary), tint(var(--primary), 14%));
 $text-selection-color: inherit;
 $text-selection-bg:    --scheme(var(--primary-light), alpha(var(--primary), 45%));
 
+$search-match-color: inherit;
+$search-match-bg:    --scheme(alpha(var(--orange), 35%), alpha(var(--orange), 45%));
+
 $hr-border: --scheme(var(--light-3), var(--dark-1));
 
 

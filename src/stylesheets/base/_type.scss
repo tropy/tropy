@@ -49,6 +49,13 @@ ul, ol {
 }
 
 // Text selection
+// Search matches (components/highlight.js).
+mark {
+  color: $search-match-color;
+  background-color: $search-match-bg;
+  border-radius: 2px;
+}
+
 ::selection {
   color: $text-selection-color;
   background-color: $text-selection-bg;

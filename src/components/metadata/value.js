@@ -2,6 +2,7 @@ import { forwardRef } from 'react'
 import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import { Editable } from '../editable.js'
+import { Highlight } from '../highlight.js'
 import { useDropText } from '../../hooks/use-drop-text.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { IconLock, IconWarningSm } from '../icons.js'
@@ -29,6 +30,7 @@ export const MetadataValue = forwardRef(({
   let [{ isOver }, drop] = useDropText(({ onDrop: onDropText }))
 
   let isInvalid = isRequired && blank(text)
+  let display = auto(text, type)
 
   let completions = useSelector(state =>
     getMetadataCompletions(state, {
@@ -46,7 +48,7 @@ export const MetadataValue = forwardRef(({
       onClick={onClick}>
       <Editable
         completions={completions}
-        display={auto(text, type)}
+        display={display && <Highlight scope="metadata" text={display}/>}
         isActive={isEditing}
         isReadOnly={isReadOnly}
         isRequired={isRequired}

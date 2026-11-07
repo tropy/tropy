@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { createSelector as memo } from 'reselect'
 import { parse } from '../common/search.js'
+import { createMatcher } from '../common/matcher.js'
 import { NAV } from '../constants/index.js'
 import { createMetaReducer } from './util.js'
 
@@ -47,6 +48,14 @@ export const selectItemSequence = (state) =>
 export const selectQuery = memo(
   (state) => state.nav.query,
   (query) => parse(query || ''))
+
+// The matcher of the search query, for highlighting (see
+// common/matcher.js); null without terms or for an invalid query,
+// which does not search either.
+export const selectMatcher = memo(
+  selectQuery,
+  ({ terms, errors }) =>
+    (terms.length === 0 || errors.length > 0) ? null : createMatcher(terms))
 
 export const selectSortKey = ({ items, metadata, ontology }, column) => {
   switch (column) {
