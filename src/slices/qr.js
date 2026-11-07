@@ -52,10 +52,16 @@ export const selectQuery = memo(
 // The matcher of the search query, for highlighting (see
 // common/matcher.js); null without terms or for an invalid query,
 // which does not search either.
+// Also null when highlights are switched off, and in item mode,
+// where the query is not visible.
 export const selectMatcher = memo(
   selectQuery,
-  ({ terms, errors }) =>
-    (terms.length === 0 || errors.length > 0) ? null : createMatcher(terms))
+  (state) =>
+    state.settings.search.highlight && state.nav.mode !== NAV.MODE.ITEM,
+  ({ terms, errors }, isEnabled) =>
+    (!isEnabled || terms.length === 0 || errors.length > 0) ?
+      null :
+      createMatcher(terms))
 
 export const selectSortKey = ({ items, metadata, ontology }, column) => {
   switch (column) {

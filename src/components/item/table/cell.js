@@ -2,7 +2,7 @@ import { memo } from 'react'
 import cx from 'classnames'
 import { CoverImage } from '../cover-image.js'
 import { Editable } from '../../editable.js'
-import { Highlight } from '../../highlight.js'
+import { Highlight, useSearchRanges } from '../../highlight.js'
 import { TagColors } from '../../tag/colors.js'
 import { auto } from '../../../format.js'
 import { noop } from '../../../common/util.js'
@@ -11,11 +11,11 @@ export const TableCell = memo(({
   display,
   getNextColumn = noop,
   getPrevColumn = noop,
-  highlight,
   id,
   isDisabled,
   isDragging,
   isEditing,
+  isHighlighted,
   isMainColumn,
   isMoving,
   isReadOnly,
@@ -39,6 +39,7 @@ export const TableCell = memo(({
   }
 
   let text = display || auto(value, type)
+  let ranges = useSearchRanges(isHighlighted ? value : null, type)
 
   let handleKeyDown = (event, input) => {
     if (event.key === 'Tab') {
@@ -75,8 +76,7 @@ export const TableCell = memo(({
           </div>
         )}
         <Editable
-          display={(highlight && text) ?
-            <Highlight scope={highlight} text={text}/> : text}
+          display={text && <Highlight text={text} ranges={ranges}/>}
           isActive={isEditing}
           isDisabled={isDisabled}
           isReadOnly={isReadOnly}

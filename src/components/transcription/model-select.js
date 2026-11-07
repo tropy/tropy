@@ -1,6 +1,6 @@
 import { useIntl } from 'react-intl'
 import { Select } from '../select.js'
-import { Highlight } from '../completions.js'
+import { Highlight } from '../highlight.js'
 import * as collate from '../../collate.js'
 
 // TODO
@@ -57,7 +57,9 @@ export const ModelSelect = ({
 const renderModel = (model, { matchData } = {}) => (
   <>
     <span className="truncate">
-      <Highlight text={model.name} matchData={matchData && matchData.name}/>
+      <Highlight
+        text={model.name}
+        ranges={matchData?.name && [matchData.name]}/>
     </span>
     <span className="mute truncate">
       {model.languages.length ? model.languages.join(', ') : model.id}

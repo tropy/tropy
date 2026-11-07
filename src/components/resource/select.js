@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { Select } from '../select.js'
-import { Highlight } from '../completions.js'
+import { Highlight } from '../highlight.js'
 import { useIntl } from 'react-intl'
 import * as collate from '../../collate.js'
 import { titlecase } from '../../common/util.js'
@@ -47,13 +47,13 @@ export const Label = ({ resource, matchData }) => (
     {resource.label ? (
       <Highlight
         text={resource.label}
-        matchData={matchData && matchData.label}/>
+        ranges={matchData?.label && [matchData.label]}/>
     ) : (
       <Highlight
         text={
           titlecase(resource.name || String(resource).split(/(#|\/)/).pop())
         }
-        matchData={matchData && matchData.name}/>
+        ranges={matchData?.name && [matchData.name]}/>
     )}
   </span>
 )
@@ -65,11 +65,11 @@ export const Id = ({ resource, matchData }) => (
           <>
             <Highlight
               text={resource.prefix}
-              matchData={matchData && matchData.prefix}/>
+              ranges={matchData?.prefix && [matchData.prefix]}/>
             :
             <Highlight
               text={resource.name}
-              matchData={matchData && matchData.name}/>
+              ranges={matchData?.name && [matchData.name]}/>
           </>
         )}
   </span>

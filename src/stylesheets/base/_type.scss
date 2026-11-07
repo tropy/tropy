@@ -48,14 +48,14 @@ ul, ol {
   list-style: none;
 }
 
-// Text selection
-// Search matches (components/highlight.js).
+// Highlights: search and completion matches (components/highlight.js).
 mark {
-  color: $search-match-color;
-  background-color: $search-match-bg;
-  border-radius: 2px;
+  color: $highlight-color;
+  background-color: $highlight-bg;
+  font-weight: $highlight-font-weight;
 }
 
+// Text selection
 ::selection {
   color: $text-selection-color;
   background-color: $text-selection-bg;

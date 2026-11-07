@@ -86,11 +86,11 @@ export const TableRow = memo(({
     }
 
     let props = {
-      // Only metadata columns are searched.
-      highlight: itemColumn ? null : 'metadata',
       id: column.id,
       isDragging: idx === drag,
       isEditing: editing === column.id,
+      // Only metadata columns are searched.
+      isHighlighted: !itemColumn,
       isMainColumn,
       isMoving: (idx >= drop && idx < drag) || (idx <= drop && idx > drag),
       isReadOnly: isReadOnly || !!column.protected,
