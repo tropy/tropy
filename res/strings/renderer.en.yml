@@ -217,6 +217,9 @@ en:
       density:
         label: Default density (ppi)
         title: Used for PDF, SVG and other scalable formats
+      search:
+        label: Search
+        highlight: Highlight matches
       export:
         label: Export
         note:
