@@ -4,7 +4,6 @@ import { join } from 'node:path'
 import fs from 'node:fs'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import envPaths from 'env-paths'
 import { coerce } from 'semver'
 import { say, setLogSymbol, ROOT } from './util.js'
 import { program } from 'commander'
@@ -42,10 +41,6 @@ function downloadHeaders ({
     `--arch=${arch}`,
     `--target=${target}`
   ].join(' ')}`, { silent })
-}
-
-function nodeGypCache (target) {
-  return join(envPaths('node-gyp', { suffix: '' }).cache, target)
 }
 
 async function download (url, file) {
@@ -240,7 +235,6 @@ class Rebuilder {
         await task.nodeGypRebuild([
           `--target=${task.target}`,
           `--arch=${task.arch}`,
-          `--nodedir=${nodeGypCache(task.target)}`,
           '--force_build=1',
           task.verbose ? '--verbose' : ''
         ])
