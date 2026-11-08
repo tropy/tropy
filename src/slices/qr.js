@@ -8,6 +8,7 @@ import { createMetaReducer } from './util.js'
 const qr = createSlice({
   name: 'qr',
   initialState: {
+    contributors: null,
     items: [],
     matches: null,
     order: [],
@@ -58,6 +59,13 @@ export const selectMatcher = memo(
     (!isEnabled || terms.length === 0 || errors.length > 0) ?
       null :
       createMatcher(terms))
+
+// The photos and notes of the selected items that contributed to
+// the search match, as lookups ({ photos, notes }: id → true), or
+// null without terms or selected items (see contributing in
+// sagas/search.js). Null too when the match filter is off.
+export const selectMatchFilter = (state) =>
+  state.settings.search.filter ? state.qr.contributors : null
 
 // Lookups for combining search terms (see common/matches.js):
 // itemOf[subject] the item of an item, photo or selection id,

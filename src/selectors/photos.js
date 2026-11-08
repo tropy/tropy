@@ -1,6 +1,7 @@
 import { createSelector as memo } from 'reselect'
 import { seq, compose, filter, into, map } from 'transducers.js'
 import { getSelectedItems } from './items.js'
+import { selectMatchFilter } from '../slices/qr.js'
 import { blank, pluck } from '../common/util.js'
 import { createSequence } from '../common/sequence.js'
 
@@ -41,12 +42,24 @@ export const getItemPhotos = (state, props) =>
     pluck(state.items, props.items),
     state.photos)
 
+// The photos of the selected items; with the match filter on,
+// only those that contributed to the search match (themselves,
+// their selections, or the notes of either).
 export const getVisiblePhotos = memo(
   getPhotos,
   getSelectedItems,
+  selectMatchFilter,
 
-  (photos, items) =>
-    expandItemPhotos(items, photos)
+  (photos, items, filter) => {
+    let visible = expandItemPhotos(items, photos)
+    if (filter == null) return visible
+
+    let [lst, push] = createSequence()
+    for (let photo of visible)
+      if (filter.photos[photo.id]) push(photo)
+
+    return lst
+  }
 )
 
 export const getPhotosWithErrors = memo(

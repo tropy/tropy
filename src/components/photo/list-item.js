@@ -22,7 +22,9 @@ export const PhotoListItem = memo(({
   isExpandable,
   isExpanded,
   isItemOpen,
+  isMatch,
   isSelected,
+  isSortable,
   isVertical,
   onChange,
   onConsolidate,
@@ -47,6 +49,7 @@ export const PhotoListItem = memo(({
     useDragDropPhoto(container, {
       photo,
       getAdjacent,
+      isSortable,
       isDisabled: isDisabled || isEditing,
       isVertical,
       onDrop: onDropPhoto
@@ -96,6 +99,7 @@ export const PhotoListItem = memo(({
         'no-drop-target': dragType === DND.SELECTION,
         dragging: isDragging,
         expandable: isExpandable,
+        match: isMatch,
         expanded: isExpanded,
         over: isOver && canDrop,
         [direction]: direction

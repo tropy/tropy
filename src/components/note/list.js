@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
+import cx from 'classnames'
 import { List, ListItem } from '../sequence/list.js'
 import { Highlight } from '../highlight.js'
 import { snippet } from '../../common/matcher.js'
@@ -26,6 +27,7 @@ export const NoteList = ({
   let selected = useSelector(getSelectedNote)
   let photo = useSelector(getSelectedPhoto)
   let matcher = useSelector(selectMatcher)
+  let contributors = useSelector(state => state.qr.contributors)
 
   // Notes are not cleared.
   let handleSelect = (note, { throttle }) => {
@@ -85,7 +87,9 @@ export const NoteList = ({
       onOpen={handleOpen}
       onSelect={handleSelect}
       renderItem={(note, state) => (
-        <ListItem {...state}>
+        <ListItem
+          {...state}
+          className={cx({ match: contributors?.notes[note.id] })}>
           <div className="css-multiline-truncate">
             <Preview text={note.text} matcher={matcher}/>
           </div>

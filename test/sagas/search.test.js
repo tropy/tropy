@@ -1,5 +1,13 @@
 import { run } from '../support/saga.js'
-import { search, sync, termLists } from '#tropy/sagas/search.js'
+import {
+  cachedLists,
+  contribute,
+  narrow,
+  search,
+  sync,
+  termLists
+} from '#tropy/sagas/search.js'
+import { create } from '#tropy/common/selection.js'
 import { update } from '#tropy/slices/qr.js'
 import { getDefaultSort } from '#tropy/selectors/nav.js'
 import * as mod from '#tropy/models/index.js'
@@ -202,3 +210,58 @@ describe('search saga', () => {
     expect(search$(state(payload), [2, 1]).puts).to.eql([])
   })
 })
+
+describe('contributors', () => {
+  const state = ({ query = 'box', item = [1], photo = 11, note = null } = {}) => ({
+    nav: { query, item: create(item), photo, selection: null, note },
+    qr: {
+      items: [1, 2],
+      contributors: { photos: { 12: true }, notes: { 7: true } }
+    },
+    settings: { search: { filter: true } },
+    items: {
+      1: { id: 1, photos: [11, 12] },
+      2: { id: 2, photos: [] }
+    },
+    photos: {
+      11: { id: 11, item: 1, notes: [], selections: [] },
+      12: { id: 12, item: 1, notes: [6, 7], selections: [] }
+    },
+    selections: {},
+    notes: { 6: { id: 6, photo: 12 }, 7: { id: 7, photo: 12 } }
+  })
+
+  const lists = [{ subjects: Int32Array.of(2, 12), notes: Int32Array.of(7) }]
+
+  const contribute$ = (s, prev, terms = lists) =>
+    run(contribute(null, prev), {
+      state: s,
+      mocks: [[cachedLists, () => null], [termLists, () => terms]]
+    })
+
+  it('takes a snapshot when the selection or the query changes', () => {
+    let { puts, result } = contribute$(state())
+
+    expect(puts[0].payload.contributors).to.eql({
+      photos: { 12: true },
+      notes: { 7: true }
+    })
+
+    // Edits change the lists, not the snapshot.
+    expect(contribute$(state(), result, []).puts).to.eql([])
+  })
+
+  it('clears the contributors without terms', () => {
+    let { puts } = contribute$(state({ query: '' }))
+    expect(puts[0].payload.contributors).to.be.null
+  })
+
+  it('moves to the first visible photo and note when hidden', () => {
+    let { puts } = run(narrow(), { state: state() })
+    expect(puts[0].payload).to.eql({ photo: 12, selection: null, note: 7 })
+
+    expect(run(narrow(), { state: state({ photo: 12, note: 7 }) }).puts)
+      .to.eql([])
+  })
+})
+
