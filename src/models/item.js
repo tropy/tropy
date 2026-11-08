@@ -1,6 +1,5 @@
 import { array, blank, uniq } from '../common/util.js'
 import { NAV } from '../constants/index.js'
-import { createSequence } from '../common/sequence.js'
 import sql, { IN } from '../common/sql.js'
 
 import modMetadata from './metadata.js'
@@ -79,20 +78,16 @@ const match = ({ text, prefix, scope }) => ({
   tag: `%${text.replace(/[\\%_]/g, '\\$&')}%`
 })
 
-// Returns the ids of a query (with an id column) as a sequence,
+// Returns the ids of a query (with an id column) as an array,
 // in the given order (an ORDER BY fragment), else in any order.
 // One JSON array, not a row each: per-row callbacks cost ~40 ms
-// of main thread at 10^5, the array ~6 ms.
+// of main thread at 10^5, parsing the array ~1 ms. Not indexed:
+// most callers filter it; indexing 10^5 ids costs ~6 ms.
 async function search (db, query, order = sql``) {
   let { ids } = await db.get(sql`
     SELECT json_group_array(id ${order}) AS ids FROM (${query})`)
 
-  const [items, push] = createSequence()
-
-  for (let id of JSON.parse(ids))
-    push(id)
-
-  return { items: Object.freeze(items) }
+  return { items: JSON.parse(ids) }
 }
 
 

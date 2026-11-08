@@ -48,16 +48,15 @@ const filter = (order, matches) => {
   return seq
 }
 
-// Returns ids in list order (from find) by position:
-// reversed, as an indexed sequence, when descending.
+// Returns ids in list order (from find) by position,
+// as an indexed sequence: reversed when descending.
 const byPosition = (ids, sort) => {
-  if (sort.asc)
-    return ids
-
   let [seq, push] = createSequence()
 
-  for (let i = ids.length - 1; i >= 0; --i)
-    push(ids[i])
+  if (sort.asc)
+    for (let i = 0; i < ids.length; ++i) push(ids[i])
+  else
+    for (let i = ids.length - 1; i >= 0; --i) push(ids[i])
 
   return seq
 }
@@ -207,12 +206,7 @@ export function *find (db, { list, tags = [], trash, imports, query }) {
 
   if (lists.length > 0) {
     let subjects = yield select(selectSubjects)
-    let [seq, push] = createSequence()
-
-    for (let id of membership(ids, lists, subjects))
-      push(id)
-
-    ids = seq
+    ids = membership(ids, lists, subjects)
   }
 
   let ms = Date.now() - START
