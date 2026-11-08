@@ -39,13 +39,10 @@ describe('common/search', () => {
         .to.eql([word('box'), word('box', 'tag')])
     })
 
-    it('reports scopes without a value', () => {
+    it('ignores scopes without a value', () => {
       expect(parse('box tag: note:""')).to.eql({
         terms: [word('box')],
-        errors: [
-          { code: 'empty-scope', offset: 4, length: 4 },
-          { code: 'empty-scope', offset: 9, length: 7 }
-        ]
+        errors: []
       })
     })
 

@@ -33,7 +33,11 @@ describe('Highlight', () => {
     it('marks the matches of the search query', () => {
       expect(search('Box 3', { query: 'box' })).to.eql(['Box'])
       expect(search('Box 3', { query: 'note:box' })).to.eql([])
-      expect(search('Box 3', { query: 'box tag:' })).to.eql([])
+      expect(search('Box 3', { query: 'box tag:' })).to.eql(['Box'])
+
+      // Invalid queries (too many terms) mark nothing.
+      let many = Array.from({ length: 33 }, (_, i) => `w${i}`).join(' ')
+      expect(search('Box 3', { query: `box ${many}` })).to.eql([])
     })
 
     it('marks nothing in item mode or when switched off', () => {

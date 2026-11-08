@@ -71,6 +71,7 @@ export class TagList extends React.PureComponent {
             isEditing={this.isEditing(tag)}
             isReadOnly={this.props.isReadOnly}
             isSelected={this.isSelected(tag)}
+            matcher={this.props.matcher}
             onChange={this.props.onSave}
             onDropItems={this.props.onDropItems}
             onEditCancel={this.props.onEditCancel}

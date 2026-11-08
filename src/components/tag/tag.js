@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import cx from 'classnames'
 import { Editable } from '../editable.js'
+import { Highlight } from '../highlight.js'
 import { IconPlusCircles } from '../icons.js'
 import { TagColor } from '../colors.js'
 import { isMeta } from '../../keymap.js'
@@ -35,6 +36,7 @@ export const Tag = React.memo(({
   isEditing,
   isSelected,
   isReadOnly,
+  matcher,
   tag,
   onChange = noop,
   onContextMenu,
@@ -56,6 +58,9 @@ export const Tag = React.memo(({
       })
     }
   })
+
+  // Tag names match terms as substrings (see common/matcher.js).
+  let ranges = matcher?.ranges(tag.name, 'tag')
 
   let handleChange = useCallback((name) => {
     onChange({ name }, tag.id)
@@ -101,6 +106,8 @@ export const Tag = React.memo(({
       <TagColor color={tag.color}/>
       <div className="name">
         <Editable
+          display={ranges?.length > 0 &&
+            <Highlight text={tag.name} ranges={ranges}/>}
           isActive={isEditing}
           isDisabled={isReadOnly}
           isRequired
