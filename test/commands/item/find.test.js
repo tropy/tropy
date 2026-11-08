@@ -2,6 +2,7 @@ import { run } from '../../support/saga.js'
 import { Find } from '#tropy/commands/item/find.js'
 import act from '#tropy/actions/api.js'
 import * as mod from '#tropy/models/index.js'
+import { termLists } from '#tropy/sagas/search.js'
 
 const TITLE = 'http://purl.org/dc/elements/1.1/title'
 
@@ -29,6 +30,7 @@ describe('ItemFind', () => {
         [mod.item.list, () => ({ items: [2, 4] })],
         // NOCASE order: b10 before b2.
         [mod.item.seed, () => [3, 1, 2, 4]],
+        [termLists, () => []],
         ...mocks
       ]
     })

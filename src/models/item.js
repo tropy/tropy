@@ -17,72 +17,41 @@ const skel = (id, lists = [], photos = [], tags = []) => ({
   id, lists, photos, tags
 })
 
-// The item of subject x.id: the item itself, or a photo's or selection's.
-// Trashed photos and selections (and selections of trashed photos)
-// have none: they contribute nothing; trashed items do (the trash
-// can be searched). Looked up lazily, items first (most hits are),
-// which is much faster than joining all candidates for every hit.
-const ITEM = sql`coalesce(
-  (SELECT id FROM items WHERE id = x.id),
-  (SELECT item_id FROM photos
-    WHERE id = x.id AND id NOT IN (SELECT id FROM trash)),
-  (SELECT p.item_id FROM selections s JOIN photos p ON p.id = s.photo_id
-    WHERE s.id = x.id
-      AND s.id NOT IN (SELECT id FROM trash)
-      AND p.id NOT IN (SELECT id FROM trash)))`
-
-// The subjects (id) and notes (note) matching a term, per scope:
-// FTS matches in each index, and items with a tag whose name
-// contains the term. Transcriptions count for their subject.
-const SOURCE = {
+// The subjects (items, photos, selections) matching a term, per scope:
+// FTS matches in the metadata and transcription indices (transcriptions
+// count for their subject), and items with a tag whose name contains
+// the term. Notes match in their own index (see NOTES).
+// Subject ids only: mapping them to items, deduping and leaving out
+// trashed photos and selections happens in JS, from state, where it is
+// cheap (in SQL these took most of a term's time).
+const SUBJECTS = {
   transcription: ({ fts }) => sql`
-    SELECT t.id AS id, NULL AS note
+    SELECT t.id
       FROM fts_transcriptions
         JOIN transcriptions t ON t.transcription_id = fts_transcriptions.rowid
       WHERE fts_transcriptions MATCH ${fts} AND t.deleted IS NULL`,
 
-  note: ({ fts }) => sql`
-    SELECT n.id AS id, n.note_id AS note
-      FROM fts_notes JOIN notes n ON n.note_id = fts_notes.rowid
-      WHERE fts_notes MATCH ${fts} AND n.deleted IS NULL`,
-
   metadata: ({ fts }) => sql`
-    SELECT m.id AS id, NULL AS note
+    SELECT m.id
       FROM fts_metadata JOIN metadata m ON m.value_id = fts_metadata.rowid
       WHERE fts_metadata MATCH ${fts}`,
 
   tag: ({ tag }) => sql`
-    SELECT id, NULL AS note
+    SELECT id
       FROM taggings JOIN tags USING (tag_id)
       WHERE name LIKE ${tag} ESCAPE '\\'`
 }
 
+// The notes matching a term.
+const NOTES = ({ fts }) => sql`
+  SELECT n.note_id
+    FROM fts_notes JOIN notes n ON n.note_id = fts_notes.rowid
+    WHERE fts_notes MATCH ${fts} AND n.deleted IS NULL`
+
 const union = (fragments) =>
   fragments.reduce((a, b) => sql`${a} UNION ALL ${b}`)
 
-// Hit rows (term, item, subject, note) for term k,
-// from the sources of its scope (all of them for any).
-// Each source maps to items on its own: mapping a union
-// of the sources at once is slower (~1.5x at 10^5).
-const HIT = (term, k) =>
-  union(((term.scope === 'any') ?
-    Object.values(SOURCE) : [SOURCE[term.scope]]
-  ).map(source => sql`
-    SELECT ${k}, item, id, note
-      FROM (SELECT x.id, x.note, ${ITEM} AS item FROM (${source(term)}) x)
-      WHERE item IS NOT NULL`))
-
-// The hit rows of the items matching every term:
-// terms are ANDed per item, not per FTS document,
-// so they can match different fields, notes, transcriptions or tags.
-// A single term needs no check (~20% faster at 10^5).
-const HITS = (terms) => sql`
-  WITH hits (term, item, subject, note) AS (${union(terms.map(HIT))})
-  SELECT DISTINCT item, subject, note
-    FROM hits ${(terms.length === 1) ? sql`` : sql`
-    WHERE item IN (
-      SELECT item FROM hits GROUP BY item
-        HAVING count(DISTINCT term) = ${terms.length})`}`
+const NONE = new Int32Array(0)
 
 // Restricts a view to the items with every tag.
 const TAGGED = (tags) => {
@@ -101,15 +70,14 @@ const ORDER = {
   [NAV.COLUMN.TEMPLATE.id]: 'subjects.template'
 }
 
-// Terms (see common/search.js) as FTS5 phrases (prefix or exact)
-// and tag name patterns: user input is never FTS5 or LIKE syntax.
+// A term (see common/search.js) as an FTS5 phrase (prefix or exact)
+// and a tag name pattern: user input is never FTS5 or LIKE syntax.
 // Neither words nor phrases contain quotes, so quoting them is safe.
-const match = (terms) =>
-  terms.map(({ text, prefix, scope }) => ({
-    scope,
-    fts: `"${text}"${prefix ? '*' : ''}`,
-    tag: `%${text.replace(/[\\%_]/g, '\\$&')}%`
-  }))
+const match = ({ text, prefix, scope }) => ({
+  scope,
+  fts: `"${text}"${prefix ? '*' : ''}`,
+  tag: `%${text.replace(/[\\%_]/g, '\\$&')}%`
+})
 
 // Returns the ids of a query (with an id column) as a sequence,
 // in the given order (an ORDER BY fragment), else in any order.
@@ -170,19 +138,23 @@ mod.item = {
           AND id NOT IN (SELECT id FROM trash) ${TAGGED(tags)}`)
   },
 
-  // The hit rows ([item, subject, note]) of the items matching
-  // every term (see HITS), or null without terms.
-  // Item level hits (item metadata, tags) have the item as subject.
-  // One JSON array, not a row each (see search).
-  async hits (db, terms) {
-    if (!terms?.length)
-      return null
+  // The subjects and notes matching a term (see SUBJECTS, NOTES),
+  // as Int32Arrays: { subjects, notes }. Terms are combined per item
+  // in JS (see common/matches.js).
+  async term (db, term) {
+    let m = match(term)
+    let any = (m.scope === 'any')
+    let sources = any ?
+      Object.values(SUBJECTS) :
+      (m.scope in SUBJECTS) ? [SUBJECTS[m.scope]] : []
 
-    let { rows } = await db.get(sql`
-      SELECT json_group_array(json_array(item, subject, note)) AS rows
-        FROM (${HITS(match(terms))})`)
+    let [subjects, notes] = await Promise.all([
+      (sources.length > 0) ?
+        db.ids(union(sources.map(source => source(m)))) : NONE,
+      (any || m.scope === 'note') ? db.ids(NOTES(m)) : NONE
+    ])
 
-    return JSON.parse(rows)
+    return { subjects, notes }
   },
 
   // All item ids in an order close to the sort,

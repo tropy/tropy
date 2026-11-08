@@ -1,5 +1,5 @@
 import { run } from '../support/saga.js'
-import { search, sync } from '#tropy/sagas/search.js'
+import { search, sync, termLists } from '#tropy/sagas/search.js'
 import { update } from '#tropy/slices/qr.js'
 import { getDefaultSort } from '#tropy/selectors/nav.js'
 import * as mod from '#tropy/models/index.js'
@@ -120,19 +120,30 @@ describe('order saga', () => {
 })
 
 describe('search saga', () => {
-  const state = (qr) => ({
+  const state = (qr, query = '') => ({
     intl: { locale: 'en' },
-    nav: { sort: {}, list: null, tags: [], query: '' },
+    nav: { sort: {}, list: null, tags: [], query },
     imports: [],
+    items: {
+      1: { id: 1, photos: [11] },
+      2: { id: 2, photos: [] },
+      3: { id: 3, photos: [] },
+      4: { id: 4, photos: [41] }
+    },
+    photos: {
+      11: { id: 11, item: 1, selections: [] },
+      41: { id: 41, item: 4, selections: [] }
+    },
+    notes: { 7: { id: 7, photo: 11 } },
     qr
   })
 
-  const search$ = (s, ids, rows = null) =>
+  const search$ = (s, ids, lists = []) =>
     run(search(null), {
       state: s,
       mocks: [
         [mod.item.all, () => ({ items: ids })],
-        [mod.item.hits, () => rows]
+        [termLists, () => lists]
       ]
     })
 
@@ -148,30 +159,30 @@ describe('search saga', () => {
     }
     let { puts: [{ payload }] } = run(search(null), {
       state: s,
-      mocks: [[mod.item.list, () => ({ items: [1, 2, 3] })]]
+      mocks: [
+        [mod.item.list, () => ({ items: [1, 2, 3] })],
+        [termLists, () => []]
+      ]
     })
 
     expect(payload.items).to.eql([3, 2, 1])
   })
 
-  it('keeps the matches and hits of the items in the view', () => {
-    let rows = [
-      [1, 11, 7],
-      [3, 3, null],
-      [4, 41, null]
+  it('keeps the items of the view matching every term', () => {
+    // Item 1 by its photo's note, item 3 itself, item 4 by its photo
+    // (not in the view); the second term matches items 1 and 3.
+    let lists = [
+      { subjects: Int32Array.of(3, 41), notes: Int32Array.of(7) },
+      { subjects: Int32Array.of(1, 3), notes: Int32Array.of() }
     ]
 
     let { puts: [{ payload }] } =
-      search$(state({ matches: null, hits: null }), [1, 2, 3], rows)
+      search$(state({ matches: null }, 'x y'), [1, 2, 3], lists)
 
     expect(payload.matches).to.eql({ 1: true, 3: true })
-    expect(payload.hits).to.eql({
-      subjects: { 11: true, 3: true },
-      notes: { 7: true }
-    })
 
-    // The same hits keep their identity.
-    expect(search$(state(payload), [1, 2, 3], rows).puts).to.eql([])
+    // The same matches keep their identity.
+    expect(search$(state(payload, 'x y'), [1, 2, 3], lists).puts).to.eql([])
   })
 
   it('does not search invalid queries', () => {

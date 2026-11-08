@@ -12,10 +12,18 @@ import { IntegrityError } from './error.js'
 
 
 const M = {
-  r: { readonly: true, fileMustExist: true },
-  w: { readonly: false, fileMustExist: true },
-  'w+': { readonly: false, fileMustExist: false },
-  'wx+': { readonly: false, fileMustExist: false }
+  'r': {
+    readonly: true, fileMustExist: true
+  },
+  'w': {
+    readonly: false, fileMustExist: true
+  },
+  'w+': {
+    readonly: false, fileMustExist: false
+  },
+  'wx+': {
+    readonly: false, fileMustExist: false
+  }
 }
 
 // Used for exec (several statements); otherwise the statement's `readonly`.
@@ -66,6 +74,9 @@ export class Database extends EventEmitter {
     this.path = path
     this.mode = mode
     this.journalMode = journalMode
+
+    // Bumped by every write: caches of query results check it.
+    this.generation = 0
 
     // One connection unless the driver can wait for locks without
     // blocking this thread (a worker: Driver.concurrent). Synchronous
@@ -118,16 +129,16 @@ export class Database extends EventEmitter {
   async create (mode = this.mode) {
     trace({ mode, path: this.path }, 'open db')
 
-    // Like sqlite3: no defensive mode (the schema scripts write
-    // sqlite_schema for the FTS tables), and statements may run
-    // while another one iterates (each).
     let db = new Driver(this.path, M[mode])
+
+    // TODO migrations currently require defensife off
     await db.unsafeMode(true)
 
     let conn = new Connection(db, {
       onWrite: (query) => {
         // Technically the write can still fail, we record the intent.
         this.hasBeenModified = true
+        this.generation++
         this.emit('update', query)
       }
     })
@@ -247,6 +258,10 @@ export class Database extends EventEmitter {
 
   all (...args) {
     return this.seq(conn => conn.all(...args))
+  }
+
+  ids (...args) {
+    return this.seq(conn => conn.ids(...args))
   }
 
   each (...args) {
@@ -382,6 +397,22 @@ export class Connection {
   get (sql, ...params) {
     return this.#call(...bind(sql, params), (stmt, values) =>
       stmt.reader ? stmt.get(...values) : void stmt.run(...values))
+  }
+
+  // The first column's row ids (integers, not NULL), in row order,
+  // as an Int32Array. The worker driver builds and transfers it
+  // (stmt.ids); with better-sqlite3 in process we pluck the column.
+  ids (sql, ...params) {
+    return this.#call(...bind(sql, params), (stmt, values) => {
+      if (stmt.ids)
+        return stmt.ids(...values)
+
+      try {
+        return Int32Array.from(stmt.pluck(true).all(...values))
+      } finally {
+        stmt.pluck(false)
+      }
+    })
   }
 
   run (sql, ...params) {

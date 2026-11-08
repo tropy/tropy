@@ -20,8 +20,8 @@ function statement (sql) {
   return stmt
 }
 
-const reply = (id, value) =>
-  self.postMessage({ id, value })
+const reply = (id, value, transfer) =>
+  self.postMessage({ id, value }, transfer)
 
 // Errors travel as plain fields: cloning drops custom ones like code.
 const fail = (id, { name, message, code, stack }) =>
@@ -48,6 +48,20 @@ self.onmessage = ({ data: { id, op, sql, values = [], path, options, flag } }) =
 
       case 'get':
         return reply(id, statement(sql).get(...values))
+
+      // The first column as an Int32Array, transferred (no copy).
+      case 'ids': {
+        let stmt = statement(sql)
+        let ids
+
+        try {
+          ids = Int32Array.from(stmt.pluck(true).all(...values))
+        } finally {
+          stmt.pluck(false)
+        }
+
+        return reply(id, ids, [ids.buffer])
+      }
 
       case 'run': {
         let { changes, lastInsertRowid } = statement(sql).run(...values)
