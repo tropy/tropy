@@ -5,6 +5,7 @@ import { TagList } from './list.js'
 import { TagAdder } from './adder.js'
 import { toId } from '../../common/util.js'
 import * as act from '../../actions/index.js'
+import { selectMatcher } from '../../slices/qr.js'
 
 import {
   getAllTags,
@@ -69,6 +70,7 @@ class TagPanel extends React.PureComponent {
             tags={this.props.tags}
             hasFocusIcon
             isReadOnly={this.props.isDisabled}
+            matcher={this.props.matcher}
             onCommit={this.handleTagAdd}
             onContextMenu={this.handleContextMenu}
             onRemove={this.handleTagRemove}/>
@@ -95,6 +97,7 @@ const TagPanelContainer = connect(
     edit: state.edit.tabTag,
     items: getSelectedItems(state),
     keymap: state.keymap.TagList,
+    matcher: selectMatcher(state),
     tags: getItemTags(state)
   }),
 

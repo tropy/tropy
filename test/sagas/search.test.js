@@ -195,7 +195,10 @@ describe('search saga', () => {
 
   it('does not search invalid queries', () => {
     let s = state({ matches: null })
-    s.nav = { ...s.nav, query: 'box tag:' }
+    s.nav = {
+      ...s.nav,
+      query: Array.from({ length: 33 }, (_, i) => `w${i}`).join(' ')
+    }
 
     let res = search$(s, [1])
 

@@ -7,8 +7,8 @@
 //   word   = non-space, non-quote chars   prefix
 //
 // Only the scope names below are recognized, so any other input
-// (`a:b`, `1990-12`, `-0500`) is a word. Recognized syntax can fail:
-// a scope without a value, or too many terms.
+// (`a:b`, `1990-12`, `-0500`) is a word. A scope without a value
+// (`tag:`, e.g. while typing) is no term. Too many terms fail.
 
 const SCOPE = {
   tag: 'tag',
@@ -34,14 +34,14 @@ export const SYNTAX =
   'notes (note:), transcriptions (transcription: or tr:) ' +
   'or metadata (metadata: or meta:), e.g. tag:letter or ' +
   'meta:"Box 3". Other text with a colon is a word (a:b). ' +
-  `At most ${MAX_TERMS} terms; a scope needs a term.`
+  `At most ${MAX_TERMS} terms; a scope without a term is ignored.`
 
 // A scope (optional), then a phrase (closing quote optional) or a word.
 // Neither a phrase nor a word can contain a quote.
 const TERM =
   /(?:(tag|note|transcription|tr|metadata|meta):)?(?:"([^"]*)("?)|([^\s"]+))/gi
 
-// A scope without a value, matched as a word.
+// A scope without a value, matched as a word: no term.
 const EMPTY = /^(tag|note|transcription|tr|metadata|meta):$/i
 
 // Returns the terms of a query and its errors.
@@ -54,21 +54,16 @@ export function parse (query = '') {
     let [match, name, phrase, end, word] = m
     let error = { offset: m.index, length: match.length }
 
-    if (word != null && EMPTY.test(word)) {
-      errors.push({ code: 'empty-scope', ...error })
+    if (word != null && EMPTY.test(word))
       continue
-    }
 
     let scope = (name == null) ? 'any' : SCOPE[name.toLowerCase()]
     let term = (word != null)
       ? { text: word, phrase: false, prefix: true, scope }
       : { text: phrase, phrase: true, prefix: !end, scope }
 
-    if (term.text.trim() === '') {
-      if (scope !== 'any')
-        errors.push({ code: 'empty-scope', ...error })
+    if (term.text.trim() === '')
       continue
-    }
 
     // Bare words and unclosed phrases are the same prefix query.
     let key = `${scope}:${term.prefix}:${term.text.toLowerCase()}`

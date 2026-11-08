@@ -2,6 +2,8 @@ import { mock } from 'node:test'
 import { fireEvent } from '@testing-library/react'
 import { render, inWindowContext } from '../../support/react.js'
 import { Tag } from '#tropy/components/tag/tag.js'
+import { createMatcher } from '#tropy/common/matcher.js'
+import { parse } from '#tropy/common/search.js'
 
 describe('Tag', () => {
   let tag = { id: 1, name: 'tag', mixed: true }
@@ -37,5 +39,15 @@ describe('Tag', () => {
     node.focus()
     press(node)
     expect(onFocusClick.mock.calls[0].arguments).to.eql([tag])
+  })
+
+  it('marks the matches of tag terms in the name', () => {
+    let { terms } = parse('tag:ag')
+    let node = render(
+      <Tag tag={tag} matcher={createMatcher(terms)} onSelect={() => {}}/>,
+      inWindowContext
+    ).element()
+
+    expect(node.querySelector('mark').textContent).to.equal('ag')
   })
 })

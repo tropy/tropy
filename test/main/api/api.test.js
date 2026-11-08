@@ -290,10 +290,11 @@ describe('api', () => {
     })
 
     it('rejects invalid queries', async () => {
-      let res = await api.get('/projects/foo/items?q=box%20tag:')
+      let q = Array.from({ length: 33 }, (_, i) => `w${i}`).join('%20')
+      let res = await api.get(`/projects/foo/items?q=${q}`)
 
       expect(res.statusCode).to.equal(400)
-      expect(res.json().detail).to.equal('invalid query: empty-scope at 4')
+      expect(res.json().detail).to.match(/^invalid query: too-many-terms at/)
       expect(api.actions).to.be.empty
     })
 

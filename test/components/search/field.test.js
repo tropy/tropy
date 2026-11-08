@@ -5,13 +5,13 @@ describe('SearchField', () => {
   it('marks an invalid query', () => {
     let { $, element } = render(
       <SearchField
-        query="tag:"
-        error="toolbar.search.error.empty-scope"
+        query="box"
+        error="toolbar.search.error.too-many-terms"
         onSearch={() => {}}/>,
       inWindowContext)
 
     expect(element()).to.have.class('invalid')
-    expect(element().title).to.match(/search term after "tag:"/)
+    expect(element().title).to.match(/Too many search terms/)
     expect($('input').getAttribute('aria-invalid')).to.equal('true')
   })
 
