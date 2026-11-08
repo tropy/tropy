@@ -26,6 +26,12 @@ class Statement {
     return this.#db.request('run', { sql: this.source, values })
   }
 
+  // Not in better-sqlite3: the first column as an Int32Array,
+  // built and transferred by the worker (see Connection#ids).
+  ids (...values) {
+    return this.#db.request('ids', { sql: this.source, values })
+  }
+
   // Rows arrive in batches; yields them one at a time.
   async * iterate (...values) {
     let rows = []

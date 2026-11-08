@@ -7,7 +7,8 @@ import { collator } from '../collate.js'
 import { parse } from '../common/search.js'
 import { NAV } from '../constants/index.js'
 import { getSortColumn } from '../selectors/index.js'
-import { selectQuery, selectSortKey } from '../slices/qr.js'
+import { selectQuery, selectSortKey, selectSubjects } from '../slices/qr.js'
+import { TermCache, keyOf, membership } from '../common/matches.js'
 import * as mod from '../models/index.js'
 import * as act from '../actions/index.js'
 
@@ -71,44 +72,33 @@ const isSameSet = (ids, matches) => {
   return true
 }
 
-const isSameKeys = (a, b) => {
-  let n = 0
+// The term lists of each database (see common/matches.js).
+const caches = new WeakMap()
 
-  for (let k in a) {
-    if (!b[k]) return false
-    ++n
+// The subjects and notes matching each term, from the cache
+// or queried (in parallel, on the pool's connections).
+export async function termLists (db, terms) {
+  let cache = caches.get(db)
+
+  if (cache == null) {
+    cache = new TermCache()
+    caches.set(db, cache)
   }
 
-  return n === Object.keys(b).length
-}
+  // Taken before querying: a write meanwhile invalidates the result.
+  let generation = db.generation
 
-const isSameHits = (a, b) =>
-  a === b || (a != null && b != null &&
-    isSameKeys(a.subjects, b.subjects) && isSameKeys(a.notes, b.notes))
+  return Promise.all(terms.map(async (term) => {
+    let key = keyOf(term)
+    let lists = cache.get(key, generation)
 
-// The ids of the view that are in the hit rows (keeping their order),
-// and the hits of those items as sets of subject and note ids.
-const intersect = (ids, rows) => {
-  let view = {}
-  for (let i = 0; i < ids.length; ++i) view[ids[i]] = true
+    if (lists == null) {
+      lists = await mod.item.term(db, term)
+      cache.set(key, generation, lists)
+    }
 
-  let matched = {}
-  let hits = { subjects: {}, notes: {} }
-
-  for (let [item, subject, note] of rows) {
-    if (!view[item]) continue
-
-    matched[item] = true
-    hits.subjects[subject] = true
-    if (note != null) hits.notes[note] = true
-  }
-
-  let [seq, push] = createSequence()
-
-  for (let i = 0; i < ids.length; ++i)
-    if (matched[ids[i]]) push(ids[i])
-
-  return [seq, hits]
+    return lists
+  }))
 }
 
 const getOptions = (sort) => ({
@@ -153,10 +143,8 @@ const getView = (state) => ({
     state.imports[0].items : null
 })
 
-// Returns the ids of the items in a view, as a set
-// (in list order, ascending position, for lists),
-// and their hits: the subjects and notes matching the query,
-// or null without query terms.
+// Returns the ids of the items in a view matching the query, as a set
+// (in list order, ascending position, for lists).
 export function *find (db, { list, tags = [], trash, imports, query }) {
   let START = Date.now()
   let view
@@ -181,17 +169,24 @@ export function *find (db, { list, tags = [], trash, imports, query }) {
       view = call(mod.item.all, db, { tags })
   }
 
-  // The view and the hits run in parallel (on separate connections).
-  let [result, rows] = yield all([
+  // The view and the terms run in parallel (on separate connections).
+  let { terms } = parse(query || '')
+  let [result, lists] = yield all([
     view,
-    call(mod.item.hits, db, parse(query || '').terms)
+    call(termLists, db, terms)
   ])
 
   let ids = result.items
-  let hits = null
 
-  if (rows != null)
-    [ids, hits] = intersect(ids, rows)
+  if (lists.length > 0) {
+    let subjects = yield select(selectSubjects)
+    let [seq, push] = createSequence()
+
+    for (let id of membership(ids, lists, subjects))
+      push(id)
+
+    ids = seq
+  }
 
   let ms = Date.now() - START
   if (ms > 300) {
@@ -204,7 +199,7 @@ export function *find (db, { list, tags = [], trash, imports, query }) {
     }, 'slow search')
   }
 
-  return { ids, hits }
+  return { ids }
 }
 
 // Returns ids in the given sort (column, asc and locale):
@@ -252,7 +247,7 @@ export function *search (db) {
       return
 
     var view = yield select(getView)
-    let { ids, hits } = yield* find(db, view)
+    let { ids } = yield* find(db, view)
 
     let { qr, current } = yield select(state => ({
       qr: state.qr,
@@ -267,19 +262,16 @@ export function *search (db) {
       for (let id of ids) matches[id] = true
     }
 
-    if (isSameHits(hits, qr.hits))
-      hits = qr.hits
-
     // The order saga owns qr.order:
     // if it has not caught up with the sort yet,
     // it writes the items once it has.
     // Otherwise the items only change with the matches.
     if (isPosition(current))
-      yield* commit({ matches, hits, items: byPosition(ids, current) })
+      yield* commit({ matches, items: byPosition(ids, current) })
     else if (isSameSort(qr.sort, current) && matches !== qr.matches)
-      yield* commit({ matches, hits, items: filter(qr.order, matches) })
+      yield* commit({ matches, items: filter(qr.order, matches) })
     else
-      yield* commit({ matches, hits })
+      yield* commit({ matches })
 
   } catch (err) {
     warn({
@@ -440,14 +432,12 @@ function *write (order, sort) {
 // Writes only what changed, or nothing:
 // results that stay the same keep their identity in state,
 // so that nothing downstream sees a new sequence.
-function *commit ({ matches, hits, order, items, sort }) {
+function *commit ({ matches, order, items, sort }) {
   let qr = yield select(state => state.qr)
   let payload = {}
 
   if (matches != null && matches !== qr.matches)
     payload.matches = matches
-  if (hits !== undefined && hits !== qr.hits)
-    payload.hits = hits
   if (order != null && stable(order, qr.order) !== qr.order)
     payload.order = order
   if (items != null && stable(items, qr.items) !== qr.items)

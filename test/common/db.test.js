@@ -129,6 +129,19 @@ describe('Database', () => {
         expect(rows).to.eql([{ a: 1 }])
       })
 
+      it('returns ids as an Int32Array in row order', async () => {
+        await db.run('CREATE TABLE s (a, b)')
+        await db.run('INSERT INTO s VALUES (3, 1), (1, 2), (2, 3)')
+
+        let ids = await db.ids(sql`SELECT a FROM s ORDER BY b DESC`)
+        expect(ids).to.be.instanceOf(Int32Array)
+        expect([...ids]).to.eql([2, 1, 3])
+
+        // The statement still returns rows afterwards.
+        expect(await db.all(sql`SELECT a FROM s ORDER BY b DESC`))
+          .to.eql([{ a: 2 }, { a: 1 }, { a: 3 }])
+      })
+
       it('rejects extra params', async () => {
         await assert.rejects(db.get(sql`SELECT ${1}`, 2))
         await assert.rejects(db.each(sql`SELECT ${1}`, 2, () => {}))

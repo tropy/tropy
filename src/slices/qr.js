@@ -10,10 +10,6 @@ const qr = createSlice({
   initialState: {
     items: [],
     matches: null,
-    // The subjects and notes matching the query, per matched item:
-    // { subjects: { id: true }, notes: { id: true } }, null without terms.
-    // Item level hits (metadata, tags) have the item as subject.
-    hits: null,
     order: [],
     sort: null
   },
@@ -62,6 +58,62 @@ export const selectMatcher = memo(
     (!isEnabled || terms.length === 0 || errors.length > 0) ?
       null :
       createMatcher(terms))
+
+// Lookups for combining search terms (see common/matches.js):
+// itemOf[subject] the item of an item, photo or selection id,
+// photoOf[subject] the photo of a photo or selection id (0 otherwise),
+// subjectOfNote(note) the photo or selection of a note.
+// Trashed photos and selections (and those of trashed photos) map to
+// nothing: only photos their item lists and selections their photo
+// lists count, as in the item and photo lists. Trashed items count.
+export const selectSubjects = memo(
+  (state) => state.items,
+  (state) => state.photos,
+  (state) => state.notes,
+  (items, photos, notes) => {
+    // Live subjects only: items, the photos their item lists,
+    // the selections their photo lists (one pass for the size).
+    let max = 0
+
+    for (let id in items) {
+      let item = items[id]
+      if (item.id > max) max = item.id
+
+      for (let p of item.photos) {
+        if (p > max) max = p
+        for (let sel of photos[p]?.selections ?? [])
+          if (sel > max) max = sel
+      }
+    }
+
+    let itemOf = new Int32Array(max + 1)
+    let photoOf = new Int32Array(max + 1)
+
+    for (let id in items) {
+      let item = items[id]
+      itemOf[item.id] = item.id
+
+      for (let p of item.photos) {
+        let photo = photos[p]
+        if (photo == null) continue
+
+        itemOf[p] = item.id
+        photoOf[p] = p
+
+        for (let sel of photo.selections ?? []) {
+          itemOf[sel] = item.id
+          photoOf[sel] = p
+        }
+      }
+    }
+
+    let subjectOfNote = (id) => {
+      let note = notes[id]
+      return (note == null) ? 0 : (note.selection ?? note.photo ?? 0)
+    }
+
+    return { itemOf, photoOf, subjectOfNote }
+  })
 
 export const selectSortKey = ({ items, metadata, ontology }, column) => {
   switch (column) {

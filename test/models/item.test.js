@@ -5,6 +5,7 @@ import tag from '#tropy/models/tag.js'
 import list from '#tropy/models/list.js'
 import { TYPE } from '#tropy/constants/index.js'
 import { parse } from '#tropy/common/search.js'
+import { contributors, membership } from '#tropy/common/matches.js'
 
 const TEMPLATE = 'https://tropy.org/v1/templates/generic'
 const TITLE = 'http://purl.org/dc/elements/1.1/title'
@@ -34,12 +35,49 @@ describe('models/item', () => {
       }
     })
 
-    const hits = (query) =>
-      item.hits(db, parse(query).terms)
+    // The term lists of a query (see models/item.js: term).
+    const lists = (query) =>
+      Promise.all(parse(query).terms.map(term => item.term(db, term)))
 
-    // The items matching a query, by their hit rows.
-    const search = async (query) =>
-      [...new Set(((await hits(query)) ?? []).map(([item]) => item))]
+    // Lookups as selectSubjects builds them from state:
+    // trashed photos map to nothing.
+    const lookups = async () => {
+      let { max } = await db.get('SELECT max(id) AS max FROM subjects')
+      let itemOf = new Int32Array(max + 1)
+      let photoOf = new Int32Array(max + 1)
+
+      for (let { id } of await db.all('SELECT id FROM items'))
+        itemOf[id] = id
+
+      for (let { id, item } of await db.all(`
+        SELECT id, item_id AS item FROM photos
+          WHERE id NOT IN (SELECT id FROM trash)`)) {
+        itemOf[id] = item
+        photoOf[id] = id
+      }
+
+      let notes = {}
+      for (let { note, id } of await db.all(
+        'SELECT note_id AS note, id FROM notes'))
+        notes[note] = id
+
+      return { itemOf, photoOf, subjectOfNote: (note) => notes[note] ?? 0 }
+    }
+
+    // The items matching a query: its terms combined per item.
+    const search = async (query) => {
+      let all = (await db.all('SELECT id FROM items ORDER BY id'))
+        .map(({ id }) => id)
+      let l = await lists(query)
+      return (l.length === 0) ? [] : membership(all, l, await lookups())
+    }
+
+    // The contributors of an item for a query.
+    const contribute = async (query, id) => {
+      let { photos, notes } =
+        contributors([id], await lists(query), await lookups())
+      return { photos: [...photos], notes: [...notes] }
+    }
 
     it('treats user input as terms, not FTS5 syntax', async () => {
       expect(await search('1990-12')).to.eql([ids[0]])
@@ -98,7 +136,7 @@ describe('models/item', () => {
       expect(await search('"lettres"')).to.eql([id])
     })
 
-    it('returns the subjects and notes that matched', async () => {
+    it('derives the photos and notes that contribute', async () => {
       await db.exec(`
         INSERT INTO subjects (id) VALUES (101), (102);
         INSERT INTO images (id) VALUES (101), (102);
@@ -112,17 +150,19 @@ describe('models/item', () => {
         INSERT INTO trash (id) VALUES (102);`)
 
       // Not the deleted note, nor the note of the trashed photo.
-      expect(await hits('zeb'))
-        .to.eql([[ids[2], 101, 7]])
-      expect(await hits('note:zeb')).to.eql(await hits('zeb'))
-      expect(await hits('meta:zeb')).to.eql([])
+      expect(await contribute('zeb', ids[2]))
+        .to.eql({ photos: [101], notes: [7] })
+      expect(await contribute('note:zeb', ids[2]))
+        .to.eql({ photos: [101], notes: [7] })
+      expect(await contribute('meta:zeb', ids[2]))
+        .to.eql({ photos: [], notes: [] })
 
-      expect(await hits('box zebra')).to.have.deep.members([
-        [ids[2], ids[2], null],
-        [ids[2], 101, 7]
-      ])
+      // The item's own metadata matches but contributes nothing.
+      expect(await search('box zebra')).to.eql([ids[2]])
+      expect(await contribute('box zebra', ids[2]))
+        .to.eql({ photos: [101], notes: [7] })
 
-      expect(await hits(' ')).to.be.null
+      expect(await lists(' ')).to.eql([])
     })
 
     it('returns list items in list order, ties by id', async () => {
