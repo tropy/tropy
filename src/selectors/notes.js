@@ -3,6 +3,7 @@ import { seq, compose, cat, map, keep } from 'transducers.js'
 import { getVisiblePhotos } from './photos.js'
 import { getVisibleSelections } from './selections.js'
 import { Cursor } from '../common/sequence.js'
+import { selectMatchFilter } from '../slices/qr.js'
 
 const getNotes = ({ notes }) => notes
 const getSelectedNoteId = ({ nav }) => nav.note
@@ -23,18 +24,21 @@ export const getNoteParent = ({ notes, photos, selections }, { id }) => {
   return { item, photo, selection }
 }
 
+// The notes of the visible photos and selections; with the match
+// filter on, only those that contributed to the search match.
 export const getVisibleNotes = memo(
   getNotes,
   getVisiblePhotos,
   getVisibleSelections,
+  selectMatchFilter,
 
-  (notes, ...parents) =>
-    seq(parents, compose(
+  (notes, photos, selections, filter) =>
+    seq([photos, selections], compose(
       cat,
       map(parent => parent.notes),
       keep(),
       cat,
-      map(id => notes[id]),
+      map(id => (filter == null || filter.notes[id]) ? notes[id] : null),
       keep()
     ))
 )

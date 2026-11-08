@@ -220,6 +220,7 @@ en:
       search:
         label: Search
         highlight: Highlight matches
+        filter: Show only matching photos and notes
       export:
         label: Export
         note:

@@ -9,6 +9,7 @@ import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { move as reorder, pick, pluck } from '../../common/util.js'
 import { adjacent, indexOf } from '../../common/sequence.js'
 import { getExpandedPhotos, getVisiblePhotos } from '../../selectors/index.js'
+import { selectMatchFilter } from '../../slices/qr.js'
 import * as act from '../../actions/index.js'
 
 // The photo list container logic shared by list and grid:
@@ -32,6 +33,10 @@ export function usePhotoIterator ({
   let selection = useSelector(state => state.nav.selection)
   let expandedPhotos = useSelector(getExpandedPhotos)
   let selections = useSelector(state => state.selections)
+  let contributors = useSelector(state => state.qr.contributors)
+
+  // Sorting a filtered list would renumber only the visible photos.
+  let isFiltered = useSelector(selectMatchFilter) != null
 
   // Navigation: a Cursor with Scroll's layout.
   // The grid navigates the photos (the expansion row has its own
@@ -204,7 +209,7 @@ export function usePhotoIterator ({
 
   let sortable = useSortableSequence({
     type: DND.PHOTO,
-    isDisabled,
+    isDisabled: isDisabled || isFiltered,
     items: photos.map(photo => photo.id),
     onSort: (order) =>
       dispatch(act.photo.order({ item: photos[0].item, photos: order }))
@@ -229,7 +234,9 @@ export function usePhotoIterator ({
     isDisabled,
     isExpandable: isExpandable(photo),
     isItemOpen,
+    isMatch: !!contributors?.photos[photo.id],
     isSelected: isSelected(photo),
+    isSortable: !isFiltered,
     isVertical: !isGrid,
     getAdjacent: sortable.getAdjacent,
     onConsolidate: consolidate,

@@ -15,7 +15,9 @@ export const PhotoTile = memo(({
   isExpandable,
   isExpanded,
   isLast,
+  isMatch,
   isSelected,
+  isSortable,
   isVertical,
   onConsolidate,
   onContextMenu,
@@ -32,6 +34,7 @@ export const PhotoTile = memo(({
     useDragDropPhoto(container, {
       photo,
       getAdjacent,
+      isSortable,
       isDisabled,
       isVertical,
       onDrop: onDropPhoto
@@ -52,6 +55,7 @@ export const PhotoTile = memo(({
         active: isSelected,
         dragging: isDragging,
         expandable: isExpandable,
+        match: isMatch,
         expanded: isExpanded,
         last: isLast,
         over: isOver && canDrop,

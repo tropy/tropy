@@ -6,7 +6,7 @@ import { debug, info, trace, warn } from '../common/log.js'
 import { ipc } from './ipc.js'
 import { consolidator } from './consolidator.js'
 import { history } from './history.js'
-import { matches, order, search, sync } from './search.js'
+import { contributing, matches, order, search, sync } from './search.js'
 import { ontology } from './ontology.js'
 import { exec } from './cmd.js'
 import { commands } from '../slices/cmd.js'
@@ -186,6 +186,7 @@ function *hydrate ({ db, project }) {
 function *start ({ db, sorted }) {
   yield fork(matches, has('search'))
   yield fork(order, db, sorted)
+  yield fork(contributing, db)
   yield fork(autosave, db)
   yield fork(transcribe)
   yield fork(maintenance)

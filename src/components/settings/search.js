@@ -14,6 +14,11 @@ export function SearchSettings ({ config, onChange }) {
         name="highlight"
         value={config.highlight}
         onChange={handleChange}/>
+      <Toggle
+        id="prefs.app.search.filter"
+        name="filter"
+        value={config.filter}
+        onChange={handleChange}/>
     </FormElement>
   )
 }

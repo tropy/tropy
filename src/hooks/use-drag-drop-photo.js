@@ -8,6 +8,7 @@ export function useDragDropPhoto (dom, {
   photo,
   getAdjacent,
   isDisabled = false,
+  isSortable = true,
   isVertical = true,
   onDrop
 }) {
@@ -22,6 +23,7 @@ export function useDragDropPhoto (dom, {
     type: DND.PHOTO,
     createDragItem,
     getAdjacent: () => getAdjacent(photo),
+    canDrop: () => isSortable,
     isDisabled,
     isVertical,
     onDrop

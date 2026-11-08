@@ -6,9 +6,15 @@ import { createSequence, stable } from '../common/sequence.js'
 import { collator } from '../collate.js'
 import { parse } from '../common/search.js'
 import { NAV } from '../constants/index.js'
-import { getSortColumn } from '../selectors/index.js'
-import { selectQuery, selectSortKey, selectSubjects } from '../slices/qr.js'
-import { TermCache, keyOf, membership } from '../common/matches.js'
+import { getSortColumn, getVisiblePhotos } from '../selectors/index.js'
+import {
+  selectMatchFilter,
+  selectQuery,
+  selectSortKey,
+  selectSubjects
+} from '../slices/qr.js'
+import { TermCache, contributors, keyOf, membership } from '../common/matches.js'
+import { ids as selected } from '../common/selection.js'
 import * as mod from '../models/index.js'
 import * as act from '../actions/index.js'
 
@@ -75,15 +81,36 @@ const isSameSet = (ids, matches) => {
 // The term lists of each database (see common/matches.js).
 const caches = new WeakMap()
 
-// The subjects and notes matching each term, from the cache
-// or queried (in parallel, on the pool's connections).
-export async function termLists (db, terms) {
+const cacheOf = (db) => {
   let cache = caches.get(db)
 
   if (cache == null) {
     cache = new TermCache()
     caches.set(db, cache)
   }
+
+  return cache
+}
+
+// The term lists, if all of them are cached; otherwise null.
+// Synchronous: the caller can update state in the same dispatch.
+export function cachedLists (db, terms) {
+  let cache = cacheOf(db)
+  let lists = []
+
+  for (let term of terms) {
+    let entry = cache.get(keyOf(term), db.generation)
+    if (entry == null) return null
+    lists.push(entry)
+  }
+
+  return lists
+}
+
+// The subjects and notes matching each term, from the cache
+// or queried (in parallel, on the pool's connections).
+export async function termLists (db, terms) {
+  let cache = cacheOf(db)
 
   // Taken before querying: a write meanwhile invalidates the result.
   let generation = db.generation
@@ -282,6 +309,116 @@ export function *search (db) {
       trash: view?.trash
     }, '*search failed')
   }
+}
+
+// Keeps qr.contributors up to date with the selected items and the
+// query, after each action that changes either. A snapshot: edits
+// leave it as it is until the next selection or query change (the
+// visibility rule, selection.md), so rows do not vanish while edited.
+// Actions taken while a run is busy leave one in the buffer.
+export function *contributing (db, prev = {}) {
+  let chan = yield actionChannel('*', buffers.sliding(1))
+
+  try {
+    while (true) {
+      yield take(chan)
+      prev = yield call(contribute, db, prev)
+      yield call(narrow)
+    }
+  } finally {
+    chan.close()
+  }
+}
+
+const isSameIds = (a, b) => {
+  if (a == null || b == null || a.length !== b.length)
+    return false
+
+  let set = new Set(a)
+  return b.every(id => set.has(id))
+}
+
+const lookup = (ids) => {
+  let obj = {}
+  for (let id of ids) obj[id] = true
+  return obj
+}
+
+// Computes the contributors of the selected items, from the cached
+// term lists (see termLists), if the selection or the query changed.
+// Returns what it saw, for the next run to compare.
+export function *contribute (db, prev = {}) {
+  try {
+    let { query, item } = yield select(state => state.nav)
+
+    if (query === prev.query && item === prev.item)
+      return prev
+
+    // Cursor moves change the selection state, not the items.
+    let items = selected(item)
+
+    if (query === prev.query && isSameIds(items, prev.items))
+      return { ...prev, item }
+
+    let { terms, errors } = yield select(selectQuery)
+
+    // Invalid queries do not search: the contributors stay too.
+    if (errors.length > 0)
+      return { query, item, items }
+
+    let value = null
+
+    if (terms.length > 0 && items.length > 0) {
+      // Cached after the search: in the same dispatch as the
+      // selection, so the filter never shows the previous one.
+      let lists = (yield call(cachedLists, db, terms)) ??
+        (yield call(termLists, db, terms))
+      let subjects = yield select(selectSubjects)
+      let { photos, notes } = contributors(items, lists, subjects)
+
+      value = { photos: lookup(photos), notes: lookup(notes) }
+    }
+
+    if (value !== null || (yield select(state => state.qr.contributors)) !== null)
+      yield put(act.qr.update({ contributors: value }))
+
+    return { query, item, items }
+
+  } catch (err) {
+    warn({ err }, '*contribute failed')
+    return {}
+  }
+}
+
+// With the match filter on, the current photo and note fall back to
+// the first visible ones when hidden (e.g. selecting an item selects
+// its first photo, which may not match). The item selection stays.
+export function *narrow () {
+  let { nav, filter } = yield select(state => ({
+    nav: state.nav,
+    filter: selectMatchFilter(state)
+  }))
+
+  if (filter == null) return
+
+  let photo = nav.photo
+  let selection = nav.selection
+
+  if (photo != null && !filter.photos[photo]) {
+    photo = (yield select(getVisiblePhotos))[0]?.id ?? null
+    selection = null
+  }
+
+  let note = nav.note
+
+  if (photo !== nav.photo || (note != null && !filter.notes[note])) {
+    let notes = (yield select(state =>
+      (state.selections[selection] ?? state.photos[photo])?.notes)) ?? []
+    note = notes.find(id => filter.notes[id]) ?? null
+  }
+
+  if (photo !== nav.photo || note !== nav.note)
+    yield put(act.nav.update({ photo, selection, note }))
 }
 
 // Keeps qr.order in sync with the sort and the sort keys in state,
