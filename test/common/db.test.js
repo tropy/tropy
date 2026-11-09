@@ -63,20 +63,19 @@ describe('Database', () => {
     })
 
     describe('writes', () => {
-      it('are reported before they complete', async () => {
-        let events = []
-        db.on('update', () => events.push('update'))
-
+      it('modify the database once committed', async () => {
         await db.exec('CREATE TABLE t (id)')
         await db.get('SELECT 1')
-        expect(events).to.eql([])
         expect(db.hasBeenModified).not.to.be.ok
 
         await db.transaction(async tx => {
           await tx.run('INSERT INTO t VALUES (1)')
-          events.push('done')
-        })
-        expect(events).to.eql(['update', 'done'])
+          throw new Error('rollback')
+        }).catch(() => {})
+        expect(db.hasBeenModified).not.to.be.ok
+
+        await db.transaction(tx =>
+          tx.run('INSERT INTO t VALUES (2)'))
         expect(db.hasBeenModified).to.be.true
       })
 

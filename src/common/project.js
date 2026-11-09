@@ -295,10 +295,10 @@ export async function open (path, {
   if (migrations?.length > 0)
     recordAccess()
   else
-    db.once('update', recordAccess)
+    db.once('change', recordAccess)
 
   db.once('will-close', async () => {
-    db.off('update', recordAccess)
+    db.off('change', recordAccess)
 
     await session?.then(id =>
       access.close(db, id, { prune: pruneAccessTable })
