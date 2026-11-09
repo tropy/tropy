@@ -69,6 +69,28 @@ describe('Database', () => {
         expect(events).to.eql(['update', 'done'])
         expect(db.hasBeenModified).to.be.true
       })
+
+      it('become changes once visible', async () => {
+        let changes = []
+        db.on('change', () => changes.push(db.generation))
+        await db.exec('CREATE TABLE t (id)')
+
+        await db.run('INSERT INTO t VALUES (1)')
+        expect(changes).to.eql([1])
+
+        await db.transaction(async tx => {
+          await tx.run('INSERT INTO t VALUES (2)')
+          await tx.run('INSERT INTO t VALUES (3)')
+          expect(changes).to.eql([1])
+        })
+        expect(changes).to.eql([1, 2])
+
+        await db.transaction(async tx => {
+          await tx.run('INSERT INTO t VALUES (4)')
+          throw new Error('rollback')
+        }).catch(() => {})
+        expect(changes).to.eql([1, 2])
+      })
     })
 
     describe('acquire', () => {
