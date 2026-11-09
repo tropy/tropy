@@ -2,6 +2,7 @@ import assert from 'node:assert'
 import { EventEmitter } from 'node:events'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { platform } from 'node:process'
 import { URL } from 'node:url'
 import { get } from './gsettings.js'
 import { papersize } from './papersize.js'
@@ -124,6 +125,7 @@ export class WindowManager extends EventEmitter {
         fixedSize,
         isExclusive,
         persistence,
+        quicklook,
         show,
         ...options
       } = this.configure(type, opts, args)
@@ -145,10 +147,9 @@ export class WindowManager extends EventEmitter {
         options.frame = !args.frameless
       }
 
-      options.backgroundColor =
-        BODY[process.platform][args.dark ? 'dark' : 'light']
+      options.backgroundColor = getBackgroundColor(args.dark)
 
-      switch (process.platform) {
+      switch (platform) {
         case 'linux':
           options.icon = Icon.expand(channel, 'tropy', '512x512.png')
           options.darkTheme = options.darkTheme || args.dark
@@ -190,6 +191,10 @@ export class WindowManager extends EventEmitter {
 
       if (fixedSize) {
         this.setFixedSize(win, true, fixedSize)
+      }
+
+      if (quicklook) {
+        this.enableQuickLook(win)
       }
 
       this.resetReadyState(win)
@@ -345,9 +350,6 @@ export class WindowManager extends EventEmitter {
       case 'dialog':
         this.handleShowDialog(win, ...args)
         break
-      case 'preview':
-        win.previewFile(...args)
-        break
       case 'toggle-maximize':
       case 'maximize':
         if (win.isMaximized())
@@ -389,6 +391,82 @@ export class WindowManager extends EventEmitter {
     }
   }
 
+  enableQuickLook (win) {
+    win.webContents.setWindowOpenHandler(({ url, frameName }) => {
+      if (url !== 'about:blank' || frameName !== 'quicklook') {
+        warn(`prevented loading ${url}`)
+        return { action: 'deny' }
+      }
+
+      return {
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          ...WindowManager.defaults.quicklook,
+          backgroundColor: getBackgroundColor(),
+          titleBarOverlay: getTitleBarOverlay(),
+          trafficLightPosition: getWindowButtonPosition('quicklook'),
+          parent: win,
+          show: false
+        }
+      }
+    })
+
+    win.webContents.on('did-create-window', (child) => {
+      this.setProps(win, { quicklook: child })
+
+      // Child windows close with their parent, but survive its destruction.
+      win.once('closed', () => {
+        if (!child.isDestroyed()) child.destroy()
+      })
+
+      child.webContents.on('will-navigate', handleWillNavigate)
+
+      child
+        .on('close', (event) => {
+          // Hides instead, unless the parent is closing or crashed.
+          if (this.getProps(win).unloading !== 'done' &&
+            !win.webContents.isCrashed()) {
+            event.preventDefault()
+            child.hide()
+          }
+        })
+        .on('show', () => this.send(win, 'quicklook', { isVisible: true }))
+        .on('hide', () => this.send(win, 'quicklook', { isVisible: false }))
+        .once('closed', () => {
+          if (!win.isDestroyed()) {
+            this.setProps(win, { quicklook: null })
+            this.send(win, 'quicklook', { isVisible: false })
+          }
+        })
+    })
+  }
+
+  // Replies once done, so the renderer can swap content
+  // in sync with the new bounds.
+  handleQuickLook = (event, action, size) => {
+    let win = this.fromEvent(event)
+    let child = (win == null) ? null : this.getProps(win).quicklook
+
+    if (child == null || child.isDestroyed())
+      return
+
+    switch (action) {
+      case 'fit':
+      case 'show':
+        if (!(size?.width > 0 && size?.height > 0))
+          return
+
+        fitQuickLook(child, win, size)
+
+        if (action === 'show')
+          child.showInactive()
+        break
+      case 'hide':
+        child.hide()
+        break
+    }
+  }
+
   handleUnload (win, action) {
     if (this.getProps(win).unloading == null) {
       this.setProps(win, { unloading: action })
@@ -414,6 +492,7 @@ export class WindowManager extends EventEmitter {
       if (this.isReady(win))
         this.resetReadyState(win)
 
+      this.getProps(win).quicklook?.hide()
       win.reload()
       this.emit('reload', type, win)
     }
@@ -490,9 +569,16 @@ export class WindowManager extends EventEmitter {
       vibrancy: false // !nativeTheme.prefersReducedTransparency
     })
 
-    if (this.app.state.frameless && win32) {
+    if (!darwin) {
+      let overlay = getTitleBarOverlay()
+
       this.each(win => {
-        win.setTitleBarOverlay(getTitleBarOverlay())
+        if (win32 && this.app.state.frameless)
+          win.setTitleBarOverlay(overlay)
+
+        let { quicklook } = this.getProps(win)
+        if (quicklook != null && !quicklook.isDestroyed())
+          quicklook.setTitleBarOverlay(overlay)
       })
     }
 
@@ -620,6 +706,11 @@ export class WindowManager extends EventEmitter {
 
           this.cancel(win, 'crashed')
 
+          // Quicklook shares the renderer process.
+          let { quicklook } = this.getProps(win)
+          if (quicklook != null && !quicklook.isDestroyed())
+            quicklook.hide()
+
           if (this.getProps(win).unloading != null) {
             warn(`${type}[${win.id}] crashed during unload, forcing destroy`)
             win.destroy()
@@ -746,7 +837,8 @@ export class WindowManager extends EventEmitter {
   // Send sync to window (preserving order!) or when ready.
   send (win, ...args) {
     this.whenReady(win, () => {
-      if (!win.isDestroyed())
+      // Closing windows may already have lost their web contents.
+      if (!win.isDestroyed() && !win.webContents.isDestroyed())
         win.webContents.send(...args)
     })
   }
@@ -919,6 +1011,7 @@ export class WindowManager extends EventEmitter {
 
   async start () {
     ipc.on('wm', this.handleIpcMessage)
+    ipc.handle('quicklook', this.handleQuickLook)
 
     // The restored theme, before listening to changes.
     nativeTheme.themeSource = this.app.state.theme
@@ -936,6 +1029,7 @@ export class WindowManager extends EventEmitter {
   async stop (destroy = false) {
     await this.close(undefined, destroy)
     ipc.removeListener('wm', this.handleIpcMessage)
+    ipc.removeHandler('quicklook')
 
     nativeTheme.off('updated', this.handleNativeThemeUpdated)
 
@@ -1030,7 +1124,19 @@ export class WindowManager extends EventEmitter {
       minHeight: PANEL.MIN_HEIGHT * 3 + PANEL.TOOLBAR + PANEL.HEADER_MARGIN,
       vibrancy: 'sidebar',
       // Without a project; twice as wide with recent projects.
-      empty: { width: 440, height: 580 }
+      empty: { width: 440, height: 580 },
+      quicklook: true
+    },
+    quicklook: {
+      width: 640,
+      height: 480,
+      titleBarStyle: 'hidden',
+      focusable: false,
+      fullscreenable: false,
+      maximizable: false,
+      minimizable: false,
+      skipTaskbar: true,
+      type: darwin ? 'panel' : undefined
     }
   }
 
@@ -1221,6 +1327,38 @@ function webContentsForward (win, events) {
   for (let type of events) {
     win.on(type, () => { win.webContents.send('win', type) })
   }
+}
+
+function getBackgroundColor (dark = nativeTheme.shouldUseDarkColors) {
+  return BODY[platform][dark ? 'dark' : 'light']
+}
+
+function fitQuickLook (win, parent, { width, height }) {
+  let display = screen.getDisplayMatching(parent.getBounds())
+  let { workArea } = display
+
+  let anchor = (win.isVisible() &&
+    screen.getDisplayMatching(win.getBounds()).id === display.id) ?
+    win.getBounds() :
+    workArea
+
+  // Small photos are scaled up to a usable size.
+  let scale = Math.min(
+    Math.max(1, 200 / Math.min(width, height)),
+    0.9 * workArea.width / width,
+    0.95 * workArea.height / height)
+
+  win.setAspectRatio(width / height)
+
+  width = Math.round(width * scale)
+  height = Math.round(height * scale)
+
+  win.setBounds(sanitizeWindowBounds({
+    x: Math.round(anchor.x + (anchor.width - width) / 2),
+    y: Math.round(anchor.y + (anchor.height - height) / 2),
+    width,
+    height
+  }))
 }
 
 export function sanitizeWindowBounds (opts = {}, display) {

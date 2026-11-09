@@ -20,6 +20,12 @@ export function idle (timeout = 1000) {
   })
 }
 
+export function nextFrame (win = window) {
+  return new Promise(resolve => {
+    win.requestAnimationFrame(resolve)
+  })
+}
+
 export const element = document.createElement.bind(document)
 
 export function create (tag, attributes = {}) {
