@@ -69,6 +69,7 @@ export function *open (opts, action) {
     }
 
     var [db, project] = yield call(openProject, path, {
+      max: 3,
       user: ARGS.uuid,
       ...opts
     })
