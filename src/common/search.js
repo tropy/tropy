@@ -81,6 +81,38 @@ export function parse (query = '') {
   return { terms: [...terms.values()], errors }
 }
 
+// Whether a term's results include all results of another term:
+// the same scope or none (no scope searches every source), its text
+// a prefix of the other's (ignoring case), and a prefix match itself
+// unless both are exact and equal. Shortening words and phrases or
+// unclosing a phrase widens; scope names are part of the grammar,
+// so `tag:x` → `tag` is a new term.
+const implies = (other, term) => {
+  if (term.scope !== 'any' && term.scope !== other.scope)
+    return false
+
+  let text = term.text.toLowerCase()
+  let otherText = other.text.toLowerCase()
+
+  return term.prefix ?
+    otherText.startsWith(text) :
+    (!other.prefix && otherText === text)
+}
+
+// Whether the results of query `next` include all results of query
+// `prev` (in the same view): every term of `next` is implied by a
+// term of `prev`. Clearing, removing terms and backspacing expand;
+// adding terms does not. Invalid queries never expand.
+export function expands (prev = '', next = '') {
+  let a = parse(prev)
+  let b = parse(next)
+
+  if (a.errors.length > 0 || b.errors.length > 0)
+    return false
+
+  return b.terms.every(term => a.terms.some(other => implies(other, term)))
+}
+
 // Returns the canonical text of the terms.
 export function serialize (terms) {
   return terms.map(({ text, phrase, prefix, scope }) => {

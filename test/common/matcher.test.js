@@ -67,6 +67,12 @@ describe('common/matcher', () => {
       expect(matcher('ld_wa').ranges('World_War', 'metadata')).to.eql([])
     })
 
+    it('folds case and marks in tag names', () => {
+      expect(matcher('ecol').ranges('Les Écoles', 'tag')).to.eql([[4, 8]])
+      // A decomposed É (E + U+0301): the mark is part of the match.
+      expect(matcher('ÉCOLE').ranges('E\u0301cole', 'tag')).to.eql([[0, 6]])
+    })
+
     it('marks nothing without terms or tokens', () => {
       expect(matcher('').ranges('box', 'metadata')).to.eql([])
       expect(matcher('-').ranges('a - b', 'metadata')).to.eql([])

@@ -47,9 +47,14 @@ export function tokenize (text) {
   return tokens
 }
 
-// LIKE folds ASCII letters only.
-const like = (text) =>
-  text.replace(/[A-Z]/g, c => c.toLowerCase())
+// Folds a text as tokens are (case, marks), keeping every character:
+// tag names match terms folded so, in the search (models/item.js: term)
+// as in the highlights.
+export const foldText = (text) => {
+  let folded = ''
+  for (let c of text) folded += fold(c)
+  return folded
+}
 
 // The end in the text of the first `length` folded characters
 // of a token, with the marks that follow them.
@@ -95,14 +100,31 @@ function * tokenMatches (text, tokens, { words, prefix }) {
   }
 }
 
-// Ranges where a term occurs in the text as a substring (tag names).
+// Ranges where a term occurs in the text as a folded substring
+// (tag names). Folded positions map back to the text; a match ends
+// before the next character that folds to something, so marks that
+// follow its last character are part of it.
 function * substringMatches (text, { pattern }) {
-  let folded = like(text)
-  let i = folded.indexOf(pattern)
+  if (!pattern) return
 
-  while (i !== -1) {
-    yield [i, i + pattern.length]
-    i = folded.indexOf(pattern, i + 1)
+  let folded = ''
+  let offsets = []
+  let i = 0
+
+  for (let c of text) {
+    let f = fold(c)
+    for (let k = 0; k < f.length; ++k) offsets.push(i)
+    folded += f
+    i += c.length
+  }
+
+  offsets.push(text.length)
+
+  let at = folded.indexOf(pattern)
+
+  while (at !== -1) {
+    yield [offsets[at], offsets[at + pattern.length]]
+    at = folded.indexOf(pattern, at + 1)
   }
 }
 
@@ -133,7 +155,7 @@ export function createMatcher (terms = []) {
   terms = terms.map(term => ({
     ...term,
     words: tokenize(term.text).map(t => t.text),
-    pattern: like(term.text)
+    pattern: foldText(term.text)
   }))
 
   let applicable = (scope) =>

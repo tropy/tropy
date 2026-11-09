@@ -40,4 +40,33 @@ describe('Nav Reducer', () => {
     expect(tags(state, 1, 'remove')).to.eql([2])
     expect(tags(state, 1, 'clear')).to.eql([])
   })
+
+  describe('keeps the selection when the search can only widen', () => {
+    let state = (props) =>
+      ({ ...nav(undefined, {}), item: create([1]), ...props })
+    let isKept = (s) => has(s.item, 1)
+
+    it('on query changes', () => {
+      let search = (from, to) =>
+        nav(state({ query: from }), { type: NAV.SEARCH, payload: { query: to } })
+
+      expect(isKept(search('box lett', 'box let'))).to.be.true
+      expect(isKept(search('box', ''))).to.be.true
+      expect(isKept(search('box', 'box lett'))).to.be.false
+    })
+
+    it('on tag filter changes', () => {
+      let select = (mod, id = 5) =>
+        nav(state({ tags: [5] }), { type: TAG.SELECT, payload: id, meta: { mod } })
+
+      expect(isKept(select('remove'))).to.be.true
+      expect(isKept(select('merge', 6))).to.be.false
+      expect(isKept(select('replace', 6))).to.be.false
+
+      let deleted = nav(state({ tags: [5] }),
+        { type: TAG.DELETE, payload: 5, meta: { done: true } })
+      expect(deleted.tags).to.eql([])
+      expect(isKept(deleted)).to.be.true
+    })
+  })
 })
