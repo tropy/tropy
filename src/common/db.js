@@ -75,7 +75,8 @@ export class Database extends EventEmitter {
     this.mode = mode
     this.journalMode = journalMode
 
-    // Bumped by every write: caches of query results check it.
+    // Bumped whenever writes become visible to other connections
+    // (see the 'change' event): caches of query results check it.
     this.generation = 0
 
     // One connection unless the driver can wait for locks without
@@ -135,11 +136,17 @@ export class Database extends EventEmitter {
     await db.unsafeMode(true)
 
     let conn = new Connection(db, {
+      // A write was issued: it can still fail, we record the intent.
       onWrite: (query) => {
-        // Technically the write can still fail, we record the intent.
         this.hasBeenModified = true
-        this.generation++
         this.emit('update', query)
+      },
+
+      // Writes became visible to other connections: after a write
+      // outside a transaction, or the commit of one that wrote.
+      onChange: () => {
+        this.generation++
+        this.emit('change')
       }
     })
 
@@ -336,10 +343,21 @@ export class Database extends EventEmitter {
 // Driver calls are awaited, so the driver may be synchronous or not.
 export class Connection {
   #statements = new Map()
+  #transaction = false
+  #dirty = false
 
-  constructor (db, { onWrite } = {}) {
+  constructor (db, { onWrite, onChange } = {}) {
     this.db = db
     this.onWrite = onWrite
+    this.onChange = onChange
+  }
+
+  // A write ran: visible now, or with the commit of its transaction.
+  #changed () {
+    if (this.#transaction)
+      this.#dirty = true
+    else
+      this.onChange?.()
   }
 
   configure (pragma = Connection.defaults) {
@@ -379,7 +397,10 @@ export class Connection {
       let stmt = await this.statement(sql)
       if (!stmt.readonly) this.onWrite?.(sql)
 
-      return await fn(stmt, args(params))
+      let result = await fn(stmt, args(params))
+      if (!stmt.readonly) this.#changed()
+
+      return result
 
     } catch (err) {
       throw normalize(err)
@@ -442,8 +463,12 @@ export class Connection {
     let start = performance.now()
 
     try {
-      if (IUD.test(sql)) this.onWrite?.(sql)
+      let isWrite = IUD.test(sql)
+      if (isWrite) this.onWrite?.(sql)
+
       await this.db.exec(sql)
+      if (isWrite) this.#changed()
+
       return this
 
     } catch (err) {
@@ -517,14 +542,26 @@ export class Connection {
     }
   }
 
-  begin (mode = 'IMMEDIATE') {
-    return this.exec(`BEGIN ${mode} TRANSACTION`)
+  async begin (mode = 'IMMEDIATE') {
+    await this.exec(`BEGIN ${mode} TRANSACTION`)
+    this.#transaction = true
+    this.#dirty = false
+    return this
   }
 
-  commit () {
-    return this.exec('COMMIT TRANSACTION')
+  async commit () {
+    await this.exec('COMMIT TRANSACTION')
+    this.#transaction = false
+
+    if (this.#dirty) {
+      this.#dirty = false
+      this.onChange?.()
+    }
+
+    return this
   }
 
+  // Nothing became visible: no change.
   async rollback (...errors) {
     try {
       await this.exec('ROLLBACK TRANSACTION')
@@ -532,6 +569,10 @@ export class Connection {
 
     } catch (cause) {
       throw new AggregateError(errors, 'rollback transaction failed', { cause })
+
+    } finally {
+      this.#transaction = false
+      this.#dirty = false
     }
   }
 
