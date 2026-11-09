@@ -3,7 +3,7 @@ import { EventEmitter } from 'node:events'
 import { readFile } from 'node:fs/promises'
 import { createPool, Pool } from 'generic-pool'
 import { canWrite } from './fs.js'
-import Driver from '#sqlite'
+import { Client } from './sqlite.js'
 import { Migration } from './migration.js'
 import { debug, trace, warn } from './log.js'
 import { DisposableResource, using } from './disposable.js'
@@ -25,9 +25,6 @@ const M = {
     readonly: false, fileMustExist: false
   }
 }
-
-// Used for exec (several statements); otherwise the statement's `readonly`.
-const IUD = /^\s*(insert|update|delete)/i
 
 {
   // PATCH generic-pool to ensure that no more connections are created
@@ -67,23 +64,23 @@ export class Database extends EventEmitter {
     }
   }
 
-  constructor (path = ':memory:', mode = 'w+', { journalMode, ...opts } = {}) {
+  constructor (path = ':memory:', mode = 'w+', {
+    journalMode,
+    worker,
+    max = 1,
+    ...opts
+  } = {}) {
     trace({ path, mode }, 'init db')
     super({ captureRejections: true })
 
     this.path = path
     this.mode = mode
     this.journalMode = journalMode
+    this.worker = worker
 
     // Bumped whenever writes become visible to other connections
     // (see the 'change' event): caches of query results check it.
     this.generation = 0
-
-    // One connection unless the driver can wait for locks without
-    // blocking this thread (a worker: Driver.concurrent). Synchronous
-    // connections on one thread cannot wait for each other's locks:
-    // a writer would block the thread the lock holder needs.
-    let { max = 3, ...rest } = opts
 
     this.pool = createPool({
       create: () => this.create(),
@@ -92,8 +89,8 @@ export class Database extends EventEmitter {
       min: 0,
       idleTimeoutMillis: 1000 * 60 * 3,
       acquireTimeoutMillis: 1000 * 60,
-      ...rest,
-      max: Driver.concurrent ? max : 1
+      ...opts,
+      max
     })
 
     this.pool
@@ -128,53 +125,60 @@ export class Database extends EventEmitter {
   }
 
   async create (mode = this.mode) {
-    trace({ mode, path: this.path }, 'open db')
+    try {
+      trace({ mode, path: this.path }, 'open db')
+      var db = new Client(this.path, M[mode], { worker: this.worker })
 
-    let db = new Driver(this.path, M[mode])
+      let conn = new Connection(db, {
+        onWrite: this.handleWrite,
+        onChange: this.handleChange
+      })
 
-    // TODO migrations currently require defensife off
-    await db.unsafeMode(true)
+      let options = { ...Connection.defaults }
 
-    let conn = new Connection(db, {
-      // A write was issued: it can still fail, we record the intent.
-      onWrite: (query) => {
-        this.hasBeenModified = true
-        this.emit('update', query)
-      },
-
-      // Writes became visible to other connections: after a write
-      // outside a transaction, or the commit of one that wrote.
-      onChange: () => {
-        this.generation++
-        this.emit('change')
+      if (this.journalMode === 'wal') {
+        options['journal_mode'] = 'wal'
+        options['synchronous'] = 'normal'
       }
-    })
 
-    let options = { ...Connection.defaults }
+      await conn.configure(options)
+      this.emit('create', conn)
 
-    if (this.journalMode === 'wal') {
-      options['journal_mode'] = 'wal'
-      options['synchronous'] = 'normal'
+      return conn
+
+    } catch (err) {
+      await db?.close().catch(err => {
+        warn({ err }, 'closing after failed open!')
+      })
+      throw err
     }
+  }
 
-    await conn.configure(options)
-    this.emit('create')
+  handleWrite = (query) => {
+    this.hasBeenModified = true
+    this.emit('update', query)
+  }
 
-    return conn
+  handleChange = () => {
+    this.generation++
+    this.emit('change')
   }
 
   async destroy (conn) {
     try {
       trace({ path: this.path }, 'close db connection')
 
-      if (!this.isReadOnly) {
-        await conn.optimize().catch((err) => {
-          debug({ err, path: this.path }, 'optimize connection failed')
-        })
+      if (!conn.isClosed) {
+        if (!this.isReadOnly) {
+          await conn.optimize().catch((err) => {
+            debug({ err, path: this.path }, 'optimize connection failed')
+          })
+        }
+
+        await conn.close()
       }
 
-      await conn.close()
-      this.emit('destroy')
+      this.emit('destroy', conn)
 
     } catch (err) {
       // NB: generic-pool does not wait handle async destroy functions
@@ -191,7 +195,7 @@ export class Database extends EventEmitter {
   }
 
   release (conn, destroy = false) {
-    return destroy ?
+    return (destroy || conn.isClosed) ?
       this.pool.destroy(conn) :
       this.pool.release(conn)
   }
@@ -309,7 +313,20 @@ export class Database extends EventEmitter {
   }
 
   async read (path) {
-    return this.exec(String(await readFile(path)))
+    let script = String(await readFile(path))
+
+    await this.seq(async conn => {
+      // TODO rewrite schema dumps so they work safe mode!
+      await conn.unsafeMode(true)
+
+      try {
+        await conn.exec(script)
+      } finally {
+        await conn.unsafeMode(false)
+      }
+    })
+
+    return this
   }
 
   async backup (dest, callback) {
@@ -338,11 +355,7 @@ export class Database extends EventEmitter {
 }
 
 
-// A connection with better-sqlite3's API (see #sqlite in package.json):
-// better-sqlite3 in process, or src/sqlite/proxy.js backed by a worker.
-// Driver calls are awaited, so the driver may be synchronous or not.
 export class Connection {
-  #statements = new Map()
   #transaction = false
   #dirty = false
 
@@ -350,6 +363,10 @@ export class Connection {
     this.db = db
     this.onWrite = onWrite
     this.onChange = onChange
+  }
+
+  get isClosed () {
+    return this.db.isClosed
   }
 
   // A write ran: visible now, or with the commit of its transaction.
@@ -368,115 +385,93 @@ export class Connection {
         .join('\n'))
   }
 
+  // Turns off defensive mode, e.g. to write to sqlite_schema.
+  unsafeMode (flag) {
+    return this.db.request('unsafeMode', { flag })
+  }
+
   optimize () {
     return this.exec('PRAGMA optimize;')
   }
 
-  async close () {
-    this.#statements.clear()
-    await this.db.close()
+  close () {
+    return this.db.close()
   }
 
-  // Cached only once prepared: a statement may fail now
-  // (e.g. no such table) and succeed after a schema change.
-  async statement (sql) {
-    let stmt = this.#statements.get(sql)
-
-    if (stmt == null) {
-      stmt = await this.db.prepare(sql)
-      this.#statements.set(sql, stmt)
-    }
-
-    return stmt
-  }
-
-  async #call (sql, params, fn) {
+  // Errors may report changes too (see exec in src/sqlite/handler.js).
+  async #call (op, sql, params, onBatch) {
     let start = performance.now()
+    let changed
 
     try {
-      let stmt = await this.statement(sql)
-      if (!stmt.readonly) this.onWrite?.(sql)
+      let reply = await this.db.request(op, {
+        sql,
+        values: args(params)
+      }, onBatch)
 
-      let result = await fn(stmt, args(params))
-      if (!stmt.readonly) this.#changed()
-
-      return result
+      changed = reply.changed
+      return reply.value
 
     } catch (err) {
+      changed = err.changed
       throw normalize(err)
 
     } finally {
+      if (changed) {
+        this.onWrite?.(sql)
+        this.#changed()
+      }
+
       profile(sql, performance.now() - start)
     }
   }
 
   all (sql, ...params) {
-    return this.#call(...bind(sql, params), (stmt, values) =>
-      stmt.reader ? stmt.all(...values) : (stmt.run(...values), []))
+    return this.#call('all', ...bind(sql, params))
   }
 
   get (sql, ...params) {
-    return this.#call(...bind(sql, params), (stmt, values) =>
-      stmt.reader ? stmt.get(...values) : void stmt.run(...values))
+    return this.#call('get', ...bind(sql, params))
   }
 
-  // The first column's row ids (integers, not NULL), in row order,
-  // as an Int32Array. The worker driver builds and transfers it
-  // (stmt.ids); with better-sqlite3 in process we pluck the column.
+  // The first column's row ids (integers, not NULL),
+  // in row order, as an Int32Array.
   ids (sql, ...params) {
-    return this.#call(...bind(sql, params), (stmt, values) => {
-      if (stmt.ids)
-        return stmt.ids(...values)
+    return this.#call('ids', ...bind(sql, params))
+  }
+
+  // Resolves to { id, changes }: id is the last inserted row id.
+  run (sql, ...params) {
+    return this.#call('run', ...bind(sql, params))
+  }
+
+  // Rejects with the first error cb throws, once the query is done:
+  // batches arrive outside the call (in a worker's message handler).
+  async each (sql, ...params) {
+    let cb = params.pop()
+    let count = 0
+    let failure
+
+    await this.#call('each', ...bind(sql, params), (rows) => {
+      if (failure) return
 
       try {
-        return Int32Array.from(stmt.pluck(true).all(...values))
-      } finally {
-        stmt.pluck(false)
+        for (let row of rows) {
+          cb(row)
+          count++
+        }
+      } catch (err) {
+        failure = err
       }
     })
-  }
 
-  run (sql, ...params) {
-    return this.#call(...bind(sql, params), async (stmt, values) => {
-      let { changes, lastInsertRowid } = await stmt.run(...values)
-      return { id: Number(lastInsertRowid), changes }
-    })
-  }
-
-  // Calls cb for each row; resolves to the number of rows.
-  each (sql, ...params) {
-    let cb = params.pop()
-
-    return this.#call(...bind(sql, params), async (stmt, values) => {
-      let count = 0
-
-      for await (let row of stmt.iterate(...values)) {
-        cb(row)
-        count++
-      }
-
-      return count
-    })
+    if (failure) throw failure
+    return count
   }
 
   async exec (sql) {
-    let start = performance.now()
-
-    try {
-      let isWrite = IUD.test(sql)
-      if (isWrite) this.onWrite?.(sql)
-
-      await this.db.exec(sql)
-      if (isWrite) this.#changed()
-
-      return this
-
-    } catch (err) {
-      throw normalize(err)
-
-    } finally {
-      profile(sql, performance.now() - start)
-    }
+    await this.#call('exec', sql)
+    return this
   }
 
   // The version number is a 10-digit migration number

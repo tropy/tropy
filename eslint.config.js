@@ -81,6 +81,16 @@ export default [
   },
 
   {
+    files: ['src/sqlite/worker.cjs', 'test/fixtures/sqlite/*.cjs'],
+    languageOptions: {
+      globals: {
+        ...globals.worker,
+        ...globals.node
+      }
+    }
+  },
+
+  {
     files: ['test/**/*.js'],
     languageOptions: {
       globals: {
