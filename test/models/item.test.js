@@ -36,8 +36,13 @@ describe('models/item', () => {
     })
 
     // The term lists of a query (see models/item.js: term).
-    const lists = (query) =>
-      Promise.all(parse(query).terms.map(term => item.term(db, term)))
+    const lists = async (query) => {
+      let tags = Object.fromEntries((await db.all(
+        'SELECT tag_id AS id, name FROM tags')).map(t => [t.id, t]))
+
+      return Promise.all(parse(query).terms.map(term =>
+        item.term(db, term, tags)))
+    }
 
     // Lookups as selectSubjects builds them from state:
     // trashed photos map to nothing.
@@ -115,6 +120,14 @@ describe('models/item', () => {
       expect(await search('tr:box')).to.eql([])
       expect(await search('note:box')).to.eql([])
       expect(await search('meta:box tag:box')).to.eql([])
+    })
+
+    it('matches tag names regardless of case and diacritics', async () => {
+      let { id } = await tag.create(db, { name: 'École' })
+      await item.tags.add(db, { id: [ids[1]], tag: id })
+
+      expect(await search('tag:école')).to.eql([ids[1]])
+      expect(await search('tag:ECOLE')).to.eql([ids[1]])
     })
 
     it('accepts long queries', async () => {

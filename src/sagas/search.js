@@ -61,6 +61,35 @@ const byPosition = (ids, sort) => {
   return seq
 }
 
+// Whether an item belongs to a view, regardless of its query and
+// tags: in its list (or in none, for unlisted), in the trash or not.
+const belongs = (item, { list, trash, imports }) => {
+  if (item == null) return false
+  if (imports != null) return imports.includes(item.id)
+  if (trash) return !!item.deleted
+  if (item.deleted) return false
+  if (list == null) return true
+  return (list < 0) ? item.lists.length === 0 : item.lists.includes(list)
+}
+
+// The selected items that belong to the view (see belongs).
+const getSelectedIds = (view) => (state) =>
+  selected(state.nav.item).filter(id => belongs(state.items[id], view))
+
+// The ids with those of extra appended that are not among them.
+const include = (ids, extra) => {
+  if (extra.length === 0)
+    return ids
+
+  let has = (extra.length <= 8) ?
+    (id => ids.includes(id)) :
+    (set => id => set.has(id))(new Set(ids))
+
+  let missing = extra.filter(id => !has(id))
+
+  return (missing.length === 0) ? ids : [...ids, ...missing]
+}
+
 const isSameSet = (ids, matches) => {
   if (matches == null)
     return false
@@ -108,7 +137,8 @@ export function cachedLists (db, terms) {
 
 // The subjects and notes matching each term, from the cache
 // or queried (in parallel, on the pool's connections).
-export async function termLists (db, terms) {
+// Tags are all tags (state.tags), for matching tag names.
+export async function termLists (db, terms, tags) {
   let cache = cacheOf(db)
 
   // Taken before querying: a write meanwhile invalidates the result.
@@ -119,7 +149,7 @@ export async function termLists (db, terms) {
     let lists = cache.get(key, generation)
 
     if (lists == null) {
-      lists = await mod.item.term(db, term)
+      lists = await mod.item.term(db, term, tags)
       cache.set(key, generation, lists)
     }
 
@@ -197,9 +227,10 @@ export function *find (db, { list, tags = [], trash, imports, query }) {
 
   // The view and the terms run in parallel (on separate connections).
   let { terms } = parse(query || '')
+  let allTags = yield select(state => state.tags)
   let [result, lists] = yield all([
     view,
-    call(termLists, db, terms)
+    call(termLists, db, terms, allTags)
   ])
 
   let ids = result.items
@@ -270,6 +301,13 @@ export function *search (db) {
     var view = yield select(getView)
     let { ids } = yield* find(db, view)
 
+    // The selection counts as matches if it belongs to the view: a
+    // search that may narrow the results clears it (nav.js), so it
+    // adds nothing, while updates of the results (edits, imports) and
+    // widening searches never remove what is selected. Unmatched items
+    // drop out with the first update after deselecting.
+    ids = include(ids, yield select(getSelectedIds(view)))
+
     let { qr, current } = yield select(state => ({
       qr: state.qr,
       current: getSort(state)
@@ -317,7 +355,6 @@ export function *contributing (db, prev = {}) {
     while (true) {
       yield take(chan)
       prev = yield call(contribute, db, prev)
-      yield call(narrow)
     }
   } finally {
     chan.close()
@@ -366,7 +403,7 @@ export function *contribute (db, prev = {}) {
       // Cached after the search: in the same dispatch as the
       // selection, so the filter never shows the previous one.
       let lists = (yield call(cachedLists, db, terms)) ??
-        (yield call(termLists, db, terms))
+        (yield call(termLists, db, terms, yield select(state => state.tags)))
       let subjects = yield select(selectSubjects)
       let { photos, notes } = contributors(items, lists, subjects)
 
@@ -376,6 +413,9 @@ export function *contribute (db, prev = {}) {
     if (value !== null || (yield select(state => state.qr.contributors)) !== null)
       yield put(act.qr.update({ contributors: value }))
 
+    // A new snapshot: the current photo and note may now be hidden.
+    yield call(narrow)
+
     return { query, item, items }
 
   } catch (err) {
@@ -384,9 +424,12 @@ export function *contribute (db, prev = {}) {
   }
 }
 
-// With the match filter on, the current photo and note fall back to
-// the first visible ones when hidden (e.g. selecting an item selects
-// its first photo, which may not match). The item selection stays.
+// With the match filter on, after a new snapshot of the contributors,
+// the current photo and note fall back to the first contributing ones
+// (e.g. selecting an item selects its first photo, which may not
+// match). The item selection stays. Only then: in between, what is
+// selected stays visible (a note created and selected, or edited so
+// it no longer matches; see getVisiblePhotos, getVisibleNotes).
 export function *narrow () {
   let { nav, filter } = yield select(state => ({
     nav: state.nav,
@@ -399,7 +442,8 @@ export function *narrow () {
   let selection = nav.selection
 
   if (photo != null && !filter.photos[photo]) {
-    photo = (yield select(getVisiblePhotos))[0]?.id ?? null
+    photo = (yield select(getVisiblePhotos))
+      .find(p => filter.photos[p.id])?.id ?? null
     selection = null
   }
 

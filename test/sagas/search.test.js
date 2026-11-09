@@ -128,9 +128,9 @@ describe('order saga', () => {
 })
 
 describe('search saga', () => {
-  const state = (qr, query = '') => ({
+  const state = (qr, query = '', item = []) => ({
     intl: { locale: 'en' },
-    nav: { sort: {}, list: null, tags: [], query },
+    nav: { sort: {}, list: null, tags: [], query, item: create(item) },
     imports: [],
     items: {
       1: { id: 1, photos: [11] },
@@ -162,7 +162,8 @@ describe('search saga', () => {
         list: 1,
         sort: { 1: { column: 'added', asc: false } },
         tags: [],
-        query: ''
+        query: '',
+        item: create()
       }
     }
     let { puts: [{ payload }] } = run(search(null), {
@@ -212,6 +213,31 @@ describe('search saga', () => {
     expect(payload.matches).to.eql({ 1: true, 2: true })
     expect(search$(state(payload), [2, 1]).puts).to.eql([])
   })
+
+  it('keeps selected items in the results as matches', () => {
+    // Item 3 is selected but no longer matches (e.g. after an edit).
+    let { puts: [{ payload }] } =
+      search$(state({ matches: null }, '', [3]), [1, 2])
+
+    expect(payload.matches).to.eql({ 1: true, 2: true, 3: true })
+  })
+
+  it('keeps only selected items that belong to the view', () => {
+    let s = state({ matches: null }, '', [3])
+    s.nav.list = 1
+    s.nav.sort = { 1: { column: 'added', asc: true } }
+    s.items[3] = { ...s.items[3], lists: [] }
+
+    let { puts: [{ payload }] } = run(search(null), {
+      state: s,
+      mocks: [
+        [mod.item.list, () => ({ items: [1, 2] })],
+        [termLists, () => []]
+      ]
+    })
+
+    expect(payload.items).to.eql([1, 2])
+  })
 })
 
 describe('contributors', () => {
@@ -252,6 +278,14 @@ describe('contributors', () => {
 
     // Edits change the lists, not the snapshot.
     expect(contribute$(state(), result, []).puts).to.eql([])
+  })
+
+  it('narrows after a new snapshot only', () => {
+    let { calls, result } = contribute$(state())
+    expect(calls(narrow).callCount()).to.equal(1)
+
+    expect(contribute$(state(), result).calls(narrow).callCount())
+      .to.equal(0)
   })
 
   it('clears the contributors without terms', () => {

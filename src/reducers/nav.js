@@ -1,6 +1,7 @@
 import { create, has, ids } from '../common/selection.js'
 import { array, merge, insert, omit, splice } from '../common/util.js'
 import { dc } from '../ontology/ns.js'
+import { expands } from '../common/search.js'
 
 import {
   EDIT,
@@ -51,12 +52,13 @@ export function nav (state = init, { type, payload, meta, error }) {
     case NAV.UPDATE:
       return { ...state, ...payload }
 
+    // A new search clears the selections, unless it can only widen
+    // the results (e.g. clearing the query or backspacing), so that
+    // what is selected stays (see search in sagas/search.js).
     case NAV.SEARCH:
-      return {
-        ...state,
-        ...reset,
-        ...payload
-      }
+      return ('query' in payload && !expands(state.query, payload.query)) ?
+        { ...state, ...reset, ...payload } :
+        { ...state, ...payload }
 
     case NAV.SORT: {
       const { list, ...sort } = payload
@@ -150,14 +152,21 @@ export function nav (state = init, { type, payload, meta, error }) {
           tags: state.tags.filter(id => id !== payload)
         }
 
-    case TAG.SELECT:
+    // Adding a tag to the filter (AND) may narrow the results:
+    // it clears the selections; removing tags only widens them.
+    case TAG.SELECT: {
+      let tags = selectTag(state.tags, payload, meta.mod)
+      let isNarrowing = tags.some(id => !state.tags.includes(id)) ||
+        state.trash || state.imports
+
       return {
         ...state,
-        ...reset,
+        ...(isNarrowing ? reset : null),
         trash: null,
         imports: null,
-        tags: selectTag(state.tags, payload, meta.mod)
+        tags
       }
+    }
 
     case PHOTO.SELECT:
       return payload ? {

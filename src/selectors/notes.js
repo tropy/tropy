@@ -25,20 +25,23 @@ export const getNoteParent = ({ notes, photos, selections }, { id }) => {
 }
 
 // The notes of the visible photos and selections; with the match
-// filter on, only those that contributed to the search match.
+// filter on, only those that contributed to the search match,
+// and the current note: what is selected stays visible.
 export const getVisibleNotes = memo(
   getNotes,
   getVisiblePhotos,
   getVisibleSelections,
   selectMatchFilter,
+  (state) => selectMatchFilter(state) && state.nav.note,
 
-  (notes, photos, selections, filter) =>
+  (notes, photos, selections, filter, current) =>
     seq([photos, selections], compose(
       cat,
       map(parent => parent.notes),
       keep(),
       cat,
-      map(id => (filter == null || filter.notes[id]) ? notes[id] : null),
+      map(id => (filter == null || filter.notes[id] || id === current) ?
+        notes[id] : null),
       keep()
     ))
 )

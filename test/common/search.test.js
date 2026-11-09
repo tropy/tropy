@@ -1,4 +1,4 @@
-import { parse, serialize } from '#tropy/common/search.js'
+import { expands, parse, serialize } from '#tropy/common/search.js'
 
 describe('common/search', () => {
   const word = (text, scope = 'any') =>
@@ -85,6 +85,30 @@ describe('common/search', () => {
         expect(parse(text).terms, JSON.stringify(query)).to.eql(terms)
         expect(serialize(parse(text).terms)).to.equal(text)
       }
+    })
+  })
+
+  describe('expands', () => {
+    it('is true when the new query can only widen the results', () => {
+      expect(expands('box', '')).to.be.true
+      expect(expands('box lett', 'box let')).to.be.true
+      expect(expands('box lett', 'lett')).to.be.true
+      expect(expands('"letter from"', '"letter from')).to.be.true
+      expect(expands('box tag:x', 'box tag:')).to.be.true
+      expect(expands('tag:box', 'box')).to.be.true
+      expect(expands('Box', 'box')).to.be.true
+    })
+
+    it('is false when the new query may narrow them', () => {
+      expect(expands('', 'box')).to.be.false
+      expect(expands('box let', 'box lett')).to.be.false
+      expect(expands('box tag:', 'box tag')).to.be.false
+      expect(expands('box', 'tag:box')).to.be.false
+      expect(expands('box', '"box"')).to.be.false
+
+      // Invalid (too many terms): never expands.
+      let many = Array.from({ length: 33 }, (_, i) => `w${i}`).join(' ')
+      expect(expands(many, '')).to.be.false
     })
   })
 })

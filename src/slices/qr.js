@@ -41,6 +41,15 @@ export const {
 export const selectItemSequence = (state) =>
   state.qr.items
 
+// A view that shows the item, when the current results do not:
+// All Items, or the trash for a deleted item, without a query or
+// tags (for nav.select). Null if the item is among the results.
+// Opening an item from outside the view (links, API) switches to it.
+export const selectViewOf = (state, id) =>
+  (state.qr.matches == null || state.qr.matches[id]) ?
+    null :
+    { trash: state.items[id]?.deleted ? true : null, query: '' }
+
 // The parsed search query: { terms, errors } (see common/search.js).
 export const selectQuery = memo(
   (state) => state.nav.query,

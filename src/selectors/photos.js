@@ -44,19 +44,21 @@ export const getItemPhotos = (state, props) =>
 
 // The photos of the selected items; with the match filter on,
 // only those that contributed to the search match (themselves,
-// their selections, or the notes of either).
+// their selections, or the notes of either), and the current photo:
+// what is selected stays visible.
 export const getVisiblePhotos = memo(
   getPhotos,
   getSelectedItems,
   selectMatchFilter,
+  (state) => selectMatchFilter(state) && state.nav.photo,
 
-  (photos, items, filter) => {
+  (photos, items, filter, current) => {
     let visible = expandItemPhotos(items, photos)
     if (filter == null) return visible
 
     let [lst, push] = createSequence()
     for (let photo of visible)
-      if (filter.photos[photo.id]) push(photo)
+      if (filter.photos[photo.id] || photo.id === current) push(photo)
 
     return lst
   }

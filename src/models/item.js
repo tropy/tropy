@@ -1,6 +1,7 @@
 import { array, blank, uniq } from '../common/util.js'
 import { NAV } from '../constants/index.js'
 import sql, { IN } from '../common/sql.js'
+import { foldText } from '../common/matcher.js'
 
 import modMetadata from './metadata.js'
 import modPhoto from './photo.js'
@@ -19,7 +20,7 @@ const skel = (id, lists = [], photos = [], tags = []) => ({
 // The subjects (items, photos, selections) matching a term, per scope:
 // FTS matches in the metadata and transcription indices (transcriptions
 // count for their subject), and items with a tag whose name contains
-// the term. Notes match in their own index (see NOTES).
+// the term (matched in JS: see term). Notes match in their own index (see NOTES).
 // Subject ids only: mapping them to items, deduping and leaving out
 // trashed photos and selections happens in JS, from state, where it is
 // cheap (in SQL these took most of a term's time).
@@ -35,10 +36,9 @@ const SUBJECTS = {
       FROM fts_metadata JOIN metadata m ON m.value_id = fts_metadata.rowid
       WHERE fts_metadata MATCH ${fts}`,
 
-  tag: ({ tag }) => sql`
-    SELECT id
-      FROM taggings JOIN tags USING (tag_id)
-      WHERE name LIKE ${tag} ESCAPE '\\'`
+  // The tags whose names match, found in JS (see term).
+  tag: ({ tags }) => sql`
+    SELECT id FROM taggings WHERE tag_id ${IN(tags)}`
 }
 
 // The notes matching a term.
@@ -46,6 +46,21 @@ const NOTES = ({ fts }) => sql`
   SELECT n.note_id
     FROM fts_notes JOIN notes n ON n.note_id = fts_notes.rowid
     WHERE fts_notes MATCH ${fts} AND n.deleted IS NULL`
+
+// The folded names of all tags ([id, name]), once per tags object
+// (state.tags changes only with the tags): ~7 ms for 2,000 tags.
+const FOLDED = new WeakMap()
+
+const foldedTags = (tags) => {
+  let folded = FOLDED.get(tags)
+
+  if (folded == null) {
+    folded = Object.values(tags).map(tag => [tag.id, foldText(tag.name)])
+    FOLDED.set(tags, folded)
+  }
+
+  return folded
+}
 
 const union = (fragments) =>
   fragments.reduce((a, b) => sql`${a} UNION ALL ${b}`)
@@ -69,13 +84,12 @@ const ORDER = {
   [NAV.COLUMN.TEMPLATE.id]: 'subjects.template'
 }
 
-// A term (see common/search.js) as an FTS5 phrase (prefix or exact)
-// and a tag name pattern: user input is never FTS5 or LIKE syntax.
-// Neither words nor phrases contain quotes, so quoting them is safe.
+// A term (see common/search.js) as an FTS5 phrase (prefix or exact):
+// user input is never FTS5 syntax. Neither words nor phrases contain
+// quotes, so quoting them is safe.
 const match = ({ text, prefix, scope }) => ({
   scope,
-  fts: `"${text}"${prefix ? '*' : ''}`,
-  tag: `%${text.replace(/[\\%_]/g, '\\$&')}%`
+  fts: `"${text}"${prefix ? '*' : ''}`
 })
 
 // Returns the ids of a query (with an id column) as an array,
@@ -135,13 +149,26 @@ mod.item = {
 
   // The subjects and notes matching a term (see SUBJECTS, NOTES),
   // as Int32Arrays: { subjects, notes }. Terms are combined per item
-  // in JS (see common/matches.js).
-  async term (db, term) {
+  // in JS (see common/matches.js). Tag names are matched here, in JS,
+  // folded like the highlights (common/matcher.js): `tags` are all
+  // tags (id → { id, name }), as in state.
+  async term (db, term, tags = {}) {
     let m = match(term)
     let any = (m.scope === 'any')
-    let sources = any ?
-      Object.values(SUBJECTS) :
-      (m.scope in SUBJECTS) ? [SUBJECTS[m.scope]] : []
+
+    if (any || m.scope === 'tag') {
+      let text = foldText(term.text)
+      m.tags = foldedTags(tags)
+        .filter(([, name]) => name.includes(text))
+        .map(([id]) => id)
+    } else {
+      m.tags = []
+    }
+
+    let sources = Object.entries(SUBJECTS)
+      .filter(([scope]) => any || scope === m.scope)
+      .filter(([scope]) => scope !== 'tag' || m.tags.length > 0)
+      .map(([, source]) => source)
 
     let [subjects, notes] = await Promise.all([
       (sources.length > 0) ?

@@ -62,6 +62,14 @@ describe('Note Selectors', () => {
       expect(getVisibleNotes(state(true)).map(n => n.id)).to.eql([12])
     })
 
+    it('keeps the current photo and note visible', () => {
+      let s = state(true)
+      s.nav = { ...s.nav, photo: 1, note: 10 }
+
+      expect(getVisiblePhotos(s).map(p => p.id)).to.eql([1, 2])
+      expect(getVisibleNotes(s).map(n => n.id)).to.eql([10, 12])
+    })
+
     it('shows all photos and notes when off', () => {
       expect(getVisiblePhotos(state(false)).map(p => p.id)).to.eql([1, 2])
       expect(getVisibleNotes(state(false)).map(n => n.id)).to.eql([10, 11, 12])

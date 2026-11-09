@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict'
-import { select } from 'redux-saga/effects'
+import { put, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { NOTE } from '../../constants/index.js'
+import { selectViewOf } from '../../slices/qr.js'
+import * as act from '../../actions/index.js'
 import { getNoteParent, getPrimaryItemId } from '../../selectors/index.js'
 import { emit } from '../../dom.js'
 
@@ -21,6 +23,10 @@ export class Open extends Command {
     }
 
     assert(photo || selection, 'cannot open note without active photo/selection')
+
+    // Not among the results: a new search for a view that shows it.
+    let view = yield select(selectViewOf, item)
+    if (view != null) yield put(act.nav.select(view))
 
     let delay = 25
     let [isProjectMode, isMinimized] = yield select(state => ([
