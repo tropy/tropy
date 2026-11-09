@@ -130,8 +130,11 @@ export class Database extends EventEmitter {
       var db = new Client(this.path, M[mode], { worker: this.worker })
 
       let conn = new Connection(db, {
-        onWrite: this.handleWrite,
-        onChange: this.handleChange
+        onChange: () => {
+          this.hasBeenModified = true
+          this.generation++
+          this.emit('change')
+        }
       })
 
       let options = { ...Connection.defaults }
@@ -152,16 +155,6 @@ export class Database extends EventEmitter {
       })
       throw err
     }
-  }
-
-  handleWrite = (query) => {
-    this.hasBeenModified = true
-    this.emit('update', query)
-  }
-
-  handleChange = () => {
-    this.generation++
-    this.emit('change')
   }
 
   async destroy (conn) {
@@ -359,9 +352,8 @@ export class Connection {
   #transaction = false
   #dirty = false
 
-  constructor (db, { onWrite, onChange } = {}) {
+  constructor (db, { onChange } = {}) {
     this.db = db
-    this.onWrite = onWrite
     this.onChange = onChange
   }
 
@@ -417,10 +409,7 @@ export class Connection {
       throw normalize(err)
 
     } finally {
-      if (changed) {
-        this.onWrite?.(sql)
-        this.#changed()
-      }
+      if (changed) this.#changed()
 
       profile(sql, performance.now() - start)
     }
