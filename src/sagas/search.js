@@ -502,14 +502,14 @@ export function *order (db, cache = {}) {
 // Returns {} on failure, so the next run starts over.
 export function *sync (db, prev = {}) {
   try {
-    let sort = yield select(getSort)
+    // Position views show the list's own order (see byPosition).
+    // Meanwhile the order of the last other sort is kept up to date,
+    // for coming back without a rebuild and for item.find (ordered).
+    let current = yield select(getSort)
+    let sort = isPosition(current) ? prev.sort : current
 
-    if (isPosition(sort)) {
-      if (!isSameSort(prev.sort, sort))
-        yield* commit({ order: [], sort })
-
-      return { sort }
-    }
+    if (sort == null)
+      return prev
 
     let options = getOptions(sort)
 
@@ -572,8 +572,10 @@ export function *sync (db, prev = {}) {
     let seed = yield call(mod.item.seed, db, sort)
 
     // The sort changed while the seed was loading:
-    // the next run starts over.
-    if (!isSameSort(sort, yield select(getSort)))
+    // the next run starts over (a position view keeps it).
+    let next = yield select(getSort)
+
+    if (!isPosition(next) && !isSameSort(sort, next))
       return {}
 
     let data = yield select(getData)
@@ -616,10 +618,15 @@ export function *sync (db, prev = {}) {
   }
 }
 
+// Writes the order, and the items in it unless a position view
+// shows the list's order instead.
 function *write (order, sort) {
-  let { matches } = yield select(state => state.qr)
+  let { matches, current } = yield select(state => ({
+    matches: state.qr.matches,
+    current: getSort(state)
+  }))
 
-  yield* commit((matches == null) ?
+  yield* commit((matches == null || isPosition(current)) ?
     { order, sort } :
     { order, sort, items: filter(order, matches) })
 }
