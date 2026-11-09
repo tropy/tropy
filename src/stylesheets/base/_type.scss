@@ -50,9 +50,8 @@ ul, ol {
 
 // Highlights: search and completion matches (components/highlight.js).
 mark {
-  color: $highlight-color;
+  color: inherit;
   background-color: $highlight-bg;
-  font-weight: $highlight-font-weight;
 }
 
 // Text selection

@@ -42,4 +42,9 @@
   .has-icon & {
     padding-left: $space-xl;
   }
+
+  mark {
+    background-color: transparent;
+    font-weight: 700;
+  }
 }
