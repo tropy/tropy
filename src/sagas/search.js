@@ -106,8 +106,10 @@ const isSameSet = (ids, matches) => {
   return true
 }
 
-// The term lists of each database (see common/matches.js).
+// The term lists of each database (see common/matches.js),
+// and the term queries running, by generation and term.
 const caches = new WeakMap()
+const running = new WeakMap()
 
 const cacheOf = (db) => {
   let cache = caches.get(db)
@@ -136,24 +138,42 @@ export function cachedLists (db, terms) {
 }
 
 // The subjects and notes matching each term, from the cache
-// or queried (in parallel, on the pool's connections).
+// or queried (in parallel, on the pool's connections). Callers
+// asking for a term already being queried share that query.
 // Tags are all tags (state.tags), for matching tag names.
 export async function termLists (db, terms, tags) {
   let cache = cacheOf(db)
 
+  if (!running.has(db)) running.set(db, new Map())
+  let queries = running.get(db)
+
   // Taken before querying: a write meanwhile invalidates the result.
   let generation = db.generation
 
-  return Promise.all(terms.map(async (term) => {
+  return Promise.all(terms.map(term => {
     let key = keyOf(term)
     let lists = cache.get(key, generation)
 
-    if (lists == null) {
-      lists = await mod.item.term(db, term, tags)
-      cache.set(key, generation, lists)
+    if (lists != null)
+      return lists
+
+    let id = `${generation}:${key}`
+    let query = queries.get(id)
+
+    if (query == null) {
+      query = mod.item.term(db, term, tags)
+        .then(result => {
+          // Written meanwhile: valid for this search only.
+          if (db.generation === generation)
+            cache.set(key, generation, result)
+          return result
+        })
+        .finally(() => queries.delete(id))
+
+      queries.set(id, query)
     }
 
-    return lists
+    return query
   }))
 }
 

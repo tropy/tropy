@@ -1,3 +1,4 @@
+import { mock } from 'node:test'
 import { run } from '../support/saga.js'
 import {
   cachedLists,
@@ -299,6 +300,38 @@ describe('contributors', () => {
 
     expect(run(narrow(), { state: state({ photo: 12, note: 7 }) }).puts)
       .to.eql([])
+  })
+})
+
+describe('termLists', () => {
+  const lists = { subjects: Int32Array.of(1), notes: Int32Array.of() }
+  const term = { text: 'box', prefix: true, scope: 'any' }
+  let query
+
+  beforeEach(() => {
+    query = mock.method(mod.item, 'term', () => Promise.resolve(lists))
+  })
+
+  afterEach(() => {
+    query.mock.restore()
+  })
+
+  it('shares a term query already running', async () => {
+    let db = { generation: 0 }
+    await Promise.all([termLists(db, [term]), termLists(db, [term])])
+    expect(query.mock.callCount()).to.equal(1)
+
+    await termLists(db, [term])
+    expect(query.mock.callCount()).to.equal(1)
+  })
+
+  it('does not share a query started before a write', async () => {
+    let db = { generation: 0 }
+    let before = termLists(db, [term])
+    db.generation++
+
+    await Promise.all([before, termLists(db, [term])])
+    expect(query.mock.callCount()).to.equal(2)
   })
 })
 
