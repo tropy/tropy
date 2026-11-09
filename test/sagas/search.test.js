@@ -88,6 +88,28 @@ describe('order saga', () => {
     expect(qr(puts)[0].sort).to.include({ asc: false })
   })
 
+  it('keeps the order up to date in position views', () => {
+    let { result } = sync$(state(metadata))
+    let position = (m) => ({
+      ...state(m),
+      nav: { list: 1, sort: { 1: { column: 'added', asc: true } } }
+    })
+
+    // A list by position: no rebuild; edits move items in the order,
+    // the items stay the list's.
+    let edited = { ...metadata, 3: title(3, 'd') }
+    let inList = sync$(position(edited), result)
+
+    expect(inList.calls(mod.item.seed).callCount()).to.equal(0)
+    expect(qr(inList.puts)[0].order).to.eql([1, 2, 3, ...untitled])
+    expect(qr(inList.puts)[0]).not.to.have.property('items')
+
+    // Back: no seed, nothing to do.
+    let back = sync$(state(edited), inList.result)
+    expect(back.calls(mod.item.seed).callCount()).to.equal(0)
+    expect(back.puts).to.eql([])
+  })
+
   it('does nothing when the keys did not change', () => {
     let s = state(metadata)
     let { result } = sync$(s)
