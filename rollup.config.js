@@ -18,6 +18,7 @@ import scss from './scripts/rollup-plugin-scss.js'
 import emit from './scripts/rollup-plugin-emit.js'
 import reactDnd from './scripts/rollup-plugin-react-dnd.js'
 import sharpRequire from './scripts/rollup-plugin-sharp.js'
+import betterSqlite3 from './scripts/rollup-plugin-better-sqlite3.js'
 
 const NODE_ENV = process.env.NODE_ENV || 'production'
 const PROFILE = !!process.env.PROFILE
@@ -228,7 +229,7 @@ export default [
         }
       }),
       nodeResolve({
-        exportConditions: ['node', 'tropy'],
+        exportConditions: ['node', 'renderer'],
         preferBuiltins: true
       }),
       json(),
@@ -261,24 +262,22 @@ export default [
   },
 
   {
-    // The DB worker (src/sqlite/worker.js): a Web Worker with Node,
-    // loaded by src/sqlite/proxy.js from next to the renderer chunks.
-    input: 'src/sqlite/worker.js',
+    input: 'src/sqlite/worker.cjs',
     output: {
-      file: 'lib/sqlite-worker.cjs',
+      file: 'lib/worker.cjs',
       format: 'cjs',
       generatedCode: 'es2015',
       sourcemap: true
     },
     plugins: [
+      betterSqlite3(),
       natives({
         copyTo: 'lib/node/lib',
         destDir: './node/lib',
         target_arch: arch
       }),
       nodeResolve({
-        // tropy: see #better-sqlite3 in package.json.
-        exportConditions: ['node', 'tropy'],
+        exportConditions: ['node'],
         preferBuiltins: true
       }),
       commonjs({

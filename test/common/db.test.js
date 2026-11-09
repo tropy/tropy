@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { mock } from 'node:test'
 import { unlink } from 'node:fs/promises'
+import { setTimeout as delay } from 'node:timers/promises'
 import { mktmp } from '../support/tmp.js'
 import { pMap, times } from '#tropy/common/util.js'
 import { Database, Connection } from '#tropy/common/db.js'
@@ -10,6 +11,15 @@ import { IntegrityError } from '#tropy/common/error.js'
 
 function failure () { throw new Error() }
 
+// Connections in workers (the renderer) can wait for each other's locks,
+// in process (main) they cannot.
+const isRenderer = process.type === 'renderer'
+
+// 2500 rows, more than two of the batches 'each' sends.
+const N = `WITH RECURSIVE n (x) AS (
+  SELECT 1 UNION ALL SELECT x + 1 FROM n WHERE x < 2500
+) SELECT x FROM n`
+
 describe('Database', () => {
   describe('given a database file', () => {
     let dbFile = mktmp('db_test.sqlite')
@@ -17,7 +27,7 @@ describe('Database', () => {
     let acquire, release
 
     beforeEach(() => {
-      db = new Database(dbFile)
+      db = new Database(dbFile, 'w+', { max: isRenderer ? 3 : 1 })
       acquire = mock.method(db.pool, 'acquire', db.pool.acquire)
       release = mock.method(db.pool, 'release', db.pool.release)
     })
@@ -90,6 +100,213 @@ describe('Database', () => {
           throw new Error('rollback')
         }).catch(() => {})
         expect(changes).to.eql([1, 2])
+      })
+    })
+
+    describe('write detection', () => {
+      it('covers every kind of call', async () => {
+        let changes = []
+        db.on('change', () => changes.push(db.generation))
+        await db.exec('CREATE TABLE t (id)')
+
+        expect(await db.all('INSERT INTO t VALUES (1) RETURNING id'))
+          .to.eql([{ id: 1 }])
+        await db.get('INSERT INTO t VALUES (2)')
+        await db.exec('INSERT INTO t VALUES (3); INSERT INTO t VALUES (4)')
+        expect(changes).to.eql([1, 2, 3])
+
+        await db.all('SELECT * FROM t')
+        await db.exec('SELECT * FROM t; DELETE FROM t WHERE id > 4')
+        expect(changes).to.eql([1, 2, 3])
+      })
+
+      it('covers statements before a failing one', async () => {
+        let changes = []
+        db.on('change', () => changes.push(db.generation))
+        await db.exec('CREATE TABLE t (id)')
+
+        await assert.rejects(
+          db.exec('INSERT INTO t VALUES (1); INSERT INTO x VALUES (2)'),
+          /no such table/)
+        expect(changes).to.eql([1])
+      })
+    })
+
+    describe('errors', () => {
+      it('reject with message and code', async () => {
+        await db.exec('CREATE TABLE u (a UNIQUE)')
+        await db.run('INSERT INTO u VALUES (1)')
+
+        await assert.rejects(db.run('INSERT INTO u VALUES (1)'), {
+          name: 'SqliteError',
+          message: /UNIQUE constraint failed/,
+          code: 'SQLITE_CONSTRAINT'
+        })
+      })
+
+      it('do not keep failed statements', () =>
+        db.seq(async conn => {
+          await assert.rejects(conn.get('SELECT * FROM later'), /no such table/)
+          await conn.exec('CREATE TABLE later (a)')
+          expect(await conn.get('SELECT * FROM later')).to.be.undefined
+        }))
+    })
+
+    describe('each', () => {
+      it('passes all rows in order', async () => {
+        let rows = []
+        expect(await db.each(N, ({ x }) => rows.push(x))).to.equal(2500)
+        expect(rows).to.eql(times(2500, i => i + 1))
+      })
+
+      it('rejects on errors while iterating, after the rows so far', async () => {
+        let rows = []
+        await assert.rejects(
+          db.each(`SELECT CASE WHEN x > 1500 THEN json('x') ELSE x END
+            FROM (${N})`, (row) => rows.push(row)),
+          /malformed JSON/)
+        expect(rows).to.have.length(1000)
+      })
+
+      it('rejects with the first callback error, once done', async () => {
+        let count = 0
+        let error = new Error()
+
+        await assert.rejects(db.each(N, () => {
+          if (++count === 10) throw error
+        }), (e) => e === error)
+
+        expect(count).to.equal(10)
+        expect(await db.get('SELECT 1 AS x')).to.eql({ x: 1 })
+      })
+    })
+
+    describe('events', () => {
+      it('create and destroy pass the connection', async () => {
+        let created = []
+        let destroyed = []
+        db.on('create', c => created.push(c))
+        db.on('destroy', c => destroyed.push(c))
+
+        await db.get('SELECT 1')
+        expect(created).to.have.length(1)
+        expect(created[0]).to.be.instanceof(Connection)
+
+        await db.close()
+        expect(destroyed).to.eql(created)
+      })
+    })
+
+    describe('when the file cannot be opened', () => {
+      it('rejects every call without connecting', async () => {
+        let missing = new Database(`${dbFile}.missing`, 'r')
+        let create = mock.fn()
+        missing.on('create', create)
+
+        try {
+          await assert.rejects(missing.get('SELECT 1'), { code: 'SQLITE_CANTOPEN' })
+          await assert.rejects(missing.get('SELECT 1'), { code: 'SQLITE_CANTOPEN' })
+          expect(create.mock.callCount()).to.equal(0)
+        } finally {
+          await missing.close()
+        }
+      })
+    })
+
+    describe('close', () => {
+      it('rejects later calls', async () => {
+        await db.get('SELECT 1')
+        await db.close()
+        await assert.rejects(db.get('SELECT 1'))
+      })
+
+      it('can be called again', async () => {
+        await db.get('SELECT 1')
+        await db.close()
+        await db.close()
+      })
+    })
+
+    describe('locks', () => {
+      let other
+
+      beforeEach(async () => {
+        await db.exec('CREATE TABLE l (a)')
+        other = new Database(dbFile, 'w', { max: 1 })
+      })
+
+      afterEach(() => other.close())
+
+      it('reject other writers once the busy timeout ends', () =>
+        db.transaction(async tx => {
+          await tx.run('INSERT INTO l VALUES (1)')
+
+          await other.seq(async conn => {
+            await conn.exec('PRAGMA busy_timeout = 0')
+            await assert.rejects(conn.run('INSERT INTO l VALUES (2)'), {
+              code: 'SQLITE_BUSY'
+            })
+          })
+        }))
+
+      it('are waited for by other writers', { skip: !isRenderer }, async () => {
+        let locked = Promise.withResolvers()
+
+        let first = db.transaction(async tx => {
+          await tx.run('INSERT INTO l VALUES (1)')
+          locked.resolve()
+          await delay(100)
+          await tx.run('INSERT INTO l VALUES (2)')
+        })
+
+        await locked.promise
+        await Promise.all([first, other.run('INSERT INTO l VALUES (3)')])
+
+        expect(await db.all('SELECT a FROM l ORDER BY a'))
+          .to.eql([{ a: 1 }, { a: 2 }, { a: 3 }])
+      })
+
+      it('do not block readers', { skip: !isRenderer }, () =>
+        db.transaction(async tx => {
+          await tx.run('INSERT INTO l VALUES (1)')
+          expect(await db.get('SELECT count(*) AS n FROM l')).to.eql({ n: 0 })
+          expect(await other.get('SELECT count(*) AS n FROM l')).to.eql({ n: 0 })
+        }))
+    })
+
+    describe('when a worker crashes', { skip: !isRenderer }, () => {
+      let crashing
+
+      beforeEach(() => {
+        crashing = new Database(dbFile, 'w+', {
+          worker: new URL('../fixtures/sqlite/crash.cjs', import.meta.url)
+        })
+      })
+
+      afterEach(() => crashing.close())
+
+      it('rejects pending and later calls on its connection', () =>
+        crashing.seq(async conn => {
+          let crash = conn.get('SELECT 1 -- crash')
+          let pending = conn.get('SELECT 2')
+          await assert.rejects(crash, /crashed/)
+          await assert.rejects(pending, /crashed/)
+          await assert.rejects(conn.get('SELECT 3'), /crashed/)
+          expect(conn.isClosed).to.be.true
+        }))
+
+      it('replaces its connection', async () => {
+        let destroyed = []
+        crashing.on('destroy', c => destroyed.push(c))
+
+        let crashed = await crashing.seq(async conn => {
+          await assert.rejects(conn.get('SELECT 1 -- crash'))
+          return conn
+        })
+
+        expect(destroyed).to.eql([crashed])
+        expect(await crashing.get('SELECT 1 AS x')).to.eql({ x: 1 })
+        expect(crashing.pool.size).to.equal(1)
       })
     })
 
@@ -326,6 +543,7 @@ describe('Database', () => {
         describe('with null violations', () => {
           beforeEach(async () => {
             await db.seq(async conn => {
+              await conn.unsafeMode(true)
               await conn.configure({ writable_schema: 'on' })
               await conn.run(
                 `UPDATE sqlite_schema

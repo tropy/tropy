@@ -21,13 +21,9 @@
   "main": "lib/main/index.js",
   "type": "module",
   "imports": {
-    "#sqlite": {
-      "tropy": "./src/sqlite/proxy.js",
-      "default": "better-sqlite3"
-    },
-    "#better-sqlite3": {
-      "tropy": "./src/sqlite/native.js",
-      "default": "better-sqlite3"
+    "#sqlite/transport": {
+      "renderer": "./src/sqlite/renderer.js",
+      "default": "./src/sqlite/node.js"
     },
     "#tropy/*.js": "./src/*.js",
     "#vendor/*.js": "./vendor/*.js"
@@ -71,7 +67,9 @@
       "test/*.test.js",
       "test/!(main|support|fixtures|wdio)/**/*.test.{js,cjs}"
     ],
+    "url": "test/support/view.html",
     "preload": [
+      "test/support/conditions.js",
       "test/support/babel.js",
       "test/support/args.js",
       "test/support/log.js",
@@ -79,6 +77,7 @@
       "test/support/fixtures.js"
     ],
     "webPreferences": {
+      "nodeIntegrationInWorker": true,
       "webSecurity": false
     }
   },
@@ -198,7 +197,6 @@
     "fsevents@2.3.3": true,
     "fs-xattr@0.3.1": true,
     "macos-alias@0.2.12": true,
-    "electron-winstaller@5.4.4": true,
-    "@parcel/watcher@2.6.0": true
+    "electron-winstaller@5.4.4": true
   }
 }
