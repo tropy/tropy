@@ -25,6 +25,7 @@
     --red:              #e62e2e;
     --orange:           #ff8c19;
     --green:            #39bf68;
+    --yellow:           #ffc200;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -36,6 +37,7 @@
     --red:              #e62e2e;
     --orange:           #ff8c19;
     --green:            #328e52;                // Dark: 64% of the light theme green + 7% saturation
+    --yellow:           #ffc200;
   }
 }
 
@@ -127,9 +129,7 @@ $link-hover-color: --scheme(var(--primary), tint(var(--primary), 14%));
 $text-selection-color: inherit;
 $text-selection-bg:    --scheme(var(--primary-light), alpha(var(--primary), 45%));
 
-$highlight-color:       inherit;
-$highlight-bg:          transparent;
-$highlight-font-weight: bold;
+$highlight-bg:         --scheme(alpha(var(--yellow), 33%), alpha(var(--yellow), 25%));
 
 $hr-border: --scheme(var(--light-3), var(--dark-1));
 
