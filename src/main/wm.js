@@ -5,7 +5,6 @@ import { join } from 'node:path'
 import { URL } from 'node:url'
 import { get } from './gsettings.js'
 import { papersize } from './papersize.js'
-import dialog from './dialog.js'
 import { debug, error, trace, warn } from '../common/log.js'
 import { darwin, linux, win32 } from '../common/os.js'
 import { CodeError } from '../common/error.js'
@@ -223,7 +222,7 @@ export class WindowManager extends EventEmitter {
 
       if (typeof show === 'string') {
         win.once(show, () => {
-          win.show()
+          this.reveal(win)
           debug({ ms: Date.now() - NOW }, `show ${type} window`)
         })
       }
@@ -335,7 +334,7 @@ export class WindowManager extends EventEmitter {
         this.handleUnload(win, 'reload')
         break
       case 'show':
-        win.show()
+        this.reveal(win)
         break
       case 'undo':
         win.webContents.undo()
@@ -535,7 +534,7 @@ export class WindowManager extends EventEmitter {
   }
 
   async handleShowDialog (win, { id, type, options }) {
-    dialog
+    this.app.dialog
       .show(type, win, options)
       .then(payload => {
         win.webContents.send('dialog', { id, payload })
@@ -915,10 +914,19 @@ export class WindowManager extends EventEmitter {
     }
   }
 
+  reveal (win, { focus = true } = {}) {
+    if (this.app.hidden)
+      return
+    if (focus)
+      win.show()
+    else
+      win.showInactive()
+  }
+
   async show (type, args, opts) {
     let win = this.current(type)
     if (win) {
-      win.show()
+      this.reveal(win)
     } else {
       // Shown on init, which comes before ready.
       win = this.open(type, args, { show: 'init', ...opts })

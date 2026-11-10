@@ -1,5 +1,4 @@
 import { logger, warn } from '../../common/log.js'
-import dialog from '../dialog.js'
 
 async function createServer (app, port) {
   let { create } = await import('./api.js')
@@ -54,7 +53,7 @@ export class Server {
           throw err
 
         warn({ err }, 'api.listen failed')
-        dialog.alert(null, this.app.dict.dialog.addrinuse)
+        this.app.dialog.alert(null, this.app.dict.dialog.addrinuse)
       })
     }
 

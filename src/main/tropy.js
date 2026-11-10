@@ -33,7 +33,7 @@ import { Strings } from './res.js'
 import { AppMenu, ContextMenu } from './menu.js'
 import { Storage } from './storage.js'
 import { Updater } from './updater.js'
-import dialog from './dialog.js'
+import { DialogService } from './dialog.js'
 import { Server as ApiServer } from './api/server.js'
 import { WindowManager, getPath } from './wm.js'
 import * as shell from './shell.js'
@@ -80,6 +80,7 @@ export class Tropy extends EventEmitter {
     this.api = new ApiServer(this)
     this.cache = new Cache(opts.cache || join(opts.data, 'cache'))
     this.ctx = new ContextMenu(this)
+    this.dialog = new DialogService(this)
     this.menu = new AppMenu(this)
     this.plugins = new Plugins(join(opts.data, 'plugins'))
     this.pm = new ProjectManager(this)
@@ -94,6 +95,10 @@ export class Tropy extends EventEmitter {
     })
   }
 
+  get hidden () {
+    return !!this.opts.hidden
+  }
+
   async start () {
     await this.restore()
     this.updateLogLevel()
@@ -104,6 +109,9 @@ export class Tropy extends EventEmitter {
     this.wm.start()
     await this.api.start()
     shell.start()
+
+    if (this.hidden && !this.api.status)
+      warn('hidden mode without api: quit with tropy --quit')
   }
 
   async stop () {
@@ -121,7 +129,7 @@ export class Tropy extends EventEmitter {
     if (urls.length === 0) {
       let win = this.wm.current()
       if (win != null)
-        return win.show()
+        return this.wm.reveal(win)
       else
         return this.pm.show(this.pm.mostRecent())
     }
@@ -197,8 +205,10 @@ export class Tropy extends EventEmitter {
     let win = this.wm.current()
     let project = this.pm.get(win)
 
-    win?.showInactive()
-    win?.moveTop()
+    if (win) {
+      this.wm.reveal(win, { focus: false })
+      win.moveTop()
+    }
 
     await this.wm.show('prefs', { file: project?.path }, {
       isExclusive: !darwin,
@@ -229,8 +239,6 @@ export class Tropy extends EventEmitter {
     if (this.state.updater) {
       this.updater.start()
     }
-
-    dialog.lastDefaultPath = this.state.lastDefaultPath
 
     info('app state restored')
   }
@@ -266,7 +274,6 @@ export class Tropy extends EventEmitter {
     let saving = []
 
     if (this.state != null) {
-      this.state.lastDefaultPath = dialog.lastDefaultPath
       saving.push(this.store.save('state.json', this.state))
     }
 
@@ -289,7 +296,7 @@ export class Tropy extends EventEmitter {
       let isReactReady = once(win, 'react:ready')
 
       if (process.env.TROPY_PRINT_DEBUG)
-        win.show()
+        this.wm.reveal(win)
 
       await this.wm.ready(win)
       await Promise.race([isReactReady, delay(2000)])
@@ -306,7 +313,7 @@ export class Tropy extends EventEmitter {
       ])
 
       if (opts.pdf) {
-        let { value: path } = await dialog.save(sender, {
+        let { value: path } = await this.dialog.save(sender, {
           filters: [{
             name: this.dict.dialog.file.pdf,
             extensions: ['pdf']
@@ -711,7 +718,7 @@ export class Tropy extends EventEmitter {
     })
 
     this.on('app:install-plugin', (win) => {
-      dialog
+      this.dialog
         .open(win, {
           defaultPath: getPath('downloads', 'home'),
           filters: [{
@@ -719,8 +726,8 @@ export class Tropy extends EventEmitter {
             extensions: Plugins.ext
           }]
         })
-        .then(plugins => {
-          if (plugins) return this.plugins.install(...plugins)
+        .then(({ cancel, value }) => {
+          if (!cancel) return this.plugins.install(value[0])
         })
     })
 
@@ -814,7 +821,7 @@ export class Tropy extends EventEmitter {
     this.wm.on('closed', this.menu.handleWindowChange)
 
     this.wm.on('unresponsive', (_, win) => {
-      dialog
+      this.dialog
         .warn(win, this.dict.dialog.unresponsive)
         .then(({ value }) => {
           switch (value) {
@@ -824,7 +831,7 @@ export class Tropy extends EventEmitter {
     })
 
     this.wm.on('crashed', (_, win) => {
-      dialog
+      this.dialog
         .warn(win, this.dict.dialog.crashed)
         .then(({ value }) => {
           switch (value) {
@@ -862,7 +869,7 @@ export class Tropy extends EventEmitter {
   handleUncaughtException (e, win = this.wm.focusedWindow) {
     fatal(e)
 
-    dialog
+    this.dialog
       .alert(win, {
         ...this.dict.dialog.unhandled,
         detail: e.stack

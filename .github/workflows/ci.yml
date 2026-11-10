@@ -102,6 +102,14 @@ jobs:
         if: runner.os == 'Linux'
         run: xvfb-run npm run coverage
 
+      - name: Run end-to-end tests
+        if: runner.os != 'Linux'
+        run: npm run test:e2e
+
+      - name: Run end-to-end tests (xvfb)
+        if: runner.os == 'Linux'
+        run: xvfb-run npm run test:e2e
+
       - name: Send coverage report to Coveralls
         if: runner.os == 'Linux' && matrix.arch == 'x64' && !matrix.tag
         continue-on-error: true

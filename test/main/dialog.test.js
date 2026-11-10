@@ -1,15 +1,20 @@
 import { mock } from 'node:test'
 import assert from 'node:assert/strict'
 import { dialog as electron } from 'electron'
-import dialog from '#tropy/main/dialog.js'
+import { DialogService } from '#tropy/main/dialog.js'
 
-describe('Dialog', () => {
+describe('DialogService', () => {
   let stub = (name, result) =>
     mock.method(electron, name, async () => result)
 
+  let dialog
+
+  beforeEach(() => {
+    dialog = new DialogService({ state: {} })
+  })
+
   afterEach(() => {
     mock.restoreAll()
-    dialog.lastDefaultPath = undefined
   })
 
   describe('show', () => {
@@ -34,7 +39,7 @@ describe('Dialog', () => {
 
       expect(await dialog.show('file', null, {}))
         .to.eql({ cancel: false, value: ['/a/b', '/a/c'], data: null })
-      expect(dialog.lastDefaultPath).to.equal('/a')
+      expect(dialog.app.state.lastDefaultPath).to.equal('/a')
 
       stub('showOpenDialog', { canceled: true, filePaths: [] })
 
@@ -47,12 +52,21 @@ describe('Dialog', () => {
 
       expect(await dialog.show('save', null, {}))
         .to.eql({ cancel: false, value: '/x/y', data: null })
-      expect(dialog.lastDefaultPath).to.equal('/x')
+      expect(dialog.app.state.lastDefaultPath).to.equal('/x')
 
       stub('showSaveDialog', { canceled: true, filePath: '' })
 
       expect(await dialog.show('save', null, {}))
         .to.eql({ cancel: true, value: null, data: null })
+    })
+
+    it('cancels dialogs in hidden mode', async () => {
+      let box = stub('showMessageBox', { response: 1, checkboxChecked: true })
+      dialog = new DialogService({ hidden: true, state: {} })
+
+      expect(await dialog.alert(null, {}))
+        .to.eql({ cancel: true, value: null, data: null })
+      expect(box.mock.callCount()).to.equal(0)
     })
 
     it('rejects unknown types', async () => {

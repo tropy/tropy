@@ -15,6 +15,16 @@ describe('args', () => {
         .to.have.property('dev', true)
     })
 
+    it('sets --hidden', () => {
+      expect(parse(['--hidden']).opts)
+        .to.have.property('hidden', true)
+    })
+
+    it('sets --quit', () => {
+      expect(parse(['--quit']).opts)
+        .to.have.property('quit', true)
+    })
+
     it('parses --scale as float', () => {
       expect(parse(['--scale', '1.5']).opts)
         .to.have.property('scale', 1.5)
