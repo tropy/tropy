@@ -53,6 +53,15 @@ describe('ItemFind', () => {
     expect(res.calls(mod.item.seed).callCount()).to.equal(0)
   })
 
+  it('adds the items the order of the UI misses', () => {
+    let s = state({
+      order: [3, 2, 4],
+      sort: { column: TITLE, asc: true, locale: 'en' }
+    })
+
+    expect(ids(exec({}, s))).to.eql([2, 1, 4])
+  })
+
   it('reverses the order of the UI for the other direction', () => {
     let s = state({
       order: [3, 2, 1, 4],

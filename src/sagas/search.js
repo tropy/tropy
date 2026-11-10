@@ -284,12 +284,17 @@ export function *ordered (db, ids, sort) {
   let set = {}
   for (let id of ids) set[id] = true
 
-  if (isSameSort(qr.sort, sort))
-    return filter(qr.order, set)
+  let same = isSameSort(qr.sort, sort)
 
-  if (isReverse(qr.sort, sort)) {
+  if (same || isReverse(qr.sort, sort)) {
     let key = yield select(selectSortKey, sort.column)
-    return filter(reverse(qr.order, key), set)
+    let seq = filter(same ? qr.order : reverse(qr.order, key), set)
+
+    // Items the UI's order misses (created since its last search).
+    for (let id of seq) delete set[id]
+    let missing = Object.keys(set).map(Number)
+
+    return update(seq, { changed: missing }, key, getOptions(sort))
   }
 
   let seed = yield call(mod.item.seed, db, sort)
