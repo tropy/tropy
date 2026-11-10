@@ -32,6 +32,10 @@
       content: none;
     }
 
+    .photo-list:has(.match) :is(&):not(.match) {
+      opacity: 0.5;
+    }
+
     .photo-container {
       display: flex;
       align-items: center;
