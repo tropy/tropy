@@ -556,8 +556,54 @@ describe('Database', () => {
               () => db.check(),
               { message: '1 integrity check(s) failed' })
             await assert.rejects(
-              () => db.check(null, { quick: true }),
+              () => db.check(null, { integrity: 'quick' }),
               { message: '1 integrity check(s) failed' })
+          })
+        })
+
+        describe('with full-text indices', () => {
+          beforeEach(() => db.exec(`
+            CREATE VIRTUAL TABLE fts USING fts5(
+              name, content = 't1', content_rowid = 'id');
+            CREATE VIRTUAL TABLE fts2 USING fts5(
+              name, content = 't1', content_rowid = 'id');
+            INSERT INTO fts(fts) VALUES ('rebuild');
+            INSERT INTO fts2(fts2) VALUES ('rebuild');`))
+
+          it('passes without reporting a change', async () => {
+            let { generation } = db
+            await db.check()
+            expect(db.generation).to.equal(generation)
+          })
+
+          describe('out of step', () => {
+            beforeEach(() =>
+              db.run("UPDATE t1 SET name = 'three' WHERE id = 3"))
+
+            it('fails with every index out of step', async () => {
+              await assert.rejects(() => db.check(), (err) => {
+                expect(err).to.be.instanceOf(IntegrityError)
+                expect(err.message).to.equal('2 full-text index check(s) failed')
+                expect(err.failures).to.have.members([
+                  'fts5: checksum mismatch for table "fts"',
+                  'fts5: checksum mismatch for table "fts2"'
+                ])
+                return true
+              })
+            })
+
+            it('passes when skipping the index check', async () => {
+              await db.check(null, { fts: false })
+              await db.check(null, { integrity: 'quick' })
+
+              // Read-only: the index check needs to write.
+              let ro = new Database(dbFile, 'r')
+              try {
+                await ro.check()
+              } finally {
+                await ro.close()
+              }
+            })
           })
         })
       })

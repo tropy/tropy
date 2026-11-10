@@ -254,7 +254,7 @@ export class Database extends EventEmitter {
       nofk(conn, c =>
         exclusiveTransaction(c, async tx => {
           await fn(tx)
-          await tx.check()
+          await tx.check(null, { integrity: false })
         })
       )
     )
@@ -293,8 +293,12 @@ export class Database extends EventEmitter {
     return this.seq(conn => conn.compatibility())
   }
 
-  check = (...args) =>
-    this.seq(conn => conn.check(...args))
+  check = (table, opts) =>
+    this.seq(conn =>
+      conn.check(table, this.isReadOnly ? { fts: false, ...opts } : opts))
+
+  fts = () =>
+    this.seq(conn => conn.fts())
 
   // Returns ratio of free pages that VACUUM would reclaim.
   free = async () => {
@@ -560,11 +564,23 @@ export class Connection {
     }
   }
 
-  async check (table, { maxIntErrors = 10, quick = false } = {}) {
+  async fts () {
+    return (await this.all(`
+      SELECT name FROM sqlite_schema
+        WHERE type = 'table' AND sql LIKE 'CREATE VIRTUAL TABLE % USING fts5%'`
+    )).map(t => t.name)
+  }
+
+  async check (table, {
+    integrity = 'full',
+    maxErrors = 10,
+    fts = (integrity === 'full'),
+    fk = true
+  } = {}) {
     try {
-      if (maxIntErrors > 0) {
-        let pragma = quick ? 'quick_check' : 'integrity_check'
-        let result = await this.all(`PRAGMA ${pragma}(${maxIntErrors})`)
+      if (integrity) {
+        let pragma = (integrity === 'quick') ? 'quick_check' : 'integrity_check'
+        let result = await this.all(`PRAGMA ${pragma}(${maxErrors})`)
 
         if (result.length !== 1 || result[0][pragma] !== 'ok') {
           throw new IntegrityError(
@@ -573,21 +589,50 @@ export class Connection {
         }
       }
 
-      let violations = await this.all(
-        `PRAGMA foreign_key_check${table ? `('${table}')` : ''}`
-      )
+      if (fts) {
+        let failures = []
 
-      if (violations.length > 0) {
-        throw new IntegrityError(
-          violations.map(v => `${v.table}[${v.rowid}] -> ${v.parent}#${v.fkid}`),
-          `${violations.length} foreign key check(s) failed`)
+        for (let name of await this.fts()) {
+          try {
+            // The check does not alter the db file, but it runs in a transaction.
+            // To avoid counting it as a change, we call db.request directly.
+            await this.db.request('exec', {
+              sql: `INSERT INTO "${name}"("${name}", rank) VALUES ('integrity-check', 1)`
+            })
+          } catch (err) {
+            if (normalize(err).code !== 'SQLITE_CORRUPT')
+              throw err
+            else
+              failures.push(err.message)
+          }
+        }
+
+        if (failures.length > 0) {
+          throw new IntegrityError(
+            failures,
+            `${failures.length} full-text index check(s) failed`)
+        }
+      }
+
+      if (fk) {
+        let violations = await this.all(
+          `PRAGMA foreign_key_check${table ? `('${table}')` : ''}`
+        )
+
+        if (violations.length > 0) {
+          throw new IntegrityError(
+            violations.map(v => `${v.table}[${v.rowid}] -> ${v.parent}#${v.fkid}`),
+            `${violations.length} foreign key check(s) failed`)
+        }
       }
 
       return this
 
     } catch (err) {
-      if (err.code !== 'SQLITE_CORRUPT') throw err
-      throw new IntegrityError([err.message], err.message, { cause: err })
+      if (err.code !== 'SQLITE_CORRUPT')
+        throw err
+      else
+        throw new IntegrityError([err.message], err.message, { cause: err })
     }
   }
 

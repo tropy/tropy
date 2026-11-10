@@ -35,7 +35,7 @@ describe('project commands', () => {
 
       expect(res.result).to.be.true
       expect(res.calls(db.check).calls[0].arguments)
-        .to.eql([null, { quick: true }])
+        .to.eql([null, { integrity: 'quick' }])
     })
 
     it('adds the corrupted warning when it fails', () => {

@@ -1,11 +1,14 @@
 import { mkprojtmp } from '../support/project.js'
 import image from '#tropy/models/image.js'
 import item from '#tropy/models/item.js'
+import metadata from '#tropy/models/metadata.js'
 import note from '#tropy/models/note.js'
 import photo from '#tropy/models/photo.js'
 import selection from '#tropy/models/selection.js'
 import * as transcription from '#tropy/models/transcription.js'
+import value from '#tropy/models/value.js'
 import sql from '#tropy/common/sql.js'
+import { TYPE } from '#tropy/constants/index.js'
 
 const TEMPLATE = 'https://tropy.org/v1/templates/photo'
 
@@ -166,6 +169,33 @@ describe('models/photo', () => {
     it('rotates the image angle', async () => {
       expect(await image.rotate(db, { id: [original.id], by: -180 }))
         .to.eql({ [original.id]: { angle: 270 } })
+    })
+  })
+
+  // The 'rebuild' command must produce the indices the triggers maintain.
+  describe('full-text indices', () => {
+    const TITLE = 'http://purl.org/dc/elements/1.1/title'
+    const title = (text) => metadata.update(db, {
+      id: original.id, data: { [TITLE]: { text, type: TYPE.TEXT } }
+    })
+
+    it('stay in step with their content', async () => {
+      let [nid] = original.notes
+      let [tid] = original.transcriptions
+
+      await note.save(db, { id: nid, state: {}, text: 'edited' })
+      await transcription.save(db, { id: tid, text: 'edited' })
+      await title('one')
+      await title('two')
+      await value.prune(db)
+      await annotate(db, original.id, 'added')
+
+      await note.delete(db, [nid])
+      await note.prune(db)
+      await transcription.remove(db, tid)
+      await transcription.prune(db)
+
+      await db.check()
     })
   })
 
