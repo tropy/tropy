@@ -74,6 +74,10 @@
       }
     }
 
+    .note-list:has(.match) :is(&):not(.match) {
+      opacity: 0.5;
+    }
+
     // CSS multiline truncate
     .css-multiline-truncate {
       @include css-multiline-truncate($note-lines);
