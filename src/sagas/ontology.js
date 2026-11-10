@@ -20,10 +20,19 @@ export function *ontology ({
       yield call(mod.create, db)
     } else {
       try {
-        yield call(db.migrate, join(ARGS.app, 'db', 'migrate', 'ontology'))
+        var migrations =
+          yield call(db.migrate, join(ARGS.app, 'db', 'migrate', 'ontology'))
       } catch (err) {
         warn({ err }, 'failed to migrate ontology database')
         yield call(fail, err, 'ontology.migrate')
+      }
+
+      if (migrations?.length > 0) {
+        try {
+          yield call(db.check)
+        } catch (err) {
+          warn({ err }, 'ontology check failed')
+        }
       }
     }
 

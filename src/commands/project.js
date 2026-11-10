@@ -26,7 +26,7 @@ function *check (db, { quick = false, force = false } = {}) {
   let START = Date.now()
 
   try {
-    yield call(db.check, null, { quick })
+    yield call(db.check, null, { integrity: quick ? 'quick' : 'full' })
     info({ quick, ms: Date.now() - START }, 'project check passed')
 
     if (yield select(isCorrupted)) {
