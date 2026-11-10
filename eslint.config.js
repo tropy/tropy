@@ -113,20 +113,6 @@ export default [
 
 
   {
-    files: ['test/wdio/**/*.js'],
-    languageOptions: {
-      globals: {
-        $: false,
-        $$: false,
-        browser: false
-      }
-    },
-    rules: {
-      'no-unused-expressions': 0
-    }
-  },
-
-  {
     files: [
       '{src,test}/{components,hooks,views}/**/*.js',
       'test/support/react.js'
