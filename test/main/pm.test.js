@@ -50,6 +50,7 @@ describe('ProjectManager', () => {
         close: async () => {},
         sendEach () {},
         whenReady: (win, resolve) => resolve(),
+        reveal: (win) => win.show(),
         open: mock.fn(register((type, props) => {
           let win = fakeWindow()
           // Reports the project it was asked to open, like a renderer,

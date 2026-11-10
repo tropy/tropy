@@ -130,11 +130,13 @@ jobs:
           NOTARY_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           NOTARY_KEY_ISSUER: ${{ secrets.APPLE_API_KEY_ISSUER }}
 
-      - name: Run integration tests
-        continue-on-error: true
-        run: |
-          npm --prefix test/wdio clean-install --no-progress
-          npm run wdio:test
+      - name: Run end-to-end tests
+        if: runner.os != 'Linux'
+        run: npm run test:e2e:dist
+
+      - name: Run end-to-end tests (xvfb)
+        if: runner.os == 'Linux'
+        run: xvfb-run npm run test:e2e:dist
 
       - name: Create release assets
         run: npm run pack -- --arch ${{ matrix.arch }}

@@ -6,7 +6,6 @@ import { darwin, win32 } from '../common/os.js'
 import { promote } from '../common/util.js'
 import { projectPath, protocolURL, urlId as getUrlId } from '../common/project-file.js'
 import { PROJECT } from '../constants/index.js'
-import dialog from './dialog.js'
 import * as act from './actions.js'
 import * as shell from './shell.js'
 
@@ -204,7 +203,7 @@ export class ProjectManager {
       if (open) {
         info({ path }, 'focus existing project window')
         // Windows still loading show themselves.
-        this.wm.whenReady(open, () => open.show())
+        this.wm.whenReady(open, () => this.wm.reveal(open))
         return open
       }
     }
@@ -221,7 +220,7 @@ export class ProjectManager {
       if (path)
         this.app.dispatch(act.project.open(path, meta), win)
 
-      win.show()
+      this.wm.reveal(win)
     }
 
     if (path)
@@ -251,7 +250,7 @@ export class ProjectManager {
 
   // Lets the user pick a project file; null if cancelled.
   async pick (win = this.wm.current()) {
-    let { cancel, value: files } = await dialog.open(win, {
+    let { cancel, value: files } = await this.app.dialog.open(win, {
       filters: [{
         name: this.app.dict.dialog.file.project,
         extensions: ['tpy', 'tropy']

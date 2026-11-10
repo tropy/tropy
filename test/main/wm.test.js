@@ -5,15 +5,21 @@ import { EventEmitter, once } from 'node:events'
 import { join } from 'node:path'
 import { env } from 'node:process'
 import { app, BrowserWindow, screen } from 'electron'
+import { DialogService } from '#tropy/main/dialog.js'
 import { WindowManager } from '#tropy/main/wm.js'
 import { Plugins } from '#tropy/common/plugins.js'
 
 // A minimal app: no environment, default settings.
-const mkapp = () => Object.assign(new EventEmitter(), {
-  env: {},
-  opts: {},
-  state: { theme: 'system', zoom: 1, win: {} }
-})
+const mkapp = () => {
+  let app = Object.assign(new EventEmitter(), {
+    env: {},
+    opts: {},
+    state: { theme: 'system', zoom: 1, win: {} }
+  })
+
+  app.dialog = new DialogService(app)
+  return app
+}
 
 describe('WindowManager', () => {
   describe('instance', () => {
@@ -288,6 +294,21 @@ describe('WindowManager', () => {
 
       wm.unref('prefs', prefs)
       expect(wm.focusedWindow).to.equal(project)
+    })
+  })
+
+  describe('reveal', () => {
+    it('keeps windows hidden in hidden mode', () => {
+      let win = { show: mock.fn(), showInactive: mock.fn() }
+      let hidden = new WindowManager(Object.assign(mkapp(), { hidden: true }))
+
+      hidden.reveal(win)
+      hidden.reveal(win, { focus: false })
+      expect(win.show.mock.callCount()).to.equal(0)
+      expect(win.showInactive.mock.callCount()).to.equal(0)
+
+      new WindowManager(mkapp()).reveal(win)
+      expect(win.show.mock.callCount()).to.equal(1)
     })
   })
 

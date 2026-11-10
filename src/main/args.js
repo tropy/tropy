@@ -16,6 +16,8 @@ const options = {
   scale: { type: 'string' },
 
   dev: { type: 'boolean', default: false },
+  hidden: { type: 'boolean', default: false },
+  quit: { type: 'boolean', default: false },
 
   'auto-updates': { type: 'boolean', default: true },
   'context-isolation': { type: 'boolean', default: true },

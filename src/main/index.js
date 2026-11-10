@@ -64,14 +64,19 @@ if (win32 && process.argv.length > 1) {
 
 let isDuplicateInstance = false
 if (!handlingSquirrelEvent) {
-  if (!app.requestSingleInstanceLock({ args: args.map(String) })) {
+  if (!app.requestSingleInstanceLock({
+    args: args.map(String),
+    quit: opts.quit
+  })) {
     isDuplicateInstance = true
     app.quit()
+  } else {
+    if (opts.quit) app.quit()
   }
 }
 
 
-if (!handlingSquirrelEvent && !isDuplicateInstance) {
+if (!handlingSquirrelEvent && !isDuplicateInstance && !opts.quit) {
   // Subtle: adding '--' so that crafted links cannot add switches!
   if (process.defaultApp) {
     app.setAsDefaultProtocolClient(
@@ -117,9 +122,13 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
     await tropy.start()
     tropy.ready = Date.now()
 
-    app.on('second-instance', async (_, argv, cwd, { args }) => {
-      info({ args }, 'second-instance')
-      await tropy.open(...args.map(url => new URL(url)))
+    app.on('second-instance', async (_, argv, cwd, { args, quit }) => {
+      info({ args, quit }, 'second-instance')
+
+      if (quit)
+        app.quit()
+      else
+        await tropy.open(...args.map(url => new URL(url)))
     })
 
     app.once('gpu-info-update', () => {
@@ -182,16 +191,16 @@ if (!handlingSquirrelEvent && !isDuplicateInstance) {
 
       event.preventDefault()
     })
-
-    let quit = false
-
-    app.on('before-quit', () => {
-      quit = true
-    })
-    app.on('window-all-closed', () => {
-      if (quit) app.quit()
-    })
   }
+
+  let quit = false
+
+  app.on('before-quit', () => {
+    quit = true
+  })
+  app.on('window-all-closed', () => {
+    if (quit || !darwin) app.quit()
+  })
 }
 
 function setPath (name, path) {
@@ -201,7 +210,9 @@ function setPath (name, path) {
 
 function handleError (error, isFatal = false) {
   if (isFatal || !Tropy.instance?.ready) {
-    return dialog.showErrorBox('Unhandled Error', error?.stack)
+    return (opts.hidden)
+      ? console.error(error)
+      : dialog.showErrorBox('Unhandled Error', error?.stack)
   }
 
   try {

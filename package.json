@@ -49,10 +49,10 @@
     "rebuild": "node scripts/rebuild.js",
     "coverage": "c8 -o coverage --reporter=text --reporter=lcov --include='src/**' npm test",
     "test": "spark --no-sandbox",
+    "test:e2e": "node --test --test-concurrency=1 test/e2e/*.test.js",
+    "test:e2e:dist": "node --test --test-concurrency=1 test/e2e/*.test.js",
     "preversion": "npm run lint && npm test",
-    "version": "node scripts/version.js && git add res/linux CITATION.cff",
-    "wdio:install": "npm --prefix test/wdio install",
-    "wdio:test": "npm --prefix test/wdio test"
+    "version": "node scripts/version.js && git add res/linux CITATION.cff"
   },
   "spark": {
     "ui": "bdd",
@@ -65,7 +65,7 @@
     ],
     "rendererGlobPatterns": [
       "test/*.test.js",
-      "test/!(main|support|fixtures|wdio)/**/*.test.{js,cjs}"
+      "test/!(main|support|fixtures|e2e)/**/*.test.{js,cjs}"
     ],
     "url": "test/support/view.html",
     "preload": [
