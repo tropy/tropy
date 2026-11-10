@@ -1,8 +1,6 @@
--- Language-neutral full-text search for all three indices:
--- unicode61 without Porter stemming (English only),
--- removing diacritics from all characters (remove_diacritics 2).
--- The triggers write to the tables by name; only the metadata
--- triggers change (no datatype filter).
+-- Switch to language-neutral FTS
+-- unicode61, removing diacritics from all characters (remove_diacritics 2).
+-- Update triggers, so that 'rebuild' is always safe (no dataype filter!).
 
 DROP TABLE fts_notes;
 
@@ -28,8 +26,6 @@ CREATE VIRTUAL TABLE fts_metadata USING fts5(
   tokenize = 'unicode61 remove_diacritics 2'
 );
 
--- All values are indexed (the triggers skipped some datatypes),
--- so that 'rebuild' and the triggers agree.
 DROP TRIGGER metadata_values_ai_fts;
 DROP TRIGGER metadata_values_ad_fts;
 
