@@ -128,7 +128,7 @@
     "source-map-js": "^1.2.1",
     "spark-chamber": "^0.2.0",
     "split2": "^4.0.0",
-    "sqleton": "^4.0.0",
+    "sqleton": "^5.0.0",
     "stylelint": "^17.0.0",
     "stylelint-config-recommended-scss": "^17.0.0",
     "stylelint-config-standard": "^40.0.0",
