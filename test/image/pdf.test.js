@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import { extractPdfEmbeddedFiles } from '#tropy/image/pdf.js'
 import { Image } from '#tropy/image/index.js'
 
-const FIXTURE = 'veraPDF test suite 6-9-t03-pass-a.pdf'
+const FIXTURE = 'vera.pdf'
 
 describe('pdf', () => {
   describe('extractPdfEmbeddedFiles', () => {

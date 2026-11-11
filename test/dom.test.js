@@ -143,8 +143,8 @@ describe('dom', () => {
       timeout: 2000
     }, async () => {
       expect(
-        await dom.loadImage(F.image.url('PA140105.JPG'))
-      ).to.have.property('width', 2048)
+        await dom.loadImage(F.image.url('apricot.jpg'))
+      ).to.have.property('width', 640)
     })
 
     it('rejects when the image fails to load', {

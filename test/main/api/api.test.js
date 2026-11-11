@@ -530,7 +530,7 @@ describe('api', () => {
     it('serves original photo files', async () => {
       api.respond({
         protocol: 'file',
-        path: F.image.path('PA140105.JPG'),
+        path: F.image.path('apricot.jpg'),
         mimetype: 'image/jpeg'
       })
       let res = await api.get('/projects/foo/photos/1/original')
@@ -538,7 +538,7 @@ describe('api', () => {
       expect(res.statusCode).to.equal(200)
       expect(res.headers['content-type']).to.equal('image/jpeg')
       expect(res.headers['content-disposition'])
-        .to.equal('attachment; filename*=UTF-8\'\'PA140105.JPG')
+        .to.equal('attachment; filename*=UTF-8\'\'apricot.jpg')
       expect(res.rawPayload.length)
         .to.equal(Number(res.headers['content-length']))
     })
@@ -546,7 +546,7 @@ describe('api', () => {
     it('guesses the type of original photo files without one', async () => {
       api.respond({
         protocol: 'file',
-        path: F.image.path('PA140105.JPG')
+        path: F.image.path('apricot.jpg')
       })
       let res = await api.get('/projects/foo/photos/1/original')
 
@@ -556,7 +556,7 @@ describe('api', () => {
 
     it('supports range and conditional requests', async () => {
       let url = '/projects/foo/photos/1/original'
-      api.respond({ protocol: 'file', path: F.image.path('PA140105.JPG') })
+      api.respond({ protocol: 'file', path: F.image.path('apricot.jpg') })
 
       let res = await api.app.inject({ url, headers: { range: 'bytes=0-9' } })
       expect(res.statusCode).to.equal(206)

@@ -8,7 +8,7 @@ describe('sharp', () => {
   })
 
   it('resizes to fit without enlarging', async () => {
-    let input = F.image.path('PA140105.JPG')
+    let input = F.image.path('apricot.jpg')
     let size = async (opts) =>
       (await (await open(await toBuffer('png', input, {}, opts))).metadata())
 
@@ -19,7 +19,7 @@ describe('sharp', () => {
     expect(await size({ width: width * 2 })).to.include({ width, height })
   })
   it('crops a region before resizing', async () => {
-    let input = F.image.path('PA140105.JPG')
+    let input = F.image.path('apricot.jpg')
     let size = async (opts) =>
       (await (await open(await toBuffer('png', input, {}, opts))).metadata())
 
