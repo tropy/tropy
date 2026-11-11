@@ -6,8 +6,9 @@
 
 @mixin css-truncation {
   white-space: nowrap;
-  overflow: hidden;
+  overflow: clip visible; // text-box-trim requires clip
   text-overflow: ellipsis;
+  min-width: 0; // clip requires min-width: 0
 }
 
 @mixin css-multiline-truncate($lines) {

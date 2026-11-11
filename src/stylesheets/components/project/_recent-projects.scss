@@ -100,7 +100,6 @@
 
   .project-file {
     display: flex;
-    align-items: center;
     gap: $default-spacing-x;
     padding: ($space-sm + 1px) $space-sm $space-sm;
     border-radius: 5px;
@@ -160,11 +159,13 @@
     }
 
     .name {
+      display: flex;
+      align-items: baseline;
       font-size: $font-size-large;
-      margin-top: -10px;
+      margin-top: 1px;
 
       @media (2dppx <= resolution) {
-        margin-top: -9.5px;
+        margin-top: 0;
       }
 
       .is-blurred & {
@@ -174,26 +175,20 @@
       .icon {
         flex: 0 0 auto;
         margin-left: $space-min;
+        margin-top: -1px;
       }
     }
 
     .truncate {
-      display: inline-block;
-      vertical-align: top;
-      max-width: calc(100% - #{$space-md});
+      text-box: trim-start cap alphabetic;
     }
 
     .stats {
       white-space: nowrap;
       font-size: $font-size-small;
       color: $recent-project-stats-color;
-      margin-top: 1px;
-      margin-bottom: -10px;
+      text-box: trim-end ex alphabetic;
       @include css-truncation;
-
-      @media (2dppx <= resolution) {
-        margin-top: 0;
-      }
 
       .is-blurred & {
         color: $recent-project-stats-blurred-color;
