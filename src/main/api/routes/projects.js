@@ -88,4 +88,21 @@ export default async function projects (fastify, { pm }) {
     }
   }, ({ params }) =>
     pm.describe(found(pm.find(params.urlId), `unknown project: ${params.urlId}`)))
+
+  fastify.post('/projects/:urlId/close', {
+    schema: {
+      operationId: 'projects.close',
+      summary: 'Close a project',
+      description: 'Like Close Project in the app: ' +
+        'the project window stays, without a project. ' +
+        'Waits until the project file is released. ' +
+        'A closed project is returned as it is.',
+      params: withUrlId()
+    }
+  }, async ({ params }) => {
+    let path = found(pm.find(params.urlId), `unknown project: ${params.urlId}`)
+
+    await pm.close(path)
+    return pm.describe(path)
+  })
 }

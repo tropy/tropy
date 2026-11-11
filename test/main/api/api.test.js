@@ -145,6 +145,18 @@ describe('api', () => {
       expect((await api.get('/projects/missing')).statusCode).to.equal(404)
     })
 
+    it('closes projects', async () => {
+      let res = await api.post('/projects/foo/close')
+
+      expect(res.statusCode).to.equal(200)
+      expect(res.json()).to.include({ path: '/projects/foo.tropy' })
+      expect(api.pm.close.mock.calls.at(-1).arguments)
+        .to.eql(['/projects/foo.tropy'])
+
+      expect((await api.post('/projects/closed/close')).statusCode).to.equal(200)
+      expect((await api.post('/projects/missing/close')).statusCode).to.equal(404)
+    })
+
     it('requires projects to be open', async () => {
       let res = await api.get('/projects/closed/items')
 
