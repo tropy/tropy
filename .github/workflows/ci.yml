@@ -15,12 +15,16 @@ jobs:
   build:
     name: ${{ matrix.image }} ${{ matrix.arch }} ${{ matrix.tag }}
     runs-on: ${{ matrix.image }}
+    continue-on-error: ${{ matrix.allow-failure == true }}
 
     strategy:
       fail-fast: false
       matrix:
         include:
           - image: ubuntu-latest
+            arch: x64
+            allow-failure: true
+          - image: ubuntu-24.04
             arch: x64
           - image: ubuntu-24.04-arm
             arch: arm64
