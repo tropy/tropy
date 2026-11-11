@@ -16,7 +16,9 @@ import * as shell from './shell.js'
  */
 export class ProjectManager {
   #projects = new WeakMap()  // win -> project
-  #pending = new Map()       // path -> { win, opened }
+
+  #opening = new Map()       // path -> { win, opened }
+  #closing = new Map()       // path -> { win, closed }
 
   constructor (app) {
     this.app = app
@@ -198,7 +200,7 @@ export class ProjectManager {
     if (path) {
       path = projectPath(path)
 
-      let open = this.window(path) ?? this.#pending.get(path)?.win
+      let open = this.window(path) ?? this.#opening.get(path)?.win
 
       if (open) {
         info({ path }, 'focus existing project window')
@@ -235,7 +237,7 @@ export class ProjectManager {
     if (path) path = projectPath(path)
 
     let win = this.show(path, options)
-    await this.#pending.get(path)?.opened.promise
+    await this.#opening.get(path)?.opened.promise
 
     return { win, project: this.get(win) }
   }
@@ -246,6 +248,32 @@ export class ProjectManager {
   async openByUrlId (urlId, meta) {
     let path = this.find(urlId)
     return path ? this.open(path, meta) : null
+  }
+
+  // Closes the project at path, like File > Close Project,
+  // or, if `closeWindow` is set, by closing the window.
+  async close (path, { closeWindow = false } = {}) {
+    path = projectPath(path)
+
+    let closing = this.#closing.get(path)
+
+    if (closing == null) {
+      let win = this.window(path)
+
+      if (win == null)
+        return false
+
+      closing = { win, closed: Promise.withResolvers() }
+      this.#closing.set(path, closing)
+
+      if (closeWindow)
+        win.close()
+      else
+        this.app.dispatch(act.project.close('user'), win)
+    }
+
+    await closing.closed.promise
+    return true
   }
 
   // Lets the user pick a project file; null if cancelled.
@@ -268,7 +296,7 @@ export class ProjectManager {
 
     this.set(win, project)
 
-    if (this.#isPending(project.path, win))
+    if (this.#isOpening(win, project.path))
       this.#settle(project.path)
 
     // Prefs show the settings of their parent window's project.
@@ -297,13 +325,20 @@ export class ProjectManager {
     if (error)
       warn({ err: error, path }, 'project closed with error')
 
-    if (this.#isPending(path, win))
+    if (this.#isOpening(win, path))
       this.#settle(path, error
         ? new IpcError(error)
         : new CodeError('ECANCELED', 'project open canceled'))
 
     if (this.get(win)?.path === path)
       this.delete(win)
+
+    let closing = this.#closing.get(path)
+
+    if (closing?.win === win) {
+      this.#closing.delete(path)
+      closing.closed.resolve()
+    }
   }
 
   // Recent projects follow use: the focused project comes first.
@@ -431,47 +466,51 @@ export class ProjectManager {
   // Tracks opening path in win,
   // until the window reports the project open or closed.
   #track (path, win) {
-    let pending = { win, opened: Promise.withResolvers() }
+    let opening = { win, opened: Promise.withResolvers() }
 
     // Nobody may wait for it, e.g. after show.
-    pending.opened.promise.catch(() => {})
+    opening.opened.promise.catch(() => {})
 
-    this.#pending.set(path, pending)
+    this.#opening.set(path, opening)
   }
 
-  // Whether win is opening any project.
-  #isOpening (win) {
-    return this.#pending.values().some(pending => pending.win === win)
+  // Whether win is opening path, or any project without one.
+  #isOpening (win, path) {
+    return (path == null)
+      ? this.#opening.values().some(opening => opening.win === win)
+      : this.#opening.get(path)?.win === win
   }
 
-  // Whether win is opening path.
-  #isPending (path, win) {
-    return this.#pending.get(path)?.win === win
-  }
-
-  // Settles all opens pending in win.
+  // Settles all opens and closes pending in win.
   #release (win, reason) {
-    for (let [path, pending] of this.#pending) {
-      if (pending.win === win)
+    for (let [path, opening] of this.#opening) {
+      if (opening.win === win)
         this.#settle(path, new CodeError('ECANCELED', reason))
+    }
+
+    for (let [path, closing] of this.#closing) {
+      if (closing.win === win) {
+        this.#closing.delete(path)
+        closing.closed.reject(new CodeError('ECANCELED', reason))
+      }
     }
   }
 
   #settle (path, error) {
-    let pending = this.#pending.get(path)
+    let opening = this.#opening.get(path)
 
-    if (pending == null)
+    if (opening == null)
       return
 
-    this.#pending.delete(path)
+    this.#opening.delete(path)
 
     if (error) {
-      if (!this.has(pending.win))
-        this.wm.setPersistenceId(pending.win, null)
+      if (!this.has(opening.win))
+        this.wm.setPersistenceId(opening.win, null)
 
-      pending.opened.reject(error)
+      opening.opened.reject(error)
     } else {
-      pending.opened.resolve()
+      opening.opened.resolve()
     }
   }
 }
