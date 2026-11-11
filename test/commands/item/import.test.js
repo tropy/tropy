@@ -20,8 +20,8 @@ describe('Import items', () => {
   let cache
   let thumbnails
 
-  let jpg = F.image.path('PA140105.JPG')
-  let tif = F.image.path('pages.tif') // 3 pages: 8x6, 6x8, 4x4
+  let jpg = F.image.path('apricot.jpg')
+  let tif = F.image.path('pastels.tif') // 3 pages: 8x6, 6x8, 4x4
 
   beforeEach(async () => {
     store = new Store(joinPath(dir, `assets-${++count}`))
@@ -118,7 +118,7 @@ describe('Import items', () => {
 
       expect(photo.path.startsWith(store.root)).to.be.true
       expect(existsSync(photo.path)).to.be.true
-      expect(photo).to.include({ mimetype: 'image/jpeg', filename: 'PA140105.JPG' })
+      expect(photo).to.include({ mimetype: 'image/jpeg', filename: 'apricot.jpg' })
       expect(photo.checksum).not.to.equal('badc0de')
       expect(photo.width).to.be.above(0)
       expect(consolidated()).to.eql([[0, photo.id]])
@@ -150,7 +150,7 @@ describe('Import items', () => {
 
     it('optimizes new photos if enabled', async () => {
       let [photo] = await importJSON([{
-        path: F.image.path('veraPDF test suite 6-9-t03-pass-a.pdf')
+        path: F.image.path('vera.pdf')
       }], { optimizeOnImport: true, optimizeQuality: 0.8 })
 
       expect(photo.mimetype).to.be.oneOf([MIME.JPG, MIME.PNG])

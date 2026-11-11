@@ -9,7 +9,11 @@ describe('create a project', () => {
   it('creates a project', async () => {
     let res = await tropy.api('/projects', {
       method: 'POST',
-      body: { path: tropy.path('Alpha.tpy'), create: true, name: 'Alpha' }
+      body: {
+        path: tropy.path('Alpha.tpy'),
+        create: true,
+        name: 'Alpha'
+      }
     })
 
     assert.equal(res.status, 201)
@@ -21,7 +25,7 @@ describe('create a project', () => {
   it('imports a photo', async () => {
     let res = await tropy.api(`/projects/${project.urlId}/import`, {
       method: 'POST',
-      body: { files: [fixture('images', 'PA140105.JPG')] }
+      body: { files: [fixture('images', 'apricot.jpg')] }
     })
 
     assert.equal(res.status, 201)
@@ -29,7 +33,7 @@ describe('create a project', () => {
   })
 
   it('finds the photo by its file name', async () => {
-    let found = await tropy.api(`/projects/${project.urlId}/items?q=PA140105`)
+    let found = await tropy.api(`/projects/${project.urlId}/items?q=apricot`)
     let none = await tropy.api(`/projects/${project.urlId}/items?q=nomatch`)
 
     assert.equal(found.status, 200)
