@@ -68,6 +68,14 @@ export const IconCrescentCircle = i('CrescentCircle', (
 
 /* 12 x 12 */
 
+export const IconArrowBranch = i('ArrowBranch', (
+  <svg width="12" height="12">
+    <g className="line" fill="currentColor">
+      <path d="M11,1.5v3.5l-1.293-1.293-2.707,2.707v2.086c0,.276-.224.5-.5.5h-1c-.276,0-.5-.224-.5-.5v-2.086l-2.707-2.707-1.293,1.293V1.5c0-.276.224-.5.5-.5h3.5l-1.293,1.293,2.293,2.293,2.293-2.293-1.293-1.293h3.5c.276,0,.5.224.5.5ZM6.5,10h-1c-.276,0-.5.224-.5.5v1c0,.276.224.5.5.5h1c.276,0,.5-.224.5-.5v-1c0-.276-.224-.5-.5-.5Z"/>
+    </g>
+  </svg>
+))
+
 export const IconArrowTurn = i('ArrowTurn', (
   <svg width="12" height="12">
     <g className="line" fill="currentColor">

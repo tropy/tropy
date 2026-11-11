@@ -1,12 +1,7 @@
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useEvent } from '../../hooks/use-event.js'
 import { Button } from '../button.js'
-import {
-  IconDotsVertical,
-  IconMaze,
-  IconRemoveLink,
-  IconWarningSm
-} from '../icons.js'
+import { Icon } from '../icons.js'
 import { RelativeDate } from '../date.js'
 
 
@@ -67,21 +62,22 @@ export const ProjectFile = ({
       onClick={handleClick}
       onContextMenu={handleContextMenu}
       title={hint}>
-      <IconMaze/>
+      <Icon name="Maze"/>
       <div className="flex-col">
         <div className="name">
           <div className="truncate">{name}</div>
           {hasConflict && (
-            <IconRemoveLink
+            <Icon
+              name="ArrowBranch"
               title={intl.formatMessage({ id: 'project.file.conflict' })}/>
           )}
-          {isMissing && <IconWarningSm/>}
+          {isMissing && <Icon name="WarningSm"/>}
         </div>
         <ProjectFileStats {...stats}/>
       </div>
       <Button
         className="context"
-        icon={<IconDotsVertical/>}
+        icon="DotsVertical"
         onClick={handleContextMenu}
         title="project.file.options"/>
     </li>
