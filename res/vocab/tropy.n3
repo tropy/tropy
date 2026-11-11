@@ -227,6 +227,12 @@ tropy:y a rdf:Property ;
   rdfs:domain tropy:Selection ;
 	rdfs:comment "Origin Y coordinate in original image."@en .
 
+tropy:polygon a rdf:Property ;
+	rdfs:label "Polygon"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Selection ;
+	rdfs:comment "Polygon mask of a selection, as a JSON list of [x, y] points relative to the selection origin; absent for rectangular selections."@en .
+
 tropy:angle a rdf:Property ;
 	rdfs:label "Angle"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;

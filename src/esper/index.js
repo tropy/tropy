@@ -1,5 +1,5 @@
 import { EventEmitter } from 'node:events'
-import { Application, RenderTexture, Ticker } from 'pixi.js'
+import { Application, Graphics, RenderTexture, Ticker } from 'pixi.js'
 import TWEEN from '@tweenjs/tween.js'
 import { debug, error, info, warn } from '../common/log.js'
 import { Photo, FILTERS } from './photo.js'
@@ -8,6 +8,7 @@ import { Loader } from './loader.js'
 import { ESPER, SASS } from '../constants/index.js'
 import ARGS from '../args.js'
 import { isMeta } from '../keymap.js'
+import { translate } from '../common/geometry.js'
 
 import {
   isClockwise, isHorizontal, contains, deg, rad
@@ -173,6 +174,17 @@ export default class Esper extends EventEmitter {
 
       photo.bg.texture = await this.loader.loadTexture(src)
       photo.filter(props)
+
+      // Polygon selections: everything outside the outline is
+      // transparent in the extracted image.
+      if (props.polygon) {
+        let mask = new Graphics()
+          .poly(translate(props.polygon, props), true)
+          .fill(0xffffff)
+        photo.addChild(mask)
+        photo.mask = mask
+      }
+
       photo.rotation = rad(props.angle)
       photo.scale.set(props.mirror ? -1 : 1, 1)
 

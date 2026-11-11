@@ -16,7 +16,7 @@ export class Save extends Command {
       pick(state.selections[id], Object.keys(data)))
 
     yield call(db.transaction, tx =>
-      mod.image.save(tx, { id, timestamp: meta.now, ...data }))
+      mod.selection.save(tx, { id, timestamp: meta.now, ...data }))
 
     this.undo = act.save({ id, data: original })
 

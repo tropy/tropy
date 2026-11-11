@@ -316,6 +316,10 @@ export class Image extends Asset {
         width: selection.width,
         height: selection.height
       })
+
+      if (selection.polygon) {
+        image = await mask(image, selection)
+      }
     }
 
     if (size) {
@@ -365,4 +369,26 @@ export class Image extends Asset {
   static QUALITY = {
     48: 85, 512: 90, full: 95
   }
+}
+
+// Cuts the (already extracted) selection to its polygon outline by
+// compositing an alpha mask. The mask must match the current size
+// exactly, so the pipeline is materialized here; subsequent
+// operations (e.g., resize) are applied to the masked image.
+async function mask (image, { width, height, polygon }) {
+  let svg = [
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">`,
+    `<polygon points="${polygon.flat().join(' ')}"/>`,
+    '</svg>'
+  ].join('')
+
+  let { data, info } = await image
+    .ensureAlpha()
+    .composite([{ input: Buffer.from(svg), blend: 'dest-in' }])
+    .raw()
+    .toBuffer({ resolveWithObject: true })
+
+  return sharp(data, {
+    raw: { width: info.width, height: info.height, channels: info.channels }
+  })
 }

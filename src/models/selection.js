@@ -1,6 +1,7 @@
-import { empty, list, pick } from '../common/util.js'
+import assert from 'node:assert'
+import { empty, json, list, pick, stringify } from '../common/util.js'
 import { props } from '../common/export.js'
-import { into, select } from '../common/query.js'
+import { into, select, update } from '../common/query.js'
 import image from './image.js'
 import metadata from './metadata.js'
 import note from './note.js'
@@ -36,6 +37,7 @@ async function load (db, ids) {
         'photo_id AS photo',
         'x',
         'y',
+        'polygon',
         'width',
         'height',
         'angle',
@@ -53,11 +55,12 @@ async function load (db, ids) {
         .join('images', { using: 'id' })
         .join('selections', { using: 'id' })
         .where({ id: ids }),
-      ({ id, created, modified, mirror, negative, ...data }) => {
+      ({ id, created, modified, mirror, negative, polygon, ...data }) => {
         data.created = new Date(created)
         data.modified = new Date(modified)
         data.mirror = !!mirror
         data.negative = !!negative
+        data.polygon = json(polygon)
 
         if (id in selections)
           Object.assign(selections[id], data)
@@ -109,6 +112,7 @@ export default {
     photo,
     x,
     y,
+    polygon = null,
     position,
     data,
     ...image
@@ -123,7 +127,8 @@ export default {
       photo_id: photo,
       position,
       x,
-      y
+      y,
+      polygon: stringify(polygon)
     }))
 
     if (!empty(data)) {
@@ -139,8 +144,8 @@ export default {
     await image.copy(db, { source, target: id })
 
     await db.run(`
-      INSERT INTO selections (id, photo_id, position, x, y)
-        SELECT ?, ?, position, x, y
+      INSERT INTO selections (id, photo_id, position, x, y, polygon)
+        SELECT ?, ?, position, x, y, polygon
           FROM selections
           WHERE id = ?`, id, photo, source)
 
@@ -153,6 +158,30 @@ export default {
       selection: (await load(db, [id]))[id],
       notes,
       transcriptions
+    }
+  },
+
+  // Saves the geometry of a selection: the bounding box lives in
+  // the images (width, height) and selections (x, y, polygon) tables.
+  async save (db, { id, timestamp, x, y, polygon, ...data }) {
+    assert(id != null, 'missing selection id')
+
+    let geometry = {}
+    if (x !== undefined) geometry.x = x
+    if (y !== undefined) geometry.y = y
+    if (polygon !== undefined) geometry.polygon = stringify(polygon)
+
+    if (!empty(geometry)) {
+      await db.run(
+        ...update('selections')
+          .set(geometry)
+          .where({ id }))
+    }
+
+    await image.save(db, { id, timestamp, ...data })
+
+    if (timestamp != null && empty(pick(data, props.image))) {
+      await subject.touch(db, { id, timestamp })
     }
   },
 

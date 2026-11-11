@@ -2,7 +2,7 @@ import gt from 'semver/functions/gt.js'
 import * as ex from './export.js'
 import { expand } from './json.js'
 import { rdfs, tropy, xsd, dc, dcterms } from '../ontology/ns.js'
-import { URI, any, array, morph, omit, get, decodeListPath } from './util.js'
+import { URI, any, array, json, morph, omit, get, decodeListPath } from './util.js'
 
 // Expand JSON-LD and ungroup item graph for backwards compatibility!
 export async function normalize (json) {
@@ -106,15 +106,20 @@ const getPhoto = (data) => ({
   type: get(data, ['@type', 0])
 })
 
-const getSelection = (data) => ({
-  data: getMetadata(data, 'selection'),
-  id: get(data, ['@id', 0]),
-  notes: flatten(data[tropy.note]).map(getNote),
-  type: get(data, ['@type', 0]),
-  template: get(data, [tropy.template, 0, '@id']),
-  transcriptions: flatten(data[tropy.transcription]).map(getTranscription),
-  ...getProps(data, 'selection')
-})
+const getSelection = (data) => {
+  let { polygon, ...props } = getProps(data, 'selection')
+
+  return {
+    data: getMetadata(data, 'selection'),
+    id: get(data, ['@id', 0]),
+    notes: flatten(data[tropy.note]).map(getNote),
+    type: get(data, ['@type', 0]),
+    template: get(data, [tropy.template, 0, '@id']),
+    transcriptions: flatten(data[tropy.transcription]).map(getTranscription),
+    polygon: json(polygon),
+    ...props
+  }
+}
 
 const getNote = (data) => ({
   language: get(data, [tropy.html, 0, '@language']),

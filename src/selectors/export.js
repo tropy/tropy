@@ -1,7 +1,7 @@
 import { ctx, props as properties } from '../common/export.js'
 import { xsd } from '../ontology/ns.js'
 import { version } from '../common/release.js'
-import { compact, blank, URI, get, pick } from '../common/util.js'
+import { compact, blank, URI, get, pick, stringify } from '../common/util.js'
 import { serialize } from '../editor/serialize.js'
 import { getListPath } from './lists.js'
 import { getItemSelection } from './items.js'
@@ -94,6 +94,11 @@ const exportSelection = (context, selection, state) => {
     ...pick(selection, properties.selection),
     ...pick(selection, properties.image)
   }
+
+  if (output.polygon != null)
+    output.polygon = stringify(output.polygon)
+  else
+    delete output.polygon
 
   addMetadata(context, output, state.metadata[selection.id], state.ontology)
 
