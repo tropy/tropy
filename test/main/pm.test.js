@@ -272,44 +272,47 @@ describe('ProjectManager', () => {
   })
 
   it('closes a project once, keeping its window', async () => {
+    let path = resolve('/a.tpy')
     let win = fakeWindow()
-    opened(win, '/a.tpy')
+    opened(win, path)
 
-    let closing = Promise.all([pm.close('/a.tpy'), pm.close('/a.tpy')])
+    let closing = Promise.all([pm.close(path), pm.close(path)])
 
     let [{ arguments: [action, target] }] = pm.app.dispatch.mock.calls
     expect(pm.app.dispatch.mock.callCount()).to.equal(1)
     expect(action).to.include({ name: 'project.close', payload: 'user' })
     expect(target).to.equal(win)
 
-    closed(win, '/a.tpy')
+    closed(win, path)
 
     expect(await closing).to.eql([true, true])
     expect(pm.get(win)).to.be.null
-    expect(await pm.close('/a.tpy')).to.be.false
+    expect(await pm.close(path)).to.be.false
   })
 
   it('closes a project with its window', async () => {
+    let path = resolve('/a.tpy')
     let win = { ...fakeWindow(), close: mock.fn() }
-    opened(win, '/a.tpy')
+    opened(win, path)
 
-    let closing = pm.close('/a.tpy', { closeWindow: true })
+    let closing = pm.close(path, { closeWindow: true })
 
     expect(win.close.mock.callCount()).to.equal(1)
     expect(pm.app.dispatch.mock.callCount()).to.equal(0)
 
     // The window unloads: the project closes, then the window.
-    closed(win, '/a.tpy')
+    closed(win, path)
     pm.handleWindowClosed('project', win)
 
     expect(await closing).to.be.true
   })
 
   it('cancels closes when a window crashes', async () => {
+    let path = resolve('/a.tpy')
     let win = fakeWindow()
-    opened(win, '/a.tpy')
+    opened(win, path)
 
-    let closing = pm.close('/a.tpy')
+    let closing = pm.close(path)
     pm.handleWindowCrashed('project', win)
 
     expect(await closing.catch(e => e)).to.include({ code: 'ECANCELED' })
