@@ -80,6 +80,7 @@ export const props = {
   ],
 
   selection: [
+    'polygon',
     'template',
     'x',
     'y'
