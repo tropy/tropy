@@ -49,8 +49,8 @@
     "rebuild": "node scripts/rebuild.js",
     "coverage": "c8 -o coverage --reporter=text --reporter=lcov --include='src/**' npm test",
     "test": "spark --no-sandbox",
-    "test:e2e": "node --test --test-concurrency=1 test/e2e/*.test.js",
-    "test:e2e:dist": "node --test --test-concurrency=1 test/e2e/*.test.js",
+    "test:e2e": "node --test --test-concurrency=1 --test-global-setup=test/e2e/setup.js test/e2e/*.test.js",
+    "test:e2e:dist": "node --test --test-concurrency=1 --test-global-setup=test/e2e/setup.js test/e2e/*.test.js",
     "preversion": "npm run lint && npm test",
     "version": "node scripts/version.js && git add res/linux CITATION.cff"
   },
