@@ -106,14 +106,6 @@ jobs:
         if: runner.os == 'Linux'
         run: xvfb-run npm test
 
-      - name: Run end-to-end tests
-        if: runner.os != 'Linux'
-        run: npm run test:e2e
-
-      - name: Run end-to-end tests (xvfb)
-        if: runner.os == 'Linux'
-        run: xvfb-run npm run test:e2e
-
   lint:
     runs-on: ubuntu-latest
     steps:

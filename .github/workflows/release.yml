@@ -132,11 +132,11 @@ jobs:
 
       - name: Run end-to-end tests
         if: runner.os != 'Linux'
-        run: npm run test:e2e:dist
+        run: npm run test:e2e -- --dist
 
       - name: Run end-to-end tests (xvfb)
         if: runner.os == 'Linux'
-        run: xvfb-run npm run test:e2e:dist
+        run: xvfb-run npm run test:e2e -- --dist
 
       - name: Create release assets
         run: npm run pack -- --arch ${{ matrix.arch }}

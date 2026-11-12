@@ -1,7 +1,7 @@
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
-import { arch, env, platform } from 'node:process'
+import { arch, argv, env, platform } from 'node:process'
 import electron from 'electron'
 import { qualified } from '#tropy/common/release.js'
 
@@ -33,7 +33,8 @@ export function checkProject (path) {
   return problems
 }
 
-export const DIST = env.npm_lifecycle_event === 'test:e2e:dist'
+// Passed to the runner (npm run test:e2e -- --dist), so only setup.js sees it.
+export const DIST = argv.includes('--dist')
 export const PORT = 10816
 
 export function command () {

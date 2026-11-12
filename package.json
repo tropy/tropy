@@ -47,15 +47,17 @@
     "log:debug": "node scripts/log-remap.js -fv | node scripts/log-viewer.js",
     "start": "electron --app . --dev --data tmp --cache tmp/cache --logs tmp/log",
     "rebuild": "node scripts/rebuild.js",
-    "coverage": "c8 npm test --",
-    "test": "spark --no-sandbox",
+    "patch": "cat patches/*.patch | patch -p1 -N -r -",
+    "coverage": "c8 npm test",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "spark --no-sandbox",
     "test:e2e": "node --test --test-concurrency=1 --test-global-setup=test/e2e/setup.js --test-reporter=spark-chamber/reporters/sparks test/e2e/*.test.js",
-    "test:e2e:dist": "node --test --test-concurrency=1 --test-global-setup=test/e2e/setup.js --test-reporter=spark-chamber/reporters/sparks test/e2e/*.test.js",
     "preversion": "npm run lint && npm test",
     "version": "node scripts/version.js && git add res/linux CITATION.cff"
   },
   "c8": {
     "all": true,
+    "excludeAfterRemap": true,
     "include": [
       "src/**"
     ]

@@ -45,14 +45,15 @@ and all dependencies required to use [node-gyp][] on your platform.
 Clone this [repository][] and install Tropy's dependencies:
 
     $ npm install --ignore-scripts
-    $ npm rebuild electron
+    $ npx install-electron
     $ node scripts/rebuild.js --force
 
 On Linux, use the `--global-libvips` flag when rebuilding
 to link against the system's libvips.
 
-To test that everything works, run:
+To test that everything works, compile the bundle and run the tests:
 
+    $ npm run rollup
     $ npm test
 
 [Node.js]: https://nodejs.org
@@ -79,16 +80,17 @@ Use the following commands for Tropy development:
      $ npm run log:view
      $ npm run log:tail
 
-     # Run all tests
+     # Run all tests: unit tests (spark) and end-to-end tests
+     # (the e2e tests need a current bundle)
      $ npm test
 
      # Run individual tests in main/renderer process
-     $ npx spark test/common/db.test.js
-     $ npx spark --renderer test/common/db.test.js
+     $ npx spark -m test/common/util.test.js
+     $ npx spark -r test/common/db.test.js
 
-     # Collect test code coverage (spark arguments select tests)
+     # Collect test code coverage of all tests or of individual tests
      $ npm run coverage
-     $ npm run coverage -- test/common/db.test.js
+     $ npx c8 spark -m test/common/db.test.js
 
      # Render the last coverage as HTML (coverage/index.html)
      $ npx c8 report -r html
