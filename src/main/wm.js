@@ -10,6 +10,7 @@ import { darwin, linux, win32 } from '../common/os.js'
 import { CodeError } from '../common/error.js'
 import { isRightToLeft } from './locale.js'
 import { channel } from '../common/release.js'
+import { startCoverage } from './coverage.js'
 import { Resource, Icon, View } from './res.js'
 import { MIME, SASS } from '../constants/index.js'
 
@@ -193,6 +194,11 @@ export class WindowManager extends EventEmitter {
       }
 
       this.resetReadyState(win)
+
+      this.setProps(win, {
+        coverage: startCoverage(win.webContents)
+      })
+
       win.once('closed', () => {
         this.getProps(win).ready.reject(new Error('window closed'))
       })
@@ -397,25 +403,34 @@ export class WindowManager extends EventEmitter {
     }
   }
 
-  handleUnloaded (win) {
-    let state = this.getProps(win).unloading
+  async handleUnloaded (win) {
+    let { coverage, unloading } = this.getProps(win)
     let type = this.types.get(win)
 
     this.cancel(win, 'unloaded')
 
-    if (state === 'close') {
-      debug(`${type} window unloaded, will close`)
-      this.setProps(win, { unloading: 'done' })
-      win.close()
-    } else if (state === 'reload') {
-      debug(`${type} window unloaded, will reload`)
-      this.setProps(win, { unloading: null })
+    switch (unloading) {
+      case 'close':
+        debug(`${type} window unloaded, will close`)
+        this.setProps(win, { unloading: 'done' })
 
-      if (this.isReady(win))
-        this.resetReadyState(win)
+        if (coverage) {
+          await coverage()
+          if (win.isDestroyed()) return
+        }
 
-      win.reload()
-      this.emit('reload', type, win)
+        win.close()
+        break
+      case 'reload':
+        debug(`${type} window unloaded, will reload`)
+        this.setProps(win, { unloading: null })
+
+        if (this.isReady(win))
+          this.resetReadyState(win)
+
+        win.reload()
+        this.emit('reload', type, win)
+        break
     }
   }
 
