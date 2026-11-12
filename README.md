@@ -86,8 +86,12 @@ Use the following commands for Tropy development:
      $ npx spark test/common/db.test.js
      $ npx spark --renderer test/common/db.test.js
 
-     # Collect test code coverage
+     # Collect test code coverage (spark arguments select tests)
      $ npm run coverage
+     $ npm run coverage -- test/common/db.test.js
+
+     # Render the last coverage as HTML (coverage/index.html)
+     $ npx c8 report -r html
 
 Plugin Development
 ------------------

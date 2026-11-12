@@ -102,9 +102,9 @@ jobs:
         if: runner.os != 'Linux'
         run: npm test
 
-      - name: Run tests and collect code coverage
+      - name: Run tests (xvfb)
         if: runner.os == 'Linux'
-        run: xvfb-run npm run coverage
+        run: xvfb-run npm test
 
       - name: Run end-to-end tests
         if: runner.os != 'Linux'
@@ -113,13 +113,6 @@ jobs:
       - name: Run end-to-end tests (xvfb)
         if: runner.os == 'Linux'
         run: xvfb-run npm run test:e2e
-
-      - name: Send coverage report to Coveralls
-        if: runner.os == 'Linux' && matrix.arch == 'x64' && !matrix.tag
-        continue-on-error: true
-        uses: coverallsapp/github-action@v2
-        with:
-          github-token: ${{ github.token }}
 
   lint:
     runs-on: ubuntu-latest
