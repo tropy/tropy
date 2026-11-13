@@ -121,8 +121,6 @@
     "prosemirror-test-builder": "^1.0.3",
     "react-dnd-test-backend": "^16.0.1",
     "rollup": "^4.34.8",
-    "rollup-plugin-copy": "^3.3.0",
-    "rollup-plugin-ignore": "^1.0.9",
     "rollup-plugin-license": "^3.0.1",
     "rollup-plugin-natives": "^0.7.2",
     "sass": "^1.64.2",

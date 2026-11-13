@@ -4,8 +4,6 @@ import process from 'node:process'
 import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
-import copy from 'rollup-plugin-copy'
-import ignore from 'rollup-plugin-ignore'
 import json from '@rollup/plugin-json'
 import license from 'rollup-plugin-license'
 import natives from 'rollup-plugin-natives'
@@ -20,6 +18,7 @@ import reactDnd from './scripts/rollup-plugin-react-dnd.js'
 import sharpRequire from './scripts/rollup-plugin-sharp.js'
 import betterSqlite3 from './scripts/rollup-plugin-better-sqlite3.js'
 import { clean } from './scripts/clean.js'
+import copy from './scripts/rollup-plugin-copy.js'
 
 const NODE_ENV = process.env.NODE_ENV || 'production'
 const PROFILE = !!process.env.PROFILE
@@ -206,16 +205,11 @@ export default [
           delete process.__signal_exit_emitter__
         }
       },
-      copy({
-        targets: [sharpNative, ...libvips],
-        copyOnce: true
-      }),
-      ignore([
-        '@mapbox/node-pre-gyp',
-        '@digitalbazaar/http-client'
-      ], { commonjsBugFix: true }),
+      copy([sharpNative, ...libvips]),
       alias({
         entries: {
+          // jsonld's default document loader; we use our own.
+          '@digitalbazaar/http-client': resolve('scripts/empty.js'),
           'readable-stream': 'node:stream',
           ...(PROFILE && { 'react-dom/client': 'react-dom/profiling' })
         }
