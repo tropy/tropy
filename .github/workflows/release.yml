@@ -55,7 +55,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 26
           architecture: ${{ matrix.nodejs_arch || matrix.arch }}
           cache: npm
       - name: Setup Python
@@ -66,7 +66,13 @@ jobs:
         run: pip install setuptools
 
       - name: Install NPM modules
-        run: npm clean-install --no-progress
+        run: npm clean-install --no-progress --ignore-scripts
+      - name: Build native NPM modules
+        if: runner.os == 'macOS'
+        run: npm rebuild fs-xattr macos-alias
+      - name: Select 7-Zip for host arch
+        if: runner.os == 'Windows'
+        run: npm rebuild electron-winstaller
       - name: Install Electron
         run: npx electron --no-sandbox -v
 

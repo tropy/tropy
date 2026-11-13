@@ -15,8 +15,8 @@
     "url": "https://github.com/tropy/tropy/issues"
   },
   "engines": {
-    "node": ">=24",
-    "npm": ">=10"
+    "node": ">=24.15",
+    "npm": ">=12"
   },
   "main": "lib/main/index.js",
   "type": "module",
@@ -204,6 +204,8 @@
     "fsevents@2.3.3": true,
     "fs-xattr@0.3.1": true,
     "macos-alias@0.2.12": true,
-    "electron-winstaller@5.4.4": true
+    "electron-winstaller@5.4.4": true,
+    "better-sqlite3": false,
+    "@parcel/watcher": false
   }
 }
