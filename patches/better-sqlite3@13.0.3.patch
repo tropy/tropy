@@ -1,0 +1,52 @@
+--- a/deps/common.gypi	
++++ b/deps/common.gypi	
+@@ -33,9 +33,9 @@
+         'cflags': [
+           '-O0',
+         ],
+         'xcode_settings': {
+-          'MACOSX_DEPLOYMENT_TARGET': '10.7',
++          'MACOSX_DEPLOYMENT_TARGET': '12.0',
+           'GCC_OPTIMIZATION_LEVEL': '0',
+           'GCC_GENERATE_DEBUGGING_SYMBOLS': 'YES',
+         },
+         'msvs_settings': {
+@@ -55,9 +55,9 @@
+         'cflags': [
+           '-O3',
+         ],
+         'xcode_settings': {
+-          'MACOSX_DEPLOYMENT_TARGET': '10.7',
++          'MACOSX_DEPLOYMENT_TARGET': '12.0',
+           'GCC_OPTIMIZATION_LEVEL': '3',
+           'GCC_GENERATE_DEBUGGING_SYMBOLS': 'NO',
+           'DEAD_CODE_STRIPPING': 'YES',
+           'GCC_INLINES_ARE_PRIVATE_EXTERN': 'YES',
+--- a/deps/defines.gypi	
++++ b/deps/defines.gypi	
+@@ -17,25 +17,20 @@
+     'SQLITE_DQS=0',
+     'SQLITE_ENABLE_COLUMN_METADATA',
+     'SQLITE_ENABLE_DBSTAT_VTAB',
+     'SQLITE_ENABLE_DESERIALIZE',
+-    'SQLITE_ENABLE_FTS3',
+-    'SQLITE_ENABLE_FTS3_PARENTHESIS',
+-    'SQLITE_ENABLE_FTS4',
+     'SQLITE_ENABLE_FTS5',
+     'SQLITE_ENABLE_GEOPOLY',
+     'SQLITE_ENABLE_JSON1',
+     'SQLITE_ENABLE_MATH_FUNCTIONS',
+     'SQLITE_ENABLE_PERCENTILE',
+     'SQLITE_ENABLE_RTREE',
+     'SQLITE_ENABLE_STAT4',
+-    'SQLITE_ENABLE_UPDATE_DELETE_LIMIT',
+     'SQLITE_LIKE_DOESNT_MATCH_BLOBS',
+     'SQLITE_OMIT_DEPRECATED',
+     'SQLITE_OMIT_PROGRESS_CALLBACK',
+     'SQLITE_OMIT_SHARED_CACHE',
+     'SQLITE_OMIT_TCL_VARIABLE',
+-    'SQLITE_SOUNDEX',
+     'SQLITE_THREADSAFE=2',
+     'SQLITE_TRACE_SIZE_LIMIT=32',
+     'SQLITE_USE_URI=0',
+   ],

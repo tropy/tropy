@@ -1,0 +1,46 @@
+--- a/src/binding.gyp	
++++ b/src/binding.gyp	
+@@ -42,9 +42,9 @@
+           'library_dirs': [
+             '<(sharp_libvips_lib_dir)'
+           ],
+           'libraries': [
+-            'libvips.lib'
++            'libvips.lib', 'libglib-2.0.lib', 'libgobject-2.0.lib'
+           ],
+         },
+         'configurations': {
+           'Release': {
+@@ -153,9 +153,9 @@
+               '_HAS_EXCEPTIONS=1'
+             ],
+             'link_settings': {
+               'libraries': [
+-                'libvips.lib'
++                'libvips.lib', 'libglib-2.0.lib', 'libgobject-2.0.lib'
+               ]
+             }
+           }],
+           ['OS == "mac"', {
+@@ -233,9 +233,9 @@
+       '-Os'
+     ],
+     'xcode_settings': {
+       'CLANG_CXX_LANGUAGE_STANDARD': 'c++17',
+-      'MACOSX_DEPLOYMENT_TARGET': '10.15',
++      'MACOSX_DEPLOYMENT_TARGET': '12.0',
+       'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
+       'GCC_ENABLE_CPP_RTTI': 'YES',
+       'OTHER_CPLUSPLUSFLAGS': [
+         '-fexceptions',
+@@ -293,9 +293,9 @@
+       ['OS == "win"', {
+         'copies': [{
+           'destination': 'build/Release',
+           'files': [
+-            '<(sharp_libvips_lib_dir)/libvips-42.dll'
++            '<(sharp_libvips_lib_dir)/*.dll'
+           ]
+         }]
+       }]
+     ]

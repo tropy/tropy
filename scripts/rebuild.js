@@ -12,7 +12,7 @@ import shelljs from 'shelljs'
 
 setLogSymbol('Δ')
 
-const { cat, cp, env, exec, sed, test } = shelljs
+const { cat, cp, env, exec, test } = shelljs
 
 const ELECTRON_VERSION = JSON.parse(
   fs.readFileSync(join(ROOT, 'node_modules/electron/package.json'), {
@@ -165,32 +165,6 @@ class Rebuilder {
         }
       },
 
-      (task) => {
-        sed('-i', /sed s\\\/-/, 'sed s/-', task.modulePath('src', 'binding.gyp'))
-      },
-
-      (task) => {
-        if (task.platform === 'darwin') {
-          sed('-i',
-            /'MACOSX_DEPLOYMENT_TARGET':\s*'[\d.]+',/,
-            "'MACOSX_DEPLOYMENT_TARGET': '12.0',",
-            task.modulePath('src', 'binding.gyp'))
-        }
-      },
-
-      (task) => {
-        if (task.platform === 'win32') {
-          sed('-i',
-            'libvips-42.dll',
-            '*.dll',
-            task.modulePath('src', 'binding.gyp'))
-          sed('-i',
-            /'libvips.lib'$/,
-            "'libvips.lib', 'libglib-2.0.lib', 'libgobject-2.0.lib'",
-            task.modulePath('src', 'binding.gyp'))
-        }
-      },
-
       async (task) => {
         await task.exec('npm run build')
       }
@@ -210,23 +184,6 @@ class Rebuilder {
         let prefix = `sqlite-autoconf-${version}`
         let dest = task.modulePath('deps', 'sqlite3')
         exec(`tar -xzf ${tar} -C ${dest} --strip-components=1 ${prefix}/sqlite3.c ${prefix}/sqlite3.h`)
-      },
-
-      async (task) => {
-        if (task.platform === 'darwin') {
-          sed('-i',
-            /'MACOSX_DEPLOYMENT_TARGET':\s*'[\d.]+',/,
-            "'MACOSX_DEPLOYMENT_TARGET': '12.0',",
-            task.modulePath('deps', 'common.gypi'))
-        }
-      },
-
-      (task) => {
-        // Drop the legacy FTS modules and extras Tropy does not use
-        sed('-i',
-          /'SQLITE_(ENABLE_(FTS[34]\w*|UPDATE_DELETE_LIMIT)|SOUNDEX)',/,
-          '',
-          task.modulePath('deps', 'defines.gypi'))
       },
 
       async (task) => {
