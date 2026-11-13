@@ -1,18 +1,20 @@
 #!/usr/bin/env node
 
+import { execFileSync } from 'node:child_process'
 import { dirname, join } from 'node:path'
 import fs from 'node:fs'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { coerce } from 'semver'
-import { download, say, setLogSymbol, untar, ROOT } from './util.js'
+import { download, run, say, setLogSymbol, untar, ROOT } from './util.js'
 import { program } from 'commander'
 import { family } from 'detect-libc'
-import shelljs from 'shelljs'
 
 setLogSymbol('Δ')
 
-const { env, exec, test } = shelljs
+const { env } = process
+
+const NODE_GYP = join(ROOT, 'node_modules', 'node-gyp', 'bin', 'node-gyp.js')
 
 const ELECTRON_VERSION = JSON.parse(
   fs.readFileSync(join(ROOT, 'node_modules/electron/package.json'), {
@@ -32,18 +34,20 @@ const SQLITE_URL = fs.readFileSync(
   join(ROOT, 'vendor/sqlite3/version.txt'), { encoding: 'utf-8' }
 ).trim()
 
-function downloadHeaders ({
+async function downloadHeaders ({
   arch = process.arch,
   target = ELECTRON_VERSION,
   url = 'https://electronjs.org/headers',
   silent
 }) {
-  exec(`npx node-gyp install ${[
+  await run(process.execPath, [
+    NODE_GYP,
+    'install',
     '--ensure',
     `--dist-url=${url}`,
     `--arch=${arch}`,
     `--target=${target}`
-  ].join(' ')}`, { silent })
+  ], { silent })
 }
 
 // Paths of our libvips build for the task's platform.
@@ -97,10 +101,6 @@ class Rebuilder {
     return join(ROOT, 'vendor', this.name, ...args)
   }
 
-  nodeGypPath (...args) {
-    return join(ROOT, 'node_modules', 'node-gyp', ...args)
-  }
-
   get package () {
     if (!this.#package)
       this.#package = JSON.parse(
@@ -136,27 +136,11 @@ class Rebuilder {
     }
   }
 
-  async exec (cmd, options = {}) {
-    await new Promise((resolve, reject) => {
-      exec(`npm explore ${this.name} -- ${cmd}`, {
-        silent: this.silent,
-        ...options
-      }, (code, stdout, stderr) => {
-        if (code !== 0) {
-          if (!this.silent)
-            console.error(stderr)
-          reject(new Error(`${this.name} failed to run "${cmd}"`))
-        } else {
-          resolve({ code, stdout, stderr })
-        }
-      })
+  async nodeGypRebuild (args) {
+    await run(process.execPath, [NODE_GYP, 'rebuild', ...args], {
+      cwd: this.modulePath(),
+      silent: this.silent
     })
-  }
-
-  async nodeGypRebuild (args, options) {
-    await this.exec(`node ${
-      this.nodeGypPath('bin', 'node-gyp.js')
-    } rebuild ${args.join(' ')}`, options)
   }
 
   static Steps = {
@@ -189,7 +173,12 @@ class Rebuilder {
       },
 
       async (task) => {
-        await task.exec('npm run build')
+        // The shell resolves the npm command shim on Windows.
+        await run('npm run build', [], {
+          cwd: task.modulePath(),
+          shell: true,
+          silent: task.silent
+        })
       },
 
       async (task) => {
@@ -221,7 +210,7 @@ class Rebuilder {
         let version = (/-(\d+)\.tar\.gz/).exec(SQLITE_URL)[1]
         let tar = task.vendorPath('../sqlite3', SQLITE_URL.split('/').pop())
 
-        if (!test('-f', tar)) {
+        if (!fs.existsSync(tar)) {
           say(`fetching SQLite version ${version} ...`)
           await download(SQLITE_URL, tar)
         }
@@ -238,7 +227,7 @@ class Rebuilder {
           `--target=${task.target}`,
           `--arch=${task.arch}`,
           '--force_build=1',
-          task.verbose ? '--verbose' : ''
+          ...(task.verbose ? ['--verbose'] : [])
         ])
       },
 
@@ -289,7 +278,7 @@ program
 
     if (!opts.skipHeaders) {
       say('fetching Electron headers ...')
-      downloadHeaders(opts)
+      await downloadHeaders(opts)
     }
 
     if (opts.parallel) {
@@ -329,8 +318,9 @@ async function rebuild (task, force) {
 }
 
 function setMacSDKRoot () {
-  env.SDKROOT =
-    exec('xcrun -sdk macosx --show-sdk-path', { silent: true }).trim()
+  env.SDKROOT = execFileSync('xcrun', ['-sdk', 'macosx', '--show-sdk-path'], {
+    encoding: 'utf-8'
+  }).trim()
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

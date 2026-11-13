@@ -1,4 +1,5 @@
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawn } from 'node:child_process'
+import { readFileSync, writeFileSync } from 'node:fs'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { Transform } from 'node:stream'
@@ -45,6 +46,35 @@ export const download = async (url, file) => {
     throw new Error(`download failed: ${url} ${res.status} ${res.statusText}`)
 
   await writeFile(file, new Uint8Array(await res.arrayBuffer()))
+}
+
+// Runs cmd and resolves when it exits with 0. Output goes to the
+// console unless silent; options are passed to spawn (cwd, shell…).
+export const run = (cmd, args = [], { silent, ...options } = {}) =>
+  new Promise((resolve, reject) => {
+    let stderr = ''
+    let child = spawn(cmd, args, {
+      stdio: silent ? ['ignore', 'ignore', 'pipe'] : 'inherit',
+      ...options
+    })
+
+    child.stderr?.on('data', data => { stderr += data })
+    child.on('error', reject)
+    child.on('close', code => {
+      if (code === 0)
+        resolve()
+      else
+        reject(new Error(`${[cmd, ...args].join(' ')} failed (${code}) ${stderr}`.trim()))
+    })
+  })
+
+// Applies [pattern, replacement] pairs to the contents of file
+// (like sed -i; use the m flag for ^ and $ to match per line).
+export const sed = (file, ...pairs) => {
+  let text = readFileSync(file, 'utf-8')
+  for (let [pattern, replacement] of pairs)
+    text = text.replace(pattern, replacement)
+  writeFileSync(file, text)
 }
 
 // Extracts the gzipped tarball file into dest.

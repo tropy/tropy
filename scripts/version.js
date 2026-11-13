@@ -1,6 +1,6 @@
 import process from 'node:process'
 import semver from 'semver'
-import shx from 'shelljs'
+import { sed } from './util.js'
 
 const VERSION = process.env.npm_package_version
 
@@ -25,8 +25,9 @@ if (!semver.prerelease(VERSION)) {
     `      <url>https://github.com/tropy/tropy/releases/tag/v${VERSION}</url>`,
     '    </release>'
   ]
-  shx.sed('-i', RELEASES, [RELEASES, ...release].join('\n'), METAINFO)
+  sed(METAINFO, [RELEASES, [RELEASES, ...release].join('\n')])
 
-  shx.sed('-i', /^version: [\d+.]+$/, `version: ${VERSION}`, CITATION)
-  shx.sed('-i', /^date-released: '[\d+-]+'$/, `date-released: '${DATE}'`, CITATION)
+  sed(CITATION,
+    [/^version: [\d+.]+$/m, `version: ${VERSION}`],
+    [/^date-released: '[\d+-]+'$/m, `date-released: '${DATE}'`])
 }
