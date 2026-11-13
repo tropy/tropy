@@ -1,8 +1,40 @@
 import { join } from 'node:path'
+import { Transform } from 'node:stream'
+import { StringDecoder } from 'node:string_decoder'
 import { styleText } from 'node:util'
-import ms from 'ms'
 
 export const ROOT = join(import.meta.dirname, '..')
+
+const UNITS = [['d', 864e5], ['h', 36e5], ['m', 6e4], ['s', 1e3]]
+
+// Formats ms as a short duration, e.g. 250ms, 3s, 2m, 1h.
+export const duration = (ms) => {
+  for (let [unit, size] of UNITS)
+    if (Math.abs(ms) >= size) return `${Math.round(ms / size)}${unit}`
+
+  return `${Math.round(ms)}ms`
+}
+
+// Splits a byte stream into lines (strings).
+export const lines = () => {
+  let decoder = new StringDecoder('utf8')
+  let rest = ''
+
+  return new Transform({
+    readableObjectMode: true,
+    transform (chunk, _, cb) {
+      let parts = (rest + decoder.write(chunk)).split(/\r?\n/)
+      rest = parts.pop()
+      for (let line of parts) this.push(line)
+      cb()
+    },
+    flush (cb) {
+      rest += decoder.end()
+      if (rest) this.push(rest)
+      cb()
+    }
+  })
+}
 export const ICONS = join(ROOT, 'res', 'icons')
 
 export let logSymbol = null
@@ -24,7 +56,7 @@ const colorize = (level, text) =>
 const seq = (function * (prev = Date.now(), padding = 8) {
   while (true) {
     let now = Date.now()
-    yield styleText('dim', (`+${ms(now - prev)}`).padStart(padding, ' '))
+    yield styleText('dim', (`+${duration(now - prev)}`).padStart(padding, ' '))
     prev = now
   }
 })()

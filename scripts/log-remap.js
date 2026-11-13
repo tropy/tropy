@@ -8,9 +8,8 @@ import process from 'node:process'
 import { Transform } from 'node:stream'
 import { execSync } from 'node:child_process'
 import { parseArgs } from 'node:util'
-import pump from 'pump'
-import split from 'split2'
 import { SourceMapConsumer } from 'source-map-js'
+import { lines } from './util.js'
 
 
 const FRAME = /^(\s+at\s+(?:.*?\s+\()?)(?:file:\/\/)?(.+?):(\d+):(\d+)(\)?)\s*$/
@@ -51,7 +50,8 @@ if (ARGS.fetch) {
   await processFirstLine()
 }
 
-pump(process.stdin, split(), transform, process.stdout)
+// Errors (e.g. EPIPE when the reader goes away) end the pipeline quietly.
+pipeline(process.stdin, lines(), transform, process.stdout).catch(() => {})
 
 if (!process.stdin.isTTY && !fs.fstatSync(process.stdin.fd).isFile()) {
   process.once('SIGINT', () => {})

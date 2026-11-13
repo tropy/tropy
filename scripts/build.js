@@ -11,13 +11,12 @@ import {
 
 import { homedir, release } from 'node:os'
 import semver from 'semver'
-import { basename, extname, join, relative } from 'node:path'
+import { basename, extname, join, matchesGlob, relative } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { program } from 'commander'
 import { packager } from '@electron/packager'
 import { flipFuses, FuseVersion, FuseV1Options } from '@electron/fuses'
-import { minimatch } from 'minimatch'
 import { ROOT, ICONS, error, say, setLogSymbol } from './util.js'
 import IMAGE from '../src/constants/image.js'
 import * as legal from './legal.js'
@@ -149,8 +148,8 @@ export function configure ({
 
   const ignore = (path) => !(
     path === '' || (
-      INCLUDE.some(pattern => minimatch(path, pattern)) &&
-      !EXCLUDE.some(pattern => minimatch(path, pattern))
+      INCLUDE.some(pattern => matchesGlob(path, pattern)) &&
+      !EXCLUDE.some(pattern => matchesGlob(path, pattern))
     )
   )
 

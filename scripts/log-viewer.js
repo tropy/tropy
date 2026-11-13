@@ -5,10 +5,9 @@ import { homedir } from 'node:os'
 import { sep } from 'node:path'
 import process from 'node:process'
 import { Transform } from 'node:stream'
+import { pipeline } from 'node:stream/promises'
 import { inspect, parseArgs, styleText } from 'node:util'
-import pump from 'pump'
-import split from 'split2'
-import ms from 'ms'
+import { duration, lines } from './util.js'
 
 const { values: ARGS } = parseArgs({
   allowNegative: true,
@@ -102,7 +101,7 @@ const error = ({ err, stack = err?.stack }) => {
 
 const meta = log =>
   log.meta.was ?
-    `#${log.meta.seq}(${log.meta.rel}) Δ${ms(log.meta.now - log.meta.was)}` :
+    `#${log.meta.seq}(${log.meta.rel}) Δ${duration(log.meta.now - log.meta.was)}` :
     `#${log.meta.seq}`
 
 const header = log =>
@@ -154,7 +153,7 @@ const seq = (function (prev, pad = 8) {
   return (now) => {
     try {
       return styleText('dim',
-        (prev > 0 ? `+${ms(now - prev)}` : '').padStart(pad, ' ')
+        (prev > 0 ? `+${duration(now - prev)}` : '').padStart(pad, ' ')
       )
     } finally {
       prev = now
@@ -177,7 +176,8 @@ const transport = new Transform({
   }
 })
 
-pump(process.stdin, split(), transport, process.stdout)
+// Errors (e.g. EPIPE when the reader goes away) end the pipeline quietly.
+pipeline(process.stdin, lines(), transport, process.stdout).catch(() => {})
 
 if (!process.stdin.isTTY && !fs.fstatSync(process.stdin.fd).isFile()) {
   process.once('SIGINT', () => {})
