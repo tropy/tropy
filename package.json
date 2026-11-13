@@ -36,7 +36,6 @@
     "prebuild": "npm run clean && npm run rollup",
     "build": "node scripts/build.js",
     "pack": "node scripts/pack.js",
-    "devtools": "electron scripts/devtools.js --data tmp",
     "legal": "node scripts/legal.js",
     "lint": "npm run -s lint:js && npm run -s lint:css",
     "lint:js": "eslint",
@@ -139,8 +138,7 @@
     "stylelint": "^17.0.0",
     "stylelint-config-recommended-scss": "^17.0.0",
     "stylelint-config-standard": "^40.0.0",
-    "stylelint-scss": "^7.0.0",
-    "unzip-crx-3": "^0.2.0"
+    "stylelint-scss": "^7.0.0"
   },
   "overrides": {
     "eslint-plugin-react": {

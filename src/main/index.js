@@ -1,7 +1,6 @@
-import { app, dialog, powerMonitor, session } from 'electron'
+import { app, dialog, powerMonitor } from 'electron'
 import { join, resolve } from 'node:path'
 import { mkdirSync as mkdir } from 'node:fs'
-import { readdir } from 'node:fs/promises'
 import { enableCompileCache } from 'node:module'
 import { pathToFileURL } from 'node:url'
 import { darwin, linux, win32, system } from '../common/os.js'
@@ -148,20 +147,6 @@ if (!handlingSquirrelEvent && !isDuplicateInstance && !opts.quit) {
     })
 
     process.on('SIGINT', () => app.quit())
-
-    if (opts.extensions) {
-      info({ path: opts.extensions }, 'loading chromium extensions')
-
-      let entries = await readdir(opts.extensions, { withFileTypes: true })
-
-      for (let entry of entries) {
-        if (entry.isDirectory()) {
-          await session.defaultSession.extensions.loadExtension(
-            join(opts.extensions, entry.name),
-            { allowFileAccess: true })
-        }
-      }
-    }
 
     info({ ms: Math.round(tropy.ready - START) }, 'ready')
   })

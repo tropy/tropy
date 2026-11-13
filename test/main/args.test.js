@@ -138,11 +138,11 @@ describe('args', () => {
           'tropy://project/x',
           '--port', '2019',
           '--data', 'C:/evil',
-          '--no-context-isolation',
+          '--dev',
           '/tmp/a.tpy'
         ])
 
-        expect(opts).to.include({ contextIsolation: true })
+        expect(opts).to.include({ dev: false })
         expect(opts).not.to.have.any.keys('port', 'data')
         expect(args.map(String)).to.eql(['tropy://project/x'])
       })

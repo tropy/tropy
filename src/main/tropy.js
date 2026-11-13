@@ -90,9 +90,7 @@ export class Tropy extends EventEmitter {
       enable: app.isPackaged && opts.autoUpdates
     })
 
-    this.wm = new WindowManager(this, {
-      contextIsolation: opts.contextIsolation
-    })
+    this.wm = new WindowManager(this)
   }
 
   get hidden () {

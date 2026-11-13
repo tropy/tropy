@@ -9,7 +9,6 @@ const options = {
   data: { type: 'string' },
   cache: { type: 'string' },
   logs: { type: 'string' },
-  extensions: { type: 'string' },
   auth: { type: 'string', default: authUrl },
   app: { type: 'string' },
 
@@ -20,7 +19,6 @@ const options = {
   quit: { type: 'boolean', default: false },
 
   'auto-updates': { type: 'boolean', default: true },
-  'context-isolation': { type: 'boolean', default: true },
 
   'renderer-preference': { type: 'string', short: 'R' },
 
@@ -50,13 +48,11 @@ export function parse (argv = process.argv.slice(1)) {
   if (values.data != null) values.data = resolve(values.data)
   if (values.cache != null) values.cache = resolve(values.cache)
   if (values.logs != null) values.logs = resolve(values.logs)
-  if (values.extensions != null) values.extensions = resolve(values.extensions)
   if (values.scale != null) values.scale = parseFloat(values.scale)
   if (values.port != null) values.port = parseInt(values.port, 10)
 
   const opts = {
     autoUpdates: values['auto-updates'],
-    contextIsolation: values['context-isolation'],
     rendererPreference: values['renderer-preference'],
     disableHardwareAcceleration: values['disable-hardware-acceleration'],
     debug: values.verbose,

@@ -46,7 +46,7 @@ const persistenceId = (type, id) =>
 export class WindowManager extends EventEmitter {
   #focusedWindow = null
 
-  constructor (app, defaults = {}) {
+  constructor (app) {
     super()
 
     this.app = app
@@ -67,8 +67,7 @@ export class WindowManager extends EventEmitter {
         experimentalFeatures: false,
         scrollBounce: true,
         spellcheck: false,
-        v8CacheOptions: 'bypassHeatCheck',
-        ...defaults
+        v8CacheOptions: 'bypassHeatCheck'
       }
     }
 
