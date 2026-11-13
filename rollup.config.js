@@ -128,6 +128,7 @@ export default [
     },
     treeshake: 'recommended',
     preserveEntrySignatures: 'allow-extension',
+    preserveSymlinks: true,
     plugins: [
       cleanLib,
       alias({
@@ -177,6 +178,7 @@ export default [
     },
     treeshake: 'recommended',
     preserveEntrySignatures: 'allow-extension',
+    preserveSymlinks: true,
     plugins: [
       emit({
         entries: {
@@ -258,6 +260,7 @@ export default [
       generatedCode: 'es2015',
       sourcemap: true
     },
+    preserveSymlinks: true,
     plugins: [
       betterSqlite3(),
       nodeResolve({

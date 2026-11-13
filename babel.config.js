@@ -7,9 +7,6 @@ export default function (api) {
     ],
     presets: [
       ['@babel/preset-react', { runtime: 'automatic' }]
-    ],
-    targets: {
-      electron: '45'
-    }
+    ]
   }
 }
