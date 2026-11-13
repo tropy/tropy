@@ -230,7 +230,8 @@ export default [
       reactDnd(),
       babel({
         include: 'src/{components,views,hooks}/**/*.js',
-        babelHelpers: 'bundled'
+        babelHelpers: 'bundled',
+        parallel: true
       }),
       commonjs({
         exclude: 'src/**',
