@@ -617,6 +617,14 @@ export const mergeMap = (a, b) =>
   a.entries().reduce((m, [k, v]) =>
     v ? m.set(k, true) : m, new Map(b))
 
+// Runs fn as a User Timing measure (visible in the DevTools
+// performance panel) and returns its duration.
+export async function measure (name, fn) {
+  let start = performance.now()
+  await fn()
+  return performance.measure(name, { start }).duration
+}
+
 export function debounce (fn, ms) {
   let id, args, ctx
 

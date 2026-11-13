@@ -7,12 +7,13 @@ import { darwin, linux, win32, system } from '../common/os.js'
 import { exe, qualified, version } from '../common/release.js'
 import { parse } from './args.js'
 import { createLogger, info, warn } from '../common/log.js'
+import { measure } from '../common/util.js'
 import { Tropy } from './tropy.js'
 import { handleSquirrelEvent } from './squirrel.js'
 
 enableCompileCache()
 
-const START = process.getCreationTime() || Date.now()
+const MAIN = performance.now()
 const { args, opts } = parse()
 
 process.on('uncaughtException', err => { handleError(err) })
@@ -100,6 +101,8 @@ if (!handlingSquirrelEvent && !isDuplicateInstance && !opts.quit) {
   }
 
   app.on('ready', async () => {
+    const APP = performance.now()
+
     createLogger({
       dest: join(opts.logs, 'tropy.log'),
       name: 'main',
@@ -114,11 +117,11 @@ if (!handlingSquirrelEvent && !isDuplicateInstance && !opts.quit) {
       platform: process.platform,
       arch: process.arch,
       version
-    }, `main.init ${version} ${system}`)
+    }, 'main.init')
 
     let tropy = new Tropy(opts)
 
-    await tropy.start()
+    let start = await measure('start', () => tropy.start())
     tropy.ready = Date.now()
 
     app.on('second-instance', async (_, argv, cwd, { args, quit }) => {
@@ -139,7 +142,7 @@ if (!handlingSquirrelEvent && !isDuplicateInstance && !opts.quit) {
       info({ quit: true, code }, `quit with exit code ${code}`)
     })
 
-    await tropy.open(...args)
+    let open = await measure('open', () => tropy.open(...args))
 
     powerMonitor.on('shutdown', (event) => {
       event.preventDefault()
@@ -148,7 +151,14 @@ if (!handlingSquirrelEvent && !isDuplicateInstance && !opts.quit) {
 
     process.on('SIGINT', () => app.quit())
 
-    info({ ms: Math.round(tropy.ready - START) }, 'ready')
+    info({
+      node: Math.round(performance.nodeTiming.bootstrapComplete),
+      main: Math.round(MAIN),
+      app: Math.round(APP),
+      start: Math.round(start),
+      open: Math.round(open),
+      ms: Math.round(performance.now())
+    }, 'ready')
   })
 
   app.on('web-contents-created', (_, contents) => {

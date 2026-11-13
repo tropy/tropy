@@ -5,10 +5,27 @@ import { homedir } from 'node:os'
 import { sep } from 'node:path'
 import process from 'node:process'
 import { Transform } from 'node:stream'
-import { inspect, styleText } from 'node:util'
+import { inspect, parseArgs, styleText } from 'node:util'
 import pump from 'pump'
 import split from 'split2'
 import ms from 'ms'
+
+const { values: ARGS } = parseArgs({
+  allowNegative: true,
+  options: {
+    // Print extra log fields, one per line (--no-extra to hide them).
+    extra: {
+      type: 'boolean',
+      default: true
+    },
+    // Print all extra fields, including the verbose ones.
+    all: {
+      type: 'boolean',
+      default: false,
+      short: 'a'
+    }
+  }
+})
 
 const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
@@ -23,16 +40,35 @@ const CWD = (function (cwd, home) {
 })(process.cwd(), homedir())
 
 const format = log =>
-  `${header(log)} ${body(log)}${timing(log)}${context(log)}${error(log)}${end(log)}`
+  `${header(log)} ${body(log)}${timing(log)}${context(log)}${extra(log)}${error(log)}${end(log)}`
     .replace(CWD, '')
 
-// Durations, with the window ready breakdown.
-const timing = ({ ms, dom, init, load }) => {
-  if (typeof ms !== 'number') return ''
+const timing = ({ ms }) =>
+  (typeof ms !== 'number') ? '' : ` ${styleText('dim', `${ms}ms`)}`
 
-  let steps = (dom == null) ? '' : ` [dom:${dom}ms init:${init}ms load:${load}ms]`
-  return ` ${styleText('dim', `${ms}ms${steps}`)}`
+// Fields shown elsewhere in the line (or not at all).
+const SHOWN = new Set([
+  'level', 'time', 'type', 'name', 'pid', 'hostname',
+  'msg', 'message', 'module', 'action', 'meta', 'quit',
+  'ms', 'path', 'url', 'err', 'stack'
+])
+
+// Extra fields hidden unless --all is given.
+const VERBOSE = new Set(['sql'])
+
+const extra = log => {
+  if (!ARGS.extra) return ''
+
+  return Object.keys(log)
+    .filter(key => !SHOWN.has(key) && (ARGS.all || !VERBOSE.has(key)))
+    .filter(key => log[key] !== undefined)
+    .map(key => '\n' + styleText('dim',
+      `${INDENT}${key}: ${value(log[key])}`.replaceAll('\n', `\n${INDENT}  `)))
+    .join('')
 }
+
+const value = v =>
+  (typeof v === 'string') ? v : inspect(v, { breakLength: Infinity })
 
 const end = log =>
   log.quit ? '\n\n' : '\n'

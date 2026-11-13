@@ -1,14 +1,12 @@
 import { basename } from 'node:path'
-import { clone, parse } from './args.js'
+import { parse } from './args.js'
 import { createLogger, fatal, info } from './common/log.js'
-import { pick } from './common/util.js'
+import { measure, pick } from './common/util.js'
 import { contextBridge, ipcRenderer as ipc } from 'electron'
 import { idle, ready } from './dom.js'
 import win, { createWindowInstance } from './window.js'
 
-const START =
-  performance?.timing?.navigationStart || Date.now()
-
+const PRELOAD = performance.now()
 const ARGS = parse()
 
 window.ELECTRON_DISABLE_SECURITY_WARNINGS = !ARGS.debug
@@ -30,25 +28,28 @@ window.ELECTRON_DISABLE_SECURITY_WARNINGS = !ARGS.debug
 
     try {
       await ready
-      const READY = Date.now()
-
-      await win.init()
-      const INIT = Date.now()
-
-      await win.load()
-      const LOAD = Date.now()
-
+      let init = await measure('init', () => win.init())
+      let load = await measure('load', () => win.load())
       await idle()
 
+      let [nav] = performance.getEntriesByType('navigation')
+      let [fcp] = performance.getEntriesByName('first-contentful-paint')
+
       info({
-        ms: Date.now() - START,
-        dom: READY - START,
-        init: INIT - READY,
-        load: LOAD - INIT
+        nav: nav?.type,
+        spawn: (nav?.type === 'navigate' && ARGS.created)
+          ? round(performance.timeOrigin - ARGS.created)
+          : undefined,
+        preload: round(PRELOAD),
+        dom: round(nav?.domContentLoadedEventEnd),
+        init: round(init),
+        load: round(load),
+        fcp: round(fcp?.startTime),
+        ms: round(performance.now())
       }, `${win.type} ready`)
 
 
-      window.tropy = {
+      globalThis.tropy = {
         get args () { return ARGS },
         state: () => win.store?.getState(),
         win
@@ -56,7 +57,7 @@ window.ELECTRON_DISABLE_SECURITY_WARNINGS = !ARGS.debug
 
       if (ARGS.dev || ARGS.debug)
         contextBridge.exposeInMainWorld('tropy', {
-          state: window.tropy.state
+          state: globalThis.tropy.state
         })
 
     } catch (err) {
@@ -77,3 +78,7 @@ window.ELECTRON_DISABLE_SECURITY_WARNINGS = !ARGS.debug
     process.crash()
   }
 }())
+
+function round (ms) {
+  return (ms == null) ? undefined : Math.round(ms)
+}

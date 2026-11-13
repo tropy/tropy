@@ -638,4 +638,16 @@ describe('util', () => {
       expect(fn.mock.calls[1].arguments).to.eql(['b'])
     })
   })
+  describe('measure', () => {
+    it('records a performance measure and returns its duration', async () => {
+      let duration = await util.measure('test:measure', () =>
+        new Promise(resolve => setTimeout(resolve, 10)))
+
+      let [entry] = performance.getEntriesByName('test:measure', 'measure')
+
+      expect(entry).to.exist
+      expect(duration).to.equal(entry.duration)
+      expect(duration).to.be.at.least(9)
+    })
+  })
 })

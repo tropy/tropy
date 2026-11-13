@@ -7,7 +7,7 @@ export async function init () {
     sharp = (await import('sharp')).default
 
     info({
-      cache: sharp.cache(),
+      // cache: sharp.cache(),
       concurrency: sharp.concurrency(),
       simd: sharp.simd()
     }, 'sharp initialized')

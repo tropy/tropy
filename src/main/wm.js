@@ -592,6 +592,8 @@ export class WindowManager extends EventEmitter {
     if (WindowManager.defaults[type].plugins === false)
       props.plugins = null
 
+    props.created = Date.now()
+
     let win = this.create(type, props, opts)
     loadView(win, type, props)
 
