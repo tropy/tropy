@@ -1,5 +1,4 @@
 import { setTimeout as delay } from 'node:timers/promises'
-import { nanoid } from 'nanoid'
 
 export function on (emitter, ...args) {
   (emitter.addEventListener || emitter.addListener).apply(emitter, args)
@@ -541,8 +540,15 @@ export function blank (string) {
   return string == null || string.length === 0
 }
 
+// 64 characters, so `byte & 63` is uniform (64 divides 256).
+const ALPHABET =
+  'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict'
+
 export function identify (length = 8) {
-  return nanoid(length)
+  return Array.from(
+    crypto.getRandomValues(new Uint8Array(length)),
+    byte => ALPHABET[byte & 63]
+  ).join('')
 }
 
 export function shallow (a, b, props) {

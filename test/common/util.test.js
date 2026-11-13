@@ -650,4 +650,19 @@ describe('util', () => {
       expect(duration).to.be.at.least(9)
     })
   })
+
+  describe('identify', () => {
+    it('returns random URL-safe ids of the given length', () => {
+      expect(util.identify()).to.match(/^[\w-]{8}$/)
+      expect(util.identify(21)).to.match(/^[\w-]{21}$/)
+      expect(util.identify()).not.to.equal(util.identify())
+    })
+
+    it('uses the full alphabet', () => {
+      let chars = new Set(
+        Array.from({ length: 1000 }, () => util.identify()).join(''))
+
+      expect(chars.size).to.equal(64)
+    })
+  })
 })
