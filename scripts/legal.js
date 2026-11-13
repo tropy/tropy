@@ -47,7 +47,8 @@ export const loadDependencies = async ({ dependencies } = {}) => {
     dependencies = [
       join(import.meta.dirname, 'licenses.json'),
       resolve('lib/licenses.main.json'),
-      resolve('lib/licenses.renderer.json')
+      resolve('lib/licenses.renderer.json'),
+      resolve('lib/licenses.worker.json')
     ]
 
     if (!process.env.SHARP_FORCE_GLOBAL_LIBVIPS) {

@@ -70,7 +70,6 @@ const IGNORE_WARNINGS = {
     resolve('src/components/button.js'),
     resolve('src/components/list/tree.js'),
     resolve('node_modules/@fastify/ajv-compiler/standalone.js'),
-    resolve('node_modules/@formatjs/ecma402-abstract/types/number.js'),
     resolve('node_modules/edtf/src/date.js'),
     resolve('node_modules/n3/src/N3DataFactory.js'),
     resolve('node_modules/semver/classes/range.js'),
@@ -186,12 +185,6 @@ export default [
         ]
       }),
       sharpRequire({ platformId }),
-      {
-        name: 'cleanup-signal-exit',
-        buildEnd () {
-          delete process.__signal_exit_emitter__
-        }
-      },
       copy([sharpNative, ...libvips]),
       alias({
         entries: {
@@ -269,6 +262,9 @@ export default [
         ignoreGlobal: true,
         requireReturnsDefault: 'auto',
         ignoreTryCatch
+      }),
+      (NODE_ENV === 'production') && licenses({
+        file: 'lib/licenses.worker.json'
       })
     ],
     onwarn
