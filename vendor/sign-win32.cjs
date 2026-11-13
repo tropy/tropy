@@ -5,7 +5,6 @@ const { chmod, mkdir, rm, writeFile } = require('node:fs/promises')
 const { dirname, extname, join, resolve } = require('node:path')
 const { env, platform } = require('node:process')
 const { fileURLToPath } = require('node:url')
-const { unzipSync } = require('cross-zip')
 
 const exec = promisify(ChildProcess.exec)
 
@@ -38,7 +37,10 @@ async function setupCodeSignTool(force = false) {
   }
 
   if (!existsSync(exe)) {
-    unzipSync(zip, dir)
+    if (platform === 'win32')
+      ChildProcess.execFileSync(join(env.SystemRoot, 'System32', 'tar.exe'), ['-xf', zip, '-C', dir])
+    else
+      ChildProcess.execFileSync('unzip', ['-oq', zip, '-d', dir])
   }
 
   if (platform !== 'win32') {

@@ -1,23 +1,22 @@
-import fs from 'fs'
-import { join } from 'path'
-import { promisify } from 'util'
-import crossZip from 'cross-zip'
+import { mkdir, mkdtemp, readdir, rename, rm } from 'node:fs/promises'
+import { join } from 'node:path'
+import { spawn } from './spawn.js'
 
-const { mkdtemp, readdir, rename, rm } = fs.promises
-const unzipAsync = promisify(crossZip.unzip)
-
-export const zip = promisify(crossZip.zip)
-
-// unzip.sync = crossZip.unzipSync
-// zip.sync = crossZip.zipSync
+// Windows ships bsdtar, which can read zip archives.
+// Use it by full path, because another tar on the PATH might not.
+const extract = (src, dst) => (process.platform === 'win32') ?
+  spawn(join(process.env.SystemRoot, 'System32', 'tar.exe'), ['-xf', src, '-C', dst]) :
+  spawn('unzip', ['-oq', src, '-d', dst])
 
 export async function unzip (src, dst, { strip } = {}) {
-  if (!strip)
-    return unzipAsync(src, dst)
+  if (!strip) {
+    await mkdir(dst, { recursive: true })
+    return extract(src, dst)
+  }
 
   try {
     var tmp = await mkdtemp(`${dst}-`)
-    await unzipAsync(src, tmp)
+    await extract(src, tmp)
     let [head, ...tail] = await readdir(tmp, { withFileTypes: true })
 
     if (tail.length > 0 || !head?.isDirectory())
@@ -27,6 +26,6 @@ export async function unzip (src, dst, { strip } = {}) {
 
   } finally {
     if (tmp)
-      await rm(tmp, { recursive: true })
+      await rm(tmp, { recursive: true, force: true })
   }
 }
