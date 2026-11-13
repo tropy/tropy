@@ -47,7 +47,6 @@
     "log:debug": "node scripts/log-remap.js -fv | node scripts/log-viewer.js",
     "start": "electron --app . --dev --data tmp --cache tmp/cache --logs tmp/log",
     "rebuild": "node scripts/rebuild.js",
-    "patch": "cat patches/*.patch | patch -p1 -N -r -",
     "coverage": "c8 npm test",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "spark --no-sandbox",
@@ -207,5 +206,8 @@
     "better-sqlite3": false,
     "@parcel/watcher": false,
     "fsevents": false
+  },
+  "patchedDependencies": {
+    "v8-to-istanbul@9.3.0": "patches/v8-to-istanbul@9.3.0.patch"
   }
 }

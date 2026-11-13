@@ -1,8 +1,7 @@
-diff --git a/node_modules/v8-to-istanbul/lib/v8-to-istanbul.js b/node_modules/v8-to-istanbul/lib/v8-to-istanbul.js
-index 3616437..1b26f9e 100644
---- a/node_modules/v8-to-istanbul/lib/v8-to-istanbul.js
-+++ b/node_modules/v8-to-istanbul/lib/v8-to-istanbul.js
-@@ -130,7 +130,11 @@ module.exports = class V8ToIstanbul {
+--- a/lib/v8-to-istanbul.js	
++++ b/lib/v8-to-istanbul.js	
+@@ -129,9 +129,13 @@
+     blocks.forEach(block => {
        block.ranges.forEach((range, i) => {
          const isEmptyCoverage = block.functionName === '(empty-report)'
          const { startCol, endCol, path, covSource } = this._maybeRemapStartColEndCol(range, isEmptyCoverage)
@@ -15,3 +14,4 @@ index 3616437..1b26f9e 100644
            return
          }
          let lines
+         if (isEmptyCoverage) {
