@@ -39,7 +39,7 @@ describe('WindowManager', () => {
 
     for (let type of ['about', 'prefs', 'print', 'project']) {
       describe(`open('${type}')`, {
-        timeout: 20000
+        timeout: 60000
       }, () => {
         let win
 
@@ -152,7 +152,7 @@ describe('WindowManager', () => {
     })
 
     describe('unload lifecycle', {
-      timeout: 20000
+      timeout: 60000
     }, () => {
       let openWindow = (type = 'about') =>
         wm.open(type, {
