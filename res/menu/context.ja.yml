@@ -14,7 +14,7 @@ ja:
     project:
       - label: プロジェクト名を変更
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: プロジェクトファイルを開く
@@ -28,10 +28,11 @@ ja:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: 新規リスト
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -40,14 +41,14 @@ ja:
     list:
       - label: リスト名を変更
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: リストを削除
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: 新規タグ
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: タグをエクスポート
         command: app:export-tags
@@ -126,7 +127,7 @@ ja:
               - app:save-default-tag-color
     tag:
       - label: タグの色
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 色指定なし
             color:
@@ -196,10 +197,10 @@ ja:
               - app:save-tag-color
       - label: タグを再設定
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: タグを削除
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: このアイテムからタグを削除
         command: app:delete-item-tag
@@ -212,7 +213,7 @@ ja:
         visible: false
         condition: isMultipleItems
       - label: タグの色
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 指定なし
             color:
@@ -342,14 +343,6 @@ ja:
         condition: isMultiplePhotos
       - label: 写真を追加
         command: app:create-item-photo
-      - label: タグ
-        id: tag
-        submenu:
-          - label: 指定なし
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: アイテムを削除
         command: app:delete-item
     item-read-only:
@@ -508,7 +501,7 @@ ja:
     trash:
       - label: アイテムを完全に削除する
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     dev:
       - label: リロード
         command: app:reload
@@ -535,7 +528,7 @@ ja:
     project:
       - label: プロジェクト名を変更
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: プロジェクトファイルを開く
@@ -549,10 +542,11 @@ ja:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: 新規リスト
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -561,14 +555,14 @@ ja:
     list:
       - label: リスト名を変更
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: リストを削除
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: 新規タグ
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: タグをエクスポートする
         command: app:export-tags
@@ -647,7 +641,7 @@ ja:
               - app:save-default-tag-color
     tag:
       - label: タグカラー
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 色指定なし
             color:
@@ -717,10 +711,10 @@ ja:
               - app:save-tag-color
       - label: タグを再設定
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: タグを削除
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: このアイテムからタグを削除
         command: app:delete-item-tag
@@ -733,7 +727,7 @@ ja:
         visible: false
         condition: isMultipleItems
       - label: タグの色
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 指定なし
             color:
@@ -863,14 +857,6 @@ ja:
         condition: isMultiplePhotos
       - label: 写真を追加
         command: app:create-item-photo
-      - label: タグ
-        id: tag
-        submenu:
-          - label: 指定なし
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: アイテムを削除
         command: app:delete-item
     item-read-only:
@@ -979,7 +965,7 @@ ja:
     trash:
       - label: アイテムを完全に削除する
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     photo:
       - label: 写真を複製する
         command: app:duplicate-photo
@@ -1056,7 +1042,7 @@ ja:
     project:
       - label: プロジェクト名を変更
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: プロジェクトファイルを開く
@@ -1070,10 +1056,11 @@ ja:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: 新規リスト
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -1082,14 +1069,14 @@ ja:
     list:
       - label: リスト名を変更
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: リストを削除
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: 新規タグ
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: タグをエクスポートする
         command: app:export-tags
@@ -1168,7 +1155,7 @@ ja:
               - app:save-default-tag-color
     tag:
       - label: タグカラー
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 色指定なし
             color:
@@ -1238,10 +1225,10 @@ ja:
               - app:save-tag-color
       - label: タグを再設定
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: タグを削除
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: このアイテムからタグを削除
         command: app:delete-item-tag
@@ -1254,7 +1241,7 @@ ja:
         visible: false
         condition: isMultipleItems
       - label: タグカラー
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 指定なし
             color:
@@ -1384,14 +1371,6 @@ ja:
         condition: isMultiplePhotos
       - label: 写真を追加
         command: app:create-item-photo
-      - label: タグ
-        id: tag
-        submenu:
-          - label: 指定なし
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: アイテムを削除
         command: app:delete-item
     item-read-only:
@@ -1500,7 +1479,7 @@ ja:
     trash:
       - label: アイテムを完全に削除する
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     photo:
       - label: 写真を複製する
         command: app:duplicate-photo

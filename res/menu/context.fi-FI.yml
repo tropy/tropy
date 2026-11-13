@@ -14,7 +14,7 @@ fi-FI:
     project:
       - label: Nimeä projekti uudelleen
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: Näytä projektitiedosto…
@@ -28,10 +28,11 @@ fi-FI:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: Uusi lista
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -40,14 +41,14 @@ fi-FI:
     list:
       - label: Nimeä lista uudelleen
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Poista lista
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: Uusi tunniste
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Vie tunnisteet…
         command: app:export-tags
@@ -126,7 +127,7 @@ fi-FI:
               - app:save-default-tag-color
     tag:
       - label: Tunnisteen väri
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Ei mitään
             color:
@@ -196,10 +197,10 @@ fi-FI:
               - app:save-tag-color
       - label: Nimeä tunniste uudelleen
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Poista tunniste
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: Poista tunniste tästä tietueesta
         command: app:delete-item-tag
@@ -212,7 +213,7 @@ fi-FI:
         visible: false
         condition: isMultipleItems
       - label: Tunnisteen väri
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Ei mitään
             color:
@@ -342,14 +343,6 @@ fi-FI:
         condition: isMultiplePhotos
       - label: Lisää kuva…
         command: app:create-item-photo
-      - label: Tunnisteet
-        id: tag
-        submenu:
-          - label: Ei mitään
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: Poista tietue
         command: app:delete-item
     item-read-only:
@@ -508,7 +501,7 @@ fi-FI:
     trash:
       - label: Poista tietueet pysyvästi
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     dev:
       - label: Lataa uudelleen
         command: app:reload
@@ -535,7 +528,7 @@ fi-FI:
     project:
       - label: Nimeä projekti uudelleen
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: Näytä projektitiedosto…
@@ -549,10 +542,11 @@ fi-FI:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: Uusi lista
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -561,14 +555,14 @@ fi-FI:
     list:
       - label: Nimeä lista uudelleen
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Poista lista
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: Uusi tunniste
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Vie tunnisteet…
         command: app:export-tags
@@ -647,7 +641,7 @@ fi-FI:
               - app:save-default-tag-color
     tag:
       - label: Tunnisteen väri
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Ei mitään
             color:
@@ -717,10 +711,10 @@ fi-FI:
               - app:save-tag-color
       - label: Nimeä tunniste uudelleen
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Poista tunniste
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: Poista tunniste tästä tietueesta
         command: app:delete-item-tag
@@ -733,7 +727,7 @@ fi-FI:
         visible: false
         condition: isMultipleItems
       - label: Tunnisteen väri
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Ei mitään
             color:
@@ -863,14 +857,6 @@ fi-FI:
         condition: isMultiplePhotos
       - label: Lisää kuva…
         command: app:create-item-photo
-      - label: Tunnisteet
-        id: tag
-        submenu:
-          - label: Ei mitään
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: Poista tietue
         command: app:delete-item
     item-read-only:
@@ -979,7 +965,7 @@ fi-FI:
     trash:
       - label: Poista tietueet pysyvästi
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     photo:
       - label: Kuvan kaksoiskappale
         command: app:duplicate-photo
@@ -1056,7 +1042,7 @@ fi-FI:
     project:
       - label: Nimeä projekti uudelleen
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: Näytä projektitiedosto…
@@ -1070,10 +1056,11 @@ fi-FI:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: Uusi lista
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -1082,14 +1069,14 @@ fi-FI:
     list:
       - label: Nimeä lista uudelleen
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Poista lista
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: Uusi tunniste
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Vie tunnisteet…
         command: app:export-tags
@@ -1168,7 +1155,7 @@ fi-FI:
               - app:save-default-tag-color
     tag:
       - label: Tunnisteen väri
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Ei mitään
             color:
@@ -1238,10 +1225,10 @@ fi-FI:
               - app:save-tag-color
       - label: Nimeä tunniste uudelleen
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Poista tunniste
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: Poista tunniste tästä tietueesta
         command: app:delete-item-tag
@@ -1254,7 +1241,7 @@ fi-FI:
         visible: false
         condition: isMultipleItems
       - label: Tunnisteen väri
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Ei mitään
             color:
@@ -1384,14 +1371,6 @@ fi-FI:
         condition: isMultiplePhotos
       - label: Lisää kuva…
         command: app:create-item-photo
-      - label: Tunnisteet
-        id: tag
-        submenu:
-          - label: Ei mitään
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: Poista tietue
         command: app:delete-item
     item-read-only:
@@ -1500,7 +1479,7 @@ fi-FI:
     trash:
       - label: Poista tietueet pysyvästi
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     photo:
       - label: Kuvan kaksoiskappale
         command: app:duplicate-photo

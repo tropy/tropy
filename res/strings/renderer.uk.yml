@@ -14,6 +14,8 @@ uk:
         other {# items in this view}}
     search:
       placeholder: Пошук
+      error:
+        too-many-terms: Too many search terms (32 at most).
   panel:
     metadata:
       tab: Метадата
@@ -101,6 +103,10 @@ uk:
     corrupted: >-
       Your project file may be damaged and manual steps are necessary to fix it.
       Please consult the user manual for further assistance.
+    newer: This project was created by a newer version of Tropy.
+    store: >-
+      The project's assets folder is missing. Photos stored in the project
+      cannot be shown until it is restored.
     readOnly: >-
       Ваш файл проекту заблокований і не може бути змінений. Щоб розблокувати,
       змініть права доступу до файлу та знову відкрийте проект.
@@ -208,6 +214,10 @@ uk:
       density:
         label: Default density (ppi)
         title: Used for PDF, SVG and other scalable formats
+      search:
+        label: Пошук
+        highlight: Highlight matches
+        filter: Show only matching photos and notes
       export:
         label: Експорт
         note:
@@ -674,7 +684,7 @@ uk:
       merge: Merging item …
       open: Opening item …
       preview: Loading preview …
-      print: Processing items …
+      print: Printing items …
       restore: Restoring item …
       save: Saving items …
       split: Splitting item …
@@ -827,6 +837,10 @@ uk:
       prune: Не вдалося оптимізувати кеш проєкту.
       purge: Не вдалося видалити старий кеш проєкту.
     project:
+      open: Project could not be opened.
+      newer: >-
+        This project was created by a newer version of Tropy. Please upgrade
+        Tropy to open it.
       created: Не вдалося створити проєкт.
       convert: Не вдалося перетворити проєкт.
       optimize: Project optimization failed.

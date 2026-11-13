@@ -14,7 +14,7 @@ nl-NL:
     project:
       - label: Projectnaam wĳzigen
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: Projectbestand tonen…
@@ -28,10 +28,11 @@ nl-NL:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: Nieuwe lijst
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -40,14 +41,14 @@ nl-NL:
     list:
       - label: Lijstnaam wĳzigen
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Lijst verwijderen
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: Nieuw label
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Labels exporteren…
         command: app:export-tags
@@ -126,7 +127,7 @@ nl-NL:
               - app:save-default-tag-color
     tag:
       - label: Labelkleur
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Geen
             color:
@@ -196,10 +197,10 @@ nl-NL:
               - app:save-tag-color
       - label: Labelnaam wĳzigen
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Label wissen
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: Label van dit item wissen
         command: app:delete-item-tag
@@ -212,7 +213,7 @@ nl-NL:
         visible: false
         condition: isMultipleItems
       - label: Labelkleur
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Geen
             color:
@@ -342,14 +343,6 @@ nl-NL:
         condition: isMultiplePhotos
       - label: Foto toevoegen…
         command: app:create-item-photo
-      - label: Labels
-        id: tag
-        submenu:
-          - label: Geen
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: Item verwijderen
         command: app:delete-item
     item-read-only:
@@ -508,7 +501,7 @@ nl-NL:
     trash:
       - label: Items permanent verwijderen
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     dev:
       - label: Herladen
         command: app:reload
@@ -535,7 +528,7 @@ nl-NL:
     project:
       - label: Projectnaam wĳzigen
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: Projectbestand tonen…
@@ -549,10 +542,11 @@ nl-NL:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: Nieuwe lijst
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -561,14 +555,14 @@ nl-NL:
     list:
       - label: Lijstnaam wĳzigen
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Lijst verwijderen
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: Nieuw label
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Labels exporteren…
         command: app:export-tags
@@ -647,7 +641,7 @@ nl-NL:
               - app:save-default-tag-color
     tag:
       - label: Labelkleur
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Geen
             color:
@@ -717,10 +711,10 @@ nl-NL:
               - app:save-tag-color
       - label: Labelnaam wĳzigen
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Label wissen
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: Label van dit item wissen
         command: app:delete-item-tag
@@ -733,7 +727,7 @@ nl-NL:
         visible: false
         condition: isMultipleItems
       - label: Labelkleur
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Geen
             color:
@@ -863,14 +857,6 @@ nl-NL:
         condition: isMultiplePhotos
       - label: Foto toevoegen…
         command: app:create-item-photo
-      - label: Labels
-        id: tag
-        submenu:
-          - label: Geen
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: Item verwijderen
         command: app:delete-item
     item-read-only:
@@ -979,7 +965,7 @@ nl-NL:
     trash:
       - label: Items permanent verwijderen
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     photo:
       - label: Foto klonen
         command: app:duplicate-photo
@@ -1056,7 +1042,7 @@ nl-NL:
     project:
       - label: Projectnaam wĳzigen
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: Projectbestand tonen…
@@ -1070,10 +1056,11 @@ nl-NL:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: Nieuwe lijst
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -1082,14 +1069,14 @@ nl-NL:
     list:
       - label: Lijstnaam wĳzigen
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Lijst verwijderen
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: Nieuw label
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Labels exporteren…
         command: app:export-tags
@@ -1168,7 +1155,7 @@ nl-NL:
               - app:save-default-tag-color
     tag:
       - label: Labelkleur
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Geen
             color:
@@ -1238,10 +1225,10 @@ nl-NL:
               - app:save-tag-color
       - label: Labelnaam wĳzigen
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Label wissen
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: Label van dit item wissen
         command: app:delete-item-tag
@@ -1254,7 +1241,7 @@ nl-NL:
         visible: false
         condition: isMultipleItems
       - label: Labelkleur
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Geen
             color:
@@ -1384,14 +1371,6 @@ nl-NL:
         condition: isMultiplePhotos
       - label: Foto toevoegen…
         command: app:create-item-photo
-      - label: Labels
-        id: tag
-        submenu:
-          - label: Geen
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: Item verwijderen
         command: app:delete-item
     item-read-only:
@@ -1500,7 +1479,7 @@ nl-NL:
     trash:
       - label: Items permanent verwijderen
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     photo:
       - label: Foto klonen
         command: app:duplicate-photo

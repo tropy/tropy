@@ -14,6 +14,8 @@ cn:
       other {此视图中有 # 项}}
     search:
       placeholder: 搜索
+      error:
+        too-many-terms: Too many search terms (32 at most).
   panel:
     metadata:
       tab: 元数据
@@ -99,6 +101,10 @@ cn:
     corrupted: >-
       Your project file may be damaged and manual steps are necessary to fix it.
       Please consult the user manual for further assistance.
+    newer: This project was created by a newer version of Tropy.
+    store: >-
+      The project's assets folder is missing. Photos stored in the project
+      cannot be shown until it is restored.
     readOnly: 您的库文件被锁定，无法修改。若要解锁，请更改文件权限并再次打开项目。
     new:
       title: 创建一个新库
@@ -204,6 +210,10 @@ cn:
       density:
         label: 显示分辨率 (ppi)
         title: 用于 PDF、SVG 和其他可缩放格式
+      search:
+        label: 搜索
+        highlight: Highlight matches
+        filter: Show only matching photos and notes
       export:
         label: 导出
         note:
@@ -658,7 +668,7 @@ cn:
       merge: 正在合并图组...
       open: Opening item …
       preview: Loading preview …
-      print: 处理中 ...
+      print: Printing items …
       restore: 正在恢复文件...
       save: 保存图组中...
       split: Splitting item …
@@ -811,6 +821,10 @@ cn:
       prune: 优化缓存失败。
       purge: 未能删除旧的缓存。
     project:
+      open: Project could not be opened.
+      newer: >-
+        This project was created by a newer version of Tropy. Please upgrade
+        Tropy to open it.
       created: 库创建失败。
       convert: 项目转换失败。
       optimize: Project optimization failed.

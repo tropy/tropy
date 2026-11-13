@@ -53,6 +53,7 @@ pt-BR:
         - label: Exportar
           id: export
           window: project
+          condition: isProjectOpen
           submenu:
             - label: JSON-LD
               command: app:export-item
@@ -72,9 +73,11 @@ pt-BR:
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Fechar Projeto
           command: app:close-project
+          accelerator: Shift+CmdOrCtrl+W
           window: project
           condition: isProjectOpen
         - type: separator
@@ -158,17 +161,22 @@ pt-BR:
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Repor a Base de Dados Ontológica
-          command: app:reset-ontology-db
-        - label: Otimizar Caches do Projeto
+        - label: Clean Up Caches
           command: app:optimize-cache
+          window: project
+          condition: isProjectOpen
         - label: Otimizar Base de Dados do Projeto
           command: app:optimize-project
-        - label: Optimize Asset Folder
+          window: project
+          condition: '!isProjectReadOnly'
+        - label: Remove Orphaned Assets…
           command: app:prune-project
-          condition: isProjectManaged
+          window: project
+          condition: isProjectStoreWritable
         - label: Reindexar Base de Dados do Projeto
           command: app:reindex-project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Tema
           id: theme
@@ -297,6 +305,7 @@ pt-BR:
         - label: Exportar
           id: export
           window: project
+          condition: isProjectOpen
           submenu:
             - label: JSON-LD
               command: app:export-item
@@ -310,9 +319,11 @@ pt-BR:
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Fechar Projeto
           command: app:close-project
+          accelerator: Shift+CmdOrCtrl+W
           window: project
           condition: isProjectOpen
     - label: Editar
@@ -394,17 +405,22 @@ pt-BR:
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Repor a Base de Dados Ontológica
-          command: app:reset-ontology-db
-        - label: Otimizar Caches do Projeto
+        - label: Clean Up Caches
           command: app:optimize-cache
+          window: project
+          condition: isProjectOpen
         - label: Otimizar Base de Dados do Projeto
           command: app:optimize-project
-        - label: Optimize Asset Folder
+          window: project
+          condition: '!isProjectReadOnly'
+        - label: Remove Orphaned Assets…
           command: app:prune-project
-          condition: isProjectManaged
+          window: project
+          condition: isProjectStoreWritable
         - label: Reindexar Base de Dados do Projeto
           command: app:reindex-project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Tema
           id: theme
@@ -505,6 +521,7 @@ pt-BR:
         - label: Exportar
           id: export
           window: project
+          condition: isProjectOpen
           submenu:
             - label: JSON-LD
               command: app:export-item
@@ -524,9 +541,11 @@ pt-BR:
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Fechar Projeto
           command: app:close-project
+          accelerator: Shift+CmdOrCtrl+W
           window: project
           condition: isProjectOpen
         - type: separator
@@ -607,17 +626,22 @@ pt-BR:
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Repor a Base de Dados Ontológica
-          command: app:reset-ontology-db
-        - label: Otimizar Caches do Projeto
+        - label: Clean Up Caches
           command: app:optimize-cache
+          window: project
+          condition: isProjectOpen
         - label: Otimizar Base de Dados do Projeto
           command: app:optimize-project
-        - label: Optimize Asset Folder
+          window: project
+          condition: '!isProjectReadOnly'
+        - label: Remove Orphaned Assets…
           command: app:prune-project
-          condition: isProjectManaged
+          window: project
+          condition: isProjectStoreWritable
         - label: Reindexar Base de Dados do Projeto
           command: app:reindex-project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Tema
           id: theme

@@ -14,6 +14,8 @@ nl-NL:
       other {# items in deze weergave}}
     search:
       placeholder: Zoeken
+      error:
+        too-many-terms: Too many search terms (32 at most).
   panel:
     metadata:
       tab: Metagegevens
@@ -101,6 +103,10 @@ nl-NL:
     corrupted: >-
       Your project file may be damaged and manual steps are necessary to fix it.
       Please consult the user manual for further assistance.
+    newer: This project was created by a newer version of Tropy.
+    store: >-
+      The project's assets folder is missing. Photos stored in the project
+      cannot be shown until it is restored.
     readOnly: >-
       Uw projectbestand is vergrendeld en kan daarom niet worden bewerkt. Pas de
       bestandsrechten aan en open het project opnieuw.
@@ -208,6 +214,10 @@ nl-NL:
       density:
         label: Standaard dichtheid (in ppi)
         title: Dit is van toepassing op pdf-, svg- en andere schaalbare formaten
+      search:
+        label: Zoeken
+        highlight: Highlight matches
+        filter: Show only matching photos and notes
       export:
         label: Exporteren
         note:
@@ -674,7 +684,7 @@ nl-NL:
       merge: Bezig met samenvoegen…
       open: Opening item …
       preview: Loading preview …
-      print: Bezig met verwerken…
+      print: Printing items …
       restore: Bezig met herstellen…
       save: Bezig met opslaan…
       split: Splitting item …
@@ -827,6 +837,10 @@ nl-NL:
       prune: De projectcache kan niet worden geoptimaliseerd.
       purge: De oude projectcaches kunnen niet worden gewist.
     project:
+      open: Project could not be opened.
+      newer: >-
+        This project was created by a newer version of Tropy. Please upgrade
+        Tropy to open it.
       created: Het project kan niet worden aangemaakt.
       convert: Het project kan niet worden geconverteerd.
       optimize: Project optimization failed.

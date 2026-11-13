@@ -53,6 +53,7 @@ it:
         - label: Esporta
           id: export
           window: project
+          condition: isProjectOpen
           submenu:
             - label: JSON-LD
               command: app:export-item
@@ -72,9 +73,11 @@ it:
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Chiudi progetto
           command: app:close-project
+          accelerator: Shift+CmdOrCtrl+W
           window: project
           condition: isProjectOpen
         - type: separator
@@ -158,17 +161,22 @@ it:
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Ripristina il database dell'ontologia
-          command: app:reset-ontology-db
-        - label: Ottimizza la cache del progetto
+        - label: Clean Up Caches
           command: app:optimize-cache
+          window: project
+          condition: isProjectOpen
         - label: Ottimizza il database del progetto
           command: app:optimize-project
-        - label: Optimize Asset Folder
+          window: project
+          condition: '!isProjectReadOnly'
+        - label: Remove Orphaned Assets…
           command: app:prune-project
-          condition: isProjectManaged
+          window: project
+          condition: isProjectStoreWritable
         - label: Reindicizza il database del progetto
           command: app:reindex-project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Tema
           id: theme
@@ -297,6 +305,7 @@ it:
         - label: Esporta
           id: export
           window: project
+          condition: isProjectOpen
           submenu:
             - label: JSON-LD
               command: app:export-item
@@ -310,9 +319,11 @@ it:
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Chiudi progetto
           command: app:close-project
+          accelerator: Shift+CmdOrCtrl+W
           window: project
           condition: isProjectOpen
     - label: Modifica
@@ -394,17 +405,22 @@ it:
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Ripristina il database dell'ontologia
-          command: app:reset-ontology-db
-        - label: Ottimizza la cache del progetto
+        - label: Clean Up Caches
           command: app:optimize-cache
+          window: project
+          condition: isProjectOpen
         - label: Ottimizza il database del progetto
           command: app:optimize-project
-        - label: Optimize Asset Folder
+          window: project
+          condition: '!isProjectReadOnly'
+        - label: Remove Orphaned Assets…
           command: app:prune-project
-          condition: isProjectManaged
+          window: project
+          condition: isProjectStoreWritable
         - label: Reindicizza il database del progetto
           command: app:reindex-project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Tema
           id: theme
@@ -505,6 +521,7 @@ it:
         - label: Esporta
           id: export
           window: project
+          condition: isProjectOpen
           submenu:
             - label: JSON-LD
               command: app:export-item
@@ -524,9 +541,11 @@ it:
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Chiudi progetto
           command: app:close-project
+          accelerator: Shift+CmdOrCtrl+W
           window: project
           condition: isProjectOpen
         - type: separator
@@ -607,17 +626,22 @@ it:
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Ripristina il database dell'ontologia
-          command: app:reset-ontology-db
-        - label: Ottimizza la cache del progetto
+        - label: Clean Up Caches
           command: app:optimize-cache
+          window: project
+          condition: isProjectOpen
         - label: Ottimizza il database del progetto
           command: app:optimize-project
-        - label: Optimize Asset Folder
+          window: project
+          condition: '!isProjectReadOnly'
+        - label: Remove Orphaned Assets…
           command: app:prune-project
-          condition: isProjectManaged
+          window: project
+          condition: isProjectStoreWritable
         - label: Reindicizza il database del progetto
           command: app:reindex-project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Tema
           id: theme

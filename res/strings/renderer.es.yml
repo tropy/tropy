@@ -14,6 +14,8 @@ es:
       other {# Objetos en esta visualización}}
     search:
       placeholder: Búsqueda
+      error:
+        too-many-terms: Too many search terms (32 at most).
   panel:
     metadata:
       tab: Metadatos
@@ -96,6 +98,10 @@ es:
     corrupted: >-
       Your project file may be damaged and manual steps are necessary to fix it.
       Please consult the user manual for further assistance.
+    newer: This project was created by a newer version of Tropy.
+    store: >-
+      The project's assets folder is missing. Photos stored in the project
+      cannot be shown until it is restored.
     readOnly: >-
       Tu proyecto está bloqueado y no se puede modificar. Para desbloquearlo,
       cambia los permisos del archivo y abre el proyecto nuevamente.
@@ -203,6 +209,10 @@ es:
       density:
         label: Resolución en pixeles por defecto (ppi)
         title: Utilizado para PDF, SVG y otros formatos escalables
+      search:
+        label: Búsqueda
+        highlight: Highlight matches
+        filter: Show only matching photos and notes
       export:
         label: Exportar
         note:
@@ -663,7 +673,7 @@ es:
       merge: Fusionando objeto …
       open: Opening item …
       preview: Loading preview …
-      print: Procesando objetos ...
+      print: Printing items …
       restore: Restaurando objeto …
       save: Guardando objetos …
       split: Splitting item …
@@ -816,6 +826,10 @@ es:
       prune: Falla al optimizar la cache memoria del proyecto.
       purge: Falla al remover la caché antigua.
     project:
+      open: Project could not be opened.
+      newer: >-
+        This project was created by a newer version of Tropy. Please upgrade
+        Tropy to open it.
       created: Falla en la creación de proyecto.
       convert: Conversión de proyecto fallida.
       optimize: Project optimization failed.

@@ -53,6 +53,7 @@ fi-FI:
         - label: Vie
           id: export
           window: project
+          condition: isProjectOpen
           submenu:
             - label: JSON-LD
               command: app:export-item
@@ -72,9 +73,11 @@ fi-FI:
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Sulje projekti
           command: app:close-project
+          accelerator: Shift+CmdOrCtrl+W
           window: project
           condition: isProjectOpen
         - type: separator
@@ -158,17 +161,22 @@ fi-FI:
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Nollaa ontologian tietokanta
-          command: app:reset-ontology-db
-        - label: Optimoi projektien välimuistit
+        - label: Clean Up Caches
           command: app:optimize-cache
+          window: project
+          condition: isProjectOpen
         - label: Optimoi projektien tietokanta
           command: app:optimize-project
-        - label: Optimize Asset Folder
+          window: project
+          condition: '!isProjectReadOnly'
+        - label: Remove Orphaned Assets…
           command: app:prune-project
-          condition: isProjectManaged
+          window: project
+          condition: isProjectStoreWritable
         - label: Indeksoi uudelleen projektien tietokanta
           command: app:reindex-project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Teema
           id: theme
@@ -297,6 +305,7 @@ fi-FI:
         - label: Vie
           id: export
           window: project
+          condition: isProjectOpen
           submenu:
             - label: JSON-LD
               command: app:export-item
@@ -310,9 +319,11 @@ fi-FI:
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Sulje projekti
           command: app:close-project
+          accelerator: Shift+CmdOrCtrl+W
           window: project
           condition: isProjectOpen
     - label: Muokkaa
@@ -394,17 +405,22 @@ fi-FI:
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Nollaa ontologian tietokanta
-          command: app:reset-ontology-db
-        - label: Optimoi projektien välimuistit
+        - label: Clean Up Caches
           command: app:optimize-cache
+          window: project
+          condition: isProjectOpen
         - label: Optimoi projektien tietokanta
           command: app:optimize-project
-        - label: Optimize Asset Folder
+          window: project
+          condition: '!isProjectReadOnly'
+        - label: Remove Orphaned Assets…
           command: app:prune-project
-          condition: isProjectManaged
+          window: project
+          condition: isProjectStoreWritable
         - label: Indeksoi uudelleen projektien tietokanta
           command: app:reindex-project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Teema
           id: theme
@@ -505,6 +521,7 @@ fi-FI:
         - label: Vie
           id: export
           window: project
+          condition: isProjectOpen
           submenu:
             - label: JSON-LD
               command: app:export-item
@@ -524,9 +541,11 @@ fi-FI:
           command: app:print
           accelerator: CmdOrCtrl+P
           window: project
+          condition: isProjectOpen
         - type: separator
         - label: Sulje projekti
           command: app:close-project
+          accelerator: Shift+CmdOrCtrl+W
           window: project
           condition: isProjectOpen
         - type: separator
@@ -607,17 +626,22 @@ fi-FI:
           accelerator: CmdOrCtrl+D
           role: toggledevtools
         - type: separator
-        - label: Nollaa ontologian tietokanta
-          command: app:reset-ontology-db
-        - label: Optimoi projektien välimuistit
+        - label: Clean Up Caches
           command: app:optimize-cache
+          window: project
+          condition: isProjectOpen
         - label: Optimoi projektien tietokanta
           command: app:optimize-project
-        - label: Optimize Asset Folder
+          window: project
+          condition: '!isProjectReadOnly'
+        - label: Remove Orphaned Assets…
           command: app:prune-project
-          condition: isProjectManaged
+          window: project
+          condition: isProjectStoreWritable
         - label: Indeksoi uudelleen projektien tietokanta
           command: app:reindex-project
+          window: project
+          condition: '!isProjectReadOnly'
         - type: separator
         - label: Teema
           id: theme

@@ -14,7 +14,7 @@ fr:
     project:
       - label: Renommer le projet
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: Montrer le fichier de projet dans son répertoire…
@@ -28,10 +28,11 @@ fr:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: Nouvelle liste
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -40,14 +41,14 @@ fr:
     list:
       - label: Renommer la liste
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Supprimer la liste
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: Nouveau tag
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Exporter les tags…
         command: app:export-tags
@@ -126,7 +127,7 @@ fr:
               - app:save-default-tag-color
     tag:
       - label: Couleur du tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Aucune
             color:
@@ -196,10 +197,10 @@ fr:
               - app:save-tag-color
       - label: Renommer le tag
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Supprimer le tag
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: Enlever le tag de l'objet
         command: app:delete-item-tag
@@ -212,7 +213,7 @@ fr:
         visible: false
         condition: isMultipleItems
       - label: Couleur du tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Aucun
             color:
@@ -342,14 +343,6 @@ fr:
         condition: isMultiplePhotos
       - label: Ajouter une photo…
         command: app:create-item-photo
-      - label: Tags
-        id: tag
-        submenu:
-          - label: Aucun
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: Supprimer l'objet
         command: app:delete-item
     item-read-only:
@@ -508,7 +501,7 @@ fr:
     trash:
       - label: Supprimer définitivement les objets
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     dev:
       - label: Recharger
         command: app:reload
@@ -535,7 +528,7 @@ fr:
     project:
       - label: Renommer le projet
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: Montrer le fichier de projet dans son répertoire…
@@ -549,10 +542,11 @@ fr:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: Nouvelle liste
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -561,14 +555,14 @@ fr:
     list:
       - label: Renommer la liste
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Supprimer la liste
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: Nouveau tag
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Exporter les tags…
         command: app:export-tags
@@ -647,7 +641,7 @@ fr:
               - app:save-default-tag-color
     tag:
       - label: Couleur du tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Aucune
             color:
@@ -717,10 +711,10 @@ fr:
               - app:save-tag-color
       - label: Renommer le tag
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Supprimer le tag
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: Enlever le tag de l'objet
         command: app:delete-item-tag
@@ -733,7 +727,7 @@ fr:
         visible: false
         condition: isMultipleItems
       - label: Couleur du tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Aucun
             color:
@@ -863,14 +857,6 @@ fr:
         condition: isMultiplePhotos
       - label: Ajouter une photo…
         command: app:create-item-photo
-      - label: Tags
-        id: tag
-        submenu:
-          - label: Aucun
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: Supprimer l'objet
         command: app:delete-item
     item-read-only:
@@ -979,7 +965,7 @@ fr:
     trash:
       - label: Supprimer définitivement les objets
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     photo:
       - label: Dupliquer la photo
         command: app:duplicate-photo
@@ -1056,7 +1042,7 @@ fr:
     project:
       - label: Renommer le projet
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: Montrer le fichier de projet dans son répertoire…
@@ -1070,10 +1056,11 @@ fr:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: Nouvelle liste
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -1082,14 +1069,14 @@ fr:
     list:
       - label: Renommer la liste
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Supprimer la liste
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: Nouveau tag
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Exporter les tags…
         command: app:export-tags
@@ -1168,7 +1155,7 @@ fr:
               - app:save-default-tag-color
     tag:
       - label: Couleur du tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Aucune
             color:
@@ -1238,10 +1225,10 @@ fr:
               - app:save-tag-color
       - label: Renommer le tag
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Supprimer le tag
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: Enlever le tag de l'objet
         command: app:delete-item-tag
@@ -1254,7 +1241,7 @@ fr:
         visible: false
         condition: isMultipleItems
       - label: Couleur du tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Aucun
             color:
@@ -1384,14 +1371,6 @@ fr:
         condition: isMultiplePhotos
       - label: Ajouter une photo…
         command: app:create-item-photo
-      - label: Tags
-        id: tag
-        submenu:
-          - label: Aucun
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: Supprimer l'objet
         command: app:delete-item
     item-read-only:
@@ -1500,7 +1479,7 @@ fr:
     trash:
       - label: Supprimer définitivement les objets
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     photo:
       - label: Dupliquer la photo
         command: app:duplicate-photo

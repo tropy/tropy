@@ -14,7 +14,7 @@ cn:
     project:
       - label: 重命名库
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: 显示库所在位置
@@ -28,10 +28,11 @@ cn:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: 新建列表
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: 导出列表 …
         command: app:export-lists
@@ -40,14 +41,14 @@ cn:
     list:
       - label: 重命名文件夹
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: 删除文件夹
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: 新建标签
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: 导出标签...
         command: app:export-tags
@@ -126,7 +127,7 @@ cn:
               - app:save-default-tag-color
     tag:
       - label: 标签颜色
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 无
             color:
@@ -196,10 +197,10 @@ cn:
               - app:save-tag-color
       - label: 重命名标签
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: 删除标签
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: 从选中项目除以此标签
         command: app:delete-item-tag
@@ -212,7 +213,7 @@ cn:
         visible: false
         condition: isMultipleItems
       - label: 标签颜色
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 无
             color:
@@ -342,14 +343,6 @@ cn:
         condition: isMultiplePhotos
       - label: 添加图片...
         command: app:create-item-photo
-      - label: 标签
-        id: tag
-        submenu:
-          - label: 无
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: 删除图组
         command: app:delete-item
     item-read-only:
@@ -508,7 +501,7 @@ cn:
     trash:
       - label: 永久删除图组
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     dev:
       - label: 重新加载
         command: app:reload
@@ -535,7 +528,7 @@ cn:
     project:
       - label: 重命名库
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: 显示库所在位置
@@ -549,10 +542,11 @@ cn:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: 新建列表
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: 导出列表 …
         command: app:export-lists
@@ -561,14 +555,14 @@ cn:
     list:
       - label: 重命名列表
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: 删除列表
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: 新建标签
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: 导出标签...
         command: app:export-tags
@@ -647,7 +641,7 @@ cn:
               - app:save-default-tag-color
     tag:
       - label: 标签颜色
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 无
             color:
@@ -717,10 +711,10 @@ cn:
               - app:save-tag-color
       - label: 重命名标签
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: 删除标签
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: 从选中图组除以此标签
         command: app:delete-item-tag
@@ -733,7 +727,7 @@ cn:
         visible: false
         condition: isMultipleItems
       - label: 标签颜色
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 无
             color:
@@ -863,14 +857,6 @@ cn:
         condition: isMultiplePhotos
       - label: 添加图片...
         command: app:create-item-photo
-      - label: 标签
-        id: tag
-        submenu:
-          - label: 无
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: 删除图组
         command: app:delete-item
     item-read-only:
@@ -979,7 +965,7 @@ cn:
     trash:
       - label: 永久删除图组
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     photo:
       - label: 复制图片
         command: app:duplicate-photo
@@ -1056,7 +1042,7 @@ cn:
     project:
       - label: 重命名库
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: 显示库所在位置
@@ -1070,10 +1056,11 @@ cn:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: 新建列表
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: 导出列表 …
         command: app:export-lists
@@ -1082,14 +1069,14 @@ cn:
     list:
       - label: 重命名列表
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: 删除列表
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: 新建标签
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: 导出标签...
         command: app:export-tags
@@ -1168,7 +1155,7 @@ cn:
               - app:save-default-tag-color
     tag:
       - label: 标签颜色
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 无
             color:
@@ -1238,10 +1225,10 @@ cn:
               - app:save-tag-color
       - label: 重命名标签
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: 删除标签
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: 从该项目中删除标签
         command: app:delete-item-tag
@@ -1254,7 +1241,7 @@ cn:
         visible: false
         condition: isMultipleItems
       - label: 标签颜色
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: 无
             color:
@@ -1384,14 +1371,6 @@ cn:
         condition: isMultiplePhotos
       - label: 添加图片...
         command: app:create-item-photo
-      - label: 标签
-        id: tag
-        submenu:
-          - label: 无
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: 删除图组
         command: app:delete-item
     item-read-only:
@@ -1500,7 +1479,7 @@ cn:
     trash:
       - label: 永久删除图组
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     photo:
       - label: 复制图片
         command: app:duplicate-photo

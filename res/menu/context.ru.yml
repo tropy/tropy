@@ -14,7 +14,7 @@ ru:
     project:
       - label: Переименовать проект
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: Показать файл проекта…
@@ -28,10 +28,11 @@ ru:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: Новый список
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -40,14 +41,14 @@ ru:
     list:
       - label: Переименовать список
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Удалить список
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: Новый тег
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Экспорт Тегов …
         command: app:export-tags
@@ -126,7 +127,7 @@ ru:
               - app:save-default-tag-color
     tag:
       - label: Цвет тэга
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Не выбран
             color:
@@ -196,10 +197,10 @@ ru:
               - app:save-tag-color
       - label: Переименовать тег
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Удалить тег
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: Удалить тег с этого элемента
         command: app:delete-item-tag
@@ -212,7 +213,7 @@ ru:
         visible: false
         condition: isMultipleItems
       - label: Цвет тэга
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Не выбран
             color:
@@ -342,14 +343,6 @@ ru:
         condition: isMultiplePhotos
       - label: Добавить фото …
         command: app:create-item-photo
-      - label: Теги
-        id: tag
-        submenu:
-          - label: Не выбран
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: Удалить элемент
         command: app:delete-item
     item-read-only:
@@ -508,7 +501,7 @@ ru:
     trash:
       - label: Безвозвратно удалить элементы
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     dev:
       - label: Перезагрузить
         command: app:reload
@@ -535,7 +528,7 @@ ru:
     project:
       - label: Переименовать проект
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: Показать файл проекта…
@@ -549,10 +542,11 @@ ru:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: Новый список
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -561,14 +555,14 @@ ru:
     list:
       - label: Переименовать список
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Удалить список
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: Новый тег
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Экспорт Тегов …
         command: app:export-tags
@@ -647,7 +641,7 @@ ru:
               - app:save-default-tag-color
     tag:
       - label: Цвет тэга
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Не выбран
             color:
@@ -717,10 +711,10 @@ ru:
               - app:save-tag-color
       - label: Переименовать тег
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Удалить тег
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: Удалить тег с этого элемента
         command: app:delete-item-tag
@@ -733,7 +727,7 @@ ru:
         visible: false
         condition: isMultipleItems
       - label: Цвет тэга
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Не выбран
             color:
@@ -863,14 +857,6 @@ ru:
         condition: isMultiplePhotos
       - label: Добавить фото …
         command: app:create-item-photo
-      - label: Теги
-        id: tag
-        submenu:
-          - label: Не выбран
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: Удалить элемент
         command: app:delete-item
     item-read-only:
@@ -979,7 +965,7 @@ ru:
     trash:
       - label: Безвозвратно удалить элементы
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     photo:
       - label: Дубликат фото
         command: app:duplicate-photo
@@ -1056,7 +1042,7 @@ ru:
     project:
       - label: Переименовать проект
         command: app:rename-project
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Copy Project URL
         command: app:copy-project-url
       - label: Показать файл проекта…
@@ -1070,10 +1056,11 @@ ru:
         condition: '!isMissing'
       - label: Remove Project from List
         command: app:clear-recent-projects
+        condition: '!isTargetProjectOpen'
     lists:
       - label: Новый список
         command: app:create-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+L
       - label: Export Lists …
         command: app:export-lists
@@ -1082,14 +1069,14 @@ ru:
     list:
       - label: Переименовать список
         command: app:rename-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Удалить список
         command: app:delete-list
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     tags:
       - label: Новый тег
         command: app:create-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         accelerator: CmdOrCtrl+Shift+A
       - label: Экспорт Тегов …
         command: app:export-tags
@@ -1168,7 +1155,7 @@ ru:
               - app:save-default-tag-color
     tag:
       - label: Цвет тэга
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Не выбран
             color:
@@ -1238,10 +1225,10 @@ ru:
               - app:save-tag-color
       - label: Переименовать тег
         command: app:rename-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
       - label: Удалить тег
         command: app:delete-tag
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     item-tag:
       - label: Удалить тег с этого элемента
         command: app:delete-item-tag
@@ -1254,7 +1241,7 @@ ru:
         visible: false
         condition: isMultipleItems
       - label: Цвет тэга
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
         submenu:
           - label: Не выбран
             color:
@@ -1384,14 +1371,6 @@ ru:
         condition: isMultiplePhotos
       - label: Добавить фото …
         command: app:create-item-photo
-      - label: Теги
-        id: tag
-        submenu:
-          - label: Не выбран
-            type: checkbox
-            checked: true
-            enabled: false
-          - type: separator
       - label: Удалить элемент
         command: app:delete-item
     item-read-only:
@@ -1500,7 +1479,7 @@ ru:
     trash:
       - label: Безвозвратно удалить элементы
         command: app:destroy-item
-        condition: '!isReadOnly'
+        condition: '!isProjectReadOnly'
     photo:
       - label: Дубликат фото
         command: app:duplicate-photo

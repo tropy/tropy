@@ -14,6 +14,8 @@ ja:
       other {# のアイテムがあります}}
     search:
       placeholder: 検索
+      error:
+        too-many-terms: Too many search terms (32 at most).
   panel:
     metadata:
       tab: メタデータ
@@ -99,6 +101,10 @@ ja:
     corrupted: >-
       Your project file may be damaged and manual steps are necessary to fix it.
       Please consult the user manual for further assistance.
+    newer: This project was created by a newer version of Tropy.
+    store: >-
+      The project's assets folder is missing. Photos stored in the project
+      cannot be shown until it is restored.
     readOnly: プロジェクトファイルがロックされており、変更できませんでした。ロックを解除するには、ファイルの書き込み権限を変更し、改めてプロジェクトを開いてください。
     new:
       title: 新規プロジェクトを作成
@@ -204,6 +210,10 @@ ja:
       density:
         label: デフォルトの解像度（ppi）
         title: PDF、SVG、その他のスケーラブルなフォーマットに使用
+      search:
+        label: 検索
+        highlight: Highlight matches
+        filter: Show only matching photos and notes
       export:
         label: エクスポート
         note:
@@ -658,7 +668,7 @@ ja:
       merge: アイテムを統合中
       open: Opening item …
       preview: Loading preview …
-      print: アイテムの処理を実行中
+      print: Printing items …
       restore: アイテムを復元中
       save: アイテムを保存中
       split: Splitting item …
@@ -811,6 +821,10 @@ ja:
       prune: プロジェクトのキャッシュの最適化に失敗しました
       purge: 古いプロジェクトのキャッシュの削除に失敗しました
     project:
+      open: Project could not be opened.
+      newer: >-
+        This project was created by a newer version of Tropy. Please upgrade
+        Tropy to open it.
       created: プロジェクトの作成に失敗しました
       convert: プロジェクトの変換に失敗しました
       optimize: Project optimization failed.
