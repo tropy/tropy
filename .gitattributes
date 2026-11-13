@@ -1,0 +1,9 @@
+* text=auto eol=lf
+
+# Copied into managed projects as desktop.ini,
+# read by Windows Explorer.
+res/icons/mime/folder.ini text eol=crlf
+
+# npm records a hash of each patch in package-lock.json,
+# so patches must keep their exact bytes.
+*.patch -text
