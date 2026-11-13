@@ -67,6 +67,8 @@ jobs:
 
       - name: Install NPM modules
         run: npm clean-install --no-progress --ignore-scripts
+      - name: Verify NPM signatures
+        run: npm audit signatures
       - name: Build native NPM modules
         if: runner.os == 'macOS'
         run: npm rebuild fs-xattr macos-alias

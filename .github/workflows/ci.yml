@@ -115,5 +115,6 @@ jobs:
           node-version: 'latest'
           cache: npm
       - run: npm clean-install --no-progress --ignore-scripts
+      - run: npm audit signatures
       - run: npm run lint
 
