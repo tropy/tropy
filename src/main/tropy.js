@@ -107,7 +107,7 @@ export class Tropy extends EventEmitter {
     this.proto.start()
     this.account.start()
     this.wm.start()
-    await this.api.start()
+    this.api.start()
     shell.start()
 
     if (this.hidden && !this.api.status)
