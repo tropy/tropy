@@ -1,5 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { createSelector as memo } from 'reselect'
+import { createSelector as memo, createSlice } from '@reduxjs/toolkit'
 import { parse } from '../common/search.js'
 import { createMatcher } from '../common/matcher.js'
 import { NAV } from '../constants/index.js'

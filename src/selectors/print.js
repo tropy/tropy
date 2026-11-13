@@ -1,4 +1,4 @@
-import { createSelector as memo } from 'reselect'
+import { createSelector as memo } from '@reduxjs/toolkit'
 import { getMetadataFields } from './metadata.js'
 import { getItemSelection } from './items.js'
 import { selectItemSequence } from '../slices/qr.js'

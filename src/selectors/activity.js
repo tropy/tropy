@@ -1,4 +1,4 @@
-import { createSelector as memo } from 'reselect'
+import { createSelector as memo } from '@reduxjs/toolkit'
 import { into, compose, map, filter } from 'transducers.js'
 
 const values = ([, value]) => value

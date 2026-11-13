@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { createSelector } from 'reselect'
+import { createSelector } from '@reduxjs/toolkit'
 import ARGS from '../args.js'
 
 export const selectCachePrefix = createSelector(

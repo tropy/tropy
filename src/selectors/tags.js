@@ -1,4 +1,4 @@
-import { createSelector as memo } from 'reselect'
+import { createSelector as memo } from '@reduxjs/toolkit'
 import { getSelectedItems } from './items.js'
 import { seq, compose, filter, map, cat, keep } from 'transducers.js'
 import { by, equals } from '../collate.js'

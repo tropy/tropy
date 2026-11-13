@@ -1,4 +1,4 @@
-import { createSelector as memo } from 'reselect'
+import { createSelector as memo } from '@reduxjs/toolkit'
 import { seq, compose, filter, into, map } from 'transducers.js'
 import { getSelectedItems } from './items.js'
 import { selectMatchFilter } from '../slices/qr.js'

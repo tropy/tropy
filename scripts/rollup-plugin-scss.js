@@ -2,7 +2,6 @@ import fs from 'node:fs'
 import { basename, extname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as sass from 'sass'
-import { OrderedMap } from 'immutable'
 import SASS from '../src/constants/sass.js'
 import { get } from '../src/common/util.js'
 
@@ -23,7 +22,7 @@ const toSass = (value, unit) => {
     let entries = Object.entries(value)
     return new sass.SassMap(entries.reduce((map, [key, val]) => (
       map.set(new sass.SassString(key), toSass(val))
-    ), new OrderedMap()))
+    ), new sass.SassMap().contents))
   }
 
   return sass.sassNull

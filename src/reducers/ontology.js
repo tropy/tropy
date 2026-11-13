@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from '@reduxjs/toolkit'
 import { ONTOLOGY } from '../constants/index.js'
 import { load, merge, nested, replace, remove, update } from './util.js'
 import { has } from '../common/util.js'

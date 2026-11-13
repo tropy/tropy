@@ -1,4 +1,4 @@
-import { createSelector as memo } from 'reselect'
+import { createSelector as memo } from '@reduxjs/toolkit'
 import { seq, compose, map, keep } from 'transducers.js'
 import { getVisiblePhotos } from './photos.js'
 

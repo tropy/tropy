@@ -1,4 +1,4 @@
-import { createSelector as memo } from 'reselect'
+import { createSelector as memo } from '@reduxjs/toolkit'
 import { pluck } from './util.js'
 import { BLANK } from '../common/util.js'
 import { Selection } from '../common/selection.js'

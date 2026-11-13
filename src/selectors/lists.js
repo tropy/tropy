@@ -1,4 +1,4 @@
-import { createSelector as memo } from 'reselect'
+import { createSelector as memo } from '@reduxjs/toolkit'
 import { get, encodeListPath } from '../common/util.js'
 import { LIST } from '../constants/index.js'
 

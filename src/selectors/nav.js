@@ -1,4 +1,4 @@
-import { createSelector as memo } from 'reselect'
+import { createSelector as memo } from '@reduxjs/toolkit'
 import { NAV, TYPE } from '../constants/index.js'
 import { dc, expand } from '../ontology/index.js'
 
