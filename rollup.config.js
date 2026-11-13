@@ -19,6 +19,7 @@ import emit from './scripts/rollup-plugin-emit.js'
 import reactDnd from './scripts/rollup-plugin-react-dnd.js'
 import sharpRequire from './scripts/rollup-plugin-sharp.js'
 import betterSqlite3 from './scripts/rollup-plugin-better-sqlite3.js'
+import { clean } from './scripts/clean.js'
 
 const NODE_ENV = process.env.NODE_ENV || 'production'
 const PROFILE = !!process.env.PROFILE
@@ -29,6 +30,19 @@ const arch =
   process.arch
 
 const platformId = `${platform}-${arch}`
+
+// Configs build in sequence, so the first one cleans lib once
+// before any output is written (and not again on watch rebuilds).
+let isClean = false
+const cleanLib = {
+  name: 'clean-lib',
+  buildStart () {
+    if (!isClean) {
+      clean('lib')
+      isClean = true
+    }
+  }
+}
 
 const sharpNative = {
   src: `node_modules/sharp/src/build/Release/sharp-${platformId}-*.node`,
@@ -113,6 +127,7 @@ export default [
     treeshake: 'recommended',
     preserveEntrySignatures: 'allow-extension',
     plugins: [
+      cleanLib,
       alias({
         entries: {
           'readable-stream': 'node:stream'
