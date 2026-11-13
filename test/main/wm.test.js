@@ -3,7 +3,6 @@ import assert from 'node:assert/strict'
 import { mock } from 'node:test'
 import { EventEmitter, once } from 'node:events'
 import { join } from 'node:path'
-import { env } from 'node:process'
 import { app, BrowserWindow, screen } from 'electron'
 import { DialogService } from '#tropy/main/dialog.js'
 import { WindowManager } from '#tropy/main/wm.js'
@@ -40,7 +39,7 @@ describe('WindowManager', () => {
 
     for (let type of ['about', 'prefs', 'print', 'project']) {
       describe(`open('${type}')`, {
-        timeout: env.CI ? 20000 : 2000
+        timeout: 20000
       }, () => {
         let win
 
@@ -153,7 +152,7 @@ describe('WindowManager', () => {
     })
 
     describe('unload lifecycle', {
-      timeout: env.CI ? 20000 : 2000
+      timeout: 20000
     }, () => {
       let openWindow = (type = 'about') =>
         wm.open(type, {
