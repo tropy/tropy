@@ -9,6 +9,7 @@ import {
 
 import { join } from 'node:path'
 import process from 'node:process'
+import { setTimeout as delay } from 'node:timers/promises'
 import * as yaml from 'js-yaml'
 import { program } from 'commander'
 
@@ -20,6 +21,7 @@ const HOME = join(import.meta.dirname, '..')
 const MENU = join(HOME, 'res', 'menu')
 const STRINGS = join(HOME, 'res', 'strings')
 
+const TRANSIFEX = 'https://rest.api.transifex.com'
 
 program
   .command('export [dir]')
@@ -88,24 +90,14 @@ program
       bail('missing Transifex API token')
     }
 
-    let { transifexApi: tx } = await import('@transifex/api')
-    tx.setup({ auth: opts.token })
-
-    let cds = await tx.Organization.get({ slug: 'cds' })
-    let projects = await cds.fetch('projects')
-    let project = await projects.get({ slug: 'tropy' })
-
     for (let code of opts.lang) {
-      let language = await tx.Language.get({ code })
-
       for (let slug of opts.res) {
         try {
           if (slug === 'main') continue
 
-          let resource = await tx.Resource.get({ project, slug })
-          let url = await tx.ResourceTranslationsAsyncDownload.download({
-            resource,
-            language
+          let url = await download(opts.token, {
+            resource: `o:cds:p:tropy:r:${slug}`,
+            language: `l:${code}`
           })
 
           let res = await fetch(url)
@@ -130,6 +122,62 @@ program
     }
   })
 
+
+// Requests a Transifex API endpoint.
+// Returns the parsed JSON:API document or,
+// for 303 responses, the redirect URL.
+const transifex = async (token, path, { method = 'GET', body } = {}) => {
+  let res = await fetch(`${TRANSIFEX}${path}`, {
+    method,
+    body: body && JSON.stringify(body),
+    redirect: 'manual',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/vnd.api+json'
+    }
+  })
+
+  if (res.status === 303)
+    return { redirect: res.headers.get('location') }
+
+  if (!res.ok)
+    throw new Error(`${res.status} ${res.statusText}: ${await res.text()}`)
+
+  return res.json()
+}
+
+// Starts an async translation download and polls the job
+// until Transifex redirects to the file. Returns the file URL.
+const download = async (token, { resource, language, interval = 5000 }) => {
+  let job = await transifex(token, '/resource_translations_async_downloads', {
+    method: 'POST',
+    body: {
+      data: {
+        type: 'resource_translations_async_downloads',
+        attributes: {
+          content_encoding: 'text',
+          file_type: 'default',
+          mode: 'default'
+        },
+        relationships: {
+          resource: { data: { type: 'resources', id: resource } },
+          language: { data: { type: 'languages', id: language } }
+        }
+      }
+    }
+  })
+
+  while (!job.redirect) {
+    if (job.data.attributes.status === 'failed')
+      throw new Error(JSON.stringify(job.data.attributes.errors))
+
+    await delay(interval)
+    job = await transifex(token,
+      `/resource_translations_async_downloads/${job.data.id}`)
+  }
+
+  return job.redirect
+}
 
 const load = (file) =>
   yaml.load(read(file))
