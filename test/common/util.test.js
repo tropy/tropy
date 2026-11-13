@@ -665,4 +665,37 @@ describe('util', () => {
       expect(chars.size).to.equal(64)
     })
   })
+  describe('memoize', () => {
+    it('returns the last result while arguments are the same', () => {
+      let fn = mock.fn((a, b) => ({ a, b }))
+      let memo = util.memoize(fn)
+      let obj = {}
+
+      expect(memo(1, obj)).to.equal(memo(1, obj))
+      expect(fn.mock.callCount()).to.equal(1)
+
+      memo(2, obj)
+      memo(2, {})
+      memo(2)
+      expect(fn.mock.callCount()).to.equal(4)
+    })
+
+    it('treats NaN as the same argument', () => {
+      let fn = mock.fn(() => ({}))
+      let memo = util.memoize(fn)
+
+      memo(NaN)
+      memo(NaN)
+      expect(fn.mock.callCount()).to.equal(1)
+    })
+
+    it('does not remember calls that throw', () => {
+      let fn = mock.fn(() => { throw new Error() })
+      let memo = util.memoize(fn)
+
+      expect(() => memo(1)).to.throw()
+      expect(() => memo(1)).to.throw()
+      expect(fn.mock.callCount()).to.equal(2)
+    })
+  })
 })

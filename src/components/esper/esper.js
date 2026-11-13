@@ -1,6 +1,6 @@
 import React from 'react'
 import cx from 'classnames'
-import { debounce, throttle } from '../../common/util.js'
+import { debounce, memoize, throttle } from '../../common/util.js'
 import { copy } from '../../clipboard.js'
 import { Toolbar } from '../toolbar.js'
 import { FILTERS } from '../../esper/index.js'
@@ -22,7 +22,6 @@ import { match } from '../../keymap.js'
 import { getResolution } from '../../dom.js'
 import { textBounds } from '../../esper/util.js'
 import { ESPER, SASS } from '../../constants/index.js'
-import memoize from 'memoize-one'
 import { Document } from 'alto-xml'
 
 const {

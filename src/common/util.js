@@ -631,6 +631,21 @@ export async function measure (name, fn) {
   return performance.measure(name, { start }).duration
 }
 
+export function memoize (fn) {
+  let last = null
+
+  return function (...args) {
+    if (last != null && last.self === this &&
+      last.args.length === args.length &&
+      last.args.every((arg, idx) => Object.is(arg, args[idx])))
+      return last.result
+
+    let result = fn.apply(this, args)
+    last = { self: this, args, result }
+    return result
+  }
+}
+
 export function debounce (fn, ms) {
   let id, args, ctx
 

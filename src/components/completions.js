@@ -6,7 +6,7 @@ import { Highlight } from './highlight.js'
 import * as collate from '../collate.js'
 import { createSequence, indexOf } from '../common/sequence.js'
 import cx from 'classnames'
-import memoize from 'memoize-one'
+import { memoize } from '../common/util.js'
 import { SASS } from '../constants/index.js'
 
 const {

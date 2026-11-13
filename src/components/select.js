@@ -2,9 +2,8 @@ import React from 'react'
 import { Completions } from './completions.js'
 import { IconXSmall } from './icons.js'
 import { Button } from './button.js'
-import { blank, noop } from '../common/util.js'
+import { blank, memoize, noop } from '../common/util.js'
 import cx from 'classnames'
-import memoize from 'memoize-one'
 
 class Value extends React.Component {
   handleClearButtonClick = (event) => {
