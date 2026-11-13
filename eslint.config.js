@@ -1,7 +1,6 @@
 import js from '@eslint/js'
 import globals from 'globals'
 import stylistic from '@stylistic/eslint-plugin'
-import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 
 export default [
@@ -118,13 +117,7 @@ export default [
       'test/support/react.js'
     ],
     plugins: {
-      'react': react,
       'react-hooks': reactHooks
-    },
-    settings: {
-      react: {
-        version: '19'
-      }
     },
     languageOptions: {
       parserOptions: {
@@ -134,11 +127,6 @@ export default [
       }
     },
     rules: {
-      ...react.configs.recommended.rules,
-      ...react.configs.flat['jsx-runtime'].rules,
-      'react/display-name': 0,
-      'react/prop-types': 0,
-      'react/no-unknown-property': [2, { ignore: ['closedby'] }],
       ...reactHooks.configs.recommended.rules,
       'react-hooks/set-state-in-effect': 0,
       'react-hooks/use-memo': 0,

@@ -113,7 +113,6 @@
     "electron": "^45.1.0",
     "electron-winstaller": "^5.0.0",
     "eslint": "^10.8.0",
-    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^17.0.0",
     "magic-string": "^1.4.5",
@@ -135,11 +134,6 @@
     "stylelint-config-recommended-scss": "^17.0.0",
     "stylelint-config-standard": "^40.0.0",
     "stylelint-scss": "^7.0.0"
-  },
-  "overrides": {
-    "eslint-plugin-react": {
-      "eslint": "$eslint"
-    }
   },
   "optionalDependencies": {
     "appdmg": "^0.6.6"
