@@ -4,6 +4,7 @@ import { Command } from '../command.js'
 import { call, put, select } from 'redux-saga/effects'
 import { PHOTO, MIME } from '../../constants/index.js'
 import { Cache } from '../../common/cache.js'
+import { sanitize } from '../../common/fs.js'
 import { addOrientation } from '../../common/iiif.js'
 import { warn, info } from '../../common/log.js'
 import Esper from '../../esper/index.js'
@@ -131,25 +132,29 @@ function getSuggestedFilename (state, props) {
     }
   }
 
-  switch (photo.mimetype) {
+  return sanitize(name, getExtension(photo.mimetype))
+}
+
+function getExtension (mimetype) {
+  switch (mimetype) {
     case MIME.AVIF:
-      return `${name}.avif`
+      return 'avif'
     case MIME.HEIC:
     case MIME.HEIF:
     case MIME.PNG:
     case MIME.SVG:
-      return `${name}.png`
+      return 'png'
     case MIME.GIF:
-      return `${name}.gif`
+      return 'gif'
     case MIME.TIFF:
-      return `${name}.tiff`
+      return 'tiff'
     case MIME.JP2:
     case MIME.J2K:
     case MIME.JPX:
     case MIME.RAW:
-      return `${name}.jpg`
+      return 'jpg'
     default:
-      return `${name}.jpg`
+      return 'jpg'
   }
 }
 

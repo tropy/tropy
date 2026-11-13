@@ -6,11 +6,11 @@ import { ONTOLOGY } from '../constants/index.js'
 import { warn } from '../common/log.js'
 import { Ontology, Template, Vocabulary } from '../ontology/index.js'
 import { get, pick, pluck } from '../common/util.js'
+import { sanitize } from '../common/fs.js'
 import { all, call, select, cps } from 'redux-saga/effects'
 import { getTemplateField, getTemplateFields } from '../selectors/index.js'
 import * as act from '../actions/index.js'
 import * as mod from '../models/index.js'
-import sanitize from 'sanitize-filename'
 import { join } from 'node:path'
 import { fail, open, prompt, save } from '../dialog.js'
 
@@ -314,7 +314,7 @@ export class TemplateExport extends Command {
         path = yield this.dialog(save.template, {
           defaultPath: join(
             ARGS.documents,
-            data.name ? sanitize(`${data.name}.ttp`) : ''
+            sanitize(data.name, 'ttp')
           )
         })
       }

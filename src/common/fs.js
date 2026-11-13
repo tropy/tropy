@@ -80,3 +80,24 @@ export async function link (src, dest, type = 'file') {
       throw err
   }
 }
+
+const ILLEGAL = /[/\\?<>:*|"\p{Cc}]/gu
+const RESERVED = /^(con|prn|aux|nul|com[0-9¹²³]|lpt[0-9¹²³])(\..*)?$/i
+
+const MAX_FILENAME_LENGTH = 80
+
+export function sanitize (name, ext = '', fallback = '') {
+  ext = ext ? `.${ext}` : ''
+
+  let base = String(name ?? '')
+    .normalize()
+    .replace(ILLEGAL, '-')
+    .slice(0, MAX_FILENAME_LENGTH)
+    .toWellFormed()
+    .replace(/^[\s.]+|[\s.]+$/g, '')
+
+  if (!base || RESERVED.test(base))
+    base = fallback
+
+  return base ? `${base}${ext}` : ''
+}

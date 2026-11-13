@@ -8,6 +8,7 @@ import { counter, get } from './common/util.js'
 import { copy } from './clipboard.js'
 import { crashReport, warn } from './common/log.js'
 import { pext } from './common/project-file.js'
+import { sanitize } from './common/fs.js'
 import IMAGE from './constants/image.js'
 import { darwin } from './common/os.js'
 
@@ -321,7 +322,7 @@ save.project = (type, name = 'Project', opts = {}) => save({
     'createDirectory',
     'showOverwriteConfirmation'
   ],
-  defaultPath: `${name}.${pext(type)}`,
+  defaultPath: sanitize(name, pext(type), 'Project'),
   ...opts
 })
 
