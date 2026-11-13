@@ -55,6 +55,8 @@ jobs:
           node-version: 26
           architecture: ${{ matrix.nodejs_arch || matrix.arch }}
           cache: npm
+      - name: Setup npm
+        run: npm install -g npm@12
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
@@ -114,6 +116,7 @@ jobs:
         with:
           node-version: 'latest'
           cache: npm
+      - run: npm install -g npm@12
       - run: npm clean-install --no-progress --ignore-scripts
       - run: npm audit signatures
       - run: npm run lint
