@@ -5,7 +5,6 @@ import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
-import natives from 'rollup-plugin-natives'
 import replace from '@rollup/plugin-replace'
 import nodeResolve from '@rollup/plugin-node-resolve'
 
@@ -187,12 +186,6 @@ export default [
         ]
       }),
       sharpRequire({ platformId }),
-      natives({
-        copyTo: 'lib/node/lib',
-        destDir: './node/lib',
-        target_arch: arch,
-        targetEsm: true
-      }),
       {
         name: 'cleanup-signal-exit',
         buildEnd () {
@@ -268,11 +261,6 @@ export default [
     },
     plugins: [
       betterSqlite3(),
-      natives({
-        copyTo: 'lib/node/lib',
-        destDir: './node/lib',
-        target_arch: arch
-      }),
       nodeResolve({
         exportConditions: ['node'],
         preferBuiltins: true
