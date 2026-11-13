@@ -5,7 +5,6 @@ import alias from '@rollup/plugin-alias'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
-import license from 'rollup-plugin-license'
 import natives from 'rollup-plugin-natives'
 import replace from '@rollup/plugin-replace'
 import nodeResolve from '@rollup/plugin-node-resolve'
@@ -19,6 +18,7 @@ import sharpRequire from './scripts/rollup-plugin-sharp.js'
 import betterSqlite3 from './scripts/rollup-plugin-better-sqlite3.js'
 import { clean } from './scripts/clean.js'
 import copy from './scripts/rollup-plugin-copy.js'
+import licenses from './scripts/rollup-plugin-licenses.js'
 
 const NODE_ENV = process.env.NODE_ENV || 'production'
 const PROFILE = !!process.env.PROFILE
@@ -150,14 +150,8 @@ export default [
         ignoreGlobal: true,
         ignoreTryCatch
       }),
-      (NODE_ENV === 'production') && license({
-        thirdParty: {
-          includePrivate: true,
-          output: {
-            file: 'lib/licenses.main.json',
-            template: JSON.stringify
-          }
-        }
+      (NODE_ENV === 'production') && licenses({
+        file: 'lib/licenses.main.json'
       })
       // visualize({ filename: 'main.html' })
     ],
@@ -253,14 +247,8 @@ export default [
         ignoreGlobal: true,
         ignoreTryCatch
       }),
-      (NODE_ENV === 'production') && license({
-        thirdParty: {
-          includePrivate: true,
-          output: {
-            file: 'lib/licenses.renderer.json',
-            template: JSON.stringify
-          }
-        }
+      (NODE_ENV === 'production') && licenses({
+        file: 'lib/licenses.renderer.json'
       })
       // visualize({ filename: 'renderer.html' })
     ],
