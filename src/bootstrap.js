@@ -48,18 +48,16 @@ window.ELECTRON_DISABLE_SECURITY_WARNINGS = !ARGS.debug
       }, `${win.type} ready`)
 
 
-      try {
-        // Expose tropy global / context-bridge for console-use.
-        window.tropy = {
-          args: clone,
-          state: () => win.store?.getState(),
-          win: () => win
-        }
-
-        contextBridge.exposeInMainWorld('tropy', window.tropy)
-      } catch {
-        // Ignore. Most likely we're not sandboxed.
+      window.tropy = {
+        get args () { return ARGS },
+        state: () => win.store?.getState(),
+        win
       }
+
+      if (ARGS.dev || ARGS.debug)
+        contextBridge.exposeInMainWorld('tropy', {
+          state: window.tropy.state
+        })
 
     } catch (err) {
       fatal(`${win.type}.init crashed: ${err.message}`)
