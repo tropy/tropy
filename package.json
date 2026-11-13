@@ -131,9 +131,6 @@
     "stylelint-config-standard": "^40.0.0",
     "stylelint-scss": "^7.0.0"
   },
-  "optionalDependencies": {
-    "appdmg": "^0.6.6"
-  },
   "dependencies": {
     "@fastify/send": "^4.2.0",
     "@inukshuk/exif": "^2.0.0",
@@ -184,8 +181,6 @@
     "write-file-atomic": "^8.0.0"
   },
   "allowScripts": {
-    "fs-xattr@0.3.1": true,
-    "macos-alias@0.2.12": true,
     "electron-winstaller@5.4.4": true,
     "better-sqlite3": false,
     "@parcel/watcher": false,

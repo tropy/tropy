@@ -296,71 +296,38 @@ const exports = {
     return [output]
   },
 
-  async dmg ({ app, arch, out, silent }) {
+  dmg ({ app, arch, out, silent }) {
     check(process.platform === 'darwin', 'must be run on macOS')
-    let appdmg = (await import('appdmg')).default
 
     let output = join(
       out,
       `${name}-${version}${arch === 'x64' ? '' : `-${arch}`}.dmg`)
 
-    return new Promise((resolve, reject) => {
-      // appdmg uses the pre-Big-Sur toolbar height when computing the
-      // size based on the background image, so we set this ourselves.
-      let window = {
-        size: {
-          width: 720,
-          height: 438
-        }
-      }
+    let res = join(ROOT, 'res', 'dmg')
+    let src = join(out, `${qualified.product}.dmg.d`)
 
-      let contents = [
-        {
-          x: 216,
-          y: 206,
-          type: 'file',
-          path: join(app, `${qualified.product}.app`)
-        },
-        {
-          x: 504,
-          y: 206,
-          type: 'link',
-          path: '/Applications' }
-      ]
+    rm('-f', output)
+    rm('-rf', src)
 
-      let failures = []
+    try {
+      mkdir('-p', join(src, '.background'))
+      exec(`ditto "${join(app, `${qualified.product}.app`)}" "${join(src, `${qualified.product}.app`)}"`)
+      ln('-s', '/Applications', join(src, 'Applications'))
 
-      appdmg({
-        target: output,
-        basepath: ROOT,
-        specification: {
-          title: qualified.product,
-          background: join('res', 'dmg', 'background.png'),
-          'icon-size': 92,
-          window,
-          contents
-        }
-      })
-        .on('progress', (info) => {
-          switch (info.type) {
-            case 'step-begin':
-              if (!silent)
-                say(`dmg: ${info.title}`)
-              break
-            case 'step-end':
-              if (info.status === 'fail')
-                failures.push(info.title)
-              break
-          }
-        })
-        .on('finish', () => {
-          if (failures.length)
-            reject(new Error(`dmg failures: ${failures.join(', ')}`))
-          else
-            resolve([output])
-        })
-        .on('error', reject)
-    })
+      exec(`tiffutil -cathidpicheck "${res}/background.png" "${res}/background@2x.png" -out "${src}/.background/background.tiff"`, { silent: true })
+
+      cp(join(res, `${channel}.DS_Store`), join(src, '.DS_Store'))
+
+      let { code, stderr } = exec(`hdiutil create -quiet -srcfolder "${src}" -volname "${qualified.product}" -fs HFS+ -format UDZO -imagekey zlib-level=9 "${output}"`, { silent })
+
+      if (code !== 0)
+        throw new Error(`hdiutil failed with code ${code}: ${stderr}`)
+
+    } finally {
+      rm('-rf', src)
+    }
+
+    return [output]
   },
 
   async squirrel ({ app, out, arch, sign }) {
