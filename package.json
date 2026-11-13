@@ -201,11 +201,11 @@
     "write-file-atomic": "^8.0.0"
   },
   "allowScripts": {
-    "fsevents@2.3.3": true,
     "fs-xattr@0.3.1": true,
     "macos-alias@0.2.12": true,
     "electron-winstaller@5.4.4": true,
     "better-sqlite3": false,
-    "@parcel/watcher": false
+    "@parcel/watcher": false,
+    "fsevents": false
   }
 }
