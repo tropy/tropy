@@ -41,7 +41,7 @@ export class Server {
   }
 
   async address () {
-    return this.#api?.server.address()
+    return (await this.#api)?.server.address()
   }
 
   start () {
