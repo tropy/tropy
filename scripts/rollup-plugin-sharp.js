@@ -1,5 +1,4 @@
 import MagicString from 'magic-string'
-import sharp from 'sharp'
 
 const REQUIRE = [
   'try {',
@@ -10,7 +9,7 @@ const REQUIRE = [
   '}'
 ].join('\n')
 
-export default function sharpRequire ({ platformId }) {
+export default function sharpRequire ({ platformId, version }) {
   let transformed = false
   return {
     name: 'sharp-require-patch',
@@ -24,7 +23,7 @@ export default function sharpRequire ({ platformId }) {
           )
         }
 
-        const path = `./node/lib/sharp-${platformId}-${sharp.versions.sharp}.node`
+        const path = `./node/lib/sharp-${platformId}-${version}.node`
         const REPLACEMENT = `sharp = require('${path}');`
 
         const magicString = new MagicString(code)

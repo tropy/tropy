@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import fs from 'node:fs'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { coerce } from 'semver'
-import { say, setLogSymbol, ROOT } from './util.js'
+import { download, say, setLogSymbol, untar, ROOT } from './util.js'
 import { program } from 'commander'
 import { family } from 'detect-libc'
 import shelljs from 'shelljs'
 
 setLogSymbol('Δ')
 
-const { cat, cp, env, exec, test } = shelljs
+const { env, exec, test } = shelljs
 
 const ELECTRON_VERSION = JSON.parse(
   fs.readFileSync(join(ROOT, 'node_modules/electron/package.json'), {
@@ -27,7 +27,10 @@ const LIBVIPS_VERSION = coerce(JSON.parse(
 ).config.libvips).toString()
 
 const LIBVIPS_URL = 'https://github.com/tropy/sharp-libvips/releases/download'
-const SHARP_LIB = join(ROOT, 'node_modules', '@img')
+
+const SQLITE_URL = fs.readFileSync(
+  join(ROOT, 'vendor/sqlite3/version.txt'), { encoding: 'utf-8' }
+).trim()
 
 function downloadHeaders ({
   arch = process.arch,
@@ -43,12 +46,25 @@ function downloadHeaders ({
   ].join(' ')}`, { silent })
 }
 
-async function download (url, file) {
-  let res = await fetch(url)
-  if (res.status !== 200)
-    throw new Error(`download failed: ${res.status} ${res.statusText}`)
+// Paths of our libvips build for the task's platform.
+// sharp's build looks for `@img/sharp-libvips-dev-<platform>` first
+// (include and lib), so we unpack it as that package and put it
+// on the NODE_PATH instead of overwriting the npm-installed ones.
+// At runtime, our sharp build looks for libvips
+// in `../../sharp-libvips-<platform>/lib` (rpath).
+function libvips (task) {
+  let platformId = `${task.platform}-${task.arch}`
+  let release = `v${LIBVIPS_VERSION}-tropy`
+  let tar = `sharp-libvips-${platformId}${task.arch === 'arm64' ? 'v8' : ''}.tar.gz`
 
-  await fs.promises.writeFile(file, Buffer.from(await res.arrayBuffer()))
+  return {
+    platformId,
+    url: `${LIBVIPS_URL}/${release}/${tar}`,
+    tar: task.vendorPath(release, tar),
+    nodePath: task.vendorPath(release, 'node_modules'),
+    dev: task.vendorPath(release, 'node_modules', '@img', `sharp-libvips-dev-${platformId}`),
+    runtime: task.modulePath('src', `sharp-libvips-${platformId}`)
+  }
 }
 
 class Rebuilder {
@@ -94,19 +110,29 @@ class Rebuilder {
     return this.#package
   }
 
+  // Everything the build depends on, written after a successful rebuild.
+  get stamp () {
+    return JSON.stringify({
+      version: this.package.version,
+      target: this.target,
+      arch: this.arch,
+      deps: (this.name === 'sharp') ?
+        (env.SHARP_FORCE_GLOBAL_LIBVIPS === 'true' ? 'global' : LIBVIPS_VERSION) :
+        SQLITE_URL
+    })
+  }
+
+  get stampPath () {
+    return (this.name === 'sharp') ?
+      this.modulePath('src', 'build', 'tropy-rebuild.json') :
+      this.modulePath('build', 'tropy-rebuild.json')
+  }
+
   get stale () {
-    switch (this.name) {
-      case 'sharp':
-        return !fs.existsSync(this.modulePath(
-          'src',
-          'build',
-          'Release',
-          `sharp-${this.platform}-${this.arch}.node`))
-      case 'better-sqlite3':
-        return !fs.existsSync(this.modulePath(
-          'build', 'Release', 'better_sqlite3.node'))
-      default:
-        return true
+    try {
+      return fs.readFileSync(this.stampPath, { encoding: 'utf-8' }) !== this.stamp
+    } catch {
+      return true
     }
   }
 
@@ -138,52 +164,71 @@ class Rebuilder {
       async (task) => {
         if (env.SHARP_FORCE_GLOBAL_LIBVIPS === 'true') {
           say('using system libvips ...')
-        } else {
-          await fs.promises.mkdir(task.vendorPath(), { recursive: true })
-
-          let platformId = `${task.platform}-${task.arch}`
-          let tar = `sharp-libvips-${platformId}${task.arch === 'arm64' ? 'v8' : ''}.tar.gz`
-          let url = `${LIBVIPS_URL}/v${LIBVIPS_VERSION}-tropy/${tar}`
-
-          if (!test('-f', task.vendorPath(tar))) {
-            say('fetching sharp-libvips binaries ...')
-            await download(url, task.vendorPath(tar))
-          }
-
-          await fs.promises.rm(task.vendorPath('lib'), { force: true, recursive: true })
-          await fs.promises.rm(task.vendorPath('include'), { force: true, recursive: true })
-          say('unpacking sharp-libvips binaries ...')
-          exec(`tar -C ${task.vendorPath()} -x -z -f ${task.vendorPath(tar)}`)
-
-          say('replacing sharp-libvips lib and include ...')
-          cp('-r',
-            task.vendorPath('lib'),
-            join(SHARP_LIB, `sharp-libvips-${platformId}`))
-          cp('-r',
-            task.vendorPath('include'),
-            join(SHARP_LIB, 'sharp-libvips-dev'))
+          return
         }
+
+        let { tar, url, dev, nodePath } = libvips(task)
+
+        if (!fs.existsSync(tar)) {
+          say('fetching sharp-libvips binaries ...')
+          await fs.promises.mkdir(dirname(tar), { recursive: true })
+          await download(url, tar)
+        }
+
+        say('unpacking sharp-libvips binaries ...')
+        await fs.promises.rm(dev, { force: true, recursive: true })
+        await fs.promises.mkdir(dev, { recursive: true })
+        untar(tar, dev)
+
+        for (let dir of ['include', 'lib'])
+          await fs.promises.writeFile(
+            join(dev, dir, 'index.js'),
+            'module.exports = __dirname\n')
+
+        env.NODE_PATH = nodePath
       },
 
       async (task) => {
         await task.exec('npm run build')
+      },
+
+      async (task) => {
+        let { platformId, dev, runtime } = libvips(task)
+
+        if (env.SHARP_FORCE_GLOBAL_LIBVIPS !== 'true') {
+          // Put libvips where our build looks for it at runtime,
+          // so it also loads outside the bundle (tests, scripts).
+          await fs.promises.rm(runtime, { force: true, recursive: true })
+          await fs.promises.cp(join(dev, 'lib'), join(runtime, 'lib'), {
+            recursive: true
+          })
+          await fs.promises.cp(
+            join(dev, 'THIRD-PARTY-NOTICES.json'),
+            join(runtime, 'THIRD-PARTY-NOTICES.json'))
+        }
+
+        // Outside the bundle, sharp falls back to npm's prebuilt
+        // binary if ours fails to load: remove it, so that it fails.
+        await fs.promises.rm(join(ROOT, 'node_modules', '@img', `sharp-${platformId}`), {
+          force: true,
+          recursive: true
+        })
       }
     ],
 
     'better-sqlite3': [
       async (task) => {
-        let url = cat(task.vendorPath('../sqlite3/version.txt')).trim()
-        let version = (/-(\d+)\.tar\.gz/).exec(url)[1]
-        let tar = task.vendorPath('../sqlite3', url.split('/').pop())
+        let version = (/-(\d+)\.tar\.gz/).exec(SQLITE_URL)[1]
+        let tar = task.vendorPath('../sqlite3', SQLITE_URL.split('/').pop())
 
         if (!test('-f', tar)) {
           say(`fetching SQLite version ${version} ...`)
-          await download(url, tar)
+          await download(SQLITE_URL, tar)
         }
 
         let prefix = `sqlite-autoconf-${version}`
         let dest = task.modulePath('deps', 'sqlite3')
-        exec(`tar -xzf ${tar} -C ${dest} --strip-components=1 ${prefix}/sqlite3.c ${prefix}/sqlite3.h`)
+        untar(tar, dest, '--strip-components=1', `${prefix}/sqlite3.c`, `${prefix}/sqlite3.h`)
       },
 
       async (task) => {
@@ -260,23 +305,24 @@ program
 
 async function rebuild (task, force) {
   if (force || task.stale) {
+    // node-gyp options for sharp's build, which passes no arguments.
     env.npm_package_config_node_gyp_target = task.target
     env.npm_package_config_node_gyp_arch = task.arch
-    env.npm_package_config_node_gyp_target_arch = task.arch
-    env.npm_config_arch = task.arch // used by sharp!
-    env.npm_config_node_gyp_target = task.target
-    env.npm_config_node_gyp_arch = task.arch
-    env.npm_config_node_gyp_target_arch = task.arch
 
-    if (task.verbose) {
+    // sharp reads it to pick libvips when cross-compiling;
+    // npm warns about it, so only set it when needed.
+    if (task.arch !== process.arch)
+      env.npm_config_arch = task.arch
+
+    if (task.verbose)
       env.npm_package_config_node_gyp_loglevel = 'verbose'
-      env.npm_config_node_gyp_loglevel = 'verbose'
-    }
 
     for (let i = 0; i < task.steps.length; ++i) {
       say(`${task.name} rebuilding #${i + 1}...`)
       await task.steps[i](task)
     }
+
+    await fs.promises.writeFile(task.stampPath, task.stamp)
   } else {
     say(`${task.name} rebuild skipped`)
   }

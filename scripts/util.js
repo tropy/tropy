@@ -1,3 +1,5 @@
+import { execFileSync } from 'node:child_process'
+import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { Transform } from 'node:stream'
 import { StringDecoder } from 'node:string_decoder'
@@ -36,6 +38,22 @@ export const lines = () => {
   })
 }
 export const ICONS = join(ROOT, 'res', 'icons')
+
+export const download = async (url, file) => {
+  let res = await fetch(url)
+  if (!res.ok)
+    throw new Error(`download failed: ${url} ${res.status} ${res.statusText}`)
+
+  await writeFile(file, new Uint8Array(await res.arrayBuffer()))
+}
+
+// Extracts the gzipped tarball file into dest.
+// Extra args are passed to tar, e.g. members to extract.
+export const untar = (file, dest, ...args) => {
+  execFileSync('tar', ['-xzf', file, '-C', dest, ...args], {
+    stdio: ['ignore', 'ignore', 'pipe']
+  })
+}
 
 export let logSymbol = null
 export const setLogSymbol = (ls) => {

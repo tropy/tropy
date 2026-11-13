@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { builtinModules } from 'node:module'
 import process from 'node:process'
@@ -29,6 +30,10 @@ const arch =
 
 const platformId = `${platform}-${arch}`
 
+const sharpVersion = JSON.parse(
+  readFileSync('node_modules/sharp/package.json')
+).version
+
 // Configs build in sequence, so the first one cleans lib once
 // before any output is written (and not again on watch rebuilds).
 let isClean = false
@@ -43,7 +48,7 @@ const cleanLib = {
 }
 
 const sharpNative = {
-  src: `node_modules/sharp/src/build/Release/sharp-${platformId}-*.node`,
+  src: `node_modules/sharp/src/build/Release/sharp-${platformId}-${sharpVersion}.node`,
   dest: 'lib/node/lib'
 }
 
@@ -55,11 +60,11 @@ if (process.env.SHARP_FORCE_GLOBAL_LIBVIPS !== 'true') {
       src: 'node_modules/sharp/src/build/Release/*.{dll,exp,iobj,ipdb,pdb}',
       dest: 'lib/node/lib'
     } : {
-      src: `node_modules/@img/sharp-libvips-${platformId}/lib`,
+      src: `node_modules/sharp/src/sharp-libvips-${platformId}/lib`,
       dest: `lib/sharp-libvips-${platformId}`
     },
     {
-      src: 'vendor/sharp/THIRD-PARTY-NOTICES.json',
+      src: `node_modules/sharp/src/sharp-libvips-${platformId}/THIRD-PARTY-NOTICES.json`,
       dest: 'lib',
       rename: 'licenses.libvips.json'
     })
@@ -184,7 +189,7 @@ export default [
           'src/bootstrap.js'
         ]
       }),
-      sharpRequire({ platformId }),
+      sharpRequire({ platformId, version: sharpVersion }),
       copy([sharpNative, ...libvips]),
       alias({
         entries: {
