@@ -1,13 +1,25 @@
 #!/usr/bin/env node
 
-import { ROOT, ICONS, bail, check, say, setLogSymbol } from './util.js'
-import { basename, dirname, join, relative } from 'node:path'
+import { ROOT, ICONS, bail, check, download, run, say, setLogSymbol } from './util.js'
+import { execFileSync } from 'node:child_process'
+import { basename, dirname, join, relative, resolve } from 'node:path'
 import { createHash } from 'node:crypto'
+import {
+  chmodSync,
+  copyFileSync,
+  cpSync,
+  existsSync,
+  globSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  symlinkSync
+} from 'node:fs'
 import { readFile, writeFile } from 'node:fs/promises'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { program } from 'commander'
-import shelljs from 'shelljs'
 
 import {
   author,
@@ -19,20 +31,6 @@ import {
 } from '../src/common/release.js'
 
 setLogSymbol('λ')
-
-const {
-  exec,
-  cat,
-  cd,
-  chmod,
-  cp,
-  ln,
-  mkdir,
-  mv,
-  rm,
-  test,
-  which
-} = shelljs
 
 const ARCH = {
   x64: 'x86_64',
@@ -79,21 +77,17 @@ async function integrity (path, algo = 'sha256') {
   return value
 }
 
-async function download ({ url, sha256 }, path) {
-  if (test('-f', path) && await checksum(path) === sha256)
+async function downloadTool ({ url, sha256 }, path) {
+  if (existsSync(path) && await checksum(path) === sha256)
     return path
 
   say(`downloading ${url}`)
-
-  let res = await fetch(url)
-  check(res.ok, `failed to download ${url}: ${res.status} ${res.statusText}`)
-
-  await writeFile(path, new Uint8Array(await res.arrayBuffer()))
+  await download(url, path)
 
   let actual = await checksum(path)
   check(actual === sha256, `checksum mismatch for ${url}: ${actual}`)
 
-  chmod('a+x', path)
+  chmodSync(path, 0o755)
 
   return path
 }
@@ -131,13 +125,17 @@ program
     try {
       let opts = program.opts()
 
+      // Some packers run in other directories.
+      opts.out = resolve(opts.out)
+      mkdirSync(opts.out, { recursive: true })
+
       if (!opts.app) {
         opts.app = join(
           opts.out,
           `${qualified.product}-${opts.platform}-${opts.arch}`)
       }
 
-      check(test('-d', opts.app), `missing app: ${opts.app}`)
+      check(existsSync(opts.app), `missing app: ${opts.app}`)
 
       if (!args.length) {
         args = ({
@@ -169,28 +167,33 @@ program
 const exports = {
 
   sourcemaps ({ arch, out, platform }) {
-    check(which('tar'), 'missing dependency: tar')
-
     let output = join(out, `${name}-${version}-sourcemaps-${platform}-${arch}.tar.gz`)
     let rename = (platform === 'darwin')
-      ? `-s '/^lib/${version}/'`
-      : `--transform='s/^lib/${version}/'`
+      ? ['-s', `/^lib/${version}/`]
+      : [`--transform=s/^lib/${version}/`]
 
-    rm('-f', output)
-    exec(`find lib -name "*.map" | tar -czf "${output}" ${rename} -T -`)
+    rmSync(output, { force: true })
+    execFileSync('tar', ['-czf', output, ...rename, '-T', '-'], {
+      cwd: ROOT,
+      input: globSync('lib/**/*.map', { cwd: ROOT }).join('\n'),
+      stdio: ['pipe', 'inherit', 'inherit']
+    })
 
     return [output]
   },
 
   bz2 ({ app, arch, out, tag }) {
-    check(which('tar'), 'missing dependency: tar')
-
     let nva = [name, version, arch]
     let output = join(out, `${[...nva, tag].filter(x => x).join('-')}.tar.bz2`)
     let base = basename(app)
 
-    rm('-f', output)
-    exec(`tar -c -j -f ${output} -C "${dirname(app)}" --transform="s/^${base}/${nva.join('-')}/" "${base}"`)
+    rmSync(output, { force: true })
+    execFileSync('tar', [
+      '-c', '-j', '-f', output,
+      '-C', dirname(app),
+      `--transform=s/^${base}/${nva.join('-')}/`,
+      base
+    ], { stdio: 'inherit' })
 
     return [output]
   },
@@ -204,51 +207,46 @@ const exports = {
     let AppDir = join(out, `${product}-${version}.AppDir`)
     let updateInfo = appImageUpdateInfo(arch, tag)
 
-    let appimagetool = await download(
+    let appimagetool = await downloadTool(
       APPIMAGETOOL[arch], join(import.meta.dirname, `appimagetool-${arch}`))
-    let runtime = await download(
+    let runtime = await downloadTool(
       APPIMAGE_RUNTIME[arch], join(import.meta.dirname, `appimage-runtime-${arch}`))
 
-    rm('-f', output, `${output}.zsync`)
-    rm('-rf', AppDir)
+    rmSync(output, { force: true })
+    rmSync(`${output}.zsync`, { force: true })
+    rmSync(AppDir, { force: true, recursive: true })
 
     try {
-      cp('-r', app, AppDir)
-      mkdir('-p',
-        `${AppDir}/usr/share/applications`,
-        `${AppDir}/usr/share/metainfo`)
-      mv(`${AppDir}/resources/icons`, `${AppDir}/usr/share/icons`)
-      mv(`${AppDir}/resources/mime`, `${AppDir}/usr/share/mime`)
+      let share = join(AppDir, 'usr', 'share')
 
-      cp(`${AppDir}/${qualified.appId}.desktop`,
-        `${AppDir}/usr/share/applications`)
-      cp(`${AppDir}/${qualified.appId}.metainfo.xml`,
-        `${AppDir}/usr/share/metainfo`)
+      cpSync(app, AppDir, { recursive: true, verbatimSymlinks: true })
+      mkdirSync(join(share, 'applications'), { recursive: true })
+      mkdirSync(join(share, 'metainfo'), { recursive: true })
+      renameSync(join(AppDir, 'resources', 'icons'), join(share, 'icons'))
+      renameSync(join(AppDir, 'resources', 'mime'), join(share, 'mime'))
 
-      cp(join(ROOT, 'res', 'linux', 'AppRun'), join(AppDir, 'AppRun'))
-      chmod('755', join(AppDir, 'AppRun'))
+      copyFileSync(join(AppDir, `${qualified.appId}.desktop`),
+        join(share, 'applications', `${qualified.appId}.desktop`))
+      copyFileSync(join(AppDir, `${qualified.appId}.metainfo.xml`),
+        join(share, 'metainfo', `${qualified.appId}.metainfo.xml`))
+
+      copyFileSync(join(ROOT, 'res', 'linux', 'AppRun'), join(AppDir, 'AppRun'))
+      chmodSync(join(AppDir, 'AppRun'), 0o755)
 
       let png = `usr/share/icons/hicolor/512x512/apps/${qualified.appId}.png`
       let svg = `usr/share/icons/hicolor/scalable/apps/${qualified.appId}.svg`
 
-      cd(AppDir)
-      ln('-s', png, '.DirIcon')
-      ln('-s', svg, `${qualified.appId}.svg`)
-      cd('-')
+      symlinkSync(png, join(AppDir, '.DirIcon'))
+      symlinkSync(svg, join(AppDir, `${qualified.appId}.svg`))
 
-      let cmd = [
-        `"${appimagetool}"`,
+      await run(appimagetool, [
         '-n',
         '-v',
-        `--runtime-file "${runtime}"`
-      ]
-
-      if (updateInfo)
-        cmd.push(`-u "${updateInfo}"`)
-
-      cmd.push(`"${AppDir}"`, `"${output}"`)
-
-      let { code, stderr } = exec(cmd.join(' '), {
+        '--runtime-file', runtime,
+        ...(updateInfo ? ['-u', updateInfo] : []),
+        AppDir,
+        output
+      ], {
         silent,
         cwd: out,
         env: {
@@ -258,45 +256,36 @@ const exports = {
         }
       })
 
-      if (code !== 0)
-        throw new Error(`appimagetool failed with code ${code}: ${stderr}`)
-
-      chmod('a+x', output)
+      chmodSync(output, 0o755)
 
     } finally {
-      rm('-rf', AppDir)
+      rmSync(AppDir, { force: true, recursive: true })
     }
 
     if (!updateInfo)
       return [output]
 
-    check(test('-f', `${output}.zsync`), `missing ${output}.zsync`)
+    check(existsSync(`${output}.zsync`), `missing ${output}.zsync`)
     return [output, `${output}.zsync`]
   },
 
-  '7z' ({ app, arch, out, platform, silent }) {
+  async '7z' ({ app, arch, out, platform, silent }) {
     let output = join(out, `${name}-${version}-${
       (platform === 'darwin' && arch === 'x64') ?
         platform : [platform, arch].join('-')
     }.zip`)
 
     let input = (platform === 'darwin') ?
-      `"${qualified.product}.app"` :
+      `${qualified.product}.app` :
       '.'
 
-    check(which('7z'), 'missing dependency: 7z')
-
-    rm('-f', output)
-
-    cd(app)
-    // TODO verbose
-    exec(`7z a ${output} ${input}`, { silent })
-    cd('-')
+    rmSync(output, { force: true })
+    await run('7z', ['a', output, input], { cwd: app, silent })
 
     return [output]
   },
 
-  dmg ({ app, arch, out, silent }) {
+  async dmg ({ app, arch, out, silent }) {
     check(process.platform === 'darwin', 'must be run on macOS')
 
     let output = join(
@@ -305,26 +294,37 @@ const exports = {
 
     let res = join(ROOT, 'res', 'dmg')
     let src = join(out, `${qualified.product}.dmg.d`)
+    let bundle = `${qualified.product}.app`
 
-    rm('-f', output)
-    rm('-rf', src)
+    rmSync(output, { force: true })
+    rmSync(src, { force: true, recursive: true })
 
     try {
-      mkdir('-p', join(src, '.background'))
-      exec(`ditto "${join(app, `${qualified.product}.app`)}" "${join(src, `${qualified.product}.app`)}"`)
-      ln('-s', '/Applications', join(src, 'Applications'))
+      mkdirSync(join(src, '.background'), { recursive: true })
+      await run('ditto', [join(app, bundle), join(src, bundle)])
+      symlinkSync('/Applications', join(src, 'Applications'))
 
-      exec(`tiffutil -cathidpicheck "${res}/background.png" "${res}/background@2x.png" -out "${src}/.background/background.tiff"`, { silent: true })
+      await run('tiffutil', [
+        '-cathidpicheck',
+        join(res, 'background.png'),
+        join(res, 'background@2x.png'),
+        '-out', join(src, '.background', 'background.tiff')
+      ], { silent: true })
 
-      cp(join(res, `${channel}.DS_Store`), join(src, '.DS_Store'))
+      copyFileSync(join(res, `${channel}.DS_Store`), join(src, '.DS_Store'))
 
-      let { code, stderr } = exec(`hdiutil create -quiet -srcfolder "${src}" -volname "${qualified.product}" -fs HFS+ -format UDZO -imagekey zlib-level=9 "${output}"`, { silent })
-
-      if (code !== 0)
-        throw new Error(`hdiutil failed with code ${code}: ${stderr}`)
+      await run('hdiutil', [
+        'create', '-quiet',
+        '-srcfolder', src,
+        '-volname', qualified.product,
+        '-fs', 'HFS+',
+        '-format', 'UDZO',
+        '-imagekey', 'zlib-level=9',
+        output
+      ], { silent })
 
     } finally {
-      rm('-rf', src)
+      rmSync(src, { force: true, recursive: true })
     }
 
     return [output]
@@ -371,10 +371,10 @@ const exports = {
       nupkg = `${n}-${v}-full.nupkg`
     } else {
       nupkg = `${n}-${v}-${arch}-full.nupkg`
-      mv(`${n}-${v}-full.nupkg`, nupkg)
+      renameSync(`${n}-${v}-full.nupkg`, nupkg)
     }
 
-    say(`squirrel release metadata:\n${cat(join(out, 'RELEASES'))}`)
+    say(`squirrel release metadata:\n${readFileSync(join(out, 'RELEASES'), 'utf-8')}`)
 
     return [
       join(out, setupExe),

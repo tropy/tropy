@@ -120,7 +120,6 @@
     "react-dnd-test-backend": "^16.0.1",
     "rollup": "^4.34.8",
     "sass": "^1.64.2",
-    "shelljs": "^0.10.0",
     "source-map-js": "^1.2.1",
     "spark-chamber": "^0.2.4",
     "sqleton": "^5.0.0",
