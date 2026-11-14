@@ -1,7 +1,9 @@
 import { mock } from 'node:test'
+import { runSaga, stdChannel } from 'redux-saga'
 import { run } from '../support/saga.js'
 import {
   cachedLists,
+  completed,
   contribute,
   narrow,
   search,
@@ -11,6 +13,10 @@ import {
 import { create } from '#tropy/common/selection.js'
 import { update } from '#tropy/slices/qr.js'
 import { getDefaultSort } from '#tropy/selectors/nav.js'
+import { dismiss } from '#tropy/slices/completed.js'
+import { done } from '#tropy/slices/cmd.js'
+import { NAV } from '#tropy/constants/index.js'
+import { nav } from '#tropy/reducers/nav.js'
 import * as mod from '#tropy/models/index.js'
 
 const TITLE = 'http://purl.org/dc/elements/1.1/title'
@@ -260,6 +266,84 @@ describe('search saga', () => {
     })
 
     expect(payload.items).to.eql([1, 2])
+  })
+
+  it('searches the items of the completed activity shown', () => {
+    let s = state({ matches: null })
+    s.nav.activity = 'item.import'
+    s.completed = {
+      'item.import': { type: 'item.import', refs: [1, 2] }
+    }
+
+    let { calls } = run(search(null), {
+      state: s,
+      mocks: [
+        [mod.item.find, () => ({ items: [1, 2] })],
+        [termLists, () => []]
+      ]
+    })
+
+    expect(calls(mod.item.find).calls[0].arguments[1].ids).to.eql([1, 2])
+  })
+})
+
+describe('completed saga', () => {
+  // Runs the saga against a state the test changes
+  // before emitting the action that changed it.
+  // Dispatched actions go through the nav reducer.
+  const start = (completed$) => {
+    let channel = stdChannel()
+    let puts = []
+    let state = {
+      nav: { ...nav(undefined, {}), activity: 'item.import' },
+      completed: completed$
+    }
+
+    runSaga({
+      channel,
+      getState: () => state,
+      dispatch (action) {
+        puts.push(action.type)
+        state.nav = nav(state.nav, action)
+        channel.put(action)
+      }
+    }, completed)
+
+    return {
+      puts,
+      emit (action, next) {
+        Object.assign(state, next)
+        channel.put(action)
+      }
+    }
+  }
+
+  const record = (props) =>
+    ({ type: 'item.import', expires: Date.now() + 60000, refs: [1], ...props })
+
+  it('searches again when a new run replaces the record shown', () => {
+    let s = start({ 'item.import': record() })
+
+    s.emit(done({ type: 'item.import', meta: {} }), {
+      completed: { 'item.import': record({ refs: [2] }) }
+    })
+
+    expect(s.puts).to.eql([NAV.SEARCH])
+  })
+
+  it('returns to the project when the record shown is dismissed', () => {
+    let s = start({ 'item.import': record() })
+
+    s.emit(dismiss('item.import'), { completed: {} })
+
+    expect(s.puts).to.eql([NAV.SELECT])
+  })
+
+  it('returns to the project when the record shown expires', async () => {
+    let s = start({ 'item.import': record({ expires: Date.now() + 10 }) })
+
+    await new Promise(resolve => setTimeout(resolve, 20))
+    expect(s.puts).to.eql([NAV.SELECT])
   })
 })
 
