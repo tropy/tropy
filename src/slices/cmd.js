@@ -25,6 +25,7 @@ export function done (action, result, meta) {
     payload,
     error,
     meta: {
+      agent: action.meta.agent,
       idx: action.meta.idx,
       ipc: action.meta.ipc,
       log: action.meta.log,
