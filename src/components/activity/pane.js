@@ -1,8 +1,9 @@
 import { memo } from 'react'
 import { useDispatch } from 'react-redux'
 import cx from 'classnames'
-import { Activity } from './activity.js'
+import { Activity, CompletedActivity } from './activity.js'
 import { useBusyActivities } from './use-busy-activities.js'
+import { useCompletedActivities } from './use-completed-activities.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { SASS } from '../../constants/index.js'
 import * as act from '../../actions/index.js'
@@ -12,15 +13,21 @@ export const ActivityPane = memo(({
 }) => {
   let dispatch = useDispatch()
   let busy = useBusyActivities()
+  let completed = useCompletedActivities()
+  let rows = busy.length + completed.length
 
   let handleCancel = useEvent((id) => {
     dispatch(act.activity.cancel(id))
   })
 
+  let handleDismiss = (type) => {
+    dispatch(act.completed.dismiss(type))
+  }
+
   return (
     <div
-      className={cx('activity-pane', { busy: busy.length > 0 })}
-      style={{ height: busy.length * height }}>
+      className={cx('activity-pane', { busy: rows > 0 })}
+      style={{ height: rows * height }}>
       {busy.map(({ id, cancel, type, progress, total }) => (
         <Activity
           key={id}
@@ -30,6 +37,14 @@ export const ActivityPane = memo(({
           total={total}
           canCancel={cancel}
           onCancel={handleCancel}/>
+      ))}
+      {completed.map(({ type, refs, errors }) => (
+        <CompletedActivity
+          key={type}
+          type={type}
+          count={refs?.length ?? 0}
+          errors={errors ?? 0}
+          onDismiss={handleDismiss}/>
       ))}
     </div>
   )

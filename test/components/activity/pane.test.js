@@ -3,6 +3,7 @@ import { fireEvent, waitFor } from '@testing-library/react'
 import { render, createStore, withStore } from '../../support/react.js'
 import { ActivityPane } from '#tropy/components/activity/index.js'
 import { cancel, start } from '#tropy/slices/activities.js'
+import { dismiss } from '#tropy/slices/completed.js'
 
 const activity = (id, init, props) => ({
   id, init, due: init + 400, type: 'test', ...props
@@ -118,5 +119,46 @@ describe('ActivityPane', () => {
 
     expect(dispatch.mock.calls[0].arguments[0])
       .to.have.property('type', cancel.type)
+  })
+
+  it('renders sticky completed activities until they expire', async () => {
+    let now = Date.now()
+    let store = createStore({
+      completed: {
+        'item.import': {
+          type: 'item.import', done: now, expires: now + 50,
+          refs: [1], errors: 2, sticky: true
+        },
+        'tag.export': { type: 'tag.export', done: now, expires: now + 60000 }
+      }
+    })
+
+    let { container } = render(<ActivityPane/>, withStore(store))
+
+    expect(container.querySelectorAll('.activity.completed')).to.have.length(1)
+    expect(container.querySelector('.activity.completed'))
+      .to.have.text('1 item imported, 2 failed')
+
+    await waitFor(() => {
+      expect(container.querySelector('.activity.completed')).to.be.null
+    })
+  })
+
+  it('dispatches dismiss', () => {
+    let now = Date.now()
+    let store = createStore({
+      completed: {
+        'item.import': {
+          type: 'item.import', done: now, expires: now + 60000, sticky: true
+        }
+      }
+    })
+    let dispatch = mock.method(store, 'dispatch')
+
+    let { container } = render(<ActivityPane/>, withStore(store))
+    fireEvent.click(container.querySelector('.activity.completed button'))
+
+    expect(dispatch.mock.calls[0].arguments[0])
+      .to.eql(dismiss('item.import'))
   })
 })
