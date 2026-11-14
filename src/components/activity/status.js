@@ -1,5 +1,8 @@
+import { useSelector } from 'react-redux'
 import { FormattedIcon } from '../icons.js'
 import { useBusyActivities } from './use-busy-activities.js'
+import { useNow, useTick } from './clock.js'
+import { selectLastCompleted } from '../../slices/completed.js'
 
 const ICON = 'Status'
 const STYLE = { '--indeterminate': 'true' }
@@ -7,9 +10,21 @@ const TITLE = 'activity.status'
 
 export const ActivityStatus = () => {
   let busy = useBusyActivities()
+  let now = useNow()
+  let last = useSelector(state => selectLastCompleted(state, now))
 
-  if (busy.length === 0)
-    return null
+  // When the agent's record expires.
+  useTick(last?.agent ? last.expires : Infinity, now)
+
+  // Without busy activities, shows if an agent completed the last one.
+  if (busy.length === 0) {
+    return last?.agent ? (
+      <FormattedIcon
+        name="Ghost"
+        title="activity.agent"
+        values={{ agent: last.agent }}/>
+    ) : null
+  }
 
   let {
     statusIcon,

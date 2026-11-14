@@ -643,6 +643,7 @@ en:
       {count, plural,
         one {1 activity in progress …}
         other {# activities in progress …}}
+    agent: Recent activity by {agent}
     completed:
       item:
         import: >-
