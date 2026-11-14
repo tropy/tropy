@@ -42,8 +42,14 @@ const canPoll = () =>
 // as more transcriptions become pending.
 export function *track (batch, pending) {
   if (!(isLinked() && pending.length)) {
-    if (batch)
-      yield put(done(batch.handle))
+    // Pending transcriptions are left when the account was unlinked.
+    if (batch) {
+      yield put(done(batch.handle, null, {
+        sticky: true,
+        cancelled: pending.length > 0,
+        ...yield select(getBatchResult, batch.seen)
+      }))
+    }
     return null
   }
 
@@ -69,6 +75,33 @@ export function *track (batch, pending) {
   }
 
   return batch
+}
+
+// The items of a batch's finished transcriptions
+// and the number of failed ones.
+function getBatchResult (state, ids) {
+  let refs = new Set()
+  let errors = 0
+
+  for (let id of ids) {
+    let tr = state.transcriptions[id]
+
+    if (tr == null || tr.status === 0)
+      continue
+
+    if (tr.status < 0) {
+      errors++
+      continue
+    }
+
+    let photo = state.photos[tr.parent] ??
+      state.photos[state.selections[tr.parent]?.photo]
+
+    if (photo != null)
+      refs.add(photo.item)
+  }
+
+  return { refs: [...refs], errors }
 }
 
 function *poll () {
@@ -99,8 +132,9 @@ function *poll () {
       })
     }
   } finally {
+    // Not recorded: the batch did not finish.
     if (batch)
-      yield put(done(batch.handle))
+      yield put(done(batch.handle, null, { cancelled: true }))
 
     online.close()
     trace('*poll terminated')
