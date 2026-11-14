@@ -10,7 +10,7 @@ import { find, ordered } from '../../sagas/search.js'
 export class Find extends Command {
   *exec () {
     let { db } = this.options
-    let { list, tags, trash, imports, query, sort } = this.action.payload
+    let { list, tags, trash, query, sort } = this.action.payload
 
     sort = {
       column: sort?.column ?? getDefaultSort(list).column,
@@ -18,7 +18,7 @@ export class Find extends Command {
       locale: yield select(state => state.intl.locale)
     }
 
-    let { ids } = yield* find(db, { list, tags, trash, imports, query })
+    let { ids } = yield* find(db, { list, tags, trash, query })
     ids = yield* ordered(db, ids, sort)
 
     let items = yield select(state => state.items)

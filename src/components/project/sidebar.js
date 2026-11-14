@@ -32,9 +32,7 @@ class ProjectSidebar extends React.PureComponent {
   get hasSelection () {
     return this.props.list != null ||
       this.props.isTrashSelected ||
-      this.props.isActivitySelected || (
-      this.props.isLastImportSelected && this.props.hasLastImport
-    )
+      this.props.isActivitySelected
   }
 
   get tabIndex () {
@@ -80,12 +78,8 @@ class ProjectSidebar extends React.PureComponent {
       case this.props.isTrashSelected:
       case this.props.isActivitySelected:
         return
-      case this.props.isLastImportSelected:
-        return this.handleTrashSelect()
       case (this.props.list === -1):
-        return this.props.hasLastImport ?
-          this.handleLastImportSelect() :
-          this.handleTrashSelect()
+        return this.handleTrashSelect()
       case this.isListEmpty():
       case this.isListSelected(this.getLastList()):
         return this.handleUnlistedSelect()
@@ -103,11 +97,7 @@ class ProjectSidebar extends React.PureComponent {
       case this.props.isActivitySelected:
         return this.handleTrashSelect()
       case this.props.isTrashSelected:
-        return this.props.hasLastImport ?
-          this.handleLastImportSelect() :
-          this.handleUnlistedSelect()
-      case this.props.isLastImportSelected:
-        return this.handleUnlistedSelect(this.getLastList())
+        return this.handleUnlistedSelect()
       case (this.props.list === -1):
         return this.handleListSelect(this.getLastList())
       case this.isListEmpty():
@@ -165,10 +155,6 @@ class ProjectSidebar extends React.PureComponent {
 
   handleTrashSelect = () => {
     this.props.onSelect({ trash: true }, { throttle: true })
-  }
-
-  handleLastImportSelect = () => {
-    this.props.onSelect({ imports: true }, { throttle: true })
   }
 
   handleUnlistedSelect = () => {
@@ -294,13 +280,6 @@ class ProjectSidebar extends React.PureComponent {
                       isSelected={this.props.list === -1}
                       onClick={this.handleUnlistedSelect}/>
                   )}
-                  {this.props.hasLastImport && (
-                    <ListLeafNode
-                      name="sidebar.imports"
-                      icon="Clock"
-                      isSelected={this.props.isLastImportSelected}
-                      onClick={this.handleLastImportSelect}/>
-                  )}
                   <TrashListNode
                     isSelected={this.props.isTrashSelected}
                     onContextMenu={this.handleContextMenu}
@@ -349,9 +328,7 @@ class ProjectSidebar extends React.PureComponent {
 const ProjectSidebarContainer = connect(
   (state, { root }) => ({
     edit: state.edit,
-    hasLastImport: state.imports.length > 0,
     isActivitySelected: state.nav.activity != null,
-    isLastImportSelected: state.nav.imports,
     isTrashSelected: state.nav.trash,
     keymap: state.keymap,
     list: state.nav.list,

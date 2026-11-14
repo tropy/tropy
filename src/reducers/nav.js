@@ -165,13 +165,12 @@ export function nav (state = init, { type, payload, meta, error }) {
     case TAG.SELECT: {
       let tags = selectTag(state.tags, payload, meta.mod)
       let isNarrowing = tags.some(id => !state.tags.includes(id)) ||
-        state.trash || state.imports || state.activity
+        state.trash || state.activity
 
       return {
         ...state,
         ...(isNarrowing ? reset : null),
         trash: null,
-        imports: null,
         activity: null,
         tags
       }
@@ -223,7 +222,6 @@ export function nav (state = init, { type, payload, meta, error }) {
         mode: NAV.MODE.PROJECT,
         list: null,
         trash: null,
-        imports: null,
         activity: null,
         tags: [],
         ...payload

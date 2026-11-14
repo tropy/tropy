@@ -33,6 +33,8 @@ import { importPaths as importLists } from '../list/import.js'
 const { readFile } = fs.promises
 
 export class Import extends ImportCommand {
+  sticky = true;
+
   *exec () {
     let { payload, meta } = this.action
 
@@ -41,6 +43,9 @@ export class Import extends ImportCommand {
     this.result = []
     this.backlog = []
     this.newLists = []
+
+    // The imported items, also if the import fails as a whole.
+    this.meta = { refs: this.result }
 
     yield * this.configure()
 

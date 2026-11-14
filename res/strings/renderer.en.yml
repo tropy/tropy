@@ -2,7 +2,6 @@ en:
   sidebar:
     lists: Lists
     tags: Tags
-    imports: Last Import
     trash: Deleted Items
     unlisted: Unlisted Items
   toolbar:
