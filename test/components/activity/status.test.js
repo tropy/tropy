@@ -59,4 +59,22 @@ describe('ActivityStatus', () => {
     expect(icon.style.getPropertyValue('--indeterminate')).to.equal('true')
     expect(icon).to.have.attribute('title', '2 activities in progress …')
   })
+
+  it('renders the agent of the last completed activity', async () => {
+    let now = Date.now()
+    let record = (type, done, agent) =>
+      ({ type, done, expires: now + 60000, agent })
+    let status = (...records) => render(<ActivityStatus/>, withStore(
+      createStore({
+        completed: Object.fromEntries(records.map(r => [r.type, r]))
+      })
+    )).container.querySelector('.icon')
+
+    expect(status(record('item.import', now, 'Claude')))
+      .to.have.attribute('title', 'Recent activity by Claude')
+    expect(status(
+      record('item.import', now - 1, 'Claude'),
+      record('tag.create', now)
+    )).to.be.null
+  })
 })
