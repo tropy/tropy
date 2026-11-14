@@ -41,3 +41,24 @@ export const Activity = ({
   )
 }
 
+export const CompletedActivity = ({
+  type,
+  count,
+  errors,
+  onDismiss
+}) => (
+  <div className={cx('activity', 'completed', { type })}>
+    <div className="activity-container">
+      <div className="flex-row center">
+        <div className="activity-text">
+          <FormattedMessage
+            id={`activity.completed.${type}`}
+            values={{ count, errors }}/>
+        </div>
+        <Button
+          icon={<IconXSmall/>}
+          onClick={() => onDismiss(type)}/>
+      </div>
+    </div>
+  </div>
+)
