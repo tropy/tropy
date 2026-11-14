@@ -45,12 +45,16 @@ export const CompletedActivity = ({
   type,
   count,
   errors,
-  onDismiss
+  isActive,
+  onDismiss,
+  onSelect
 }) => (
-  <div className={cx('activity', 'completed', { type })}>
+  <div className={cx('activity', 'completed', { type, active: isActive })}>
     <div className="activity-container">
       <div className="flex-row center">
-        <div className="activity-text">
+        <div
+          className={cx('activity-text', { link: count > 0 })}
+          onClick={count > 0 ? () => onSelect(type) : null}>
           <FormattedMessage
             id={`activity.completed.${type}`}
             values={{ count, errors }}/>

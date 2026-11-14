@@ -161,4 +161,28 @@ describe('ActivityPane', () => {
     expect(dispatch.mock.calls[0].arguments[0])
       .to.eql(dismiss('item.import'))
   })
+
+  it('shows the items of completed activities', () => {
+    let now = Date.now()
+    let record = (type, refs) =>
+      ({ type, done: now, expires: now + 60000, refs, sticky: true })
+    let store = createStore({
+      completed: {
+        'item.import': record('item.import', [1]),
+        'tag.export': record('tag.export')
+      }
+    })
+    let dispatch = mock.method(store, 'dispatch')
+
+    let { container } = render(<ActivityPane/>, withStore(store))
+    let [withRefs, withoutRefs] =
+      container.querySelectorAll('.activity.completed .activity-text')
+
+    fireEvent.click(withoutRefs)
+    expect(dispatch.mock.callCount()).to.equal(0)
+
+    fireEvent.click(withRefs)
+    expect(dispatch.mock.calls[0].arguments[0])
+      .to.have.nested.property('payload.activity', 'item.import')
+  })
 })

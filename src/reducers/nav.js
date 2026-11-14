@@ -39,7 +39,7 @@ const init = {
 export function nav (state = init, { type, payload, meta, error }) {
   switch (type) {
     case NAV.RESTORE: {
-      let { items, ...nav } = omit(payload || {}, ['query', 'tags'])
+      let { items, ...nav } = omit(payload || {}, ['query', 'tags', 'activity'])
       let state = merge(init, nav)
 
       // Restore item selection from legacy `items` array or previous state
@@ -55,10 +55,17 @@ export function nav (state = init, { type, payload, meta, error }) {
     // A new search clears the selections, unless it can only widen
     // the results (e.g. clearing the query or backspacing), so that
     // what is selected stays (see search in sagas/search.js).
+    // A query also leaves the results of a completed activity.
     case NAV.SEARCH:
-      return ('query' in payload && !expands(state.query, payload.query)) ?
-        { ...state, ...reset, ...payload } :
-        { ...state, ...payload }
+      if (!('query' in payload))
+        return { ...state, ...payload }
+
+      return {
+        ...state,
+        ...(expands(state.query, payload.query) ? null : reset),
+        activity: null,
+        ...payload
+      }
 
     case NAV.SORT: {
       const { list, ...sort } = payload
@@ -83,6 +90,7 @@ export function nav (state = init, { type, payload, meta, error }) {
       return !meta.select ? state : {
         ...state,
         ...reset,
+        activity: null,
         list: payload
       }
     }
@@ -157,13 +165,14 @@ export function nav (state = init, { type, payload, meta, error }) {
     case TAG.SELECT: {
       let tags = selectTag(state.tags, payload, meta.mod)
       let isNarrowing = tags.some(id => !state.tags.includes(id)) ||
-        state.trash || state.imports
+        state.trash || state.imports || state.activity
 
       return {
         ...state,
         ...(isNarrowing ? reset : null),
         trash: null,
         imports: null,
+        activity: null,
         tags
       }
     }
@@ -215,6 +224,7 @@ export function nav (state = init, { type, payload, meta, error }) {
         list: null,
         trash: null,
         imports: null,
+        activity: null,
         tags: [],
         ...payload
       }

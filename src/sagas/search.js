@@ -1,4 +1,13 @@
-import { actionChannel, all, call, put, select, take } from 'redux-saga/effects'
+import {
+  actionChannel,
+  all,
+  call,
+  delay,
+  put,
+  race,
+  select,
+  take
+} from 'redux-saga/effects'
 import { buffers } from 'redux-saga'
 import { warn } from '../common/log.js'
 import { build, reverse, update } from '../common/order.js'
@@ -13,6 +22,8 @@ import {
   selectSortKey,
   selectSubjects
 } from '../slices/qr.js'
+import { done } from '../slices/cmd.js'
+import { dismiss, isExpired } from '../slices/completed.js'
 import { TermCache, contributors, keyOf, membership } from '../common/matches.js'
 import { ids as selected } from '../common/selection.js'
 import * as mod from '../models/index.js'
@@ -63,8 +74,9 @@ const byPosition = (ids, sort) => {
 
 // Whether an item belongs to a view, regardless of its query and
 // tags: in its list (or in none, for unlisted), in the trash or not.
-const belongs = (item, { list, trash, imports }) => {
+const belongs = (item, { list, trash, activity, imports }) => {
   if (item == null) return false
+  if (activity != null) return activity.includes(item.id)
   if (imports != null) return imports.includes(item.id)
   if (trash) return !!item.deleted
   if (item.deleted) return false
@@ -208,23 +220,78 @@ export function *matches (pattern) {
   }
 }
 
+const isShowing = ({ type, payload }) =>
+  type === NAV.SELECT && payload?.activity != null
+
+// Keeps the results of a completed activity (nav.activity) up to date:
+// they change when a new run replaces its record, and the view returns
+// to the whole project when the record is dismissed, expires,
+// or has no items.
+export function *completed () {
+  let shown = null
+
+  while (true) {
+    let { type, record } = yield select(({ nav, completed }) => ({
+      type: nav.activity,
+      record: completed[nav.activity]
+    }))
+
+    if (type == null) {
+      shown = null
+      yield take(isShowing)
+      continue
+    }
+
+    if (record?.refs == null || isExpired(record, Date.now())) {
+      shown = null
+      yield put(act.nav.select({}))
+      continue
+    }
+
+    if (shown?.type === type && shown !== record)
+      yield put(act.nav.search({}))
+
+    shown = record
+
+    yield race([
+      take(action => action.type === type && done.match(action)),
+      take(action => dismiss.match(action) && action.payload === type),
+      take(isShowing),
+      delay(record.expires - Date.now() + 1)
+    ])
+  }
+}
+
 // The view the user is looking at: the items the search returns.
 const getView = (state) => ({
   list: state.nav.list,
   tags: state.nav.tags,
   trash: state.nav.trash,
   query: state.nav.query,
+  activity: (state.nav.activity != null) ?
+    state.completed[state.nav.activity]?.refs ?? null : null,
   imports: (state.nav.imports && state.imports.length > 0) ?
     state.imports[0].items : null
 })
 
 // Returns the ids of the items in a view matching the query, as a set
 // (in list order, ascending position, for lists).
-export function *find (db, { list, tags = [], trash, imports, query }) {
+export function *find (db, {
+  list,
+  tags = [],
+  trash,
+  activity,
+  imports,
+  query
+}) {
   let START = Date.now()
   let view
 
   switch (true) {
+    case (activity != null):
+      view = call(mod.item.find, db, { ids: activity })
+      break
+
     case (imports != null):
       view = call(mod.item.find, db, { ids: imports })
       break

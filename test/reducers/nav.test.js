@@ -69,4 +69,17 @@ describe('Nav Reducer', () => {
       expect(isKept(deleted)).to.be.true
     })
   })
+
+  it('leaves the results of a completed activity', () => {
+    let state = { ...nav(undefined, {}), activity: 'item.import' }
+
+    expect(nav(state, { type: NAV.SEARCH, payload: {} }).activity)
+      .to.equal('item.import')
+    expect(nav(state, { type: NAV.SEARCH, payload: { query: 'x' } }).activity)
+      .to.be.null
+    expect(nav(state, { type: NAV.SELECT, payload: { list: 1 } }).activity)
+      .to.be.null
+    expect(nav(state, { type: TAG.SELECT, payload: 1, meta: {} }).activity)
+      .to.be.null
+  })
 })

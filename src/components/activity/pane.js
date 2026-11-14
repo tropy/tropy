@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import { Activity, CompletedActivity } from './activity.js'
 import { useBusyActivities } from './use-busy-activities.js'
@@ -14,6 +14,7 @@ export const ActivityPane = memo(({
   let dispatch = useDispatch()
   let busy = useBusyActivities()
   let completed = useCompletedActivities()
+  let selected = useSelector(state => state.nav.activity)
   let rows = busy.length + completed.length
 
   let handleCancel = useEvent((id) => {
@@ -22,6 +23,10 @@ export const ActivityPane = memo(({
 
   let handleDismiss = (type) => {
     dispatch(act.completed.dismiss(type))
+  }
+
+  let handleSelect = (type) => {
+    dispatch(act.nav.select({ activity: type, query: '' }, { throttle: true }))
   }
 
   return (
@@ -44,7 +49,9 @@ export const ActivityPane = memo(({
           type={type}
           count={refs?.length ?? 0}
           errors={errors ?? 0}
-          onDismiss={handleDismiss}/>
+          isActive={type === selected}
+          onDismiss={handleDismiss}
+          onSelect={handleSelect}/>
       ))}
     </div>
   )
