@@ -166,7 +166,6 @@ function *hydrate ({ db, project }) {
     call(restore, 'completed', project.id),
     call(restore, 'notepad', project.id),
     call(restore, 'esper', project.id),
-    call(restore, 'imports', project.id),
     call(restore, 'sidebar', project.id),
     call(restore, 'panel', project.id)
   ])
@@ -228,7 +227,6 @@ function *stop ({ db, project, store }) {
     call(persist, 'completed', project.id),
     call(persist, 'notepad', project.id),
     call(persist, 'esper', project.id),
-    call(persist, 'imports', project.id),
     call(persist, 'sidebar', project.id),
     call(persist, 'panel', project.id)
   ])

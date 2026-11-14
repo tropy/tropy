@@ -74,10 +74,9 @@ const byPosition = (ids, sort) => {
 
 // Whether an item belongs to a view, regardless of its query and
 // tags: in its list (or in none, for unlisted), in the trash or not.
-const belongs = (item, { list, trash, activity, imports }) => {
+const belongs = (item, { list, trash, activity }) => {
   if (item == null) return false
   if (activity != null) return activity.includes(item.id)
-  if (imports != null) return imports.includes(item.id)
   if (trash) return !!item.deleted
   if (item.deleted) return false
   if (list == null) return true
@@ -269,9 +268,7 @@ const getView = (state) => ({
   trash: state.nav.trash,
   query: state.nav.query,
   activity: (state.nav.activity != null) ?
-    state.completed[state.nav.activity]?.refs ?? null : null,
-  imports: (state.nav.imports && state.imports.length > 0) ?
-    state.imports[0].items : null
+    state.completed[state.nav.activity]?.refs ?? null : null
 })
 
 // Returns the ids of the items in a view matching the query, as a set
@@ -281,7 +278,6 @@ export function *find (db, {
   tags = [],
   trash,
   activity,
-  imports,
   query
 }) {
   let START = Date.now()
@@ -290,10 +286,6 @@ export function *find (db, {
   switch (true) {
     case (activity != null):
       view = call(mod.item.find, db, { ids: activity })
-      break
-
-    case (imports != null):
-      view = call(mod.item.find, db, { ids: imports })
       break
 
     case (!!trash):

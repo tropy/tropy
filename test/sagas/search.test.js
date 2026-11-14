@@ -160,7 +160,6 @@ describe('search saga', () => {
   const state = (qr, query = '', item = []) => ({
     intl: { locale: 'en' },
     nav: { sort: {}, list: null, tags: [], query, item: create(item) },
-    imports: [],
     items: {
       1: { id: 1, photos: [11] },
       2: { id: 2, photos: [] },
