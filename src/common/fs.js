@@ -14,25 +14,11 @@ export async function ls (path, {
   filter = tautology,
   recursive = false
 } = {}) {
-  let files = []
-  let entries = await readdir(path, { withFileTypes: true })
+  let entries = await readdir(path, { recursive, withFileTypes: true })
 
-  for (let entry of entries) {
-    if (entry.isFile()) {
-      if (filter(entry, path))
-        files.push(join(path, entry.name))
-
-    } else {
-      if (recursive && entry.isDirectory())
-        files = files.concat(
-          await ls(join(path, entry.name), {
-            filter,
-            recursive
-          }))
-    }
-  }
-
-  return files
+  return entries
+    .filter(entry => entry.isFile() && filter(entry, entry.parentPath))
+    .map(entry => join(entry.parentPath, entry.name))
 }
 
 export async function expand (paths, {

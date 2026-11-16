@@ -44,6 +44,13 @@ describe('fs utils', () => {
           filter: ({ name }) => name === 'bar.bz'
         })
       ).to.have.length(2)
+
+      expect(
+        await ls(root, {
+          recursive: true,
+          filter: (_, dir) => dir === sub1
+        })
+      ).to.eql([join(sub1, 'bar.bz')])
     })
   })
 
