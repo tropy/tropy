@@ -76,9 +76,9 @@ const byPosition = (ids, sort) => {
 // tags: in its list (or in none, for unlisted), in the trash or not.
 const belongs = (item, { list, trash, activity }) => {
   if (item == null) return false
-  if (activity != null) return activity.includes(item.id)
   if (trash) return !!item.deleted
   if (item.deleted) return false
+  if (activity != null) return activity.includes(item.id)
   if (list == null) return true
   return (list < 0) ? item.lists.length === 0 : item.lists.includes(list)
 }
