@@ -1,6 +1,60 @@
-import { CursorKeyMap, KeyMap, getSelectionMode } from '#tropy/keymap.js'
+import { readFileSync } from 'node:fs'
 import { darwin } from '#tropy/common/os.js'
 import { Cursor } from '#tropy/common/sequence.js'
+import { KeyMap as KeyMapResource } from '#tropy/res.js'
+import {
+  CursorKeyMap,
+  KeyMap,
+  compile,
+  getSelectionMode,
+  parse
+} from '#tropy/keymap.js'
+
+describe('parse', () => {
+  let mods = (string) => {
+    let { alt, ctrl, meta, shift } = parse(string)[0]
+    return { alt, ctrl, meta, shift }
+  }
+
+  let none = { alt: false, ctrl: false, meta: false, shift: false }
+  let cmdOrCtrl = darwin ? { meta: true } : { ctrl: true }
+
+  it('supports Electron modifier names', () => {
+    expect(mods('Alt+a')).to.eql({ ...none, alt: true })
+    expect(mods('Option+a')).to.eql({ ...none, alt: true })
+    expect(mods('Ctrl+a')).to.eql({ ...none, ctrl: true })
+    expect(mods('Control+a')).to.eql({ ...none, ctrl: true })
+    expect(mods('Cmd+a')).to.eql({ ...none, meta: true })
+    expect(mods('Command+a')).to.eql({ ...none, meta: true })
+    expect(mods('Meta+a')).to.eql({ ...none, meta: true })
+    expect(mods('Super+a')).to.eql({ ...none, meta: true })
+    expect(mods('Shift+a')).to.eql({ ...none, shift: true })
+    expect(mods('CmdOrCtrl+a')).to.eql({ ...none, ...cmdOrCtrl })
+    expect(mods('CommandOrControl+a')).to.eql({ ...none, ...cmdOrCtrl })
+  })
+
+  it('ignores modifier case', () => {
+    expect(mods('SHIFT+cmdorctrl+a')).to.eql({
+      ...none, ...cmdOrCtrl, shift: true
+    })
+  })
+
+  it('rejects unknown modifiers', () => {
+    expect(() => parse('Item+a')).to.throw()
+    expect(() => parse('Comand+a')).to.throw()
+    expect(() => parse('Constructor+a')).to.throw()
+    expect(() => parse(['Ctrl+a', 'Ctl+b'])).to.throw()
+  })
+
+  it('compiles the bundled keymaps', () => {
+    let data = KeyMapResource.parse(
+      readFileSync(KeyMapResource.expand('renderer')))
+
+    for (let platform in data.en) {
+      expect(() => compile(data.en[platform]), platform).not.to.throw()
+    }
+  })
+})
 
 describe('KeyMap', () => {
   let keymap = new KeyMap({

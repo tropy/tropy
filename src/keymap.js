@@ -1,10 +1,20 @@
 import { darwin } from './common/os.js'
 
-const ALT = /^a(lt)?$/i
-const CTRL = /^c(trl|ontrol)?$/i
-const META = /^cmd|meta|m$/i
-const SHIFT = /^s(hift)$/i
-const MOD = /^mod|cmdorctrl$/i
+const CMD_OR_CTRL = darwin ? 'meta' : 'ctrl'
+
+const MODIFIERS = new Map([
+  ['alt', 'alt'],
+  ['option', 'alt'],
+  ['control', 'ctrl'],
+  ['ctrl', 'ctrl'],
+  ['command', 'meta'],
+  ['cmd', 'meta'],
+  ['meta', 'meta'],
+  ['super', 'meta'],
+  ['shift', 'shift'],
+  ['commandorcontrol', CMD_OR_CTRL],
+  ['cmdorctrl', CMD_OR_CTRL]
+])
 
 export class KeyMap {
   constructor (specs = {}) {
@@ -47,26 +57,24 @@ function p (string) {
   if (key === 'Space') key = ' '
   key = normalize(key)
 
-  let alt = false, ctrl = false, meta = false, shift = false
-
-  for (let mod of parts) {
-    switch (true) {
-      case (ALT.test(mod)):
-        alt = true
-        break
-      case (CTRL.test(mod) || (!darwin && MOD.test(mod))):
-        ctrl = true
-        break
-      case (META.test(mod) || (darwin && MOD.test(mod))):
-        meta = true
-        break
-      case (SHIFT.test(mod)):
-        shift = true
-        break
-    }
+  let spec = {
+    key,
+    alt: false,
+    ctrl: false,
+    meta: false,
+    shift: false
   }
 
-  return { key, alt, ctrl, meta, shift }
+  for (let mod of parts) {
+    let name = MODIFIERS.get(mod.toLowerCase())
+
+    if (name == null)
+      throw new Error(`unknown modifier "${mod}" in "${string}"`)
+
+    spec[name] = true
+  }
+
+  return spec
 }
 
 const normalize = (key) =>
