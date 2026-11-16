@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useEvent } from './use-event.js'
 import { useFocusClick } from './use-focus-click.js'
 import { useSingleClick } from './use-single-click.js'
-import { hasModifiers } from '../keymap.js'
+import { anyModifierKey } from '../keymap.js'
 
 // Click-to-edit fires when an item:
 //  - was already selected
@@ -56,7 +56,7 @@ export const clickToEdit = {
   },
 
   onClick ({ focus, pending, wasSelected }, { isDisabled, value }, event) {
-    if (isDisabled || hasModifiers(event))
+    if (isDisabled || anyModifierKey(event))
       return
     if (wasSelected.current == null ||
       wasSelected.current.id !== (value?.id ?? value))

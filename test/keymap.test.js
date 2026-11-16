@@ -5,11 +5,11 @@ import { KeyMap as KeyMapResource } from '#tropy/res.js'
 import {
   CursorKeyMap,
   KeyMap,
+  anyModifierKey,
   cmdOrCtrlKey,
   compile,
   getKeyState,
   getSelectionMode,
-  hasModifiers,
   modifiers,
   parse
 } from '#tropy/keymap.js'
@@ -248,16 +248,16 @@ describe('getSelectionMode', () => {
   })
 })
 
-describe('hasModifiers', () => {
+describe('anyModifierKey', () => {
   it('detects modifier keys', () => {
-    expect(hasModifiers({})).to.be.false
-    expect(hasModifiers({ shiftKey: true })).to.be.true
-    expect(hasModifiers({ altKey: true })).to.be.true
+    expect(anyModifierKey({})).to.be.false
+    expect(anyModifierKey({ shiftKey: true })).to.be.true
+    expect(anyModifierKey({ altKey: true })).to.be.true
   })
 
   it('ignores AltGr', () => {
-    expect(hasModifiers(altGr)).to.be.false
-    expect(hasModifiers({ ...altGr, shiftKey: true })).to.be.true
+    expect(anyModifierKey(altGr)).to.be.false
+    expect(anyModifierKey({ ...altGr, shiftKey: true })).to.be.true
   })
 })
 

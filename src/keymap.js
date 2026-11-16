@@ -145,10 +145,8 @@ export function match (map, event) {
   return null
 }
 
-export function hasModifiers (event) {
-  let { alt, ctrl, meta, shift } = modifiers(event)
-  return alt || ctrl || meta || shift
-}
+export const anyModifierKey = (event) =>
+  Object.values(modifiers(event)).includes(true)
 
 export function getKeyState (event) {
   let { alt, ctrl, meta, shift } = modifiers(event)
