@@ -262,6 +262,17 @@ export class Photo extends Container {
     return this
   }
 
+  isOutsideSelection ({ x, y }) {
+    let { active } = this.overlay
+
+    if (active == null)
+      return false
+
+    return !new Rectangle(
+      active.x, active.y, active.width, active.height
+    ).contains(x, y)
+  }
+
   sync (props, state = {}) {
     let { width, height } = props.selection || state
 

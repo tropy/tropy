@@ -469,6 +469,13 @@ export class Esper extends React.Component {
     this.handleToolChange(TOOL.ARROW)
   }
 
+  handleSelectionDeactivate = () => {
+    this.props.onSelect({
+      photo: this.props.photo.id,
+      item: this.props.photo.item
+    })
+  }
+
   handleSelectionCreate = (selection) => {
     if (this.props.isReadOnly) return
 
@@ -754,6 +761,7 @@ export class Esper extends React.Component {
             onResolutionChange={this.handleResolutionChange}
             onSelectionActivate={this.handleSelectionActivate}
             onSelectionCreate={this.handleSelectionCreate}
+            onSelectionDeactivate={this.handleSelectionDeactivate}
             onSelectText={this.handleTextSelection}
             onTextureChange={this.handleTextureChange}
             onWheelPan={this.handleWheelPan}
