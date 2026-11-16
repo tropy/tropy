@@ -101,11 +101,16 @@ export class Command {
     } catch (error) {
       this.error = error
 
+      // Cancellation reaches *exec first, which freezes 
+      // the command before the finally block runs.
+      this.cancelled = true
+
       yield this.abort()
       yield cancel()
 
     } finally {
-      this.cancelled = !hasRunToCompletion
+      if (!this.error)
+        this.cancelled = !hasRunToCompletion
     }
 
     return this
