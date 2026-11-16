@@ -1,13 +1,9 @@
-import { compact, copy, pluck } from './util.js'
+import { compact, pluck } from './util.js'
 
 const { assign, entries } = Object
 const { isArray } = Array
 
 export class Query {
-  dup () {
-    return copy(this, new this.constructor())
-  }
-
   get hasParams () {
     return this.params != null && Reflect.ownKeys(this.params).length > 0
   }
