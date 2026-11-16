@@ -16,7 +16,7 @@ const { locale, file } = ARGS
 Promise.all([
   Esper.instance.init(),
   store.dispatch(intl.load({ locale })),
-  store.dispatch(keymap.load({ locale }))
+  store.dispatch(keymap.load())
 ])
   .then(() => {
     if (file != null) {

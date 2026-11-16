@@ -86,8 +86,8 @@ describe('parse', () => {
     let data = KeyMapResource.parse(
       readFileSync(KeyMapResource.expand('renderer')))
 
-    for (let platform in data.en) {
-      expect(() => compile(data.en[platform]), platform).not.to.throw()
+    for (let platform in data) {
+      expect(() => compile(data[platform]), platform).not.to.throw()
     }
   })
 
@@ -105,7 +105,7 @@ describe('parse', () => {
 
     let overlaps = []
 
-    for (let [platform, keymaps] of Object.entries(data.en)) {
+    for (let [platform, keymaps] of Object.entries(data)) {
       for (let [component, keymap] of Object.entries(compile(keymaps))) {
         let specs = [...keymap]
 

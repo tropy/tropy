@@ -2,9 +2,9 @@ import { KeyMap } from '../res.js'
 import { KEYMAP } from '../constants/index.js'
 import { compile } from '../keymap.js'
 
-function load ({ locale }) {
+function load () {
   return async function (dispatch) {
-    let res = await KeyMap.openWithFallback('en', locale)
+    let res = await KeyMap.open()
     let map = compile(res.map)
 
     dispatch(update(map))

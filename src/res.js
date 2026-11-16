@@ -14,14 +14,17 @@ export class KeyMap extends Resource {
     return join(super.base, 'res/keymaps')
   }
 
-  static open (locale, ...args) {
-    return super.open(locale, process.type, ...args)
+  static open () {
+    return super.open(null, process.type)
   }
 
-  constructor (data, locale = 'en') {
+  static expand (name) {
+    return join(this.base, `${name}${this.ext}`)
+  }
+
+  constructor (data) {
     super()
-    this.map = data?.[locale]?.[process.platform] || {}
-    this.locale = locale
+    this.map = data?.[process.platform] || {}
   }
 }
 
