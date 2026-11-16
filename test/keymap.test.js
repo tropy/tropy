@@ -57,6 +57,30 @@ describe('parse', () => {
     expect(() => parse(['Ctrl+a', 'Ctl+b'])).to.throw()
   })
 
+  it('supports Electron key names', () => {
+    let key = (string) => parse(string)[0].key
+
+    expect(key('Up')).to.equal('ArrowUp')
+    expect(key('Down')).to.equal('ArrowDown')
+    expect(key('Left')).to.equal('ArrowLeft')
+    expect(key('Right')).to.equal('ArrowRight')
+    expect(key('Esc')).to.equal('Escape')
+    expect(key('Return')).to.equal('Enter')
+    expect(key('Space')).to.equal(' ')
+    expect(key('CmdOrCtrl+Plus')).to.equal('+')
+  })
+
+  it('ignores Electron key name case', () => {
+    expect(parse('esc')[0].key).to.equal('Escape')
+    expect(parse('Shift+UP')[0].key).to.equal('ArrowUp')
+  })
+
+  it('keeps DOM key names', () => {
+    expect(parse('ArrowUp')[0].key).to.equal('ArrowUp')
+    expect(parse('Escape')[0].key).to.equal('Escape')
+    expect(parse('Enter')[0].key).to.equal('Enter')
+  })
+
   it('compiles the bundled keymaps', () => {
     let data = KeyMapResource.parse(
       readFileSync(KeyMapResource.expand('renderer')))

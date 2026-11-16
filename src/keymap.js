@@ -16,6 +16,18 @@ const MODIFIERS = new Map([
   ['cmdorctrl', CMD_OR_CTRL]
 ])
 
+// Electron accelerator key names
+const KEYS = new Map([
+  ['down', 'ArrowDown'],
+  ['esc', 'Escape'],
+  ['left', 'ArrowLeft'],
+  ['plus', '+'],
+  ['return', 'Enter'],
+  ['right', 'ArrowRight'],
+  ['space', ' '],
+  ['up', 'ArrowUp']
+])
+
 export class KeyMap {
   constructor (specs = {}) {
     this.specs = {}
@@ -54,8 +66,7 @@ function p (string) {
   let parts = string.split(/[+-](?!$)/)
   let key = parts.pop()
 
-  if (key === 'Space') key = ' '
-  key = normalize(key)
+  key = normalize(KEYS.get(key.toLowerCase()) ?? key)
 
   let spec = {
     key,
