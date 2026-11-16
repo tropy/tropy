@@ -55,17 +55,10 @@ export function nav (state = init, { type, payload, meta, error }) {
     // A new search clears the selections, unless it can only widen
     // the results (e.g. clearing the query or backspacing), so that
     // what is selected stays (see search in sagas/search.js).
-    // A query also leaves the results of a completed activity.
     case NAV.SEARCH:
-      if (!('query' in payload))
-        return { ...state, ...payload }
-
-      return {
-        ...state,
-        ...(expands(state.query, payload.query) ? null : reset),
-        activity: null,
-        ...payload
-      }
+      return ('query' in payload && !expands(state.query, payload.query)) ?
+        { ...state, ...reset, ...payload } :
+        { ...state, ...payload }
 
     case NAV.SORT: {
       const { list, ...sort } = payload

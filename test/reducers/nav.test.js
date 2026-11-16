@@ -70,13 +70,11 @@ describe('Nav Reducer', () => {
     })
   })
 
-  it('leaves the results of a completed activity', () => {
+  it('filters the results of a completed activity, leaves them for other views', () => {
     let state = { ...nav(undefined, {}), activity: 'item.import' }
 
-    expect(nav(state, { type: NAV.SEARCH, payload: {} }).activity)
-      .to.equal('item.import')
     expect(nav(state, { type: NAV.SEARCH, payload: { query: 'x' } }).activity)
-      .to.be.null
+      .to.equal('item.import')
     expect(nav(state, { type: NAV.SELECT, payload: { list: 1 } }).activity)
       .to.be.null
     expect(nav(state, { type: TAG.SELECT, payload: 1, meta: {} }).activity)

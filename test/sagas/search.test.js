@@ -284,6 +284,26 @@ describe('search saga', () => {
 
     expect(calls(mod.item.find).calls[0].arguments[1].ids).to.eql([1, 2])
   })
+
+  it('keeps no deleted items of the completed activity shown', () => {
+    // Item 3 is selected but was moved to the trash.
+    let s = state({ matches: null }, '', [3])
+    s.nav.activity = 'item.import'
+    s.completed = {
+      'item.import': { type: 'item.import', refs: [1, 2, 3] }
+    }
+    s.items[3] = { ...s.items[3], deleted: true }
+
+    let { puts: [{ payload }] } = run(search(null), {
+      state: s,
+      mocks: [
+        [mod.item.find, () => ({ items: [1, 2] })],
+        [termLists, () => []]
+      ]
+    })
+
+    expect(payload.matches).to.eql({ 1: true, 2: true })
+  })
 })
 
 describe('completed saga', () => {
