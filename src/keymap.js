@@ -80,18 +80,31 @@ function p (string) {
 const normalize = (key) =>
   (key.length === 1) ? key.toLowerCase() : key
 
+export function modifiers (event) {
+  // win32 reports AltGr as Ctrl+Alt.
+  let altGr = !!event.getModifierState?.('AltGraph')
+
+  return {
+    alt: !!event.altKey && !altGr,
+    ctrl: !!event.ctrlKey && !altGr,
+    meta: !!event.metaKey,
+    shift: !!event.shiftKey
+  }
+}
+
 export function match (map, event) {
   if ((event.nativeEvent ?? event).isComposing)
     return null
 
   let key = normalize(event.key)
+  let { alt, ctrl, meta, shift } = modifiers(event)
 
   for (let [name, spec] of map) {
     if (spec.key !== key) continue
-    if (spec.alt !== event.altKey) continue
-    if (spec.ctrl !== event.ctrlKey) continue
-    if (spec.meta !== event.metaKey) continue
-    if (spec.shift !== event.shiftKey) continue
+    if (spec.alt !== alt) continue
+    if (spec.ctrl !== ctrl) continue
+    if (spec.meta !== meta) continue
+    if (spec.shift !== shift) continue
 
     return name
   }
@@ -99,23 +112,29 @@ export function match (map, event) {
   return null
 }
 
-export const hasModifiers = (event) =>
-  event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
+export function hasModifiers (event) {
+  let { alt, ctrl, meta, shift } = modifiers(event)
+  return alt || ctrl || meta || shift
+}
 
-export const getKeyState = (event) => ({
-  altKey: event.altKey,
-  ctrlKey: event.ctrlKey,
-  metaKey: event.metaKey,
-  shiftKey: event.shiftKey,
-  repeat: event.repeat
-})
+export function getKeyState (event) {
+  let { alt, ctrl, meta, shift } = modifiers(event)
+
+  return {
+    altKey: alt,
+    ctrlKey: ctrl,
+    metaKey: meta,
+    shiftKey: shift,
+    repeat: event.repeat
+  }
+}
 
 export function isMeta (event) {
-  return (!darwin && event.ctrlKey) || (darwin && event.metaKey)
+  return modifiers(event)[CMD_OR_CTRL]
 }
 
 export function getSelectionMode (keyState) {
-  if (keyState.shiftKey)
+  if (modifiers(keyState).shift)
     return isMeta(keyState) ? 'flip' : 'extend'
   else
     return isMeta(keyState) ? 'toggle' : 'replace'

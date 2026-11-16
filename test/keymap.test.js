@@ -6,9 +6,20 @@ import {
   CursorKeyMap,
   KeyMap,
   compile,
+  getKeyState,
   getSelectionMode,
+  hasModifiers,
+  isMeta,
+  modifiers,
   parse
 } from '#tropy/keymap.js'
+
+// Windows reports AltGr as Ctrl+Alt.
+const altGr = {
+  altKey: true,
+  ctrlKey: true,
+  getModifierState: (mod) => mod === 'AltGraph'
+}
 
 describe('parse', () => {
   let mods = (string) => {
@@ -56,6 +67,30 @@ describe('parse', () => {
   })
 })
 
+describe('modifiers', () => {
+  let none = { alt: false, ctrl: false, meta: false, shift: false }
+
+  it('returns booleans for all modifiers', () => {
+    expect(modifiers({})).to.eql(none)
+    expect(modifiers({
+      altKey: true,
+      ctrlKey: true,
+      metaKey: true,
+      shiftKey: true
+    })).to.eql({ alt: true, ctrl: true, meta: true, shift: true })
+  })
+
+  it('clears Ctrl+Alt when AltGr is pressed', () => {
+    expect(modifiers({
+      altKey: true,
+      ctrlKey: true,
+      metaKey: true,
+      shiftKey: true,
+      getModifierState: (mod) => mod === 'AltGraph'
+    })).to.eql({ ...none, meta: true, shift: true })
+  })
+})
+
 describe('KeyMap', () => {
   let keymap = new KeyMap({
     all: 'Ctrl+a',
@@ -97,6 +132,25 @@ describe('KeyMap', () => {
   it('ignores React events during IME composition', () => {
     expect(match('a', { ctrlKey: true, nativeEvent: { isComposing: true } }))
       .to.be.null
+  })
+
+  describe('AltGr', () => {
+    let keymap = new KeyMap({
+      bracket: '[',
+      lift: 'Ctrl+Alt+['
+    })
+
+    it('ignores Ctrl+Alt when AltGr is pressed', () => {
+      expect(keymap.match({ key: '[', ...altGr })).to.equal('bracket')
+    })
+
+    it('matches Ctrl+Alt without AltGr', () => {
+      expect(keymap.match({
+        ...altGr,
+        key: '[',
+        getModifierState: () => false
+      })).to.equal('lift')
+    })
   })
 })
 
@@ -158,5 +212,48 @@ describe('getSelectionMode', () => {
     expect(getSelectionMode(meta)).to.equal('toggle')
     expect(getSelectionMode({ shiftKey: true })).to.equal('extend')
     expect(getSelectionMode({ ...meta, shiftKey: true })).to.equal('flip')
+  })
+
+  it('ignores AltGr', () => {
+    expect(getSelectionMode(altGr)).to.equal('replace')
+    expect(getSelectionMode({ ...altGr, shiftKey: true })).to.equal('extend')
+  })
+})
+
+describe('hasModifiers', () => {
+  it('detects modifier keys', () => {
+    expect(hasModifiers({})).to.be.false
+    expect(hasModifiers({ shiftKey: true })).to.be.true
+    expect(hasModifiers({ altKey: true })).to.be.true
+  })
+
+  it('ignores AltGr', () => {
+    expect(hasModifiers(altGr)).to.be.false
+    expect(hasModifiers({ ...altGr, shiftKey: true })).to.be.true
+  })
+})
+
+describe('isMeta', () => {
+  let meta = darwin ? { metaKey: true } : { ctrlKey: true }
+
+  it('detects the platform meta key', () => {
+    expect(isMeta({})).to.be.false
+    expect(isMeta(meta)).to.be.true
+  })
+
+  it('ignores AltGr', () => {
+    expect(isMeta(altGr)).to.be.false
+  })
+})
+
+describe('getKeyState', () => {
+  it('returns normalized modifiers and repeat', () => {
+    expect(getKeyState({ ...altGr, shiftKey: true, repeat: true })).to.eql({
+      altKey: false,
+      ctrlKey: false,
+      metaKey: false,
+      shiftKey: true,
+      repeat: true
+    })
   })
 })
