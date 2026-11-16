@@ -270,6 +270,7 @@ describe('search saga', () => {
   it('searches the items of the completed activity shown', () => {
     let s = state({ matches: null })
     s.nav.activity = 'item.import'
+    s.nav.tags = [5]
     s.completed = {
       'item.import': { type: 'item.import', refs: [1, 2] }
     }
@@ -282,7 +283,8 @@ describe('search saga', () => {
       ]
     })
 
-    expect(calls(mod.item.find).calls[0].arguments[1].ids).to.eql([1, 2])
+    expect(calls(mod.item.find).calls[0].arguments[1])
+      .to.eql({ ids: [1, 2], tags: [5] })
   })
 
   it('keeps no deleted items of the completed activity shown', () => {

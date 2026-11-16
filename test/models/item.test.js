@@ -190,6 +190,18 @@ describe('models/item', () => {
         .to.eql([ids[1], ids[2], ids[0]])
     })
 
+    it('finds the given items with every tag', async () => {
+      let a = await tag.create(db, { name: 'A' })
+      let b = await tag.create(db, { name: 'B' })
+      await item.tags.add(db, { id: [ids[0], ids[1]], tag: a.id })
+      await item.tags.add(db, { id: [ids[1], ids[2]], tag: b.id })
+
+      expect((await item.find(db, { ids: ids.slice(1), tags: [a.id] })).items)
+        .to.eql([ids[1]])
+      expect((await item.find(db, { ids, tags: [a.id, b.id] })).items)
+        .to.eql([ids[1]])
+    })
+
     it('finds unlisted items by their live memberships', async () => {
       let a = await list.create(db, { name: 'A' })
       let b = await list.create(db, { name: 'B' })
