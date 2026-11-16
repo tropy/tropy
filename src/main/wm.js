@@ -410,7 +410,10 @@ export class WindowManager extends EventEmitter {
           titleBarOverlay: getTitleBarOverlay(),
           trafficLightPosition: getWindowButtonPosition('quicklook'),
           parent: win,
-          show: false
+          show: false,
+          webPreferences: {
+            sandbox: false
+          }
         }
       }
     })
