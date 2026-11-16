@@ -5,6 +5,15 @@ import { ESPER, SASS } from '../constants/index.js'
 
 const { CURSOR, ZOOM_LINEAR_MAX } = SASS.ESPER
 
+export function getActiveTool ({ selection, tool }, { quicktool }) {
+  tool = quicktool || tool
+
+  if (selection && tool === ESPER.TOOL.SELECT)
+    return ESPER.TOOL.ARROW
+  else
+    return tool
+}
+
 export function constrain (pos, { left, top, bottom, right }) {
   pos.x = (restrict(pos.x, left, right))
   pos.y = (restrict(pos.y, top, bottom))
