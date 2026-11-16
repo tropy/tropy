@@ -1,6 +1,14 @@
 import { mock } from 'node:test'
 import WIN, { createWindowInstance } from '#tropy/window.js'
 import { darwin } from '#tropy/common/os.js'
+import { has } from '#tropy/dom.js'
+
+// Windows reports AltGr as Ctrl+Alt.
+const altGr = {
+  altKey: true,
+  ctrlKey: true,
+  getModifierState: (mod) => mod === 'AltGraph'
+}
 
 describe('Window', () => {
   let win = WIN || createWindowInstance()
@@ -83,6 +91,47 @@ describe('Window', () => {
       let event = press('x')
       expect(emitted()).to.eql([])
       expect(event.preventDefault.mock.callCount()).to.equal(0)
+    })
+  })
+
+  describe('modifier keys', () => {
+    let classes = ['alt-key', 'ctrl-key', 'meta-key', 'full-screen-menu']
+    let isFullScreen = win.isFullScreen
+
+    let active = () =>
+      classes.filter(name => has(win.html, name))
+
+    afterEach(() => {
+      win.html.classList.remove(...classes)
+      win.isFullScreen = isFullScreen
+    })
+
+    it('tracks modifier keys', () => {
+      win.handleModifierKeyDown({ altKey: true, ctrlKey: true, metaKey: true })
+      expect(active()).to.eql(['alt-key', 'ctrl-key', 'meta-key'])
+
+      win.updateModifierKeys({ ctrlKey: true })
+      expect(active()).to.eql(['ctrl-key'])
+
+      win.updateModifierKeys({}) // blur
+      expect(active()).to.eql([])
+    })
+
+    it('ignores AltGr', () => {
+      win.handleModifierKeyDown(altGr)
+      expect(active()).to.eql([])
+    })
+
+    it('toggles the full screen menu with Alt', () => {
+      win.isFullScreen = true
+      win.handleModifierKeyDown({ altKey: true })
+      expect(has(win.html, 'full-screen-menu')).to.be.true
+    })
+
+    it('does not toggle the full screen menu with AltGr', () => {
+      win.isFullScreen = true
+      win.handleModifierKeyDown(altGr)
+      expect(has(win.html, 'full-screen-menu')).to.be.false
     })
   })
 })

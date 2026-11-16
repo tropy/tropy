@@ -4,7 +4,7 @@ import { existsSync as exists } from 'node:fs'
 import { basename, join } from 'node:path'
 import { logger, warn } from './common/log.js'
 import { darwin, linux } from './common/os.js'
-import { KeyMap } from './keymap.js'
+import { KeyMap, altKey, getModifiers } from './keymap.js'
 import { Plugins } from './common/plugins.js'
 import { debounce, delay } from './common/util.js'
 import ARGS, { update } from './args.js'
@@ -291,24 +291,32 @@ export class Window extends EventEmitter {
   }
 
   handleModifierKeys () {
-    on(document, 'keydown', event => {
-      toggle(this.html, 'alt-key', event.altKey)
-      toggle(this.html, 'meta-key', event.metaKey)
-      toggle(this.html, 'ctrl-key', event.ctrlKey)
+    on(document, 'keydown', this.handleModifierKeyDown, {
+      passive: true,
+      capture: true
+    })
 
-      if (this.isFullScreen && event.altKey)
-        toggle(this.html, 'full-screen-menu')
+    on(document, 'keyup', this.updateModifierKeys, {
+      passive: true,
+      capture: true
+    })
 
-    }, { passive: true, capture: true })
+    on(window, 'blur', this.updateModifierKeys, { passive: true })
+  }
 
-    let up = (event) => {
-      toggle(this.html, 'alt-key', event.altKey === true)
-      toggle(this.html, 'meta-key', event.metaKey === true)
-      toggle(this.html, 'ctrl-key', event.ctrlKey === true)
-    }
+  handleModifierKeyDown = (event) => {
+    this.updateModifierKeys(event)
 
-    on(document, 'keyup', up, { passive: true, capture: true })
-    on(window, 'blur', up, { passive: true })
+    if (this.isFullScreen && altKey(event))
+      toggle(this.html, 'full-screen-menu')
+  }
+
+  updateModifierKeys = (event) => {
+    let { alt, ctrl, meta } = getModifiers(event)
+
+    toggle(this.html, 'alt-key', alt)
+    toggle(this.html, 'meta-key', meta)
+    toggle(this.html, 'ctrl-key', ctrl)
   }
 
   handleDragEvents () {

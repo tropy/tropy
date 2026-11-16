@@ -1,5 +1,6 @@
 import React from 'react'
 import { noop } from '../common/util.js'
+import { altKey } from '../keymap.js'
 import { AutoResizer } from './auto-resizer.js'
 import { Completions } from './completions.js'
 
@@ -175,12 +176,12 @@ export class Input extends React.PureComponent {
 
     switch (event.key) {
       case 'ArrowDown':
-        opt = event.altKey
+        opt = altKey(event)
           ? completions.last()
           : completions.next()
         break
       case 'ArrowUp':
-        opt = event.altKey
+        opt = altKey(event)
           ? completions.first()
           : completions.prev()
         break

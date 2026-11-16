@@ -6,6 +6,7 @@ import { useEvent } from '../hooks/use-event.js'
 import { useTheme } from '../hooks/use-theme.js'
 import { useWindow } from '../hooks/use-window.js'
 import { on, off, stylesheet, toggle } from '../dom.js'
+import { getModifiers } from '../keymap.js'
 import { StyleSheet } from '../res.js'
 
 
@@ -44,8 +45,9 @@ export function Frame ({
 
   useEffect(() => {
     let checkModKeys = (event) => {
-      toggle(doc.documentElement, 'ctrl-key', event.ctrlKey === true)
-      toggle(doc.documentElement, 'meta-key', event.metaKey === true)
+      let { ctrl, meta } = getModifiers(event)
+      toggle(doc.documentElement, 'ctrl-key', ctrl)
+      toggle(doc.documentElement, 'meta-key', meta)
     }
 
     if (doc != null) {

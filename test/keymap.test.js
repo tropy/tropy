@@ -10,8 +10,8 @@ import {
   cmdOrCtrlKey,
   compile,
   getKeyState,
+  getModifiers,
   getSelectionMode,
-  modifiers,
   parse
 } from '#tropy/keymap.js'
 
@@ -92,12 +92,12 @@ describe('parse', () => {
   })
 })
 
-describe('modifiers', () => {
+describe('getModifiers', () => {
   let none = { alt: false, ctrl: false, meta: false, shift: false }
 
   it('returns booleans for all modifiers', () => {
-    expect(modifiers({})).to.eql(none)
-    expect(modifiers({
+    expect(getModifiers({})).to.eql(none)
+    expect(getModifiers({
       altKey: true,
       ctrlKey: true,
       metaKey: true,
@@ -106,7 +106,7 @@ describe('modifiers', () => {
   })
 
   it('clears Ctrl+Alt when AltGr is pressed', () => {
-    expect(modifiers({
+    expect(getModifiers({
       altKey: true,
       ctrlKey: true,
       metaKey: true,

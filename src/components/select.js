@@ -3,6 +3,7 @@ import { Completions } from './completions.js'
 import { IconXSmall } from './icons.js'
 import { Button } from './button.js'
 import { blank, memoize, noop } from '../common/util.js'
+import { altKey } from '../keymap.js'
 import cx from 'classnames'
 
 class Value extends React.Component {
@@ -166,10 +167,10 @@ export class Select extends React.Component {
     if (this.props.onKeyDown(event) !== true) {
       switch (event.key) {
         case 'ArrowDown':
-          this.delegate(event.altKey ? 'last' : 'next')
+          this.delegate(altKey(event) ? 'last' : 'next')
           break
         case 'ArrowUp':
-          this.delegate(event.altKey ? 'first' : 'prev')
+          this.delegate(altKey(event) ? 'first' : 'prev')
           break
         case 'Enter':
           this.commit()

@@ -130,7 +130,7 @@ function getKey ({ key, code }) {
   return key
 }
 
-export function modifiers (event) {
+export function getModifiers (event) {
   // win32 reports AltGr as Ctrl+Alt.
   let altGr = !!event.getModifierState?.('AltGraph')
 
@@ -147,7 +147,7 @@ export function match (map, event) {
     return null
 
   let key = getKey(event)
-  let { alt, ctrl, meta, shift } = modifiers(event)
+  let { alt, ctrl, meta, shift } = getModifiers(event)
 
   for (let [name, spec] of map) {
     if (spec.key !== key) continue
@@ -163,10 +163,10 @@ export function match (map, event) {
 }
 
 export const anyModifierKey = (event) =>
-  Object.values(modifiers(event)).includes(true)
+  Object.values(getModifiers(event)).includes(true)
 
 export function getKeyState (event) {
-  let { alt, ctrl, meta, shift } = modifiers(event)
+  let { alt, ctrl, meta, shift } = getModifiers(event)
 
   return {
     altKey: alt,
@@ -178,15 +178,15 @@ export function getKeyState (event) {
 }
 
 export function altKey (event) {
-  return modifiers(event).alt
+  return getModifiers(event).alt
 }
 
 export function cmdOrCtrlKey (event) {
-  return modifiers(event)[CMD_OR_CTRL]
+  return getModifiers(event)[CMD_OR_CTRL]
 }
 
 export function getSelectionMode (keyState) {
-  if (modifiers(keyState).shift)
+  if (getModifiers(keyState).shift)
     return cmdOrCtrlKey(keyState) ? 'flip' : 'extend'
   else
     return cmdOrCtrlKey(keyState) ? 'toggle' : 'replace'
