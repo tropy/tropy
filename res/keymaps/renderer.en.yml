@@ -12,13 +12,11 @@ en:
       find:
         - CmdOrCtrl+f
         - /
-        - Shift+/
       editMetadata: CmdOrCtrl+e
       addTag: CmdOrCtrl+t
     Esper: &Esper
       zoomIn:
         - CmdOrCtrl-+
-        - Shift+CmdOrCtrl-+
         - CmdOrCtrl-=
       zoomOut:
         - CmdOrCtrl+-
@@ -36,12 +34,10 @@ en:
       quicktool: Space
       rotateLeft:
         - CmdOrCtrl+[
-        - CmdOrCtrl+Shift+[
         - CmdOrCtrl+Alt+[
         - l
       rotateRight:
         - CmdOrCtrl+]
-        - CmdOrCtrl+Shift+]
         - CmdOrCtrl+Alt+]
         - r
       copy:
@@ -66,11 +62,9 @@ en:
         - Delete
       rotateLeft: &rotateLeft
         - CmdOrCtrl+[
-        - CmdOrCtrl+Shift+[
         - CmdOrCtrl+Alt+[
       rotateRight: &rotateRight
         - CmdOrCtrl+]
-        - CmdOrCtrl+Shift+]
         - CmdOrCtrl+Alt+]
       all: Ctrl+a
       merge: Ctrl+Shift+M
@@ -135,15 +129,9 @@ en:
       italic: CmdOrCtrl+i
       underline: CmdOrCtrl+u
       overline: CmdOrCtrl+o
-      subscript:
-        - Shift+CmdOrCtrl+B
-        - Shift+CmdOrCtrl+b
-      superscript:
-        - Shift+CmdOrCtrl+P
-        - Shift+CmdOrCtrl+p
-      strikethrough:
-        - Shift+CmdOrCtrl+T
-        - Shift+CmdOrCtrl+t
+      subscript: Shift+CmdOrCtrl+b
+      superscript: Shift+CmdOrCtrl+p
+      strikethrough: Shift+CmdOrCtrl+t
       addLink: CmdOrCtrl+l
       joinUp: Shift+Alt+ArrowUp
       joinDown: Shift+Alt+ArrowDown
@@ -160,7 +148,6 @@ en:
         - CmdOrCtrl+Shift+.
       undo: CmdOrCtrl+z
       redo:
-        - CmdOrCtrl+Shift+Z
         - CmdOrCtrl+Shift+z
         - CmdOrCtrl+y
     TranscriptionPanel: &TranscriptionPanel

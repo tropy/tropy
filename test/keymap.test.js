@@ -90,6 +90,36 @@ describe('parse', () => {
       expect(() => compile(data.en[platform]), platform).not.to.throw()
     }
   })
+
+  it('has no overlapping bindings in the bundled keymaps', () => {
+    let data = KeyMapResource.parse(
+      readFileSync(KeyMapResource.expand('renderer')))
+
+    // Specs overlap if they match the same events (null Shift matches both).
+    let overlap = (a, b) =>
+      a.key === b.key &&
+      a.alt === b.alt &&
+      a.ctrl === b.ctrl &&
+      a.meta === b.meta &&
+      (a.shift === b.shift || a.shift == null || b.shift == null)
+
+    let overlaps = []
+
+    for (let [platform, keymaps] of Object.entries(data.en)) {
+      for (let [component, keymap] of Object.entries(compile(keymaps))) {
+        let specs = [...keymap]
+
+        specs.forEach(([a, sa], i) => {
+          for (let [b, sb] of specs.slice(i + 1)) {
+            if (overlap(sa, sb))
+              overlaps.push(`${platform} ${component}: ${a}, ${b} (${sa.key})`)
+          }
+        })
+      }
+    }
+
+    expect(overlaps).to.eql([])
+  })
 })
 
 describe('getModifiers', () => {
