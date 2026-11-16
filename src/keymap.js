@@ -80,6 +80,39 @@ function p (string) {
 const normalize = (key) =>
   (key.length === 1) ? key.toLowerCase() : key
 
+const ASCII = /^[\x20-\x7e]$/
+const KEY_CODE = /^(?:Key|Digit)([A-Z0-9])$/
+
+const PUNCTUATION = new Map([
+  ['Backquote', '`'],
+  ['Backslash', '\\'],
+  ['BracketLeft', '['],
+  ['BracketRight', ']'],
+  ['Comma', ','],
+  ['Equal', '='],
+  ['Minus', '-'],
+  ['Period', '.'],
+  ['Quote', "'"],
+  ['Semicolon', ';'],
+  ['Slash', '/']
+])
+
+// For non-Latin layouts (e.g. Cyrillic) fall back
+// to US layout character of the physical key.
+function fromCode (code) {
+  let m = KEY_CODE.exec(code)
+  return m ? m[1].toLowerCase() : PUNCTUATION.get(code)
+}
+
+function getKey ({ key, code }) {
+  key = normalize(key)
+
+  if (key.length === 1 && !ASCII.test(key))
+    return fromCode(code) ?? key
+
+  return key
+}
+
 export function modifiers (event) {
   // win32 reports AltGr as Ctrl+Alt.
   let altGr = !!event.getModifierState?.('AltGraph')
@@ -96,7 +129,7 @@ export function match (map, event) {
   if ((event.nativeEvent ?? event).isComposing)
     return null
 
-  let key = normalize(event.key)
+  let key = getKey(event)
   let { alt, ctrl, meta, shift } = modifiers(event)
 
   for (let [name, spec] of map) {

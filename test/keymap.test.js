@@ -134,6 +134,34 @@ describe('KeyMap', () => {
       .to.be.null
   })
 
+  describe('non-Latin layouts', () => {
+    let keymap = new KeyMap({
+      copy: 'Ctrl+c',
+      italic: 'Ctrl+i',
+      zoomToFit: 'Ctrl+0',
+      rotate: 'Ctrl+['
+    })
+
+    let match = (key, code) =>
+      keymap.match({ key, code, ctrlKey: true })
+
+    it('falls back to the physical key for non-ASCII characters', () => {
+      expect(match('с', 'KeyC')).to.equal('copy') // Cyrillic
+      expect(match('С', 'KeyC')).to.equal('copy') // Cyrillic, CapsLock
+      expect(match('à', 'Digit0')).to.equal('zoomToFit') // AZERTY
+      expect(match('ü', 'BracketLeft')).to.equal('rotate') // German
+    })
+
+    it('prefers the layout key for ASCII characters', () => {
+      expect(match('c', 'KeyI')).to.equal('copy') // Dvorak
+    })
+
+    it('does not match when the physical key is unknown', () => {
+      expect(match('с')).to.be.null
+      expect(match('с', 'IntlRo')).to.be.null
+    })
+  })
+
   describe('AltGr', () => {
     let keymap = new KeyMap({
       bracket: '[',
