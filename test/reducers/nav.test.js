@@ -75,9 +75,9 @@ describe('Nav Reducer', () => {
 
     expect(nav(state, { type: NAV.SEARCH, payload: { query: 'x' } }).activity)
       .to.equal('item.import')
-    expect(nav(state, { type: NAV.SELECT, payload: { list: 1 } }).activity)
-      .to.be.null
     expect(nav(state, { type: TAG.SELECT, payload: 1, meta: {} }).activity)
+      .to.equal('item.import')
+    expect(nav(state, { type: NAV.SELECT, payload: { list: 1 } }).activity)
       .to.be.null
   })
 })

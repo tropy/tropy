@@ -285,7 +285,7 @@ export function *find (db, {
 
   switch (true) {
     case (activity != null):
-      view = call(mod.item.find, db, { ids: activity })
+      view = call(mod.item.find, db, { ids: activity, tags })
       break
 
     case (!!trash):
@@ -325,7 +325,8 @@ export function *find (db, {
       list,
       query: !!query,
       tags: tags.length > 0,
-      trash
+      trash,
+      activity: !!activity
     }, 'slow search')
   }
 
@@ -421,7 +422,8 @@ export function *search (db) {
       list: view?.list,
       query: view?.query,
       tags: view?.tags?.length > 0,
-      trash: view?.trash
+      trash: view?.trash,
+      activity: view?.activity != null
     }, '*search failed')
   }
 }

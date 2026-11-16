@@ -115,11 +115,12 @@ mod.item = {
         WHERE id NOT IN (SELECT id FROM trash) ${TAGGED(tags)}`)
   },
 
-  async find (db, { ids }) {
+  async find (db, { ids, tags }) {
     return search(db, sql`
       SELECT id
         FROM items
-        WHERE id ${IN(ids)} AND id NOT IN (SELECT id FROM trash)`)
+        WHERE id ${IN(ids)} AND id NOT IN (SELECT id FROM trash)
+          ${TAGGED(tags)}`)
   },
 
   async trash (db) {

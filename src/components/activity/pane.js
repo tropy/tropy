@@ -26,7 +26,7 @@ export const ActivityPane = memo(({
   }
 
   let handleSelect = (type) => {
-    dispatch(act.nav.select({ activity: type, query: '' }, { throttle: true }))
+    dispatch(act.nav.select({ activity: type }, { throttle: true }))
   }
 
   return (

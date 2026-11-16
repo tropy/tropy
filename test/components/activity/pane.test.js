@@ -182,7 +182,7 @@ describe('ActivityPane', () => {
     expect(dispatch.mock.callCount()).to.equal(0)
 
     fireEvent.click(withRefs)
-    expect(dispatch.mock.calls[0].arguments[0])
-      .to.have.nested.property('payload.activity', 'item.import')
+    expect(dispatch.mock.calls[0].arguments[0].payload)
+      .to.eql({ activity: 'item.import' })
   })
 })
