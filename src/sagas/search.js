@@ -144,8 +144,7 @@ export function cachedLists (db, terms) {
 export async function termLists (db, terms, tags) {
   let cache = cacheOf(db)
 
-  if (!running.has(db)) running.set(db, new Map())
-  let queries = running.get(db)
+  let queries = running.getOrInsertComputed(db, () => new Map())
 
   // Taken before querying: a write meanwhile invalidates the result.
   let generation = db.generation
