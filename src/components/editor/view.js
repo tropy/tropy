@@ -7,7 +7,7 @@ import { isBlank, nodeViews } from '../../editor/index.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useIpcSend } from '../../hooks/use-ipc.js'
 import { isLink } from '../../dom.js'
-import { isMeta } from '../../keymap.js'
+import { cmdOrCtrlKey } from '../../keymap.js'
 import { usePlaceholder } from './use-placeholder.js'
 
 
@@ -46,7 +46,7 @@ export const EditorView = ({
 
     let link = isLink(event.target)
 
-    if (link && isMeta(event)) {
+    if (link && cmdOrCtrlKey(event)) {
       event.preventDefault()
       open(link.href)
     }
@@ -64,7 +64,7 @@ export const EditorView = ({
           onChange(next, tr.docChanged)
       },
       handleClick: (v, pos, event) => (
-        isMeta(event) // Returning true prevents PM's block selection!
+        cmdOrCtrlKey(event) // Returning true prevents PM's block selection!
       ),
       handleDOMEvents: {
         blur: onBlur,

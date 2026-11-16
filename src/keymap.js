@@ -129,15 +129,15 @@ export function getKeyState (event) {
   }
 }
 
-export function isMeta (event) {
+export function cmdOrCtrlKey (event) {
   return modifiers(event)[CMD_OR_CTRL]
 }
 
 export function getSelectionMode (keyState) {
   if (modifiers(keyState).shift)
-    return isMeta(keyState) ? 'flip' : 'extend'
+    return cmdOrCtrlKey(keyState) ? 'flip' : 'extend'
   else
-    return isMeta(keyState) ? 'toggle' : 'replace'
+    return cmdOrCtrlKey(keyState) ? 'toggle' : 'replace'
 }
 
 export class CursorKeyMap {

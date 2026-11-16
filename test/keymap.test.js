@@ -5,11 +5,11 @@ import { KeyMap as KeyMapResource } from '#tropy/res.js'
 import {
   CursorKeyMap,
   KeyMap,
+  cmdOrCtrlKey,
   compile,
   getKeyState,
   getSelectionMode,
   hasModifiers,
-  isMeta,
   modifiers,
   parse
 } from '#tropy/keymap.js'
@@ -233,16 +233,16 @@ describe('hasModifiers', () => {
   })
 })
 
-describe('isMeta', () => {
+describe('cmdOrCtrlKey', () => {
   let meta = darwin ? { metaKey: true } : { ctrlKey: true }
 
   it('detects the platform meta key', () => {
-    expect(isMeta({})).to.be.false
-    expect(isMeta(meta)).to.be.true
+    expect(cmdOrCtrlKey({})).to.be.false
+    expect(cmdOrCtrlKey(meta)).to.be.true
   })
 
   it('ignores AltGr', () => {
-    expect(isMeta(altGr)).to.be.false
+    expect(cmdOrCtrlKey(altGr)).to.be.false
   })
 })
 

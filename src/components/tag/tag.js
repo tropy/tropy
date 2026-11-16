@@ -4,7 +4,7 @@ import { Editable } from '../editable.js'
 import { Highlight } from '../highlight.js'
 import { IconPlusCircles } from '../icons.js'
 import { TagColor } from '../colors.js'
-import { isMeta } from '../../keymap.js'
+import { cmdOrCtrlKey } from '../../keymap.js'
 import { noop, toId } from '../../common/util.js'
 import { useDropItems } from '../../hooks/use-drag-drop-items.js'
 import { useFocusClick } from '../../hooks/use-focus-click.js'
@@ -76,8 +76,8 @@ export const Tag = React.memo(({
     if (event.button > 0) return
 
     let mod = isSelected ?
-        (isMeta(event) ? 'remove' : 'clear') :
-        (isMeta(event) ? 'merge' : 'replace')
+        (cmdOrCtrlKey(event) ? 'remove' : 'clear') :
+        (cmdOrCtrlKey(event) ? 'merge' : 'replace')
 
     onSelect(tag.id, { mod })
   }

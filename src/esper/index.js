@@ -7,7 +7,7 @@ import { Selection } from './selection.js'
 import { Loader } from './loader.js'
 import { ESPER, SASS } from '../constants/index.js'
 import ARGS from '../args.js'
-import { isMeta } from '../keymap.js'
+import { cmdOrCtrlKey } from '../keymap.js'
 
 import {
   isClockwise, isHorizontal, contains, deg, rad
@@ -742,7 +742,7 @@ export default class Esper extends EventEmitter {
     }
 
     let tool = this.photo?.tool
-    let modifier = event.shiftKey ? 'SHIFT' : isMeta(event) ? 'META' : null
+    let modifier = event.shiftKey ? 'SHIFT' : cmdOrCtrlKey(event) ? 'META' : null
 
     if (this.isDoubleClick(tool)) {
       let { x, y, shift } = coords(data.originalEvent)
