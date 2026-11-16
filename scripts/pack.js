@@ -3,7 +3,7 @@
 import { ROOT, ICONS, bail, check, download, run, say, setLogSymbol } from './util.js'
 import { execFileSync } from 'node:child_process'
 import { basename, dirname, join, relative, resolve } from 'node:path'
-import { createHash } from 'node:crypto'
+import { hash } from 'node:crypto'
 import {
   chmodSync,
   copyFileSync,
@@ -66,9 +66,7 @@ const APPIMAGE_RUNTIME = {
 }
 
 async function checksum (path, algo = 'sha256') {
-  let hash = createHash(algo)
-  hash.update(await readFile(path))
-  return hash.digest('hex')
+  return hash(algo, await readFile(path))
 }
 
 async function integrity (path, algo = 'sha256') {

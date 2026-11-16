@@ -1,9 +1,8 @@
 import assert from 'node:assert/strict'
-import { Buffer } from 'node:buffer'
+import { hash } from 'node:crypto'
 import { ipcRenderer } from 'electron'
 import ARGS from './args.js'
 import { HttpError } from './common/error.js'
-import { md5 } from './common/crypto.js'
 import { TokenSet } from './common/token-set.js'
 import { retry } from './common/net.js'
 import { debug } from './common/log.js'
@@ -75,8 +74,9 @@ export async function jsonRequest (pathname, options = {}, ...args) {
 }
 
 export async function upload ({ buffer, type }) {
-  let checksum = md5(buffer)
-  let contentMd5 = Buffer.from(checksum, 'hex').toString('base64')
+  let digest = hash('md5', buffer, 'buffer')
+  let checksum = digest.toString('hex')
+  let contentMd5 = digest.toString('base64')
   let contentType = `image/${type}`
 
   let res = await request(`/uploads/${checksum}.${type}`, {

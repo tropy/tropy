@@ -1,10 +1,10 @@
+import { hash } from 'node:crypto'
 import { rdjpgcom } from 'rdjpgcom'
 import { Asset } from '../asset/index.js'
 import { exif } from './exif.js'
 import { xmp } from './xmp.js'
 import sharp, { defaults, init } from './sharp.js'
 import { inspectPdfPage } from './pdf.js'
-import { md5 } from '../common/crypto.js'
 import { debug, warn } from '../common/log.js'
 import { pMap, pick, restrict } from '../common/util.js'
 import { rgb } from '../css.js'
@@ -185,7 +185,7 @@ export class Image extends Asset {
     }
 
     this.buffer = outputBuffer
-    this.checksum = md5(outputBuffer)
+    this.checksum = hash('md5', outputBuffer)
     this.path = `${this.checksum}${ext}`
     this.protocol = 'file'
     this.mimetype = mimetype
@@ -221,7 +221,7 @@ export class Image extends Asset {
       size: buffer.length,
       mtime: new Date()
     }
-    image.checksum = md5(buffer)
+    image.checksum = hash('md5', buffer)
     image.meta = null
     image.stats = null
     image.page = 0
