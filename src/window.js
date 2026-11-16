@@ -4,6 +4,7 @@ import { existsSync as exists } from 'node:fs'
 import { basename, join } from 'node:path'
 import { logger, warn } from './common/log.js'
 import { darwin, linux } from './common/os.js'
+import { KeyMap } from './keymap.js'
 import { Plugins } from './common/plugins.js'
 import { debounce, delay } from './common/util.js'
 import ARGS, { update } from './args.js'
@@ -28,9 +29,10 @@ import {
   remove
 } from './dom.js'
 
-const isCommand = darwin ?
-  e => e.metaKey && !e.altKey && !e.ctrlKey :
-  e => e.ctrlKey && !e.altKey && !e.metaKey
+const EDIT = new KeyMap({
+  undo: 'CmdOrCtrl+z',
+  redo: darwin ? 'CmdOrCtrl+Shift+z' : ['CmdOrCtrl+Shift+z', 'Ctrl+y']
+})
 
 let instance
 export { instance as default }
@@ -259,34 +261,33 @@ export class Window extends EventEmitter {
   }
 
   handleEditorCommands () {
-    on(document, 'keydown', event => {
-      if (!isCommand(event)) return
-      if (event.defaultPrevented) return
+    on(document, 'keydown', this.handleEditorCommand)
+  }
 
-      switch (event.key) {
-        case 'z':
-          if (event.shiftKey) {
-            if (isLiveInput(event.target)) this.redo()
-            else this.emit('app.redo')
-          } else {
-            if (isLiveInput(event.target)) this.undo()
-            else this.emit('app.undo')
-          }
-          break
+  handleEditorCommand = (event) => {
+    if (event.defaultPrevented) return
 
-        case 'Z':
-        case 'y':
-          if (isLiveInput(event.target)) this.redo()
-          else this.emit('app.redo')
-          break
+    switch (EDIT.match(event)) {
+      case 'undo':
+        if (isLiveInput(event.target))
+          this.undo()
+        else
+          this.emit('app.undo')
+        break
 
-        default:
-          return
-      }
+      case 'redo':
+        if (isLiveInput(event.target))
+          this.redo()
+        else
+          this.emit('app.redo')
+        break
 
-      event.preventDefault()
-      event.stopImmediatePropagation()
-    })
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopImmediatePropagation()
   }
 
   handleModifierKeys () {

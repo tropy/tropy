@@ -177,6 +177,10 @@ export function getKeyState (event) {
   }
 }
 
+export function altKey (event) {
+  return modifiers(event).alt
+}
+
 export function cmdOrCtrlKey (event) {
   return modifiers(event)[CMD_OR_CTRL]
 }
@@ -198,18 +202,20 @@ export class CursorKeyMap {
     return this.cursor.options?.layout ?? 'list'
   }
 
-  match ({ altKey, key }) {
-    switch (key) {
+  match (event) {
+    let alt = altKey(event)
+
+    switch (event.key) {
       case 'ArrowUp':
-        return altKey ? 'first' : 'up'
+        return alt ? 'first' : 'up'
       case 'ArrowDown':
-        return altKey ? 'last' : 'down'
+        return alt ? 'last' : 'down'
       case 'ArrowLeft':
         if (this.layout !== 'grid') return null
-        return altKey ? 'start' : 'prev'
+        return alt ? 'start' : 'prev'
       case 'ArrowRight':
         if (this.layout !== 'grid') return null
-        return altKey ? 'end' : 'next'
+        return alt ? 'end' : 'next'
       case 'Home':
         return (this.scrollKeys === 'select') ? 'first' : null
       case 'End':

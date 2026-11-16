@@ -5,6 +5,7 @@ import { KeyMap as KeyMapResource } from '#tropy/res.js'
 import {
   CursorKeyMap,
   KeyMap,
+  altKey,
   anyModifierKey,
   cmdOrCtrlKey,
   compile,
@@ -262,6 +263,11 @@ describe('CursorKeyMap', () => {
     expect(match('ArrowRight', { altKey: true }, grid)).to.equal('end')
   })
 
+  it('ignores AltGr', () => {
+    expect(match('ArrowDown', altGr)).to.equal('down')
+    expect(match('ArrowUp', altGr)).to.equal('up')
+  })
+
   it('ignores other modifiers', () => {
     expect(match('ArrowDown', { shiftKey: true, ctrlKey: true, metaKey: true }))
       .to.equal('down')
@@ -311,6 +317,17 @@ describe('anyModifierKey', () => {
   it('ignores AltGr', () => {
     expect(anyModifierKey(altGr)).to.be.false
     expect(anyModifierKey({ ...altGr, shiftKey: true })).to.be.true
+  })
+})
+
+describe('altKey', () => {
+  it('detects the Alt key', () => {
+    expect(altKey({})).to.be.false
+    expect(altKey({ altKey: true })).to.be.true
+  })
+
+  it('ignores AltGr', () => {
+    expect(altKey(altGr)).to.be.false
   })
 })
 
