@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readdir, rename, rm } from 'node:fs/promises'
+import { mkdir, mkdtempDisposable, readdir, rename } from 'node:fs/promises'
 import { join } from 'node:path'
 import { spawn } from './spawn.js'
 
@@ -14,18 +14,12 @@ export async function unzip (src, dst, { strip } = {}) {
     return extract(src, dst)
   }
 
-  try {
-    var tmp = await mkdtemp(`${dst}-`)
-    await extract(src, tmp)
-    let [head, ...tail] = await readdir(tmp, { withFileTypes: true })
+  await using tmp = await mkdtempDisposable(`${dst}-`)
+  await extract(src, tmp.path)
+  let [head, ...tail] = await readdir(tmp.path, { withFileTypes: true })
 
-    if (tail.length > 0 || !head?.isDirectory())
-      await rename(tmp, dst)
-    else
-      await rename(join(tmp, head.name), dst)
-
-  } finally {
-    if (tmp)
-      await rm(tmp, { recursive: true, force: true })
-  }
+  if (tail.length > 0 || !head?.isDirectory())
+    await rename(tmp.path, dst)
+  else
+    await rename(join(tmp.path, head.name), dst)
 }
