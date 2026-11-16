@@ -47,12 +47,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
-          node-version: 26
+          node-version: v26
           architecture: ${{ matrix.nodejs_arch || matrix.arch }}
           cache: npm
       - name: Setup npm
@@ -111,10 +111,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 'latest'
+          node-version: latest
           cache: npm
       - run: npm install -g npm@12
       - run: npm clean-install --no-progress --ignore-scripts
