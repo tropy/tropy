@@ -74,6 +74,11 @@ function p (string) {
     spec[name] = true
   }
 
+  // Whether these characters need Shift depends on the layout,
+  // so ignore Shift (null) unless the spec includes it.
+  if (!spec.shift && SYMBOL.test(key))
+    spec.shift = null
+
   return spec
 }
 
@@ -81,6 +86,7 @@ const normalize = (key) =>
   (key.length === 1) ? key.toLowerCase() : key
 
 const ASCII = /^[\x20-\x7e]$/
+const SYMBOL = /^[^a-z ]$/
 const KEY_CODE = /^(?:Key|Digit)([A-Z0-9])$/
 
 const PUNCTUATION = new Map([
@@ -137,7 +143,7 @@ export function match (map, event) {
     if (spec.alt !== alt) continue
     if (spec.ctrl !== ctrl) continue
     if (spec.meta !== meta) continue
-    if (spec.shift !== shift) continue
+    if (spec.shift != null && spec.shift !== shift) continue
 
     return name
   }

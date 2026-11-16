@@ -134,6 +134,35 @@ describe('KeyMap', () => {
       .to.be.null
   })
 
+  describe('punctuation', () => {
+    let keymap = new KeyMap({
+      find: '/',
+      zoomToFit: 'Ctrl+0',
+      quicktool: 'Space',
+      colon: 'Shift+;'
+    })
+
+    let match = (key, mods = {}) =>
+      keymap.match({ key, ...mods })
+
+    it('ignores Shift unless specified', () => {
+      expect(match('/')).to.equal('find')
+      expect(match('/', { shiftKey: true })).to.equal('find') // German
+      expect(match('0', { ctrlKey: true, shiftKey: true }))
+        .to.equal('zoomToFit') // AZERTY
+    })
+
+    it('requires Shift if specified', () => {
+      expect(match(';', { shiftKey: true })).to.equal('colon')
+      expect(match(';')).to.be.null
+    })
+
+    it('does not ignore Shift for Space', () => {
+      expect(match(' ')).to.equal('quicktool')
+      expect(match(' ', { shiftKey: true })).to.be.null
+    })
+  })
+
   describe('non-Latin layouts', () => {
     let keymap = new KeyMap({
       copy: 'Ctrl+c',
