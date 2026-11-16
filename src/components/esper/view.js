@@ -11,6 +11,7 @@ export const EsperView = React.forwardRef(({
   onResolutionChange,
   onSelectionActivate,
   onSelectionCreate,
+  onSelectionDeactivate,
   onSelectText,
   onTextureChange,
   onWheelPan,
@@ -46,6 +47,7 @@ export const EsperView = React.forwardRef(({
       .on('resolution-change', onResolutionChange)
       .on('selection-activate', onSelectionActivate)
       .on('selection-create', onSelectionCreate)
+      .on('selection-deactivate', onSelectionDeactivate)
       .on('select-text', onSelectText)
       .on('texture-change', onTextureChange)
       .on('wheel-pan', onWheelPan)
@@ -59,6 +61,7 @@ export const EsperView = React.forwardRef(({
         .off('resolution-change', onResolutionChange)
         .off('selection-activate', onSelectionActivate)
         .off('selection-create', onSelectionCreate)
+        .off('selection-deactivate', onSelectionDeactivate)
         .off('select-text', onSelectText)
         .off('texture-change', onTextureChange)
         .off('wheel-pan', onWheelPan)
@@ -72,6 +75,7 @@ export const EsperView = React.forwardRef(({
     onResolutionChange,
     onSelectionActivate,
     onSelectionCreate,
+    onSelectionDeactivate,
     onSelectText,
     onTextureChange,
     onWheelPan,
