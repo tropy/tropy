@@ -1,63 +1,8 @@
 import assert from 'node:assert/strict'
-import { EventEmitter } from 'node:events'
 import { mock } from 'node:test'
 import * as util from '#tropy/common/util.js'
 
 describe('util', () => {
-
-  describe('once', () => {
-    describe('given an event emitter', () => {
-      const ee = new EventEmitter()
-
-      describe('when the event fires', () => {
-        let removeListener
-
-        beforeEach(() => {
-          removeListener = mock.method(ee, 'removeListener')
-          setTimeout(() => ee.emit('evt', 42), 25)
-        })
-
-        afterEach(() => {
-          removeListener.mock.restore()
-        })
-
-        it('resolves', async () => {
-          expect(await util.once(ee, 'evt')).to.eql([42])
-        })
-
-        it('cleans up', async () => {
-          await util.once(ee, 'evt')
-          let calls = removeListener.mock.calls.map(c => c.arguments[0])
-          expect(calls).to.include('evt')
-          expect(calls).to.include('error')
-        })
-      })
-
-      describe('when the error event fires', () => {
-        let removeListener
-
-        beforeEach(() => {
-          removeListener = mock.method(ee, 'removeListener')
-          setTimeout(() => ee.emit('error', new Error()), 25)
-        })
-
-        afterEach(() => {
-          removeListener.mock.restore()
-        })
-
-        it('is rejected', async () => {
-          await assert.rejects(() => util.once(ee, 'evt'))
-        })
-
-        it('cleans up', async () => {
-          try { await util.once(ee, 'evt') } catch { /* expected */ }
-          let calls = removeListener.mock.calls.map(c => c.arguments[0])
-          expect(calls).to.include('evt')
-          expect(calls).to.include('error')
-        })
-      })
-    })
-  })
 
   describe('flatten', () => {
     it('flattens empty objects', () =>

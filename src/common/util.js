@@ -8,34 +8,6 @@ export function off (emitter, ...args) {
   (emitter.removeEventListener || emitter.removeListener).apply(emitter, args)
 }
 
-export function once (emitter, ...events) {
-  return Promise.all(events.map(event =>
-    new Promise((resolve, reject) => {
-      function success (...args) {
-        off(emitter, event, success)
-        off(emitter, 'error', failure)
-        resolve(...args)
-      }
-
-      function failure (reason) {
-        off(emitter, event, success)
-        off(emitter, 'error', failure)
-        reject(reason instanceof Error ? reason : new Error(reason))
-      }
-
-      on(emitter, 'error', failure)
-      on(emitter, event, success)
-    })
-  ))
-}
-
-export function when (emitter, event, { timeout, signal }) {
-  return Promise.race([
-    once(emitter, event),
-    delay(timeout, null, { signal })
-  ])
-}
-
 export { delay }
 
 export function empty (obj) {

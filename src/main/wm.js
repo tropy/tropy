@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { EventEmitter } from 'node:events'
+import { EventEmitter, once } from 'node:events'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { URL } from 'node:url'
@@ -21,8 +21,7 @@ import {
   omit,
   promote,
   remove,
-  restrict,
-  when
+  restrict
 } from '../common/util.js'
 
 import {
@@ -1272,7 +1271,8 @@ export function sanitizeWindowBounds (opts = {}, display) {
 }
 
 function setWindowState (win, event, setter = event, ...args) {
-  let p = when(win, event, { timeout: 2000 })
+  let p = once(win, event, { signal: AbortSignal.timeout(2000) })
+    .catch(e => { if (e.name !== 'AbortError') throw e })
   win[setter](...args)
   return p
 }

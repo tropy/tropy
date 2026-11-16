@@ -1,4 +1,5 @@
-import { blank, once as when } from './common/util.js'
+import { once as when } from 'node:events'
+import { blank } from './common/util.js'
 
 const everything = () => true
 
