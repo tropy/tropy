@@ -582,12 +582,14 @@ export class WindowManager extends EventEmitter {
       vibrancy: false // !nativeTheme.prefersReducedTransparency
     })
 
-    let bg = BODY[process.platform][
-      nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
-    ]
+    let bg = getBackgroundColor()
 
     this.each(win => {
       win.setBackgroundColor(bg)
+
+      let { quicklook } = this.getProps(win)
+      if (quicklook != null && !quicklook.isDestroyed())
+        quicklook.setBackgroundColor(bg)
     })
 
     if (!darwin) {
