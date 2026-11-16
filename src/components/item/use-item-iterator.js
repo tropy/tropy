@@ -1,6 +1,5 @@
 import { useImperativeHandle, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { seq, compose, map, cat, keep } from 'transducers.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useEventHandler } from '../../hooks/use-event-handler.js'
@@ -52,10 +51,8 @@ export function useItemIterator ({
   let getSelection = useEvent(() => selection.ids())
 
   let getSelectedPhotos = () =>
-    seq(selection.ids(), compose(
-      map(id => (indexOf(items, id) === -1) ? null : data[id]?.photos),
-      keep(),
-      cat))
+    selection.ids().flatMap(id =>
+      (indexOf(items, id) === -1) ? [] : data[id]?.photos ?? [])
 
   // The first unselected item after or before the cursor.
   // Only these are checked: the worst case for sparse selections

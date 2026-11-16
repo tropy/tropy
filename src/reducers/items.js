@@ -1,5 +1,4 @@
 import { ITEM, PROJECT, LIST, METADATA, PHOTO } from '../constants/index.js'
-import { into, map } from 'transducers.js'
 
 import {
   load,
@@ -61,9 +60,11 @@ function itemsReducer (state = {}, { type, payload, meta, error }) {
 
       const { id: list, items } = payload
 
-      return into({ ...state }, map(id => ({
-        [id]: { ...state[id], lists: [...state[id].lists, list] }
-      })), items)
+      return {
+        ...state,
+        ...Object.fromEntries(items.map(id =>
+          [id, { ...state[id], lists: [...state[id].lists, list] }]))
+      }
     }
 
     case LIST.ITEM.REMOVE: {
@@ -71,12 +72,13 @@ function itemsReducer (state = {}, { type, payload, meta, error }) {
 
       const { id: list, items } = payload
 
-      return into({ ...state }, map(id => ({
-        [id]: {
+      return {
+        ...state,
+        ...Object.fromEntries(items.map(id => [id, {
           ...state[id],
           lists: state[id].lists.filter(lid => lid !== list)
-        }
-      })), items)
+        }]))
+      }
     }
 
     case PHOTO.ORDER:

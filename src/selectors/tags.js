@@ -1,6 +1,5 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
 import { getSelectedItems } from './items.js'
-import { seq, compose, filter, map, cat, keep } from 'transducers.js'
 import { by, equals } from '../collate.js'
 
 const byName = by('name')
@@ -35,13 +34,12 @@ export const getItemTags = memo(
   (tags, items) => {
     const counts = {}
 
-    return seq(items, compose(
-      map(item => item.tags),
-      cat,
-      map(id => ((counts[id] = (counts[id] || 0) + 1), tags[id])),
-      keep(),
-      filter(tag => counts[tag.id] === 1)
-    ))
+    // Lazy: each tag is counted and checked before the next one.
+    return items.values()
+      .flatMap(item => item.tags)
+      .map(id => ((counts[id] = (counts[id] || 0) + 1), tags[id]))
+      .filter(tag => tag != null && counts[tag.id] === 1)
+      .toArray()
       .map(tag => ({
         ...tag,
         count: counts[tag.id],
@@ -55,10 +53,9 @@ export const getTagCompletions = memo(
   getAllTags,
   getItemTags,
 
-  (tags, itemTags) => seq(tags,
-    compose(
-      filter(tag => !itemTags.find(t => !t.mixed && t.id === tag.id)),
-      map(tag => tag.name)))
+  (tags, itemTags) => tags
+    .filter(tag => !itemTags.find(t => !t.mixed && t.id === tag.id))
+    .map(tag => tag.name)
 )
 
 export const getTagColors = memo(

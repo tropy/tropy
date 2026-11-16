@@ -1,6 +1,5 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
 import { by } from '../collate.js'
-import { cat, compose, filter, into, map } from 'transducers.js'
 import { blank, get, homogenize } from '../common/util.js'
 import { expand, tropy } from '../ontology/index.js'
 import { ITEM, PHOTO, SELECTION } from '../constants/index.js'
@@ -9,7 +8,8 @@ import { getPrimaryItemId } from './items.js'
 
 const getResourceList =
   (res, vocab) =>
-    into([], map(kv => expand(kv[1], vocab)), res)
+    Object.values(res)
+      .map(r => expand(r, vocab))
       .sort(by('prefix', 'label', 'name'))
 
 
@@ -30,16 +30,13 @@ export const getVocabs = memo(
   ({ ontology }) => ontology.props,
   ({ ontology }) => ontology.class,
   ({ ontology }) => ontology.type,
-  (vocab, props, klass, types) => into(
-    [],
-    map(kv => ({
-      ...kv[1],
-      classes: kv[1].classes.map(id => klass[id] || { id }),
-      datatypes: kv[1].datatypes.map(id => types[id] || { id }),
-      properties: kv[1].properties.map(id => props[id] || { id })
-    })),
-    vocab
-  )
+  (vocab, props, klass, types) =>
+    Object.values(vocab).map(v => ({
+      ...v,
+      classes: v.classes.map(id => klass[id] || { id }),
+      datatypes: v.datatypes.map(id => types[id] || { id }),
+      properties: v.properties.map(id => props[id] || { id })
+    }))
 )
 
 export const getAllTemplates = memo(
@@ -64,13 +61,9 @@ export const getAllTemplates = memo(
 
 const getTemplatesByType = (type) => memo(
   ({ ontology }) => ontology.template,
-  (templates) => into(
-    [],
-    compose(
-      map(kv => kv[1]),
-      filter(t => t.type === type)),
-    templates
-  ).sort(by('name', 'id'))
+  (templates) => Object.values(templates)
+    .filter(t => t.type === type)
+    .sort(by('name', 'id'))
 )
 
 export const getItemTemplates = getTemplatesByType(tropy.Item)
@@ -91,16 +84,11 @@ export const getItemTemplateProperties = memo(
   ({ ontology }) => ontology.props,
   ({ ontology }) => ontology.vocab,
   (templates, props, vocab) =>
-    homogenize(isUniq => into(
-      [],
-      compose(
-        map(tmp => tmp.fields),
-        cat,
-        filter(fld => isUniq(fld.property)),
-        map(fld => expand(props[fld.property] || { id: fld.property }, vocab))
-      ),
-      templates
-    )).sort(by('prefix', 'label', 'name'))
+    homogenize(isUniq => templates
+      .flatMap(tmp => tmp.fields)
+      .filter(fld => isUniq(fld.property))
+      .map(fld => expand(props[fld.property] || { id: fld.property }, vocab))
+    ).sort(by('prefix', 'label', 'name'))
 )
 
 export const selectTemplatesByType = memo(

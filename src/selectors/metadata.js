@@ -7,17 +7,6 @@ import { compare } from '../collate.js'
 import { createSequence, getIndex } from '../common/sequence.js'
 
 import {
-  cat,
-  compose,
-  filter,
-  keep,
-  map,
-  seq,
-  transduce,
-  transformer
-} from 'transducers.js'
-
-import {
   getActiveItemTemplate,
   getActivePhotoTemplate,
   getActiveSelectionTemplate
@@ -25,7 +14,7 @@ import {
 
 const EMPTY = []
 
-const collect = transformer((data, [key, value]) => {
+const collect = (data, [key, value]) => {
   if (value != null) {
     if (Object.hasOwn(data, key)) {
       if (equal(data[key], value)) data[key].count++
@@ -36,23 +25,24 @@ const collect = transformer((data, [key, value]) => {
   }
 
   return data
-})
+}
 
-const skipId = filter(kv => kv[0] !== 'id')
+const collectMetadata = (metadata, ids) => {
+  let data = ids
+    .map(id => metadata[id])
+    .filter(md => md != null)
+    .flatMap(md => Object.entries(md))
+    .filter(([key]) => key !== 'id')
+    .reduce(collect, { id: ids })
 
-const collectMetadata = (metadata, ids) =>
-  seq(
-    transduce(
-      ids,
-      compose(map(id => metadata[id]), keep(), cat, skipId),
-      collect,
-      { id: ids }),
-    map(([key, value]) => {
-      if (key !== 'id') {
-        value.mixed = value.count !== ids.length
-      }
-      return [key, value]
-    }))
+  for (let [key, value] of Object.entries(data)) {
+    if (key !== 'id') {
+      value.mixed = value.count !== ids.length
+    }
+  }
+
+  return data
+}
 
 export const getItemMetadata = memo(
   ({ metadata }) => metadata,
@@ -176,11 +166,13 @@ export const getMetadataCompletions = memo(
 
     let comp = new Set()
 
-    seq(metadata, compose(
-      map(([, data]) => data),
-      cat,
-      filter(makeCompletionFilter(prop, datatype, byProp)),
-      map(([, value]) => comp.add(value.text))))
+    let isCompletion = makeCompletionFilter(prop, datatype, byProp)
+
+    for (let data of Object.values(metadata)) {
+      for (let entry of Object.entries(data)) {
+        if (isCompletion(entry)) comp.add(entry[1].text)
+      }
+    }
 
     return [...comp].sort(compare)
   }

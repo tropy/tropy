@@ -1,5 +1,4 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { seq, compose, cat, map, keep } from 'transducers.js'
 import { getVisiblePhotos } from './photos.js'
 import { pluck } from '../common/util.js'
 
@@ -32,11 +31,8 @@ export const getVisibleSelections = memo(
   getVisiblePhotos,
 
   (selections, photos) =>
-    seq(photos, compose(
-      map(photo => photo.selections),
-      keep(),
-      cat,
-      map(id => selections[id]),
-      keep()
-    ))
+    photos
+      .flatMap(photo => photo.selections ?? [])
+      .map(id => selections[id])
+      .filter(selection => selection != null)
 )

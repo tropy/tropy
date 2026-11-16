@@ -1,5 +1,4 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { seq, compose, map, keep } from 'transducers.js'
 import { getVisiblePhotos } from './photos.js'
 
 const rev = (a, b) => a < b ? 1 : b < a ? -1 : 0
@@ -9,11 +8,8 @@ export const getExpandedPhotos = memo(
   ({ ui }) => ui.panel.zoom > 0,
   getVisiblePhotos,
   (expand, isGrid, photos) => {
-    let expandedPhotos = seq(photos, compose(
-      map(({ id, selections }) =>
-        (expand[id] > 0 && selections.length > 0) ? { id, selections } : null),
-      keep()
-    ))
+    let expandedPhotos = photos.filter(({ id, selections }) =>
+      expand[id] > 0 && selections.length > 0)
 
     if (isGrid) {
       expandedPhotos = expandedPhotos

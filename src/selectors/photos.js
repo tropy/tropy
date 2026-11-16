@@ -1,5 +1,4 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { seq, compose, filter, into, map } from 'transducers.js'
 import { getSelectedItems } from './items.js'
 import { selectMatchFilter } from '../slices/qr.js'
 import { blank, pluck } from '../common/util.js'
@@ -67,21 +66,17 @@ export const getVisiblePhotos = memo(
 export const getPhotosWithErrors = memo(
   getPhotos,
   (photos) =>
-    into([], compose(
-      filter(withErrors),
-      filter(notConsolidating),
-      map(toId)
-    ), photos))
+    Object.entries(photos)
+      .filter(withErrors)
+      .filter(notConsolidating)
+      .map(toId))
 
 export const getPhotosForConsolidation =
   ({ photos }, ids) =>
     blank(ids) ?
-      into([],
-        compose(
-          filter(notConsolidating),
-          map(toPhoto)
-        ), photos) :
-      seq(ids,
-        compose(
-          map(id => photos[id]),
-          filter(photo => !photo.consolidating)))
+      Object.entries(photos)
+        .filter(notConsolidating)
+        .map(toPhoto) :
+      ids
+        .map(id => photos[id])
+        .filter(photo => !photo.consolidating)

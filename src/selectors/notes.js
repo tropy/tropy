@@ -1,5 +1,4 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { seq, compose, cat, map, keep } from 'transducers.js'
 import { getVisiblePhotos } from './photos.js'
 import { getVisibleSelections } from './selections.js'
 import { Cursor } from '../common/sequence.js'
@@ -35,15 +34,11 @@ export const getVisibleNotes = memo(
   (state) => selectMatchFilter(state) && state.nav.note,
 
   (notes, photos, selections, filter, current) =>
-    seq([photos, selections], compose(
-      cat,
-      map(parent => parent.notes),
-      keep(),
-      cat,
-      map(id => (filter == null || filter.notes[id] || id === current) ?
-        notes[id] : null),
-      keep()
-    ))
+    [...photos, ...selections]
+      .flatMap(parent => parent.notes ?? [])
+      .map(id => (filter == null || filter.notes[id] || id === current) ?
+        notes[id] : null)
+      .filter(note => note != null)
 )
 
 const isSibling = (note, other) =>

@@ -1,5 +1,4 @@
 import { array, omit, splice } from '../common/util.js'
-import { into, map } from 'transducers.js'
 
 export function load (state, payload, meta, error) {
   if (error) return state
@@ -20,9 +19,11 @@ export function remove (state, payload) {
 }
 
 export function merge (state, payload) {
-  return into({ ...state }, map(([id, data]) => ({
-    [id]: { ...state[id], ...data }
-  })), payload)
+  return {
+    ...state,
+    ...Object.fromEntries(Object.entries(payload).map(([id, data]) =>
+      [id, { ...state[id], ...data }]))
+  }
 }
 
 export function update (state, payload, meta = {}) {
@@ -58,22 +59,24 @@ export const nested = {
   add (name, state = {}, payload, { idx } = {}) {
     if (Array.isArray(idx)) idx = idx[0]
 
-    return into({ ...state }, map(id => ({
-      [id]: {
+    return {
+      ...state,
+      ...Object.fromEntries(array(payload.id).map(id => [id, {
         ...state[id],
         [name]: splice(state[id][name], idx, 0, ...payload[name])
-      }
-    })), array(payload.id))
+      }]))
+    }
   },
 
   remove (name, state = {}, payload) {
-    return into({ ...state }, map(id => ({
-      [id]: {
+    return {
+      ...state,
+      ...Object.fromEntries(array(payload.id).map(id => [id, {
         ...state[id],
         [name]: state[id][name].filter(x =>
           !payload[name].includes(x.id != null ? x.id : x))
-      }
-    })), array(payload.id))
+      }]))
+    }
   }
 }
 
@@ -82,25 +85,29 @@ export const bulk = {
     if (!Array.isArray(payload)) return merge(state, payload)
     let [ids, data] = payload
 
-    return into({ ...state }, map(id => ({
-      [id]: meta.replace ? data : { ...state[id], ...data }
-    })), ids)
+    return {
+      ...state,
+      ...Object.fromEntries(ids.map(id =>
+        [id, meta.replace ? data : { ...state[id], ...data }]))
+    }
   },
 
   remove (state, payload) {
     let [ids, props] = payload
 
-    return into({ ...state },
-      map(id => ({ [id]: omit(state[id], array(props)) })), ids)
+    return {
+      ...state,
+      ...Object.fromEntries(ids.map(id =>
+        [id, omit(state[id], array(props))]))
+    }
   }
 }
 
 export function pending (state, payload) {
   if (payload == null || payload.length === 0) return state
 
-  return into(
-    { ...state },
-    map(id => ({ [id]: { id, pending: true } })),
-    payload
-  )
+  return {
+    ...state,
+    ...Object.fromEntries(payload.map(id => [id, { id, pending: true }]))
+  }
 }
