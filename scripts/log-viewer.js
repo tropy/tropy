@@ -26,8 +26,6 @@ const { values: ARGS } = parseArgs({
   }
 })
 
-const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-
 // The working directory, also as logged relative to home (~).
 const CWD = (function (cwd, home) {
   let dirs = [cwd]
@@ -35,7 +33,7 @@ const CWD = (function (cwd, home) {
   if (cwd.startsWith(home + sep))
     dirs.push('~' + cwd.slice(home.length))
 
-  return new RegExp(`(?:${dirs.map(escape).join('|')}).`, 'g')
+  return new RegExp(`(?:${dirs.map(RegExp.escape).join('|')}).`, 'g')
 })(process.cwd(), homedir())
 
 const format = log =>

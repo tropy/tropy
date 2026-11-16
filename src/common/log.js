@@ -56,8 +56,7 @@ export function redactHome (dir = home) {
   if (!dir || dirname(dir) === dir)
     return (s) => s
 
-  let escaped = JSON.stringify(dir).slice(1, -1)
-    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  let escaped = RegExp.escape(JSON.stringify(dir).slice(1, -1))
 
   let pattern = new RegExp(String.raw`${escaped}(?=/|\\\\|")`, 'g')
 
