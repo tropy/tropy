@@ -20,7 +20,7 @@ import { growingEdge } from '../../common/selection.js'
 import { addOrientation, subOrientation } from '../../common/iiif.js'
 import { match } from '../../keymap.js'
 import { getResolution } from '../../dom.js'
-import { textBounds } from '../../esper/util.js'
+import { getActiveTool, textBounds } from '../../esper/util.js'
 import { ESPER, SASS } from '../../constants/index.js'
 import { Document } from 'alto-xml'
 
@@ -816,15 +816,6 @@ export class Esper extends React.Component {
   }
 }
 
-
-const getActiveTool = ({ selection, tool }, { quicktool }) => {
-  tool = quicktool || tool
-
-  if (selection && tool === TOOL.SELECT)
-    return TOOL.ARROW
-  else
-    return tool
-}
 
 const getZoomBounds = (props, state, screen = {}) => {
   let minZoom = MIN_ZOOM / getResolution()
