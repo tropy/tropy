@@ -3,7 +3,7 @@ import { AdjustmentFilter } from 'pixi-filters'
 import { SharpenFilter } from './filter/index.js'
 import { SelectionLayer, SelectionOverlay } from './selection.js'
 import { TextLayer } from './text-layer.js'
-import { constrain } from './util.js'
+import { constrain, getActiveTool } from './util.js'
 import { getResolution } from '../dom.js'
 import { deg, isHorizontal } from '../common/math.js'
 import { ESPER } from '../constants/index.js'
@@ -270,7 +270,7 @@ export class Photo extends Container {
 
     this.selections.sync(props, state)
     this.overlay.sync(props, state)
-    this.tool = state.quicktool || props.tool
+    this.tool = getActiveTool(props, state)
     this.textLayer.sync(props, state)
   }
 

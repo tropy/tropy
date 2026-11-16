@@ -1,7 +1,7 @@
 import { Container, Graphics, Rectangle } from 'pixi.js'
 import { BLANK } from '../common/util.js'
 import { ESPER } from '../constants/index.js'
-import { normalize } from './util.js'
+import { getActiveTool, normalize } from './util.js'
 
 
 export class SelectionLayer extends Container {
@@ -55,7 +55,7 @@ export class SelectionLayer extends Container {
   }
 
   sync (props, state) {
-    let tool = state.quicktool || props.tool
+    let tool = getActiveTool(props, state)
 
     this.visible = this.isVisible(props.selection, tool)
     this.eventMode = this.getEventModeFor(tool)
