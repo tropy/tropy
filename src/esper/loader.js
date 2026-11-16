@@ -41,22 +41,24 @@ export class Loader extends EventEmitter {
       return this.#pending.get(url).promise
     }
 
-    let deferred = {}
-    this.#pending.set(url, deferred)
+    let { promise, resolve, reject } = Promise.withResolvers()
 
-    deferred.promise = new Promise((resolve, reject) => {
-      deferred.resolve = resolve
-      deferred.reject = reject
+    promise = promise.finally(() => {
+      this.#pending.delete(url)
+    })
 
+    this.#pending.set(url, { promise, resolve, reject })
+
+    try {
       this.#worker.postMessage({
         type: 'load',
         payload: url
       })
-    }).finally(() => {
-      this.#pending.delete(url)
-    })
+    } catch (err) {
+      reject(err)
+    }
 
-    return deferred.promise
+    return promise
   }
 
   async loadTexture (url) {

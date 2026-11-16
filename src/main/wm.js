@@ -806,26 +806,22 @@ export class WindowManager extends EventEmitter {
   }
 
   rsvp (win, action, { timeout = 60000 } = {}) {
-    let id
-    let timer
+    if (win == null)
+      return Promise.reject(new Error('window not found'))
 
-    return new Promise((resolve, reject) => {
-      id = this.seq.next().value
+    let id = this.seq.next().value
+    let { promise, resolve, reject } = Promise.withResolvers()
 
-      if (win == null)
-        return reject(new Error('window not found'))
+    action.meta.rsvp = id
+    this.pending[id] = { win, resolve, reject }
 
-      action.meta.rsvp = id
-      this.pending[id] = { win, resolve, reject }
+    this.dispatch(win, action)
 
-      this.dispatch(win, action)
+    let timer = (timeout > 0) && setTimeout(() => {
+      reject(new CodeError('ETIMEDOUT', `no response after ${timeout}ms`))
+    }, timeout)
 
-      if (timeout > 0)
-        timer = setTimeout(() => {
-          reject(new CodeError('ETIMEDOUT', `no response after ${timeout}ms`))
-        }, timeout)
-
-    }).finally(() => {
+    return promise.finally(() => {
       clearTimeout(timer)
       delete this.pending[id]
     })
