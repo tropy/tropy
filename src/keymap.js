@@ -45,6 +45,7 @@ function p (string) {
   let key = parts.pop()
 
   if (key === 'Space') key = ' '
+  key = normalize(key)
 
   let alt = false, ctrl = false, meta = false, shift = false
 
@@ -68,9 +69,17 @@ function p (string) {
   return { key, alt, ctrl, meta, shift }
 }
 
+const normalize = (key) =>
+  (key.length === 1) ? key.toLowerCase() : key
+
 export function match (map, event) {
+  if ((event.nativeEvent ?? event).isComposing)
+    return null
+
+  let key = normalize(event.key)
+
   for (let [name, spec] of map) {
-    if (spec.key !== event.key) continue
+    if (spec.key !== key) continue
     if (spec.alt !== event.altKey) continue
     if (spec.ctrl !== event.ctrlKey) continue
     if (spec.meta !== event.metaKey) continue

@@ -1,6 +1,50 @@
-import { CursorKeyMap, getSelectionMode } from '#tropy/keymap.js'
+import { CursorKeyMap, KeyMap, getSelectionMode } from '#tropy/keymap.js'
 import { darwin } from '#tropy/common/os.js'
 import { Cursor } from '#tropy/common/sequence.js'
+
+describe('KeyMap', () => {
+  let keymap = new KeyMap({
+    all: 'Ctrl+a',
+    undo: 'Ctrl+z',
+    redo: 'Ctrl+Shift+z',
+    merge: 'Ctrl+Shift+M'
+  })
+
+  let match = (key, mods = {}) =>
+    keymap.match({
+      key,
+      altKey: false,
+      ctrlKey: false,
+      metaKey: false,
+      shiftKey: false,
+      ...mods
+    })
+
+  it('matches letters regardless of CapsLock', () => {
+    expect(match('a', { ctrlKey: true })).to.equal('all')
+    expect(match('A', { ctrlKey: true })).to.equal('all')
+  })
+
+  it('matches letters regardless of spec case', () => {
+    expect(match('M', { ctrlKey: true, shiftKey: true })).to.equal('merge')
+    expect(match('m', { ctrlKey: true, shiftKey: true })).to.equal('merge')
+  })
+
+  it('distinguishes letters by shift key', () => {
+    expect(match('Z', { ctrlKey: true })).to.equal('undo')
+    expect(match('z', { ctrlKey: true, shiftKey: true })).to.equal('redo')
+    expect(match('M', { ctrlKey: true })).to.be.null
+  })
+
+  it('ignores events during IME composition', () => {
+    expect(match('a', { ctrlKey: true, isComposing: true })).to.be.null
+  })
+
+  it('ignores React events during IME composition', () => {
+    expect(match('a', { ctrlKey: true, nativeEvent: { isComposing: true } }))
+      .to.be.null
+  })
+})
 
 describe('CursorKeyMap', () => {
   let seq = ['a', 'b', 'c']
