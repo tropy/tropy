@@ -160,6 +160,30 @@ describe('util', () => {
     })
   })
 
+  describe('splice', () => {
+    it('returns a copy with items removed or inserted', () => {
+      let a = [1, 2, 3]
+      expect(util.splice(a, 1, 1)).to.eql([1, 3])
+      expect(util.splice(a, 1, 0, 'x', 'y')).to.eql([1, 'x', 'y', 2, 3])
+      expect(util.splice(a, 0, 2, 'x')).to.eql(['x', 3])
+      expect(util.splice(a, 5, 0, 'x')).to.eql([1, 2, 3, 'x'])
+      expect(a).to.eql([1, 2, 3])
+    })
+
+    it('appends when no position is given', () => {
+      expect(util.splice([1, 2], null, 0, 3)).to.eql([1, 2, 3])
+      expect(util.insert([1, 2], undefined, 3, 4)).to.eql([1, 2, 3, 4])
+    })
+  })
+
+  describe('times', () => {
+    it('collects n results of fn', () => {
+      expect(util.times(0)).to.eql([])
+      expect(util.times(3)).to.eql([0, 1, 2])
+      expect(util.times(3, i => i * 2)).to.eql([0, 2, 4])
+    })
+  })
+
   describe('get', () => {
     it('returns the value', () => {
       expect(util.get({}, '')).to.eql({})

@@ -1,5 +1,4 @@
 import { indexOf } from './sequence.js'
-import { own } from './util.js'
 
 const toId = (it) => it?.id ?? it
 
@@ -34,7 +33,7 @@ const copy = (map) =>
 
 // Accepts an element or an id.
 export const has = (state, it) =>
-  own(state.selected, toId(it))
+  Object.hasOwn(state.selected, toId(it))
 
 export const size = (state) =>
   Object.keys(state.selected).length
@@ -46,10 +45,10 @@ export const equal = (a, b) => {
     return false
 
   for (let id in a.selected)
-    if (!own(b.selected, id)) return false
+    if (!Object.hasOwn(b.selected, id)) return false
 
   for (let id in b.selected)
-    if (!own(a.selected, id)) return false
+    if (!Object.hasOwn(a.selected, id)) return false
 
   return true
 }
@@ -163,7 +162,7 @@ const change = (state, seq, id, at, mode) => {
       let isSelected = true
 
       each(seq, range, (it) => {
-        if (!own(selected, it)) isSelected = false
+        if (!Object.hasOwn(selected, it)) isSelected = false
       })
 
       if (isSelected) {
@@ -226,7 +225,7 @@ const ranges = ({ anchor, cursor }, seq, id, at) => {
 }
 
 const toggle = (selected, id) => {
-  if (own(selected, id))
+  if (Object.hasOwn(selected, id))
     delete selected[id]
   else
     selected[id] = true

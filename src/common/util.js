@@ -43,10 +43,7 @@ export function empty (obj) {
 }
 
 export function times (n, fn = identity) {
-  for (var i = 0, res = []; i < n; ++i)
-    res.push(fn(i))
-
-  return res
+  return Array.from({ length: n }, (_, i) => fn(i))
 }
 
 export function *iteratorWithIndex (input) {
@@ -131,13 +128,7 @@ function toArray (obj) {
 export { toArray as array }
 
 export function splice (array, at, count = 0, ...items) {
-  if (at == null) at = array.length
-
-  return [
-    ...array.slice(0, at),
-    ...items,
-    ...array.slice(at + count)
-  ]
+  return array.toSpliced(at ?? array.length, count, ...items)
 }
 
 export function insert (array, at, ...items) {
@@ -155,10 +146,6 @@ export function promote (array, ...items) {
 
 export function sample (array) {
   return array[Math.floor(Math.random() * array.length)]
-}
-
-export function sort (array, ...args) {
-  return [...array].sort(...args)
 }
 
 export function uniq (array, into = [], memo = new Set()) {
@@ -191,16 +178,6 @@ export function mixed (array) {
   }
 
   return false
-}
-
-export function reverse (array) {
-  const rev = []
-
-  for (let i = array.length - 1; i >= 0; --i) {
-    rev.push(array[i])
-  }
-
-  return rev
 }
 
 export function remap (array, fn) {
@@ -327,15 +304,11 @@ export function has (src, path) {
   return true
 }
 
-export function own (obj, key) {
-  return Object.prototype.hasOwnProperty.call(obj, key)
-}
-
 export function pluck (src, props = [], into = [], expand = false) {
   return props.reduce((res, key) => {
     const value = src[key]
 
-    if (expand || typeof value !== 'undefined' || own(src, key)) {
+    if (expand || typeof value !== 'undefined' || Object.hasOwn(src, key)) {
       res.push(src[key])
     }
 
@@ -346,7 +319,7 @@ export function pluck (src, props = [], into = [], expand = false) {
 
 export function any (src, ...props) {
   for (let prop of props) {
-    if (own(src, prop)) return src[prop]
+    if (Object.hasOwn(src, prop)) return src[prop]
     if (typeof src[prop] !== 'undefined') return src[prop]
   }
 }
@@ -357,7 +330,7 @@ export function pick (src, props = [], into = {}, expand = false) {
     props.reduce((res, key) => {
       const value = src[key]
 
-      if (expand || typeof value !== 'undefined' || own(src, key)) {
+      if (expand || typeof value !== 'undefined' || Object.hasOwn(src, key)) {
         res[key] = value
       }
 
@@ -376,7 +349,7 @@ export function merge (a, b, into = {}) {
   if (a !== into) Object.assign(into, a)
 
   for (let prop in b) {
-    if (own(b, prop)) {
+    if (Object.hasOwn(b, prop)) {
       let value = b[prop]
       let type = typeof value
 
@@ -412,7 +385,7 @@ export function map (src, fn, into = {}) {
   // if (typeof fn !== 'function') fn = () => fn
 
   for (let prop in src) {
-    if (own(src, prop)) {
+    if (Object.hasOwn(src, prop)) {
       into[prop] = fn(prop, src[prop], src)
     }
   }
@@ -422,7 +395,7 @@ export function map (src, fn, into = {}) {
 
 export function morph (src, fn, into = {}) {
   for (let prop in src) {
-    if (own(src, prop)) {
+    if (Object.hasOwn(src, prop)) {
       into = fn(into, prop, src[prop], src) || into
     }
   }

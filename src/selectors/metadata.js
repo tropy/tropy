@@ -2,7 +2,6 @@ import { createSelector as memo } from '@reduxjs/toolkit'
 import { pluck } from './util.js'
 import { getItemSelection } from './items.js'
 import { selectItemSequence } from '../slices/qr.js'
-import { own } from '../common/util.js'
 import { equal } from '../value.js'
 import { compare } from '../collate.js'
 import { createSequence, getIndex } from '../common/sequence.js'
@@ -28,7 +27,7 @@ const EMPTY = []
 
 const collect = transformer((data, [key, value]) => {
   if (value != null) {
-    if (own(data, key)) {
+    if (Object.hasOwn(data, key)) {
       if (equal(data[key], value)) data[key].count++
 
     } else {
