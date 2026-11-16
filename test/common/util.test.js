@@ -90,21 +90,6 @@ describe('util', () => {
     })
   })
 
-  describe('swap', () => {
-    it('swaps the items at the given positions', () => {
-      expect(util.swap([1, 2, 3], 0, 0)).to.eql([1, 2, 3])
-      expect(util.swap([1, 2, 3], 1, 1)).to.eql([1, 2, 3])
-      expect(util.swap([1, 2, 3], 2, 2)).to.eql([1, 2, 3])
-
-      expect(util.swap([1, 2, 3], 0, 1)).to.eql([2, 1, 3])
-      expect(util.swap([1, 2, 3], 0, 2)).to.eql([3, 2, 1])
-      expect(util.swap([1, 2, 3], 2, 0)).to.eql([3, 2, 1])
-
-      expect(util.swap([1, 2, 3], 0, 4)).to.eql([3, 2, 1])
-      expect(util.swap([1, 2, 3], 0, -1)).to.eql([1, 2, 3])
-    })
-  })
-
   describe('splice', () => {
     it('returns a copy with items removed or inserted', () => {
       let a = [1, 2, 3]
@@ -223,18 +208,6 @@ describe('util', () => {
     })
   })
 
-  describe('mixed', () => {
-    it('returns true for mixed contents', () => {
-      expect(util.mixed([])).to.be.false
-      expect(util.mixed([1])).to.be.false
-      expect(util.mixed([1, 1])).to.be.false
-      expect(util.mixed([1, 1, 1])).to.be.false
-      expect(util.mixed([2, 1, 1])).to.be.true
-      expect(util.mixed([2, 2, 1])).to.be.true
-      expect(util.mixed([1, 2])).to.be.true
-    })
-  })
-
   describe('remove', () => {
     it('returns new array', () => {
       const a = [1, 2, 3]
@@ -305,17 +278,6 @@ describe('util', () => {
       expect(util.shallow(3, 3)).to.be.true
       expect(util.shallow('1', 1)).to.be.false
       expect(util.shallow(1, 2)).to.be.false
-    })
-  })
-
-  describe('camelcase', () => {
-    it('converts strings to camelCase', () => {
-      expect(util.camelcase('')).to.eql('')
-      expect(util.camelcase('foo')).to.eql('foo')
-      expect(util.camelcase('Foo')).to.eql('foo')
-      expect(util.camelcase('foo bar')).to.eql('fooBar')
-      expect(util.camelcase('Foo Bar')).to.eql('fooBar')
-      expect(util.camelcase('one two three')).to.eql('oneTwoThree')
     })
   })
 

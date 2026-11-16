@@ -144,14 +144,6 @@ export function exist (obj) {
   return obj != null
 }
 
-export function mixed (array) {
-  for (let i = 1; i < array.length; ++i) {
-    if (array[i] !== array[i - 1]) return true
-  }
-
-  return false
-}
-
 export function remap (array, fn) {
   const res = new Array(array.length)
 
@@ -192,21 +184,6 @@ export function warp (array, idx, at) {
   at = restrict(at, 0, array.length - 1)
   if (idx === at || idx == null) return array
   return insert(splice(array, idx, 1), at, array[idx])
-}
-
-export function swap (array, from, to) {
-  to = restrict(to, 0, array.length - 1)
-
-  if (from === to || from == null) return array
-  if (from > to) return swap(array, to, from)
-
-  let head = array.slice(0, from)
-  let between = array.slice(from + 1, to)
-  let tail = array.slice(to + 1)
-
-  return [
-    ...head, array[to], ...between, array[from], ...tail
-  ]
 }
 
 export function flatten (obj) {
@@ -349,10 +326,6 @@ export function merge (a, b, into = {}) {
   return into
 }
 
-export function copy (obj, into = {}) {
-  return merge(into, obj, into)
-}
-
 export function map (src, fn, into = {}) {
   // if (typeof fn !== 'function') fn = () => fn
 
@@ -399,38 +372,11 @@ export function capitalize (string) {
   return string.replace(/^\p{Ll}/u, (m) => m.toUpperCase())
 }
 
-export function downcase (string) {
-  return string.toLowerCase().replace(/\s+/g, '-')
-}
-
-export function camelcase (str) {
-  return str.replace(
-    /(?:^\w|\p{Lu}|\b\w|\s+)/ug,
-    (match, index) => {
-      if (+match === 0) return ''
-      return index === 0 ? match.toLowerCase() : match.toUpperCase()
-    })
-}
-
 export function lispcase (str) {
   return str.split(/(\p{Lu}\p{Lu}+)|(\p{Lu}\p{Ll}+)|[\s-]+/u)
     .filter(s => !!s)
     .map(s => s.toLowerCase())
     .join('-')
-}
-
-export function diff (a, b) {
-  const delta = []
-
-  for (let prop in b) {
-    if (a[prop] !== b[prop]) delta.push(prop)
-  }
-
-  for (let prop in a) {
-    if (!(prop in b)) delta.push(prop)
-  }
-
-  return delta
 }
 
 export function strftime (format, date = new Date()) {
@@ -454,13 +400,6 @@ export function strftime (format, date = new Date()) {
         return match
     }
   })
-}
-
-export function refine (context, method, refinement) {
-  const original = context[method]
-
-  context[method] = (...args) =>
-    refinement.call(context, args, original.apply(context, args))
 }
 
 export function restrict (value, lower, upper) {
