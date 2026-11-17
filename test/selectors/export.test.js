@@ -79,6 +79,15 @@ describe('Export Selectors', () => {
         expect(item.photo).to.have.length(state.items[1].photos.length)
       })
 
+      it('includes selection polygons as closed rings', () => {
+        let photo = state.photos[state.items[1].photos[0]]
+        let { x, y, width, height } = state.selections[photo.selections[0]]
+
+        expect(JSON.parse(item.photo[0].selection[0].polygon)).to.eql([
+          [x, y], [x + width, y], [x + width, y + height], [x, y + height], [x, y]
+        ])
+      })
+
       it('includes metadata', () => {
         expect(item.title).to.eql(
           state.metadata[1]['http://purl.org/dc/elements/1.1/title'].text)
