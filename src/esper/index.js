@@ -737,23 +737,22 @@ export default class Esper extends EventEmitter {
 
     this.resume()
 
-    if (target instanceof Selection) {
-      return this.emit('selection-activate', event.target.data)
-    }
-
     let tool = this.photo?.tool
     let modifier = event.shiftKey ? 'SHIFT' : cmdOrCtrlKey(event) ? 'META' : null
 
-    if (tool === ESPER.TOOL.ARROW &&
-      this.photo.isOutsideSelection(data.getLocalPosition(this.photo))) {
-      return this.emit('selection-deactivate')
-    }
-
     if (this.isDoubleClick(tool)) {
+      if (target instanceof Selection)
+        return this.emit('selection-activate', target.data)
+
+      if (tool === ESPER.TOOL.ARROW &&
+        this.photo.isOutsideSelection(data.getLocalPosition(this.photo)))
+        return this.emit('selection-deactivate')
+
       let { x, y, shift } = coords(data.originalEvent)
       return this.emit(`zoom-${shift ? 'out' : 'in'}`, { x, y }, true)
     }
 
+    target = this.photo
     target.cursor = `${tool}-active`
 
     this.drag.start()
