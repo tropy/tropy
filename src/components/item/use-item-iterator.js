@@ -31,7 +31,7 @@ export function useItemIterator ({
   let items = useSelector(selectItemSequence)
   let data = useSelector(state => state.items)
   let selection = useSelector(getItemSelection)
-  let isTrashSelected = useSelector(state => state.nav.trash)
+  let isTrashSelected = useSelector(state => state.nav.view.name === 'trash')
 
   useImperativeHandle(ref, () => ({
     focus () {

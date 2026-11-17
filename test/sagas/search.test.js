@@ -1,9 +1,7 @@
 import { mock } from 'node:test'
-import { runSaga, stdChannel } from 'redux-saga'
 import { run } from '../support/saga.js'
 import {
   cachedLists,
-  completed,
   contribute,
   narrow,
   search,
@@ -13,10 +11,6 @@ import {
 import { create } from '#tropy/common/selection.js'
 import { update } from '#tropy/slices/qr.js'
 import { getDefaultSort } from '#tropy/selectors/nav.js'
-import { dismiss } from '#tropy/slices/completed.js'
-import { done } from '#tropy/slices/cmd.js'
-import { NAV } from '#tropy/constants/index.js'
-import { nav } from '#tropy/reducers/nav.js'
 import * as mod from '#tropy/models/index.js'
 
 const TITLE = 'http://purl.org/dc/elements/1.1/title'
@@ -31,7 +25,7 @@ describe('order saga', () => {
 
   const state = (metadata, qr = {}) => ({
     intl: { locale: 'en' },
-    nav: { sort: {}, list: null },
+    nav: { sort: {}, view: { name: 'project' } },
     items,
     metadata,
     ontology: { template: {} },
@@ -98,7 +92,7 @@ describe('order saga', () => {
     let { result } = sync$(state(metadata))
     let position = (m) => ({
       ...state(m),
-      nav: { list: 1, sort: { 1: { column: 'added', asc: true } } }
+      nav: { view: { name: 'list', id: 1 }, sort: { 1: { column: 'added', asc: true } } }
     })
 
     // A list by position: no rebuild; edits move items in the order,
@@ -159,7 +153,7 @@ describe('order saga', () => {
 describe('search saga', () => {
   const state = (qr, query = '', item = []) => ({
     intl: { locale: 'en' },
-    nav: { sort: {}, list: null, tags: [], query, item: create(item) },
+    nav: { sort: {}, view: { name: 'project' }, tags: [], query, item: create(item) },
     items: {
       1: { id: 1, photos: [11] },
       2: { id: 2, photos: [] },
@@ -187,7 +181,7 @@ describe('search saga', () => {
     let s = {
       ...state({ matches: null }),
       nav: {
-        list: 1,
+        view: { name: 'list', id: 1 },
         sort: { 1: { column: 'added', asc: false } },
         tags: [],
         query: '',
@@ -252,7 +246,7 @@ describe('search saga', () => {
 
   it('keeps only selected items that belong to the view', () => {
     let s = state({ matches: null }, '', [3])
-    s.nav.list = 1
+    s.nav.view = { name: 'list', id: 1 }
     s.nav.sort = { 1: { column: 'added', asc: true } }
     s.items[3] = { ...s.items[3], lists: [] }
 
@@ -269,10 +263,10 @@ describe('search saga', () => {
 
   it('searches the items of the completed activity shown', () => {
     let s = state({ matches: null })
-    s.nav.activity = 'item.import'
+    s.nav.view = { name: 'activity', type: 'item.import' }
     s.nav.tags = [5]
     s.completed = {
-      'item.import': { type: 'item.import', refs: [1, 2] }
+      'item.import': { type: 'item.import', refs: [1, 2], expires: Infinity }
     }
 
     let { calls } = run(search(null), {
@@ -290,9 +284,9 @@ describe('search saga', () => {
   it('keeps no deleted items of the completed activity shown', () => {
     // Item 3 is selected but was moved to the trash.
     let s = state({ matches: null }, '', [3])
-    s.nav.activity = 'item.import'
+    s.nav.view = { name: 'activity', type: 'item.import' }
     s.completed = {
-      'item.import': { type: 'item.import', refs: [1, 2, 3] }
+      'item.import': { type: 'item.import', refs: [1, 2, 3], expires: Infinity }
     }
     s.items[3] = { ...s.items[3], deleted: true }
 
@@ -306,65 +300,61 @@ describe('search saga', () => {
 
     expect(payload.matches).to.eql({ 1: true, 2: true })
   })
-})
 
-describe('completed saga', () => {
-  // Runs the saga against a state the test changes
-  // before emitting the action that changed it.
-  // Dispatched actions go through the nav reducer.
-  const start = (completed$) => {
-    let channel = stdChannel()
-    let puts = []
-    let state = {
-      nav: { ...nav(undefined, {}), activity: 'item.import' },
-      completed: completed$
+  it('keeps the items of an expired activity while shown', () => {
+    let s = state({ matches: null })
+    s.nav.view = { name: 'activity', type: 'item.import' }
+    s.completed = {
+      'item.import': { type: 'item.import', refs: [1], expires: Date.now() - 1 }
     }
 
-    runSaga({
-      channel,
-      getState: () => state,
-      dispatch (action) {
-        puts.push(action.type)
-        state.nav = nav(state.nav, action)
-        channel.put(action)
-      }
-    }, completed)
-
-    return {
-      puts,
-      emit (action, next) {
-        Object.assign(state, next)
-        channel.put(action)
-      }
-    }
-  }
-
-  const record = (props) =>
-    ({ type: 'item.import', expires: Date.now() + 60000, refs: [1], ...props })
-
-  it('searches again when a new run replaces the record shown', () => {
-    let s = start({ 'item.import': record() })
-
-    s.emit(done({ type: 'item.import', meta: {} }), {
-      completed: { 'item.import': record({ refs: [2] }) }
+    let { calls } = run(search(null), {
+      state: s,
+      mocks: [
+        [mod.item.find, () => ({ items: [1] })],
+        [termLists, () => []]
+      ]
     })
 
-    expect(s.puts).to.eql([NAV.SEARCH])
+    expect(calls(mod.item.find).calls[0].arguments[1].ids).to.eql([1])
   })
 
-  it('returns to the project when the record shown is dismissed', () => {
-    let s = start({ 'item.import': record() })
+  it('finds no items for an activity that is gone', () => {
+    let s = state({ matches: null }, '', [1])
+    s.nav.view = { name: 'activity', type: 'item.import' }
+    s.completed = {}
 
-    s.emit(dismiss('item.import'), { completed: {} })
+    let { calls, puts: [{ payload }] } = run(search(null), {
+      state: s,
+      mocks: [
+        [mod.item.find, () => ({ items: [] })],
+        [termLists, () => []]
+      ]
+    })
 
-    expect(s.puts).to.eql([NAV.SELECT])
+    expect(calls(mod.item.find).calls[0].arguments[1])
+      .to.eql({ ids: [], tags: [] })
+    expect(payload.matches).to.eql({})
   })
 
-  it('returns to the project when the record shown expires', async () => {
-    let s = start({ 'item.import': record({ expires: Date.now() + 10 }) })
+  it('searches the items of a live run, not the completed one', () => {
+    let s = state({ matches: null })
+    s.nav.view = { name: 'activity', type: 'item.import', seq: 9 }
+    s.activities = { 9: { id: 9, type: 'item.import', refs: [3] } }
+    s.completed = {
+      'item.import': { type: 'item.import', refs: [1, 2], expires: Infinity }
+    }
 
-    await new Promise(resolve => setTimeout(resolve, 20))
-    expect(s.puts).to.eql([NAV.SELECT])
+    let { calls } = run(search(null), {
+      state: s,
+      mocks: [
+        [mod.item.find, () => ({ items: [3] })],
+        [termLists, () => []]
+      ]
+    })
+
+    expect(calls(mod.item.find).calls[0].arguments[1])
+      .to.eql({ ids: [3], tags: [] })
   })
 })
 

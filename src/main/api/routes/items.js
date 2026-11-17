@@ -41,8 +41,10 @@ export const findItems = ({ operationId, summary, params }) => ({
       throw fail(400, `invalid query: ${error.code} at ${error.offset}`)
 
     return rsvp(act.item.find({
+      view: (params.id == null) ?
+        { name: 'project' } :
+        { name: 'list', id: params.id },
       tags: query.tag,
-      list: params.id,
       sort: { column: query.sort, asc: !query.reverse },
       query: query.q
     }))

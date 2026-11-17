@@ -16,7 +16,8 @@ import * as act from '../../actions/index.js'
 
 import {
   getAllTags,
-  getListSubTree
+  getListSubTree,
+  listOf
 } from '../../selectors/index.js'
 
 
@@ -31,6 +32,7 @@ class ProjectSidebar extends React.PureComponent {
 
   get hasSelection () {
     return this.props.list != null ||
+      this.props.isUnlistedSelected ||
       this.props.isTrashSelected ||
       this.props.isActivitySelected
   }
@@ -78,7 +80,7 @@ class ProjectSidebar extends React.PureComponent {
       case this.props.isTrashSelected:
       case this.props.isActivitySelected:
         return
-      case (this.props.list === -1):
+      case this.props.isUnlistedSelected:
         return this.handleTrashSelect()
       case this.isListEmpty():
       case this.isListSelected(this.getLastList()):
@@ -98,7 +100,7 @@ class ProjectSidebar extends React.PureComponent {
         return this.handleTrashSelect()
       case this.props.isTrashSelected:
         return this.handleUnlistedSelect()
-      case (this.props.list === -1):
+      case this.props.isUnlistedSelected:
         return this.handleListSelect(this.getLastList())
       case this.isListEmpty():
       case this.isListSelected(this.getFirstList()):
@@ -130,7 +132,7 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   handleSelect () {
-    this.props.onSelect({ list: null, trash: null }, { throttle: true })
+    this.props.onSelect({ view: { name: 'project' } }, { throttle: true })
   }
 
   handleMouseDown = () => {
@@ -154,11 +156,11 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   handleTrashSelect = () => {
-    this.props.onSelect({ trash: true }, { throttle: true })
+    this.props.onSelect({ view: { name: 'trash' } }, { throttle: true })
   }
 
   handleUnlistedSelect = () => {
-    this.props.onSelect({ list: -1 }, { throttle: true })
+    this.props.onSelect({ view: { name: 'unlisted' } }, { throttle: true })
   }
 
   handleProjectDropFiles = (files) => {
@@ -179,7 +181,7 @@ class ProjectSidebar extends React.PureComponent {
 
   handleListSelect = (list) => {
     if (list > 0 && (!this.isListSelected(list) || this.hasActiveTags)) {
-      this.props.onSelect({ list }, { throttle: true })
+      this.props.onSelect({ view: { name: 'list', id: list } }, { throttle: true })
       return true
     }
   }
@@ -277,7 +279,7 @@ class ProjectSidebar extends React.PureComponent {
                     <ListLeafNode
                       name="sidebar.unlisted"
                       icon="UnlistedItems"
-                      isSelected={this.props.list === -1}
+                      isSelected={this.props.isUnlistedSelected}
                       onClick={this.handleUnlistedSelect}/>
                   )}
                   <TrashListNode
@@ -328,10 +330,11 @@ class ProjectSidebar extends React.PureComponent {
 const ProjectSidebarContainer = connect(
   (state, { root }) => ({
     edit: state.edit,
-    isActivitySelected: state.nav.activity != null,
-    isTrashSelected: state.nav.trash,
+    isActivitySelected: state.nav.view.name === 'activity',
+    isTrashSelected: state.nav.view.name === 'trash',
+    isUnlistedSelected: state.nav.view.name === 'unlisted',
     keymap: state.keymap,
-    list: state.nav.list,
+    list: listOf(state.nav.view),
     lists: state.lists,
     listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
     tagColor: state.settings.tagColor,

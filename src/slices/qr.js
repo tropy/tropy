@@ -47,7 +47,7 @@ export const selectItemSequence = (state) =>
 export const selectViewOf = (state, id) =>
   (state.qr.matches == null || state.qr.matches[id]) ?
     null :
-    { trash: state.items[id]?.deleted ? true : null, query: '' }
+    { view: { name: state.items[id]?.deleted ? 'trash' : 'project' }, query: '' }
 
 // The parsed search query: { terms, errors } (see common/search.js).
 export const selectQuery = memo(

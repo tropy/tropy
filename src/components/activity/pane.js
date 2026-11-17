@@ -11,7 +11,9 @@ export const ActivityPane = memo(() => {
   let dispatch = useDispatch()
   let busy = useBusyActivities()
   let completed = useCompletedActivities()
-  let selected = useSelector(state => state.nav.activity)
+  let view = useSelector(state => state.nav.view)
+  let selected = (view.name === 'activity' && view.seq == null) ?
+    view.type : null
   let rows = busy.length + completed.length
 
   let handleCancel = useEvent((id) => {
@@ -23,7 +25,9 @@ export const ActivityPane = memo(() => {
   }
 
   let handleSelect = (type) => {
-    dispatch(act.nav.select({ activity: type }, { throttle: true }))
+    dispatch(act.nav.select({
+      view: { name: 'activity', type }
+    }, { throttle: true }))
   }
 
   return (

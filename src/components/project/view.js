@@ -9,6 +9,7 @@ import { ItemGrid, ItemTable, NoItems } from '../item/index.js'
 import { ProjectSidebar } from './sidebar.js'
 import { ProjectToolbar } from './toolbar.js'
 import { SASS } from '../../constants/index.js'
+import { listOf } from '../../selectors/nav.js'
 
 import * as act from '../../actions/index.js'
 
@@ -30,8 +31,8 @@ export const ProjectView = ({
   let items = useSelector(selectItemSequence)
   let queryError = useSelector(state => selectQuery(state).errors[0])
 
-  let list = typeof nav.list === 'number' &&
-    nav.list > 0 ? nav.list : null
+  let list = listOf(nav.view)
+  let isTrash = nav.view.name === 'trash'
 
   let iterator = useRef()
 
@@ -44,8 +45,8 @@ export const ProjectView = ({
 
   let ItemIterator = zoom ? ItemGrid : ItemTable
 
-  let isBlank = project.isBlank && !nav.trash
-  let isReadOnly = project.isReadOnly || nav.trash
+  let isBlank = project.isBlank && !isTrash
+  let isReadOnly = project.isReadOnly || isTrash
 
   let style = useMemo(() => ({
     flexBasis: `calc(100% - ${offset}px)`

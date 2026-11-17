@@ -79,9 +79,11 @@ describe('ProtocolHandler', () => {
     for (let [url, name, payload] of [
       ['/items', 'nav.select', { query: '' }],
       ['/items?q=Map', 'nav.select', { query: 'Map' }],
-      ['/lists/3', 'nav.select', { list: 3, query: '' }],
+      ['/lists/3', 'nav.select', {
+        view: { name: 'list', id: 3 }, query: ''
+      }],
       ['/tags/5', 'nav.select', { tags: [5], query: '' }],
-      ['/trash', 'nav.select', { trash: true, query: '' }]
+      ['/trash', 'nav.select', { view: { name: 'trash' }, query: '' }]
     ]) {
       await proto.handle(base + url)
 

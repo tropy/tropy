@@ -289,9 +289,19 @@ describe('api', () => {
       expect(res.json()).to.eql([{ id: 1 }])
       expect(api.action.type).to.equal(ITEM.FIND)
       expect(api.action.payload).to.deep.include({
+        view: { name: 'project' },
         tags: [1, 2],
         sort: { column: undefined, asc: false }
       })
+    })
+
+    it('finds the items in a list, not in the root list', async () => {
+      api.respond([])
+      await api.get('/projects/foo/lists/3/items')
+      expect(api.action.payload.view).to.eql({ name: 'list', id: 3 })
+
+      let res = await api.get('/projects/foo/lists/0/items')
+      expect(res.statusCode).to.equal(400)
     })
 
     it('sorts by list position only in lists', async () => {

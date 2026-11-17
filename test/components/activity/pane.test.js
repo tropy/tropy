@@ -144,6 +144,34 @@ describe('ActivityPane', () => {
     })
   })
 
+  it('keeps the activity shown after it expires', async () => {
+    let now = Date.now()
+    let store = createStore({
+      completed: {
+        'item.import': {
+          type: 'item.import', done: now, expires: now + 50,
+          refs: [1], sticky: true
+        }
+      }
+    })
+    store.dispatch({
+      type: 'nav.update',
+      payload: { view: { name: 'activity', type: 'item.import' } }
+    })
+
+    let { container } = render(<ActivityPane/>, withStore(store))
+
+    await new Promise(resolve => setTimeout(resolve, 100))
+    expect(container.querySelector('.activity.completed'))
+      .to.have.class('active')
+
+    // Leaving the view leaves the expired record.
+    store.dispatch({ type: 'nav.update', payload: { view: { name: 'trash' } } })
+    await waitFor(() => {
+      expect(container.querySelector('.activity.completed')).to.be.null
+    })
+  })
+
   it('dispatches dismiss', () => {
     let now = Date.now()
     let store = createStore({
@@ -183,7 +211,7 @@ describe('ActivityPane', () => {
 
     fireEvent.click(withRefs)
     expect(dispatch.mock.calls[0].arguments[0].payload)
-      .to.eql({ activity: 'item.import' })
+      .to.eql({ view: { name: 'activity', type: 'item.import' } })
   })
 
   it('dismisses without selecting', () => {

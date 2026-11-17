@@ -2,6 +2,7 @@ import { create, has, ids } from '../common/selection.js'
 import { array, merge, insert, omit, splice } from '../common/util.js'
 import { dc } from '../ontology/ns.js'
 import { expands } from '../common/search.js'
+import { dismiss } from '../slices/completed.js'
 
 import {
   EDIT,
@@ -20,9 +21,23 @@ const reset = {
   note: null
 }
 
+/*
+ * The view (nav.view): what the item results are drawn from,
+ * filtered by tags and query.
+ *   { name: 'project' }               all items (the default)
+ *   { name: 'list', id }              the items in a list
+ *   { name: 'unlisted' }              the items in no list
+ *   { name: 'trash' }                 the deleted items
+ *   { name: 'activity', type, seq? }  the items of an activity:
+ *                                     the completed run of a type,
+ *                                     or the live run seq.
+ */
+const PROJECT = { name: 'project' }
+
 const init = {
   ...reset,
   mode: NAV.MODE.PROJECT,
+  view: PROJECT,
   query: '',
   tags: [],
   sort: {},
@@ -39,8 +54,12 @@ const init = {
 export function nav (state = init, { type, payload, meta, error }) {
   switch (type) {
     case NAV.RESTORE: {
-      let { items, ...nav } = omit(payload || {}, ['query', 'tags', 'activity'])
+      let { items, ...nav } = omit(payload || {}, [
+        'query', 'tags', 'view', 'list', 'trash', 'activity', 'imports'
+      ])
       let state = merge(init, nav)
+
+      state.view = restoreView(payload || {})
 
       // Restore item selection from legacy `items` array or previous state
       state.item = items
@@ -67,24 +86,24 @@ export function nav (state = init, { type, payload, meta, error }) {
         ...state,
         sort: {
           ...state.sort,
-          [list || 0]: sort
+          [list || LIST.ROOT]: sort
         }
       }
     }
 
     case LIST.REMOVE: {
-      return (state.list !== payload) ? state : {
-        ...state,
-        ...reset,
-        list: null
-      }
+      return (state.view.name !== 'list' || state.view.id !== payload) ?
+        state : {
+          ...state,
+          ...reset,
+          view: PROJECT
+        }
     }
     case LIST.COLLAPSE: {
       return !meta.select ? state : {
         ...state,
         ...reset,
-        activity: null,
-        list: payload
+        view: { name: 'list', id: payload }
       }
     }
     case LIST.ITEM.REMOVE: {
@@ -157,13 +176,13 @@ export function nav (state = init, { type, payload, meta, error }) {
     // it clears the selections; removing tags only widens them.
     case TAG.SELECT: {
       let tags = selectTag(state.tags, payload, meta.mod)
-      let isNarrowing = tags.some(id => !state.tags.includes(id)) ||
-        state.trash
+      let isTrash = state.view.name === 'trash'
+      let isNarrowing = tags.some(id => !state.tags.includes(id)) || isTrash
 
       return {
         ...state,
         ...(isNarrowing ? reset : null),
-        trash: null,
+        ...(isTrash ? { view: PROJECT } : null),
         tags
       }
     }
@@ -212,12 +231,20 @@ export function nav (state = init, { type, payload, meta, error }) {
         ...state,
         ...reset,
         mode: NAV.MODE.PROJECT,
-        list: null,
-        trash: null,
-        activity: null,
+        view: PROJECT,
         tags: [],
         ...payload
       }
+
+    // Dismissing the selected (completed) activity deselects it.
+    case dismiss.type:
+      return (state.view.name !== 'activity' ||
+        state.view.type !== payload ||
+        state.view.seq != null) ? state : {
+          ...state,
+          ...reset,
+          view: PROJECT
+        }
 
     case NAV.COLUMN.INSERT:
       return {
@@ -252,6 +279,28 @@ export function nav (state = init, { type, payload, meta, error }) {
     default:
       return state
   }
+}
+
+// The view of persisted nav state, also of legacy state
+// (list: -1 for unlisted, trash) without a view.
+// Live runs do not outlive the window:
+// a live activity becomes the completed run of its type.
+function restoreView ({ view, list, trash }) {
+  switch (view?.name) {
+    case 'activity':
+      return { name: 'activity', type: view.type }
+    case 'list':
+    case 'unlisted':
+    case 'trash':
+    case 'project':
+      return view
+  }
+
+  if (trash) return { name: 'trash' }
+  if (list === -1) return { name: 'unlisted' }
+  if (list > 0) return { name: 'list', id: list }
+
+  return PROJECT
 }
 
 // TODO remove when tag list uses new selections

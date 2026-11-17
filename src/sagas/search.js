@@ -1,13 +1,4 @@
-import {
-  actionChannel,
-  all,
-  call,
-  delay,
-  put,
-  race,
-  select,
-  take
-} from 'redux-saga/effects'
+import { actionChannel, all, call, put, select, take } from 'redux-saga/effects'
 import { buffers } from 'redux-saga'
 import { warn } from '../common/log.js'
 import { build, reverse, update } from '../common/order.js'
@@ -22,8 +13,6 @@ import {
   selectSortKey,
   selectSubjects
 } from '../slices/qr.js'
-import { done } from '../slices/cmd.js'
-import { dismiss, isExpired } from '../slices/completed.js'
 import { TermCache, contributors, keyOf, membership } from '../common/matches.js'
 import { ids as selected } from '../common/selection.js'
 import * as mod from '../models/index.js'
@@ -73,14 +62,23 @@ const byPosition = (ids, sort) => {
 }
 
 // Whether an item belongs to a view, regardless of its query and
-// tags: in its list (or in none, for unlisted), in the trash or not.
-const belongs = (item, { list, trash, activity }) => {
+// tags: in its list (or in none, for unlisted), in the trash or not,
+// among the items of its activity.
+const belongs = (item, { name, id, refs }) => {
   if (item == null) return false
-  if (trash) return !!item.deleted
+  if (name === 'trash') return !!item.deleted
   if (item.deleted) return false
-  if (activity != null) return activity.includes(item.id)
-  if (list == null) return true
-  return (list < 0) ? item.lists.length === 0 : item.lists.includes(list)
+
+  switch (name) {
+    case 'activity':
+      return refs.includes(item.id)
+    case 'unlisted':
+      return item.lists.length === 0
+    case 'list':
+      return item.lists.includes(id)
+    default:
+      return true
+  }
 }
 
 // The selected items that belong to the view (see belongs).
@@ -219,86 +217,49 @@ export function *matches (pattern) {
   }
 }
 
-const isShowing = ({ type, payload }) =>
-  type === NAV.SELECT && payload?.activity != null
-
-// Keeps the results of a completed activity (nav.activity) up to date:
-// they change when a new run replaces its record, and the view returns
-// to the whole project when the record is dismissed, expires,
-// or has no items.
-export function *completed () {
-  let shown = null
-
-  while (true) {
-    let { type, record } = yield select(({ nav, completed }) => ({
-      type: nav.activity,
-      record: completed[nav.activity]
-    }))
-
-    if (type == null) {
-      shown = null
-      yield take(isShowing)
-      continue
-    }
-
-    if (record?.refs == null || isExpired(record, Date.now())) {
-      shown = null
-      yield put(act.nav.select({}))
-      continue
-    }
-
-    if (shown?.type === type && shown !== record)
-      yield put(act.nav.search({}))
-
-    shown = record
-
-    yield race([
-      take(action => action.type === type && done.match(action)),
-      take(action => dismiss.match(action) && action.payload === type),
-      take(isShowing),
-      delay(record.expires - Date.now() + 1)
-    ])
-  }
-}
-
 // The view the user is looking at: the items the search returns.
+// An activity's items are those of its live run,
+// or else of its completed one: none if the activity is gone
+// (e.g. dismissed, or expired on restore).
+// An expired record stays while shown: what is selected is visible.
 const getView = (state) => ({
-  list: state.nav.list,
+  ...state.nav.view,
   tags: state.nav.tags,
-  trash: state.nav.trash,
   query: state.nav.query,
-  activity: (state.nav.activity != null) ?
-    state.completed[state.nav.activity]?.refs ?? null : null
+  refs: (state.nav.view.name === 'activity') ?
+    getRefs(state, state.nav.view) : null
 })
+
+const getRefs = (state, { type, seq }) =>
+  ((seq != null) ?
+    state.activities[seq]?.refs :
+    state.completed[type]?.refs) ?? []
 
 // Returns the ids of the items in a view matching the query, as a set
 // (in list order, ascending position, for lists).
 export function *find (db, {
-  list,
+  name,
+  id,
+  refs,
   tags = [],
-  trash,
-  activity,
   query
 }) {
   let START = Date.now()
   let view
 
-  switch (true) {
-    case (activity != null):
-      view = call(mod.item.find, db, { ids: activity, tags })
+  switch (name) {
+    case 'activity':
+      view = call(mod.item.find, db, { ids: refs, tags })
       break
-
-    case (!!trash):
+    case 'trash':
       view = call(mod.item.trash, db)
       break
-
-    case (list != null):
-      if (list < 0)
-        view = call(mod.item.unlisted, db, { tags })
-      else
-        view = call(mod.item.list, db, list, { tags })
+    case 'unlisted':
+      view = call(mod.item.unlisted, db, { tags })
       break
-
+    case 'list':
+      view = call(mod.item.list, db, id, { tags })
+      break
     default:
       view = call(mod.item.all, db, { tags })
   }
@@ -322,11 +283,9 @@ export function *find (db, {
   if (ms > 300) {
     warn({
       ms,
-      list,
+      view: name,
       query: !!query,
-      tags: tags.length > 0,
-      trash,
-      activity: !!activity
+      tags: tags.length > 0
     }, 'slow search')
   }
 
@@ -419,11 +378,9 @@ export function *search (db) {
   } catch (err) {
     warn({
       err,
-      list: view?.list,
+      view: view?.name,
       query: view?.query,
-      tags: view?.tags?.length > 0,
-      trash: view?.trash,
-      activity: view?.activity != null
+      tags: view?.tags?.length > 0
     }, '*search failed')
   }
 }

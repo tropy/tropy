@@ -7,7 +7,8 @@ import * as mod from '../../models/index.js'
 
 import {
   getItemTemplate,
-  getTemplateValues
+  getTemplateValues,
+  listOf
 } from '../../selectors/index.js'
 
 
@@ -20,8 +21,7 @@ export class Create extends Command {
 
     // Created in a list: added to it (as imports are), so that it
     // belongs to the view it is selected in.
-    let list = yield select(state => state.nav.list)
-    let active = (typeof list === 'number' && list > 0) ? list : null
+    let active = yield select(state => listOf(state.nav.view))
 
     let item = yield call(db.transaction, async tx => {
       let created = await mod.item.create(tx, template.id, data)

@@ -1,5 +1,6 @@
 import { LIST, EDIT } from '../constants/index.js'
 import { array } from '../common/util.js'
+import { listOf } from '../selectors/nav.js'
 
 const isChildNodeSelected = (root, selected, nodes) => {
   if (selected == null || selected === root)
@@ -84,7 +85,7 @@ export default {
       let { nav, lists } = getState()
 
       // Set hint for nav reducer.
-      meta.select = isChildNodeSelected(id, nav.list, lists)
+      meta.select = isChildNodeSelected(id, listOf(nav.view), lists)
 
       dispatch({
         type: LIST.COLLAPSE,

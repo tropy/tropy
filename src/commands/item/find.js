@@ -2,7 +2,7 @@ import { select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { ITEM } from '../../constants/index.js'
 import { pluck } from '../../common/util.js'
-import { getDefaultSort } from '../../selectors/nav.js'
+import { getDefaultSort, sortKey } from '../../selectors/nav.js'
 import { find, ordered } from '../../sagas/search.js'
 
 // Finds the items of a view, in the UI's order for the given sort.
@@ -10,15 +10,15 @@ import { find, ordered } from '../../sagas/search.js'
 export class Find extends Command {
   *exec () {
     let { db } = this.options
-    let { list, tags, trash, query, sort } = this.action.payload
+    let { view, tags, query, sort } = this.action.payload
 
     sort = {
-      column: sort?.column ?? getDefaultSort(list).column,
+      column: sort?.column ?? getDefaultSort(sortKey(view)).column,
       asc: sort?.asc ?? true,
       locale: yield select(state => state.intl.locale)
     }
 
-    let { ids } = yield* find(db, { list, tags, trash, query })
+    let { ids } = yield* find(db, { ...view, tags, query })
     ids = yield* ordered(db, ids, sort)
 
     let items = yield select(state => state.items)

@@ -74,10 +74,11 @@ describe('ItemFind', () => {
   })
 
   it('keeps the list order when sorting by position', () => {
-    let res = exec({ list: 1 })
+    let res = exec({ view: { name: 'list', id: 1 } })
 
     expect(ids(res)).to.eql([2, 4])
-    expect(exec({ list: 1, sort: { asc: false } }).result.map(it => it.id))
+    expect(exec({ view: { name: 'list', id: 1 }, sort: { asc: false } }).result
+      .map(it => it.id))
       .to.eql([4, 2])
     expect(res.calls(mod.item.seed).callCount()).to.equal(0)
   })
