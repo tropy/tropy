@@ -44,13 +44,24 @@
     border-top-color: $activity-blurred-border-color;
   }
 
+  &.active {
+    background: $activity-active-bg;
+    border-top-color: $activity-active-bg;
+
+    .activity-pane:focus-within :is(&) {
+      color: $activity-focus-color;
+      background-color: $activity-focus-bg;
+      border-top-color: $activity-focus-bg;
+
+      & + .activity {
+        border-top-color: transparent;
+      }
+    }
+  }
+
   .activity-container {
     flex: 1 1 0;
     min-width: 0;
-  }
-
-  &.active .activity-text {
-    font-weight: 600;
   }
 
   .flex-row {
@@ -68,10 +79,6 @@
   .activity-text {
     @include css-truncation;
     margin-right: auto;
-
-    &.link {
-      cursor: pointer;
-    }
 
     .is-blurred & {
       opacity: $sidebar-blurred-name-opacity;
@@ -105,11 +112,8 @@
     padding: 0;
     width: 12px;
     height: 12px;
-    background: $progress-cancel-bg;
     border-radius: 6px;
-    overflow: hidden;
     position: relative;
-    opacity: 0.5;
     margin-left: $space-min;
 
     .vibrancy:not(.is-blurred) & {
@@ -127,23 +131,16 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      color: $progress-cancel-color;
+      color: $progress-cancel-bg;
 
       .vibrancy:not(.is-blurred) & {
         display: none;
       }
-    }
 
-    &:hover,
-    &:active {
-      opacity: 1;
-    }
-
-    &:active {
-      background: $icon-active-color;
-
-      .icon {
-        color: $progress-cancel-color;
+      .activity.active :is(&) {
+        .activity-pane:focus :is(&) {
+          color: $activity-focus-color;
+        }
       }
     }
   }

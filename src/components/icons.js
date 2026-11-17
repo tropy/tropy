@@ -176,6 +176,22 @@ export const IconWarningSm = i('WarningSm', (
   </svg>
 ))
 
+export const IconXCircleSmall = i('XCircleSmall', (
+  <svg width="12" height="12" viewBox="0 0 12 12">
+    <g className="line" fill="currentColor">
+      <path fillRule="evenodd" d="M6,0A6,6,0,1,0,6,12A6,6,0,1,0,6,0ZM9.536,8.828L6.707,6L9.536,3.172L8.828,2.464L6,5.293L3.172,2.464L2.464,3.172L5.293,6L2.464,8.828L3.172,9.536L6,6.707L8.828,9.536Z"/>
+    </g>
+  </svg>
+))
+
+export const IconCheckmarkCircleSmall = i('CheckmarkCircleSmall', (
+  <svg width="12" height="12" viewBox="0 0 12 12">
+    <g className="line" fill="currentColor">
+      <path  fillRule="evenodd" d="M2.151,6.5l2.93,2.93,4.254-6.077-.983-.688-3.434,4.906-1.494-1.494-.424-.424-.849.849ZM6,0c3.314,0,6,2.686,6,6s-2.686,6-6,6S0,9.314,0,6,2.686,0,6,0Z"/>
+    </g>
+  </svg>
+))
+
 
 /* 16 x 16 */
 

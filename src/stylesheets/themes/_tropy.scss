@@ -297,8 +297,13 @@ $sidebar-vibrancy-icon-selected-color:    --scheme(alpha(var(--light-10), 59%), 
 $sidebar-blurred-icon-opacity:         os(--scheme(0.33,                        0.33), null, null);
 $sidebar-blurred-name-opacity:         os(--scheme(0.76,                        0.55), null, null);
 $sidebar-blurred-tag-opacity-darwin:      --scheme(0.31,                        0.34);
+
+// Activity
 $activity-border-color:                   --scheme(var(--light-3),              var(--dark-1));
 $activity-vibrancy-border-color:          --scheme(alpha(var(--light-10), 10%), alpha(var(--dark-0), 33%));
+$activity-active-bg:                      --scheme(var(--light-3),              var(--dark-5));
+$activity-focus-color:                    --scheme(var(--light-1),              var(--primary-light));
+$activity-focus-bg:                       --scheme(var(--primary),              var(--primary));
 $activity-blurred-border-color:        os(--scheme(shade(var(--light-3), 4%),   shade(var(--dark-1), 4%)), null, null);
 $activity-vibrancy-progress-bar-bg:       --scheme(alpha(var(--light-10), 10%), alpha(var(--dark-0), 20%));
 $activity-vibrancy-progress-cancel-bg:    --scheme(alpha(var(--light-10), 25%), var(--primary-vibrancy));
@@ -498,7 +503,6 @@ $thumbnail-bg:    --scheme(shade(var(--light-3), 5%),  tint(var(--dark-5), 5%));
 $progress-bar-bg:             --scheme(var(--light-3), var(--dark-2));
 $progress-bar-color:          --scheme(var(--primary), var(--primary));
 $progress-bar-blurred-color:  --scheme(var(--light-5), var(--dark-6));
-$progress-cancel-color:       --scheme(var(--light-1), var(--dark-4));
 $progress-cancel-bg:          --scheme(var(--light-6), var(--dark-7));
 
 // Editor
