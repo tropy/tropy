@@ -157,7 +157,12 @@ CREATE TABLE selections (
   y         NUMERIC  NOT NULL DEFAULT 0,
   position  INTEGER
 
-) WITHOUT ROWID;
+, polygon TEXT
+  CHECK (polygon IS NULL OR (
+    json_type(polygon) = 'array' AND
+    json_array_length(polygon) >= 4 AND
+    json_extract(polygon, '$[0]') IS json_extract(polygon, '$[#-1]')
+  ))) WITHOUT ROWID;
 CREATE TABLE IF NOT EXISTS "taggings" (
   tag_id     INTEGER  NOT NULL REFERENCES tags ON DELETE CASCADE,
   id         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
@@ -173,35 +178,36 @@ CREATE TABLE migrations (
   number      INTEGER  NOT NULL PRIMARY KEY,
   created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 , compatibility INTEGER NOT NULL DEFAULT 0) WITHOUT ROWID;
-INSERT INTO migrations VALUES(1603291819,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1604191233,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1610181540,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1707240933,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1708121306,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1710032150,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1710041250,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1710041315,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1801231006,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1801241335,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1803301510,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1810082056,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1811081017,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1902062123,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1904161246,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1906131635,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1910041503,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(1910311746,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(2005271953,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(2011121230,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(2103121202,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(2103171215,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(2103301553,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(2207140945,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(2302021456,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(2403201717,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(2412161647,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(2611021200,'2026-11-06 22:36:41',0);
-INSERT INTO migrations VALUES(2611061900,'2026-11-06 22:36:41',0);
+INSERT INTO migrations VALUES(1603291819,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1604191233,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1610181540,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1707240933,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1708121306,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1710032150,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1710041250,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1710041315,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1801231006,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1801241335,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1803301510,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1810082056,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1811081017,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1902062123,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1904161246,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1906131635,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1910041503,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(1910311746,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(2005271953,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(2011121230,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(2103121202,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(2103171215,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(2103301553,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(2207140945,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(2302021456,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(2403201717,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(2412161647,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(2611021200,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(2611061900,'2026-11-17 17:40:19',0);
+INSERT INTO migrations VALUES(2611131200,'2026-11-17 17:40:19',0);
 CREATE TABLE transcriptions (
   transcription_id  INTEGER PRIMARY KEY,
   id                INTEGER NOT NULL REFERENCES images ON DELETE CASCADE,
@@ -375,6 +381,40 @@ CREATE TRIGGER metadata_values_ad_fts
   BEGIN
     INSERT INTO fts_metadata (fts_metadata, rowid, datatype, text)
       VALUES ('delete', OLD.value_id, OLD.datatype, OLD.text);
+  END;
+CREATE TRIGGER insert_selections_polygon
+  AFTER INSERT ON selections
+  WHEN NEW.polygon IS NOT NULL
+  BEGIN
+    UPDATE selections
+      SET x = (SELECT min(json_extract(value, '$[0]')) FROM json_each(NEW.polygon)),
+          y = (SELECT min(json_extract(value, '$[1]')) FROM json_each(NEW.polygon))
+      WHERE id = NEW.id;
+    UPDATE images
+      SET width = (
+            SELECT max(json_extract(value, '$[0]')) - min(json_extract(value, '$[0]'))
+            FROM json_each(NEW.polygon)),
+          height = (
+            SELECT max(json_extract(value, '$[1]')) - min(json_extract(value, '$[1]'))
+            FROM json_each(NEW.polygon))
+      WHERE id = NEW.id;
+  END;
+CREATE TRIGGER update_selections_polygon
+  AFTER UPDATE OF polygon ON selections
+  WHEN NEW.polygon IS NOT NULL
+  BEGIN
+    UPDATE selections
+      SET x = (SELECT min(json_extract(value, '$[0]')) FROM json_each(NEW.polygon)),
+          y = (SELECT min(json_extract(value, '$[1]')) FROM json_each(NEW.polygon))
+      WHERE id = NEW.id;
+    UPDATE images
+      SET width = (
+            SELECT max(json_extract(value, '$[0]')) - min(json_extract(value, '$[0]'))
+            FROM json_each(NEW.polygon)),
+          height = (
+            SELECT max(json_extract(value, '$[1]')) - min(json_extract(value, '$[1]'))
+            FROM json_each(NEW.polygon))
+      WHERE id = NEW.id;
   END;
 CREATE INDEX idx_photos_checksum ON photos (checksum);
 CREATE INDEX idx_metadata_value_id ON metadata (value_id);
