@@ -1,9 +1,5 @@
 import { times } from '../common/util.js'
 
-const ACTIVITY = {
-  HEIGHT: 43
-}
-
 const BODY = {
   linux: {
     dark: '#292929',
@@ -231,7 +227,6 @@ const LIST = {
 }
 
 export default {
-  ACTIVITY,
   BODY,
   COLUMN,
   EDITOR,
