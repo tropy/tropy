@@ -8,7 +8,10 @@ import { done } from '#tropy/slices/cmd.js'
 
 describe('completed', () => {
   const run = (type, meta = {}, result) => {
-    let action = { type, meta: { seq: 1, now: 100, agent: meta.agent } }
+    let action = {
+      type,
+      meta: { seq: 1, now: 100, agent: meta.agent, hidden: meta.hidden }
+    }
     let d = done(action, result, { maxAge: 1000, ...meta })
     d.meta.now = meta.now ?? 200
     return d
@@ -21,7 +24,7 @@ describe('completed', () => {
     let state = reduce(
       run('item.import', { refs: [1], sticky: true }),
       run('item.import', { now: 300, refs: [2, 3], agent: 'A' }),
-      run('photo.consolidate', { errors: 2 }, new Error()))
+      run('photo.consolidate', { errors: 2, agent: 'B' }, new Error()))
 
     expect(state).to.eql({
       'item.import': {
@@ -30,23 +33,35 @@ describe('completed', () => {
       },
       'photo.consolidate': {
         type: 'photo.consolidate', init: 100, done: 200, expires: 1200,
-        failed: true, errors: 2
+        agent: 'B', failed: true, errors: 2
       }
     })
   })
 
   it('does not record cancelled runs', () => {
-    let state = reduce(run('a'), run('a', { now: 300, cancelled: true }))
+    let state = reduce(
+      run('a', { sticky: true }),
+      run('a', { now: 300, sticky: true, cancelled: true }))
     expect(state.a.done).to.equal(200)
   })
 
+  it('records only sticky or agent runs, never hidden ones', () => {
+    let state = reduce(
+      run('a'),
+      run('b', { agent: 'A', hidden: true }),
+      run('c', { sticky: true, hidden: true }))
+    expect(state).to.eql({})
+  })
+
   it('dismisses a type', () => {
-    let state = reduce(run('a'), run('b'))
+    let state = reduce(run('a', { sticky: true }), run('b', { sticky: true }))
     expect(Object.keys(reducer(state, dismiss('a')))).to.eql(['b'])
   })
 
   it('drops expired records on restore', () => {
-    let state = reduce(run('a', { now: 200 }), run('b', { now: 900 }))
+    let state = reduce(
+      run('a', { now: 200, sticky: true }),
+      run('b', { now: 900, sticky: true }))
     let action = { ...restore(state), meta: { now: 1500 } }
     expect(Object.keys(reducer({}, action))).to.eql(['b'])
   })
@@ -55,7 +70,7 @@ describe('completed', () => {
     let completed = reduce(
       run('a', { now: 100, sticky: true }),
       run('b', { now: 500, sticky: true }),
-      run('c', { now: 600 }))
+      run('c', { now: 600, agent: 'A' }))
 
     expect(selectCompletedActivities({ completed }, 1050)
       .map(rec => rec.type)).to.eql(['b', 'a'])

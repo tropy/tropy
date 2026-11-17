@@ -1,5 +1,4 @@
 import { createSelector, createSlice, lruMemoize } from '@reduxjs/toolkit'
-import { done } from './cmd.js'
 
 /*
  * Completed Activities:
@@ -7,13 +6,17 @@ import { done } from './cmd.js'
  *
  * Activities are recorded on their done action,
  * and are kept meta.maxAge (default one day).
+ *
+ * To record activity set `meta.sticky` or `meta.agent`;
+ * or use `meta.hidden` to hide.
  */
 
 export const isExpired = (record, now) =>
   !(record.expires >= now)
 
-const isRecorded = (action) =>
-  done.match(action) && !action.meta.cancelled
+const isRecorded = ({ meta }) =>
+  !!meta?.done && !meta.cancelled && !meta.hidden &&
+  !!(meta.sticky || meta.agent)
 
 function record ({ type, error, meta }) {
   let rec = {
