@@ -153,39 +153,71 @@ function f (message, ...opts) {
   return new IntlMessageFormat(message, ARGS.locale).format(...opts)
 }
 
-async function show (type, { message, values, ...opts } = {}) {
+async function show (type, { key, message, values, ...opts } = {}) {
   try {
-    if (message) {
-      message = f(message, values)
+    if (message == null && key != null) {
+      message = f(t(key), values)
     }
 
     return await instance.show(type, { message, ...opts })
+
   } catch (err) {
     warn({ err }, `failed to show ${type} dialog`)
     return { cancel: true }
   }
 }
 
+function lookup (...path) {
+  let { message, ...opts } = t('dialog', ...path) ?? {}
+
+  if (message != null)
+    opts.key = ['dialog', ...path, 'message'].join('.')
+
+  return opts
+}
+
 async function notify (id, opts) {
   return show('message-box', {
     type: 'info',
-    ...t('dialog', 'notify', ...id.split('.')),
+    ...lookup('notify', ...id.split('.')),
     ...opts
   })
 }
 
 async function fail (e, code = e.code, detail) {
-  let message = t(`error.${code}`) || e.message
+  let key = `error.${code}`
 
+  return showError(e, {
+    ...(t(key) ? { key } : { message: e.message }),
+    detail: detail || e.stack
+  })
+}
+
+async function failPartially (errors, code) {
+  let detail = errors.slice(0, 5).map(e => e.message)
+  if (errors.length > 5) detail.push('…')
+
+  let key = `error.partial.${code}`
+
+  return showError(errors[0], {
+    key: t(key) ? key : 'error.partial.default',
+    values: { count: errors.length },
+    detail: detail.join('\n')
+  })
+}
+
+async function showError (e, { key, message, values, detail }) {
   return show('message-box', {
     type: 'error',
-    ...t('dialog', 'error'),
+    ...lookup('error'),
+    key,
     message,
-    detail: detail || e.stack
+    values,
+    detail
   }).then(({ value }) => {
     switch (value) {
       case 1:
-        copy({ text: crashReport(e, message) })
+        copy({ text: crashReport(e, message ?? key) })
         break
       case 2:
         ipc.send('shell', 'show', ARGS.log)
@@ -201,7 +233,7 @@ async function prompt (id, {
   ...opts
 } = {}) {
   let { cancel, data } = await show('message-box', {
-    ...t('dialog', 'prompt', ...id.split('.')),
+    ...lookup('prompt', ...id.split('.')),
     type: 'question',
     defaultId,
     cancelId,
@@ -403,6 +435,7 @@ save.transcription = ({ alto = true, ...opts } = {}) => save({
 
 export {
   fail,
+  failPartially,
   notify,
   open,
   prompt,

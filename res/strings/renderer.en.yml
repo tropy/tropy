@@ -894,6 +894,56 @@ en:
       create: Failed to create tag. Tag names must be unique.
     db:
       SQLITE_CANTOPEN: Cannot find or open database file.
+    partial:
+      default: >-
+        {count, plural,
+          one {One part}
+          other {# parts}
+        } could not be completed.
+      item:
+        import: >-
+          {count, plural,
+            one {One file}
+            other {# files}
+          } could not be imported.
+      photo:
+        consolidate: >-
+          {count, plural,
+            one {One photo}
+            other {# photos}
+          } could not be consolidated.
+        create: >-
+          {count, plural,
+            one {One file}
+            other {# files}
+          } could not be imported.
+        duplicate: >-
+          {count, plural,
+            one {One photo}
+            other {# photos}
+          } could not be duplicated.
+        transcribe: >-
+          {count, plural,
+            one {One transcription}
+            other {# transcriptions}
+          } failed.
+      ontology:
+        import: >-
+          {count, plural,
+            one {One vocabulary or file}
+            other {# vocabularies or files}
+          } could not be imported.
+        template:
+          create: >-
+            {count, plural,
+              one {One template}
+              other {# templates}
+            } could not be created.
+          import: >-
+            {count, plural,
+              one {One template file}
+              other {# template files}
+            } could not be imported.
   flash:
     update:
       ready:

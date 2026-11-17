@@ -3,8 +3,7 @@ import { call, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { copy } from '../../clipboard.js'
 import { ITEM } from '../../constants/index.js'
-import { warn } from '../../common/log.js'
-import { fail, save } from '../../dialog.js'
+import { save } from '../../dialog.js'
 import win from '../../window.js'
 import { getExportItems } from '../../selectors/index.js'
 
@@ -18,28 +17,23 @@ export class Export extends Command {
 
     if (plugin) target = ':plugin:'
 
-    try {
-      if (!target) {
-        target = yield this.dialog(save.items)
-      }
+    if (!target) {
+      target = yield this.dialog(save.items)
+    }
 
-      if (!target) return
+    if (!target) return
 
-      let items = yield select(state => getExportItems(state, { id }))
+    let items = yield select(state => getExportItems(state, { id }))
 
-      switch (target) {
-        case ':clipboard:':
-          copy({ text: JSON.stringify(items, null, 2) })
-          break
-        case ':plugin:':
-          yield call(win.plugins.export, plugin, items)
-          break
-        default:
-          yield call(write, target, JSON.stringify(items, null, 2))
-      }
-    } catch (err) {
-      warn({ err, path: target }, 'failed to export items')
-      fail(err, this.action.type)
+    switch (target) {
+      case ':clipboard:':
+        copy({ text: JSON.stringify(items, null, 2) })
+        break
+      case ':plugin:':
+        yield call(win.plugins.export, plugin, items)
+        break
+      default:
+        yield call(write, target, JSON.stringify(items, null, 2))
     }
   }
 }

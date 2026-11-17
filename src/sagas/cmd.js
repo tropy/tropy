@@ -1,7 +1,7 @@
 import { call, put, race, take } from 'redux-saga/effects'
 import { info, trace, warn } from '../common/log.js'
 import { Command } from '../commands/command.js'
-import { fail } from '../dialog.js'
+import { fail, failPartially } from '../dialog.js'
 import { activity, history } from '../actions/index.js'
 import { done } from '../slices/cmd.js'
 
@@ -21,8 +21,15 @@ export function *exec (options, action) {
 
     if (cmd.isReversible)
       yield put(history.tick(cmd.history))
-    if (cmd.error && !action.meta.silent)
-      fail(cmd.error, action.type)
+    if (cmd.error) {
+      warn({ err: cmd.error }, `${cmd} failed`)
+
+      if (!action.meta.silent)
+        fail(cmd.error, action.type)
+
+    } else if (cmd.errors.length > 0 && !action.meta.silent) {
+      failPartially(cmd.errors, action.type)
+    }
 
   } catch (err) {
     warn({ err }, `${action.type} failed in *exec`)

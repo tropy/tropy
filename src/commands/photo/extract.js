@@ -6,10 +6,10 @@ import { PHOTO, MIME } from '../../constants/index.js'
 import { Cache } from '../../common/cache.js'
 import { sanitize } from '../../common/fs.js'
 import { addOrientation } from '../../common/iiif.js'
-import { warn, info } from '../../common/log.js'
+import { info } from '../../common/log.js'
 import Esper from '../../esper/index.js'
 import { clamp } from '../../esper/util.js'
-import { fail, save } from '../../dialog.js'
+import { save } from '../../dialog.js'
 import { toBuffer, toFile } from '../../image/index.js'
 import { dc, dcterms } from '../../ontology/ns.js'
 import * as act from '../../actions/index.js'
@@ -18,98 +18,88 @@ import win from '../../window.js'
 
 export class Extract extends Command {
   *exec () {
-    try {
-      let { cache } = this.options
-      let { meta, payload } = this.action
-      var {
-        format = 'png',
-        target,
-        plugin,
-        region,
-        width,
-        height,
-        quality
-      } = meta
+    let { cache } = this.options
+    let { meta, payload } = this.action
+    let {
+      format = 'png',
+      target,
+      plugin,
+      region,
+      width,
+      height,
+      quality
+    } = meta
 
-      if (plugin)
-        target = ':plugin:'
+    if (plugin)
+      target = ':plugin:'
 
-      let { photo, selection, filename } = yield select(state => {
-        let selection = state.selections[payload.selection]
-
-        return {
-          selection,
-          photo: state.photos[payload.id ?? selection?.photo],
-          filename: target ? null : getSuggestedFilename(state, payload)
-        }
-      })
-
-      if (photo == null)
-        return
-
-      if (!target)
-        target = yield this.dialog(save.image, { filename })
-      if (!target)
-        return
-
-      var image = selection || photo
-      let src = Cache.url(cache.root, 'full', photo)
-
-      let { buffer, ...raw } = yield call(Esper.instance.extract, src, {
-        ...image,
-        ...addOrientation(image, photo)
-      })
-
-      switch (target) {
-        case ':buffer:': {
-          // Region of the rendered image, i.e. the photo as shown.
-          if (region) {
-            region = clamp(region, raw)
-            if (!(region.width > 0 && region.height > 0))
-              return null
-          }
-
-          let data = yield call(toBuffer, format, buffer, { raw }, {
-            region,
-            width,
-            height,
-            quality
-          })
-          return { data, format }
-        }
-        case ':clipboard:': {
-          let png = yield call(toBuffer, 'png', buffer, { raw })
-          copy({ image: png, type: MIME.PNG })
-          break
-        }
-        case ':plugin:': {
-          let res = yield call(win.plugins.extract, plugin, { buffer, ...raw })
-          if (res?.note)
-            yield put(act.note.create({
-              text: res.note,
-              photo: photo.id,
-              selection: selection?.id
-            }))
-          break
-        }
-        default:
-          yield call(toFile, target, buffer, { raw })
-      }
-
-      info({ photo: image.id, path: target }, 'extracted image')
+    let { photo, selection, filename } = yield select(state => {
+      let selection = state.selections[payload.selection]
 
       return {
-        target,
-        size: buffer.length
+        selection,
+        photo: state.photos[payload.id ?? selection?.photo],
+        filename: target ? null : getSuggestedFilename(state, payload)
       }
+    })
 
-    } catch (err) {
-      warn({ err, photo: image?.id, path: target }, 'failed to extract image')
+    if (photo == null)
+      return
 
-      if (target === ':buffer:')
-        throw err
+    if (!target)
+      target = yield this.dialog(save.image, { filename })
+    if (!target)
+      return
 
-      fail(err, this.action.type)
+    let image = selection || photo
+    let src = Cache.url(cache.root, 'full', photo)
+
+    let { buffer, ...raw } = yield call(Esper.instance.extract, src, {
+      ...image,
+      ...addOrientation(image, photo)
+    })
+
+    switch (target) {
+      case ':buffer:': {
+        // Region of the rendered image, i.e. the photo as shown.
+        if (region) {
+          region = clamp(region, raw)
+          if (!(region.width > 0 && region.height > 0))
+            return null
+        }
+
+        let data = yield call(toBuffer, format, buffer, { raw }, {
+          region,
+          width,
+          height,
+          quality
+        })
+        return { data, format }
+      }
+      case ':clipboard:': {
+        let png = yield call(toBuffer, 'png', buffer, { raw })
+        copy({ image: png, type: MIME.PNG })
+        break
+      }
+      case ':plugin:': {
+        let res = yield call(win.plugins.extract, plugin, { buffer, ...raw })
+        if (res?.note)
+          yield put(act.note.create({
+            text: res.note,
+            photo: photo.id,
+            selection: selection?.id
+          }))
+        break
+      }
+      default:
+        yield call(toFile, target, buffer, { raw })
+    }
+
+    info({ photo: image.id, path: target }, 'extracted image')
+
+    return {
+      target,
+      size: buffer.length
     }
   }
 }

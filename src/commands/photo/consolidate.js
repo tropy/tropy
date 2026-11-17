@@ -41,8 +41,6 @@ async function lookup (photo, paths = {}, checkFileSize) {
 }
 
 export class Consolidate extends ImportCommand {
-  maxAlerts = 2;
-
   *resolve (photo) {
     let { meta } = this.action
     let path = yield call(lookup, photo, meta.paths, true)

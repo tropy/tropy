@@ -3,7 +3,6 @@ import { writeFile as write } from 'node:fs'
 import ARGS from '../args.js'
 import { Command } from './command.js'
 import { ONTOLOGY } from '../constants/index.js'
-import { warn } from '../common/log.js'
 import { Ontology, Template, Vocabulary } from '../ontology/index.js'
 import { get, pick, pluck } from '../common/util.js'
 import { sanitize } from '../common/fs.js'
@@ -12,7 +11,7 @@ import { getTemplateField, getTemplateFields } from '../selectors/index.js'
 import * as act from '../actions/index.js'
 import * as mod from '../models/index.js'
 import { join } from 'node:path'
-import { fail, open, prompt, save } from '../dialog.js'
+import { open, prompt, save } from '../dialog.js'
 
 
 const { VOCAB, PROPS, CLASS, LABEL, TEMPLATE } = ONTOLOGY
@@ -51,16 +50,14 @@ export class Import extends Command {
               vocabs.push(id)
 
             } catch (err) {
-              warn({ err, vocab: id }, 'failed to import vocabulary')
-              fail(err, this.action.type)
+              this.addError(err, `failed to import vocabulary ${id}`)
             }
           }
         })
 
 
       } catch (err) {
-        warn({ err, path: file }, 'failed to import file')
-        fail(err, this.action.type)
+        this.addError(err, `failed to import "${file}"`)
       }
     }
 
@@ -277,8 +274,7 @@ export class TemplateImport extends Command {
         }, { ...meta, replace: true }))
 
       } catch (err) {
-        warn({ err, path: file }, 'failed to import file')
-        fail(err, this.action.type)
+        this.addError(err, `failed to import "${file}"`)
       }
     }
 
@@ -306,27 +302,21 @@ export class TemplateExport extends Command {
   *exec () {
     let { id, path } = this.action.payload
 
-    try {
-      const data = yield select(state => state.ontology.template[id])
-      assert(data != null, 'missing template')
+    const data = yield select(state => state.ontology.template[id])
+    assert(data != null, 'missing template')
 
-      if (!path) {
-        path = yield this.dialog(save.template, {
-          defaultPath: join(
-            ARGS.documents,
-            sanitize(data.name, 'ttp')
-          )
-        })
-      }
-
-      if (!path) return
-
-      yield call(Template.save, data, path)
-
-    } catch (err) {
-      warn({ err, template: id, path }, 'failed to export template')
-      fail(err, this.action.type)
+    if (!path) {
+      path = yield this.dialog(save.template, {
+        defaultPath: join(
+          ARGS.documents,
+          sanitize(data.name, 'ttp')
+        )
+      })
     }
+
+    if (!path) return
+
+    yield call(Template.save, data, path)
   }
 }
 
@@ -347,8 +337,7 @@ export class TemplateCreate extends Command {
         ids.push(id)
 
       } catch (err) {
-        warn({ err, template: id }, 'failed to create template')
-        fail(err, this.action.type)
+        this.addError(err, `failed to create template ${id}`)
       }
     }
 

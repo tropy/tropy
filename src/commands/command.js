@@ -3,18 +3,31 @@ import { call, cancelled, put } from 'redux-saga/effects'
 import * as activity from '../slices/activities.js'
 import { parallel } from '../sagas/util.js'
 import { warn } from '../common/log.js'
-import { fail } from '../dialog.js'
 
 export const Registry = new Map()
+
+/*
+ * Commands run once, via the *exec saga.
+ * They succeed or fail on their own;
+ * cancellation only ever comes from outside.
+ *
+ * Failures: errors propagate out of exec(),
+ * they should only be caught if the command handles them.
+ * Otherwise, the *exec saga is the single place that:
+ * logs the error, reports it with the done action,
+ * and, unless `meta.silent`, shows the generic error dialog.
+ *
+ * Use addError() for partial failures.
+ *
+ * Cancellation: no catch block runs, only finally blocks.
+ * The *abort() hook is only for errors.
+ */
 
 export class Command {
   #total = 0
   #progress = 0
 
-  // Errors of individual parts, e.g. files of an import.
-  // The command itself succeeded unless this.error is set.
   errors = []
-  maxAlerts = 3
   suspended = 0
 
   constructor (action, options = {}) {
@@ -93,8 +106,6 @@ export class Command {
     }
   }
 
-  // Commands run once (via the *exec saga).
-  // They succeed or fail on their own. Cancellation only from outside.
   *run () {
     try {
       this.result = yield this.exec()
@@ -116,16 +127,9 @@ export class Command {
     return Object.freeze(this)
   }
 
-  // Records the error of a failed part of the command.
-  // The first errors (up to maxAlerts) are shown, unless silent.
   addError (err, message = `${this} failed in part`) {
     warn({ err }, message)
     this.errors.push(err)
-
-    let { maxAlerts = this.maxAlerts, silent } = this.action.meta
-
-    if (this.errors.length <= maxAlerts && !silent)
-      fail(err, this.action.type)
   }
 
   *parallel (items, proc) {

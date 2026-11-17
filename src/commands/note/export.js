@@ -4,8 +4,7 @@ import { call, select } from 'redux-saga/effects'
 import { copy } from '../../clipboard.js'
 import { serialize, toHTML, toMarkdown } from '../../editor/serialize.js'
 import { Command } from '../command.js'
-import { fail, save } from '../../dialog.js'
-import { warn } from '../../common/log.js'
+import { save } from '../../dialog.js'
 import { pluck } from '../../common/util.js'
 import { getVisibleNotes } from '../../selectors/index.js'
 import { NOTE } from '../../constants/index.js'
@@ -13,43 +12,36 @@ import { NOTE } from '../../constants/index.js'
 
 export class Export extends Command {
   *exec () {
-    try {
-      let id = this.action.payload
-      var { target, format } = this.action.meta
+    let id = this.action.payload
+    let { target, format } = this.action.meta
 
-      if (!target)
-        target = yield this.dialog(save.notes)
-      if (!target)
-        return
+    if (!target)
+      target = yield this.dialog(save.notes)
+    if (!target)
+      return
 
-      let [settings, notes] = yield select(state => ([
-        state.settings,
-        id ? pluck(state.notes, id) : getVisibleNotes(state)
-      ]))
+    let [settings, notes] = yield select(state => ([
+      state.settings,
+      id ? pluck(state.notes, id) : getVisibleNotes(state)
+    ]))
 
-      if (!format)
-        format = formatFor(target, settings.export.note)
+    if (!format)
+      format = formatFor(target, settings.export.note)
 
-      let data = mapNotes(notes, format, settings.export.note)
+    let data = mapNotes(notes, format, settings.export.note)
 
-      switch (target) {
-        case ':clipboard:':
-          if (format === 'html')
-            copy({ html: data, text: data })
-          else
-            copy({
-              html: mapNotes(notes, 'html', settings.export.note),
-              text: data
-            })
-          break
-        default:
-          yield call(fs.promises.writeFile, target, data)
-      }
-
-
-    } catch (err) {
-      warn({ err, path: target }, `failed to export notes as ${format}`)
-      fail(err, this.action.type)
+    switch (target) {
+      case ':clipboard:':
+        if (format === 'html')
+          copy({ html: data, text: data })
+        else
+          copy({
+            html: mapNotes(notes, 'html', settings.export.note),
+            text: data
+          })
+        break
+      default:
+        yield call(fs.promises.writeFile, target, data)
     }
   }
 
