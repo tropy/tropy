@@ -1,6 +1,7 @@
 import assert from 'node:assert'
-import { empty, json, pick, stringify } from '../common/util.js'
+import { empty, json, omit, pick, stringify } from '../common/util.js'
 import { props } from '../common/export.js'
+import { close, open, rectangle, round } from '../common/geometry.js'
 import { into, select, update } from '../common/query.js'
 import sql, { IN } from '../common/sql.js'
 import image from './image.js'
@@ -61,7 +62,10 @@ async function load (db, ids) {
         data.modified = new Date(modified)
         data.mirror = !!mirror
         data.negative = !!negative
-        data.polygon = json(polygon)
+
+        data.polygon = (polygon != null) ?
+          open(json(polygon)) :
+          rectangle(data)
 
         if (id in selections)
           Object.assign(selections[id], data)
@@ -103,6 +107,9 @@ async function load (db, ids) {
   return selections
 }
 
+const ring = (polygon) =>
+  stringify(close(round(polygon)))
+
 
 export default {
   load,
@@ -113,7 +120,7 @@ export default {
     photo,
     x,
     y,
-    polygon = null,
+    polygon,
     position,
     data,
     ...image
@@ -127,9 +134,7 @@ export default {
       id,
       photo_id: photo,
       position,
-      x,
-      y,
-      polygon: stringify(polygon)
+      polygon: ring(polygon ?? rectangle({ x, y, ...image }))
     }))
 
     if (!empty(data)) {
@@ -162,22 +167,17 @@ export default {
     }
   },
 
-  // Saves the geometry of a selection: the bounding box lives in
-  // the images (width, height) and selections (x, y, polygon) tables.
-  async save (db, { id, timestamp, x, y, polygon, ...data }) {
+  async save (db, { id, timestamp, polygon, ...data }) {
     assert(id != null, 'missing selection id')
 
-    let geometry = {}
-    if (x !== undefined) geometry.x = x
-    if (y !== undefined) geometry.y = y
-    if (polygon !== undefined) geometry.polygon = stringify(polygon)
-
-    if (!empty(geometry)) {
+    if (polygon != null) {
       await db.run(
         ...update('selections')
-          .set(geometry)
+          .set({ polygon: ring(polygon) })
           .where({ id }))
     }
+
+    data = omit(data, ['x', 'y', 'width', 'height'])
 
     await image.save(db, { id, timestamp, ...data })
 
@@ -186,7 +186,7 @@ export default {
     }
   },
 
-  async order (db, photo, selections, offset = 0) {
+  async order (db, photo, selections, offset) {
     if (selections.length) {
       return db.run(sql`
         UPDATE selections

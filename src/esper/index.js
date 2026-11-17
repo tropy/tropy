@@ -8,7 +8,7 @@ import { Loader } from './loader.js'
 import { ESPER, SASS } from '../constants/index.js'
 import ARGS from '../args.js'
 import { isMeta } from '../keymap.js'
-import { translate } from '../common/geometry.js'
+import { isRectangle } from '../common/geometry.js'
 
 import {
   isClockwise, isHorizontal, contains, deg, rad
@@ -175,11 +175,9 @@ export default class Esper extends EventEmitter {
       photo.bg.texture = await this.loader.loadTexture(src)
       photo.filter(props)
 
-      // Polygon selections: everything outside the outline is
-      // transparent in the extracted image.
-      if (props.polygon) {
+      if (props.polygon && !isRectangle(props.polygon)) {
         let mask = new Graphics()
-          .poly(translate(props.polygon, props), true)
+          .poly(props.polygon.flat(), true)
           .fill(0xffffff)
         photo.addChild(mask)
         photo.mask = mask

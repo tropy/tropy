@@ -1,8 +1,8 @@
-import { Container, Graphics, Polygon, Rectangle } from 'pixi.js'
+import { Container, Graphics, Polygon } from 'pixi.js'
 import { BLANK } from '../common/util.js'
 import { ESPER } from '../constants/index.js'
 import { normalize } from './util.js'
-import { translate } from '../common/geometry.js'
+import { rectangle } from '../common/geometry.js'
 
 
 export class SelectionLayer extends Container {
@@ -85,6 +85,10 @@ export class SelectionLayer extends Container {
   }
 }
 
+const outline = ({ x, y, width, height, polygon }) =>
+  (polygon ?? ((width && height) ? rectangle({ x, y, width, height }) : null))
+    ?.flat()
+
 
 export class Selection extends Graphics {
   constructor () {
@@ -113,17 +117,13 @@ export class Selection extends Graphics {
   ) {
     this.clear()
 
-    let { x, y, width, height, polygon } = data
-    if (!width || !height) return
+    let points = outline(data)
+    if (!points) return
 
     let colors = ESPER.COLOR.selection[state]
 
-    if (polygon)
-      this.poly(translate(polygon, data), true)
-    else
-      this.rect(x, y, width, height)
-
     this
+      .poly(points, true)
       .fill(colors.fill)
       .stroke({ width: scale, ...colors.line })
   }
@@ -133,12 +133,8 @@ export class Selection extends Graphics {
 
     if (this.isBlank || this.parent.eventMode !== 'none') {
       this.hitArea = null
-    } else if (data.polygon) {
-      this.hitArea = new Polygon(translate(data.polygon, data).flat())
     } else {
-      this.hitArea = new Rectangle(
-        data.x, data.y, data.width, data.height
-      )
+      this.hitArea = new Polygon(outline(data))
     }
   }
 }
@@ -162,19 +158,17 @@ export class SelectionOverlay extends Container {
 
     let scale = 1 / this.parent.scale.y
     let { bg } = this.parent
-    let { x, y, width, height, polygon } = this.active
-    let points = polygon && translate(polygon, this.active)
+    let points = outline(this.active)
 
-    let outline = (g) => points ?
-      g.poly(points, true) :
-      g.rect(x, y, width, height)
-
-    outline(this.children[1])
+    this.children[1]
+      .poly(points, true)
       .fill({ color: 0, alpha: 0 })
       .stroke({ width: scale, ...ESPER.COLOR.mask.line })
 
-    outline(this.children[0].rect(0, 0, bg.width, bg.height)
-      .fill(ESPER.COLOR.mask.fill))
+    this.children[0]
+      .rect(0, 0, bg.width, bg.height)
+      .fill(ESPER.COLOR.mask.fill)
+      .poly(points, true)
       .cut()
   }
 

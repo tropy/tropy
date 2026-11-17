@@ -1,36 +1,29 @@
-import { json, stringify as toJSON } from './util.js'
+export const rectangle = ({ x, y, width, height }) => [
+  [x, y],
+  [x + width, y],
+  [x + width, y + height],
+  [x, y + height]
+]
 
-export const parse = (polygon) =>
-  ((typeof polygon === 'string') ? json(polygon) : polygon)
-    ?.map(([x, y]) => ({ x, y })) ?? null
-
-export const stringify = (polygon) =>
-  toJSON(polygon?.map(({ x, y }) => [x, y]))
-
-export function bounds (points) {
-  let left = Infinity
-  let top = Infinity
-  let right = -Infinity
-  let bottom = -Infinity
-
-  for (let { x, y } of points) {
-    if (x < left) left = x
-    if (x > right) right = x
-    if (y < top) top = y
-    if (y > bottom) bottom = y
-  }
-
-  return {
-    x: left,
-    y: top,
-    width: right - left,
-    height: bottom - top
-  }
-}
+export const isRectangle = (points) =>
+  points.length === 4 && points.every(([x, y], i) => {
+    let [nx, ny] = points[(i + 1) % 4]
+    return (x === nx) !== (y === ny)
+  })
 
 export const translate = (points, { x = 0, y = 0 }) =>
-  points.map(p => ({ x: p.x + x, y: p.y + y }))
+  points.map(([px, py]) => [px + x, py + y])
 
+export const round = (points) =>
+  points.map(([x, y]) => [Math.round(x), Math.round(y)])
 
-export const flatten = (points) =>
-  points.flatMap(({ x, y }) => [x, y])
+export const isClosed = (points) =>
+  points.length > 1 &&
+  points[0][0] === points.at(-1)[0] &&
+  points[0][1] === points.at(-1)[1]
+
+export const close = (points) =>
+  isClosed(points) ? points : [...points, points[0]]
+
+export const open = (points) =>
+  isClosed(points) ? points.slice(0, -1) : points

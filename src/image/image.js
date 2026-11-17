@@ -7,6 +7,7 @@ import { inspectPdfPage } from './pdf.js'
 import { md5 } from '../common/crypto.js'
 import { debug, warn } from '../common/log.js'
 import { pMap, pick, restrict } from '../common/util.js'
+import { isRectangle, translate } from '../common/geometry.js'
 import { rgb } from '../css.js'
 import { IMAGE, MIME } from '../constants/index.js'
 import { exif as exifns } from '../ontology/ns.js'
@@ -317,7 +318,7 @@ export class Image extends Asset {
         height: selection.height
       })
 
-      if (selection.polygon) {
+      if (selection.polygon && !isRectangle(selection.polygon)) {
         image = await mask(image, selection)
       }
     }
@@ -371,14 +372,13 @@ export class Image extends Asset {
   }
 }
 
-// Cuts the (already extracted) selection to its polygon outline by
-// compositing an alpha mask. The mask must match the current size
-// exactly, so the pipeline is materialized here; subsequent
-// operations (e.g., resize) are applied to the masked image.
-async function mask (image, { width, height, polygon }) {
+// The mask must match the current size exactly.
+// Subsequent operations (e.g., resize) are applied to the masked image.
+async function mask (image, { x, y, width, height, polygon }) {
+  let points = translate(polygon, { x: -x, y: -y })
   let svg = [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">`,
-    `<polygon points="${polygon.flat().join(' ')}"/>`,
+    `<polygon points="${points.flat().join(' ')}"/>`,
     '</svg>'
   ].join('')
 

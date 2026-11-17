@@ -231,7 +231,7 @@ tropy:polygon a rdf:Property ;
 	rdfs:label "Polygon"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:domain tropy:Selection ;
-	rdfs:comment "Polygon mask of a selection, as a JSON list of [x, y] points relative to the selection origin; absent for rectangular selections."@en .
+	rdfs:comment "Outline of a selection in original image coordinates."@en .
 
 tropy:angle a rdf:Property ;
 	rdfs:label "Angle"@en ;
