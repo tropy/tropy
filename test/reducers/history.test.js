@@ -21,6 +21,16 @@ describe('History Reducer', () => {
       expect(reduce(order(1), order(1)).past).to.have.length(1)
     })
 
+    it('does not merge ticks of different agents', () => {
+      let redo = { ...order(1), meta: { agent: 'A' } }
+      let state = history(undefined, tick(order(1)))
+      state = history(state, {
+        ...tick(order(1)),
+        payload: { undo: order(1), redo }
+      })
+      expect(state.past).to.have.length(2)
+    })
+
     it('does not merge ticks for different items', () => {
       expect(reduce(order(1), order(2)).past).to.have.length(2)
     })

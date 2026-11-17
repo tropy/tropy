@@ -6,11 +6,14 @@ function target ({ payload }) {
 }
 
 function canMerge (a, b) {
-  if (a.type !== b.type)
+  if (a.redo.meta?.agent !== b.redo.meta?.agent)
     return false
 
-  let id = target(a)
-  return id != null && id === target(b)
+  if (a.undo.type !== b.undo.type)
+    return false
+
+  let id = target(a.undo)
+  return id != null && id === target(b.undo)
 }
 
 export function history (state = { past: [], future: [] }, {
@@ -33,9 +36,11 @@ export function history (state = { past: [], future: [] }, {
       if (meta.mode === 'merge' && state.past.length) {
         const { undo } = state.past[0]
 
-        if (canMerge(undo, payload.undo)) {
+        if (canMerge(state.past[0], payload)) {
           return {
-            past: [{ ...payload, undo }, ...state.past.slice(1)],
+            past: [
+              { ...payload, undo }, ...state.past.slice(1)
+            ],
             future: []
           }
         }

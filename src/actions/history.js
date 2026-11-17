@@ -1,6 +1,15 @@
 import { HISTORY } from '../constants/index.js'
 import { omit } from '../common/util.js'
 
+const dup = (action, history, agent) => ({
+  ...action,
+  meta: {
+    ...omit(action.meta, ['agent']),
+    ...(agent && { agent }),
+    history
+  }
+})
+
 export default {
   undo (payload, meta) {
     return (dispatch, getState) => {
@@ -34,13 +43,13 @@ export default {
     }
   },
 
-  tick ({ undo, redo, mode = 'add' }, meta) {
-    undo.meta = omit(undo.meta, ['history'])
-    redo.meta = omit(redo.meta, ['history'])
-
+  tick ({ undo, redo, mode = 'add', agent }, meta) {
     return {
       type: HISTORY.TICK,
-      payload: { undo, redo },
+      payload: {
+        undo: dup(undo, 'undo'),
+        redo: dup(redo, 'redo', agent)
+      },
       meta: {
         ipc: HISTORY.CHANGED,
         log: mode === 'merge' ? false : 'trace',
