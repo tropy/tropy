@@ -380,6 +380,16 @@ export const IconFit = i('Fit', (
   </svg>
 ))
 
+export const IconFlash = i('Flash', (
+  <svg width="16" height="16" viewBox="0 0 16 16" overflow="visible">
+    <g className="line" fill="currentColor">
+      <path d="M12,6h-3.153l-.003.007.931-4.033c.124-.536-.045-.614-.375-.174l-4.8,6.4c-.33.44-.15.8.4.8h3.153v-.003s0,.003,0,.003l-.929,4.026c-.124.536.045.614.375.174l4.8-6.4c.33-.44.15-.8-.4-.8"/>
+    </g>
+    <circle className="track" fill="none" stroke="currentColor" strokeWidth="1.5" cx="8.5" cy="7.5" r="8.75"/>
+    <circle className="progress" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" pathLength="100" strokeDasharray="var(--progress, 75) 100" cx="8.5" cy="7.5" r="8.75"/>
+  </svg>
+))
+
 export const IconFolder = i('Folder', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
@@ -743,8 +753,8 @@ export const IconSplit = i('Split', (
 
 export const IconStatus = i('Status', (
   <svg width="16" height="16" viewBox="0 0 16 16" overflow="visible">
-    <circle className="track" fill="none" stroke="currentColor" strokeWidth="1.5" cx="8.5" cy="7.5" r="7.75"/>
-    <circle className="progress" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" pathLength="100" strokeDasharray="var(--progress, 75) 100" transform="rotate(-90 8.5 7.5)" cx="8.5" cy="7.5" r="7.75"/>
+    <circle className="track" fill="none" stroke="currentColor" strokeWidth="1.5" cx="8.5" cy="7.5" r="8.75"/>
+    <circle className="progress" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" pathLength="100" strokeDasharray="var(--progress, 75) 100" cx="8.5" cy="7.5" r="8.75"/>
   </svg>
 ))
 
@@ -808,8 +818,8 @@ export const IconTranscriptionStatus = i('TranscriptionStatus', (
     <g className="line" fill="currentColor">
       <path d="M9,11h2v1H6V11H8V5H6V7H5V4h7V7H11V5H9Z"/>
     </g>
-    <circle className="track" fill="none" stroke="currentColor" strokeWidth="1.5" cx="8.5" cy="7.5" r="7.75"/>
-    <circle className="progress" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" pathLength="100" strokeDasharray="var(--progress, 75) 100" cx="8.5" cy="7.5" r="7.75"/>
+    <circle className="track" fill="none" stroke="currentColor" strokeWidth="1.5" cx="8.5" cy="7.5" r="8.75"/>
+    <circle className="progress" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" pathLength="100" strokeDasharray="var(--progress, 75) 100" cx="8.5" cy="7.5" r="8.75"/>
   </svg>
 ))
 
