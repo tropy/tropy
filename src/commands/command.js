@@ -50,14 +50,16 @@ export class Command {
   }
 
   get isReversible () {
-    return !this.error && !!this.undo && !!this.action.meta.history
+    return !this.error && !!this.undo &&
+      ['add', 'merge'].includes(this.action.meta.history)
   }
 
   get history () {
     return {
       undo: this.undo,
       redo: this.redo || this.action,
-      mode: this.action.meta.history
+      mode: this.action.meta.history,
+      agent: this.action.meta.agent
     }
   }
 

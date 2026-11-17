@@ -3,6 +3,7 @@ import { delay } from 'redux-saga/effects'
 import { Command } from '#tropy/commands/command.js'
 import { cancel } from '#tropy/slices/activities.js'
 import { exec } from '#tropy/sagas/cmd.js'
+import { HISTORY } from '#tropy/constants/index.js'
 
 class TestCommand extends Command {
   static last
@@ -21,6 +22,9 @@ class TestCommand extends Command {
     if (this.action.payload === 'wait')
       yield delay(1000)
 
+    if (this.action.payload === 'edit')
+      this.undo = { type: 'test.cmd', payload: 'edit', meta: {} }
+
     if (this.action.payload === 'partial') {
       this.addError(new Error('part 1'))
       this.addError(new Error('part 2'))
@@ -38,14 +42,14 @@ class TestCommand extends Command {
 TestCommand.register('test.cmd')
 
 describe('*exec', () => {
-  let run = (payload) => {
+  let run = (payload, meta) => {
     let channel = stdChannel()
     let puts = []
 
     let action = {
       type: 'test.cmd',
       payload,
-      meta: { seq: 42, now: Date.now(), silent: true }
+      meta: { seq: 42, now: Date.now(), silent: true, ...meta }
     }
 
     let task = runSaga({
@@ -57,8 +61,9 @@ describe('*exec', () => {
     }, exec, {}, action)
 
     let done = () => puts.find(a => a.meta?.done)
+    let tick = () => puts.find(a => a.type === HISTORY.TICK)
 
-    return { channel, done, task }
+    return { channel, done, tick, task }
   }
 
   it('finishes successful commands', async () => {
@@ -96,6 +101,25 @@ describe('*exec', () => {
     expect(Object.isFrozen(cmd)).to.be.true
     expect(done()).to.have.property('error', true)
     expect(done().meta.cancelled).to.be.undefined
+  })
+
+  it('adds edits to the history, redo by their agent', async () => {
+    let { done, tick, task } = run('edit', { history: 'add', agent: 'A' })
+    await task.toPromise()
+
+    let { undo, redo } = tick().payload
+    expect(done().meta).to.include({ history: 'add', agent: 'A' })
+    expect(redo.meta).to.include({ history: 'redo', agent: 'A' })
+    expect(undo.meta).to.include({ history: 'undo' })
+    expect(undo.meta).not.to.have.property('agent')
+  })
+
+  it('does not add undo or redo to the history', async () => {
+    let { done, tick, task } = run('edit', { history: 'undo' })
+    await task.toPromise()
+
+    expect(tick()).to.be.undefined
+    expect(done().meta).to.include({ history: 'undo' })
   })
 
   it('finishes commands cancelled from outside as cancelled', async () => {
