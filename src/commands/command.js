@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { call, cancel, cancelled, put } from 'redux-saga/effects'
+import { call, cancelled, put } from 'redux-saga/effects'
 import * as activity from '../slices/activities.js'
 import { parallel } from '../sagas/util.js'
 import { warn } from '../common/log.js'
@@ -93,19 +93,19 @@ export class Command {
     }
   }
 
+  // Commands run once (via the *exec saga).
+  // They succeed or fail on their own. Cancellation only from outside.
   *run () {
     try {
       this.result = yield this.exec()
-      var hasRunToCompletion = true
 
     } catch (error) {
       this.error = error
-
       yield this.abort()
-      yield cancel()
 
     } finally {
-      this.cancelled = !hasRunToCompletion
+      if (yield cancelled())
+        this.cancelled = true
     }
 
     return this
