@@ -81,6 +81,7 @@
 
   .activity-text {
     @include css-truncation;
+    font-variant-numeric: tabular-nums;
     margin-right: auto;
 
     .is-blurred & {
