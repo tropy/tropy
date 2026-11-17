@@ -108,7 +108,7 @@ export const Project = ({
         inert={inert}
         isItemMode={isItemMode}
         isProjectClosing={project.isClosing}
-        isReadOnly={project.isReadOnly || nav.trash}
+        isReadOnly={project.isReadOnly || nav.view.name === 'trash'}
         offset={offset}
         panel={panel}
         onContextMenu={handleContextMenu}

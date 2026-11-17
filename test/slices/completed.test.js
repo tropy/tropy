@@ -62,6 +62,11 @@ describe('completed', () => {
     expect(selectCompletedActivities({ completed }, 1150)
       .map(rec => rec.type)).to.eql(['b'])
 
+    // The record shown stays, also if expired.
+    let nav = { view: { name: 'activity', type: 'a' } }
+    expect(selectCompletedActivities({ completed, nav }, 1150)
+      .map(rec => rec.type)).to.eql(['b', 'a'])
+
     expect(selectLastCompleted({ completed }, 1550).type).to.equal('c')
     expect(selectLastCompleted({ completed }, 1650)).to.be.null
   })

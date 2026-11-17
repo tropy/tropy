@@ -7,7 +7,6 @@ import { ipc } from './ipc.js'
 import { consolidator } from './consolidator.js'
 import { history } from './history.js'
 import {
-  completed,
   contributing,
   matches,
   order,
@@ -193,7 +192,6 @@ function *hydrate ({ db, project }) {
 
 function *start ({ db, sorted }) {
   yield fork(matches, has('search'))
-  yield fork(completed)
   yield fork(order, db, sorted)
   yield fork(contributing, db)
   yield fork(autosave, db)

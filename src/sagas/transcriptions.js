@@ -43,9 +43,11 @@ const canPoll = () =>
 export function *track (batch, pending) {
   if (!(isLinked() && pending.length)) {
     // Pending transcriptions are left when the account was unlinked.
+    // Searches: the batch's items may be shown (an activity view).
     if (batch) {
       yield put(done(batch.handle, null, {
         sticky: true,
+        search: true,
         cancelled: pending.length > 0,
         ...yield select(getBatchResult, batch.seen)
       }))

@@ -6,8 +6,11 @@ export function useCompletedActivities () {
   let now = useNow()
   let completed = useSelector(state => selectCompletedActivities(state, now))
 
-  // When the next record expires.
-  useTick(Math.min(...completed.map(rec => rec.expires)), now)
+  // When the next record expires
+  // (the record shown may have expired already).
+  useTick(Math.min(...completed
+    .map(rec => rec.expires)
+    .filter(at => at > now)), now)
 
   return completed
 }

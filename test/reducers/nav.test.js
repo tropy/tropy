@@ -1,6 +1,7 @@
-import { ITEM, NAV, TAG } from '#tropy/constants/index.js'
+import { ITEM, LIST, NAV, TAG } from '#tropy/constants/index.js'
 import { nav } from '#tropy/reducers/nav.js'
 import { create, has } from '#tropy/common/selection.js'
+import { dismiss } from '#tropy/slices/completed.js'
 
 describe('Nav Reducer', () => {
   it('restores selected items persisted as an array', () => {
@@ -70,14 +71,95 @@ describe('Nav Reducer', () => {
     })
   })
 
-  it('filters the results of a completed activity, leaves them for other views', () => {
-    let state = { ...nav(undefined, {}), activity: 'item.import' }
+  describe('view', () => {
+    let state = (props) =>
+      ({ ...nav(undefined, {}), item: create([1]), ...props })
+    let imports = { name: 'activity', type: 'item.import' }
 
-    expect(nav(state, { type: NAV.SEARCH, payload: { query: 'x' } }).activity)
-      .to.equal('item.import')
-    expect(nav(state, { type: TAG.SELECT, payload: 1, meta: {} }).activity)
-      .to.equal('item.import')
-    expect(nav(state, { type: NAV.SELECT, payload: { list: 1 } }).activity)
-      .to.be.null
+    it('is the project by default', () => {
+      expect(nav(undefined, {}).view).to.eql({ name: 'project' })
+    })
+
+    it('is replaced on select, back to the project by default', () => {
+      let s = state({ view: imports })
+      expect(nav(s, { type: NAV.SELECT, payload: { view: { name: 'trash' } } }).view)
+        .to.eql({ name: 'trash' })
+      expect(nav(s, { type: NAV.SELECT, payload: {} }).view)
+        .to.eql({ name: 'project' })
+    })
+
+    it('keeps an activity for searches and tag filters', () => {
+      let s = state({ view: imports })
+      expect(nav(s, { type: NAV.SEARCH, payload: { query: 'x' } }).view)
+        .to.equal(imports)
+      expect(nav(s, { type: TAG.SELECT, payload: 1, meta: {} }).view)
+        .to.equal(imports)
+    })
+
+    it('leaves the trash for tag filters', () => {
+      let s = nav(state({ view: { name: 'trash' } }),
+        { type: TAG.SELECT, payload: 1, meta: {} })
+      expect(s.view).to.eql({ name: 'project' })
+      expect(s.tags).to.eql([1])
+    })
+
+    it('returns to the project when its list is removed', () => {
+      let s = state({ view: { name: 'list', id: 3 } })
+      expect(nav(s, { type: LIST.REMOVE, payload: 4, meta: {} })).to.equal(s)
+      expect(nav(s, { type: LIST.REMOVE, payload: 3, meta: {} }).view)
+        .to.eql({ name: 'project' })
+    })
+
+    it('selects a collapsed parent list if hinted', () => {
+      let s = state({ view: { name: 'list', id: 3 } })
+      let collapse = (select) =>
+        nav(s, { type: LIST.COLLAPSE, payload: 2, meta: { select } }).view
+
+      expect(collapse(false)).to.eql({ name: 'list', id: 3 })
+      expect(collapse(true)).to.eql({ name: 'list', id: 2 })
+    })
+
+    it('returns to the project when its activity is dismissed', () => {
+      let s = state({ view: imports })
+      expect(nav(s, dismiss('item.export'))).to.equal(s)
+
+      let dismissed = nav(s, dismiss('item.import'))
+      expect(dismissed.view).to.eql({ name: 'project' })
+      expect(has(dismissed.item, 1)).to.be.false
+    })
+
+    it('keeps a live run when its completed record is dismissed', () => {
+      let s = state({ view: { name: 'activity', type: 'item.import', seq: 9 } })
+      expect(nav(s, dismiss('item.import'))).to.equal(s)
+    })
+
+    it('is restored, also from legacy state', () => {
+      let restore = (payload) =>
+        nav(undefined, { type: NAV.RESTORE, payload }).view
+
+      expect(restore({ view: { name: 'list', id: 3 } })).to.eql({ name: 'list', id: 3 })
+      expect(restore({ view: imports })).to.eql(imports)
+      expect(restore({ list: 3 })).to.eql({ name: 'list', id: 3 })
+      expect(restore({ list: -1 })).to.eql({ name: 'unlisted' })
+      expect(restore({ trash: true })).to.eql({ name: 'trash' })
+      expect(restore({ list: null, trash: null })).to.eql({ name: 'project' })
+      expect(restore(undefined)).to.eql({ name: 'project' })
+    })
+
+    it('restores no live runs, nor legacy fields', () => {
+      let s = nav(undefined, {
+        type: NAV.RESTORE,
+        payload: {
+          view: { name: 'activity', type: 'item.import', seq: 9 },
+          list: 3,
+          trash: true,
+          activity: 'item.import',
+          imports: true
+        }
+      })
+
+      expect(s.view).to.eql(imports)
+      expect(s).not.to.have.any.keys('list', 'trash', 'activity', 'imports')
+    })
   })
 })

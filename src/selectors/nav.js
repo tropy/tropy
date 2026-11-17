@@ -1,5 +1,5 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { NAV, TYPE } from '../constants/index.js'
+import { LIST, NAV, TYPE } from '../constants/index.js'
 import { dc, expand } from '../ontology/index.js'
 
 import {
@@ -9,6 +9,15 @@ import {
 
 const DEFAULT_SORT = { column: dc.title, asc: true }
 const DEFAULT_LIST_SORT = { column: 'added', asc: true }
+
+// The list of a view (nav.view), if it is a list's.
+export const listOf = (view) =>
+  (view?.name === 'list') ? view.id : null
+
+// The key of the view's sort settings in nav.sort:
+// lists have their own, the other views share the root's.
+export const sortKey = (view) =>
+  listOf(view) ?? LIST.ROOT
 
 // The item sort when the user has not chosen one.
 export const getDefaultSort = (list) =>
@@ -76,6 +85,6 @@ export const getAllColumns = memo(
 
 export const getSortColumn = memo(
   ({ nav }) => nav.sort,
-  ({ nav }) => nav.list || 0,
+  ({ nav }) => sortKey(nav.view),
   (sort, list) => ((list in sort) ? sort[list] : getDefaultSort(list))
 )

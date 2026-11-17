@@ -112,7 +112,10 @@ const ROUTES = Object.freeze([
     summary: 'Show a list (not verified)',
     params: object({ urlId, list: id }, ['urlId', 'list'])
   }, ({ list }, win) =>
-    win.dispatch(act.nav.select({ list, query: '' }))),
+    win.dispatch(act.nav.select({
+      view: { name: 'list', id: list },
+      query: ''
+    }))),
 
   projectRoute('/:urlId/tags/:tag', {
     operationId: 'tropy.tag',
@@ -126,7 +129,7 @@ const ROUTES = Object.freeze([
     summary: 'Show the trash',
     params: object({ urlId }, ['urlId'])
   }, (args, win) =>
-    win.dispatch(act.nav.select({ trash: true, query: '' }))),
+    win.dispatch(act.nav.select({ view: { name: 'trash' }, query: '' }))),
 
   windowRoute('(prefs|preferences)', {
     operationId: 'tropy.preferences',
