@@ -44,11 +44,11 @@ export const ActivityPane = memo(() => {
           canCancel={cancel}
           onCancel={handleCancel}/>
       ))}
-      {completed.map(({ type, refs, errors }) => (
+      {completed.map(({ type, items, errors }) => (
         <CompletedActivity
           key={type}
           type={type}
-          count={refs?.length ?? 0}
+          count={items?.length ?? 0}
           errors={errors ?? 0}
           isActive={type === selected}
           onDismiss={handleDismiss}

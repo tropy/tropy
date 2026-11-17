@@ -46,7 +46,6 @@ export function *exec (options, action) {
       yield put(done(
         action,
         cmd.error || cmd.result, {
-          sticky: cmd.sticky,
           cancelled: cmd.cancelled || undefined,
           errors: cmd.errors.length || undefined,
           ...cmd.meta

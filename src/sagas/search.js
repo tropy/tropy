@@ -64,14 +64,14 @@ const byPosition = (ids, sort) => {
 // Whether an item belongs to a view, regardless of its query and
 // tags: in its list (or in none, for unlisted), in the trash or not,
 // among the items of its activity.
-const belongs = (item, { name, id, refs }) => {
+const belongs = (item, { name, id, items }) => {
   if (item == null) return false
   if (name === 'trash') return !!item.deleted
   if (item.deleted) return false
 
   switch (name) {
     case 'activity':
-      return refs.includes(item.id)
+      return items.includes(item.id)
     case 'unlisted':
       return item.lists.length === 0
     case 'list':
@@ -226,21 +226,21 @@ const getView = (state) => ({
   ...state.nav.view,
   tags: state.nav.tags,
   query: state.nav.query,
-  refs: (state.nav.view.name === 'activity') ?
-    getRefs(state, state.nav.view) : null
+  items: (state.nav.view.name === 'activity') ?
+    getItems(state, state.nav.view) : null
 })
 
-const getRefs = (state, { type, seq }) =>
+const getItems = (state, { type, seq }) =>
   ((seq != null) ?
-    state.activities[seq]?.refs :
-    state.completed[type]?.refs) ?? []
+    state.activities[seq]?.items :
+    state.completed[type]?.items) ?? []
 
 // Returns the ids of the items in a view matching the query, as a set
 // (in list order, ascending position, for lists).
 export function *find (db, {
   name,
   id,
-  refs,
+  items,
   tags = [],
   query
 }) {
@@ -249,7 +249,7 @@ export function *find (db, {
 
   switch (name) {
     case 'activity':
-      view = call(mod.item.find, db, { ids: refs, tags })
+      view = call(mod.item.find, db, { ids: items, tags })
       break
     case 'trash':
       view = call(mod.item.trash, db)

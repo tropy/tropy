@@ -73,9 +73,9 @@ describe('track saga', () => {
     let [{ meta }] = run(track(batch, []), { state }).puts
 
     expect(meta).to.include({
-      sticky: true, search: true, errors: 1, cancelled: false
+      search: true, errors: 1, cancelled: false
     })
-    expect(meta.refs).to.eql([100, 101])
+    expect(meta.items).to.eql([100, 101])
   })
 
   it('cancels the batch if transcriptions are pending', () => {
