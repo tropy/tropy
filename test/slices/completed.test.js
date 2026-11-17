@@ -16,6 +16,7 @@ describe('completed', () => {
         seq: 1,
         now: 100,
         agent: meta.agent,
+        hidden: meta.hidden,
         history: meta.history
       }
     }
@@ -57,7 +58,8 @@ describe('completed', () => {
       run('a'),
       run('b', { items: [] }),
       run('c', { agent: 'A' }),
-      run('d', { history: 'add' }))
+      run('d', { history: 'add' }),
+      run('e', { agent: 'A', hidden: true }))
     expect(Object.keys(state)).to.eql(['b', 'c', 'd'])
   })
 
