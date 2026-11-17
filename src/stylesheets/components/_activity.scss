@@ -73,7 +73,8 @@
   }
 
   .flex-row:nth-child(2) {
-    margin-bottom: 6px;
+    margin-top: -1px; // 8px
+    margin-bottom: 7px; // 8px
   }
 
   .icon-spin {
