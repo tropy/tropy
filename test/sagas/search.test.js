@@ -266,7 +266,7 @@ describe('search saga', () => {
     s.nav.view = { name: 'activity', type: 'item.import' }
     s.nav.tags = [5]
     s.completed = {
-      'item.import': { type: 'item.import', refs: [1, 2], expires: Infinity }
+      'item.import': { type: 'item.import', items: [1, 2], expires: Infinity }
     }
 
     let { calls } = run(search(null), {
@@ -286,7 +286,7 @@ describe('search saga', () => {
     let s = state({ matches: null }, '', [3])
     s.nav.view = { name: 'activity', type: 'item.import' }
     s.completed = {
-      'item.import': { type: 'item.import', refs: [1, 2, 3], expires: Infinity }
+      'item.import': { type: 'item.import', items: [1, 2, 3], expires: Infinity }
     }
     s.items[3] = { ...s.items[3], deleted: true }
 
@@ -305,7 +305,7 @@ describe('search saga', () => {
     let s = state({ matches: null })
     s.nav.view = { name: 'activity', type: 'item.import' }
     s.completed = {
-      'item.import': { type: 'item.import', refs: [1], expires: Date.now() - 1 }
+      'item.import': { type: 'item.import', items: [1], expires: Date.now() - 1 }
     }
 
     let { calls } = run(search(null), {
@@ -340,9 +340,9 @@ describe('search saga', () => {
   it('searches the items of a live run, not the completed one', () => {
     let s = state({ matches: null })
     s.nav.view = { name: 'activity', type: 'item.import', seq: 9 }
-    s.activities = { 9: { id: 9, type: 'item.import', refs: [3] } }
+    s.activities = { 9: { id: 9, type: 'item.import', items: [3] } }
     s.completed = {
-      'item.import': { type: 'item.import', refs: [1, 2], expires: Infinity }
+      'item.import': { type: 'item.import', items: [1, 2], expires: Infinity }
     }
 
     let { calls } = run(search(null), {

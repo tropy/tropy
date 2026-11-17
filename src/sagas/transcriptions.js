@@ -46,7 +46,6 @@ export function *track (batch, pending) {
     // Searches: the batch's items may be shown (an activity view).
     if (batch) {
       yield put(done(batch.handle, null, {
-        sticky: true,
         search: true,
         cancelled: pending.length > 0,
         ...yield select(getBatchResult, batch.seen)
@@ -82,7 +81,7 @@ export function *track (batch, pending) {
 // The items of a batch's finished transcriptions
 // and the number of failed ones.
 function getBatchResult (state, ids) {
-  let refs = new Set()
+  let items = new Set()
   let errors = 0
 
   for (let id of ids) {
@@ -100,10 +99,10 @@ function getBatchResult (state, ids) {
       state.photos[state.selections[tr.parent]?.photo]
 
     if (photo != null)
-      refs.add(photo.item)
+      items.add(photo.item)
   }
 
-  return { refs: [...refs], errors }
+  return { items: [...items], errors }
 }
 
 function *poll () {

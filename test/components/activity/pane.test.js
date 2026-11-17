@@ -121,13 +121,13 @@ describe('ActivityPane', () => {
       .to.have.property('type', cancel.type)
   })
 
-  it('renders sticky completed activities until they expire', async () => {
+  it('renders completed activities with items until they expire', async () => {
     let now = Date.now()
     let store = createStore({
       completed: {
         'item.import': {
           type: 'item.import', done: now, expires: now + 50,
-          refs: [1], errors: 2, sticky: true
+          items: [1], errors: 2
         },
         'tag.export': { type: 'tag.export', done: now, expires: now + 60000 }
       }
@@ -150,7 +150,7 @@ describe('ActivityPane', () => {
       completed: {
         'item.import': {
           type: 'item.import', done: now, expires: now + 50,
-          refs: [1], sticky: true
+          items: [1]
         }
       }
     })
@@ -177,7 +177,7 @@ describe('ActivityPane', () => {
     let store = createStore({
       completed: {
         'item.import': {
-          type: 'item.import', done: now, expires: now + 60000, sticky: true
+          type: 'item.import', done: now, expires: now + 60000, items: []
         }
       }
     })
@@ -192,24 +192,24 @@ describe('ActivityPane', () => {
 
   it('shows the items of completed activities', () => {
     let now = Date.now()
-    let record = (type, refs) =>
-      ({ type, done: now, expires: now + 60000, refs, sticky: true })
+    let record = (type, items) =>
+      ({ type, done: now, expires: now + 60000, items })
     let store = createStore({
       completed: {
         'item.import': record('item.import', [1]),
-        'tag.export': record('tag.export')
+        'tag.export': record('tag.export', [])
       }
     })
     let dispatch = mock.method(store, 'dispatch')
 
     let { container } = render(<ActivityPane/>, withStore(store))
-    let [withRefs, withoutRefs] =
+    let [withItems, withoutItems] =
       container.querySelectorAll('.activity.completed')
 
-    fireEvent.click(withoutRefs)
+    fireEvent.click(withoutItems)
     expect(dispatch.mock.callCount()).to.equal(0)
 
-    fireEvent.click(withRefs)
+    fireEvent.click(withItems)
     expect(dispatch.mock.calls[0].arguments[0].payload)
       .to.eql({ view: { name: 'activity', type: 'item.import' } })
   })
@@ -222,8 +222,7 @@ describe('ActivityPane', () => {
           type: 'item.import',
           done: now,
           expires: now + 60000,
-          refs: [1],
-          sticky: true
+          items: [1]
         }
       }
     })

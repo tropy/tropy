@@ -7,12 +7,19 @@ import reducer, {
 import { done } from '#tropy/slices/cmd.js'
 
 describe('completed', () => {
+  const DAY = 24 * 60 * 60 * 1000
+
   const run = (type, meta = {}, result) => {
     let action = {
       type,
-      meta: { seq: 1, now: 100, agent: meta.agent, hidden: meta.hidden }
+      meta: {
+        seq: 1,
+        now: 100,
+        agent: meta.agent,
+        history: meta.history
+      }
     }
-    let d = done(action, result, { maxAge: 1000, ...meta })
+    let d = done(action, result, meta)
     d.meta.now = meta.now ?? 200
     return d
   }
@@ -22,67 +29,68 @@ describe('completed', () => {
 
   it('records the last completed run per type', () => {
     let state = reduce(
-      run('item.import', { refs: [1], sticky: true }),
-      run('item.import', { now: 300, refs: [2, 3], agent: 'A' }),
-      run('photo.consolidate', { errors: 2, agent: 'B' }, new Error()))
+      run('item.import', { items: [1] }),
+      run('item.import', { now: 300, items: [2, 3], agent: 'A' }),
+      run('photo.consolidate', { history: 'add' }, new Error()))
 
     expect(state).to.eql({
       'item.import': {
-        type: 'item.import', init: 100, done: 300, expires: 1300,
-        agent: 'A', refs: [2, 3]
+        type: 'item.import', done: 300, expires: 300 + DAY,
+        agent: 'A', items: [2, 3]
       },
       'photo.consolidate': {
-        type: 'photo.consolidate', init: 100, done: 200, expires: 1200,
-        agent: 'B', failed: true, errors: 2
+        type: 'photo.consolidate', done: 200, expires: 200 + DAY,
+        errors: 1
       }
     })
   })
 
   it('does not record cancelled runs', () => {
     let state = reduce(
-      run('a', { sticky: true }),
-      run('a', { now: 300, sticky: true, cancelled: true }))
+      run('a', { history: 'add' }),
+      run('a', { now: 300, history: 'add', cancelled: true }))
     expect(state.a.done).to.equal(200)
   })
 
-  it('records only sticky or agent runs, never hidden ones', () => {
+  it('records only runs with items, by an agent, or edits', () => {
     let state = reduce(
       run('a'),
-      run('b', { agent: 'A', hidden: true }),
-      run('c', { sticky: true, hidden: true }))
-    expect(state).to.eql({})
+      run('b', { items: [] }),
+      run('c', { agent: 'A' }),
+      run('d', { history: 'add' }))
+    expect(Object.keys(state)).to.eql(['b', 'c', 'd'])
   })
 
   it('dismisses a type', () => {
-    let state = reduce(run('a', { sticky: true }), run('b', { sticky: true }))
+    let state = reduce(run('a', { items: [] }), run('b', { items: [] }))
     expect(Object.keys(reducer(state, dismiss('a')))).to.eql(['b'])
   })
 
   it('drops expired records on restore', () => {
     let state = reduce(
-      run('a', { now: 200, sticky: true }),
-      run('b', { now: 900, sticky: true }))
-    let action = { ...restore(state), meta: { now: 1500 } }
+      run('a', { now: 200, items: [] }),
+      run('b', { now: 900, items: [] }))
+    let action = { ...restore(state), meta: { now: 500 + DAY } }
     expect(Object.keys(reducer({}, action))).to.eql(['b'])
   })
 
   it('selects live records', () => {
     let completed = reduce(
-      run('a', { now: 100, sticky: true }),
-      run('b', { now: 500, sticky: true }),
+      run('a', { now: 100, items: [1] }),
+      run('b', { now: 500, items: [] }),
       run('c', { now: 600, agent: 'A' }))
 
-    expect(selectCompletedActivities({ completed }, 1050)
+    expect(selectCompletedActivities({ completed }, 50 + DAY)
       .map(rec => rec.type)).to.eql(['b', 'a'])
-    expect(selectCompletedActivities({ completed }, 1150)
+    expect(selectCompletedActivities({ completed }, 150 + DAY)
       .map(rec => rec.type)).to.eql(['b'])
 
     // The record shown stays, also if expired.
     let nav = { view: { name: 'activity', type: 'a' } }
-    expect(selectCompletedActivities({ completed, nav }, 1150)
+    expect(selectCompletedActivities({ completed, nav }, 150 + DAY)
       .map(rec => rec.type)).to.eql(['b', 'a'])
 
-    expect(selectLastCompleted({ completed }, 1550).type).to.equal('c')
-    expect(selectLastCompleted({ completed }, 1650)).to.be.null
+    expect(selectLastCompleted({ completed }, 550 + DAY).type).to.equal('c')
+    expect(selectLastCompleted({ completed }, 650 + DAY)).to.be.null
   })
 })

@@ -5,34 +5,32 @@ import { createSelector, createSlice, lruMemoize } from '@reduxjs/toolkit'
  * the last completed run of each activity type.
  *
  * Activities are recorded on their done action,
- * and are kept meta.maxAge (default one day).
+ * and kept one day if:
  *
- * To record activity set `meta.sticky` or `meta.agent`;
- * or use `meta.hidden` to hide.
+ * They have meta.items (shown in the activity pane),
+ * meta.agent (the activity status),
+ * or are part of the undo/redo history.
  */
 
 export const isExpired = (record, now) =>
   !(record.expires >= now)
 
-const isRecorded = ({ meta }) =>
-  !!meta?.done && !meta.cancelled && !meta.hidden &&
-  !!(meta.sticky || meta.agent)
+const keep = ({ meta }) =>
+  !!meta?.done && !meta.cancelled &&
+  !!(meta.items || meta.agent || meta.history)
 
 function record ({ type, error, meta }) {
   let rec = {
     type,
-    init: meta.was,
     done: meta.now,
-    expires: meta.now + (meta.maxAge ?? 24 * 60 * 60 * 1000)
+    expires: meta.now + 24 * 60 * 60 * 1000
   }
 
   let errors = meta.errors || (error ? 1 : 0)
 
   if (meta.agent) rec.agent = meta.agent
-  if (error) rec.failed = true
   if (errors) rec.errors = errors
-  if (meta.refs?.length) rec.refs = meta.refs
-  if (meta.sticky) rec.sticky = true
+  if (meta.items) rec.items = meta.items
 
   return rec
 }
@@ -66,7 +64,7 @@ const completed = createSlice({
   },
 
   extraReducers: (builder) => {
-    builder.addMatcher(isRecorded, (state, action) => {
+    builder.addMatcher(keep, (state, action) => {
       state[action.type] = record(action)
     })
   }
@@ -77,14 +75,15 @@ const selectShownType = ({ nav }) =>
   (nav?.view.name === 'activity' && nav.view.seq == null) ?
     nav.view.type : null
 
-// Live sticky records, most recent first.
+// Live records with items (also none, e.g. a failed import),
+// most recent first.
 // The record shown stays while shown, also if expired:
 // what is selected is visible.
 export const selectCompletedActivities = createSelector(
   [({ completed }) => completed, (_, now) => now, selectShownType],
   (completed, now, shown) =>
     Object.values(completed)
-      .filter(rec => rec.sticky &&
+      .filter(rec => rec.items != null &&
         (!isExpired(rec, now) || rec.type === shown))
       .sort((a, b) => b.done - a.done),
   {
