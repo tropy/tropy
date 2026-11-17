@@ -5,36 +5,36 @@
 // --------------------------------------------------
 
 .activity-pane {
-  height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   overflow: hidden;
-  transition:
-    height
-    $activity-transition-duration
-    $activity-transition-timing-function;
   font-size: $font-size-small;
-
-  &.busy {
-    display: block;
-  }
 }
 
 .activity {
   @keyframes activity-in {
     0% {
+      height: 0;
       opacity: 0;
     }
 
     100% {
+      height: $activity-height;
       opacity: 1;
     }
   }
 
-  display: flex;
-  align-items: center;
+  flex: 0 0 auto;
   border-top: 1px solid $activity-border-color;
   padding: 0 $default-spacing-x;
-  animation: activity-in 0.125s ease both;
   height: $activity-height;
+  overflow: clip;
+  animation:
+    activity-in
+    $activity-animation-duration
+    $activity-animation-timing-function
+    both;
 
   .vibrancy & {
     border-top-color: $activity-vibrancy-border-color;
@@ -60,7 +60,10 @@
   }
 
   .activity-container {
-    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
     min-width: 0;
   }
 

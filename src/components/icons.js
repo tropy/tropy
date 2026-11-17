@@ -187,7 +187,7 @@ export const IconXCircleSmall = i('XCircleSmall', (
 export const IconCheckmarkCircleSmall = i('CheckmarkCircleSmall', (
   <svg width="12" height="12" viewBox="0 0 12 12">
     <g className="line" fill="currentColor">
-      <path  fillRule="evenodd" d="M2.151,6.5l2.93,2.93,4.254-6.077-.983-.688-3.434,4.906-1.494-1.494-.424-.424-.849.849ZM6,0c3.314,0,6,2.686,6,6s-2.686,6-6,6S0,9.314,0,6,2.686,0,6,0Z"/>
+      <path fillRule="evenodd" d="M2.151,6.5l2.93,2.93,4.254-6.077-.983-.688-3.434,4.906-1.494-1.494-.424-.424-.849.849ZM6,0c3.314,0,6,2.686,6,6s-2.686,6-6,6S0,9.314,0,6,2.686,0,6,0Z"/>
     </g>
   </svg>
 ))

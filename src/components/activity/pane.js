@@ -5,12 +5,9 @@ import { Activity, CompletedActivity } from './activity.js'
 import { useBusyActivities } from './use-busy-activities.js'
 import { useCompletedActivities } from './use-completed-activities.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { SASS } from '../../constants/index.js'
 import * as act from '../../actions/index.js'
 
-export const ActivityPane = memo(({
-  height = SASS.ACTIVITY.HEIGHT
-}) => {
+export const ActivityPane = memo(() => {
   let dispatch = useDispatch()
   let busy = useBusyActivities()
   let completed = useCompletedActivities()
@@ -32,7 +29,6 @@ export const ActivityPane = memo(({
   return (
     <div
       className={cx('activity-pane', { busy: rows > 0 })}
-      style={{ height: rows * height }}
       tabIndex={-1}>
       {busy.map(({ id, cancel, type, progress, total }) => (
         <Activity
