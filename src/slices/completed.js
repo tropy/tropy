@@ -6,17 +6,13 @@ import { createSelector, createSlice, lruMemoize } from '@reduxjs/toolkit'
  *
  * Activities are recorded on their done action,
  * and kept one day if:
- *
- * They have meta.items (shown in the activity pane),
- * meta.agent (the activity status),
- * or are part of the undo/redo history.
  */
 
 export const isExpired = (record, now) =>
   !(record.expires >= now)
 
 const keep = ({ meta }) =>
-  !!meta?.done && !meta.cancelled &&
+  !!meta?.done && !meta.cancelled && !meta.hidden &&
   !!(meta.items || meta.agent || meta.history)
 
 function record ({ type, error, meta }) {
