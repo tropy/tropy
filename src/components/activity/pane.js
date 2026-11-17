@@ -32,7 +32,8 @@ export const ActivityPane = memo(({
   return (
     <div
       className={cx('activity-pane', { busy: rows > 0 })}
-      style={{ height: rows * height }}>
+      style={{ height: rows * height }}
+      tabIndex={-1}>
       {busy.map(({ id, cancel, type, progress, total }) => (
         <Activity
           key={id}

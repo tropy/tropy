@@ -1,4 +1,8 @@
-import { IconSpin, IconXSmall } from '../icons.js'
+import {
+  IconCheckmarkCircleSmall,
+  IconSpin,
+  IconXCircleSmall
+} from '../icons.js'
 import { FormattedMessage } from 'react-intl'
 import cx from 'classnames'
 import { Button } from '../button.js'
@@ -27,7 +31,8 @@ export const Activity = ({
           </div>
           {hasCancelButton && (
             <Button
-              icon={<IconXSmall/>}
+              icon={<IconXCircleSmall/>}
+              noFocus
               onClick={() => onCancel(id)}/>
           )}
         </div>
@@ -49,19 +54,27 @@ export const CompletedActivity = ({
   onDismiss,
   onSelect
 }) => (
-  <div className={cx('activity', 'completed', { type, active: isActive })}>
+  <div
+    className={cx('activity', 'completed', {
+      type,
+      active: isActive,
+      link: count > 0
+    })}
+    onClick={count > 0 ? () => onSelect(type) : null}>
     <div className="activity-container">
       <div className="flex-row center">
-        <div
-          className={cx('activity-text', { link: count > 0 })}
-          onClick={count > 0 ? () => onSelect(type) : null}>
+        <div className="activity-text">
           <FormattedMessage
             id={`activity.completed.${type}`}
             values={{ count, errors }}/>
         </div>
         <Button
-          icon={<IconXSmall/>}
-          onClick={() => onDismiss(type)}/>
+          icon={<IconCheckmarkCircleSmall/>}
+          noFocus
+          onClick={(event) => {
+            event.stopPropagation()
+            onDismiss(type)
+          }}/>
       </div>
     </div>
   </div>

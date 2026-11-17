@@ -117,8 +117,8 @@
     }
 
     .icon {
-      .btn-icon:active :is(&),
-      .btn-icon.active :is(&) {
+      .btn-icon:active :where(&),
+      .btn-icon.active :where(&) {
         color: $btn-icon-active-color;
       }
 

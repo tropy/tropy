@@ -84,9 +84,9 @@
   padding: $btn-icon-padding;
   overflow: hidden;
 
-  .icon {
-    .btn-icon:active :is(&),
-    .btn-icon.active :is(&) {
+  &:active,
+  &.active {
+    .icon {
       color: $icon-active-color;
     }
   }

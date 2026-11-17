@@ -113,9 +113,9 @@ describe('ActivityPane', () => {
 
     let { container } = render(<ActivityPane/>, withStore(store))
     await waitFor(() => {
-      expect(container.querySelector('.activity button')).to.exist
+      expect(container.querySelector('.activity .btn')).to.exist
     })
-    fireEvent.click(container.querySelector('.activity button'))
+    fireEvent.click(container.querySelector('.activity .btn'))
 
     expect(dispatch.mock.calls[0].arguments[0])
       .to.have.property('type', cancel.type)
@@ -156,7 +156,7 @@ describe('ActivityPane', () => {
     let dispatch = mock.method(store, 'dispatch')
 
     let { container } = render(<ActivityPane/>, withStore(store))
-    fireEvent.click(container.querySelector('.activity.completed button'))
+    fireEvent.click(container.querySelector('.activity.completed .btn'))
 
     expect(dispatch.mock.calls[0].arguments[0])
       .to.eql(dismiss('item.import'))
@@ -176,7 +176,7 @@ describe('ActivityPane', () => {
 
     let { container } = render(<ActivityPane/>, withStore(store))
     let [withRefs, withoutRefs] =
-      container.querySelectorAll('.activity.completed .activity-text')
+      container.querySelectorAll('.activity.completed')
 
     fireEvent.click(withoutRefs)
     expect(dispatch.mock.callCount()).to.equal(0)
@@ -184,5 +184,28 @@ describe('ActivityPane', () => {
     fireEvent.click(withRefs)
     expect(dispatch.mock.calls[0].arguments[0].payload)
       .to.eql({ activity: 'item.import' })
+  })
+
+  it('dismisses without selecting', () => {
+    let now = Date.now()
+    let store = createStore({
+      completed: {
+        'item.import': {
+          type: 'item.import',
+          done: now,
+          expires: now + 60000,
+          refs: [1],
+          sticky: true
+        }
+      }
+    })
+    let dispatch = mock.method(store, 'dispatch')
+
+    let { container } = render(<ActivityPane/>, withStore(store))
+    fireEvent.click(container.querySelector('.activity.completed .btn'))
+
+    expect(dispatch.mock.callCount()).to.equal(1)
+    expect(dispatch.mock.calls[0].arguments[0])
+      .to.eql(dismiss('item.import'))
   })
 })
