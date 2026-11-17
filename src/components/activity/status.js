@@ -20,7 +20,8 @@ export const ActivityStatus = () => {
   if (busy.length === 0) {
     return last?.agent ? (
       <FormattedIcon
-        name="Ghost"
+        name="Flash"
+        style={{ '--progress': 100 }}
         title="activity.agent"
         values={{ agent: last.agent }}/>
     ) : null
