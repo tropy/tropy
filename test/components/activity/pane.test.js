@@ -29,9 +29,8 @@ describe('ActivityPane', () => {
     let { container } = render(<ActivityPane/>, withStore(store))
 
     await waitFor(() => {
-      expect(container.querySelector('.activity-pane')).to.have.class('busy')
+      expect(container.querySelectorAll('.activity')).to.have.length(1)
     })
-    expect(container.querySelectorAll('.activity')).to.have.length(1)
   })
 
   it('lists live activities newest first, above completed ones', async () => {

@@ -4,8 +4,12 @@ import { useBusyActivities } from './use-busy-activities.js'
 import { useNow, useTick } from './clock.js'
 
 /*
- * The list of activities for the activity pane.
- * Live activities first, then completed ones.
+ * The rows of the activity pane:
+ * busy activities, newest first,
+ * then completed ones, most recent first.
+ *
+ * A completed row keeps its key (id) in this session,
+ * so React re-uses the component as it changes status.
  */
 export function useActivityList () {
   let now = useNow()
