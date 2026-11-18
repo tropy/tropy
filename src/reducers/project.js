@@ -5,7 +5,7 @@ const init = {
   name: '',
   optimize: {
     onImport: true,
-    quality: 0.8
+    quality: PROJECT.OPTIMIZE_QUALITY
   }
 }
 

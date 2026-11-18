@@ -6,6 +6,7 @@ import { Button } from '../button.js'
 import { ProjectTypeField } from './type-field.js'
 import { notify } from '../../dialog.js'
 import { BASES } from '../../common/project.js'
+import { PROJECT } from '../../constants/index.js'
 import { protocolURL, TYPES } from '../../common/project-file.js'
 import { convert, optimize } from '../../slices/project-files.js'
 import { useDispatch } from 'react-redux'
@@ -106,6 +107,7 @@ export const ProjectSettings = React.memo(({
             name="optimize.quality"
             isCompact
             value={project.optimize.quality}
+            resetValue={PROJECT.OPTIMIZE_QUALITY}
             onChange={onChange}/>
           <FormToggle
             id="prefs.project.optimize.onImport"
