@@ -93,7 +93,6 @@ export const RangeFilter = ({
         max={max}
         min={min}
         origin={origin}
-        resetOnDoubleClick
         tabIndex={tabIndex}
         value={value}
         onChange={handleChange}/>

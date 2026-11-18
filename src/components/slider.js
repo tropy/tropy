@@ -126,7 +126,7 @@ export class Slider extends React.PureComponent {
 
   handleDoubleClick = () => {
     if (!this.isDisabled)
-      this.set(this.origin, 'dblclick')
+      this.props.onDoubleClick || this.set(this.origin, 'dblclick')
   }
 
   handleMinButtonClick = throttle(() => {
@@ -250,9 +250,7 @@ export class Slider extends React.PureComponent {
             ref={this.track}
             className="slider-track"
             style={{ '--position': position }}
-            onDoubleClick={
-              this.props.resetOnDoubleClick ? this.handleDoubleClick : null
-            }>
+            onDoubleClick={this.handleDoubleClick}>
             <div className="slider-range" style={{ width, left: offset }}/>
             <div className="slider-handle"></div>
             {this.props.showCurrentValue && (
@@ -271,7 +269,6 @@ export class Slider extends React.PureComponent {
     min: 0,
     max: 1,
     precision: 1,
-    resetOnDoubleClick: false,
     resolution: 100,
     showCurrentValue: false,
     size: 'md',
