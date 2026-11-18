@@ -178,8 +178,8 @@ $window-controls-width: os(65px, 136px, 80px);
 
 $sidebar-width:                      const("SIDEBAR.DEFAULT_WIDTH", "px");
 $activity-height:                    39px;
-$activity-animation-duration:        0.125s;
-$activity-animation-timing-function: ease-out;
+$activity-transition-duration:        0.125s;
+$activity-transition-timing-function: ease-out;
 $list-tree-padding-left:             const("LIST.PADDING", "px");
 $list-tree-indent:                   const("LIST.INDENT", "px");
 $list-tree-max-levels:               100;
