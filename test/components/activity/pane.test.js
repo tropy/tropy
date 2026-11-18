@@ -34,6 +34,35 @@ describe('ActivityPane', () => {
     expect(container.querySelectorAll('.activity')).to.have.length(1)
   })
 
+  it('lists live activities newest first, above completed ones', async () => {
+    let now = Date.now()
+    let store = createStore({
+      activities: {
+        1: activity(1, now - 1000),
+        2: activity(2, now - 1000, {
+          type: 'item.import', progress: 2, total: 5
+        })
+      },
+      completed: {
+        'tag.export': {
+          type: 'tag.export', id: 0, done: now, expires: now + 60000,
+          items: []
+        }
+      }
+    })
+
+    let { container } = render(<ActivityPane/>, withStore(store))
+
+    await waitFor(() => {
+      expect(container.querySelectorAll('.activity')).to.have.length(3)
+    })
+    expect([...container.querySelectorAll('.activity')]
+      .map(node => node.classList.contains('completed') ? 'done' : 'busy'))
+      .to.eql(['busy', 'busy', 'done'])
+    expect(container.querySelector('.activity'))
+      .to.have.text('Imported 1 of 5 items …')
+  })
+
   it('never shows hidden activities', async () => {
     let now = Date.now()
     let store = createStore({
@@ -155,7 +184,7 @@ describe('ActivityPane', () => {
       }
     })
     store.dispatch({
-      type: 'nav.update',
+      type: 'nav.select',
       payload: { view: { name: 'activity', type: 'item.import' } }
     })
 
@@ -166,7 +195,7 @@ describe('ActivityPane', () => {
       .to.have.class('active')
 
     // Leaving the view leaves the expired record.
-    store.dispatch({ type: 'nav.update', payload: { view: { name: 'trash' } } })
+    store.dispatch({ type: 'nav.select', payload: { view: { name: 'trash' } } })
     await waitFor(() => {
       expect(container.querySelector('.activity.completed')).to.be.null
     })

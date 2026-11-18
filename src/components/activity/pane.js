@@ -1,20 +1,14 @@
 import { memo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import cx from 'classnames'
 import { Activity, CompletedActivity } from './activity.js'
-import { useBusyActivities } from './use-busy-activities.js'
-import { useCompletedActivities } from './use-completed-activities.js'
+import { useActivityList } from './use-activity-list.js'
 import { useEvent } from '../../hooks/use-event.js'
 import * as act from '../../actions/index.js'
 
 export const ActivityPane = memo(() => {
   let dispatch = useDispatch()
-  let busy = useBusyActivities()
-  let completed = useCompletedActivities()
-  let view = useSelector(state => state.nav.view)
-  let selected = (view.name === 'activity' && view.seq == null) ?
-    view.type : null
-  let rows = busy.length + completed.length
+  let activities = useActivityList()
 
   let handleCancel = useEvent((id) => {
     dispatch(act.activity.cancel(id))
@@ -32,25 +26,24 @@ export const ActivityPane = memo(() => {
 
   return (
     <div
-      className={cx('activity-pane', { busy: rows > 0 })}
+      className={cx('activity-pane', { busy: activities.length > 0 })}
       tabIndex={-1}>
-      {busy.map(({ id, cancel, type, progress, total }) => (
+      {activities.map(row => (row.status === 'busy') ? (
         <Activity
-          key={id}
-          id={id}
-          type={type}
-          progress={progress}
-          total={total}
-          canCancel={cancel}
+          key={row.key}
+          id={row.key}
+          type={row.type}
+          progress={row.progress}
+          total={row.total}
+          canCancel={row.canCancel}
           onCancel={handleCancel}/>
-      ))}
-      {completed.map(({ type, items, errors }) => (
+      ) : (
         <CompletedActivity
-          key={type}
-          type={type}
-          count={items?.length ?? 0}
-          errors={errors ?? 0}
-          isActive={type === selected}
+          key={row.key}
+          type={row.type}
+          count={row.count}
+          errors={row.errors}
+          isActive={row.isActive}
           onDismiss={handleDismiss}
           onSelect={handleSelect}/>
       ))}
