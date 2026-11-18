@@ -16,7 +16,7 @@ import { done } from './cmd.js'
  * Commands do this in *exec; other tasks dispatch their own trigger,
  * like the transcription collector or a thunk via dispatch().
  *
- * Activity props (agent, cancel, hidden, statusIcon)
+ * Activity props (agent, cancel, hidden, cloud)
  * are taken from the trigger's meta.
  *
  * Past activities: the last completed activity of each type,
@@ -27,8 +27,8 @@ import { done } from './cmd.js'
 const PROPS = [
   'agent',
   'cancel',
-  'hidden',
-  'statusIcon'
+  'cloud',
+  'hidden'
 ]
 
 // Matches the done action that ends an activity.

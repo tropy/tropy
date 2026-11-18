@@ -86,10 +86,11 @@ export const nested = {
   }
 }
 
-// Handle for the activity of processing pending transcriptions.
+// Handle for the activity of processing pending transcriptions,
+// which uses our transcription service (cloud, see the activity status).
 export const collect = createAction('transcription.process', () => ({
   payload: undefined,
-  meta: { statusIcon: 'TranscriptionStatus' }
+  meta: { cloud: true }
 }))
 
 export const {
