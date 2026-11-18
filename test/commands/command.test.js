@@ -49,6 +49,32 @@ describe('Command', () => {
     })
   })
 
+  describe('progress', () => {
+    it('reports items as a copy, searching while shown', async () => {
+      class ItemCommand extends Command {
+        result = [1]
+        get items () { return this.result }
+      }
+
+      let puts = []
+      let cmd = new ItemCommand({ type: 'item.import', meta: { seq: 9 } })
+
+      let run = (view) => runSaga({
+        dispatch: (a) => puts.push(a),
+        getState: () => ({ nav: { view } })
+      }, function* () {
+        yield * cmd.progress()
+      }).toPromise()
+
+      await run({ name: 'project' })
+      cmd.result.push(2)
+      await run({ name: 'activity', type: 'item.import', id: 9 })
+
+      expect(puts.map(a => a.payload.items)).to.eql([[1], [1, 2]])
+      expect(puts.map(a => a.meta.search)).to.eql([false, true])
+    })
+  })
+
   describe('addError', () => {
     it('collects errors of parallel items', async () => {
       let cmd = new Command({ type: 'test', meta: { seq: 1, silent: true } })

@@ -59,7 +59,7 @@ describe('track saga', () => {
       }).puts[0].meta.search
     }
 
-    expect(search({ name: 'project' })).to.be.undefined
+    expect(search({ name: 'project' })).to.be.false
     expect(search({ name: 'activity', type: 'transcription.process', id: 7 }))
       .to.be.true
   })
