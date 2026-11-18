@@ -106,7 +106,7 @@ export class Tropy extends EventEmitter {
     this.account.start()
     this.wm.start()
     this.api.start()
-    shell.start()
+    shell.start(this)
 
     if (this.hidden && !this.api.status)
       warn('hidden mode without api: quit with tropy --quit')

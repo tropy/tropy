@@ -169,9 +169,9 @@ function openTool (proto) {
       additionalProperties: false
     },
 
-    async call ({ url }) {
+    async call ({ url }, agent) {
       try {
-        let project = await proto.handle(url)
+        let project = await proto.handle(url, { agent })
 
         return {
           content: [{ type: 'text', text: JSON.stringify(project) }],

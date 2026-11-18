@@ -88,18 +88,26 @@ async function attrib (path, ...attrs) {
   }
 }
 
-export function start () {
+let app
+
+export function start (tropy) {
+  app = tropy
   ipcMain.on('shell', handler)
 }
 
 export function stop () {
   ipcMain.removeListener('shell', handler)
+  app = null
 }
 
 async function handler (event, cmd, ...args) {
   switch (cmd) {
     case 'open':
-      await open(...args)
+      // Short-circuit tropy:// URL calls
+      if (String(args[0]).startsWith('tropy:'))
+        await app.proto.handleRequest(args[0], { agent: null })
+      else
+        await open(...args)
       break
     case 'show':
       await show(...args)

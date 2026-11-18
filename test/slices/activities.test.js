@@ -163,6 +163,21 @@ describe('past activities', () => {
     ))).to.eql(['b', 'c', 'd'])
   })
 
+  it('records actions by an agent that run no command, unless hidden', () => {
+    let action = (type, meta) =>
+      ({ type, meta: { seq: 1, now: 100, agent: 'A', ...meta } })
+
+    expect(past(
+      action('nav.select'),
+      action('item.find', { hidden: true }),
+      action('item.open', { cmd: 'project' })
+    )).to.eql({
+      'nav.select': {
+        type: 'nav.select', done: 100, expires: 100 + DAY, agent: 'A'
+      }
+    })
+  })
+
   it('dismisses a type', () => {
     let state = reduce(run('a', { items: [] }), run('b', { items: [] }))
     expect(Object.keys(reducer(state, dismiss('a')).past)).to.eql(['b'])

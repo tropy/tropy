@@ -42,17 +42,19 @@ export const restoreId = (id) =>
 export const isExpired = (record, now) =>
   !(record.expires >= now)
 
-// Whether a done action is recorded as a past activity.
-export const keep = ({ meta }, busy) =>
-  !!meta?.done && !meta.cancelled && !meta.hidden && !!(
-    meta.items || busy?.items || meta.agent || meta.history
-  )
+const isDoneOrRemote = (action) =>
+  stop.match(action) || !!action.meta?.agent
 
-// Converts done action into a past activity record.
+// Whether isDoneOrRemote should be kept as past activity
+const keep = ({ meta }, busy) =>
+  !meta.cancelled && !meta.hidden && (meta.done
+    ? !!(meta.items || busy?.items || meta.agent || meta.history)
+    : !meta.cmd)
+
+// Converts an action into a past activity record.
 function preserve ({ type, error, meta }, busy) {
   let record = {
     type,
-    id: meta.rel,
     done: meta.now,
     expires: meta.now + 24 * 60 * 60 * 1000
   }
@@ -60,6 +62,7 @@ function preserve ({ type, error, meta }, busy) {
   let errors = meta.errors || (error ? 1 : 0)
   let items = meta.items ?? busy?.items
 
+  if (meta.rel != null) record.id = meta.rel
   if (meta.agent) record.agent = meta.agent
   if (errors) record.errors = errors
   if (items) record.items = items
@@ -180,13 +183,14 @@ const activities = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addMatcher(stop.match, (state, action) => {
+      .addMatcher(isDoneOrRemote, (state, action) => {
         let busy = state.busy[action.meta.rel]
 
         if (keep(action, busy))
           state.past[action.type] = preserve(action, busy)
 
-        delete state.busy[action.meta.rel]
+        if (stop.match(action))
+          delete state.busy[action.meta.rel]
       })
   }
 })

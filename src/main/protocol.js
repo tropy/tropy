@@ -33,23 +33,26 @@ function projectRoute (pathname, { operationId, summary, params, query }, handle
         return null
 
       if (handler)
-        await handler(args, projectWindow(app, opened.win))
+        await handler(args, projectWindow(app, opened.win, opts.agent))
 
       return opened.project
     }
   }
 }
 
-function projectWindow (app, win) {
+function projectWindow (app, win, agent) {
   return {
     dispatch (action) {
-      app.dispatch(action, win)
+      app.dispatch({
+        ...action,
+        meta: { ...action.meta, agent }
+      }, win)
     },
 
     async rsvp (action) {
       let response = await app.wm.rsvp(win, {
         ...action,
-        meta: { ...action.meta, silent: true }
+        meta: { ...action.meta, silent: true, agent }
       })
 
       return response.payload
@@ -172,7 +175,8 @@ export class ProtocolHandler {
 
   // Resolves with the result of the url's route.
   // With prompt, unknown projects can be picked in a file dialog.
-  async handle (url, { prompt = false } = {}) {
+  // The agent defaults to the protocol (e.g. a link in another app).
+  async handle (url, { prompt = false, agent = 'tropy-url' } = {}) {
     try {
       url = new URL(url)
     } catch {
@@ -198,7 +202,10 @@ export class ProtocolHandler {
         await validate(route.query ?? object({}), query)
 
         try {
-          return await route.handler(this.app, { ...query, ...params }, { prompt })
+          return await route.handler(this.app, { ...query, ...params }, {
+            prompt,
+            agent
+          })
         } catch (err) {
           throw (err.status) ? err : new HttpError({
             status: statusOf(err) || 500,
@@ -219,11 +226,11 @@ export class ProtocolHandler {
       .catch(err => warn({ err }, 'failed to copy protocol url'))
   }
 
-  async handleRequest (url) {
+  async handleRequest (url, { agent } = {}) {
     info({ url }, 'opening url')
 
     try {
-      return await this.handle(url, { prompt: true })
+      return await this.handle(url, { prompt: true, agent })
     } catch (err) {
       warn({ err, url }, 'failed to open url')
     }
