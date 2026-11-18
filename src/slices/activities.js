@@ -1,5 +1,5 @@
 import { createSelector, createSlice, lruMemoize } from '@reduxjs/toolkit'
-import { omit, pick } from '../common/util.js'
+import { pick } from '../common/util.js'
 import { done } from './cmd.js'
 
 /*
@@ -33,6 +33,11 @@ const PROPS = [
 
 // Matches the done action that ends an activity.
 export const stop = { match: done.match }
+
+// Activity ids are sequential per window,
+// we restore using negative ids to avoid clashes with new activities.
+export const restoreId = (id) =>
+  (id == null) ? null : -Math.abs(id)
 
 export const isExpired = (record, now) =>
   !(record.expires >= now)
@@ -146,8 +151,6 @@ const activities = createSlice({
       }
     },
 
-    // The id is the past activity's, if any: it tells the nav reducer
-    // whether the view shows it (see selectActivity).
     dismiss: {
       prepare: (type, id, meta) => ({
         payload: { type, id: id ?? null },
@@ -164,10 +167,12 @@ const activities = createSlice({
     restore (state, { payload, meta }) {
       let past = {}
 
-      // Drop the id on restore, because activity ids are sequential.
       for (let record of Object.values(payload?.past ?? {}))
         if (!isExpired(record, meta.now))
-          past[record.type] = omit(record, ['id'])
+          past[record.type] = {
+            ...record,
+            id: restoreId(record.id)
+          }
 
       state.past = past
     }

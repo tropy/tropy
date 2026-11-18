@@ -176,14 +176,18 @@ describe('past activities', () => {
     expect(Object.keys(reducer(undefined, action).past)).to.eql(['b'])
   })
 
-  it('drops the ids of their runs on restore, keeps busy ones', () => {
+  it('restores ids negative, keeps busy activities', () => {
     let state = reduce(run('a', { items: [] }))
     let current = { busy: { 7: { id: 7 } }, past: {} }
     let action = { ...restore(state), meta: { now: 300 } }
 
     let restored = reducer(current, action)
-    expect(restored.past.a).not.to.have.property('id')
+    expect(restored.past.a).to.have.property('id', -1)
     expect(restored.busy).to.equal(current.busy)
+
+    // Restored again, the id stays.
+    action = { ...restore(restored), meta: { now: 300 } }
+    expect(reducer(current, action).past.a).to.have.property('id', -1)
   })
 
   it('selects the activity of a view: the busy one, else the past one', () => {

@@ -37,7 +37,7 @@ describe('ActivityPane', () => {
     })
   })
 
-  it('lists busy and past activities by id, restored ones last', async () => {
+  it('lists activities by id, restored ones last by date', async () => {
     let now = Date.now()
     let record = (type, props) =>
       ({ type, done: now, expires: now + 60000, items: [], ...props })
@@ -51,18 +51,22 @@ describe('ActivityPane', () => {
       },
       past: {
         'tag.export': record('tag.export', { id: 2 }),
-        'list.export': record('list.export')
+        'list.export': record('list.export', { id: -7 }),
+        'note.export': record('note.export', { id: -3, done: now - 1 })
       }
     })
 
     let { container } = render(<ActivityPane/>, withStore(store))
 
     await waitFor(() => {
-      expect(container.querySelectorAll('.activity')).to.have.length(4)
+      expect(container.querySelectorAll('.activity')).to.have.length(5)
     })
     expect([...container.querySelectorAll('.activity')]
       .map(node => node.classList.contains('past') ? 'past' : 'busy'))
-      .to.eql(['busy', 'past', 'busy', 'past'])
+      .to.eql(['busy', 'past', 'busy', 'past', 'past'])
+    // Restored: by date (list.export is newer), not by id.
+    expect(container.querySelectorAll('.activity')[3])
+      .to.have.text('activity.past.list.export')
     expect(container.querySelector('.activity'))
       .to.have.text('Imported 1 of 5 items …')
   })
