@@ -1,9 +1,10 @@
 import { mock } from 'node:test'
-import { fireEvent, waitFor } from '@testing-library/react'
+import { act, fireEvent, waitFor } from '@testing-library/react'
 import { render, createStore, withStore } from '../../support/react.js'
 import { ActivityPane } from '#tropy/components/activity/index.js'
 import { cancel, start } from '#tropy/slices/activities.js'
 import { dismiss } from '#tropy/slices/completed.js'
+import { KeyMap } from '#tropy/keymap.js'
 
 const activity = (id, init, props) => ({
   id, init, due: init + 400, type: 'test', ...props
@@ -60,6 +61,45 @@ describe('ActivityPane', () => {
       .to.eql(['busy', 'busy', 'done'])
     expect(container.querySelector('.activity'))
       .to.have.text('Imported 1 of 5 items …')
+  })
+
+  it('has the tab stop while an activity is shown', () => {
+    let store = createStore({})
+    let { container } = render(<ActivityPane/>, withStore(store))
+    let pane = container.querySelector('.activity-pane')
+
+    expect(pane).to.have.attribute('tabindex', '-1')
+
+    act(() => {
+      store.dispatch({
+        type: 'nav.select',
+        payload: { view: { name: 'activity', type: 'item.import' } }
+      })
+    })
+    expect(pane).to.have.attribute('tabindex', '2')
+  })
+
+  it('returns to the project on escape while an activity is shown', () => {
+    let store = createStore({
+      keymap: { ActivityPane: new KeyMap({ clear: 'Escape' }) }
+    })
+    let dispatch = mock.method(store, 'dispatch')
+    let { container } = render(<ActivityPane/>, withStore(store))
+    let pane = container.querySelector('.activity-pane')
+
+    // Unhandled without an activity: Escape goes on (e.g. global back).
+    expect(fireEvent.keyDown(pane, { key: 'Escape' })).to.be.true
+    expect(dispatch.mock.callCount()).to.equal(0)
+
+    act(() => {
+      store.dispatch({
+        type: 'nav.select',
+        payload: { view: { name: 'activity', type: 'item.import' } }
+      })
+    })
+    fireEvent.keyDown(pane, { key: 'Escape' })
+    expect(dispatch.mock.calls.at(-1).arguments[0].payload)
+      .to.eql({ view: { name: 'project' } })
   })
 
   it('never shows hidden activities', async () => {

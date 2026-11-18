@@ -1,12 +1,20 @@
 import { memo } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { TABS } from '../../constants/index.js'
 import { Activity } from './activity.js'
 import { useActivityList } from './use-activity-list.js'
+import { useKeyMap } from '../../hooks/use-keymap.js'
 import * as act from '../../actions/index.js'
 
 export const ActivityPane = memo(() => {
   let dispatch = useDispatch()
   let activities = useActivityList()
+
+  // TODO
+  // While we have no common cursor nav in the sidebar,
+  // we move the tab-stop while in activity view.
+  let isActivityView = useSelector(state =>
+    state.nav.view.name === 'activity')
 
   let handleCancel = (id) => {
     dispatch(act.activity.cancel(id))
@@ -20,8 +28,17 @@ export const ActivityPane = memo(() => {
     }))
   }
 
+  let handleKeyDown = useKeyMap('ActivityPane', isActivityView && {
+    clear () {
+      dispatch(act.nav.select({ view: { name: 'project' } }))
+    }
+  })
+
   return (
-    <div className="activity-pane" tabIndex={-1}>
+    <div
+      className="activity-pane"
+      tabIndex={isActivityView ? TABS.ProjectSidebar : -1}
+      onKeyDown={handleKeyDown}>
       {activities.map(({ key, ...props }) => (
         <Activity
           key={key}
