@@ -36,11 +36,11 @@ describe('completed', () => {
 
     expect(state).to.eql({
       'item.import': {
-        type: 'item.import', seq: 1, done: 300, expires: 300 + DAY,
+        type: 'item.import', id: 1, done: 300, expires: 300 + DAY,
         agent: 'A', items: [2, 3]
       },
       'photo.consolidate': {
-        type: 'photo.consolidate', seq: 1, done: 200, expires: 200 + DAY,
+        type: 'photo.consolidate', id: 1, done: 200, expires: 200 + DAY,
         errors: 1
       }
     })
@@ -76,10 +76,10 @@ describe('completed', () => {
     expect(Object.keys(reducer({}, action))).to.eql(['b'])
   })
 
-  it('drops the seq of their runs on restore', () => {
+  it('drops the ids of their runs on restore', () => {
     let state = reduce(run('a', { items: [] }))
     let action = { ...restore(state), meta: { now: 300 } }
-    expect(reducer({}, action).a).not.to.have.property('seq')
+    expect(reducer({}, action).a).not.to.have.property('id')
   })
 
   it('selects live records', () => {

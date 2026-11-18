@@ -339,7 +339,7 @@ describe('search saga', () => {
 
   it('searches the items of a live run, not the completed one', () => {
     let s = state({ matches: null })
-    s.nav.view = { name: 'activity', type: 'item.import', seq: 9 }
+    s.nav.view = { name: 'activity', type: 'item.import', id: 9 }
     s.activities = { 9: { id: 9, type: 'item.import', items: [3] } }
     s.completed = {
       'item.import': { type: 'item.import', items: [1, 2], expires: Infinity }

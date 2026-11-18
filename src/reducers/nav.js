@@ -28,11 +28,15 @@ const reset = {
  *   { name: 'list', id }              the items in a list
  *   { name: 'unlisted' }              the items in no list
  *   { name: 'trash' }                 the deleted items
- *   { name: 'activity', type, seq? }  the items of an activity:
- *                                     the completed run of a type,
- *                                     or the live run seq.
+ *   { name: 'activity', type, id }    the items of an activity:
+ *                                     the completed run of a type
+ *                                     (id null), or the live run id.
  */
 const PROJECT = { name: 'project' }
+
+// Activity views always have an id: null for the completed run.
+const activity = ({ type, id = null }) =>
+  ({ name: 'activity', type, id })
 
 const init = {
   ...reset,
@@ -231,16 +235,18 @@ export function nav (state = init, { type, payload, meta, error }) {
         ...state,
         ...reset,
         mode: NAV.MODE.PROJECT,
-        view: PROJECT,
         tags: [],
-        ...payload
+        ...payload,
+        view: (payload?.view?.name === 'activity') ?
+          activity(payload.view) :
+          (payload?.view ?? PROJECT)
       }
 
     // Dismissing the selected (completed) activity deselects it.
     case dismiss.type:
       return (state.view.name !== 'activity' ||
         state.view.type !== payload ||
-        state.view.seq != null) ? state : {
+        state.view.id != null) ? state : {
           ...state,
           ...reset,
           view: PROJECT
@@ -288,7 +294,7 @@ export function nav (state = init, { type, payload, meta, error }) {
 function restoreView ({ view, list, trash }) {
   switch (view?.name) {
     case 'activity':
-      return { name: 'activity', type: view.type }
+      return activity({ type: view.type })
     case 'list':
     case 'unlisted':
     case 'trash':

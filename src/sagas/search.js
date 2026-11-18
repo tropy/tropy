@@ -230,9 +230,9 @@ const getView = (state) => ({
     getItems(state, state.nav.view) : null
 })
 
-const getItems = (state, { type, seq }) =>
-  ((seq != null) ?
-    state.activities[seq]?.items :
+const getItems = (state, { type, id }) =>
+  ((id != null) ?
+    state.activities[id]?.items :
     state.completed[type]?.items) ?? []
 
 // Returns the ids of the items in a view matching the query, as a set

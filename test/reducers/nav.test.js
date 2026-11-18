@@ -74,7 +74,7 @@ describe('Nav Reducer', () => {
   describe('view', () => {
     let state = (props) =>
       ({ ...nav(undefined, {}), item: create([1]), ...props })
-    let imports = { name: 'activity', type: 'item.import' }
+    let imports = { name: 'activity', type: 'item.import', id: null }
 
     it('is the project by default', () => {
       expect(nav(undefined, {}).view).to.eql({ name: 'project' })
@@ -86,6 +86,16 @@ describe('Nav Reducer', () => {
         .to.eql({ name: 'trash' })
       expect(nav(s, { type: NAV.SELECT, payload: {} }).view)
         .to.eql({ name: 'project' })
+    })
+
+    it('always has an id for activities, null for the completed run', () => {
+      let select = (view) =>
+        nav(undefined, { type: NAV.SELECT, payload: { view } }).view
+
+      expect(select({ name: 'activity', type: 'item.import' }))
+        .to.eql(imports)
+      expect(select({ name: 'activity', type: 'item.import', id: 9 }))
+        .to.eql({ ...imports, id: 9 })
     })
 
     it('keeps an activity for searches and tag filters', () => {
@@ -129,7 +139,7 @@ describe('Nav Reducer', () => {
     })
 
     it('keeps a live run when its completed record is dismissed', () => {
-      let s = state({ view: { name: 'activity', type: 'item.import', seq: 9 } })
+      let s = state({ view: { ...imports, id: 9 } })
       expect(nav(s, dismiss('item.import'))).to.equal(s)
     })
 
@@ -150,7 +160,7 @@ describe('Nav Reducer', () => {
       let s = nav(undefined, {
         type: NAV.RESTORE,
         payload: {
-          view: { name: 'activity', type: 'item.import', seq: 9 },
+          view: { ...imports, id: 9 },
           list: 3,
           trash: true,
           activity: 'item.import',

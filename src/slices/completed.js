@@ -6,7 +6,7 @@ import { omit } from '../common/util.js'
  * the last completed run of each activity type.
  *
  * Activities are recorded on their done action,
- * and kept one day if they qualify the `keep` condition.
+ * and kept one day if they meet the `keep` condition.
  */
 
 export const isExpired = (record, now) =>
@@ -20,7 +20,7 @@ const keep = ({ meta }) =>
 function preserve ({ type, error, meta }) {
   let record = {
     type,
-    seq: meta.rel,
+    id: meta.rel,
     done: meta.now,
     expires: meta.now + 24 * 60 * 60 * 1000
   }
@@ -55,10 +55,10 @@ const completed = createSlice({
     restore (_, { payload, meta }) {
       let state = {}
 
-      // On restore, keep only if not expired, drop seq.
+      // Drops the ids: their runs are gone, and ids repeat across sessions.
       for (let record of Object.values(payload ?? {}))
         if (!isExpired(record, meta.now))
-          state[record.type] = omit(record, ['seq'])
+          state[record.type] = omit(record, ['id'])
 
       return state
     }
@@ -73,7 +73,7 @@ const completed = createSlice({
 
 // The type of the completed activity shown (nav.view), if any.
 const selectShownType = ({ nav }) =>
-  (nav?.view.name === 'activity' && nav.view.seq == null) ?
+  (nav?.view.name === 'activity' && nav.view.id == null) ?
     nav.view.type : null
 
 // Live records with items (also none, e.g. a failed import),
