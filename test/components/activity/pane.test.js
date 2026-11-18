@@ -281,10 +281,9 @@ describe('ActivityPane', () => {
     fireEvent.click(withoutItems)
     expect(dispatch.mock.callCount()).to.equal(0)
 
-    // The completed record, not its (finished) run.
     fireEvent.click(withItems)
     expect(dispatch.mock.calls[0].arguments[0].payload)
-      .to.eql({ view: { name: 'activity', type: 'item.import', id: null } })
+      .to.eql({ view: { name: 'activity', type: 'item.import', id: 7 } })
   })
 
   it('shows the items of busy activities', async () => {

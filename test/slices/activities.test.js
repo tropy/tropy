@@ -3,6 +3,7 @@ import reducer, {
   dismiss,
   restore,
   resume,
+  selectActivity,
   selectMostRecentActivity,
   selectPastActivities,
   start,
@@ -183,6 +184,18 @@ describe('past activities', () => {
     let restored = reducer(current, action)
     expect(restored.past.a).not.to.have.property('id')
     expect(restored.busy).to.equal(current.busy)
+  })
+
+  it('selects the activity of a view: the busy one, else the past one', () => {
+    let busy = { id: 9, type: 'a' }
+    let past = { id: 5, type: 'a' }
+    let state = { activities: { busy: { 9: busy }, past: { a: past } } }
+
+    expect(selectActivity(state, { type: 'a', id: 9 })).to.equal(busy)
+    // Done, or replaced by a newer activity: the past one of the type.
+    expect(selectActivity(state, { type: 'a', id: 8 })).to.equal(past)
+    expect(selectActivity(state, { type: 'a', id: null })).to.equal(past)
+    expect(selectActivity(state, { type: 'b', id: 9 })).to.be.null
   })
 
   it('selects live records', () => {

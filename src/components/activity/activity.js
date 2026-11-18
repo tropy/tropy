@@ -14,7 +14,7 @@ export const Activity = ({
   errors,
   canCancel,
   hasItems,
-  isActive,
+  isSelected,
   onCancel,
   onDismiss,
   onSelect
@@ -32,7 +32,7 @@ export const Activity = ({
     message = `activity.${type}`
     values = { progress: numCompleted, total, hasProgressBar }
   } else {
-    button = <DismissButton onClick={() => onDismiss(type)}/>
+    button = <DismissButton onClick={() => onDismiss(type, id)}/>
 
     message = `activity.past.${type}`
     values = { count, errors }
@@ -41,11 +41,11 @@ export const Activity = ({
   return (
     <div
       className={cx('activity', status, {
-        active: isActive,
+        active: isSelected,
         link: hasItems
       })}
       onClick={hasItems
-        ? () => onSelect(type, isBusy ? id : null)
+        ? () => onSelect(type, id)
         : null
       }>
       <div className="activity-container">
