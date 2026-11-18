@@ -12,6 +12,7 @@ export const Activity = ({
   total,
   count,
   errors,
+  isCancelled,
   canCancel,
   hasItems,
   isSelected,
@@ -35,7 +36,7 @@ export const Activity = ({
     button = <DismissButton onClick={() => onDismiss(type, id)}/>
 
     message = `activity.past.${type}`
-    values = { count, errors }
+    values = { count, errors, cancelled: String(!!isCancelled) }
   }
 
   return (

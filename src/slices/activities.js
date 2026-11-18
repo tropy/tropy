@@ -45,11 +45,19 @@ export const isExpired = (record, now) =>
 const isDoneOrRemote = (action) =>
   stop.match(action) || !!action.meta?.agent
 
-// Whether isDoneOrRemote should be kept as past activity
-const keep = ({ meta }, busy) =>
-  !meta.cancelled && !meta.hidden && (meta.done
-    ? !!(meta.items || busy?.items || meta.agent || meta.history)
-    : !meta.cmd)
+// Whether isDoneOrRemote should be kept as past activity.
+function keep ({ meta }, busy) {
+  if (meta.hidden)
+    return false
+  if (!meta.done)
+    return !meta.cmd // Not a command, so agent/api UI action
+
+  let items = meta.items ?? busy?.items
+
+  return meta.cancelled
+    ? items?.length > 0
+    : !!(items || meta.agent || meta.history)
+}
 
 // Converts an action into a past activity record.
 function preserve ({ type, error, meta }, busy) {
@@ -63,6 +71,7 @@ function preserve ({ type, error, meta }, busy) {
   let items = meta.items ?? busy?.items
 
   if (meta.rel != null) record.id = meta.rel
+  if (meta.cancelled) record.cancelled = true
   if (meta.agent) record.agent = meta.agent
   if (errors) record.errors = errors
   if (items) record.items = items
@@ -100,7 +109,6 @@ const activities = createSlice({
       prepare: (id, meta) => ({
         payload: { id },
         meta: {
-          search: true, // In case the view is active!
           ...meta,
           rel: id
         }

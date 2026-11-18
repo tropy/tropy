@@ -146,11 +146,14 @@ describe('past activities', () => {
     })
   })
 
-  it('does not record cancelled runs', () => {
-    expect(past(
-      run('a', { history: 'add' }),
-      run('a', { now: 300, history: 'add', cancelled: true })
-    ).a.done).to.equal(200)
+  it('records cancelled activities only with items', () => {
+    let state = past(
+      run('a', { items: [1] }),
+      run('a', { now: 300, items: [], cancelled: true }))
+    expect(state.a).to.include({ done: 200 }).and.not.have.property('cancelled')
+
+    state = past(run('a', { now: 300, items: [1], cancelled: true }))
+    expect(state.a).to.include({ done: 300, cancelled: true })
   })
 
   it('records only runs with items, by an agent, or edits', () => {

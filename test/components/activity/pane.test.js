@@ -220,6 +220,25 @@ describe('ActivityPane', () => {
     })
   })
 
+  it('says that a past activity was cancelled', () => {
+    let now = Date.now()
+    let store = createStore({
+      past: {
+        'item.import': {
+          type: 'item.import',
+          done: now,
+          expires: now + 60000,
+          items: [1, 2],
+          cancelled: true
+        }
+      }
+    })
+
+    let { container } = render(<ActivityPane/>, withStore(store))
+    expect(container.querySelector('.activity.past'))
+      .to.have.text('2 items imported, cancelled')
+  })
+
   it('keeps the activity shown after it expires', async () => {
     let now = Date.now()
     let store = createStore({
