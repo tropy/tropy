@@ -51,6 +51,8 @@ linux: &linux
       - Escape
       - Home
     edit: F2
+  ActivityPane: &ActivityPane
+    clear: Escape
   ItemIterator: &ItemIterator
     preview: Space
     open: Enter
@@ -171,6 +173,7 @@ darwin:
       - Escape
       - Home
     edit: Enter
+  ActivityPane: *ActivityPane
   ItemIterator:
     preview: Space
     open:

@@ -17,4 +17,18 @@ describe('ProjectSidebar', () => {
 
     expect(getByText(projects.tropy.name)).to.exist
   })
+
+  it('has no tab stop while an activity is shown', () => {
+    let section = (props) => render(
+      <ProjectSidebar
+        project={projects.tropy}
+        lists={lists}
+        {...props}/>,
+      inWindowContext
+    ).element().querySelector('section')
+
+    expect(section()).to.have.attribute('tabindex', '2')
+    expect(section({ isActivitySelected: true }))
+      .not.to.have.attribute('tabindex')
+  })
 })
