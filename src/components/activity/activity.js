@@ -34,7 +34,7 @@ export const Activity = ({
   } else {
     button = <DismissButton onClick={() => onDismiss(type)}/>
 
-    message = `activity.completed.${type}`
+    message = `activity.past.${type}`
     values = { count, errors }
   }
 
