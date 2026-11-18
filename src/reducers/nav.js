@@ -2,7 +2,7 @@ import { create, has, ids } from '../common/selection.js'
 import { array, merge, insert, omit, splice } from '../common/util.js'
 import { dc } from '../ontology/ns.js'
 import { expands } from '../common/search.js'
-import { cancel, dismiss, keep } from '../slices/activities.js'
+import { cancel, dismiss } from '../slices/activities.js'
 
 import {
   EDIT,
@@ -28,13 +28,14 @@ const reset = {
  *   { name: 'list', id }              the items in a list
  *   { name: 'unlisted' }              the items in no list
  *   { name: 'trash' }                 the deleted items
- *   { name: 'activity', type, id }    the items of an activity:
- *                                     the completed run of a type
- *                                     (id null), or the live run id.
+ *   { name: 'activity', type, id }    the items of an activity
+ *                                     (see selectActivity): the busy
+ *                                     one with that id, else the past
+ *                                     one of its type.
  */
 const PROJECT = { name: 'project' }
 
-// Activity views always have an id: null for the completed run.
+// Activity views always have an id: null for the past activity.
 const activity = ({ type, id = null }) =>
   ({ name: 'activity', type, id })
 
@@ -55,25 +56,7 @@ const init = {
 }
 
 
-// When the live run shown is done, shows its completed record,
-// or the project if the run was not recorded (see completed.js).
-// The done action searches (e.g. the transcription batch's).
-function leaveRun (state, meta) {
-  let { view } = state
-
-  if (!meta?.done || view.name !== 'activity' ||
-    view.id == null || view.id !== meta.rel)
-    return state
-
-  return {
-    ...state,
-    view: keep({ meta }) ? activity({ type: view.type }) : PROJECT
-  }
-}
-
 export function nav (state = init, { type, payload, meta, error }) {
-  state = leaveRun(state, meta)
-
   switch (type) {
     case NAV.RESTORE: {
       let { items, ...nav } = omit(payload || {}, [
@@ -255,9 +238,9 @@ export function nav (state = init, { type, payload, meta, error }) {
         mode: NAV.MODE.PROJECT,
         tags: [],
         ...payload,
-        view: (payload?.view?.name === 'activity') ?
-          activity(payload.view) :
-          (payload?.view ?? PROJECT)
+        view: (payload?.view?.name === 'activity')
+          ? activity(payload.view)
+          : (payload?.view ?? PROJECT)
       }
 
     case cancel.type:
@@ -270,8 +253,8 @@ export function nav (state = init, { type, payload, meta, error }) {
 
     case dismiss.type:
       return (state.view.name !== 'activity' ||
-        state.view.type !== payload ||
-        state.view.id != null) ? state : {
+        state.view.type !== payload.type ||
+        (state.view.id != null && state.view.id !== payload.id)) ? state : {
           ...state,
           ...reset,
           view: PROJECT
@@ -314,8 +297,8 @@ export function nav (state = init, { type, payload, meta, error }) {
 
 // The view of persisted nav state, also of legacy state
 // (list: -1 for unlisted, trash) without a view.
-// Live runs do not outlive the window:
-// a live activity becomes the completed run of its type.
+// Busy activities do not outlive the window:
+// the view refers to the past activity of its type.
 function restoreView ({ view, list, trash }) {
   switch (view?.name) {
     case 'activity':

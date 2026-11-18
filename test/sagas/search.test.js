@@ -346,6 +346,27 @@ describe('search saga', () => {
     expect(payload.matches).to.eql({})
   })
 
+  it('searches the items of the past activity when the run shown is done', () => {
+    let s = state({ matches: null })
+    s.nav.view = { name: 'activity', type: 'item.import', id: 9 }
+    s.activities = {
+      busy: {},
+      past: {
+        'item.import': { type: 'item.import', id: 9, items: [1, 2], expires: Infinity }
+      }
+    }
+
+    let { calls } = run(search(null), {
+      state: s,
+      mocks: [
+        [mod.item.find, () => ({ items: [1, 2] })],
+        [termLists, () => []]
+      ]
+    })
+
+    expect(calls(mod.item.find).calls[0].arguments[1].ids).to.eql([1, 2])
+  })
+
   it('searches the items of a busy run, not the past one', () => {
     let s = state({ matches: null })
     s.nav.view = { name: 'activity', type: 'item.import', id: 9 }

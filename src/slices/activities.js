@@ -9,7 +9,7 @@ import { done } from './cmd.js'
  * Each activity follows a dispatched trigger action,
  * keyed by the trigger's meta.seq:
  *   1. start(action) when the task actually begins;
- *   2. update, suspend or resume with the same action while it runs;
+ *   2. update, suspend or resume with the same action while busy;
  *   3. the task's done(action) response stops the activity.
  *
  * Whoever starts an activity must guarantee to dispatch done(action).
@@ -146,16 +146,18 @@ const activities = createSlice({
       }
     },
 
+    // The id is the past activity's, if any: it tells the nav reducer
+    // whether the view shows it (see selectActivity).
     dismiss: {
-      prepare: (type, meta) => ({
-        payload: type,
+      prepare: (type, id, meta) => ({
+        payload: { type, id: id ?? null },
         meta: {
           search: true, // In case the view is active!
           ...meta
         }
       }),
-      reducer ({ past }, { payload: type }) {
-        delete past[type]
+      reducer ({ past }, { payload }) {
+        delete past[payload.type]
       }
     },
 
@@ -193,17 +195,35 @@ export const selectBusyActivities = createSelector(
       .sort((a, b) => b.id - a.id)
 )
 
-// The type of the past activity shown (nav.view), if any.
-const selectActiveType = ({ nav }) =>
-  (nav?.view.name === 'activity' && nav.view.id == null) ?
-    nav.view.type : null
+// The activity a view (type, id) refers to: the busy activity with
+// that id, else the past activity of its type. So a view stays with
+// its activity when it is done, and moves on when a newer activity
+// of its type replaces the past one.
+export function selectActivity ({ activities }, { type, id }) {
+  let activity = (id != null) ? activities.busy[id] : null
+  return (activity?.type === type)
+    ? activity
+    : (activities.past[type] ?? null)
+}
 
+// The selected activity (nav.view), if any.
+export const selectSelectedActivity = (state) =>
+  (state.nav?.view.name === 'activity')
+    ? selectActivity(state, state.nav.view)
+    : null
+
+// The selected past activity stays, also if expired:
+// what is selected is visible.
 export const selectPastActivities = createSelector(
-  [({ activities }) => activities.past, (_, now) => now, selectActiveType],
-  (past, now, shown) =>
+  [
+    ({ activities }) => activities.past,
+    (_, now) => now,
+    selectSelectedActivity
+  ],
+  (past, now, selected) =>
     Object.values(past)
       .filter(rec => rec.items != null &&
-        (!isExpired(rec, now) || rec.type === shown))
+        (!isExpired(rec, now) || rec === selected))
       .sort((a, b) => b.done - a.done),
   {
     // Bounded caches: `now` differs from call to call.

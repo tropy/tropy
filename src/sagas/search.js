@@ -7,6 +7,7 @@ import { collator } from '../collate.js'
 import { parse } from '../common/search.js'
 import { NAV } from '../constants/index.js'
 import { getSortColumn, getVisiblePhotos } from '../selectors/index.js'
+import { selectActivity } from '../slices/activities.js'
 import {
   selectMatchFilter,
   selectQuery,
@@ -226,14 +227,13 @@ const getView = (state) => ({
   ...state.nav.view,
   tags: state.nav.tags,
   query: state.nav.query,
-  items: (state.nav.view.name === 'activity') ?
-    getItems(state, state.nav.view) : null
+  items: (state.nav.view.name === 'activity')
+    ? getItems(state, state.nav.view)
+    : null
 })
 
-const getItems = (state, { type, id }) =>
-  ((id != null) ?
-    state.activities.busy[id]?.items :
-    state.activities.past[type]?.items) ?? []
+const getItems = (state, view) =>
+  selectActivity(state, view)?.items ?? []
 
 // Returns the ids of the items in a view matching the query, as a set
 // (in list order, ascending position, for lists).

@@ -1,7 +1,10 @@
 import { useSelector } from 'react-redux'
-import { selectPastActivities } from '../../slices/activities.js'
 import { useBusyActivities } from './use-busy-activities.js'
 import { useNow, useTick } from './clock.js'
+import {
+  selectSelectedActivity,
+  selectPastActivities
+} from '../../slices/activities.js'
 
 /*
  * The rows of the activity pane:
@@ -15,37 +18,34 @@ export function useActivityList () {
   let now = useNow()
   let busy = useBusyActivities()
   let past = useSelector(state => selectPastActivities(state, now))
-  let view = useSelector(state => state.nav.view)
+  let selected = useSelector(selectSelectedActivity)
 
   // Re-render when the next record expires
   useTick(Math.min(
     ...past.map(a => a.expires).filter(exp => exp > now)
   ), now)
 
-  let isActive = (type, id = null) =>
-    view.name === 'activity' && view.type === type && view.id === id
-
   return [
-    ...busy.map(({ id, type, progress, total, cancel, items }) => ({
-      key: id,
-      id,
-      type,
+    ...busy.map(activity => ({
+      key: activity.id,
+      id: activity.id,
+      type: activity.type,
       status: 'busy',
-      progress,
-      total,
-      canCancel: !!cancel,
-      hasItems: items?.length > 0,
-      isActive: isActive(type, id)
+      progress: activity.progress,
+      total: activity.total,
+      canCancel: !!activity.cancel,
+      hasItems: activity.items?.length > 0,
+      isSelected: activity === selected
     })),
-    ...past.map(({ id, type, items, errors }) => ({
-      key: id ?? type,
-      id,
-      type,
+    ...past.map(activity => ({
+      key: activity.id ?? activity.type,
+      id: activity.id,
+      type: activity.type,
       status: 'past',
-      count: items?.length ?? 0,
-      errors: errors ?? 0,
-      hasItems: items?.length > 0,
-      isActive: isActive(type)
+      count: activity.items?.length ?? 0,
+      errors: activity.errors ?? 0,
+      hasItems: activity.items?.length > 0,
+      isSelected: activity === selected
     }))
   ].sort(byId)
 }

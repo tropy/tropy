@@ -138,16 +138,16 @@ describe('Nav Reducer', () => {
       expect(has(dismissed.item, 1)).to.be.false
     })
 
-    it('shows the completed record when the live run shown is done', () => {
+    it('keeps the view of an activity that is done (see selectActivity)', () => {
       let s = state({ view: { ...imports, id: 9 } })
-      let done = (rel, meta) => ({
-        type: 'item.import',
-        meta: { done: true, rel, ...meta }
-      })
+      let done = { type: 'item.import', meta: { done: true, rel: 9 } }
+      expect(nav(s, done)).to.equal(s)
+    })
 
-      expect(nav(s, done(8, { items: [1] }))).to.equal(s)
-      expect(nav(s, done(9, { items: [1] })).view).to.eql(imports)
-      expect(nav(s, done(9, { items: [1], cancelled: true })).view)
+    it('returns to the project when the past activity shown is dismissed', () => {
+      let s = state({ view: { ...imports, id: 9 } })
+      expect(nav(s, dismiss('item.import', 8))).to.equal(s)
+      expect(nav(s, dismiss('item.import', 9)).view)
         .to.eql({ name: 'project' })
     })
 
