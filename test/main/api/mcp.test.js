@@ -66,8 +66,8 @@ describe('api /mcp', () => {
   it('opens tropy:// urls', async () => {
     let result = await call('open', { url: 'tropy://project/foo' })
 
-    expect(api.proto.handle.mock.calls[0].arguments[0])
-      .to.equal('tropy://project/foo')
+    expect(api.proto.handle.mock.calls[0].arguments)
+      .to.eql(['tropy://project/foo', { agent: 'tropy-spark/1.0' }])
     expect(result.structuredContent).to.eql({ url: 'tropy://project/foo' })
   })
 })

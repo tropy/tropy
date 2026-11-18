@@ -94,6 +94,22 @@ describe('ProtocolHandler', () => {
     }
   })
 
+  it('passes the agent on, the protocol by default', async () => {
+    await proto.handle(base + '/items?q=Map')
+    expect(app.dispatch.mock.calls.at(-1).arguments[0].meta)
+      .to.include({ agent: 'tropy-url' })
+
+    await proto.handle(base + '/items/41', { agent: 'claude' })
+    expect(app.wm.rsvp.mock.calls.at(-1).arguments[1].meta)
+      .to.include({ agent: 'claude', silent: true })
+  })
+
+  it('passes no agent for urls opened in Tropy (e.g. note links)', async () => {
+    await proto.handleRequest(base + '/items?q=Map', { agent: null })
+    expect(app.dispatch.mock.calls.at(-1).arguments[0].meta)
+      .to.have.property('agent', null)
+  })
+
   it('shows app windows', async () => {
     for (let [url, method] of [
       ['tropy://prefs', 'showPreferencesWindow'],
