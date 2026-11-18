@@ -37,31 +37,32 @@ describe('ActivityPane', () => {
     })
   })
 
-  it('lists live activities newest first, above completed ones', async () => {
+  it('lists busy and past activities by id, restored ones last', async () => {
     let now = Date.now()
+    let record = (type, props) =>
+      ({ type, done: now, expires: now + 60000, items: [], ...props })
+
     let store = createStore({
       busy: {
         1: activity(1, now - 1000),
-        2: activity(2, now - 1000, {
+        3: activity(3, now - 1000, {
           type: 'item.import', progress: 2, total: 5
         })
       },
       past: {
-        'tag.export': {
-          type: 'tag.export', id: 0, done: now, expires: now + 60000,
-          items: []
-        }
+        'tag.export': record('tag.export', { id: 2 }),
+        'list.export': record('list.export')
       }
     })
 
     let { container } = render(<ActivityPane/>, withStore(store))
 
     await waitFor(() => {
-      expect(container.querySelectorAll('.activity')).to.have.length(3)
+      expect(container.querySelectorAll('.activity')).to.have.length(4)
     })
     expect([...container.querySelectorAll('.activity')]
-      .map(node => node.classList.contains('done') ? 'done' : 'busy'))
-      .to.eql(['busy', 'busy', 'done'])
+      .map(node => node.classList.contains('past') ? 'past' : 'busy'))
+      .to.eql(['busy', 'past', 'busy', 'past'])
     expect(container.querySelector('.activity'))
       .to.have.text('Imported 1 of 5 items …')
   })
@@ -206,12 +207,12 @@ describe('ActivityPane', () => {
 
     let { container } = render(<ActivityPane/>, withStore(store))
 
-    expect(container.querySelectorAll('.activity.done')).to.have.length(1)
-    expect(container.querySelector('.activity.done'))
+    expect(container.querySelectorAll('.activity.past')).to.have.length(1)
+    expect(container.querySelector('.activity.past'))
       .to.have.text('1 item imported, 2 failed')
 
     await waitFor(() => {
-      expect(container.querySelector('.activity.done')).to.be.null
+      expect(container.querySelector('.activity.past')).to.be.null
     })
   })
 
@@ -233,13 +234,13 @@ describe('ActivityPane', () => {
     let { container } = render(<ActivityPane/>, withStore(store))
 
     await new Promise(resolve => setTimeout(resolve, 100))
-    expect(container.querySelector('.activity.done'))
+    expect(container.querySelector('.activity.past'))
       .to.have.class('active')
 
     // Leaving the view leaves the expired record.
     store.dispatch({ type: 'nav.select', payload: { view: { name: 'trash' } } })
     await waitFor(() => {
-      expect(container.querySelector('.activity.done')).to.be.null
+      expect(container.querySelector('.activity.past')).to.be.null
     })
   })
 
@@ -255,7 +256,7 @@ describe('ActivityPane', () => {
     let dispatch = mock.method(store, 'dispatch')
 
     let { container } = render(<ActivityPane/>, withStore(store))
-    fireEvent.click(container.querySelector('.activity.done .btn'))
+    fireEvent.click(container.querySelector('.activity.past .btn'))
 
     expect(dispatch.mock.calls[0].arguments[0])
       .to.eql(dismiss('item.import'))
@@ -275,7 +276,7 @@ describe('ActivityPane', () => {
 
     let { container } = render(<ActivityPane/>, withStore(store))
     let [withItems, withoutItems] =
-      container.querySelectorAll('.activity.done')
+      container.querySelectorAll('.activity.past')
 
     fireEvent.click(withoutItems)
     expect(dispatch.mock.callCount()).to.equal(0)
@@ -332,7 +333,7 @@ describe('ActivityPane', () => {
     let dispatch = mock.method(store, 'dispatch')
 
     let { container } = render(<ActivityPane/>, withStore(store))
-    fireEvent.click(container.querySelector('.activity.done .btn'))
+    fireEvent.click(container.querySelector('.activity.past .btn'))
 
     expect(dispatch.mock.callCount()).to.equal(1)
     expect(dispatch.mock.calls[0].arguments[0])
