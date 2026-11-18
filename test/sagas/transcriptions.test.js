@@ -86,21 +86,20 @@ describe('track saga', () => {
     expect(puts(null, 1)).to.eql([])
   })
 
-  it('keeps the items of finished transcriptions', () => {
+  it('keeps the items of the batch and counts failures', () => {
     let batch = start(1, 2, 3)
     let [{ meta }] = run(track(batch, []), { state }).puts
 
-    expect(meta).to.include({
-      search: true, errors: 1, cancelled: false
-    })
+    expect(meta).to.include({ search: true, errors: 1 })
     expect(meta.items).to.eql([100, 101])
   })
 
-  it('cancels the batch if transcriptions are pending', () => {
+  it('ends the batch, not cancelled, when the account is unlinked', () => {
     let batch = start(1, 3)
     args({ account: { linked: false } })
     let [{ meta }] = run(track(batch, pending(3)), { state }).puts
 
-    expect(meta).to.include({ cancelled: true })
+    expect(meta).not.to.have.property('cancelled')
+    expect(meta.items).to.eql([100, 101])
   })
 })

@@ -91,7 +91,11 @@ const activities = createSlice({
     cancel: {
       prepare: (id, meta) => ({
         payload: { id },
-        meta: { ...meta, rel: id }
+        meta: {
+          search: true, // In case the view is active!
+          ...meta,
+          rel: id
+        }
       }),
       reducer () {}
     },

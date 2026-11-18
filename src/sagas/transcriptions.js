@@ -43,13 +43,15 @@ const canPoll = () =>
 // as more transcriptions become pending.
 export function *track (batch, pending) {
   if (!(isLinked() && pending.length)) {
-    // Pending transcriptions are left when the account was unlinked.
+    // Pending transcriptions are left when the account was unlinked:
+    // the batch ends all the same, as it was not cancelled.
+    // Its items are those shown while busy, pending or not.
     // Searches: the batch's items may be shown (an activity view).
     if (batch) {
       yield put(done(batch.handle, null, {
         search: true,
-        cancelled: pending.length > 0,
-        ...yield select(getBatchResult, batch.seen)
+        items: yield select(getBatchItems, batch.seen),
+        errors: yield select(getBatchErrors, batch.seen)
       }))
     }
     return null
@@ -104,30 +106,15 @@ function getBatchItems (state, ids) {
   return [...items]
 }
 
-// The items of a batch's finished transcriptions
-// and the number of failed ones.
-function getBatchResult (state, ids) {
-  let items = new Set()
+// The number of a batch's failed transcriptions.
+function getBatchErrors (state, ids) {
   let errors = 0
 
-  for (let id of ids) {
-    let tr = state.transcriptions[id]
-
-    if (tr == null || tr.status === 0)
-      continue
-
-    if (tr.status < 0) {
+  for (let id of ids)
+    if (state.transcriptions[id]?.status < 0)
       errors++
-      continue
-    }
 
-    let item = getItem(state, tr)
-
-    if (item != null)
-      items.add(item)
-  }
-
-  return { items: [...items], errors }
+  return errors
 }
 
 function *poll () {

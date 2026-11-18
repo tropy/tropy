@@ -2,7 +2,7 @@ import { create, has, ids } from '../common/selection.js'
 import { array, merge, insert, omit, splice } from '../common/util.js'
 import { dc } from '../ontology/ns.js'
 import { expands } from '../common/search.js'
-import { dismiss, keep } from '../slices/activities.js'
+import { cancel, dismiss, keep } from '../slices/activities.js'
 
 import {
   EDIT,
@@ -260,7 +260,14 @@ export function nav (state = init, { type, payload, meta, error }) {
           (payload?.view ?? PROJECT)
       }
 
-    // Dismissing the selected (completed) activity deselects it.
+    case cancel.type:
+      return (state.view.name !== 'activity' ||
+        state.view.id !== payload.id) ? state : {
+          ...state,
+          ...reset,
+          view: PROJECT
+        }
+
     case dismiss.type:
       return (state.view.name !== 'activity' ||
         state.view.type !== payload ||
