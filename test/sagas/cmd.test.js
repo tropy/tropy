@@ -33,6 +33,10 @@ class TestCommand extends Command {
     return 'result'
   }
 
+  get items () {
+    return (this.action.payload === 'items') ? [1, 2] : undefined
+  }
+
   *abort () {
     yield delay(0)
     this.aborted = true
@@ -120,6 +124,16 @@ describe('*exec', () => {
 
     expect(tick()).to.be.undefined
     expect(done().meta).to.include({ history: 'undo' })
+  })
+
+  it('reports the items of commands that track them', async () => {
+    let { done, task } = run('items')
+    await task.toPromise()
+    expect(done().meta.items).to.eql([1, 2])
+
+    let other = run()
+    await other.task.toPromise()
+    expect(other.done().meta.items).to.be.undefined
   })
 
   it('finishes commands cancelled from outside as cancelled', async () => {

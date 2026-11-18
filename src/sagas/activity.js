@@ -2,13 +2,13 @@ import { put, select } from 'redux-saga/effects'
 import { update } from '../slices/activities.js'
 
 // Updates a live activity (see activity.update).
-// An update with items searches if the activity's view is shown,
-// so its results stay up to date while it is busy;
-// elsewhere, its items change no results.
+// Sets meta.search if the activity has items and is currently selected.
 export function *putActivityUpdate (action, payload) {
-  let view = yield select(state => state.nav.view)
-  let isShown = ('items' in payload) &&
-    view.name === 'activity' && view.id === action.meta.seq
+  let search = ('items' in payload) &&
+    (yield select(activeView, action.meta.seq))
 
-  yield put(update(action, payload, isShown ? { search: true } : undefined))
+  yield put(update(action, payload, { search }))
 }
+
+const activeView = ({ nav }, id) =>
+  nav.view.name === 'activity' && nav.view.id === id

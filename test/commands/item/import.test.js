@@ -55,7 +55,10 @@ describe('Import items', () => {
 
     await runSaga({
       dispatch: (a) => puts.push(a),
-      getState: () => ({ settings: { title: {} } })
+      getState: () => ({
+        settings: { title: {} },
+        nav: { view: { name: 'project' } }
+      })
     }, function * () {
       yield * step(cmd)
       yield join(cmd.backlog)

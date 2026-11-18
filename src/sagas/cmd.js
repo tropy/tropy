@@ -48,6 +48,7 @@ export function *exec (options, action) {
         cmd.error || cmd.result, {
           cancelled: cmd.cancelled || undefined,
           errors: cmd.errors.length || undefined,
+          items: cmd.items,
           ...cmd.meta
         }
       )))

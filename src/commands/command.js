@@ -2,6 +2,7 @@ import assert from 'assert'
 import { call, cancelled, put } from 'redux-saga/effects'
 import * as activity from '../slices/activities.js'
 import { parallel } from '../sagas/util.js'
+import { putActivityUpdate } from '../sagas/activity.js'
 import { warn } from '../common/log.js'
 
 export const Registry = new Map()
@@ -61,6 +62,11 @@ export class Command {
       mode: this.action.meta.history,
       agent: this.action.meta.agent
     }
+  }
+
+  // Getter for items used for activities
+  get items () {
+    return undefined
   }
 
   get type () {
@@ -158,10 +164,15 @@ export class Command {
     else
       this.#progress += progress
 
-    yield put(activity.update(this.action, {
+    let payload = {
       total: this.#total,
       progress: this.#progress
-    }))
+    }
+
+    if (this.items)
+      payload.items = [...this.items]
+
+    yield* putActivityUpdate(this.action, payload)
 
     return this.#progress
   }
