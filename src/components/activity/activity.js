@@ -21,6 +21,22 @@ export const Activity = ({
 }) => {
   let isBusy = (status === 'busy')
   let hasProgressBar = isBusy && progress > 0
+  let numCompleted = progress - 1
+
+  let button, message, values
+
+  if (isBusy) {
+    if (canCancel)
+      button = <CancelButton onClick={() => onCancel(id)}/>
+
+    message = `activity.${type}`
+    values = { progress: numCompleted, total, hasProgressBar }
+  } else {
+    button = <DismissButton onClick={() => onDismiss(type)}/>
+
+    message = `activity.completed.${type}`
+    values = { count, errors }
+  }
 
   return (
     <div
@@ -35,42 +51,33 @@ export const Activity = ({
       <div className="activity-container">
         <div className="flex-row center">
           {isBusy && !hasProgressBar && <Icon name="Spin"/>}
-          <ActivityText
-            type={type}
-            isBusy={isBusy}
-            values={isBusy ?
-              { progress: progress - 1, total, hasProgressBar } :
-              { count, errors }}/>
-          {isBusy ? canCancel && (
-            <Button
-              icon="XCircleSmall"
-              noFocus
-              onClick={() => onCancel(id)}/>
-          ) : (
-            <Button
-              icon="CheckmarkCircleSmall"
-              noFocus
-              onClick={() => onDismiss(type)}/>
-          )}
+          <div className="activity-text">
+            <FormattedMessage id={message} values={values}/>
+          </div>
+          {button}
         </div>
         {hasProgressBar && (
-          <ActivityProgress progress={progress} total={total}/>
+          <div className="flex-row center">
+            <progress value={numCompleted} max={total}/>
+          </div>
         )}
       </div>
     </div>
   )
 }
 
-const ActivityText = ({ type, isBusy, values }) => (
-  <div className="activity-text">
-    <FormattedMessage
-      id={isBusy ? `activity.${type}` : `activity.completed.${type}`}
-      values={values}/>
-  </div>
+const CancelButton = ({ onClick }) => (
+  <Button
+    icon="XCircleSmall"
+    noFocus
+    title="activity.cancel"
+    onClick={onClick}/>
 )
 
-const ActivityProgress = ({ progress, total }) => (
-  <div className="flex-row center">
-    <progress value={progress - 1} max={total}/>
-  </div>
+const DismissButton = ({ onClick }) => (
+  <Button
+    icon="CheckmarkCircleSmall"
+    noFocus
+    title="activity.dismiss"
+    onClick={onClick}/>
 )
