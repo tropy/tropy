@@ -86,8 +86,7 @@ export const PhotoListItem = memo(({
     onConsolidate(photo)
   }
 
-  let handleToggle = (event) => {
-    event.stopPropagation()
+  let handleToggle = () => {
     onToggle(photo)
   }
 
@@ -113,8 +112,7 @@ export const PhotoListItem = memo(({
             noFocus
             icon={<Icon name="Chevron9"/>}
             className="disclosure"
-            onClick={handleToggle}
-            onMouseDown={stopPropagation}/>
+            onClick={handleToggle}/>
         )}
         <div className="thumbnail-container">
           <Thumbnail
