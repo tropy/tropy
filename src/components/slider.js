@@ -28,6 +28,10 @@ export class Slider extends React.PureComponent {
     return (this.props.origin != null) ? this.props.origin : this.props.min
   }
 
+  get resetValue () {
+    return this.props.resetValue ?? this.origin
+  }
+
   get delta () {
     return this.props.max - this.props.min
   }
@@ -88,6 +92,10 @@ export class Slider extends React.PureComponent {
     }
   }
 
+  reset (reason) {
+    this.set(this.resetValue, reason)
+  }
+
   handleDragStart = (event) => {
     let box = bounds(this.track.current)
     let border = borders(this.track.current)
@@ -124,9 +132,13 @@ export class Slider extends React.PureComponent {
   }
 
 
-  handleDoubleClick = () => {
-    if (!this.isDisabled)
-      this.props.onDoubleClick || this.set(this.origin, 'dblclick')
+  handleDoubleClick = (event) => {
+    if (this.isDisabled) return
+
+    if (this.props.onDoubleClick)
+      this.props.onDoubleClick(event)
+    else
+      this.reset('dblclick')
   }
 
   handleMinButtonClick = throttle(() => {
@@ -170,7 +182,7 @@ export class Slider extends React.PureComponent {
         this.set(value + 1 / precision, 'key')
         break
       case 'reset':
-        this.set(this.origin, 'key')
+        this.reset('key')
         break
       default:
         return
