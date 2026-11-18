@@ -1,7 +1,7 @@
 import { ITEM, LIST, NAV, TAG } from '#tropy/constants/index.js'
 import { nav } from '#tropy/reducers/nav.js'
 import { create, has } from '#tropy/common/selection.js'
-import { dismiss } from '#tropy/slices/completed.js'
+import { dismiss } from '#tropy/slices/activities.js'
 
 describe('Nav Reducer', () => {
   it('restores selected items persisted as an array', () => {
@@ -136,6 +136,19 @@ describe('Nav Reducer', () => {
       let dismissed = nav(s, dismiss('item.import'))
       expect(dismissed.view).to.eql({ name: 'project' })
       expect(has(dismissed.item, 1)).to.be.false
+    })
+
+    it('shows the completed record when the live run shown is done', () => {
+      let s = state({ view: { ...imports, id: 9 } })
+      let done = (rel, meta) => ({
+        type: 'item.import',
+        meta: { done: true, rel, ...meta }
+      })
+
+      expect(nav(s, done(8, { items: [1] }))).to.equal(s)
+      expect(nav(s, done(9, { items: [1] })).view).to.eql(imports)
+      expect(nav(s, done(9, { items: [1], cancelled: true })).view)
+        .to.eql({ name: 'project' })
     })
 
     it('keeps a live run when its completed record is dismissed', () => {

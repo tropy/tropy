@@ -2,17 +2,17 @@ import { call, put, race, take } from 'redux-saga/effects'
 import { info, trace, warn } from '../common/log.js'
 import { Command } from '../commands/command.js'
 import { fail, failPartially } from '../dialog.js'
-import { activity, history } from '../actions/index.js'
+import { activities, history } from '../actions/index.js'
 import { done } from '../slices/cmd.js'
 
 const cancellation = (id) => ({ payload, type }) => (
-  type === activity.cancel.type && payload.id === id
+  type === activities.cancel.type && payload.id === id
 )
 
 export function *exec (options, action) {
   try {
     var cmd = Command.create(action, options)
-    yield put(activity.start(action))
+    yield put(activities.start(action))
 
     var [cancelled] = yield race([
       take(cancellation(action.meta.seq)),

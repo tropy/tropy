@@ -17,10 +17,10 @@ export const ActivityPane = memo(() => {
     state.nav.view.name === 'activity')
 
   let handleCancel = (id) => {
-    dispatch(act.activity.cancel(id))
+    dispatch(act.activities.cancel(id))
   }
   let handleDismiss = (type) => {
-    dispatch(act.completed.dismiss(type))
+    dispatch(act.activities.dismiss(type))
   }
   let handleSelect = (type, id) => {
     dispatch(act.nav.select({

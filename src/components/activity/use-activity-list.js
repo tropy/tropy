@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { selectCompletedActivities } from '../../slices/completed.js'
+import { selectPastActivities } from '../../slices/activities.js'
 import { useBusyActivities } from './use-busy-activities.js'
 import { useNow, useTick } from './clock.js'
 
@@ -14,7 +14,7 @@ import { useNow, useTick } from './clock.js'
 export function useActivityList () {
   let now = useNow()
   let busy = useBusyActivities()
-  let done = useSelector(state => selectCompletedActivities(state, now))
+  let done = useSelector(state => selectPastActivities(state, now))
   let view = useSelector(state => state.nav.view)
 
   // Re-render when the next record expires

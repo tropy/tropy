@@ -2,7 +2,7 @@ import { create, has, ids } from '../common/selection.js'
 import { array, merge, insert, omit, splice } from '../common/util.js'
 import { dc } from '../ontology/ns.js'
 import { expands } from '../common/search.js'
-import { dismiss } from '../slices/completed.js'
+import { dismiss, keep } from '../slices/activities.js'
 
 import {
   EDIT,
@@ -55,7 +55,25 @@ const init = {
 }
 
 
+// When the live run shown is done, shows its completed record,
+// or the project if the run was not recorded (see completed.js).
+// The done action searches (e.g. the transcription batch's).
+function leaveRun (state, meta) {
+  let { view } = state
+
+  if (!meta?.done || view.name !== 'activity' ||
+    view.id == null || view.id !== meta.rel)
+    return state
+
+  return {
+    ...state,
+    view: keep({ meta }) ? activity({ type: view.type }) : PROJECT
+  }
+}
+
 export function nav (state = init, { type, payload, meta, error }) {
+  state = leaveRun(state, meta)
+
   switch (type) {
     case NAV.RESTORE: {
       let { items, ...nav } = omit(payload || {}, [

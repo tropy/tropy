@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { selectActivities } from '../../slices/activities.js'
+import { selectBusyActivities } from '../../slices/activities.js'
 import { useNow, useTick } from './clock.js'
 
 const isSuspended = (activity) =>
@@ -8,7 +8,7 @@ const isSuspended = (activity) =>
 export function useBusyActivities () {
   let now = useNow()
 
-  let pending = useSelector(selectActivities).filter(a => !isSuspended(a))
+  let pending = useSelector(selectBusyActivities).filter(a => !isSuspended(a))
   let busy = pending.filter(a => now >= a.due)
 
   // Re-render on next due date!

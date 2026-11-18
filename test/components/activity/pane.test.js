@@ -1,9 +1,9 @@
 import { mock } from 'node:test'
 import { act, fireEvent, waitFor } from '@testing-library/react'
-import { render, createStore, withStore } from '../../support/react.js'
+import { render, createStore as createTestStore, withStore }
+  from '../../support/react.js'
 import { ActivityPane } from '#tropy/components/activity/index.js'
-import { cancel, start } from '#tropy/slices/activities.js'
-import { dismiss } from '#tropy/slices/completed.js'
+import { cancel, dismiss, start } from '#tropy/slices/activities.js'
 import { KeyMap } from '#tropy/keymap.js'
 
 const activity = (id, init, props) => ({
@@ -17,11 +17,14 @@ const started = (seq) => {
   return action
 }
 
+const createStore = ({ busy = {}, past = {}, ...state } = {}) =>
+  createTestStore({ ...state, activities: { busy, past } })
+
 describe('ActivityPane', () => {
   it('renders only activities exceeding the delay', async () => {
     let now = Date.now()
     let store = createStore({
-      activities: {
+      busy: {
         1: activity(1, now - 1000),
         2: activity(2, now)
       }
@@ -37,13 +40,13 @@ describe('ActivityPane', () => {
   it('lists live activities newest first, above completed ones', async () => {
     let now = Date.now()
     let store = createStore({
-      activities: {
+      busy: {
         1: activity(1, now - 1000),
         2: activity(2, now - 1000, {
           type: 'item.import', progress: 2, total: 5
         })
       },
-      completed: {
+      past: {
         'tag.export': {
           type: 'tag.export', id: 0, done: now, expires: now + 60000,
           items: []
@@ -105,7 +108,7 @@ describe('ActivityPane', () => {
   it('never shows hidden activities', async () => {
     let now = Date.now()
     let store = createStore({
-      activities: {
+      busy: {
         1: activity(1, now - 1000),
         2: activity(2, now - 1000, { hidden: true })
       }
@@ -120,7 +123,7 @@ describe('ActivityPane', () => {
 
   it('renders completed steps as progress', async () => {
     let store = createStore({
-      activities: {
+      busy: {
         1: activity(1, Date.now() - 1000, {
           type: 'item.import', progress: 2, total: 5
         })
@@ -173,7 +176,7 @@ describe('ActivityPane', () => {
 
   it('dispatches cancel', async () => {
     let store = createStore({
-      activities: {
+      busy: {
         1: activity(1, Date.now() - 1000, { cancel: true })
       }
     })
@@ -192,7 +195,7 @@ describe('ActivityPane', () => {
   it('renders completed activities with items until they expire', async () => {
     let now = Date.now()
     let store = createStore({
-      completed: {
+      past: {
         'item.import': {
           type: 'item.import', done: now, expires: now + 50,
           items: [1], errors: 2
@@ -215,7 +218,7 @@ describe('ActivityPane', () => {
   it('keeps the activity shown after it expires', async () => {
     let now = Date.now()
     let store = createStore({
-      completed: {
+      past: {
         'item.import': {
           type: 'item.import', done: now, expires: now + 50,
           items: [1]
@@ -243,7 +246,7 @@ describe('ActivityPane', () => {
   it('dispatches dismiss', () => {
     let now = Date.now()
     let store = createStore({
-      completed: {
+      past: {
         'item.import': {
           type: 'item.import', done: now, expires: now + 60000, items: []
         }
@@ -263,7 +266,7 @@ describe('ActivityPane', () => {
     let record = (type, items) =>
       ({ type, id: 7, done: now, expires: now + 60000, items })
     let store = createStore({
-      completed: {
+      past: {
         'item.import': record('item.import', [1]),
         'tag.export': record('tag.export', [])
       }
@@ -285,7 +288,7 @@ describe('ActivityPane', () => {
 
   it('shows the items of busy activities', async () => {
     let store = createStore({
-      activities: {
+      busy: {
         1: activity(1, Date.now() - 1000),
         2: activity(2, Date.now() - 1000, { items: [3] })
       }
@@ -317,7 +320,7 @@ describe('ActivityPane', () => {
   it('dismisses without selecting', () => {
     let now = Date.now()
     let store = createStore({
-      completed: {
+      past: {
         'item.import': {
           type: 'item.import',
           done: now,

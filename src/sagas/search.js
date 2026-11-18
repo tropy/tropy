@@ -232,8 +232,8 @@ const getView = (state) => ({
 
 const getItems = (state, { type, id }) =>
   ((id != null) ?
-    state.activities[id]?.items :
-    state.completed[type]?.items) ?? []
+    state.activities.busy[id]?.items :
+    state.activities.past[type]?.items) ?? []
 
 // Returns the ids of the items in a view matching the query, as a set
 // (in list order, ascending position, for lists).

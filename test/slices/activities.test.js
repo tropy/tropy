@@ -1,7 +1,19 @@
 import reducer, {
-  cancel, resume, start, stop, suspend, update
+  cancel,
+  dismiss,
+  restore,
+  resume,
+  selectMostRecentActivity,
+  selectPastActivities,
+  start,
+  stop,
+  suspend,
+  update
 } from '#tropy/slices/activities.js'
 import { done } from '#tropy/slices/cmd.js'
+
+const reduce = (...actions) =>
+  actions.reduce(reducer, undefined)
 
 describe('activities', () => {
   const cmd = (type, meta) => ({
@@ -16,14 +28,13 @@ describe('activities', () => {
     return s
   }
 
-  const reduce = (...actions) =>
-    actions.reduce(reducer, undefined)
+  const busy = (...actions) => reduce(...actions).busy
 
   it('starts activities for commands explicitly', () => {
     let action = cmd('item.import', { cancel: true })
 
-    expect(reduce(action)).to.eql({})
-    expect(reduce(action, started(action)))
+    expect(busy(action)).to.eql({})
+    expect(busy(action, started(action)))
       .to.eql({
         1: { id: 1, type: 'item.import', due: 500, cancel: true }
       })
@@ -31,9 +42,9 @@ describe('activities', () => {
 
   it('updates activities', () => {
     let action = cmd('item.import')
-    expect(reduce(started(action), update(action, { progress: 1, total: 2 })))
+    expect(busy(started(action), update(action, { progress: 1, total: 2 })))
       .to.have.nested.property('1.progress', 1)
-    expect(reduce(update(action, { progress: 1 }))).to.eql({})
+    expect(busy(update(action, { progress: 1 }))).to.eql({})
   })
 
   it('postpones activities suspended before they are due', () => {
@@ -41,32 +52,32 @@ describe('activities', () => {
     let at = (now, a) => ({ ...a, meta: { ...a.meta, now } })
 
     let state = reduce(started(action), at(200, suspend(action)))
-    expect(state).to.have.nested.property('1.suspended', 200)
+    expect(state.busy).to.have.nested.property('1.suspended', 200)
 
     state = reducer(state, at(1000, resume(action)))
-    expect(state[1]).to.not.have.property('suspended')
-    expect(state[1]).to.have.property('due', 1300)
+    expect(state.busy[1]).to.not.have.property('suspended')
+    expect(state.busy[1]).to.have.property('due', 1300)
   })
 
   it('does not postpone activities suspended after they are due', () => {
     let action = cmd('item.import')
     let at = (now, a) => ({ ...a, meta: { ...a.meta, now } })
 
-    let state = reduce(
+    expect(busy(
       started(action),
       at(600, suspend(action)),
-      at(1000, resume(action)))
-    expect(state).to.have.nested.property('1.due', 500)
+      at(1000, resume(action)))).to.have.nested.property('1.due', 500)
   })
 
   it('removes activities when their command is done', () => {
     let action = cmd('item.import')
-    expect(reduce(started(action), done(action, {}))).to.eql({})
+    expect(busy(started(action), done(action, {}))).to.eql({})
   })
 
   it('removes failed activities', () => {
     let action = cmd('item.import')
-    expect(reduce(started(action), done(action, new Error('failed')))).to.eql({})
+    expect(busy(started(action), done(action, new Error('failed'))))
+      .to.eql({})
   })
 
   it('does not change activities on cancel', () => {
@@ -80,5 +91,118 @@ describe('activities', () => {
 
     expect(stop.match(done(action))).to.be.true
     expect(stop.match(action)).to.be.false
+  })
+
+  it('records the items reported while busy', () => {
+    let action = cmd('transcription.process')
+    let state = reduce(
+      started(action),
+      update(action, { items: [1, 2] }),
+      done(action))
+
+    expect(state.busy).to.eql({})
+    expect(state.past['transcription.process'])
+      .to.include({ id: 1 })
+      .and.to.have.property('items').eql([1, 2])
+  })
+})
+
+describe('past activities', () => {
+  const DAY = 24 * 60 * 60 * 1000
+
+  const run = (type, meta = {}, result) => {
+    let action = {
+      type,
+      meta: {
+        seq: 1,
+        now: 100,
+        agent: meta.agent,
+        hidden: meta.hidden,
+        history: meta.history
+      }
+    }
+    let d = done(action, result, meta)
+    d.meta.now = meta.now ?? 200
+    return d
+  }
+
+  const past = (...actions) => reduce(...actions).past
+
+  it('records the last completed run per type', () => {
+    expect(past(
+      run('item.import', { items: [1] }),
+      run('item.import', { now: 300, items: [2, 3], agent: 'A' }),
+      run('photo.consolidate', { history: 'add' }, new Error())
+    )).to.eql({
+      'item.import': {
+        type: 'item.import', id: 1, done: 300, expires: 300 + DAY,
+        agent: 'A', items: [2, 3]
+      },
+      'photo.consolidate': {
+        type: 'photo.consolidate', id: 1, done: 200, expires: 200 + DAY,
+        errors: 1
+      }
+    })
+  })
+
+  it('does not record cancelled runs', () => {
+    expect(past(
+      run('a', { history: 'add' }),
+      run('a', { now: 300, history: 'add', cancelled: true })
+    ).a.done).to.equal(200)
+  })
+
+  it('records only runs with items, by an agent, or edits', () => {
+    expect(Object.keys(past(
+      run('a'),
+      run('b', { items: [] }),
+      run('c', { agent: 'A' }),
+      run('d', { history: 'add' }),
+      run('e', { agent: 'A', hidden: true })
+    ))).to.eql(['b', 'c', 'd'])
+  })
+
+  it('dismisses a type', () => {
+    let state = reduce(run('a', { items: [] }), run('b', { items: [] }))
+    expect(Object.keys(reducer(state, dismiss('a')).past)).to.eql(['b'])
+  })
+
+  it('drops expired records on restore', () => {
+    let state = reduce(
+      run('a', { now: 200, items: [] }),
+      run('b', { now: 900, items: [] }))
+    let action = { ...restore(state), meta: { now: 500 + DAY } }
+    expect(Object.keys(reducer(undefined, action).past)).to.eql(['b'])
+  })
+
+  it('drops the ids of their runs on restore, keeps busy ones', () => {
+    let state = reduce(run('a', { items: [] }))
+    let current = { busy: { 7: { id: 7 } }, past: {} }
+    let action = { ...restore(state), meta: { now: 300 } }
+
+    let restored = reducer(current, action)
+    expect(restored.past.a).not.to.have.property('id')
+    expect(restored.busy).to.equal(current.busy)
+  })
+
+  it('selects live records', () => {
+    let activities = reduce(
+      run('a', { now: 100, items: [1] }),
+      run('b', { now: 500, items: [] }),
+      run('c', { now: 600, agent: 'A' }))
+
+    expect(selectPastActivities({ activities }, 50 + DAY)
+      .map(rec => rec.type)).to.eql(['b', 'a'])
+    expect(selectPastActivities({ activities }, 150 + DAY)
+      .map(rec => rec.type)).to.eql(['b'])
+
+    // The record shown stays, also if expired.
+    let nav = { view: { name: 'activity', type: 'a' } }
+    expect(selectPastActivities({ activities, nav }, 150 + DAY)
+      .map(rec => rec.type)).to.eql(['b', 'a'])
+
+    expect(selectMostRecentActivity({ activities }, 550 + DAY).type)
+      .to.equal('c')
+    expect(selectMostRecentActivity({ activities }, 650 + DAY)).to.be.null
   })
 })

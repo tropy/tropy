@@ -1,5 +1,4 @@
 export { default as activities } from '../slices/activities.js'
-export { default as completed } from '../slices/completed.js'
 export { default as notepad } from '../slices/notepad.js'
 export { default as projectFiles } from '../slices/project-files.js'
 export { default as qr } from '../slices/qr.js'

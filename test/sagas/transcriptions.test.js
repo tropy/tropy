@@ -13,7 +13,8 @@ describe('track saga', () => {
       3: { id: 3, parent: 30, status: 1 }
     },
     photos: { 10: { id: 10, item: 100 }, 11: { id: 11, item: 101 } },
-    selections: { 30: { id: 30, photo: 11 } }
+    selections: { 30: { id: 30, photo: 11 } },
+    nav: { view: { name: 'project' } }
   }
 
   const puts = (batch, ...ids) =>
@@ -32,18 +33,35 @@ describe('track saga', () => {
     expect(puts(null, 1)).to.eql([
       'transcription.process',
       'activities/start',
-      { total: 1, progress: 1 }
+      { total: 1, progress: 1, items: [100] }
     ])
   })
 
   it('grows the batch as transcriptions become pending', () => {
     let batch = start(1)
-    expect(puts(batch, 1, 2, 3)).to.eql([{ total: 3, progress: 1 }])
+    expect(puts(batch, 1, 2, 3))
+      .to.eql([{ total: 3, progress: 1, items: [100, 101] }])
   })
 
   it('advances progress as transcriptions finish', () => {
     let batch = start(1, 2, 3)
-    expect(puts(batch, 2, 3)).to.eql([{ total: 3, progress: 2 }])
+    expect(puts(batch, 2, 3))
+      .to.eql([{ total: 3, progress: 2, items: [100, 101] }])
+  })
+
+  it('searches on updates only while the batch is shown', () => {
+    let search = (view) => {
+      let batch = start(1, 2)
+      batch.handle.meta.seq = 7
+
+      return run(track(batch, pending(1, 2, 3)), {
+        state: { ...state, nav: { view } }
+      }).puts[0].meta.search
+    }
+
+    expect(search({ name: 'project' })).to.be.undefined
+    expect(search({ name: 'activity', type: 'transcription.process', id: 7 }))
+      .to.be.true
   })
 
   it('skips updates when nothing changed', () => {
