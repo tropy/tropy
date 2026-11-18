@@ -743,11 +743,11 @@ export default class Esper extends EventEmitter {
     if (this.isDoubleClick(tool)) {
       if (target instanceof Selection)
         return this.emit('selection-activate', target.data)
-
+      
       if (tool === ESPER.TOOL.ARROW &&
-        this.photo.isOutsideSelection(data.getLocalPosition(this.photo)))
+        this.photo.overlay.contains(data.getLocalPosition(this.photo)))
         return this.emit('selection-deactivate')
-
+      
       let { x, y, shift } = coords(data.originalEvent)
       return this.emit(`zoom-${shift ? 'out' : 'in'}`, { x, y }, true)
     }

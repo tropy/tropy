@@ -173,4 +173,8 @@ export class SelectionOverlay extends Container {
     this.children[0].clear()
     this.visible = (selection != null)
   }
+
+  contains (point) {
+    return this.children[0].containsPoint(point)
+  }
 }
