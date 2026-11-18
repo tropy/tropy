@@ -73,9 +73,9 @@
   }
 }
 
-.icon-flash,
-.icon-status,
-.icon-transcription-status {
+.icon-agent-status,
+.icon-cloud-status,
+.icon-status {
   .track {
     color: $icon-track-color;
     visibility: if(style(--indeterminate: true): hidden;);

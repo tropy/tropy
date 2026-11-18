@@ -48,15 +48,22 @@ describe('ActivityStatus', () => {
     expect(icon).to.have.attribute('title', 'Imported 1 of 5 items …')
   })
 
-  it('renders the activity status icon', async () => {
-    let icon = await renderStatus(
-      busy(1, { statusIcon: 'TranscriptionStatus' }))
-    expect(icon).to.have.class('icon-transcription-status')
+  it('renders the variant of the activity: agent, cloud, default', async () => {
+    expect(await renderStatus(busy(1, { cloud: true })))
+      .to.have.class('icon-cloud-status')
+    expect(await renderStatus(busy(1, { agent: 'A', cloud: true })))
+      .to.have.class('icon-agent-status')
+  })
+
+  it('renders the shared variant of multiple activities', async () => {
+    expect(await renderStatus(
+      busy(1, { cloud: true }),
+      busy(2, { cloud: true }))).to.have.class('icon-cloud-status')
   })
 
   it('renders indeterminate status for multiple activities', async () => {
     let icon = await renderStatus(
-      busy(1, { statusIcon: 'TranscriptionStatus', progress: 1, total: 4 }),
+      busy(1, { cloud: true, progress: 1, total: 4 }),
       busy(2))
     expect(icon).to.have.class('icon-status')
     expect(icon.style.getPropertyValue('--indeterminate')).to.equal('true')

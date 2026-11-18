@@ -380,7 +380,7 @@ export const IconFit = i('Fit', (
   </svg>
 ))
 
-export const IconFlash = i('Flash', (
+export const IconAgentStatus = i('AgentStatus', (
   <svg width="16" height="16" viewBox="0 0 16 16" overflow="visible">
     <g className="line" fill="currentColor">
       <path d="M12,6h-3.153l-.003.007.931-4.033c.124-.536-.045-.614-.375-.174l-4.8,6.4c-.33.44-.15.8.4.8h3.153v-.003s0,.003,0,.003l-.929,4.026c-.124.536.045.614.375.174l4.8-6.4c.33-.44.15-.8-.4-.8"/>
@@ -813,7 +813,7 @@ export const IconTranscriptionFailed = i('TranscriptionFailed', (
   </svg>
 ))
 
-export const IconTranscriptionStatus = i('TranscriptionStatus', (
+export const IconCloudStatus = i('CloudStatus', (
   <svg width="16" height="16" viewBox="0 0 16 16" overflow="visible">
     <g className="line" fill="currentColor">
       <path d="M9,11h2v1H6V11H8V5H6V7H5V4h7V7H11V5H9Z"/>

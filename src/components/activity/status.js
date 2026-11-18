@@ -4,23 +4,29 @@ import { useBusyActivities } from './use-busy-activities.js'
 import { useNow, useTick } from './clock.js'
 import { selectMostRecentActivity } from '../../slices/activities.js'
 
-const ICON = 'Status'
 const STYLE = { '--indeterminate': 'true' }
 const TITLE = 'activity.status'
+
+const variant = ({ agent, cloud }) => {
+  if (agent) return 'AgentStatus'
+  if (cloud) return 'CloudStatus'
+  return 'Status'
+}
 
 export const ActivityStatus = () => {
   let busy = useBusyActivities()
   let now = useNow()
   let last = useSelector(state => selectMostRecentActivity(state, now))
 
-  // When the agent's record expires.
+  // Re-render when most recent expires
   useTick(last?.agent ? last.expires : Infinity, now)
 
-  // Without busy activities, shows if an agent completed the last one.
+  // If there's no busy activity,
+  // we check if most recent activity was via agent
   if (busy.length === 0) {
     return last?.agent ? (
       <FormattedIcon
-        name="Flash"
+        name="AgentStatus"
         style={{ '--progress': 100 }}
         title="activity.agent"
         values={{ agent: last.agent }}/>
@@ -28,11 +34,16 @@ export const ActivityStatus = () => {
   }
 
   let {
-    statusIcon,
     type,
     progress,
     total
   } = (busy.length === 1) ? busy[0] : {}
+
+  // If multiple activities are ongoing,
+  // we pick the common variant if possible.
+  let name = variant(busy[0])
+  if (busy.some(activity => variant(activity) !== name))
+    name = 'Status'
 
   let hasProgressBar = progress > 0 && total > 0
   let title = type && `activity.${type}`
@@ -42,7 +53,7 @@ export const ActivityStatus = () => {
 
   return (
     <FormattedIcon
-      name={statusIcon || ICON}
+      name={name}
       style={style || STYLE}
       title={title || TITLE}
       values={{
