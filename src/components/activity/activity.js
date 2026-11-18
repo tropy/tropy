@@ -42,12 +42,14 @@ export const Activity = ({
               { progress: progress - 1, total, hasProgressBar } :
               { count, errors }}/>
           {isBusy ? canCancel && (
-            <ActivityAction
+            <Button
               icon="XCircleSmall"
+              noFocus
               onClick={() => onCancel(id)}/>
           ) : (
-            <ActivityAction
+            <Button
               icon="CheckmarkCircleSmall"
+              noFocus
               onClick={() => onDismiss(type)}/>
           )}
         </div>
@@ -65,16 +67,6 @@ const ActivityText = ({ type, isBusy, values }) => (
       id={isBusy ? `activity.${type}` : `activity.completed.${type}`}
       values={values}/>
   </div>
-)
-
-const ActivityAction = ({ icon, onClick }) => (
-  <Button
-    icon={icon}
-    noFocus
-    onClick={(event) => {
-      event.stopPropagation()
-      onClick()
-    }}/>
 )
 
 const ActivityProgress = ({ progress, total }) => (

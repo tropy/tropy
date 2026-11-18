@@ -66,10 +66,12 @@ export const Button = React.memo(({
     if (noFocus) {
       attr.onMouseDown = (event) => {
         event.preventDefault()
+        event.stopPropagation()
         onMouseDown?.(event)
       }
       attr.onClick = (event) => {
         event.preventDefault()
+        event.stopPropagation()
         onClick?.(event)
       }
 

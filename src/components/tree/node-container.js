@@ -1,5 +1,4 @@
 import cx from 'classnames'
-import { useEvent } from '../../hooks/use-event.js'
 import { Button } from '../button.js'
 import { Icon } from '../icons.js'
 
@@ -12,11 +11,6 @@ export const NodeContainer = ({
   onExpandButtonClick,
   ref
 }) => {
-  let handleExpandButtonClick = useEvent(event => {
-    event.stopPropagation()
-    onExpandButtonClick()
-  })
-
   return (
     <div
       ref={ref}
@@ -27,7 +21,7 @@ export const NodeContainer = ({
         <Button
           icon="Triangle"
           noFocus
-          onClick={handleExpandButtonClick}/>
+          onClick={onExpandButtonClick}/>
       )}
       <div className="icon-truncate">
         {typeof icon === 'string' ? <Icon name={icon}/> : icon}
