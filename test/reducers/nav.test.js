@@ -88,16 +88,6 @@ describe('Nav Reducer', () => {
         .to.eql({ name: 'project' })
     })
 
-    it('always has an id for activities, null for the completed run', () => {
-      let select = (view) =>
-        nav(undefined, { type: NAV.SELECT, payload: { view } }).view
-
-      expect(select({ name: 'activity', type: 'item.import' }))
-        .to.eql(imports)
-      expect(select({ name: 'activity', type: 'item.import', id: 9 }))
-        .to.eql({ ...imports, id: 9 })
-    })
-
     it('keeps an activity for searches and tag filters', () => {
       let s = state({ view: imports })
       expect(nav(s, { type: NAV.SEARCH, payload: { query: 'x' } }).view)
@@ -176,7 +166,7 @@ describe('Nav Reducer', () => {
       expect(restore(undefined)).to.eql({ name: 'project' })
     })
 
-    it('restores no live runs, nor legacy fields', () => {
+    it('restores the activity view with a negative id, no legacy fields', () => {
       let s = nav(undefined, {
         type: NAV.RESTORE,
         payload: {
@@ -188,7 +178,7 @@ describe('Nav Reducer', () => {
         }
       })
 
-      expect(s.view).to.eql(imports)
+      expect(s.view).to.eql({ ...imports, id: -9 })
       expect(s).not.to.have.any.keys('list', 'trash', 'activity', 'imports')
     })
   })

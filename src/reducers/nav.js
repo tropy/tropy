@@ -2,7 +2,7 @@ import { create, has, ids } from '../common/selection.js'
 import { array, merge, insert, omit, splice } from '../common/util.js'
 import { dc } from '../ontology/ns.js'
 import { expands } from '../common/search.js'
-import { cancel, dismiss } from '../slices/activities.js'
+import { cancel, dismiss, restoreId } from '../slices/activities.js'
 
 import {
   EDIT,
@@ -34,10 +34,6 @@ const reset = {
  *                                     one of its type.
  */
 const PROJECT = { name: 'project' }
-
-// Activity views always have an id: null for the past activity.
-const activity = ({ type, id = null }) =>
-  ({ name: 'activity', type, id })
 
 const init = {
   ...reset,
@@ -236,11 +232,9 @@ export function nav (state = init, { type, payload, meta, error }) {
         ...state,
         ...reset,
         mode: NAV.MODE.PROJECT,
+        view: PROJECT,
         tags: [],
-        ...payload,
-        view: (payload?.view?.name === 'activity')
-          ? activity(payload.view)
-          : (payload?.view ?? PROJECT)
+        ...payload
       }
 
     case cancel.type:
@@ -295,14 +289,10 @@ export function nav (state = init, { type, payload, meta, error }) {
   }
 }
 
-// The view of persisted nav state, also of legacy state
-// (list: -1 for unlisted, trash) without a view.
-// Busy activities do not outlive the window:
-// the view refers to the past activity of its type.
 function restoreView ({ view, list, trash }) {
   switch (view?.name) {
     case 'activity':
-      return activity({ type: view.type })
+      return { name: 'activity', type: view.type, id: restoreId(view.id) }
     case 'list':
     case 'unlisted':
     case 'trash':

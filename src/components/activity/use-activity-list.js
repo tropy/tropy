@@ -9,9 +9,9 @@ import {
 /*
  * The rows of the activity pane:
  * busy and past activities, sorted by sequential id,
- * past activities without an id (restored) last.
+ * restored past activities (negative ids) last.
  *
- * A past row keeps its key (id) in this session,
+ * Rows are keyed by type and id. A past activity keeps its key,
  * so React re-uses the component as it changes status.
  */
 export function useActivityList () {
@@ -27,7 +27,7 @@ export function useActivityList () {
 
   return [
     ...busy.map(activity => ({
-      key: activity.id,
+      key: `${activity.type}:${activity.id}`,
       id: activity.id,
       type: activity.type,
       status: 'busy',
@@ -38,7 +38,7 @@ export function useActivityList () {
       isSelected: activity === selected
     })),
     ...past.map(activity => ({
-      key: activity.id ?? activity.type,
+      key: `${activity.type}:${activity.id ?? ''}`,
       id: activity.id,
       type: activity.type,
       status: 'past',
@@ -50,5 +50,7 @@ export function useActivityList () {
   ].sort(byId)
 }
 
+const isRestored = ({ id }) => !(id > 0)
+
 const byId = (a, b) =>
-  (a.id == null) - (b.id == null) || (b.id ?? 0) - (a.id ?? 0)
+  isRestored(a) - isRestored(b) || (isRestored(a) ? 0 : b.id - a.id)
