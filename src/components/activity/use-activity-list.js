@@ -44,6 +44,7 @@ export function useActivityList () {
       status: 'past',
       count: activity.items?.length ?? 0,
       errors: activity.errors ?? 0,
+      isCancelled: !!activity.cancelled,
       hasItems: activity.items?.length > 0,
       isSelected: activity === selected
     }))

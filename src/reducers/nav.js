@@ -2,7 +2,7 @@ import { create, has, ids } from '../common/selection.js'
 import { array, merge, insert, omit, splice } from '../common/util.js'
 import { dc } from '../ontology/ns.js'
 import { expands } from '../common/search.js'
-import { cancel, dismiss, restoreId } from '../slices/activities.js'
+import { dismiss, restoreId } from '../slices/activities.js'
 
 import {
   EDIT,
@@ -236,14 +236,6 @@ export function nav (state = init, { type, payload, meta, error }) {
         tags: [],
         ...payload
       }
-
-    case cancel.type:
-      return (state.view.name !== 'activity' ||
-        state.view.id !== payload.id) ? state : {
-          ...state,
-          ...reset,
-          view: PROJECT
-        }
 
     case dismiss.type:
       return (state.view.name !== 'activity' ||

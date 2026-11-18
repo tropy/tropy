@@ -210,4 +210,16 @@ describe('Import items', () => {
       expect(consolidated()).to.eql([])
     })
   })
+
+  it('is cancelled when the file dialog is closed', async () => {
+    let cmd = new Import(act.item.import({}, { duplicate: 'import' }), {})
+    cmd.dialog = () => [] // Closed, as dialogs return then.
+
+    let files = await runSaga({ dispatch () {} }, function* () {
+      return yield * cmd.getFilesToImport()
+    }).toPromise()
+
+    expect(files).to.eql([])
+    expect(cmd.cancelled).to.be.true
+  })
 })

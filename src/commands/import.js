@@ -77,8 +77,14 @@ export class ImportCommand extends Command {
     let { payload, meta } = this.action
     let { files = [], urls = [] } = payload
 
-    if (!files.length && !urls.length && meta.prompt)
+    if (!files.length && !urls.length && meta.prompt) {
       files = yield * this.promptForFilesToImport(meta.prompt)
+
+      // Closing the dialog cancels the command: nothing was imported,
+      // so it is not recorded as a past activity either.
+      if (!files.length)
+        this.cancelled = true
+    }
 
     let json = files.filter(f => (/^\.json(ld)?$/i).test(extname(f)))
 

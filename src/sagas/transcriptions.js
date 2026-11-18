@@ -145,7 +145,8 @@ function *poll () {
       })
     }
   } finally {
-    // Not recorded: the batch did not finish.
+    // Teardown (e.g. the project closes): the batch did not finish,
+    // but is recorded with the items it showed (see activities keep).
     if (batch)
       yield put(done(batch.handle, null, { cancelled: true }))
 

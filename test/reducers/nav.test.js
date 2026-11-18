@@ -128,6 +128,11 @@ describe('Nav Reducer', () => {
       expect(has(dismissed.item, 1)).to.be.false
     })
 
+    it('keeps the view of a busy activity that is cancelled', () => {
+      let s = state({ view: { ...imports, id: 9 } })
+      expect(nav(s, cancel(9))).to.equal(s)
+    })
+
     it('keeps the view of an activity that is done (see selectActivity)', () => {
       let s = state({ view: { ...imports, id: 9 } })
       let done = { type: 'item.import', meta: { done: true, rel: 9 } }
@@ -139,13 +144,6 @@ describe('Nav Reducer', () => {
       expect(nav(s, dismiss('item.import', 8))).to.equal(s)
       expect(nav(s, dismiss('item.import', 9)).view)
         .to.eql({ name: 'project' })
-    })
-
-    it('returns to the project when the busy run shown is cancelled', () => {
-      let s = state({ view: { ...imports, id: 9 } })
-      expect(nav(s, cancel(8))).to.equal(s)
-      expect(nav(s, cancel(9)).view).to.eql({ name: 'project' })
-      expect(has(nav(s, cancel(9)).item, 1)).to.be.false
     })
 
     it('keeps a live run when its completed record is dismissed', () => {
