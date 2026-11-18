@@ -55,7 +55,7 @@ const completed = createSlice({
     restore (_, { payload, meta }) {
       let state = {}
 
-      // Drops the ids: their runs are gone, and ids repeat across sessions.
+      // Drop the id on restore, because activity ids are sequential.
       for (let record of Object.values(payload ?? {}))
         if (!isExpired(record, meta.now))
           state[record.type] = omit(record, ['id'])

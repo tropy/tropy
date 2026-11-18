@@ -57,7 +57,7 @@ describe('ActivityPane', () => {
       expect(container.querySelectorAll('.activity')).to.have.length(3)
     })
     expect([...container.querySelectorAll('.activity')]
-      .map(node => node.classList.contains('completed') ? 'done' : 'busy'))
+      .map(node => node.classList.contains('done') ? 'done' : 'busy'))
       .to.eql(['busy', 'busy', 'done'])
     expect(container.querySelector('.activity'))
       .to.have.text('Imported 1 of 5 items …')
@@ -164,12 +164,12 @@ describe('ActivityPane', () => {
 
     let { container } = render(<ActivityPane/>, withStore(store))
 
-    expect(container.querySelectorAll('.activity.completed')).to.have.length(1)
-    expect(container.querySelector('.activity.completed'))
+    expect(container.querySelectorAll('.activity.done')).to.have.length(1)
+    expect(container.querySelector('.activity.done'))
       .to.have.text('1 item imported, 2 failed')
 
     await waitFor(() => {
-      expect(container.querySelector('.activity.completed')).to.be.null
+      expect(container.querySelector('.activity.done')).to.be.null
     })
   })
 
@@ -191,13 +191,13 @@ describe('ActivityPane', () => {
     let { container } = render(<ActivityPane/>, withStore(store))
 
     await new Promise(resolve => setTimeout(resolve, 100))
-    expect(container.querySelector('.activity.completed'))
+    expect(container.querySelector('.activity.done'))
       .to.have.class('active')
 
     // Leaving the view leaves the expired record.
     store.dispatch({ type: 'nav.select', payload: { view: { name: 'trash' } } })
     await waitFor(() => {
-      expect(container.querySelector('.activity.completed')).to.be.null
+      expect(container.querySelector('.activity.done')).to.be.null
     })
   })
 
@@ -213,7 +213,7 @@ describe('ActivityPane', () => {
     let dispatch = mock.method(store, 'dispatch')
 
     let { container } = render(<ActivityPane/>, withStore(store))
-    fireEvent.click(container.querySelector('.activity.completed .btn'))
+    fireEvent.click(container.querySelector('.activity.done .btn'))
 
     expect(dispatch.mock.calls[0].arguments[0])
       .to.eql(dismiss('item.import'))
@@ -222,7 +222,7 @@ describe('ActivityPane', () => {
   it('shows the items of completed activities', () => {
     let now = Date.now()
     let record = (type, items) =>
-      ({ type, done: now, expires: now + 60000, items })
+      ({ type, id: 7, done: now, expires: now + 60000, items })
     let store = createStore({
       completed: {
         'item.import': record('item.import', [1]),
@@ -233,14 +233,46 @@ describe('ActivityPane', () => {
 
     let { container } = render(<ActivityPane/>, withStore(store))
     let [withItems, withoutItems] =
-      container.querySelectorAll('.activity.completed')
+      container.querySelectorAll('.activity.done')
+
+    fireEvent.click(withoutItems)
+    expect(dispatch.mock.callCount()).to.equal(0)
+
+    // The completed record, not its (finished) run.
+    fireEvent.click(withItems)
+    expect(dispatch.mock.calls[0].arguments[0].payload)
+      .to.eql({ view: { name: 'activity', type: 'item.import', id: null } })
+  })
+
+  it('shows the items of busy activities', async () => {
+    let store = createStore({
+      activities: {
+        1: activity(1, Date.now() - 1000),
+        2: activity(2, Date.now() - 1000, { items: [3] })
+      }
+    })
+    store.dispatch({
+      type: 'nav.select',
+      payload: { view: { name: 'activity', type: 'test', id: 2 } }
+    })
+    let dispatch = mock.method(store, 'dispatch')
+
+    let { container } = render(<ActivityPane/>, withStore(store))
+    await waitFor(() => {
+      expect(container.querySelectorAll('.activity.busy')).to.have.length(2)
+    })
+    let [withItems, withoutItems] =
+      container.querySelectorAll('.activity.busy')
+
+    expect(withItems).to.have.class('active')
+    expect(withoutItems).not.to.have.class('active')
 
     fireEvent.click(withoutItems)
     expect(dispatch.mock.callCount()).to.equal(0)
 
     fireEvent.click(withItems)
     expect(dispatch.mock.calls[0].arguments[0].payload)
-      .to.eql({ view: { name: 'activity', type: 'item.import' } })
+      .to.eql({ view: { name: 'activity', type: 'test', id: 2 } })
   })
 
   it('dismisses without selecting', () => {
@@ -258,7 +290,7 @@ describe('ActivityPane', () => {
     let dispatch = mock.method(store, 'dispatch')
 
     let { container } = render(<ActivityPane/>, withStore(store))
-    fireEvent.click(container.querySelector('.activity.completed .btn'))
+    fireEvent.click(container.querySelector('.activity.done .btn'))
 
     expect(dispatch.mock.callCount()).to.equal(1)
     expect(dispatch.mock.calls[0].arguments[0])

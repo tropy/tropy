@@ -1,81 +1,84 @@
-import {
-  IconCheckmarkCircleSmall,
-  IconSpin,
-  IconXCircleSmall
-} from '../icons.js'
 import { FormattedMessage } from 'react-intl'
 import cx from 'classnames'
 import { Button } from '../button.js'
+import { Icon } from '../icons.js'
 
 
 export const Activity = ({
   id,
   type,
+  status,
   progress,
   total,
+  count,
+  errors,
   canCancel,
-  onCancel
+  hasItems,
+  isActive,
+  onCancel,
+  onDismiss,
+  onSelect
 }) => {
-  let hasProgressBar = (progress > 0)
-  let hasCancelButton = canCancel && typeof onCancel === 'function'
+  let isBusy = (status === 'busy')
+  let hasProgressBar = isBusy && progress > 0
 
   return (
-    <div className={cx('activity', { type })}>
+    <div
+      className={cx('activity', status, {
+        active: isActive,
+        link: hasItems
+      })}
+      onClick={hasItems
+        ? () => onSelect(type, isBusy ? id : null)
+        : null
+      }>
       <div className="activity-container">
         <div className="flex-row center">
-          {!hasProgressBar && <IconSpin/>}
-          <div className="activity-text">
-            <FormattedMessage
-              id={`activity.${type}`}
-              values={{ progress: progress - 1, total, hasProgressBar }}/>
-          </div>
-          {hasCancelButton && (
-            <Button
-              icon={<IconXCircleSmall/>}
-              noFocus
+          {isBusy && !hasProgressBar && <Icon name="Spin"/>}
+          <ActivityText
+            type={type}
+            isBusy={isBusy}
+            values={isBusy ?
+              { progress: progress - 1, total, hasProgressBar } :
+              { count, errors }}/>
+          {isBusy ? canCancel && (
+            <ActivityAction
+              icon="XCircleSmall"
               onClick={() => onCancel(id)}/>
+          ) : (
+            <ActivityAction
+              icon="CheckmarkCircleSmall"
+              onClick={() => onDismiss(type)}/>
           )}
         </div>
         {hasProgressBar && (
-          <div className="flex-row center">
-            <progress value={progress - 1} max={total}/>
-          </div>
+          <ActivityProgress progress={progress} total={total}/>
         )}
       </div>
     </div>
   )
 }
 
-export const CompletedActivity = ({
-  type,
-  count,
-  errors,
-  isActive,
-  onDismiss,
-  onSelect
-}) => (
-  <div
-    className={cx('activity', 'completed', {
-      type,
-      active: isActive,
-      link: count > 0
-    })}
-    onClick={count > 0 ? () => onSelect(type) : null}>
-    <div className="activity-container">
-      <div className="flex-row center">
-        <div className="activity-text">
-          <FormattedMessage
-            id={`activity.completed.${type}`}
-            values={{ count, errors }}/>
-        </div>
-        <Button
-          icon={<IconCheckmarkCircleSmall/>}
-          noFocus
-          onClick={(event) => {
-            event.stopPropagation()
-            onDismiss(type)
-          }}/>
-      </div>
-    </div>
+const ActivityText = ({ type, isBusy, values }) => (
+  <div className="activity-text">
+    <FormattedMessage
+      id={isBusy ? `activity.${type}` : `activity.completed.${type}`}
+      values={values}/>
+  </div>
+)
+
+const ActivityAction = ({ icon, onClick }) => (
+  <Button
+    icon={icon}
+    noFocus
+    onClick={(event) => {
+      event.stopPropagation()
+      onClick()
+    }}/>
+)
+
+const ActivityProgress = ({ progress, total }) => (
+  <div className="flex-row center">
+    <progress value={progress - 1} max={total}/>
   </div>
 )

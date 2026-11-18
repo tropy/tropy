@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { useDispatch } from 'react-redux'
 import cx from 'classnames'
-import { Activity, CompletedActivity } from './activity.js'
+import { Activity } from './activity.js'
 import { useActivityList } from './use-activity-list.js'
 import { useEvent } from '../../hooks/use-event.js'
 import * as act from '../../actions/index.js'
@@ -18,32 +18,23 @@ export const ActivityPane = memo(() => {
     dispatch(act.completed.dismiss(type))
   }
 
-  let handleSelect = (type) => {
+  let handleSelect = (type, id) => {
     dispatch(act.nav.select({
-      view: { name: 'activity', type }
-    }, { throttle: true }))
+      view: { name: 'activity', type, id }
+    }))
   }
 
   return (
     <div
-      className={cx('activity-pane', { busy: activities.length > 0 })}
+      className={cx('activity-pane', {
+        busy: activities.length > 0
+      })}
       tabIndex={-1}>
-      {activities.map(row => (row.status === 'busy') ? (
+      {activities.map(({ key, ...props }) => (
         <Activity
-          key={row.key}
-          id={row.key}
-          type={row.type}
-          progress={row.progress}
-          total={row.total}
-          canCancel={row.canCancel}
-          onCancel={handleCancel}/>
-      ) : (
-        <CompletedActivity
-          key={row.key}
-          type={row.type}
-          count={row.count}
-          errors={row.errors}
-          isActive={row.isActive}
+          key={key}
+          {...props}
+          onCancel={handleCancel}
           onDismiss={handleDismiss}
           onSelect={handleSelect}/>
       ))}

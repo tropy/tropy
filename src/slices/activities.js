@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { pick } from '../common/util.js'
 import { done } from './cmd.js'
 
@@ -114,6 +114,14 @@ const activities = createSlice({
       })
   }
 })
+
+export const selectActivities = createSelector(
+  ({ activities }) => activities,
+  (activities) =>
+    Object.values(activities)
+      .filter(a => !a.hidden)
+      .sort((a, b) => b.id - a.id)
+)
 
 export const {
   cancel,
