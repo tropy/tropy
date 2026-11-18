@@ -43,7 +43,7 @@ export class Duplicate extends Command {
           put(act.transcriptions.insert(transcriptions)),
           put(act.selection.insert(selections)),
           put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
-          put(act.activity.update(this.action, { total, progress: i + 1 }))
+          put(act.activities.update(this.action, { total, progress: i + 1 }))
         ])
 
         photos.push(photo.id)

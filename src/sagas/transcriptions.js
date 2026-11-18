@@ -2,6 +2,7 @@ import {
   create, insert, load, collect, remove, restore, update
 } from '../slices/transcriptions.js'
 import * as activity from '../slices/activities.js'
+import { putActivityUpdate } from './activity.js'
 import { done } from '../slices/cmd.js'
 import { OnlineChannel } from './online.js'
 import { getPendingTranscriptions } from '../selectors/transcriptions.js'
@@ -72,10 +73,35 @@ export function *track (batch, pending) {
 
   if (total !== size || progress !== batch.progress) {
     batch.progress = progress
-    yield put(activity.update(batch.handle, { total, progress }))
+    yield* putActivityUpdate(batch.handle, {
+      total,
+      progress,
+      items: yield select(getBatchItems, batch.seen)
+    })
   }
 
   return batch
+}
+
+// The item of a transcription (of a photo or a selection), if any.
+const getItem = (state, tr) => (
+  state.photos[tr.parent] ??
+  state.photos[state.selections[tr.parent]?.photo]
+)?.item
+
+// The items being transcribed in a batch, pending or not.
+function getBatchItems (state, ids) {
+  let items = new Set()
+
+  for (let id of ids) {
+    let tr = state.transcriptions[id]
+    let item = tr && getItem(state, tr)
+
+    if (item != null)
+      items.add(item)
+  }
+
+  return [...items]
 }
 
 // The items of a batch's finished transcriptions
@@ -95,11 +121,10 @@ function getBatchResult (state, ids) {
       continue
     }
 
-    let photo = state.photos[tr.parent] ??
-      state.photos[state.selections[tr.parent]?.photo]
+    let item = getItem(state, tr)
 
-    if (photo != null)
-      items.add(photo.item)
+    if (item != null)
+      items.add(item)
   }
 
   return { items: [...items], errors }

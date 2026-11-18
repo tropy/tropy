@@ -8,7 +8,10 @@ const busy = (id, props) => ({
 
 const renderStatus = async (...activities) => {
   let store = createStore({
-    activities: Object.fromEntries(activities.map(a => [a.id, a]))
+    activities: {
+      busy: Object.fromEntries(activities.map(a => [a.id, a])),
+      past: {}
+    }
   })
   let { container } = render(<ActivityStatus/>, withStore(store))
 
@@ -60,13 +63,16 @@ describe('ActivityStatus', () => {
     expect(icon).to.have.attribute('title', '2 activities in progress …')
   })
 
-  it('renders the agent of the last completed activity', async () => {
+  it('renders the agent of the last past activity', async () => {
     let now = Date.now()
     let record = (type, done, agent) =>
       ({ type, done, expires: now + 60000, agent })
     let status = (...records) => render(<ActivityStatus/>, withStore(
       createStore({
-        completed: Object.fromEntries(records.map(r => [r.type, r]))
+        activities: {
+          busy: {},
+          past: Object.fromEntries(records.map(r => [r.type, r]))
+        }
       })
     )).container.querySelector('.icon')
 

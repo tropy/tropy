@@ -261,12 +261,15 @@ describe('search saga', () => {
     expect(payload.items).to.eql([1, 2])
   })
 
-  it('searches the items of the completed activity shown', () => {
+  it('searches the items of the past activity shown', () => {
     let s = state({ matches: null })
     s.nav.view = { name: 'activity', type: 'item.import' }
     s.nav.tags = [5]
-    s.completed = {
-      'item.import': { type: 'item.import', items: [1, 2], expires: Infinity }
+    s.activities = {
+      busy: {},
+      past: {
+        'item.import': { type: 'item.import', items: [1, 2], expires: Infinity }
+      }
     }
 
     let { calls } = run(search(null), {
@@ -281,12 +284,15 @@ describe('search saga', () => {
       .to.eql({ ids: [1, 2], tags: [5] })
   })
 
-  it('keeps no deleted items of the completed activity shown', () => {
+  it('keeps no deleted items of the past activity shown', () => {
     // Item 3 is selected but was moved to the trash.
     let s = state({ matches: null }, '', [3])
     s.nav.view = { name: 'activity', type: 'item.import' }
-    s.completed = {
-      'item.import': { type: 'item.import', items: [1, 2, 3], expires: Infinity }
+    s.activities = {
+      busy: {},
+      past: {
+        'item.import': { type: 'item.import', items: [1, 2, 3], expires: Infinity }
+      }
     }
     s.items[3] = { ...s.items[3], deleted: true }
 
@@ -304,8 +310,11 @@ describe('search saga', () => {
   it('keeps the items of an expired activity while shown', () => {
     let s = state({ matches: null })
     s.nav.view = { name: 'activity', type: 'item.import' }
-    s.completed = {
-      'item.import': { type: 'item.import', items: [1], expires: Date.now() - 1 }
+    s.activities = {
+      busy: {},
+      past: {
+        'item.import': { type: 'item.import', items: [1], expires: Date.now() - 1 }
+      }
     }
 
     let { calls } = run(search(null), {
@@ -322,7 +331,7 @@ describe('search saga', () => {
   it('finds no items for an activity that is gone', () => {
     let s = state({ matches: null }, '', [1])
     s.nav.view = { name: 'activity', type: 'item.import' }
-    s.completed = {}
+    s.activities = { busy: {}, past: {} }
 
     let { calls, puts: [{ payload }] } = run(search(null), {
       state: s,
@@ -337,12 +346,14 @@ describe('search saga', () => {
     expect(payload.matches).to.eql({})
   })
 
-  it('searches the items of a live run, not the completed one', () => {
+  it('searches the items of a busy run, not the past one', () => {
     let s = state({ matches: null })
     s.nav.view = { name: 'activity', type: 'item.import', id: 9 }
-    s.activities = { 9: { id: 9, type: 'item.import', items: [3] } }
-    s.completed = {
-      'item.import': { type: 'item.import', items: [1, 2], expires: Infinity }
+    s.activities = {
+      busy: { 9: { id: 9, type: 'item.import', items: [3] } },
+      past: {
+        'item.import': { type: 'item.import', items: [1, 2], expires: Infinity }
+      }
     }
 
     let { calls } = run(search(null), {
