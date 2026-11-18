@@ -1,34 +1,37 @@
 import { createSelector, createSlice, lruMemoize } from '@reduxjs/toolkit'
+import { omit } from '../common/util.js'
 
 /*
  * Completed Activities:
  * the last completed run of each activity type.
  *
  * Activities are recorded on their done action,
- * and kept one day if:
+ * and kept one day if they qualify the `keep` condition.
  */
 
 export const isExpired = (record, now) =>
   !(record.expires >= now)
 
 const keep = ({ meta }) =>
-  !!meta?.done && !meta.cancelled && !meta.hidden &&
-  !!(meta.items || meta.agent || meta.history)
+  !!meta?.done && !meta.cancelled && !meta.hidden && !!(
+    meta.items || meta.agent || meta.history
+  )
 
-function record ({ type, error, meta }) {
-  let rec = {
+function preserve ({ type, error, meta }) {
+  let record = {
     type,
+    seq: meta.rel,
     done: meta.now,
     expires: meta.now + 24 * 60 * 60 * 1000
   }
 
   let errors = meta.errors || (error ? 1 : 0)
 
-  if (meta.agent) rec.agent = meta.agent
-  if (errors) rec.errors = errors
-  if (meta.items) rec.items = meta.items
+  if (meta.agent) record.agent = meta.agent
+  if (errors) record.errors = errors
+  if (meta.items) record.items = meta.items
 
-  return rec
+  return record
 }
 
 const completed = createSlice({
@@ -36,24 +39,26 @@ const completed = createSlice({
   initialState: {},
 
   reducers: {
-    // Searches: the record may be the view's (see reducers/nav.js).
     dismiss: {
       prepare: (type, meta) => ({
         payload: type,
-        meta: { search: true, ...meta }
+        meta: {
+          search: true,
+          ...meta
+        }
       }),
       reducer (state, { payload: type }) {
         delete state[type]
       }
     },
 
-    // Replaces the records, as the window may switch projects.
     restore (_, { payload, meta }) {
       let state = {}
 
-      for (let rec of Object.values(payload ?? {}))
-        if (!isExpired(rec, meta.now))
-          state[rec.type] = rec
+      // On restore, keep only if not expired, drop seq.
+      for (let record of Object.values(payload ?? {}))
+        if (!isExpired(record, meta.now))
+          state[record.type] = omit(record, ['seq'])
 
       return state
     }
@@ -61,7 +66,7 @@ const completed = createSlice({
 
   extraReducers: (builder) => {
     builder.addMatcher(keep, (state, action) => {
-      state[action.type] = record(action)
+      state[action.type] = preserve(action)
     })
   }
 })
