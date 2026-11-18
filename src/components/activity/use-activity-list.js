@@ -5,21 +5,21 @@ import { useNow, useTick } from './clock.js'
 
 /*
  * The rows of the activity pane:
- * busy activities, newest first,
- * then completed ones, most recent first.
+ * busy and past activities, sorted by sequential id,
+ * past activities without an id (restored) last.
  *
- * A completed row keeps its key (id) in this session,
+ * A past row keeps its key (id) in this session,
  * so React re-uses the component as it changes status.
  */
 export function useActivityList () {
   let now = useNow()
   let busy = useBusyActivities()
-  let done = useSelector(state => selectPastActivities(state, now))
+  let past = useSelector(state => selectPastActivities(state, now))
   let view = useSelector(state => state.nav.view)
 
   // Re-render when the next record expires
   useTick(Math.min(
-    ...done.map(a => a.expires).filter(exp => exp > now)
+    ...past.map(a => a.expires).filter(exp => exp > now)
   ), now)
 
   let isActive = (type, id = null) =>
@@ -37,15 +37,18 @@ export function useActivityList () {
       hasItems: items?.length > 0,
       isActive: isActive(type, id)
     })),
-    ...done.map(({ id, type, items, errors }) => ({
+    ...past.map(({ id, type, items, errors }) => ({
       key: id ?? type,
       id,
       type,
-      status: 'done',
+      status: 'past',
       count: items?.length ?? 0,
       errors: errors ?? 0,
       hasItems: items?.length > 0,
       isActive: isActive(type)
     }))
-  ]
+  ].sort(byId)
 }
+
+const byId = (a, b) =>
+  (a.id == null) - (b.id == null) || (b.id ?? 0) - (a.id ?? 0)
