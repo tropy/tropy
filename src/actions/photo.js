@@ -158,7 +158,7 @@ export default {
           note,
           item
         },
-        meta: { log: 'trace', ...meta }
+        meta: { log: 'trace', history: true, ...meta }
       })
     }
   },

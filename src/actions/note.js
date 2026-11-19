@@ -89,7 +89,7 @@ export default {
       dispatch({
         type: NOTE.SELECT,
         payload: { note, photo, item, selection },
-        meta: { log: 'trace', ...meta }
+        meta: { log: 'trace', history: true, ...meta }
       })
     }
   },

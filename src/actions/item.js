@@ -158,7 +158,7 @@ export default {
       dispatch({
         type: ITEM.SELECT,
         payload: { item, photo, note },
-        meta: { log: 'trace', ...meta }
+        meta: { log: 'trace', history: true, ...meta }
       })
     }
   },
@@ -167,7 +167,7 @@ export default {
     return {
       type: ITEM.OPEN,
       payload,
-      meta: { cmd: 'project', ...meta }
+      meta: { cmd: 'project', history: true, ...meta }
     }
   },
 
