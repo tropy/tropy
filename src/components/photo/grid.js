@@ -27,8 +27,8 @@ export const PhotoGrid = (props) => {
     open () {
       iterator.open(iterator.current())
     },
-    preview () {
-      iterator.preview(iterator.current())
+    preview (event) {
+      iterator.preview(event.shiftKey ? -1 : 1)
     },
     delete () {
       iterator.remove(iterator.current())

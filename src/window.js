@@ -14,6 +14,7 @@ import { createDialogService } from './dialog.js'
 import * as json from './common/json.js'
 import * as sharp from './image/sharp.js'
 import { WindowControls } from './window-controls.js'
+import { QuickLook } from './quicklook.js'
 import { resetAccessToken } from './account.js'
 
 import {
@@ -50,6 +51,8 @@ export class Window extends EventEmitter {
     sharp,
     window: this
   })
+
+  quicklook = new QuickLook(this)
 
   dialog
   store
@@ -225,6 +228,9 @@ export class Window extends EventEmitter {
       })
       .on('idle', (_, state) => {
         this.emit('idle', state)
+      })
+      .on('quicklook', (_, { isVisible }) => {
+        this.quicklook.setVisible(isVisible)
       })
       .on('print', (_, data) => {
         this.emit('print', data)
@@ -497,10 +503,6 @@ export class Window extends EventEmitter {
 
   get isResizeAnimated () {
     return darwin && ARGS.motion
-  }
-
-  preview (file) {
-    this.send('preview', file)
   }
 
   send (type, ...params) {

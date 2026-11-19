@@ -10,6 +10,7 @@ import { blank } from '../../common/util.js'
 import { getItemSelection } from '../../selectors/index.js'
 import { selectItemSequence } from '../../slices/qr.js'
 import * as act from '../../actions/index.js'
+import { usePhotoPreview } from '../photo/use-photo-preview.js'
 
 // The item list container logic shared by grid and table:
 // selects the items and the selection, navigates them
@@ -26,6 +27,7 @@ export function useItemIterator ({
   onItemImport
 }, { edit, onSelectedClick, tabIndex }) {
   let dispatch = useDispatch()
+  let preview = usePhotoPreview()
   let scroll = useRef()
 
   let items = useSelector(selectItemSequence)
@@ -122,10 +124,8 @@ export function useItemIterator ({
       open ({ cursor }) {
         open(cursor.current())
       },
-      preview ({ cursor }) {
-        let item = data[cursor.current()]
-        if (item != null)
-          dispatch(act.item.preview({ id: item.id, photos: item.photos }))
+      preview (_, event) {
+        preview(event.shiftKey ? -1 : 1)
       },
       clear: clearSelection,
       delete ({ cursor }) {

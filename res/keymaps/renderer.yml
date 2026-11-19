@@ -54,7 +54,9 @@ linux: &linux
   ActivityPane: &ActivityPane
     clear: Escape
   ItemIterator: &ItemIterator
-    preview: Space
+    preview:
+      - Space
+      - Shift+Space
     open: Enter
     edit: F2
     clear: Escape
@@ -71,6 +73,9 @@ linux: &linux
     merge: Ctrl+Shift+M
   PhotoIterator: &PhotoIterator
     open: Enter
+    preview:
+      - Space
+      - Shift+Space
     edit: F2
     delete:
       - Backspace
@@ -175,7 +180,9 @@ darwin:
     edit: Enter
   ActivityPane: *ActivityPane
   ItemIterator:
-    preview: Space
+    preview:
+      - Space
+      - Shift+Space
     open:
       - Cmd+ArrowDown
       - Cmd+ArrowRight
@@ -196,7 +203,9 @@ darwin:
       - Backspace
       - Delete
     enter: Enter
-    preview: Space
+    preview:
+      - Space
+      - Shift+Space
     contract: Escape
     copyPhoto:
       - CmdOrCtrl+Shift+C
