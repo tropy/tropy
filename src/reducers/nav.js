@@ -73,7 +73,7 @@ export function nav (state = init, { type, payload, meta, error }) {
     }
 
     case LIST.REMOVE: {
-      return (state.view.name !== 'list' || state.view.id !== payload) ?
+      return !views.isList(state.view, payload) ?
         state : {
           ...state,
           ...reset,
@@ -218,9 +218,8 @@ export function nav (state = init, { type, payload, meta, error }) {
       }
 
     case dismiss.type:
-      return (state.view.name !== 'activity' ||
-        state.view.type !== payload.type ||
-        (state.view.id != null && state.view.id !== payload.id)) ? state : {
+      return !views.isActivity(state.view, payload.type, payload.id) ?
+        state : {
           ...state,
           ...reset,
           view: views.project()
