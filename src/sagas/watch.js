@@ -5,7 +5,7 @@ import * as act from '../actions/index.js'
 import { Watcher } from '../common/watch.js'
 import { debug, info, warn } from '../common/log.js'
 import { IMAGE, PROJECT } from '../constants/index.js'
-import { Storage } from '../storage.js'
+import { Storage } from '../storage/index.js'
 
 const ignored = (path, stats) =>
   stats?.isFile() && !IMAGE.EXT.includes(

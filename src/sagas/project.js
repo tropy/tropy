@@ -27,7 +27,7 @@ import { transcribe } from './transcriptions.js'
 import ARGS, { update } from '../args.js'
 import { create, open as openProject } from '../common/project.js'
 import { Migrations, Resource, Schema } from '../res.js'
-import { Storage } from '../storage.js'
+import { Storage } from '../storage/index.js'
 
 import '../commands/index.js'
 
@@ -81,6 +81,8 @@ export function *open (opts, action) {
     })
 
     yield fork(handleDatabaseErrors, db, dbErrorActions)
+
+    Storage.migrate('project', project.id)
 
     project.watch = Storage.load('project.watch', project.id) || {}
     project.optimize = Storage.load('project.optimize', project.id) ?? {}

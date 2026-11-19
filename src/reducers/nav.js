@@ -55,17 +55,10 @@ const init = {
 export function nav (state = init, { type, payload, meta, error }) {
   switch (type) {
     case NAV.RESTORE: {
-      let { items, ...nav } = omit(payload || {}, [
-        'query', 'tags', 'view', 'list', 'trash', 'activity', 'imports'
-      ])
-      let state = merge(init, nav)
+      let state = merge(init, omit(payload || {}, ['query', 'tags', 'view']))
 
-      state.view = restoreView(payload || {})
-
-      // Restore item selection from legacy `items` array or previous state
-      state.item = items
-        ? create(items)
-        : create(ids(state.item), state.item)
+      state.view = restoreView(payload?.view)
+      state.item = create(ids(state.item), state.item)
 
       return state
     }
@@ -281,7 +274,7 @@ export function nav (state = init, { type, payload, meta, error }) {
   }
 }
 
-function restoreView ({ view, list, trash }) {
+function restoreView (view) {
   switch (view?.name) {
     case 'activity':
       return { name: 'activity', type: view.type, id: restoreId(view.id) }
@@ -290,13 +283,9 @@ function restoreView ({ view, list, trash }) {
     case 'trash':
     case 'project':
       return view
+    default:
+      return PROJECT
   }
-
-  if (trash) return { name: 'trash' }
-  if (list === -1) return { name: 'unlisted' }
-  if (list > 0) return { name: 'list', id: list }
-
-  return PROJECT
 }
 
 // TODO remove when tag list uses new selections
