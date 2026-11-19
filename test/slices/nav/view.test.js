@@ -1,6 +1,6 @@
-import { listOf, sortKey } from '#tropy/selectors/nav.js'
+import { listOf, sortKey } from '#tropy/slices/nav/view.js'
 
-describe('nav selectors', () => {
+describe('nav view', () => {
   it('has a list only for lists', () => {
     expect(listOf({ name: 'list', id: 3 })).to.equal(3)
     expect(listOf({ name: 'unlisted' })).to.be.null

@@ -3,6 +3,7 @@ import { parse } from '../common/search.js'
 import { createMatcher } from '../common/matcher.js'
 import { NAV } from '../constants/index.js'
 import { createMetaReducer } from './util.js'
+import * as views from './nav/view.js'
 
 const qr = createSlice({
   name: 'qr',
@@ -47,7 +48,7 @@ export const selectItemSequence = (state) =>
 export const selectViewOf = (state, id) =>
   (state.qr.matches == null || state.qr.matches[id]) ?
     null :
-    { view: { name: state.items[id]?.deleted ? 'trash' : 'project' }, query: '' }
+    { view: state.items[id]?.deleted ? views.trash() : views.project(), query: '' }
 
 // The parsed search query: { terms, errors } (see common/search.js).
 export const selectQuery = memo(

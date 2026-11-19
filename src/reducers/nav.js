@@ -2,7 +2,8 @@ import { create, has, ids } from '../common/selection.js'
 import { array, merge, insert, omit, splice } from '../common/util.js'
 import { dc } from '../ontology/ns.js'
 import { expands } from '../common/search.js'
-import { dismiss, restoreId } from '../slices/activities.js'
+import { dismiss } from '../slices/activities.js'
+import * as views from '../slices/nav/view.js'
 
 import {
   EDIT,
@@ -21,24 +22,10 @@ const reset = {
   note: null
 }
 
-/*
- * The view (nav.view): what the item results are drawn from,
- * filtered by tags and query.
- *   { name: 'project' }               all items (the default)
- *   { name: 'list', id }              the items in a list
- *   { name: 'unlisted' }              the items in no list
- *   { name: 'trash' }                 the deleted items
- *   { name: 'activity', type, id }    the items of an activity
- *                                     (see selectActivity): the busy
- *                                     one with that id, else the past
- *                                     one of its type.
- */
-const PROJECT = { name: 'project' }
-
 const init = {
   ...reset,
   mode: NAV.MODE.PROJECT,
-  view: PROJECT,
+  view: views.project(),
   query: '',
   tags: [],
   sort: {},
@@ -57,7 +44,7 @@ export function nav (state = init, { type, payload, meta, error }) {
     case NAV.RESTORE: {
       let state = merge(init, omit(payload || {}, ['query', 'tags', 'view']))
 
-      state.view = restoreView(payload?.view)
+      state.view = views.restore(payload?.view)
       state.item = create(ids(state.item), state.item)
 
       return state
@@ -90,14 +77,14 @@ export function nav (state = init, { type, payload, meta, error }) {
         state : {
           ...state,
           ...reset,
-          view: PROJECT
+          view: views.project()
         }
     }
     case LIST.COLLAPSE: {
       return !meta.select ? state : {
         ...state,
         ...reset,
-        view: { name: 'list', id: payload }
+        view: views.list(payload)
       }
     }
     case LIST.ITEM.REMOVE: {
@@ -176,7 +163,7 @@ export function nav (state = init, { type, payload, meta, error }) {
       return {
         ...state,
         ...(isNarrowing ? reset : null),
-        ...(isTrash ? { view: PROJECT } : null),
+        ...(isTrash ? { view: views.project() } : null),
         tags
       }
     }
@@ -225,7 +212,7 @@ export function nav (state = init, { type, payload, meta, error }) {
         ...state,
         ...reset,
         mode: NAV.MODE.PROJECT,
-        view: PROJECT,
+        view: views.project(),
         tags: [],
         ...payload
       }
@@ -236,7 +223,7 @@ export function nav (state = init, { type, payload, meta, error }) {
         (state.view.id != null && state.view.id !== payload.id)) ? state : {
           ...state,
           ...reset,
-          view: PROJECT
+          view: views.project()
         }
 
     case NAV.COLUMN.INSERT:
@@ -271,20 +258,6 @@ export function nav (state = init, { type, payload, meta, error }) {
 
     default:
       return state
-  }
-}
-
-function restoreView (view) {
-  switch (view?.name) {
-    case 'activity':
-      return { name: 'activity', type: view.type, id: restoreId(view.id) }
-    case 'list':
-    case 'unlisted':
-    case 'trash':
-    case 'project':
-      return view
-    default:
-      return PROJECT
   }
 }
 

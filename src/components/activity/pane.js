@@ -5,6 +5,7 @@ import { Activity } from './activity.js'
 import { useActivityList } from './use-activity-list.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 import * as act from '../../actions/index.js'
+import * as views from '../../slices/nav/view.js'
 
 export const ActivityPane = memo(() => {
   let dispatch = useDispatch()
@@ -23,14 +24,12 @@ export const ActivityPane = memo(() => {
     dispatch(act.activities.dismiss(type, id))
   }
   let handleSelect = (type, id) => {
-    dispatch(act.nav.select({
-      view: { name: 'activity', type, id }
-    }))
+    dispatch(act.nav.select({ view: views.activity(type, id) }))
   }
 
   let handleKeyDown = useKeyMap('ActivityPane', isActivityView && {
     clear () {
-      dispatch(act.nav.select({ view: { name: 'project' } }))
+      dispatch(act.nav.select({ view: views.project() }))
     }
   })
 

@@ -5,10 +5,11 @@ import { prompt } from '../../dialog.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
 
+import { listOf } from '../../slices/nav/view.js'
+
 import {
   getItemTemplate,
-  getTemplateValues,
-  listOf
+  getTemplateValues
 } from '../../selectors/index.js'
 
 
