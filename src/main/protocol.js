@@ -96,7 +96,7 @@ const ROUTES = Object.freeze([
       }
     })
   }, ({ q = '' }, win) =>
-    win.dispatch(act.nav.select({ query: q }))),
+    win.dispatch(act.nav.show({ view: { name: 'project' }, query: q }))),
 
   projectRoute('/:urlId/items/:item{/:photo}?{/:selection}?', {
     operationId: 'tropy.item',
@@ -115,7 +115,7 @@ const ROUTES = Object.freeze([
     summary: 'Show a list (not verified)',
     params: object({ urlId, list: id }, ['urlId', 'list'])
   }, ({ list }, win) =>
-    win.dispatch(act.nav.select({
+    win.dispatch(act.nav.show({
       view: { name: 'list', id: list },
       query: ''
     }))),
@@ -125,14 +125,16 @@ const ROUTES = Object.freeze([
     summary: 'Show the items with a tag (not verified)',
     params: object({ urlId, tag: id }, ['urlId', 'tag'])
   }, ({ tag }, win) =>
-    win.dispatch(act.nav.select({ tags: [tag], query: '' }))),
+    win.dispatch(act.nav.show({
+      view: { name: 'project' }, tags: [tag], query: ''
+    }))),
 
   projectRoute('/:urlId/trash', {
     operationId: 'tropy.trash',
     summary: 'Show the trash',
     params: object({ urlId }, ['urlId'])
   }, (args, win) =>
-    win.dispatch(act.nav.select({ view: { name: 'trash' }, query: '' }))),
+    win.dispatch(act.nav.show({ view: { name: 'trash' }, query: '' }))),
 
   windowRoute('(prefs|preferences)', {
     operationId: 'tropy.preferences',

@@ -32,7 +32,8 @@ export default {
     }
   },
 
-  select (payload, meta) {
+  // Shows a view: { view, query, tags }.
+  show (payload, meta) {
     return {
       type: NAV.SELECT,
       payload,
