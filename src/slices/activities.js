@@ -167,11 +167,12 @@ const activities = createSlice({
       }
     },
 
+    // Restores the past activities shown in the pane (with items).
     restore (state, { payload, meta }) {
       let past = {}
 
       for (let record of Object.values(payload?.past ?? {}))
-        if (!isExpired(record, meta.now))
+        if (record.items != null && !isExpired(record, meta.now))
           past[record.type] = {
             ...record,
             id: restoreId(record.id)

@@ -190,10 +190,11 @@ describe('past activities', () => {
     expect(Object.keys(reducer(state, dismiss('a')).past)).to.eql(['b'])
   })
 
-  it('drops expired records on restore', () => {
+  it('restores live records with items', () => {
     let state = reduce(
       run('a', { now: 200, items: [] }),
-      run('b', { now: 900, items: [] }))
+      run('b', { now: 900, items: [] }),
+      run('c', { now: 900 }))
     let action = { ...restore(state), meta: { now: 500 + DAY } }
     expect(Object.keys(reducer(undefined, action).past)).to.eql(['b'])
   })
