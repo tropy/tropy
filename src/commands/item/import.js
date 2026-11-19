@@ -9,7 +9,7 @@ import { extractPdfEmbeddedFiles } from '../../image/pdf.js'
 import { fromHTML } from '../../editor/serialize.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
-import { ITEM, MIME, NAV, SASS } from '../../constants/index.js'
+import { ITEM, MIME, SASS } from '../../constants/index.js'
 import { sample } from '../../common/util.js'
 import win from '../../window.js'
 
@@ -49,7 +49,6 @@ export class Import extends ImportCommand {
     yield * this.configure()
 
     yield this.progress({ progress: 0 })
-    yield put(act.nav.update({ mode: NAV.MODE.PROJECT, query: '' }))
 
     if (meta.plugin) {
       yield call(win.plugins.exec, {
