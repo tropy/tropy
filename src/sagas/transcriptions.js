@@ -46,10 +46,8 @@ export function *track (batch, pending) {
     // Pending transcriptions are left when the account was unlinked:
     // the batch ends all the same, as it was not cancelled.
     // Its items are those shown while busy, pending or not.
-    // Searches: the batch's items may be shown (an activity view).
     if (batch) {
       yield put(done(batch.handle, null, {
-        search: true,
         items: yield select(getBatchItems, batch.seen),
         errors: yield select(getBatchErrors, batch.seen)
       }))
