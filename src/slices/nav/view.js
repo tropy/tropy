@@ -20,6 +20,18 @@ export const listOf = (view) =>
 export const sortKey = (view) =>
   listOf(view) ?? LIST.ROOT
 
+export const isList = (view, id) =>
+  view?.name === 'list' && view.id === id
+
+export const isActivity = (view, type, id) => {
+  if (view?.name !== 'activity')
+    return false
+  if (view.type !== type)
+    return false
+  else
+    return (view.id == null || view.id === id)
+}
+
 export function restore (view) {
   switch (view?.name) {
     case 'activity':
