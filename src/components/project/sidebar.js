@@ -14,10 +14,11 @@ import { match } from '../../keymap.js'
 import { testFocusChange } from '../../dom.js'
 import * as act from '../../actions/index.js'
 
+import * as views from '../../slices/nav/view.js'
+
 import {
   getAllTags,
-  getListSubTree,
-  listOf
+  getListSubTree
 } from '../../selectors/index.js'
 
 
@@ -135,7 +136,7 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   handleSelect () {
-    this.props.onSelect({ view: { name: 'project' } }, { throttle: true })
+    this.props.onSelect({ view: views.project() }, { throttle: true })
   }
 
   handleMouseDown = () => {
@@ -159,11 +160,11 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   handleTrashSelect = () => {
-    this.props.onSelect({ view: { name: 'trash' } }, { throttle: true })
+    this.props.onSelect({ view: views.trash() }, { throttle: true })
   }
 
   handleUnlistedSelect = () => {
-    this.props.onSelect({ view: { name: 'unlisted' } }, { throttle: true })
+    this.props.onSelect({ view: views.unlisted() }, { throttle: true })
   }
 
   handleProjectDropFiles = (files) => {
@@ -184,7 +185,7 @@ class ProjectSidebar extends React.PureComponent {
 
   handleListSelect = (list) => {
     if (list > 0 && (!this.isListSelected(list) || this.hasActiveTags)) {
-      this.props.onSelect({ view: { name: 'list', id: list } }, { throttle: true })
+      this.props.onSelect({ view: views.list(list) }, { throttle: true })
       return true
     }
   }
@@ -337,7 +338,7 @@ const ProjectSidebarContainer = connect(
     isTrashSelected: state.nav.view.name === 'trash',
     isUnlistedSelected: state.nav.view.name === 'unlisted',
     keymap: state.keymap,
-    list: listOf(state.nav.view),
+    list: views.listOf(state.nav.view),
     lists: state.lists,
     listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
     tagColor: state.settings.tagColor,

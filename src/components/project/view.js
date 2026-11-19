@@ -9,7 +9,7 @@ import { ItemGrid, ItemTable, NoItems } from '../item/index.js'
 import { ProjectSidebar } from './sidebar.js'
 import { ProjectToolbar } from './toolbar.js'
 import { SASS } from '../../constants/index.js'
-import { listOf } from '../../selectors/nav.js'
+import { listOf } from '../../slices/nav/view.js'
 
 import * as act from '../../actions/index.js'
 

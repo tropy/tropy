@@ -2,7 +2,8 @@ import { select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { ITEM } from '../../constants/index.js'
 import { pluck } from '../../common/util.js'
-import { getDefaultSort, sortKey } from '../../selectors/nav.js'
+import { getDefaultSort } from '../../selectors/nav.js'
+import { sortKey } from '../../slices/nav/view.js'
 import { find, ordered } from '../../sagas/search.js'
 
 // Finds the items of a view, in the UI's order for the given sort.

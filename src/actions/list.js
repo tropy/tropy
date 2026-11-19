@@ -1,6 +1,6 @@
 import { LIST, EDIT } from '../constants/index.js'
 import { array } from '../common/util.js'
-import { listOf } from '../selectors/nav.js'
+import { listOf } from '../slices/nav/view.js'
 
 const isChildNodeSelected = (root, selected, nodes) => {
   if (selected == null || selected === root)
