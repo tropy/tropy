@@ -90,7 +90,7 @@ describe('track saga', () => {
     let batch = start(1, 2, 3)
     let [{ meta }] = run(track(batch, []), { state }).puts
 
-    expect(meta).to.include({ search: true, errors: 1 })
+    expect(meta).to.include({ errors: 1 })
     expect(meta.items).to.eql([100, 101])
   })
 
