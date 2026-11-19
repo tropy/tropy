@@ -7,6 +7,7 @@ export default {
   OPENED: 'project.opened',
   READY: 'project.ready',
   OPTIMIZE: 'project.optimize',
+  OPTIMIZE_QUALITY: 0.8,
   PRUNE: 'project.prune',
   REINDEX: 'project.reindex',
   RELOAD: 'project.reload',

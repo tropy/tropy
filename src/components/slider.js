@@ -28,6 +28,10 @@ export class Slider extends React.PureComponent {
     return (this.props.origin != null) ? this.props.origin : this.props.min
   }
 
+  get resetValue () {
+    return this.props.resetValue ?? this.origin
+  }
+
   get delta () {
     return this.props.max - this.props.min
   }
@@ -88,6 +92,10 @@ export class Slider extends React.PureComponent {
     }
   }
 
+  reset (reason) {
+    this.set(this.resetValue, reason)
+  }
+
   handleDragStart = (event) => {
     let box = bounds(this.track.current)
     let border = borders(this.track.current)
@@ -123,6 +131,15 @@ export class Slider extends React.PureComponent {
     this.set(min + restrict((pageX - left) / width, 0, 1) * delta, 'drag')
   }
 
+
+  handleDoubleClick = (event) => {
+    if (this.isDisabled) return
+
+    if (this.props.onDoubleClick)
+      this.props.onDoubleClick(event)
+    else
+      this.reset('dblclick')
+  }
 
   handleMinButtonClick = throttle(() => {
     this.set(this.getPrevStep(), 'button')
@@ -165,7 +182,7 @@ export class Slider extends React.PureComponent {
         this.set(value + 1 / precision, 'key')
         break
       case 'reset':
-        this.set(this.origin, 'key')
+        this.reset('key')
         break
       default:
         return
@@ -244,7 +261,8 @@ export class Slider extends React.PureComponent {
           <div
             ref={this.track}
             className="slider-track"
-            style={{ '--position': position }}>
+            style={{ '--position': position }}
+            onDoubleClick={this.handleDoubleClick}>
             <div className="slider-range" style={{ width, left: offset }}/>
             <div className="slider-handle"></div>
             {this.props.showCurrentValue && (
