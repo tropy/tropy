@@ -816,7 +816,7 @@ export const IconTranscriptionFailed = i('TranscriptionFailed', (
 export const IconCloudStatus = i('CloudStatus', (
   <svg width="16" height="16" viewBox="0 0 16 16" overflow="visible">
     <g className="line" fill="currentColor">
-      <path d="M9,11h2v1H6V11H8V5H6V7H5V4h7V7H11V5H9Z"/>
+      <path d="M12,7c-.018,0-.034.005-.051.005.034-.163.051-.332.051-.505,0-1.38-1.12-2.5-2.5-2.5-.926,0-1.726.51-2.158,1.259-.24-.163-.53-.259-.842-.259-.828,0-1.5.672-1.5,1.5,0,.18.037.35.095.51-.032-.002-.062-.01-.095-.01-1.104,0-2,.896-2,2s.896,2,2,2h7c1.104,0,2-.896,2-2s-.896-2-2-2Z"/>
     </g>
     <circle className="track" fill="none" stroke="currentColor" strokeWidth="1.5" cx="8.5" cy="7.5" r="8.75"/>
     <circle className="progress" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" pathLength="100" strokeDasharray="var(--progress, 75) 100" cx="8.5" cy="7.5" r="8.75"/>
