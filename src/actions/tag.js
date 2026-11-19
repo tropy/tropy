@@ -104,7 +104,7 @@ export default {
     return {
       type: TAG.SELECT,
       payload,
-      meta: { search: true, ...meta }
+      meta: { history: true, search: true, ...meta }
     }
   }
 }

@@ -141,7 +141,7 @@ describe('past activities', () => {
       },
       'photo.consolidate': {
         type: 'photo.consolidate', id: 1, done: 200, expires: 200 + DAY,
-        errors: 1
+        errors: 1, history: 'add'
       }
     })
   })
@@ -156,29 +156,33 @@ describe('past activities', () => {
     expect(state.a).to.include({ done: 300, cancelled: true })
   })
 
-  it('records only runs with items, by an agent, or edits', () => {
+  it('records completed activities, unless hidden', () => {
     expect(Object.keys(past(
       run('a'),
-      run('b', { items: [] }),
-      run('c', { agent: 'A' }),
-      run('d', { history: 'add' }),
-      run('e', { agent: 'A', hidden: true })
-    ))).to.eql(['b', 'c', 'd'])
+      run('b', { hidden: true })
+    ))).to.eql(['a'])
   })
 
-  it('records actions by an agent that run no command, unless hidden', () => {
-    let action = (type, meta) =>
-      ({ type, meta: { seq: 1, now: 100, agent: 'A', ...meta } })
+  it('records single actions with history', () => {
+    expect(Object.keys(past(
+      { type: 'nav.search', meta: { now: 100, history: true } },
+      { type: 'nav.update', meta: { now: 100 } }
+    ))).to.eql(['nav.search'])
+  })
 
-    expect(past(
-      action('nav.select'),
-      action('item.find', { hidden: true }),
-      action('item.open', { cmd: 'project' })
-    )).to.eql({
-      'nav.select': {
-        type: 'nav.select', done: 100, expires: 100 + DAY, agent: 'A'
-      }
-    })
+  it('lets the user take over from an agent', () => {
+    let state = reduce(
+      { type: 'nav.select', meta: { now: 100, history: true, agent: 'A' } },
+      run('item.load', { now: 200 }))
+
+    expect(selectMostRecentActivity({ activities: state }, 300))
+      .to.have.property('agent', 'A')
+
+    state = reducer(state,
+      { type: 'nav.search', meta: { now: 300, history: true } })
+
+    expect(selectMostRecentActivity({ activities: state }, 300))
+      .not.to.have.property('agent')
   })
 
   it('dismisses a type', () => {
@@ -224,7 +228,7 @@ describe('past activities', () => {
     let activities = reduce(
       run('a', { now: 100, items: [1] }),
       run('b', { now: 500, items: [] }),
-      run('c', { now: 600, agent: 'A' }))
+      run('c', { now: 600, agent: 'A', history: 'add' }))
 
     expect(selectPastActivities({ activities }, 50 + DAY)
       .map(rec => rec.type)).to.eql(['b', 'a'])

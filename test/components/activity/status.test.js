@@ -73,7 +73,7 @@ describe('ActivityStatus', () => {
   it('renders the agent of the last past activity', async () => {
     let now = Date.now()
     let record = (type, done, agent) =>
-      ({ type, done, expires: now + 60000, agent })
+      ({ type, done, expires: now + 60000, agent, history: 'add' })
     let status = (...records) => render(<ActivityStatus/>, withStore(
       createStore({
         activities: {

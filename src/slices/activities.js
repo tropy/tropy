@@ -19,9 +19,8 @@ import { done } from './cmd.js'
  * Activity props (agent, cancel, hidden, cloud)
  * are taken from the trigger's meta.
  *
- * Past activities: the last completed activity of each type,
- * recorded on its done action if it meets the `keep` condition,
- * and kept one day.
+ * Past activities are kept for one day,
+ * but only the most recent one per type.
  */
 
 const PROPS = [
@@ -42,22 +41,14 @@ export const restoreId = (id) =>
 export const isExpired = (record, now) =>
   !(record.expires >= now)
 
-const isDoneOrRemote = (action) =>
-  stop.match(action) || !!action.meta?.agent
+const isPastActivity = ({ meta }) =>
+  !!meta && (!!meta.done || (!!meta.history && !meta.cmd))
 
-// Whether isDoneOrRemote should be kept as past activity.
-function keep ({ meta }, busy) {
-  if (meta.hidden)
-    return false
-  if (!meta.done)
-    return !meta.cmd // Not a command, so agent/api UI action
-
-  let items = meta.items ?? busy?.items
-
-  return meta.cancelled
-    ? items?.length > 0
-    : !!(items || meta.agent || meta.history)
-}
+// We keep a past activity unless it's hidden,
+// or was cancelled and has no items (e.g., cancel import dialog).
+const keep = ({ meta }, activity) =>
+  !meta.hidden &&
+  !(meta.cancelled && !(meta.items ?? activity?.items)?.length)
 
 // Converts an action into a past activity record.
 function preserve ({ type, error, meta }, busy) {
@@ -73,6 +64,7 @@ function preserve ({ type, error, meta }, busy) {
   if (meta.rel != null) record.id = meta.rel
   if (meta.cancelled) record.cancelled = true
   if (meta.agent) record.agent = meta.agent
+  if (meta.history) record.history = meta.history
   if (errors) record.errors = errors
   if (items) record.items = items
 
@@ -191,11 +183,11 @@ const activities = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addMatcher(isDoneOrRemote, (state, action) => {
-        let busy = state.busy[action.meta.rel]
+      .addMatcher(isPastActivity, (state, action) => {
+        let activity = state.busy[action.meta.rel]
 
-        if (keep(action, busy))
-          state.past[action.type] = preserve(action, busy)
+        if (keep(action, activity))
+          state.past[action.type] = preserve(action, activity)
 
         if (stop.match(action))
           delete state.busy[action.meta.rel]
@@ -249,11 +241,14 @@ export const selectPastActivities = createSelector(
   }
 )
 
+// The most recent live activity someone did (with history),
+// by the user or an agent.
 export function selectMostRecentActivity ({ activities }, now) {
   let last = null
 
   for (let rec of Object.values(activities.past))
-    if (!isExpired(rec, now) && (last == null || rec.done > last.done))
+    if (rec.history && !isExpired(rec, now) &&
+      (last == null || rec.done > last.done))
       last = rec
 
   return last

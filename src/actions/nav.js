@@ -28,7 +28,7 @@ export default {
     return {
       type: NAV.SEARCH,
       payload,
-      meta: { search: true, ...meta }
+      meta: { history: true, search: true, ...meta }
     }
   },
 
@@ -36,7 +36,7 @@ export default {
     return {
       type: NAV.SELECT,
       payload,
-      meta: { log: 'trace', search: true, ...meta }
+      meta: { log: 'trace', history: true, search: true, ...meta }
     }
   },
 
