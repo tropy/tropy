@@ -9,7 +9,7 @@ import { debug, info, warn } from '../common/log.js'
 import { IntegrityError } from '../common/error.js'
 import { pick, pMap } from '../common/util.js'
 import * as act from '../actions/index.js'
-import { Storage } from '../storage.js'
+import { Storage } from '../storage/index.js'
 import photo from '../models/photo.js'
 import { list, load, optimize, reindex, resolveBasePath, save } from '../common/project.js'
 

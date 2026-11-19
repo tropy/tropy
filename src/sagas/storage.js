@@ -1,5 +1,5 @@
 import { put, select, takeEvery as every, fork } from 'redux-saga/effects'
-import { Storage } from '../storage.js'
+import { Storage } from '../storage/index.js'
 import * as act from '../actions/index.js'
 
 export function *restore (name, ...args) {

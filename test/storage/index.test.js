@@ -1,4 +1,4 @@
-import { Storage } from '#tropy/storage.js'
+import { Storage } from '#tropy/storage/index.js'
 
 describe('Storage', () => {
   let storage = new Storage('storage.test')

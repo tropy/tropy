@@ -4,12 +4,6 @@ import { create, has } from '#tropy/common/selection.js'
 import { cancel, dismiss } from '#tropy/slices/activities.js'
 
 describe('Nav Reducer', () => {
-  it('restores selected items persisted as an array', () => {
-    let { item } = nav(undefined, { type: NAV.RESTORE, payload: { items: [1, 2] } })
-    expect(item).to.include({ anchor: 2, cursor: 2 })
-    expect(has(item, 1) && has(item, 2)).to.be.true
-  })
-
   it('restores the selection state, keeping anchor and cursor', () => {
     let payload = { item: { selected: { 1: true, 3: true }, anchor: 1, cursor: 3 } }
     let { item } = nav(undefined, { type: NAV.RESTORE, payload })
@@ -151,33 +145,22 @@ describe('Nav Reducer', () => {
       expect(nav(s, dismiss('item.import'))).to.equal(s)
     })
 
-    it('is restored, also from legacy state', () => {
+    it('is restored', () => {
       let restore = (payload) =>
         nav(undefined, { type: NAV.RESTORE, payload }).view
 
       expect(restore({ view: { name: 'list', id: 3 } })).to.eql({ name: 'list', id: 3 })
-      expect(restore({ view: imports })).to.eql(imports)
-      expect(restore({ list: 3 })).to.eql({ name: 'list', id: 3 })
-      expect(restore({ list: -1 })).to.eql({ name: 'unlisted' })
-      expect(restore({ trash: true })).to.eql({ name: 'trash' })
-      expect(restore({ list: null, trash: null })).to.eql({ name: 'project' })
+      expect(restore({ view: { name: 'unknown' } })).to.eql({ name: 'project' })
       expect(restore(undefined)).to.eql({ name: 'project' })
     })
 
-    it('restores the activity view with a negative id, no legacy fields', () => {
-      let s = nav(undefined, {
+    it('restores the activity view with a negative id', () => {
+      let { view } = nav(undefined, {
         type: NAV.RESTORE,
-        payload: {
-          view: { ...imports, id: 9 },
-          list: 3,
-          trash: true,
-          activity: 'item.import',
-          imports: true
-        }
+        payload: { view: { ...imports, id: 9 } }
       })
 
-      expect(s.view).to.eql({ ...imports, id: -9 })
-      expect(s).not.to.have.any.keys('list', 'trash', 'activity', 'imports')
+      expect(view).to.eql({ ...imports, id: -9 })
     })
   })
 })

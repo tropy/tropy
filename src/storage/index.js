@@ -1,6 +1,9 @@
-import { trace, warn } from './common/log.js'
+import { trace, warn } from '../common/log.js'
+import * as schema from './migrations.js'
 
 export class Storage {
+  static schema = schema
+
   static load (name, ...args) {
     return new Storage(...args).load(name)
   }
@@ -9,8 +12,8 @@ export class Storage {
     return new Storage(...args).save(name, object)
   }
 
-  static migrate (schema, ...args) {
-    return new Storage(...args).migrate(schema)
+  static migrate (name, ...args) {
+    return new Storage(...args).migrate(Storage.schema[name])
   }
 
   constructor (namespace = 'tropy') {
