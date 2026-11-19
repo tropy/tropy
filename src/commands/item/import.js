@@ -191,7 +191,7 @@ export class Import extends ImportCommand {
       this.result.push(item.id)
 
       yield all([
-        put(act.item.insert(item)),
+        put(act.item.insert(item, { search: false })),
         put(act.metadata.load([item.id, ...item.photos])),
         put(act.photo.insert(photos))
       ])
@@ -307,7 +307,7 @@ export class Import extends ImportCommand {
     this.result.push(item.id)
 
     yield all([
-      put(act.item.insert(item)),
+      put(act.item.insert(item, { search: false })),
       put(act.metadata.load([item.id, ...item.photos])),
       put(act.photo.insert(photos))
     ])
@@ -465,7 +465,7 @@ export class Import extends ImportCommand {
         put(act.transcriptions.insert(transcriptions)),
         put(act.selection.insert(selections)),
         put(act.photo.insert(photos)),
-        put(act.item.insert(item)),
+        put(act.item.insert(item, { search: false })),
         put(act.metadata.load([
           item.id,
           ...photos.map(p => p.id),
