@@ -26,7 +26,7 @@ export class Open extends Command {
     // Not among the results (opened by a link or the API):
     // a new search for a view that shows it.
     let view = yield select(selectViewOf, id)
-    if (view != null) yield put(act.nav.select(view))
+    if (view != null) yield put(act.nav.show(view))
 
     if (!photo) {
       photo = item.photos.includes(nav.photo) ?

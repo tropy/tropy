@@ -43,7 +43,7 @@ export const selectItemSequence = (state) =>
 
 // A view that shows the item, when the current results do not:
 // All Items, or the trash for a deleted item, without a query or
-// tags (for nav.select). Null if the item is among the results.
+// tags (for nav.show). Null if the item is among the results.
 // Opening an item from outside the view (links, API) switches to it.
 export const selectViewOf = (state, id) =>
   (state.qr.matches == null || state.qr.matches[id]) ?

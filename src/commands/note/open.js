@@ -26,7 +26,7 @@ export class Open extends Command {
 
     // Not among the results: a new search for a view that shows it.
     let view = yield select(selectViewOf, item)
-    if (view != null) yield put(act.nav.select(view))
+    if (view != null) yield put(act.nav.show(view))
 
     let delay = 25
     let [isProjectMode, isMinimized] = yield select(state => ([

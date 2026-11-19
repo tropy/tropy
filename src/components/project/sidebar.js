@@ -402,7 +402,7 @@ const ProjectSidebarContainer = connect(
     },
 
     onSelect (...args) {
-      dispatch(act.nav.select(...args))
+      dispatch(act.nav.show(...args))
     },
 
     onTagCreate (data) {

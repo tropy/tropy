@@ -53,7 +53,7 @@ export const metadata = {
 }
 
 export const nav = {
-  select: a('nav.select')
+  show: a('nav.show')
 }
 
 export const note = {
