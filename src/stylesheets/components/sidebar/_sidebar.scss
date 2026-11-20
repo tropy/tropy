@@ -71,11 +71,6 @@
     }
   }
 
-  .btn-icon {
-    padding: 0;
-    margin-left: -$space-md;
-  }
-
   .icon {
     &:first-child {
       margin-right: $space-xs;
@@ -157,6 +152,11 @@
 
         &.over:not(.before, .after) {
           @extend %drop-target;
+        }
+
+        .btn-icon {
+          padding: 0;
+          margin-left: -$space-md;
         }
 
         .icon {
