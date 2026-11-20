@@ -1,79 +1,14 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { NAV, TYPE } from '../constants/index.js'
-import { dc, expand } from '../ontology/index.js'
+import { dc } from '../ontology/ns.js'
 import { sortKey } from '../slices/nav/view.js'
-
-import {
-  getItemTemplateProperties,
-  getPropertyList
-} from './ontology.js'
+import * as COLUMN from '../slices/columns/builtin.js'
 
 const DEFAULT_SORT = { column: dc.title, asc: true }
-const DEFAULT_LIST_SORT = { column: 'added', asc: true }
+const DEFAULT_LIST_SORT = { column: COLUMN.POSITION.id, asc: true }
 
 // The item sort when the user has not chosen one.
 export const getDefaultSort = (list) =>
   (list > 0) ? DEFAULT_LIST_SORT : DEFAULT_SORT
-
-const SPECIAL_COLUMNS = [
-  NAV.COLUMN.CREATED,
-  NAV.COLUMN.MODIFIED,
-  NAV.COLUMN.TEMPLATE
-]
-
-const merge = (col, { label, name, prefix }) => ({
-  type: TYPE.TEXT, ...col, label, name, prefix
-})
-
-const getSpecialColumns = memo(
-  ({ intl }) => intl.messages, (msg) =>
-    SPECIAL_COLUMNS.reduce((spc, col) => (
-      (spc[col.id] = { ...col, label: msg[col.id] || col.id }), spc
-    ), {})
-)
-
-
-export const getColumns = memo(
-  ({ nav }) => nav.columns,
-  ({ ontology }) => ontology.props,
-  ({ ontology }) => ontology.vocab,
-  getSpecialColumns,
-  (cols, props, vocab, spc) =>
-    cols.map(col => col.id in spc ?
-        ({ ...spc[col.id], ...col }) :
-      merge(col, expand(props[col.id] || { id: col.id }, vocab)))
-)
-
-const getAllFreeColumns = memo(
-  ({ nav }) => nav.columns,
-  getPropertyList,
-  getSpecialColumns,
-  (cols, props, spc) => [
-    ...Object.values(spc).filter(({ id }) => !cols.find(col => col.id === id)),
-    ...props.filter(prop => !cols.find(col => col.id === prop.id))
-  ]
-)
-
-const getCommonFreeColumns = memo(
-  ({ nav }) => nav.columns,
-  getItemTemplateProperties,
-  getSpecialColumns,
-  (cols, props, spc) => [
-    ...Object.values(spc).filter(({ id }) => !cols.find(col => col.id === id)),
-    ...props.filter(prop => !cols.find(col => col.id === prop.id))
-  ]
-)
-
-export const getAllColumns = memo(
-  getColumns,
-  getAllFreeColumns,
-  getCommonFreeColumns,
-  (active, all, common) => ({
-    active,
-    all: [...active, ...all],
-    common: [...active, ...common]
-  })
-)
 
 export const getSortColumn = memo(
   ({ nav }) => nav.sort,

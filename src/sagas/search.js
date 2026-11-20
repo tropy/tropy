@@ -5,7 +5,6 @@ import { build, reverse, update } from '../common/order.js'
 import { createSequence, stable } from '../common/sequence.js'
 import { collator } from '../collate.js'
 import { parse } from '../common/search.js'
-import { NAV } from '../constants/index.js'
 import { getSortColumn, getVisiblePhotos } from '../selectors/index.js'
 import { selectActivity } from '../slices/activities.js'
 import {
@@ -18,6 +17,7 @@ import { TermCache, contributors, keyOf, membership } from '../common/matches.js
 import { ids as selected } from '../common/selection.js'
 import * as mod from '../models/index.js'
 import * as act from '../actions/index.js'
+import * as COLUMN from '../slices/columns/builtin.js'
 
 const getSort = (state) => ({
   ...getSortColumn(state),
@@ -33,11 +33,11 @@ const isReverse = (a, b) =>
   a.column === b.column && a.asc !== b.asc && a.locale === b.locale
 
 const isPosition = (sort) =>
-  sort.column === NAV.COLUMN.POSITION.id
+  sort.column === COLUMN.POSITION.id
 
 const isDate = (sort) =>
-  sort.column === NAV.COLUMN.CREATED.id ||
-  sort.column === NAV.COLUMN.MODIFIED.id
+  sort.column === COLUMN.CREATED.id ||
+  sort.column === COLUMN.MODIFIED.id
 
 // Returns the ids of order in matches, as an indexed sequence.
 const filter = (order, matches) => {

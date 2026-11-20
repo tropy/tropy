@@ -4,6 +4,7 @@ import { createMatcher } from '../common/matcher.js'
 import { NAV } from '../constants/index.js'
 import { createMetaReducer } from './util.js'
 import * as views from './nav/view.js'
+import * as COLUMN from './columns/builtin.js'
 
 const qr = createSlice({
   name: 'qr',
@@ -134,11 +135,11 @@ export const selectSubjects = memo(
 
 export const selectSortKey = ({ items, metadata, ontology }, column) => {
   switch (column) {
-    case NAV.COLUMN.CREATED.id:
+    case COLUMN.CREATED.id:
       return (id) => items[id]?.created?.getTime()
-    case NAV.COLUMN.MODIFIED.id:
+    case COLUMN.MODIFIED.id:
       return (id) => items[id]?.modified?.getTime()
-    case NAV.COLUMN.TEMPLATE.id:
+    case COLUMN.TEMPLATE.id:
       return (id) => ontology.template[items[id]?.template]?.name
     default:
       return (id) => metadata[id]?.[column]?.text

@@ -6,7 +6,7 @@ import { TableHead } from './head.js'
 import { ColumnContextMenu } from '../column.js'
 import cx from 'classnames'
 import { useEvent } from '../../../hooks/use-event.js'
-import { getAllColumns, getSortColumn } from '../../../selectors/index.js'
+import { getSortColumn } from '../../../selectors/index.js'
 import * as act from '../../../actions/index.js'
 import { useItemIterator } from '../use-item-iterator.js'
 
@@ -16,11 +16,9 @@ import {
   useColumnState
 } from './use-columns.js'
 
-import {
-  NAV,
-  SASS,
-  TABS
-} from '../../../constants/index.js'
+import { SASS, TABS } from '../../../constants/index.js'
+import { selectColumns } from '../../../slices/columns/index.js'
+import * as COLUMN from '../../../slices/columns/builtin.js'
 
 const { ROW } = SASS
 const any = (src) => { for (let key in src) return key }
@@ -30,7 +28,7 @@ export const ItemTable = (props) => {
 
   let dispatch = useDispatch()
 
-  let columns = useSelector(getAllColumns)
+  let columns = useSelector(selectColumns)
   let data = useSelector(state => state.metadata)
   let edit = useSelector(state => state.edit.column)
   let sort = useSelector(getSortColumn)
@@ -50,8 +48,8 @@ export const ItemTable = (props) => {
   let columnState = useColumnState({
     columns,
     list,
-    onColumnOrder: (payload) => dispatch(act.nav.column.order(payload)),
-    onColumnResize: (payload) => dispatch(act.nav.column.resize(payload))
+    onColumnOrder: (payload) => dispatch(act.columns.order(payload)),
+    onColumnResize: (payload) => dispatch(act.columns.resize(payload))
   })
 
   // A click on a selected item edits the clicked cell.
@@ -69,7 +67,7 @@ export const ItemTable = (props) => {
     tabIndex: TABS.ItemTable,
     edit (id) {
       if (id != null && !isReadOnly)
-        handleEdit({ column: { [id]: columns.active[0].id } })
+        handleEdit({ column: { [id]: columns[0].id } })
     },
     onSelectedClick: handleSelectedClick
   })
@@ -84,9 +82,9 @@ export const ItemTable = (props) => {
     hasPositionColumn: columnState.hasPositionColumn,
     minMainColWidth: columnState.minMainColWidth,
     onColumnInsert: (payload, meta) =>
-      dispatch(act.nav.column.insert(payload, meta)),
+      dispatch(act.columns.insert(payload, meta)),
     onColumnRemove: (payload) =>
-      dispatch(act.nav.column.remove(payload))
+      dispatch(act.columns.remove(payload))
   })
 
   // Keep the edited item in view when editing starts.
@@ -116,7 +114,7 @@ export const ItemTable = (props) => {
     sort.asc ? index + 1 : items.length - index
 
   let templateColumns = (columnState.hasPositionColumn ?
-    `${NAV.COLUMN.POSITION.width}px ` : '') +
+    `${COLUMN.POSITION.width}px ` : '') +
     columnState.colwidth.map(width => `${width}px `).join('') +
     'auto'
 

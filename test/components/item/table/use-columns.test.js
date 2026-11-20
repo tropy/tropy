@@ -7,7 +7,7 @@ describe('useColumnState', () => {
 
   let setup = (props) =>
     renderHook((p) => useColumnState(p), {
-      initialProps: { columns: { active }, ...props }
+      initialProps: { columns: active, ...props }
     })
 
   it('applies the minimum widths', () => {
@@ -38,7 +38,7 @@ describe('useColumnState', () => {
     expect(onColumnOrder.mock.calls[0].arguments[0])
       .to.eql({ order: { b: 0, a: 1 } })
 
-    rerender({ columns: { active: [...active] }, onColumnOrder })
+    rerender({ columns: [...active], onColumnOrder })
     expect(result.current.columns.map(c => c.id)).to.eql(['a', 'b'])
   })
 })

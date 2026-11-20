@@ -1,6 +1,5 @@
 import { create, has, ids } from '../common/selection.js'
-import { array, merge, insert, omit, splice } from '../common/util.js'
-import { dc } from '../ontology/ns.js'
+import { array, merge, omit } from '../common/util.js'
 import { expands } from '../common/search.js'
 import { dismiss } from '../slices/activities.js'
 import * as views from '../slices/nav/view.js'
@@ -28,14 +27,7 @@ const init = {
   view: views.project(),
   query: '',
   tags: [],
-  sort: {},
-  columns: [
-    { width: 250, id: dc.title },
-    { width: 100, id: dc.creator },
-    { width: 100, id: dc.date },
-    { width: 100, id: dc.type },
-    { width: 190, id: NAV.COLUMN.CREATED.id }
-  ]
+  sort: {}
 }
 
 
@@ -224,36 +216,6 @@ export function nav (state = init, { type, payload, meta, error }) {
           ...reset,
           view: views.project()
         }
-
-    case NAV.COLUMN.INSERT:
-      return {
-        ...state,
-        columns: insert(state.columns, meta.idx, payload)
-      }
-    case NAV.COLUMN.REMOVE:
-      return {
-        ...state,
-        columns: state.columns.filter(col => col.id !== payload.id)
-      }
-    case NAV.COLUMN.ORDER: {
-      const { order } = payload
-
-      return {
-        ...state,
-        columns: state.columns.reduce((cols, c) =>
-          ((cols[order[c.id]] = c), cols), [])
-      }
-    }
-    case NAV.COLUMN.RESIZE: {
-      const { column, width } = payload
-
-      return {
-        ...state,
-        columns: splice(state.columns, column, 1, {
-          ...state.columns[column], width
-        })
-      }
-    }
 
     default:
       return state

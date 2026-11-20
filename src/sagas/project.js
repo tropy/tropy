@@ -165,6 +165,7 @@ function *hydrate ({ db, project }) {
   yield all([
     call(restore, 'nav', project.id),
     call(restore, 'activities', project.id),
+    call(restore, 'columns', project.id),
     call(restore, 'notepad', project.id),
     call(restore, 'esper', project.id),
     call(restore, 'sidebar', project.id),
@@ -225,6 +226,7 @@ function *stop ({ db, project, store }) {
   yield all([
     call(persist, 'nav', project.id),
     call(persist, 'activities', project.id),
+    call(persist, 'columns', project.id),
     call(persist, 'notepad', project.id),
     call(persist, 'esper', project.id),
     call(persist, 'sidebar', project.id),
