@@ -6,7 +6,7 @@ import { IMAGE } from '../../constants/index.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useIpcEvent } from '../../hooks/use-ipc.js'
 import { MetadataField } from '../metadata/field.js'
-import { bytes, datetime, number as num } from '../../format.js'
+import { bytes, datetime, number as num, ppi } from '../../format.js'
 import * as act from '../../actions/index.js'
 import { map } from '../../common/util.js'
 
@@ -61,7 +61,7 @@ export const PhotoInfo = React.memo(({
           min={minDensity}
           property="density"
           text={photo.density}
-          type="ppi"
+          format={ppi}
           onCancel={stopEditing}
           onChange={handleChange}
           onEdit={setEditing}/>

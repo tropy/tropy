@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl'
 import { Form, FormField, FormElement, FormSelect } from '../form.js'
 import { tropy, Template } from '../../ontology/index.js'
 import { ontology } from '../../actions/index.js'
-import { TYPE } from '../../constants/index.js'
+import * as datatype from '../../common/datatype.js'
 import { insert, move, remove } from '../../common/util.js'
 
 
@@ -77,7 +77,7 @@ class TemplateEditor extends React.PureComponent {
     if (id < 0) {
       this.props.onFieldAdd({
         id: this.state.id,
-        field: { datatype: TYPE.TEXT, ...data }
+        field: { datatype: datatype.text, ...data }
       }, { idx })
     } else {
       this.props.onFieldSave({

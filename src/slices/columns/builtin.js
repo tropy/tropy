@@ -1,16 +1,16 @@
-import TYPE from '../../constants/type.js'
-import { tropy } from '../../ontology/ns.js'
+import { tropy } from '../../common/ns.js'
+import * as datatype from '../../common/datatype.js'
 
 export const CREATED = {
   id: 'item.created',
   protected: true,
-  type: TYPE.DATE
+  type: datatype.date
 }
 
 export const MODIFIED = {
   id: 'item.modified',
   protected: true,
-  type: TYPE.DATE
+  type: datatype.date
 }
 
 export const TEMPLATE = {
@@ -23,6 +23,6 @@ export const POSITION = {
   id: 'added',
   label: '',
   protected: true,
-  type: TYPE.NUMBER,
+  type: datatype.number,
   width: 60
 }

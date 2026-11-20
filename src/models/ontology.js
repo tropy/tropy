@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { join } from 'node:path'
 import ARGS from '../args.js'
-import { TYPE } from '../constants/index.js'
+import * as datatype from '../common/datatype.js'
 import { blank } from '../common/util.js'
 import sql, { IN, SET } from '../common/sql.js'
 
@@ -446,7 +446,7 @@ const ontology = {
                 ${hasId ? sql`${f.id},` : sql``}
                 ${id},
                 ${f.property},
-                ${f.datatype || TYPE.TEXT},
+                ${f.datatype || datatype.text},
                 ${!!f.isRequired},
                 ${f.hint},
                 ${f.value},

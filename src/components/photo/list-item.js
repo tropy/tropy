@@ -12,7 +12,7 @@ import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
 import { useElementClicks } from '../../hooks/use-element-clicks.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { pick } from '../../common/util.js'
-import { TYPE } from '../../constants/index.js'
+import * as datatype from '../../common/datatype.js'
 
 export const PhotoListItem = memo(({
   getAdjacent,
@@ -43,7 +43,7 @@ export const PhotoListItem = memo(({
 
   let titleText = useSelector(state =>
     state.metadata[photo.id]?.[title]?.text)
-  let titleRanges = useSearchRanges(titleText, TYPE.TEXT)
+  let titleRanges = useSearchRanges(titleText, datatype.text)
 
   let [{ canDrop, direction, dragType, isDragging, isOver }, dnd] =
     useDragDropPhoto(container, {
@@ -68,7 +68,7 @@ export const PhotoListItem = memo(({
     onChange({
       id: photo.id,
       data: {
-        [title]: { text, type: TYPE.TEXT }
+        [title]: { text, type: datatype.text }
       }
     })
 

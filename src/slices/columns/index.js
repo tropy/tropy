@@ -1,6 +1,6 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
-import { TYPE } from '../../constants/index.js'
-import { dc } from '../../ontology/ns.js'
+import * as datatype from '../../common/datatype.js'
+import { dc } from '../../common/ns.js'
 import { expand } from '../../ontology/index.js'
 import {
   getItemTemplateProperties,
@@ -66,7 +66,7 @@ export const {
 export default columns.reducer
 
 const toColumn = (col, { label, name, prefix }) => ({
-  type: TYPE.TEXT, ...col, label, name, prefix
+  type: datatype.text, ...col, label, name, prefix
 })
 
 const selectBuiltinColumns = createSelector(

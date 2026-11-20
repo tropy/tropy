@@ -1,7 +1,7 @@
 import { Writer, DataFactory } from 'n3'
 import args from '../args.js'
 import { blank } from '../common/util.js'
-import { dc, rdf, rdfs, owl, vann } from './ns.js'
+import { dc, rdf, rdfs, owl, vann } from '../common/ns.js'
 
 const { namedNode, literal } = DataFactory
 

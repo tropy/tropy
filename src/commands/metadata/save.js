@@ -3,7 +3,8 @@ import { Command } from '../command.js'
 import { pick } from '../../common/util.js'
 import mod from '../../models/metadata.js'
 import act from '../../actions/metadata.js'
-import { METADATA, TYPE } from '../../constants/index.js'
+import { METADATA } from '../../constants/index.js'
+import * as datatype from '../../common/datatype.js'
 
 
 export class Save extends Command {
@@ -25,7 +26,7 @@ export class Save extends Command {
 
     for (let prop in data) {
       if (typeof data[prop] === 'string')
-        data[prop] = { text: data[prop], type: TYPE.TEXT }
+        data[prop] = { text: data[prop], type: datatype.text }
     }
 
     yield put(act.update({ ids, data }))

@@ -1,6 +1,6 @@
 import edtf, { format as edtfFormat } from 'edtf'
 import ARGS from './args.js'
-import { TYPE } from './constants/index.js'
+import { classify } from './common/datatype.js'
 import { blank } from './common/util.js'
 
 export function datetime (value, options = DTF) {
@@ -46,15 +46,11 @@ export function ppi (value) {
 }
 
 export function auto (value, type) {
-  switch (type) {
-    case TYPE.DATE:
+  switch (classify(type)) {
+    case 'date':
       return datetime(value)
-    case TYPE.NUMBER:
+    case 'number':
       return number(value)
-    case TYPE.BYTE:
-      return bytes(value)
-    case 'ppi':
-      return ppi(value)
     default:
       return value
   }

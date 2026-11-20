@@ -10,7 +10,7 @@ import { pick } from '../common/util.js'
 import { open, prompt } from '../dialog.js'
 import { Image } from '../image/image.js'
 import { IMAGE, MIME } from '../constants/index.js'
-import { dc, dcterms } from '../ontology/ns.js'
+import { dc, dcterms } from '../common/ns.js'
 import { date, text } from '../value.js'
 import { getTemplateValues, getTemplateProperties } from '../selectors/index.js'
 

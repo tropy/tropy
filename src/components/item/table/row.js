@@ -3,7 +3,7 @@ import cx from 'classnames'
 import { TableCell } from './cell.js'
 import { useDragDropItem } from '../../../hooks/use-drag-drop-items.js'
 import { useEvent } from '../../../hooks/use-event.js'
-import { TYPE } from '../../../constants/index.js'
+import * as datatype from '../../../common/datatype.js'
 import * as COLUMN from '../../../slices/columns/builtin.js'
 
 const isItemColumn = (id) => {
@@ -59,7 +59,7 @@ export const TableRow = memo(({
   let handleChange = useEvent((id, value) => {
     if (value.type == null) {
       let field = template?.fields?.find(f => f.property === id)
-      value.type = field?.datatype || TYPE.TEXT
+      value.type = field?.datatype || datatype.text
     }
 
     onChange({

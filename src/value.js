@@ -1,15 +1,15 @@
-import { TYPE } from './constants/index.js'
+import * as datatype from './common/datatype.js'
 
 export function date (input) {
-  return { text: input, type: TYPE.DATE }
+  return { text: input, type: datatype.date }
 }
 
 export function text (input) {
-  return { text: input, type: TYPE.TEXT }
+  return { text: input, type: datatype.text }
 }
 
 export function value (input, type) {
-  return { text: input, type: type || TYPE.TEXT }
+  return { text: input, type: type || datatype.text }
 }
 
 export function equal (a, b) {
