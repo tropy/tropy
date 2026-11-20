@@ -29,6 +29,6 @@ describe('ProjectSidebar', () => {
 
     expect(section()).to.have.attribute('tabindex', '2')
     expect(section({ isActivitySelected: true }))
-      .not.to.have.attribute('tabindex')
+      .to.have.attribute('tabindex', '-1')
   })
 })

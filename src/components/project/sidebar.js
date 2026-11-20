@@ -39,9 +39,9 @@ class ProjectSidebar extends React.PureComponent {
 
   // TODO see ActivityPane. We move the tab-stop when there are activities.
   get tabIndex () {
-    return (this.props.isDisabled || this.props.isActivitySelected)
-      ? null
-      : TABS.ProjectSidebar
+    if (this.props.isDisabled) return null
+    if (this.props.isActivitySelected) return -1
+    return TABS.ProjectSidebar
   }
 
   getFirstList () {
