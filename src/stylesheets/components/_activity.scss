@@ -86,7 +86,7 @@
 
   progress {
     position: absolute;
-    inset: -1px 0 auto 0;
+    inset: -1px 0 auto;
     height: $progress-bar-height - 1px;
 
     &::-webkit-progress-bar {
