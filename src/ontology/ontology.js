@@ -3,7 +3,7 @@ import { join, basename, extname } from 'node:path'
 import * as N3 from 'n3'
 import { any, empty, get, URI } from '../common/util.js'
 import { Resource } from '../res.js'
-import { dc, dcterms, owl, rdf, rdfs, skos, vann } from './ns.js'
+import { dc, dcterms, owl, rdf, rdfs, skos, vann } from '../common/ns.js'
 
 
 export class Ontology extends Resource {

@@ -20,6 +20,7 @@ export const MetadataValue = forwardRef(({
   property,
   text,
   type,
+  format = auto,
   ...props
 }, drag) => {
 
@@ -30,7 +31,7 @@ export const MetadataValue = forwardRef(({
   let [{ isOver }, drop] = useDropText(({ onDrop: onDropText }))
 
   let isInvalid = isRequired && blank(text)
-  let display = auto(text, type)
+  let display = format(text, type)
   let ranges = useSearchRanges(text, type)
 
   let completions = useSelector(state =>

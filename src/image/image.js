@@ -9,7 +9,7 @@ import { debug, warn } from '../common/log.js'
 import { pMap, pick, restrict } from '../common/util.js'
 import { rgb } from '../css.js'
 import { IMAGE, MIME } from '../constants/index.js'
-import { exif as exifns } from '../ontology/ns.js'
+import { exif as exifns } from '../common/ns.js'
 
 const Orientation = (o) => (o > 0 && o < 9) ? Number(o) : 1
 

@@ -1,5 +1,5 @@
 import { ctx, props as properties } from '../common/export.js'
-import { xsd } from '../ontology/ns.js'
+import { xsd } from '../common/ns.js'
 import { version } from '../common/release.js'
 import { compact, blank, URI, get, pick } from '../common/util.js'
 import { serialize } from '../editor/serialize.js'

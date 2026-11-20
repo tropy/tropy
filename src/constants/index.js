@@ -1,4 +1,3 @@
-export { default as TYPE } from './type.js'
 export { default as API } from './api.js'
 export { default as CACHE } from './cache.js'
 export { default as CONTEXT } from './context.js'

@@ -2,7 +2,7 @@ import { FormElement } from '../form.js'
 import { TemplateSelect } from '../template/select.js'
 import { IconItemSmall, IconPhoto, IconSelection } from '../icons.js'
 import { useEvent } from '../../hooks/use-event.js'
-import { tropy } from '../../ontology/ns.js'
+import { tropy } from '../../common/ns.js'
 
 export function TemplateSettings ({ config, onChange }) {
   let handleTemplateChange = useEvent((values, hasChanged) => {

@@ -3,7 +3,7 @@ import item from '#tropy/models/item.js'
 import metadata from '#tropy/models/metadata.js'
 import tag from '#tropy/models/tag.js'
 import list from '#tropy/models/list.js'
-import { TYPE } from '#tropy/constants/index.js'
+import * as datatype from '#tropy/common/datatype.js'
 import { parse } from '#tropy/common/search.js'
 import { contributors, membership } from '#tropy/common/matches.js'
 
@@ -29,7 +29,7 @@ describe('models/item', () => {
         let { id } = await item.create(db, TEMPLATE)
         await metadata.update(db, {
           id,
-          data: { [TITLE]: { text, type: TYPE.TEXT } }
+          data: { [TITLE]: { text, type: datatype.text } }
         })
         ids.push(id)
       }
@@ -141,7 +141,7 @@ describe('models/item', () => {
       let { id } = await item.create(db, TEMPLATE)
       await metadata.update(db, {
         id,
-        data: { [TITLE]: { text: 'Lettres du café', type: TYPE.TEXT } }
+        data: { [TITLE]: { text: 'Lettres du café', type: datatype.text } }
       })
 
       expect(await search('cafe')).to.eql([id])

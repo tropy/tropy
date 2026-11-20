@@ -1,5 +1,5 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { dc } from '../ontology/ns.js'
+import { dc } from '../common/ns.js'
 import { sortKey } from '../slices/nav/view.js'
 import * as COLUMN from '../slices/columns/builtin.js'
 

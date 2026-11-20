@@ -8,7 +8,7 @@ import selection from '#tropy/models/selection.js'
 import * as transcription from '#tropy/models/transcription.js'
 import value from '#tropy/models/value.js'
 import sql from '#tropy/common/sql.js'
-import { TYPE } from '#tropy/constants/index.js'
+import * as datatype from '#tropy/common/datatype.js'
 
 const TEMPLATE = 'https://tropy.org/v1/templates/photo'
 
@@ -176,7 +176,7 @@ describe('models/photo', () => {
   describe('full-text indices', () => {
     const TITLE = 'http://purl.org/dc/elements/1.1/title'
     const title = (text) => metadata.update(db, {
-      id: original.id, data: { [TITLE]: { text, type: TYPE.TEXT } }
+      id: original.id, data: { [TITLE]: { text, type: datatype.text } }
     })
 
     it('stay in step with their content', async () => {

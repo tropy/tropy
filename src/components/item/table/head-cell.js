@@ -3,7 +3,7 @@ import { Draggable } from '../../draggable.js'
 import { Resizable } from '../../resizable.js'
 import cx from 'classnames'
 import { IconChevron7 } from '../../icons.js'
-import { TYPE } from '../../../constants/index.js'
+import * as datatype from '../../../common/datatype.js'
 import { blank, noop } from '../../../common/util.js'
 
 const MIN_WIDTH = 40
@@ -92,6 +92,6 @@ export class TableHeadCell extends React.PureComponent {
   static defaultProps = {
     minWidth: MIN_WIDTH,
     onOrderStart: noop,
-    type: TYPE.TEXT
+    type: datatype.text
   }
 }

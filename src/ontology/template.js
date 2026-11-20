@@ -1,7 +1,8 @@
 import { readFile as read, writeFile as write } from 'node:fs/promises'
 import { identify, pick } from '../common/util.js'
-import { ONTOLOGY, TYPE } from '../constants/index.js'
-import { tropy } from './ns.js'
+import { ONTOLOGY } from '../constants/index.js'
+import * as datatype from '../common/datatype.js'
+import { tropy } from '../common/ns.js'
 
 
 export class Template {
@@ -65,7 +66,7 @@ export class Template {
 
 class Field {
   static defaults = {
-    datatype: TYPE.TEXT,
+    datatype: datatype.text,
     hint: '',
     isConstant: false,
     isRequired: false,

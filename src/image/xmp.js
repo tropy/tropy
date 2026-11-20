@@ -2,7 +2,7 @@ import { $, $$, parse } from '../dom.js'
 import { debug, warn } from '../common/log.js'
 import { blank } from '../common/util.js'
 import { text, date } from '../value.js'
-import { xml } from '../ontology/ns.js'
+import { xml } from '../common/ns.js'
 
 const DATES = /(^d|D)ate(\b|[A-Z])/
 

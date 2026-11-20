@@ -2,13 +2,13 @@ import { basename } from 'node:path'
 import { useIntl, FormattedMessage } from 'react-intl'
 import cx from 'classnames'
 import { auto, bytes, number } from '../../format.js'
-import { TYPE } from '../../constants/index.js'
+import * as datatype from '../../common/datatype.js'
 
 export const MetadataField = ({
   isExtra,
   label,
   text,
-  type = TYPE.TEXT
+  type = datatype.text
 }) => (
   <li className={cx('metadata-field', { extra: isExtra })}>
     <label>{label}</label>
@@ -23,11 +23,11 @@ export const ItemInfo = ({ item }) => {
       <MetadataField
         label={intl.formatMessage({ id: 'item.created' })}
         text={item.created}
-        type={TYPE.DATE}/>
+        type={datatype.date}/>
       <MetadataField
         label={intl.formatMessage({ id: 'item.modified' })}
         text={item.modified}
-        type={TYPE.DATE}/>
+        type={datatype.date}/>
     </ol>
   )
 }
@@ -50,11 +50,11 @@ export const PhotoInfo = ({ photo }) => {
       <MetadataField
         label={intl.formatMessage({ id: 'photo.created' })}
         text={photo.created}
-        type={TYPE.DATE}/>
+        type={datatype.date}/>
       <MetadataField
         label={intl.formatMessage({ id: 'photo.modified' })}
         text={photo.modified}
-        type={TYPE.DATE}/>
+        type={datatype.date}/>
     </ol>
   )
 }
@@ -105,7 +105,7 @@ export const MetadataSection = ({ fields, title, tags }) => (
         <MetadataField
           label={<FormattedMessage id="print.tags"/>}
           text={tags.join(', ')}
-          type={TYPE.TEXT}/>
+          type={datatype.text}/>
       )}
     </ol>
   </section>

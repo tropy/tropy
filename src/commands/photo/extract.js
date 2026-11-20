@@ -11,7 +11,7 @@ import Esper from '../../esper/index.js'
 import { clamp } from '../../esper/util.js'
 import { save } from '../../dialog.js'
 import { toBuffer, toFile } from '../../image/index.js'
-import { dc, dcterms } from '../../ontology/ns.js'
+import { dc, dcterms } from '../../common/ns.js'
 import * as act from '../../actions/index.js'
 import win from '../../window.js'
 

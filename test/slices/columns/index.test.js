@@ -6,7 +6,7 @@ import reducer, {
   restore,
   selectColumnOptions
 } from '#tropy/slices/columns/index.js'
-import { dc, tropy } from '#tropy/ontology/ns.js'
+import { dc, tropy } from '#tropy/common/ns.js'
 
 describe('columns', () => {
   let state = [

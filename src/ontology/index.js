@@ -1,4 +1,4 @@
-export * from './ns.js'
+export * from '../common/ns.js'
 export * from './ontology.js'
 export * from './template.js'
 export * from './util.js'

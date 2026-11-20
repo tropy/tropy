@@ -1,5 +1,5 @@
 import * as format from '#tropy/format.js'
-import { TYPE } from '#tropy/constants/index.js'
+import * as datatype from '#tropy/common/datatype.js'
 import { createMatcher } from '#tropy/common/matcher.js'
 import { parse } from '#tropy/common/search.js'
 
@@ -102,8 +102,8 @@ describe('format', () => {
 
   describe('auto', () => {
     it('picks a suitable format for given type', () => {
-      expect(format.auto('42000', TYPE.NUMBER)).to.equal('42,000')
-      expect(format.auto('2000-12', TYPE.DATE)).to.equal('Dec 2000')
+      expect(format.auto('42000', datatype.number)).to.equal('42,000')
+      expect(format.auto('2000-12', datatype.date)).to.equal('Dec 2000')
     })
 
     it('falls back to input', () => {
@@ -116,12 +116,12 @@ describe('format', () => {
       format.ranges(value, type, createMatcher(parse(query).terms))
 
     it('marks matches in values shown as they are', () => {
-      expect(ranges('box', 'Box 3', TYPE.TEXT)).to.eql([[0, 3]])
+      expect(ranges('box', 'Box 3', datatype.text)).to.eql([[0, 3]])
     })
 
     it('matches formatted values on their raw value', () => {
-      expect(ranges('feb', '2019-02-23', TYPE.DATE)).to.equal(null)
-      expect(ranges('2019', '2019-02-23', TYPE.DATE)).to.eql([[0, 12]])
+      expect(ranges('feb', '2019-02-23', datatype.date)).to.equal(null)
+      expect(ranges('2019', '2019-02-23', datatype.date)).to.eql([[0, 12]])
     })
   })
 })

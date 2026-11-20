@@ -7,7 +7,7 @@ import { useEvent } from '../../hooks/use-event.js'
 import { useCursorKeys } from '../../hooks/use-cursor-keys.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 import { SASS, TABS } from '../../constants/index.js'
-import { dc } from '../../ontology/ns.js'
+import { dc } from '../../common/ns.js'
 import cx from 'classnames'
 import * as act from '../../actions/index.js'
 
