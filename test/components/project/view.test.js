@@ -17,7 +17,7 @@ describe('ProjectView', () => {
     let { lists, ontology } = F.state
     let intl = { locale: 'en', messages: {} }
     let store = createStore({ intl, lists, ontology })
-    store.dispatch({ type: 'nav.update', payload: { view: shown } })
+    store.dispatch({ type: 'nav.select', payload: { view: shown } })
 
     let dispatch = mock.method(store, 'dispatch')
     render(

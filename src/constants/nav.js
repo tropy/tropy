@@ -9,6 +9,5 @@ export default {
   SEARCH: 'nav.search',
   SELECT: 'nav.select',
   SORT: 'nav.sort',
-  UPDATE: 'nav.update',
   MODE
 }

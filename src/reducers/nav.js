@@ -3,6 +3,7 @@ import { array, merge, omit } from '../common/util.js'
 import { expands } from '../common/search.js'
 import { dismiss } from '../slices/activities.js'
 import * as views from '../slices/nav/view.js'
+import { mode, narrow } from '../actions/nav.js'
 
 import {
   EDIT,
@@ -41,8 +42,16 @@ export function nav (state = init, { type, payload, meta, error }) {
 
       return state
     }
-    case NAV.UPDATE:
-      return { ...state, ...payload }
+    case mode.project.type:
+      return { ...state, mode: NAV.MODE.PROJECT }
+
+    case narrow.type:
+      return {
+        ...state,
+        photo: payload.photo,
+        selection: payload.selection,
+        note: payload.note
+      }
 
     // A new search clears the selections, unless it can only widen
     // the results (e.g. clearing the query or backspacing), so that

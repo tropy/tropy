@@ -498,7 +498,7 @@ export function *narrow () {
   }
 
   if (photo !== nav.photo || note !== nav.note)
-    yield put(act.nav.update({ photo, selection, note }))
+    yield put(act.nav.narrow({ photo, selection, note }))
 }
 
 // Keeps qr.order in sync with the sort and the sort keys in state,
