@@ -131,7 +131,7 @@
   },
   "dependencies": {
     "@fastify/send": "^4.2.0",
-    "@inukshuk/exif": "^2.0.0",
+    "@inukshuk/exif": "^3.0.0",
     "@modelcontextprotocol/server": "^2.4.0",
     "@reduxjs/toolkit": "^2.0.1",
     "@tweenjs/tween.js": "^25.0.0",
@@ -185,6 +185,6 @@
   "patchedDependencies": {
     "v8-to-istanbul@9.3.0": "patches/v8-to-istanbul@9.3.0.patch",
     "sharp@0.35.5": "patches/sharp@0.35.5.patch",
-    "better-sqlite3@13.0.3": "patches/better-sqlite3@13.0.3.patch"
+    "better-sqlite3@13.2.0": "patches/better-sqlite3@13.2.0.patch"
   }
 }
