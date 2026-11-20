@@ -18,9 +18,11 @@
   padding: 0 $default-spacing-x;
   height: $activity-height;
   overflow: clip;
+  overflow-clip-margin: border-box;
   transition-property: height, opacity;
   transition-duration: $activity-transition-duration;
   transition-timing-function: $activity-transition-timing-function;
+  position: relative;
 
   @starting-style {
     height: 0;
@@ -36,8 +38,13 @@
   }
 
   &.active {
-    background: $activity-active-bg;
+    background-color: $activity-active-bg;
     border-top-color: $activity-active-bg;
+
+    .is-blurred & {
+      background-color: $activity-blurred-active-bg;
+      border-top-color: $activity-blurred-active-bg;
+    }
 
     .activity-pane:focus-within :is(&) {
       color: $activity-focus-color;
@@ -63,11 +70,6 @@
     justify-content: space-between;
   }
 
-  .flex-row:nth-child(2) {
-    margin-top: -1px; // 8px
-    margin-bottom: 7px; // 8px
-  }
-
   .icon-spin {
     margin-right: $space-xs;
   }
@@ -83,21 +85,32 @@
   }
 
   progress {
-    .vibrancy & {
-      &::-webkit-progress-bar {
-        background-color: $activity-vibrancy-progress-bar-bg;
-      }
+    position: absolute;
+    inset: -1px 0 auto 0;
+    height: $progress-bar-height - 1px;
 
+    &::-webkit-progress-bar {
+      border-radius: 0;
+      background-color: transparent;
+    }
+
+    &::-webkit-progress-value {
+      border-radius: 0;
+    }
+
+    .vibrancy & {
       &::-webkit-progress-value {
         background-color: $activity-vibrancy-progress-val-bg;
       }
     }
 
-    .is-blurred & {
-      &::-webkit-progress-bar {
-        background-color: $activity-blurred-progress-bar-bg;
+    .activity-pane:focus-within .active :is(&) {
+      &::-webkit-progress-value {
+        background-color: $activity-focus-color;
       }
+    }
 
+    .is-blurred & {
       &::-webkit-progress-value {
         background-color: $activity-blurred-progress-val-bg;
       }

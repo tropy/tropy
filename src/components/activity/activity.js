@@ -49,6 +49,9 @@ export const Activity = ({
         ? () => onSelect(type, id)
         : null
       }>
+      {hasProgressBar && (
+        <progress value={numCompleted} max={total}/>
+      )}
       <div className="activity-container">
         <div className="flex-row center">
           {isBusy && !hasProgressBar && <Icon name="Spin"/>}
@@ -57,11 +60,6 @@ export const Activity = ({
           </div>
           {button}
         </div>
-        {hasProgressBar && (
-          <div className="flex-row center">
-            <progress value={numCompleted} max={total}/>
-          </div>
-        )}
       </div>
     </div>
   )
