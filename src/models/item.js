@@ -1,11 +1,11 @@
 import { array, blank, uniq } from '../common/util.js'
-import { NAV } from '../constants/index.js'
 import sql, { IN } from '../common/sql.js'
 import { foldText } from '../common/matcher.js'
 
 import modMetadata from './metadata.js'
 import modPhoto from './photo.js'
 import modSubject from './subject.js'
+import * as COLUMN from '../slices/columns/builtin.js'
 
 const mod = {
   metadata: modMetadata,
@@ -79,9 +79,9 @@ const TAGGED = (tags) => {
 
 // Seed order for the subject columns; metadata columns join their values.
 const ORDER = {
-  [NAV.COLUMN.CREATED.id]: 'subjects.created',
-  [NAV.COLUMN.MODIFIED.id]: 'subjects.modified',
-  [NAV.COLUMN.TEMPLATE.id]: 'subjects.template'
+  [COLUMN.CREATED.id]: 'subjects.created',
+  [COLUMN.MODIFIED.id]: 'subjects.modified',
+  [COLUMN.TEMPLATE.id]: 'subjects.template'
 }
 
 // A term (see common/search.js) as an FTS5 phrase (prefix or exact):

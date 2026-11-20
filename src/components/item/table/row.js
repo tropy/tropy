@@ -3,7 +3,8 @@ import cx from 'classnames'
 import { TableCell } from './cell.js'
 import { useDragDropItem } from '../../../hooks/use-drag-drop-items.js'
 import { useEvent } from '../../../hooks/use-event.js'
-import { NAV, TYPE } from '../../../constants/index.js'
+import { TYPE } from '../../../constants/index.js'
+import * as COLUMN from '../../../slices/columns/builtin.js'
 
 const isItemColumn = (id) => {
   let idx = id.search(/^item\./)
@@ -132,8 +133,8 @@ export const TableRow = memo(({
           {...cellProps}
           onChange={onChange}
           isReadOnly
-          id={NAV.COLUMN.POSITION.id}
-          type={NAV.COLUMN.POSITION.type}
+          id={COLUMN.POSITION.id}
+          type={COLUMN.POSITION.type}
           value={position}/>
       )}
       {columns.map((column, idx) => (

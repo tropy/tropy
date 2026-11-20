@@ -4,7 +4,8 @@ export const project = {
   migrations: [
     {
       number: 1,
-      // Drops old unused props. Converts nav view and item selection.
+      // Drops old, unused props.
+      // Converts nav view and item selection.
       up: ({ nav, activities, notepad, esper, sidebar, panel }) => {
         if (nav != null) {
           nav = {
@@ -18,6 +19,17 @@ export const project = {
         }
 
         return { nav, activities, notepad, esper, sidebar, panel }
+      }
+    },
+    {
+      number: 2,
+      // Moves nav.columns out of nav.
+      up: ({ nav, ...state }) => {
+        if (nav?.columns == null)
+          return { ...state, nav }
+
+        let { columns, ...rest } = nav
+        return { ...state, nav: rest, columns }
       }
     }
   ]

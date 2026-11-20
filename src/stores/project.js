@@ -6,6 +6,7 @@ import { seq, debounce, throttle, log } from '../middleware/index.js'
 
 import {
   activities,
+  columns,
   context,
   edit,
   esper,
@@ -49,6 +50,7 @@ export const create = () => {
   let store = configureStore({
     reducer: {
       activities,
+      columns,
       context,
       edit,
       esper,

@@ -1,9 +1,12 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useStore } from 'react-redux'
 import { useDraftState } from '../../../hooks/use-draft-state.js'
 import { useEvent } from '../../../hooks/use-event.js'
 import { bounds, ensure } from '../../../dom.js'
 import { restrict, splice, warp } from '../../../common/util.js'
-import { NAV, SASS } from '../../../constants/index.js'
+import { SASS } from '../../../constants/index.js'
+import { selectColumnOptions } from '../../../slices/columns/index.js'
+import * as builtin from '../../../slices/columns/builtin.js'
 
 const { COLUMN } = SASS
 
@@ -30,15 +33,15 @@ export function useColumnState ({
   onColumnResize
 }) {
   let [state, setState] = useDraftState(useMemo(() => ({
-    columns: columns.active,
-    colwidth: columns.active.map((c, idx) => Math.max(
+    columns,
+    colwidth: columns.map((c, idx) => Math.max(
       c.width, idx > 0 ? minColWidth : minMainColWidth
     ))
-  }), [columns.active, minColWidth, minMainColWidth]))
+  }), [columns, minColWidth, minMainColWidth]))
 
   let hasPositionColumn = !!list
   let minWidth = state.colwidth.reduce((sum, w) => sum + w, 0) +
-    (hasPositionColumn ? NAV.COLUMN.POSITION.width : 0)
+    (hasPositionColumn ? builtin.POSITION.width : 0)
 
   // Handlers passed to TableHead (a PureComponent) are stable.
   let resize = useEvent(({ column, width }, doCommit) => {
@@ -110,7 +113,7 @@ export function useColumnDrag (table, {
   })
 
   let onOrderStart = useEvent((idx, event) => {
-    let min = hasPositionColumn ? NAV.COLUMN.POSITION.width : 0
+    let min = hasPositionColumn ? builtin.POSITION.width : 0
     let max = minWidth - colwidth[idx]
     let offset = event.nativeEvent.offsetX +
       ((idx === 0 && !hasPositionColumn) ?
@@ -172,8 +175,6 @@ export function useColumnDrag (table, {
   }
 }
 
-// The column picker in the table head: inserts at the position
-// of the click.
 export function useColumnContextMenu (table, {
   colwidth,
   columns,
@@ -182,13 +183,14 @@ export function useColumnContextMenu (table, {
   onColumnInsert,
   onColumnRemove
 }) {
+  let store = useStore()
   let [menu, setMenu] = useState(null)
 
   let show = useEvent((event) => {
     event.stopPropagation()
 
     let opt = (event.altKey || event.shiftKey) ? 'all' : 'common'
-    let min = hasPositionColumn ? NAV.COLUMN.POSITION.width : 0
+    let min = hasPositionColumn ? builtin.POSITION.width : 0
     let n = offsetInTable(table.current, event.clientX, { min })
     let idx = 0
     let k = 0
@@ -201,9 +203,9 @@ export function useColumnContextMenu (table, {
     setMenu({
       idx,
       left: event.clientX,
-      options: columns[opt],
+      options: selectColumnOptions(store.getState(), opt),
       top: event.clientY,
-      value: columns.active.map(col => col.id)
+      value: columns.map(col => col.id)
     })
   })
 

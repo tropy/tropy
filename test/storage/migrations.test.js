@@ -29,5 +29,13 @@ describe('Storage migrations', () => {
           item: { selected: { 1: true, 2: true }, anchor: 2, cursor: 2 }
         })
     })
+
+    it('#2 moves the columns out of nav', () => {
+      let columns = [{ id: 'a', width: 10 }]
+
+      expect(migrate({ nav: { columns, sort: {} } }, 2))
+        .to.eql({ nav: { sort: {} }, columns })
+      expect(migrate({ panel: {} }, 2)).to.eql({ panel: {}, nav: undefined })
+    })
   })
 })

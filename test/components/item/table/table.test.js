@@ -10,7 +10,7 @@ describe('ItemTable', () => {
     let store = createItemStore()
     let { $, $$ } = render(<ItemTable/>, withStore(store))
 
-    let { columns } = store.getState().nav
+    let { columns } = store.getState()
     let widths = columns.map(col => `${Math.max(col.width, 40)}px `)
     widths[0] = `${Math.max(columns[0].width, 100)}px `
 

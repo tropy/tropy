@@ -1,7 +1,7 @@
 import React from 'react'
 import { TableHeadCell } from './head-cell.js'
 import { titlecase } from '../../../common/util.js'
-import { NAV } from '../../../constants/index.js'
+import * as COLUMN from '../../../slices/columns/builtin.js'
 
 export class TableHead extends React.PureComponent {
   get isAscending () {
@@ -30,8 +30,8 @@ export class TableHead extends React.PureComponent {
         onContextMenu={this.props.onContextMenu}>
         {this.props.hasPositionColumn && (
           <TableHeadCell
-            {...NAV.COLUMN.POSITION}
-            isActive={this.isActive(NAV.COLUMN.POSITION)}
+            {...COLUMN.POSITION}
+            isActive={this.isActive(COLUMN.POSITION)}
             isAscending={this.isAscending}
             isFixedColumn
             onClick={this.props.onSort}/>

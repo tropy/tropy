@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { NAV, LIST } from '../constants/index.js'
+import * as COLUMN from '../slices/columns/builtin.js'
 
 export const update = createAction(NAV.UPDATE)
 
@@ -50,43 +51,9 @@ export default {
       },
       // Only position needs a search (list order from SQL);
       // the order saga follows other columns by itself.
-      meta: { search: payload.column === NAV.COLUMN.POSITION.id, ...meta }
+      meta: { search: payload.column === COLUMN.POSITION.id, ...meta }
     }
   },
 
-  mode,
-
-  column: {
-    insert (payload, meta = {}) {
-      return {
-        type: NAV.COLUMN.INSERT,
-        payload,
-        meta
-      }
-    },
-
-    order (payload, meta = {}) {
-      return {
-        type: NAV.COLUMN.ORDER,
-        payload,
-        meta
-      }
-    },
-
-    remove (payload, meta = {}) {
-      return {
-        type: NAV.COLUMN.REMOVE,
-        payload,
-        meta
-      }
-    },
-
-    resize (payload, meta = {}) {
-      return {
-        type: NAV.COLUMN.RESIZE,
-        payload,
-        meta
-      }
-    }
-  }
+  mode
 }
