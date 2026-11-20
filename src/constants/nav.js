@@ -4,10 +4,5 @@ export const MODE = {
 }
 
 export default {
-  PERSIST: 'nav.persist',
-  RESTORE: 'nav.restore',
-  SEARCH: 'nav.search',
-  SELECT: 'nav.select',
-  SORT: 'nav.sort',
   MODE
 }

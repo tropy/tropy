@@ -1,12 +1,12 @@
-import { ITEM, LIST, NAV, TAG } from '#tropy/constants/index.js'
-import { nav } from '#tropy/reducers/nav.js'
+import { ITEM, LIST, TAG } from '#tropy/constants/index.js'
+import nav, * as act from '#tropy/slices/nav/index.js'
 import { create, has } from '#tropy/common/selection.js'
 import { cancel, dismiss } from '#tropy/slices/activities.js'
 
-describe('Nav Reducer', () => {
+describe('nav', () => {
   it('restores the selection state, keeping anchor and cursor', () => {
     let payload = { item: { selected: { 1: true, 3: true }, anchor: 1, cursor: 3 } }
-    let { item } = nav(undefined, { type: NAV.RESTORE, payload })
+    let { item } = nav(undefined, act.restore(payload))
 
     expect(item).to.include({ anchor: 1, cursor: 3 })
     expect(has(item, 1) && has(item, 3)).to.be.true
@@ -43,7 +43,7 @@ describe('Nav Reducer', () => {
 
     it('on query changes', () => {
       let search = (from, to) =>
-        nav(state({ query: from }), { type: NAV.SEARCH, payload: { query: to } })
+        nav(state({ query: from }), act.search({ query: to }))
 
       expect(isKept(search('box lett', 'box let'))).to.be.true
       expect(isKept(search('box', ''))).to.be.true
@@ -76,15 +76,15 @@ describe('Nav Reducer', () => {
 
     it('is replaced on select, back to the project by default', () => {
       let s = state({ view: imports })
-      expect(nav(s, { type: NAV.SELECT, payload: { view: { name: 'trash' } } }).view)
+      expect(nav(s, act.show({ view: { name: 'trash' } })).view)
         .to.eql({ name: 'trash' })
-      expect(nav(s, { type: NAV.SELECT, payload: {} }).view)
+      expect(nav(s, act.show({})).view)
         .to.eql({ name: 'project' })
     })
 
     it('keeps an activity for searches and tag filters', () => {
       let s = state({ view: imports })
-      expect(nav(s, { type: NAV.SEARCH, payload: { query: 'x' } }).view)
+      expect(nav(s, act.search({ query: 'x' })).view)
         .to.equal(imports)
       expect(nav(s, { type: TAG.SELECT, payload: 1, meta: {} }).view)
         .to.equal(imports)
@@ -147,7 +147,7 @@ describe('Nav Reducer', () => {
 
     it('is restored', () => {
       let restore = (payload) =>
-        nav(undefined, { type: NAV.RESTORE, payload }).view
+        nav(undefined, act.restore(payload)).view
 
       expect(restore({ view: { name: 'list', id: 3 } })).to.eql({ name: 'list', id: 3 })
       expect(restore({ view: { name: 'unknown' } })).to.eql({ name: 'project' })
@@ -155,10 +155,7 @@ describe('Nav Reducer', () => {
     })
 
     it('restores the activity view with a negative id', () => {
-      let { view } = nav(undefined, {
-        type: NAV.RESTORE,
-        payload: { view: { ...imports, id: 9 } }
-      })
+      let { view } = nav(undefined, act.restore({ view: { ...imports, id: 9 } }))
 
       expect(view).to.eql({ ...imports, id: -9 })
     })

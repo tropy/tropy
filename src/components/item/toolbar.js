@@ -6,7 +6,7 @@ import { Button } from '../button.js'
 import { AccountStatus } from '../account/status.js'
 import { ActivityStatus } from '../activity/index.js'
 import { Fade } from '../fx.js'
-import { mode } from '../../actions/nav.js'
+import { mode } from '../../slices/nav/index.js'
 
 export const ItemToolbar = ({ isItemMode }) => {
   let dispatch = useDispatch()
