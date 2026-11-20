@@ -101,7 +101,7 @@
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-replace": "^6.0.1",
-    "@stylistic/eslint-plugin": "^5.10.0",
+    "@stylistic/eslint-plugin": "^6.0.0",
     "@testing-library/react": "^16.0.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "c8": "^12.0.0",
@@ -124,9 +124,9 @@
     "source-map-js": "^1.2.1",
     "spark-chamber": "^0.2.4",
     "sqleton": "^5.0.0",
-    "stylelint": "^17.0.0",
-    "stylelint-config-recommended-scss": "^17.0.0",
-    "stylelint-config-standard": "^40.0.0",
+    "stylelint": "^18.0.0",
+    "stylelint-config-recommended-scss": "^18.0.0",
+    "stylelint-config-standard": "^41.0.0",
     "stylelint-scss": "^7.0.0"
   },
   "dependencies": {
