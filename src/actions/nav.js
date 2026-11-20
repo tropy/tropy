@@ -2,17 +2,12 @@ import { createAction } from '@reduxjs/toolkit'
 import { NAV, LIST } from '../constants/index.js'
 import * as COLUMN from '../slices/columns/builtin.js'
 
-export const update = createAction(NAV.UPDATE)
-
 export const mode = {
-  item () {
-    return update({ mode: NAV.MODE.ITEM })
-  },
-
-  project () {
-    return update({ mode: NAV.MODE.PROJECT })
-  }
+  project: createAction('nav/mode/project')
 }
+
+// Narrow selection if search filters within item
+export const narrow = createAction('nav/narrow')
 
 export default {
   restore (payload, meta) {
@@ -23,7 +18,7 @@ export default {
     }
   },
 
-  update,
+  narrow,
 
   search (payload, meta) {
     return {
