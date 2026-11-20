@@ -698,7 +698,7 @@ export class Esper extends React.Component {
 
     let isOverlayVisible =
       overlay && transcription != null
-    let isOverlaySplit = overlay === OVERLAY.SPLIT
+    let isOverlaySplit = isOverlayVisible && overlay === OVERLAY.SPLIT
 
     return (
       <EsperContainer
