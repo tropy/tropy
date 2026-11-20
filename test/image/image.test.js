@@ -36,6 +36,34 @@ describe('Image', () => {
         .to.have.property('fs')
         .that.contains.keys(['size', 'birthtimeMs'])
     })
+
+    it('assumes UTC for exif dates without offset', () => {
+      expect(image.date).to.equal('2026-11-11T10:16:00Z')
+    })
+  })
+
+  describe('given an image and local timezone', () => {
+    let image = new Image({ path: F.image.path('apricot.jpg') })
+
+    before(() => image.open({ useLocalTimezone: true }))
+
+    it('assumes local time for exif dates without offset', () => {
+      expect(image.date).to.match(/^2026-11-11T10:16:00[+-]\d{2}:\d{2}$/)
+      expect(new Date(image.date).getTime())
+        .to.equal(new Date('2026-11-11T10:16:00').getTime())
+    })
+  })
+
+  describe('given an image with exif offset time', () => {
+    for (let useLocalTimezone of [true, false]) {
+      it(`keeps the offset (local timezone: ${useLocalTimezone})`, async () => {
+        let image = await Image.open({
+          path: F.image.path('blue.jpg'),
+          useLocalTimezone
+        })
+        expect(image.date).to.equal('2026-11-11T10:16:00-03:00')
+      })
+    }
   })
 
   describe('formats', () => {

@@ -268,26 +268,24 @@ export class Image extends Asset {
       }
     }
 
-    let timezone = useLocalTimezone ? (new Date().getTimezoneOffset()) : 0
-
     if (page != null && page < this.numPages) {
       this.page = page
-      await this.analyze(this.do(), page, { timezone })
+      await this.analyze(this.do(), page, { localtime: useLocalTimezone })
 
     } else {
       await pMap(
         this.meta,
-        (_, page) => this.analyze(this.do(page), page, { timezone }),
+        (_, page) => this.analyze(this.do(page), page, { localtime: useLocalTimezone }),
         { concurrency: 4 })
     }
   }
 
-  analyze = async (img, page, { timezone }) => {
+  analyze = async (img, page, { localtime }) => {
     let meta = await img.metadata()
 
     this.meta[page] = {
       ...meta,
-      exif: exif(meta.exif, { timezone }),
+      exif: exif(meta.exif, { localtime }),
       xmp: xmp(meta.xmp)
     }
 
