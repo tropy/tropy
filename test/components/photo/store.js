@@ -1,6 +1,6 @@
 import { createStore } from '../../support/react.js'
 import { create } from '#tropy/common/selection.js'
-import { nav } from '#tropy/reducers/nav.js'
+import nav from '#tropy/slices/nav/index.js'
 import { panel } from '#tropy/reducers/panel.js'
 
 // A store with item 1 selected, its photos visible

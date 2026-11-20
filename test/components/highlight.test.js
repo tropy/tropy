@@ -1,6 +1,6 @@
 import { render, createStore, withStore } from '../support/react.js'
 import { Highlight, useSearchRanges } from '#tropy/components/highlight.js'
-import { nav } from '#tropy/reducers/nav.js'
+import nav from '#tropy/slices/nav/index.js'
 
 describe('Highlight', () => {
   const marks = (text, ranges) => {
