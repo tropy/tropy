@@ -82,7 +82,7 @@ export class Consolidate extends ImportCommand {
     this.options.isReadOnly = project.isReadOnly
     this.options.density = meta.density || settings.density
     this.options.overwrite = true
-    this.useLocalTimezone = settings.timezone
+    this.options.useLocalTimezone = settings.localtime
 
     this.result = []
 

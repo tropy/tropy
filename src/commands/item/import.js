@@ -100,7 +100,7 @@ export class Import extends ImportCommand {
         photo: getPhotoTemplate(state),
         selection: getSelectionTemplate(state)
       },
-      useLocalTimezone: state.settings.timezone,
+      useLocalTimezone: state.settings.localtime,
       createLists: this.action.meta.createLists ?? state.settings.createLists,
       tagColor: this.action.meta.tagColor ?? state.settings.tagColor,
       optimizeOnImport: state.project.isManaged && state.project.optimize.onImport,
