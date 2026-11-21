@@ -75,12 +75,13 @@ export const searchSlice = createSlice({
       })
 
       // Only the view, query and tags: the payload may come from main.
+      // The filters stay unless given (a view change keeps them).
       .addCase(show, (state, { payload }) => {
-        let { view = views.project(), query, tags = [] } = payload
+        let { view = views.project(), query, tags } = payload
 
         state.view = view
-        state.tags = tags
         if (query !== undefined) state.query = query
+        if (tags !== undefined) state.tags = tags
       })
 
       .addCase(LIST.REMOVE, (state, { payload }) => {

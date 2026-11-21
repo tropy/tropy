@@ -39,7 +39,7 @@ describe('Open item', () => {
     expect(open({}).map(({ type, payload }) => ({ type, payload })))
       .to.eql([{
         type: 'nav/show',
-        payload: { view: { name: 'trash' }, query: '' }
+        payload: { view: { name: 'trash' }, query: '', tags: [] }
       }])
   })
 })

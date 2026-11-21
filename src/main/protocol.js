@@ -96,7 +96,11 @@ const ROUTES = Object.freeze([
       }
     })
   }, ({ q = '' }, win) =>
-    win.dispatch(act.nav.show({ view: { name: 'project' }, query: q }))),
+    win.dispatch(act.nav.show({
+      view: { name: 'project' },
+      query: q,
+      tags: []
+    }))),
 
   projectRoute('/:urlId/items/:item{/:photo}?{/:selection}?', {
     operationId: 'tropy.item',
@@ -117,7 +121,8 @@ const ROUTES = Object.freeze([
   }, ({ list }, win) =>
     win.dispatch(act.nav.show({
       view: { name: 'list', id: list },
-      query: ''
+      query: '',
+      tags: []
     }))),
 
   projectRoute('/:urlId/tags/:tag', {
@@ -134,7 +139,7 @@ const ROUTES = Object.freeze([
     summary: 'Show the trash',
     params: object({ urlId }, ['urlId'])
   }, (args, win) =>
-    win.dispatch(act.nav.show({ view: { name: 'trash' }, query: '' }))),
+    win.dispatch(act.nav.show({ view: { name: 'trash' }, query: '', tags: [] }))),
 
   windowRoute('(prefs|preferences)', {
     operationId: 'tropy.preferences',

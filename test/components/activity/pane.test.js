@@ -306,7 +306,9 @@ describe('ActivityPane', () => {
 
     fireEvent.click(withItems)
     expect(dispatch.mock.calls[0].arguments[0].payload)
-      .to.eql({ view: { name: 'activity', type: 'item.import', id: 7 } })
+      .to.eql({
+        view: { name: 'activity', type: 'item.import', id: 7 }, query: '', tags: []
+      })
   })
 
   it('shows the items of busy activities', async () => {
@@ -337,7 +339,9 @@ describe('ActivityPane', () => {
 
     fireEvent.click(withItems)
     expect(dispatch.mock.calls[0].arguments[0].payload)
-      .to.eql({ view: { name: 'activity', type: 'test', id: 2 } })
+      .to.eql({
+        view: { name: 'activity', type: 'test', id: 2 }, query: '', tags: []
+      })
   })
 
   it('dismisses without selecting', () => {
