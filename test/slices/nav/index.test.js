@@ -152,6 +152,16 @@ describe('nav', () => {
         .and.to.have.nested.property('view.name', 'project')
     })
 
+    it('keeps the filters unless given', () => {
+      let s = state({ query: 'x', tags: [5] })
+      let shown = (payload) => nav(s, act.show(payload)).search
+
+      expect(shown({ view: { name: 'trash' } }))
+        .to.include({ query: 'x' }).and.have.property('tags').eql([5])
+      expect(shown({ view: { name: 'trash' }, query: '', tags: [] }))
+        .to.include({ query: '' }).and.have.property('tags').eql([])
+    })
+
     it('is replaced on select, back to the project by default', () => {
       let s = state({ view: imports })
       expect(view(nav(s, act.show({ view: { name: 'trash' } }))))

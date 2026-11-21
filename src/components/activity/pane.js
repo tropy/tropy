@@ -25,7 +25,11 @@ export const ActivityPane = memo(() => {
     dispatch(act.activities.dismiss(type, id))
   }
   let handleSelect = (type, id) => {
-    dispatch(nav.show({ view: views.activity(type, id) }))
+    dispatch(nav.show({
+      view: views.activity(type, id),
+      query: '',
+      tags: []
+    }))
   }
 
   let handleKeyDown = useKeyMap('ActivityPane', isActivityView && {

@@ -77,15 +77,15 @@ describe('ProtocolHandler', () => {
 
   it('navigates within the project window', async () => {
     for (let [url, name, payload] of [
-      ['/items', 'nav.show', { view: { name: 'project' }, query: '' }],
-      ['/items?q=Map', 'nav.show', { query: 'Map' }],
+      ['/items', 'nav.show', { view: { name: 'project' }, query: '', tags: [] }],
+      ['/items?q=Map', 'nav.show', { query: 'Map', tags: [] }],
       ['/lists/3', 'nav.show', {
-        view: { name: 'list', id: 3 }, query: ''
+        view: { name: 'list', id: 3 }, query: '', tags: []
       }],
       ['/tags/5', 'nav.show', {
         view: { name: 'project' }, tags: [5], query: ''
       }],
-      ['/trash', 'nav.show', { view: { name: 'trash' }, query: '' }]
+      ['/trash', 'nav.show', { view: { name: 'trash' }, query: '', tags: [] }]
     ]) {
       await proto.handle(base + url)
 
