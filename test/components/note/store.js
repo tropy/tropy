@@ -20,7 +20,11 @@ export const createNoteStore = ({
     notes: Object.fromEntries(ids.map(id =>
       [id, { id, photo: 1, text: text ?? `${id}` }])),
     qr: { items: [1] },
-    nav: { ...nav(undefined, {}), item: create([1]), photo: 1, note, query },
+    nav: {
+      ...nav(undefined, {}),
+      search: { ...nav(undefined, {}).search, query },
+      selection: { item: create([1]), photo: 1, selection: null, note }
+    },
     keymap
   })
 }

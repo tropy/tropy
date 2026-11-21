@@ -19,7 +19,7 @@ const getPhotos = ({ photos }) => photos
 
 export const getSelectedPhoto = memo(
   getPhotos,
-  ({ nav }) => nav.photo,
+  ({ nav }) => nav.selection.photo,
   (photos, id) => (id != null) ? photos[id] : null
 )
 
@@ -49,7 +49,7 @@ export const getVisiblePhotos = memo(
   getPhotos,
   getSelectedItems,
   selectMatchFilter,
-  (state) => selectMatchFilter(state) && state.nav.photo,
+  (state) => selectMatchFilter(state) && state.nav.selection.photo,
 
   (photos, items, filter, current) => {
     let visible = expandItemPhotos(items, photos)

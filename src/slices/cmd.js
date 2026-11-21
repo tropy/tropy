@@ -1,18 +1,44 @@
 import { pick } from '../common/util.js'
 import { createMetaReducer } from './util.js'
 
-// Prepares actions that trigger a command in the given scope.
 export const cmdReducer = (reducer, scope = 'project') =>
   createMetaReducer({ cmd: scope }, reducer)
 
-// Matches actions that trigger a command in the given scope.
+// Matches all command triggers in scope.
 export function commands (scope) {
   return ({ error, meta }) => (
     !error && meta && !meta.done && meta.cmd === scope
   )
 }
 
-// Creates the 'done' action for a long running effect,
+const matches = (types, type) =>
+  types.length === 0 || types.includes(type)
+
+export function isPending (...types) {
+  return ({ type, error, meta }) => (
+    !error && meta?.cmd != null && !meta.done && matches(types, type)
+  )
+}
+
+export function isDone (...types) {
+  return ({ type, error, meta }) => (
+    !error && !!meta?.done && matches(types, type)
+  )
+}
+
+export function hasFailed (...types) {
+  return ({ type, error, meta }) => (
+    !!error && !!meta?.done && matches(types, type)
+  )
+}
+
+export function isResultOf (action) {
+  return ({ type, meta }) => (
+    type === action.type && !!meta?.done && meta.rel === action.meta.seq
+  )
+}
+
+// The 'done' action creator for a long running effect,
 // like a Command execution.
 export function done (action, result, meta) {
   let error = result instanceof Error

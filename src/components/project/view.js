@@ -9,6 +9,7 @@ import { ItemGrid, ItemTable, NoItems } from '../item/index.js'
 import { ProjectSidebar } from './sidebar.js'
 import { ProjectToolbar } from './toolbar.js'
 import { SASS } from '../../constants/index.js'
+import * as nav from '../../slices/nav/index.js'
 import { listOf } from '../../slices/nav/view.js'
 
 import * as act from '../../actions/index.js'
@@ -26,13 +27,14 @@ export const ProjectView = ({
 
   let dispatch = useDispatch()
 
-  let nav = useSelector(state => state.nav)
+  let view = useSelector(state => state.nav.search.view)
+  let query = useSelector(state => state.nav.search.query)
   let zoom = useSelector(state => state.ui.zoom)
   let items = useSelector(selectItemSequence)
   let queryError = useSelector(state => selectQuery(state).errors[0])
 
-  let list = listOf(nav.view)
-  let isTrash = nav.view.name === 'trash'
+  let list = listOf(view)
+  let isTrash = view.name === 'trash'
 
   let iterator = useRef()
 
@@ -62,7 +64,7 @@ export const ProjectView = ({
   })
 
   let handleSearch = useEvent((query) => {
-    dispatch(act.nav.search({ query }))
+    dispatch(nav.search({ query }))
   })
 
   usePasteEvent('application/json', (data) => {
@@ -93,7 +95,7 @@ export const ProjectView = ({
               isDisabled={isDisabled}
               isReadOnly={isReadOnly}
               maxZoom={maxZoom}
-              query={nav.query}
+              query={query}
               queryError={queryError}
               zoom={zoom}
               onItemCreate={handleItemImport}

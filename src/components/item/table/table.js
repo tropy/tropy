@@ -17,7 +17,14 @@ import {
 } from './use-columns.js'
 
 import { SASS, TABS } from '../../../constants/index.js'
-import { selectColumns } from '../../../slices/columns/index.js'
+import * as nav from '../../../slices/nav/index.js'
+import {
+  insert,
+  order,
+  remove,
+  resize,
+  selectColumns
+} from '../../../slices/columns/index.js'
 import * as COLUMN from '../../../slices/columns/builtin.js'
 
 const { ROW } = SASS
@@ -40,7 +47,7 @@ export const ItemTable = (props) => {
   })
 
   let handleSort = useEvent((opts) => {
-    dispatch(act.nav.sort({ ...opts, list }))
+    dispatch(nav.sort({ ...opts, list }))
   })
 
   let table = useRef()
@@ -48,8 +55,8 @@ export const ItemTable = (props) => {
   let columnState = useColumnState({
     columns,
     list,
-    onColumnOrder: (payload) => dispatch(act.columns.order(payload)),
-    onColumnResize: (payload) => dispatch(act.columns.resize(payload))
+    onColumnOrder: (payload) => dispatch(order(payload)),
+    onColumnResize: (payload) => dispatch(resize(payload))
   })
 
   // A click on a selected item edits the clicked cell.
@@ -82,9 +89,9 @@ export const ItemTable = (props) => {
     hasPositionColumn: columnState.hasPositionColumn,
     minMainColWidth: columnState.minMainColWidth,
     onColumnInsert: (payload, meta) =>
-      dispatch(act.columns.insert(payload, meta)),
+      dispatch(insert(payload, meta)),
     onColumnRemove: (payload) =>
-      dispatch(act.columns.remove(payload))
+      dispatch(remove(payload))
   })
 
   // Keep the edited item in view when editing starts.

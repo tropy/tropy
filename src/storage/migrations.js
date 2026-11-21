@@ -31,6 +31,26 @@ export const project = {
         let { columns, ...rest } = nav
         return { ...state, nav: rest, columns }
       }
+    },
+    {
+      number: 3,
+      // Nests nav by slice: search, selection, mode.
+      // The query and tags are not restored.
+      up: ({ nav, ...state }) => {
+        if (nav == null)
+          return { ...state, nav }
+
+        let { view, sort, item, photo, selection, note, mode } = nav
+
+        return {
+          ...state,
+          nav: {
+            search: { view, sort },
+            selection: { item, photo, selection, note },
+            mode
+          }
+        }
+      }
     }
   ]
 }

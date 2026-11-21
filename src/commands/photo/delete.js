@@ -12,7 +12,7 @@ export class Delete extends Command {
     let { payload } = this.action
 
     let [nav, item] = yield select(state => ([
-      state.nav,
+      state.nav.selection,
       state.items[payload.item]
     ]))
 

@@ -216,10 +216,10 @@ export function selectActivity ({ activities }, { type, id }) {
     : (activities.past[type] ?? null)
 }
 
-// The selected activity (nav.view), if any.
+// The selected activity (nav.search.view), if any.
 export const selectSelectedActivity = (state) =>
-  (state.nav?.view.name === 'activity')
-    ? selectActivity(state, state.nav.view)
+  (state.nav?.search.view.name === 'activity')
+    ? selectActivity(state, state.nav.search.view)
     : null
 
 // The selected past activity stays, also if expired:

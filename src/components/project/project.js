@@ -12,8 +12,8 @@ import { ModalLayer } from '../modal-layer.js'
 import { MessageBox } from '../message-box.js'
 import { TranscriptionConfig } from '../transcription/config.js'
 import { DragLayer } from '../drag-layer.js'
-import { MODE } from '../../constants/nav.js'
 import * as act from '../../actions/index.js'
+import * as nav from '../../slices/nav/index.js'
 import { IconTropyLarge } from '../icons.js'
 
 const MODALS = {
@@ -37,15 +37,17 @@ export const Project = ({
 }) => {
   let dispatch = useDispatch()
 
-  let nav = useSelector(state => state.nav)
-  let mode = useTransitionState(ref, nav.mode, {
+  let navMode = useSelector(state => state.nav.mode)
+  let isTrash = useSelector(state => state.nav.search.view.name === 'trash')
+
+  let mode = useTransitionState(ref, navMode, {
     timeout,
     toString: modeToString,
     skipTransition: !project.isReady
   })
 
   let isItemMode = !!(
-    (mode.current === MODE.ITEM) ^ mode.isChanging
+    (mode.current === 'item') ^ mode.isChanging
   )
 
   let inert = !project.isReady || !!project.isClosing
@@ -55,7 +57,7 @@ export const Project = ({
 
   useGlobalEvent('back', () => {
     if (isItemMode)
-      dispatch(act.nav.mode.project())
+      dispatch(nav.mode.back())
   })
 
   // TODO use event propagation instead of passing down callback!
@@ -108,7 +110,7 @@ export const Project = ({
         inert={inert}
         isItemMode={isItemMode}
         isProjectClosing={project.isClosing}
-        isReadOnly={project.isReadOnly || nav.view.name === 'trash'}
+        isReadOnly={project.isReadOnly || isTrash}
         offset={offset}
         panel={panel}
         onContextMenu={handleContextMenu}

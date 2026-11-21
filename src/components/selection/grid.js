@@ -23,7 +23,7 @@ export const SelectionGrid = memo(({
   photo,
   size
 }) => {
-  let active = useSelector(state => state.nav.selection)
+  let active = useSelector(state => state.nav.selection.selection)
   let selections = useSelector(state =>
     pluck(state.selections, photo.selections), shallowEqual)
 

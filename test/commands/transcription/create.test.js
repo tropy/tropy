@@ -8,7 +8,7 @@ describe('Create transcription', () => {
   let exec = (payload) => run(
     new Create(slice.create({ text: 'Text', ...payload }), { db }).exec(), {
       state: {
-        nav: { photo: 1, selection: null },
+        nav: { selection: { photo: 1, selection: null } },
         photos: { 1: { id: 1 }, 3: { id: 3 } },
         selections: { 2: { id: 2, photo: 3 } }
       },

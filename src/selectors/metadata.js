@@ -115,13 +115,13 @@ export const getItemFields = memo(
 
 const getPhotoMetadata = memo(
   ({ metadata }) => metadata,
-  ({ nav }) => nav.photo,
+  ({ nav }) => nav.selection.photo,
   (metadata, id) => id ? collectMetadata(metadata, [id]) : null
 )
 
 const getSelectionMetadata = memo(
   ({ metadata }) => metadata,
-  ({ nav }) => nav.selection,
+  ({ nav }) => nav.selection.selection,
   (metadata, id) => id ? collectMetadata(metadata, [id]) : null
 )
 

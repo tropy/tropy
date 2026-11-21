@@ -10,7 +10,10 @@ export const createItemStore = (selected = [1]) => {
     items: Object.fromEntries(ids.map(id =>
       [id, { id, photos: [], tags: [], lists: [] }])),
     qr: { items: ids },
-    nav: { ...nav(undefined, {}), item: create(selected) },
+    nav: {
+      ...nav(undefined, {}),
+      selection: { ...nav(undefined, {}).selection, item: create(selected) }
+    },
     intl: { messages: {} }
   })
 }

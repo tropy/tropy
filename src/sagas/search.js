@@ -17,6 +17,8 @@ import { TermCache, contributors, keyOf, membership } from '../common/matches.js
 import { ids as selected } from '../common/selection.js'
 import * as mod from '../models/index.js'
 import * as act from '../actions/index.js'
+import * as nav from '../slices/nav/index.js'
+import { isResultOf } from '../slices/cmd.js'
 import * as COLUMN from '../slices/columns/builtin.js'
 
 const getSort = (state) => ({
@@ -84,7 +86,7 @@ const belongs = (item, { name, id, items }) => {
 
 // The selected items that belong to the view (see belongs).
 const getSelectedIds = (view) => (state) =>
-  selected(state.nav.item).filter(id => belongs(state.items[id], view))
+  selected(state.nav.selection.item).filter(id => belongs(state.items[id], view))
 
 // The ids with those of extra appended that are not among them.
 const include = (ids, extra) => {
@@ -195,9 +197,6 @@ const getData = ({ items, metadata, ontology }) => ({
   items, metadata, template: ontology.template
 })
 
-const isDone = (cmd) => ({ type, meta }) =>
-  type === cmd.type && meta?.done && meta.rel === cmd.meta.seq
-
 // Keeps qr.matches (and qr.items) up to date with the search in state,
 // after each action that asks for it, one search (qr.search) at a time:
 // actions taken while a search is busy leave one in the buffer,
@@ -211,7 +210,7 @@ export function *matches (pattern) {
 
       let cmd = act.qr.search()
       yield put(cmd)
-      yield take(isDone(cmd))
+      yield take(isResultOf(cmd))
     }
   } finally {
     chan.close()
@@ -224,11 +223,11 @@ export function *matches (pattern) {
 // (e.g. dismissed, or expired on restore).
 // An expired record stays while shown: what is selected is visible.
 const getView = (state) => ({
-  ...state.nav.view,
-  tags: state.nav.tags,
-  query: state.nav.query,
-  items: (state.nav.view.name === 'activity')
-    ? getItems(state, state.nav.view)
+  ...state.nav.search.view,
+  tags: state.nav.search.tags,
+  query: state.nav.search.query,
+  items: (state.nav.search.view.name === 'activity')
+    ? getItems(state, state.nav.search.view)
     : null
 })
 
@@ -252,7 +251,7 @@ export function *find (db, {
       view = call(mod.item.find, db, { ids: items, tags })
       break
     case 'trash':
-      view = call(mod.item.trash, db)
+      view = call(mod.item.trash, db, { tags })
       break
     case 'unlisted':
       view = call(mod.item.unlisted, db, { tags })
@@ -345,7 +344,7 @@ export function *search (db) {
     let { ids } = yield* find(db, view)
 
     // The selection counts as matches if it belongs to the view: a
-    // search that may narrow the results clears it (nav.js), so it
+    // search that may narrow the results clears it (slices/nav), so it
     // adds nothing, while updates of the results (edits, imports) and
     // widening searches never remove what is selected. Unmatched items
     // drop out with the first update after deselecting.
@@ -422,7 +421,10 @@ const lookup = (ids) => {
 // Returns what it saw, for the next run to compare.
 export function *contribute (db, prev = {}) {
   try {
-    let { query, item } = yield select(state => state.nav)
+    let { query, item } = yield select(state => ({
+      query: state.nav.search.query,
+      item: state.nav.selection.item
+    }))
 
     if (query === prev.query && item === prev.item)
       return prev
@@ -473,15 +475,15 @@ export function *contribute (db, prev = {}) {
 // selected stays visible (a note created and selected, or edited so
 // it no longer matches; see getVisiblePhotos, getVisibleNotes).
 export function *narrow () {
-  let { nav, filter } = yield select(state => ({
-    nav: state.nav,
+  let { current, filter } = yield select(state => ({
+    current: state.nav.selection,
     filter: selectMatchFilter(state)
   }))
 
   if (filter == null) return
 
-  let photo = nav.photo
-  let selection = nav.selection
+  let photo = current.photo
+  let selection = current.selection
 
   if (photo != null && !filter.photos[photo]) {
     photo = (yield select(getVisiblePhotos))
@@ -489,16 +491,16 @@ export function *narrow () {
     selection = null
   }
 
-  let note = nav.note
+  let note = current.note
 
-  if (photo !== nav.photo || (note != null && !filter.notes[note])) {
+  if (photo !== current.photo || (note != null && !filter.notes[note])) {
     let notes = (yield select(state =>
       (state.selections[selection] ?? state.photos[photo])?.notes)) ?? []
     note = notes.find(id => filter.notes[id]) ?? null
   }
 
-  if (photo !== nav.photo || note !== nav.note)
-    yield put(act.nav.narrow({ photo, selection, note }))
+  if (photo !== current.photo || note !== current.note)
+    yield put(nav.narrow({ photo, selection, note }))
 }
 
 // Keeps qr.order in sync with the sort and the sort keys in state,

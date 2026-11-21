@@ -28,7 +28,7 @@ describe('PhotoList', () => {
     render(<PhotoList/>, withStore(store))
 
     emit(document, 'global:nextPhoto')
-    expect(store.getState().nav.photo).to.equal(2)
+    expect(store.getState().nav.selection.photo).to.equal(2)
   })
 
   it('opens the context menu for photos', () => {
@@ -50,10 +50,10 @@ describe('PhotoList', () => {
       fireEvent.keyDown($('.scroll-container'), { key: 'ArrowDown' })
 
     down()
-    expect(store.getState().nav).to.include({ photo: 1, selection: 9 })
+    expect(store.getState().nav.selection).to.include({ photo: 1, selection: 9 })
 
     down()
-    expect(store.getState().nav).to.include({ photo: 2, selection: undefined })
+    expect(store.getState().nav.selection).to.include({ photo: 2, selection: undefined })
   })
 
   it('opens the context menu for expanded selections', () => {

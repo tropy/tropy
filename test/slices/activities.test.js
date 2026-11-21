@@ -237,7 +237,7 @@ describe('past activities', () => {
       .map(rec => rec.type)).to.eql(['b'])
 
     // The record shown stays, also if expired.
-    let nav = { view: { name: 'activity', type: 'a' } }
+    let nav = { search: { view: { name: 'activity', type: 'a' } } }
     expect(selectPastActivities({ activities, nav }, 150 + DAY)
       .map(rec => rec.type)).to.eql(['b', 'a'])
 

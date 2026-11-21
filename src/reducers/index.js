@@ -1,12 +1,3 @@
-export { default as activities } from '../slices/activities.js'
-export { default as columns } from '../slices/columns/index.js'
-export { default as nav } from '../slices/nav/index.js'
-export { default as notepad } from '../slices/notepad.js'
-export { default as projectFiles } from '../slices/project-files.js'
-export { default as qr } from '../slices/qr.js'
-export { default as prefs } from '../slices/prefs.js'
-export { default as transcriptions } from '../slices/transcriptions.js'
-
 export * from './context.js'
 export * from './edit.js'
 export * from './esper.js'

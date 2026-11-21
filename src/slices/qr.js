@@ -1,7 +1,6 @@
 import { createSelector as memo, createSlice } from '@reduxjs/toolkit'
 import { parse } from '../common/search.js'
 import { createMatcher } from '../common/matcher.js'
-import { NAV } from '../constants/index.js'
 import { createMetaReducer } from './util.js'
 import * as views from './nav/view.js'
 import * as COLUMN from './columns/builtin.js'
@@ -53,7 +52,7 @@ export const selectViewOf = (state, id) =>
 
 // The parsed search query: { terms, errors } (see common/search.js).
 export const selectQuery = memo(
-  (state) => state.nav.query,
+  (state) => state.nav.search.query,
   (query) => parse(query || ''))
 
 // The matcher of the search query, for highlighting (see
@@ -64,7 +63,7 @@ export const selectQuery = memo(
 export const selectMatcher = memo(
   selectQuery,
   (state) =>
-    state.settings.search.highlight && state.nav.mode !== NAV.MODE.ITEM,
+    state.settings.search.highlight && state.nav.mode !== 'item',
   ({ terms, errors }, isEnabled) =>
     (!isEnabled || terms.length === 0 || errors.length > 0) ?
       null :

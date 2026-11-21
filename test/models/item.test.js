@@ -202,6 +202,15 @@ describe('models/item', () => {
         .to.eql([ids[1]])
     })
 
+    it('finds trashed items with every tag', async () => {
+      let a = await tag.create(db, { name: 'A' })
+      await item.tags.add(db, { id: [ids[0], ids[1]], tag: a.id })
+      await item.delete(db, [ids[1], ids[2]])
+
+      expect((await item.trash(db, {})).items).to.have.members(ids.slice(1))
+      expect((await item.trash(db, { tags: [a.id] })).items).to.eql([ids[1]])
+    })
+
     it('finds unlisted items by their live memberships', async () => {
       let a = await list.create(db, { name: 'A' })
       let b = await list.create(db, { name: 'B' })

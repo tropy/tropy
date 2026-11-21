@@ -160,7 +160,7 @@ export const getActiveItemTemplate = memo(
 
 export const getActivePhotoTemplate = memo(
   ({ ontology }) => ontology.template,
-  ({ nav }) => nav.photo,
+  ({ nav }) => nav.selection.photo,
   ({ photos }) => photos,
   (template, id, photos) =>
     (id != null && id in photos) ? template[photos[id].template] : null
@@ -168,7 +168,7 @@ export const getActivePhotoTemplate = memo(
 
 export const getActiveSelectionTemplate = memo(
   ({ ontology }) => ontology.template,
-  ({ nav }) => nav.selection,
+  ({ nav }) => nav.selection.selection,
   ({ selections }) => selections,
   (template, id, selections) =>
     (id != null && id in selections) ? template[selections[id].template] : null

@@ -4,6 +4,8 @@ import createSagaMiddleware from 'redux-saga'
 import { fatal } from '../common/log.js'
 import { seq, debounce, throttle, log } from '../middleware/index.js'
 
+import prefs from '../slices/prefs.js'
+
 import {
   context,
   edit,
@@ -12,7 +14,6 @@ import {
   intl,
   keymap,
   ontology,
-  prefs,
   project,
   settings
 } from '../reducers/index.js'

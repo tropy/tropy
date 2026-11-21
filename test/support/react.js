@@ -8,7 +8,27 @@ import { TestBackend } from 'react-dnd-test-backend'
 import WIN, { createWindowInstance } from '#tropy/window.js'
 import { WindowContext } from '#tropy/components/window.js'
 import { Strings } from '#tropy/res.js'
-import * as reducer from '#tropy/reducers/index.js'
+import * as legacy from '#tropy/reducers/index.js'
+import activities from '#tropy/slices/activities.js'
+import columns from '#tropy/slices/columns/index.js'
+import nav from '#tropy/slices/nav/index.js'
+import notepad from '#tropy/slices/notepad.js'
+import prefs from '#tropy/slices/prefs.js'
+import projectFiles from '#tropy/slices/project-files.js'
+import qr from '#tropy/slices/qr.js'
+import transcriptions from '#tropy/slices/transcriptions.js'
+
+const reducer = {
+  ...legacy,
+  activities,
+  columns,
+  nav,
+  notepad,
+  prefs,
+  projectFiles,
+  qr,
+  transcriptions
+}
 
 const helpers = {
   $ (node, ...args) {

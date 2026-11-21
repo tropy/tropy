@@ -10,5 +10,5 @@ export function *putActivityUpdate (action, payload) {
   yield put(update(action, payload, { search }))
 }
 
-const activeView = ({ nav }, id) =>
-  nav.view.name === 'activity' && nav.view.id === id
+const activeView = ({ nav: { search } }, id) =>
+  search.view.name === 'activity' && search.view.id === id

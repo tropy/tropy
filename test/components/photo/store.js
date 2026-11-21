@@ -28,6 +28,9 @@ export const createPhotoStore = ({
       {},
     qr: { items: [1] },
     panel: { ...panel(undefined, {}), expand: expanded ? { 1: 1 } : {} },
-    nav: { ...nav(undefined, {}), item: create([1]), photo: current },
+    nav: {
+      ...nav(undefined, {}),
+      selection: { ...nav(undefined, {}).selection, item: create([1]), photo: current }
+    },
     keymap
   })

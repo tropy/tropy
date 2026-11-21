@@ -13,7 +13,7 @@ export const ItemToolbar = ({ isItemMode }) => {
   let nodeRef = useRef(null)
 
   let toggleProjectMode = useEvent(() => {
-    dispatch(mode.project())
+    dispatch(mode.back())
   })
 
   return (

@@ -1,46 +1,77 @@
-import { ITEM, LIST, TAG } from '#tropy/constants/index.js'
+import { EDIT, ITEM, LIST, NOTE, TAG } from '#tropy/constants/index.js'
 import nav, * as act from '#tropy/slices/nav/index.js'
 import { create, has } from '#tropy/common/selection.js'
 import { cancel, dismiss } from '#tropy/slices/activities.js'
+import { done } from '#tropy/slices/cmd.js'
+
+const init = nav(undefined, {})
+
+// A nav with items 1 selected and the given search.
+const state = (search) => ({
+  ...init,
+  search: { ...init.search, ...search },
+  selection: { ...init.selection, item: create([1]) }
+})
+
+const isKept = (s) => has(s.selection.item, 1)
 
 describe('nav', () => {
   it('restores the selection state, keeping anchor and cursor', () => {
-    let payload = { item: { selected: { 1: true, 3: true }, anchor: 1, cursor: 3 } }
-    let { item } = nav(undefined, act.restore(payload))
+    let payload = {
+      selection: { item: { selected: { 1: true, 3: true }, anchor: 1, cursor: 3 } }
+    }
+    let { item } = nav(undefined, act.restore(payload)).selection
 
     expect(item).to.include({ anchor: 1, cursor: 3 })
     expect(has(item, 1) && has(item, 3)).to.be.true
     expect(Object.getPrototypeOf(item.selected)).to.be.null
   })
 
+  it('restores the selection with another view (not a search change)', () => {
+    let restored = nav(init, act.restore({
+      search: { view: { name: 'list', id: 3 } },
+      selection: { item: create([1]) },
+      mode: 'item'
+    }))
+
+    expect(restored.search.view).to.eql({ name: 'list', id: 3 })
+    expect(restored.mode).to.equal('item')
+    expect(isKept(restored)).to.be.true
+  })
+
+  it('restores no selection from malformed state', () => {
+    let s = nav(undefined, act.restore({
+      search: { sort: 'x' },
+      selection: { item: { anchor: 1 } }
+    }))
+
+    expect(s.selection).to.eql(init.selection)
+    expect(s.search.sort).to.eql({})
+  })
+
   it('replaces the selection state on select', () => {
     let item = create([3])
-    let state = nav(undefined, { type: ITEM.SELECT, payload: { item }, meta: {} })
-    expect(state.item).to.equal(item)
+    let s = nav(undefined, { type: ITEM.SELECT, payload: { item }, meta: {} })
+    expect(s.selection.item).to.equal(item)
   })
 
   it('resets the selection when selected items are deleted', () => {
-    let state = { ...nav(undefined, {}), item: create([1, 2]) }
-    let action = { type: ITEM.DELETE, payload: [2], meta: {} }
-    expect(nav(state, action).item.anchor).to.be.null
+    let action = { type: ITEM.DELETE, payload: [1], meta: { cmd: 'project' } }
+    expect(nav(state(), action).selection.item.anchor).to.be.null
   })
 
   it('selects tags to filter by', () => {
-    let tags = (state, id, mod) =>
-      nav(state, { type: TAG.SELECT, payload: id, meta: { mod } }).tags
+    let tags = (s, id, mod) =>
+      nav(s, { type: TAG.SELECT, payload: id, meta: { mod } }).search.tags
 
-    let state = { ...nav(undefined, {}), tags: [1, 2] }
-    expect(tags(state, 3)).to.eql([3])
-    expect(tags(state, 3, 'merge')).to.eql([1, 2, 3])
-    expect(tags(state, 1, 'remove')).to.eql([2])
-    expect(tags(state, 1, 'clear')).to.eql([])
+    let s = state({ tags: [1, 2] })
+    expect(tags(s, 3)).to.eql([3])
+    expect(tags(s, 3, 'merge')).to.eql([1, 2, 3])
+    expect(tags(s, 1, 'remove')).to.eql([2])
+    expect(tags(s, 1, 'clear')).to.eql([])
   })
 
   describe('keeps the selection when the search can only widen', () => {
-    let state = (props) =>
-      ({ ...nav(undefined, {}), item: create([1]), ...props })
-    let isKept = (s) => has(s.item, 1)
-
     it('on query changes', () => {
       let search = (from, to) =>
         nav(state({ query: from }), act.search({ query: to }))
@@ -60,54 +91,79 @@ describe('nav', () => {
 
       let deleted = nav(state({ tags: [5] }),
         { type: TAG.DELETE, payload: 5, meta: { done: true } })
-      expect(deleted.tags).to.eql([])
+      expect(deleted.search.tags).to.eql([])
       expect(isKept(deleted)).to.be.true
+    })
+
+    it('on showing the view already shown', () => {
+      expect(isKept(nav(state(), act.show({})))).to.be.true
+      expect(isKept(nav(state(), act.show({ view: { name: 'trash' } }))))
+        .to.be.false
+    })
+
+    it('on showing the same activity, with or without an id', () => {
+      let past = { name: 'activity', type: 'item.import', id: null }
+      let s = nav(state({ view: past }),
+        act.show({ view: { name: 'activity', type: 'item.import' } }))
+      expect(isKept(s)).to.be.true
+    })
+
+    it('on sorting, also with an invalid query', () => {
+      let query = Array.from({ length: 40 }, (_, i) => `w${i}`).join(' ')
+      let s = nav(state({ query }), act.sort({ column: 'x', asc: true }))
+      expect(isKept(s)).to.be.true
     })
   })
 
   describe('view', () => {
-    let state = (props) =>
-      ({ ...nav(undefined, {}), item: create([1]), ...props })
     let imports = { name: 'activity', type: 'item.import', id: null }
+    let view = (s) => s.search.view
 
     it('is the project by default', () => {
-      expect(nav(undefined, {}).view).to.eql({ name: 'project' })
+      expect(view(init)).to.eql({ name: 'project' })
+    })
+
+    it('takes only the view, query and tags shown', () => {
+      let s = nav(init, act.show({ view: { name: 'trash' }, sort: { 0: {} } }))
+      expect(s.search.sort).to.eql({})
+      expect(nav(init, act.search({ query: 'x', view: { name: 'trash' } }))
+        .search).to.include({ query: 'x' })
+        .and.to.have.nested.property('view.name', 'project')
     })
 
     it('is replaced on select, back to the project by default', () => {
       let s = state({ view: imports })
-      expect(nav(s, act.show({ view: { name: 'trash' } })).view)
+      expect(view(nav(s, act.show({ view: { name: 'trash' } }))))
         .to.eql({ name: 'trash' })
-      expect(nav(s, act.show({})).view)
+      expect(view(nav(s, act.show({}))))
         .to.eql({ name: 'project' })
     })
 
     it('keeps an activity for searches and tag filters', () => {
       let s = state({ view: imports })
-      expect(nav(s, act.search({ query: 'x' })).view)
-        .to.equal(imports)
-      expect(nav(s, { type: TAG.SELECT, payload: 1, meta: {} }).view)
+      expect(view(nav(s, act.search({ query: 'x' })))).to.equal(imports)
+      expect(view(nav(s, { type: TAG.SELECT, payload: 1, meta: {} })))
         .to.equal(imports)
     })
 
-    it('leaves the trash for tag filters', () => {
+    it('keeps the trash for tag filters', () => {
       let s = nav(state({ view: { name: 'trash' } }),
         { type: TAG.SELECT, payload: 1, meta: {} })
-      expect(s.view).to.eql({ name: 'project' })
-      expect(s.tags).to.eql([1])
+      expect(view(s)).to.eql({ name: 'trash' })
+      expect(s.search.tags).to.eql([1])
     })
 
     it('returns to the project when its list is removed', () => {
       let s = state({ view: { name: 'list', id: 3 } })
       expect(nav(s, { type: LIST.REMOVE, payload: 4, meta: {} })).to.equal(s)
-      expect(nav(s, { type: LIST.REMOVE, payload: 3, meta: {} }).view)
+      expect(view(nav(s, { type: LIST.REMOVE, payload: 3, meta: {} })))
         .to.eql({ name: 'project' })
     })
 
     it('selects a collapsed parent list if hinted', () => {
       let s = state({ view: { name: 'list', id: 3 } })
       let collapse = (select) =>
-        nav(s, { type: LIST.COLLAPSE, payload: 2, meta: { select } }).view
+        view(nav(s, { type: LIST.COLLAPSE, payload: 2, meta: { select } }))
 
       expect(collapse(false)).to.eql({ name: 'list', id: 3 })
       expect(collapse(true)).to.eql({ name: 'list', id: 2 })
@@ -118,8 +174,8 @@ describe('nav', () => {
       expect(nav(s, dismiss('item.export'))).to.equal(s)
 
       let dismissed = nav(s, dismiss('item.import'))
-      expect(dismissed.view).to.eql({ name: 'project' })
-      expect(has(dismissed.item, 1)).to.be.false
+      expect(view(dismissed)).to.eql({ name: 'project' })
+      expect(isKept(dismissed)).to.be.false
     })
 
     it('keeps the view of a busy activity that is cancelled', () => {
@@ -136,7 +192,7 @@ describe('nav', () => {
     it('returns to the project when the past activity shown is dismissed', () => {
       let s = state({ view: { ...imports, id: 9 } })
       expect(nav(s, dismiss('item.import', 8))).to.equal(s)
-      expect(nav(s, dismiss('item.import', 9)).view)
+      expect(view(nav(s, dismiss('item.import', 9))))
         .to.eql({ name: 'project' })
     })
 
@@ -146,18 +202,60 @@ describe('nav', () => {
     })
 
     it('is restored', () => {
-      let restore = (payload) =>
-        nav(undefined, act.restore(payload)).view
+      let restore = (v) =>
+        view(nav(undefined, act.restore({ search: { view: v } })))
 
-      expect(restore({ view: { name: 'list', id: 3 } })).to.eql({ name: 'list', id: 3 })
-      expect(restore({ view: { name: 'unknown' } })).to.eql({ name: 'project' })
-      expect(restore(undefined)).to.eql({ name: 'project' })
+      expect(restore({ name: 'list', id: 3 })).to.eql({ name: 'list', id: 3 })
+      expect(restore({ name: 'unknown' })).to.eql({ name: 'project' })
+      expect(view(nav(undefined, act.restore(undefined))))
+        .to.eql({ name: 'project' })
     })
 
     it('restores the activity view with a negative id', () => {
-      let { view } = nav(undefined, act.restore({ view: { ...imports, id: 9 } }))
+      let s = nav(undefined,
+        act.restore({ search: { view: { ...imports, id: 9 } } }))
 
-      expect(view).to.eql({ ...imports, id: -9 })
+      expect(view(s)).to.eql({ ...imports, id: -9 })
+    })
+  })
+
+  describe('mode', () => {
+    let itemMode = { ...init, mode: 'item' }
+    let mode = (s, action) => nav(s, action).mode
+
+    let open = { type: ITEM.OPEN, payload: { id: 1 }, meta: { cmd: 'project', seq: 1 } }
+    let openNote = { type: NOTE.OPEN, payload: { id: 7 }, meta: { cmd: 'project', seq: 2 } }
+
+    it('switches to the item when opening is done', () => {
+      expect(mode(init, done(open, { id: 1 }))).to.equal('item')
+      expect(mode(init, done(openNote, { item: 1, photo: 2, note: 7 })))
+        .to.equal('item')
+    })
+
+    it('stays while opening, if it failed, or the item is missing', () => {
+      expect(mode(init, open)).to.equal('project')
+      expect(mode(init, done(open, new Error()))).to.equal('project')
+      expect(mode(init, done(open, null))).to.equal('project')
+    })
+
+    it('goes back to the project', () => {
+      expect(mode(itemMode, act.mode.back())).to.equal('project')
+      expect(mode(itemMode, act.show({}))).to.equal('project')
+    })
+
+    it('goes back to the project to edit a tag or list', () => {
+      let edit = (payload) => ({ type: EDIT.START, payload, meta: {} })
+
+      expect(mode(itemMode, edit({ tag: { id: 1 } }))).to.equal('project')
+      expect(mode(itemMode, edit({ list: { id: 1 } }))).to.equal('project')
+      expect(mode(itemMode, edit({ note: { id: 1 } }))).to.equal('item')
+    })
+
+    it('restores only known modes', () => {
+      expect(nav(undefined, act.restore({ mode: 'item' })).mode).to.equal('item')
+      expect(nav(undefined, act.restore({ mode: 'x' })).mode).to.equal('project')
+      expect(nav(undefined, act.restore({ mode: 'constructor' })).mode)
+        .to.equal('project')
     })
   })
 })
