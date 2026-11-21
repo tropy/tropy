@@ -5,7 +5,7 @@ import { build, reverse, update } from '../common/order.js'
 import { createSequence, stable } from '../common/sequence.js'
 import { collator } from '../collate.js'
 import { parse } from '../common/search.js'
-import { getSortColumn, getVisiblePhotos } from '../selectors/index.js'
+import { getVisiblePhotos } from '../selectors/index.js'
 import { selectActivity } from '../slices/activities.js'
 import {
   selectMatchFilter,
@@ -22,7 +22,7 @@ import { isResultOf } from '../slices/cmd.js'
 import * as COLUMN from '../slices/columns/builtin.js'
 
 const getSort = (state) => ({
-  ...getSortColumn(state),
+  ...nav.selectSort(state),
   locale: state.intl.locale
 })
 
@@ -226,7 +226,7 @@ const getView = (state) => ({
   ...state.nav.search.view,
   tags: state.nav.search.tags,
   query: state.nav.search.query,
-  items: (state.nav.search.view.name === 'activity')
+  items: nav.selectIsView(state, 'activity')
     ? getItems(state, state.nav.search.view)
     : null
 })

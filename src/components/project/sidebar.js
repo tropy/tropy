@@ -335,11 +335,11 @@ class ProjectSidebar extends React.PureComponent {
 const ProjectSidebarContainer = connect(
   (state, { root }) => ({
     edit: state.edit,
-    isActivitySelected: state.nav.search.view.name === 'activity',
-    isTrashSelected: state.nav.search.view.name === 'trash',
-    isUnlistedSelected: state.nav.search.view.name === 'unlisted',
+    isActivitySelected: nav.selectIsView(state, 'activity'),
+    isTrashSelected: nav.selectIsView(state, 'trash'),
+    isUnlistedSelected: nav.selectIsView(state, 'unlisted'),
     keymap: state.keymap,
-    list: views.listOf(state.nav.search.view),
+    list: nav.selectList(state),
     lists: state.lists,
     listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
     tagColor: state.settings.tagColor,

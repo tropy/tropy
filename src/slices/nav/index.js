@@ -1,15 +1,17 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import { expands } from '../../common/search.js'
 import { restore, show } from './actions.js'
-import searchReducer, { search, sort } from './search.js'
-import selectionReducer, { clear, narrow } from './selection.js'
-import modeReducer, { back } from './mode.js'
+import { searchSlice } from './search.js'
+import { selectionSlice } from './selection.js'
+import { modeSlice } from './mode.js'
 
 const slices = combineReducers({
-  search: searchReducer,
-  selection: selectionReducer,
-  mode: modeReducer
+  search: searchSlice.reducer,
+  selection: selectionSlice.reducer,
+  mode: modeSlice.reducer
 })
+
+const { clear } = selectionSlice.actions
 
 export default function nav (state, action) {
   if (restore.match(action))
@@ -23,7 +25,7 @@ export default function nav (state, action) {
     narrows(state.search, next.search))
     next = {
       ...next,
-      selection: selectionReducer(next.selection, clear())
+      selection: selectionSlice.reducer(next.selection, clear())
     }
 
   return next
@@ -41,5 +43,13 @@ const isSameView = (a, b) =>
   a.name === b.name && a.type === b.type &&
   (a.id ?? null) === (b.id ?? null)
 
-export { restore, show, search, sort, narrow }
-export const mode = { back }
+export { restore, show }
+export const { search, sort } = searchSlice.actions
+export const { narrow } = selectionSlice.actions
+export const mode = { back: modeSlice.actions.back }
+
+export const {
+  selectIsView,
+  selectList,
+  selectSort
+} = searchSlice.getSelectors(state => state.nav.search)

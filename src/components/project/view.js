@@ -10,7 +10,6 @@ import { ProjectSidebar } from './sidebar.js'
 import { ProjectToolbar } from './toolbar.js'
 import { SASS } from '../../constants/index.js'
 import * as nav from '../../slices/nav/index.js'
-import { listOf } from '../../slices/nav/view.js'
 
 import * as act from '../../actions/index.js'
 
@@ -27,14 +26,12 @@ export const ProjectView = ({
 
   let dispatch = useDispatch()
 
-  let view = useSelector(state => state.nav.search.view)
+  let list = useSelector(nav.selectList)
+  let isTrash = useSelector(state => nav.selectIsView(state, 'trash'))
   let query = useSelector(state => state.nav.search.query)
   let zoom = useSelector(state => state.ui.zoom)
   let items = useSelector(selectItemSequence)
   let queryError = useSelector(state => selectQuery(state).errors[0])
-
-  let list = listOf(view)
-  let isTrash = view.name === 'trash'
 
   let iterator = useRef()
 

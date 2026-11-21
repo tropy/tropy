@@ -258,4 +258,28 @@ describe('nav', () => {
         .to.equal('project')
     })
   })
+
+  describe('selectors', () => {
+    let root = (search) => ({ nav: state(search) })
+    let list = { name: 'list', id: 3 }
+
+    it('sort the view shown, by default title or list position', () => {
+      expect(act.selectSort(root()).column).to.match(/title$/)
+      expect(act.selectSort(root({ view: list })).column).to.equal('added')
+
+      let s = nav(state({ view: list }), act.sort({ column: 'x', asc: false }))
+      expect(s.search.sort).to.eql({ 3: { column: 'x', asc: false } })
+      expect(act.selectSort({ nav: s })).to.eql({ column: 'x', asc: false })
+
+      let trash = { ...s, search: { ...s.search, view: { name: 'trash' } } }
+      expect(act.selectSort({ nav: trash }).column).to.match(/title$/)
+    })
+
+    it('select the list shown and test the view', () => {
+      expect(act.selectList(root({ view: list }))).to.equal(3)
+      expect(act.selectList(root())).to.be.null
+      expect(act.selectIsView(root({ view: { name: 'trash' } }), 'trash')).to.be.true
+      expect(act.selectIsView(root(), 'trash')).to.be.false
+    })
+  })
 })

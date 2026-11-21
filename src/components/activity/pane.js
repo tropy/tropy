@@ -16,7 +16,7 @@ export const ActivityPane = memo(() => {
   // While we have no common cursor nav in the sidebar,
   // we move the tab-stop while in activity view.
   let isActivityView = useSelector(state =>
-    state.nav.search.view.name === 'activity')
+    nav.selectIsView(state, 'activity'))
 
   let handleCancel = (id) => {
     dispatch(act.activities.cancel(id))

@@ -9,6 +9,7 @@ import { indexOf } from '../../common/sequence.js'
 import { blank } from '../../common/util.js'
 import { getItemSelection } from '../../selectors/index.js'
 import { selectItemSequence } from '../../slices/qr.js'
+import { selectIsView } from '../../slices/nav/index.js'
 import * as act from '../../actions/index.js'
 
 // The item list container logic shared by grid and table:
@@ -31,7 +32,7 @@ export function useItemIterator ({
   let items = useSelector(selectItemSequence)
   let data = useSelector(state => state.items)
   let selection = useSelector(getItemSelection)
-  let isTrashSelected = useSelector(state => state.nav.search.view.name === 'trash')
+  let isTrashSelected = useSelector(state => selectIsView(state, 'trash'))
 
   useImperativeHandle(ref, () => ({
     focus () {

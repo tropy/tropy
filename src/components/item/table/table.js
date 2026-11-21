@@ -6,7 +6,6 @@ import { TableHead } from './head.js'
 import { ColumnContextMenu } from '../column.js'
 import cx from 'classnames'
 import { useEvent } from '../../../hooks/use-event.js'
-import { getSortColumn } from '../../../selectors/index.js'
 import * as act from '../../../actions/index.js'
 import { useItemIterator } from '../use-item-iterator.js'
 
@@ -38,7 +37,7 @@ export const ItemTable = (props) => {
   let columns = useSelector(selectColumns)
   let data = useSelector(state => state.metadata)
   let edit = useSelector(state => state.edit.column)
-  let sort = useSelector(getSortColumn)
+  let sort = useSelector(nav.selectSort)
   let templates = useSelector(state => state.ontology.template)
 
   // Rows and the head are memoized: these handlers are stable.
@@ -47,7 +46,7 @@ export const ItemTable = (props) => {
   })
 
   let handleSort = useEvent((opts) => {
-    dispatch(nav.sort({ ...opts, list }))
+    dispatch(nav.sort(opts))
   })
 
   let table = useRef()

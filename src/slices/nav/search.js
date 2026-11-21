@@ -13,7 +13,7 @@ const initialState = {
   sort: {} // Sort column stored per list!
 }
 
-const searchSlice = createSlice({
+export const searchSlice = createSlice({
   name: 'nav/search',
   initialState,
 
@@ -28,12 +28,10 @@ const searchSlice = createSlice({
       }
     },
 
+    // Sorts the view shown: { column, asc }.
     sort: {
       prepare: (payload, meta) => ({
-        payload: {
-          ...payload,
-          list: payload.list ?? LIST.ROOT
-        },
+        payload,
         // Only position needs a search (list order from SQL);
         // the order saga follows other columns by itself.
         meta: {
@@ -41,9 +39,25 @@ const searchSlice = createSlice({
           ...meta
         }
       }),
-      reducer (state, { payload: { list, ...sort } }) {
-        state.sort[list || LIST.ROOT] = sort
+      reducer (state, { payload: { column, asc } }) {
+        state.sort[views.sortKey(state.view)] = { column, asc }
       }
+    }
+  },
+
+  // Bound to their place by nav (see getSelectors).
+  selectors: {
+    // The list shown, if any.
+    selectList: (search) =>
+      views.listOf(search.view),
+
+    selectIsView: (search, name) =>
+      search.view.name === name,
+
+    // The sort of the view shown, or its default.
+    selectSort: (search) => {
+      let key = views.sortKey(search.view)
+      return search.sort[key] ?? views.defaultSort(key)
     }
   },
 
@@ -94,9 +108,6 @@ const searchSlice = createSlice({
       })
   }
 })
-
-export const { search, sort } = searchSlice.actions
-export default searchSlice.reducer
 
 // TODO remove when tag list uses new selections
 // The tag filter: replace, add (merge), remove or clear.

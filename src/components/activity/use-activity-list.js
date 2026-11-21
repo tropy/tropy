@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { useBusyActivities } from './use-busy-activities.js'
 import { useNow, useTick } from './clock.js'
 import {
-  selectSelectedActivity,
+  selectShownActivity,
   selectPastActivities
 } from '../../slices/activities.js'
 
@@ -18,7 +18,7 @@ export function useActivityList () {
   let now = useNow()
   let busy = useBusyActivities()
   let past = useSelector(state => selectPastActivities(state, now))
-  let selected = useSelector(selectSelectedActivity)
+  let selected = useSelector(selectShownActivity)
 
   // Re-render when the next record expires
   useTick(Math.min(

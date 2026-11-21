@@ -29,7 +29,7 @@ const removeItems = (state, { payload }) => {
     return initialState
 }
 
-const selectionSlice = createSlice({
+export const selectionSlice = createSlice({
   name: 'nav/selection',
   initialState,
 
@@ -119,6 +119,3 @@ const selectionSlice = createSlice({
       })
   }
 })
-
-export const { clear, narrow } = selectionSlice.actions
-export default selectionSlice.reducer
