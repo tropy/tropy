@@ -1,4 +1,4 @@
-import { listOf, isActivity, isList, sortKey } from '#tropy/slices/nav/view.js'
+import { contains, listOf, isActivity, isList, sortKey } from '#tropy/slices/nav/view.js'
 
 describe('nav view', () => {
   it('has a list only for lists', () => {
@@ -12,6 +12,30 @@ describe('nav view', () => {
     expect(sortKey({ name: 'unlisted' })).to.equal(0)
     expect(sortKey({ name: 'trash' })).to.equal(0)
     expect(sortKey({ name: 'activity', type: 'item.import' })).to.equal(0)
+  })
+
+  it('contains views by the containment table', () => {
+    let project = { name: 'project' }
+    let list = { name: 'list', id: 3 }
+    let unlisted = { name: 'unlisted' }
+    let trash = { name: 'trash' }
+    let past = { name: 'activity', type: 'item.import', id: null }
+
+    for (let [outer, inner, expected] of [
+      [project, project, true],
+      [project, list, true],
+      [project, unlisted, true],
+      [project, past, true],
+      [project, trash, false],
+      [list, project, false],
+      [list, { name: 'list', id: 4 }, false],
+      [list, { name: 'list', id: 3 }, true],
+      [trash, project, false],
+      [past, { ...past, id: undefined }, true],
+      [past, { ...past, id: 9 }, false],
+      [past, { ...past, type: 'item.export' }, false]
+    ]) expect(contains(outer, inner), JSON.stringify([outer, inner]))
+      .to.equal(expected)
   })
 
   it('shows a list by id', () => {

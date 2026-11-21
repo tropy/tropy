@@ -1,5 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import { expands } from '../../common/search.js'
+import { contains } from './view.js'
 import { restore, show } from './actions.js'
 import { searchSlice } from './search.js'
 import { selectionSlice } from './selection.js'
@@ -19,10 +20,10 @@ export default function nav (state, action) {
 
   let next = slices(state, action)
 
-  // The one rule across slices (a cross-slice reducer):
-  // a search change that may narrow the results clears the selections.
+  // Cross-slice Reducer
+  // Search changes that could narrow the results clear selections.
   if (state && next.search !== state.search &&
-    narrows(state.search, next.search))
+    !widens(state.search, next.search))
     next = {
       ...next,
       selection: selectionSlice.reducer(next.selection, clear())
@@ -31,17 +32,13 @@ export default function nav (state, action) {
   return next
 }
 
-// Today's rules (widens replaces them in step 5): another view,
-// a query that may match less, or tags added to the filter (AND).
-const narrows = (prev, next) =>
-  !isSameView(prev.view, next.view) ||
-  (prev.query !== next.query && !expands(prev.query, next.query)) ||
-  next.tags.some(id => !prev.tags.includes(id))
-
-// Ids may be null or missing (e.g. a past activity, restored or not).
-const isSameView = (a, b) =>
-  a.name === b.name && a.type === b.type &&
-  (a.id ?? null) === (b.id ?? null)
+// Whether a search can only widen the results: the new view
+// contains the old one, the new query expands the old one, and
+// no tag was added to the filter (AND). The sort does not count.
+const widens = (prev, next) =>
+  contains(next.view, prev.view) &&
+  (prev.query === next.query || expands(prev.query, next.query)) &&
+  next.tags.every(id => prev.tags.includes(id))
 
 export { restore, show }
 export const { search, sort } = searchSlice.actions
