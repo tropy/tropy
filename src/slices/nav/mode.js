@@ -9,7 +9,7 @@ const mode = {
   item: 'item'
 }
 
-const modeSlice = createSlice({
+export const modeSlice = createSlice({
   name: 'nav/mode',
   initialState: mode.project,
 
@@ -32,6 +32,3 @@ const modeSlice = createSlice({
         (payload != null) ? mode.item : state)
   }
 })
-
-export const { back } = modeSlice.actions
-export default modeSlice.reducer

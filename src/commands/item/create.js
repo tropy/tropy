@@ -5,7 +5,7 @@ import { prompt } from '../../dialog.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
 
-import { listOf } from '../../slices/nav/view.js'
+import { selectList } from '../../slices/nav/index.js'
 
 import {
   getItemTemplate,
@@ -22,7 +22,7 @@ export class Create extends Command {
 
     // Created in a list: added to it (as imports are), so that it
     // belongs to the view it is selected in.
-    let active = yield select(state => listOf(state.nav.search.view))
+    let active = yield select(selectList)
 
     let item = yield call(db.transaction, async tx => {
       let created = await mod.item.create(tx, template.id, data)

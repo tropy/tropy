@@ -10,7 +10,7 @@ import {
 } from '#tropy/sagas/search.js'
 import { create } from '#tropy/common/selection.js'
 import { update } from '#tropy/slices/qr.js'
-import { getDefaultSort } from '#tropy/selectors/nav.js'
+import { defaultSort } from '#tropy/slices/nav/view.js'
 import * as mod from '#tropy/models/index.js'
 
 const TITLE = 'http://purl.org/dc/elements/1.1/title'
@@ -79,7 +79,7 @@ describe('order saga', () => {
   it('reverses the order on a direction change without seeding', () => {
     let { result } = sync$(state(metadata))
     let s = state(metadata)
-    s.nav.search.sort = { 0: { ...getDefaultSort(0), asc: false } }
+    s.nav.search.sort = { 0: { ...defaultSort(0), asc: false } }
 
     let { puts, calls } = sync$(s, result)
 

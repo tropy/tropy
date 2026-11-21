@@ -38,7 +38,7 @@ export const Project = ({
   let dispatch = useDispatch()
 
   let navMode = useSelector(state => state.nav.mode)
-  let isTrash = useSelector(state => state.nav.search.view.name === 'trash')
+  let isTrash = useSelector(state => nav.selectIsView(state, 'trash'))
 
   let mode = useTransitionState(ref, navMode, {
     timeout,

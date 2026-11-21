@@ -216,8 +216,8 @@ export function selectActivity ({ activities }, { type, id }) {
     : (activities.past[type] ?? null)
 }
 
-// The selected activity (nav.search.view), if any.
-export const selectSelectedActivity = (state) =>
+// The activity shown (nav.search.view), if any.
+export const selectShownActivity = (state) =>
   (state.nav?.search.view.name === 'activity')
     ? selectActivity(state, state.nav.search.view)
     : null
@@ -228,7 +228,7 @@ export const selectPastActivities = createSelector(
   [
     ({ activities }) => activities.past,
     (_, now) => now,
-    selectSelectedActivity
+    selectShownActivity
   ],
   (past, now, selected) =>
     Object.values(past)
