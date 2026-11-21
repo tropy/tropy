@@ -4,7 +4,7 @@ import * as act from '#tropy/actions/index.js'
 
 describe('Open item', () => {
   let state = (matches = { 1: true }) => ({
-    nav: {},
+    nav: { selection: {} },
     qr: { matches },
     items: { 1: { id: 1, photos: [2], deleted: true } },
     photos: { 2: { id: 2, notes: [] } },

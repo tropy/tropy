@@ -82,10 +82,10 @@ export default {
 
   collapse (id, meta = {}) {
     return (dispatch, getState) => {
-      let { nav, lists } = getState()
+      let { nav: { search }, lists } = getState()
 
       // Set hint for nav reducer.
-      meta.select = isChildNodeSelected(id, listOf(nav.view), lists)
+      meta.select = isChildNodeSelected(id, listOf(search.view), lists)
 
       dispatch({
         type: LIST.COLLAPSE,

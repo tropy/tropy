@@ -2,7 +2,7 @@ import { put, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { ITEM } from '../../constants/index.js'
 import { selectViewOf } from '../../slices/qr.js'
-import * as act from '../../actions/index.js'
+import { show } from '../../slices/nav/index.js'
 
 
 export class Open extends Command {
@@ -11,7 +11,7 @@ export class Open extends Command {
 
     let [item, nav, selections] = yield select(state => ([
       state.items[id],
-      state.nav,
+      state.nav.selection,
       state.selections
     ]))
 
@@ -26,7 +26,7 @@ export class Open extends Command {
     // Not among the results (opened by a link or the API):
     // a new search for a view that shows it.
     let view = yield select(selectViewOf, id)
-    if (view != null) yield put(act.nav.show(view))
+    if (view != null) yield put(show(view))
 
     if (!photo) {
       photo = item.photos.includes(nav.photo) ?

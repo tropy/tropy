@@ -37,5 +37,20 @@ describe('Storage migrations', () => {
         .to.eql({ nav: { sort: {} }, columns })
       expect(migrate({ panel: {} }, 2)).to.eql({ panel: {}, nav: undefined })
     })
+
+    it('#3 nests nav by slice', () => {
+      let view = { name: 'list', id: 3 }
+      let item = { selected: { 1: true }, anchor: 1, cursor: 1 }
+
+      expect(migrate({
+        nav: { view, sort: {}, query: 'x', tags: [1], item, photo: 2, mode: 'item' }
+      }, 3)).to.eql({
+        nav: {
+          search: { view, sort: {} },
+          selection: { item, photo: 2, selection: undefined, note: undefined },
+          mode: 'item'
+        }
+      })
+    })
   })
 })

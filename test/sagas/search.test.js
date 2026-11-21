@@ -25,7 +25,7 @@ describe('order saga', () => {
 
   const state = (metadata, qr = {}) => ({
     intl: { locale: 'en' },
-    nav: { sort: {}, view: { name: 'project' } },
+    nav: { search: { sort: {}, view: { name: 'project' } } },
     items,
     metadata,
     ontology: { template: {} },
@@ -79,7 +79,7 @@ describe('order saga', () => {
   it('reverses the order on a direction change without seeding', () => {
     let { result } = sync$(state(metadata))
     let s = state(metadata)
-    s.nav.sort = { 0: { ...getDefaultSort(0), asc: false } }
+    s.nav.search.sort = { 0: { ...getDefaultSort(0), asc: false } }
 
     let { puts, calls } = sync$(s, result)
 
@@ -92,7 +92,9 @@ describe('order saga', () => {
     let { result } = sync$(state(metadata))
     let position = (m) => ({
       ...state(m),
-      nav: { view: { name: 'list', id: 1 }, sort: { 1: { column: 'added', asc: true } } }
+      nav: {
+        search: { view: { name: 'list', id: 1 }, sort: { 1: { column: 'added', asc: true } } }
+      }
     })
 
     // A list by position: no rebuild; edits move items in the order,
@@ -153,7 +155,10 @@ describe('order saga', () => {
 describe('search saga', () => {
   const state = (qr, query = '', item = []) => ({
     intl: { locale: 'en' },
-    nav: { sort: {}, view: { name: 'project' }, tags: [], query, item: create(item) },
+    nav: {
+      search: { sort: {}, view: { name: 'project' }, tags: [], query },
+      selection: { item: create(item) }
+    },
     items: {
       1: { id: 1, photos: [11] },
       2: { id: 2, photos: [] },
@@ -181,11 +186,13 @@ describe('search saga', () => {
     let s = {
       ...state({ matches: null }),
       nav: {
-        view: { name: 'list', id: 1 },
-        sort: { 1: { column: 'added', asc: false } },
-        tags: [],
-        query: '',
-        item: create()
+        search: {
+          view: { name: 'list', id: 1 },
+          sort: { 1: { column: 'added', asc: false } },
+          tags: [],
+          query: ''
+        },
+        selection: { item: create() }
       }
     }
     let { puts: [{ payload }] } = run(search(null), {
@@ -218,8 +225,8 @@ describe('search saga', () => {
 
   it('does not search invalid queries', () => {
     let s = state({ matches: null })
-    s.nav = {
-      ...s.nav,
+    s.nav.search = {
+      ...s.nav.search,
       query: Array.from({ length: 33 }, (_, i) => `w${i}`).join(' ')
     }
 
@@ -246,8 +253,8 @@ describe('search saga', () => {
 
   it('keeps only selected items that belong to the view', () => {
     let s = state({ matches: null }, '', [3])
-    s.nav.view = { name: 'list', id: 1 }
-    s.nav.sort = { 1: { column: 'added', asc: true } }
+    s.nav.search.view = { name: 'list', id: 1 }
+    s.nav.search.sort = { 1: { column: 'added', asc: true } }
     s.items[3] = { ...s.items[3], lists: [] }
 
     let { puts: [{ payload }] } = run(search(null), {
@@ -263,8 +270,8 @@ describe('search saga', () => {
 
   it('searches the items of the past activity shown', () => {
     let s = state({ matches: null })
-    s.nav.view = { name: 'activity', type: 'item.import' }
-    s.nav.tags = [5]
+    s.nav.search.view = { name: 'activity', type: 'item.import' }
+    s.nav.search.tags = [5]
     s.activities = {
       busy: {},
       past: {
@@ -287,7 +294,7 @@ describe('search saga', () => {
   it('keeps no deleted items of the past activity shown', () => {
     // Item 3 is selected but was moved to the trash.
     let s = state({ matches: null }, '', [3])
-    s.nav.view = { name: 'activity', type: 'item.import' }
+    s.nav.search.view = { name: 'activity', type: 'item.import' }
     s.activities = {
       busy: {},
       past: {
@@ -309,7 +316,7 @@ describe('search saga', () => {
 
   it('keeps the items of an expired activity while shown', () => {
     let s = state({ matches: null })
-    s.nav.view = { name: 'activity', type: 'item.import' }
+    s.nav.search.view = { name: 'activity', type: 'item.import' }
     s.activities = {
       busy: {},
       past: {
@@ -330,7 +337,7 @@ describe('search saga', () => {
 
   it('finds no items for an activity that is gone', () => {
     let s = state({ matches: null }, '', [1])
-    s.nav.view = { name: 'activity', type: 'item.import' }
+    s.nav.search.view = { name: 'activity', type: 'item.import' }
     s.activities = { busy: {}, past: {} }
 
     let { calls, puts: [{ payload }] } = run(search(null), {
@@ -348,7 +355,7 @@ describe('search saga', () => {
 
   it('searches the items of the past activity when the run shown is done', () => {
     let s = state({ matches: null })
-    s.nav.view = { name: 'activity', type: 'item.import', id: 9 }
+    s.nav.search.view = { name: 'activity', type: 'item.import', id: 9 }
     s.activities = {
       busy: {},
       past: {
@@ -369,7 +376,7 @@ describe('search saga', () => {
 
   it('searches the items of a busy run, not the past one', () => {
     let s = state({ matches: null })
-    s.nav.view = { name: 'activity', type: 'item.import', id: 9 }
+    s.nav.search.view = { name: 'activity', type: 'item.import', id: 9 }
     s.activities = {
       busy: { 9: { id: 9, type: 'item.import', items: [3] } },
       past: {
@@ -392,7 +399,10 @@ describe('search saga', () => {
 
 describe('contributors', () => {
   const state = ({ query = 'box', item = [1], photo = 11, note = null } = {}) => ({
-    nav: { query, item: create(item), photo, selection: null, note },
+    nav: {
+      search: { query },
+      selection: { item: create(item), photo, selection: null, note }
+    },
     qr: {
       items: [1, 2],
       contributors: { photos: { 12: true }, notes: { 7: true } }

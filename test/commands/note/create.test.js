@@ -9,7 +9,7 @@ describe('Create note', () => {
     new Create(act.note.create({ html: '<p>Note</p>', ...payload }), { db })
       .exec(), {
       state: {
-        nav: { photo: 1, selection: null },
+        nav: { selection: { photo: 1, selection: null } },
         photos: { 1: { id: 1 }, 3: { id: 3 } },
         selections: { 2: { id: 2, photo: 3 } }
       },

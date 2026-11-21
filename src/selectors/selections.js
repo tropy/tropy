@@ -7,19 +7,19 @@ const getSelections = ({ selections }) => selections
 
 export const getActiveSelection = memo(
   getSelections,
-  ({ nav }) => nav.selection,
+  ({ nav }) => nav.selection.selection,
   (selections, id) => (id != null) ? selections[id] : null
 )
 
 export const getActiveSelectionData = memo(
   ({ metadata }) => metadata,
-  ({ nav }) => nav.selection,
+  ({ nav }) => nav.selection.selection,
   (metadata, id) => (id != null) ? metadata[id] : null
 )
 
 
 export const getPhotoSelections = memo(
-  ({ nav, photos }) => photos[nav.photo]?.selections,
+  ({ nav, photos }) => photos[nav.selection.photo]?.selections,
   getSelections,
   (photoSelections, selections) =>
     (photoSelections != null) ?

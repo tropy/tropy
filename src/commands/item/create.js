@@ -22,7 +22,7 @@ export class Create extends Command {
 
     // Created in a list: added to it (as imports are), so that it
     // belongs to the view it is selected in.
-    let active = yield select(state => listOf(state.nav.view))
+    let active = yield select(state => listOf(state.nav.search.view))
 
     let item = yield call(db.transaction, async tx => {
       let created = await mod.item.create(tx, template.id, data)

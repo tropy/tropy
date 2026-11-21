@@ -22,7 +22,7 @@ describe('Highlight', () => {
 
     const search = (text, { query, mode = 'project', highlight = true }) => {
       let store = createStore({
-        nav: { ...nav(undefined, {}), query, mode },
+        nav: { ...nav(undefined, {}), search: { ...nav(undefined, {}).search, query }, mode },
         settings: { ...settings, search: { highlight } }
       })
       let { container } = render(

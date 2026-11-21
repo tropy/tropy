@@ -26,7 +26,7 @@ describe('NoteList', () => {
     fireEvent.mouseDown(note, { detail: 1 })
     fireEvent.doubleClick(note, { detail: 2 })
 
-    expect(store.getState().nav.note).to.equal(2)
+    expect(store.getState().nav.selection.note).to.equal(2)
     expect(commands()[0].payload).to.include({ id: 1, selection: undefined })
     expect(commands()[0].payload.notes).to.eql([2])
   })
@@ -80,7 +80,7 @@ describe('NoteList', () => {
     let { $, store } = setup()
 
     fireEvent.keyDown($('.scroll-container'), { key: 'ArrowDown' })
-    expect(store.getState().nav.note).to.equal(2)
+    expect(store.getState().nav.selection.note).to.equal(2)
   })
 
   it('selects a page of notes with page keys', async () => {
@@ -97,7 +97,7 @@ describe('NoteList', () => {
     })
 
     fireEvent.keyDown($('.scroll-container'), { key: 'PageDown' })
-    expect(store.getState().nav.note).to.equal(6)
+    expect(store.getState().nav.selection.note).to.equal(6)
 
     style.remove()
   })

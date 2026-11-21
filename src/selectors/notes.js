@@ -5,7 +5,7 @@ import { Cursor } from '../common/sequence.js'
 import { selectMatchFilter } from '../slices/qr.js'
 
 const getNotes = ({ notes }) => notes
-const getSelectedNoteId = ({ nav }) => nav.note
+const getSelectedNoteId = ({ nav }) => nav.selection.note
 
 export const getSelectedNote = memo(
   getNotes, getSelectedNoteId, (notes, id) => notes[id]
@@ -31,7 +31,7 @@ export const getVisibleNotes = memo(
   getVisiblePhotos,
   getVisibleSelections,
   selectMatchFilter,
-  (state) => selectMatchFilter(state) && state.nav.note,
+  (state) => selectMatchFilter(state) && state.nav.selection.note,
 
   (notes, photos, selections, filter, current) =>
     [...photos, ...selections]

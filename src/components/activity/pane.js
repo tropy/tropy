@@ -5,6 +5,7 @@ import { Activity } from './activity.js'
 import { useActivityList } from './use-activity-list.js'
 import { useKeyMap } from '../../hooks/use-keymap.js'
 import * as act from '../../actions/index.js'
+import * as nav from '../../slices/nav/index.js'
 import * as views from '../../slices/nav/view.js'
 
 export const ActivityPane = memo(() => {
@@ -15,7 +16,7 @@ export const ActivityPane = memo(() => {
   // While we have no common cursor nav in the sidebar,
   // we move the tab-stop while in activity view.
   let isActivityView = useSelector(state =>
-    state.nav.view.name === 'activity')
+    state.nav.search.view.name === 'activity')
 
   let handleCancel = (id) => {
     dispatch(act.activities.cancel(id))
@@ -24,12 +25,12 @@ export const ActivityPane = memo(() => {
     dispatch(act.activities.dismiss(type, id))
   }
   let handleSelect = (type, id) => {
-    dispatch(act.nav.show({ view: views.activity(type, id) }))
+    dispatch(nav.show({ view: views.activity(type, id) }))
   }
 
   let handleKeyDown = useKeyMap('ActivityPane', isActivityView && {
     clear () {
-      dispatch(act.nav.show({ view: views.project() }))
+      dispatch(nav.show({ view: views.project() }))
     }
   })
 

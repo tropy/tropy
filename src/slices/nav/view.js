@@ -2,7 +2,7 @@ import { LIST } from '../../constants/index.js'
 import { restoreId } from '../activities.js'
 
 /*
- * nav.view { name, ...props }
+ * nav.search.view { name, ...props }
  *
  * The view decides the base set of visible items;
  * search query and tags are secondary filters.

@@ -29,8 +29,8 @@ export function usePhotoIterator ({
   let scroll = useRef()
 
   let photos = useSelector(getVisiblePhotos)
-  let current = useSelector(state => state.nav.photo)
-  let selection = useSelector(state => state.nav.selection)
+  let current = useSelector(state => state.nav.selection.photo)
+  let selection = useSelector(state => state.nav.selection.selection)
   let expandedPhotos = useSelector(getExpandedPhotos)
   let selections = useSelector(state => state.selections)
   let contributors = useSelector(state => state.qr.contributors)

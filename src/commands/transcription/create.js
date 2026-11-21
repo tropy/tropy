@@ -23,7 +23,7 @@ export class Create extends Command {
     }
 
     if (photo == null && selection == null) {
-      ({ photo, selection } = yield select(state => state.nav))
+      ({ photo, selection } = yield select(state => state.nav.selection))
     }
 
     let isValid = yield select(state => (selection != null) ?

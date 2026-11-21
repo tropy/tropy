@@ -3,7 +3,7 @@ import { put, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { NOTE } from '../../constants/index.js'
 import { selectViewOf } from '../../slices/qr.js'
-import * as act from '../../actions/index.js'
+import { show } from '../../slices/nav/index.js'
 import { getNoteParent, getPrimaryItemId } from '../../selectors/index.js'
 import { emit } from '../../dom.js'
 
@@ -17,8 +17,8 @@ export class Open extends Command {
     } else {
       [item, photo, selection] = yield select(state => ([
         getPrimaryItemId(state),
-        state.nav.photo,
-        state.nav.selection
+        state.nav.selection.photo,
+        state.nav.selection.selection
       ]))
     }
 
@@ -26,7 +26,7 @@ export class Open extends Command {
 
     // Not among the results: a new search for a view that shows it.
     let view = yield select(selectViewOf, item)
-    if (view != null) yield put(act.nav.show(view))
+    if (view != null) yield put(show(view))
 
     let delay = 25
     let [isProjectMode, isMinimized] = yield select(state => ([

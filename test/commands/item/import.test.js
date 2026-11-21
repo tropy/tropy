@@ -57,7 +57,7 @@ describe('Import items', () => {
       dispatch: (a) => puts.push(a),
       getState: () => ({
         settings: { title: {} },
-        nav: { view: { name: 'project' } }
+        nav: { search: { view: { name: 'project' } } }
       })
     }, function * () {
       yield * step(cmd)

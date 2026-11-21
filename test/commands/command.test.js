@@ -61,7 +61,7 @@ describe('Command', () => {
 
       let run = (view) => runSaga({
         dispatch: (a) => puts.push(a),
-        getState: () => ({ nav: { view } })
+        getState: () => ({ nav: { search: { view } } })
       }, function* () {
         yield * cmd.progress()
       }).toPromise()

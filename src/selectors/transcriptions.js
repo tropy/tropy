@@ -15,7 +15,7 @@ export const pickActiveTranscription = (transcriptions) =>
 
 export const getActiveTranscription = (state, props) =>
   pickActiveTranscription(getTranscriptions(state, {
-    id: props?.id ?? state.nav.selection ?? state.nav.photo
+    id: props?.id ?? state.nav.selection.selection ?? state.nav.selection.photo
   }))
 
 export function getTranscriptionSuccessor (state, ids) {

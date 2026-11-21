@@ -11,7 +11,7 @@ export const getDefaultSort = (list) =>
   (list > 0) ? DEFAULT_LIST_SORT : DEFAULT_SORT
 
 export const getSortColumn = memo(
-  ({ nav }) => nav.sort,
-  ({ nav }) => sortKey(nav.view),
+  ({ nav }) => nav.search.sort,
+  ({ nav }) => sortKey(nav.search.view),
   (sort, list) => ((list in sort) ? sort[list] : getDefaultSort(list))
 )

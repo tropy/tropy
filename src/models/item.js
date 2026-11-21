@@ -123,11 +123,11 @@ mod.item = {
           ${TAGGED(tags)}`)
   },
 
-  async trash (db) {
+  async trash (db, { tags } = {}) {
     return search(db, sql`
       SELECT id
         FROM items JOIN trash USING (id)
-        WHERE reason = 'user'`)
+        WHERE reason = 'user' ${TAGGED(tags)}`)
   },
 
   // In list order: the order when sorting by position.

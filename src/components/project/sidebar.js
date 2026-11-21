@@ -14,6 +14,7 @@ import { match } from '../../keymap.js'
 import { testFocusChange } from '../../dom.js'
 import * as act from '../../actions/index.js'
 
+import * as nav from '../../slices/nav/index.js'
 import * as views from '../../slices/nav/view.js'
 
 import {
@@ -334,15 +335,15 @@ class ProjectSidebar extends React.PureComponent {
 const ProjectSidebarContainer = connect(
   (state, { root }) => ({
     edit: state.edit,
-    isActivitySelected: state.nav.view.name === 'activity',
-    isTrashSelected: state.nav.view.name === 'trash',
-    isUnlistedSelected: state.nav.view.name === 'unlisted',
+    isActivitySelected: state.nav.search.view.name === 'activity',
+    isTrashSelected: state.nav.search.view.name === 'trash',
+    isUnlistedSelected: state.nav.search.view.name === 'unlisted',
     keymap: state.keymap,
-    list: views.listOf(state.nav.view),
+    list: views.listOf(state.nav.search.view),
     lists: state.lists,
     listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
     tagColor: state.settings.tagColor,
-    tagSelection: state.nav.tags,
+    tagSelection: state.nav.search.tags,
     tags: getAllTags(state),
     width: state.ui.sidebar.width
   }),
@@ -402,7 +403,7 @@ const ProjectSidebarContainer = connect(
     },
 
     onSelect (...args) {
-      dispatch(act.nav.show(...args))
+      dispatch(nav.show(...args))
     },
 
     onTagCreate (data) {

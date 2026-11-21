@@ -16,7 +16,7 @@ describe('ItemGrid', () => {
       withStore(store))
   }
 
-  let selection = () => store.getState().nav.item
+  let selection = () => store.getState().nav.selection.item
 
   it('selects the next item on global events', () => {
     setup()
@@ -44,7 +44,7 @@ describe('ItemGrid', () => {
   it('clears the selection on background clicks', () => {
     let { $ } = setup()
     fireEvent.click($('.scroll-container'))
-    expect(store.getState().nav.item.selected).to.eql({})
+    expect(store.getState().nav.selection.item.selected).to.eql({})
   })
 
   it('opens the context menu for the item', () => {

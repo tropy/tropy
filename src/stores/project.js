@@ -4,9 +4,15 @@ import createSagaMiddleware from 'redux-saga'
 import { fatal } from '../common/log.js'
 import { seq, debounce, throttle, log } from '../middleware/index.js'
 
+import activities from '../slices/activities.js'
+import columns from '../slices/columns/index.js'
+import nav from '../slices/nav/index.js'
+import notepad from '../slices/notepad.js'
+import projectFiles from '../slices/project-files.js'
+import qr from '../slices/qr.js'
+import transcriptions from '../slices/transcriptions.js'
+
 import {
-  activities,
-  columns,
   context,
   edit,
   esper,
@@ -17,21 +23,16 @@ import {
   keymap,
   lists,
   metadata,
-  nav,
   notes,
-  notepad,
   ontology,
   panel,
   photos,
   project,
-  projectFiles,
-  qr,
   recent,
   selections,
   settings,
   sidebar,
   tags,
-  transcriptions,
   ui
 } from '../reducers/index.js'
 

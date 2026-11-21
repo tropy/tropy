@@ -14,7 +14,7 @@ export class Create extends Command {
     let { html, state, text, photo, selection } = this.action.payload
 
     if (photo == null && selection == null) {
-      ({ photo, selection } = yield select(({ nav }) => nav))
+      ({ photo, selection } = yield select(({ nav }) => nav.selection))
     }
 
     let parent = yield select(state => (selection != null) ?
@@ -72,7 +72,7 @@ export class Delete extends Command {
       return null
 
     let [isSelected, map] = yield select(state => ([
-      payload.includes(state.nav.note),
+      payload.includes(state.nav.selection.note),
       getNotesMap(state, { notes: payload })
     ]))
 

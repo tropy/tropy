@@ -5,7 +5,7 @@ import { Selection } from '../common/selection.js'
 import { selectItemSequence } from '../slices/qr.js'
 
 export const getItemSelection = memo(
-  ({ nav }) => nav.item,
+  ({ nav }) => nav.selection.item,
   selectItemSequence,
   (state, seq) => new Selection(state, seq)
 )

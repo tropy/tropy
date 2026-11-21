@@ -14,7 +14,7 @@ describe('track saga', () => {
     },
     photos: { 10: { id: 10, item: 100 }, 11: { id: 11, item: 101 } },
     selections: { 30: { id: 30, photo: 11 } },
-    nav: { view: { name: 'project' } }
+    nav: { search: { view: { name: 'project' } } }
   }
 
   const puts = (batch, ...ids) =>
@@ -55,7 +55,7 @@ describe('track saga', () => {
       batch.handle.meta.seq = 7
 
       return run(track(batch, pending(1, 2, 3)), {
-        state: { ...state, nav: { view } }
+        state: { ...state, nav: { search: { view } } }
       }).puts[0].meta.search
     }
 
