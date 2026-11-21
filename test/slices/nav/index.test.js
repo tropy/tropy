@@ -108,6 +108,27 @@ describe('nav', () => {
       expect(isKept(s)).to.be.true
     })
 
+    it('on view changes to a containing view', () => {
+      let list = { name: 'list', id: 3 }
+      let show = (from, to) =>
+        isKept(nav(state({ view: from }), act.show({ view: to })))
+
+      expect(show(list, { name: 'project' })).to.be.true
+      expect(show({ name: 'unlisted' }, { name: 'project' })).to.be.true
+      expect(show({ name: 'project' }, list)).to.be.false
+      expect(show(list, { name: 'list', id: 4 })).to.be.false
+      expect(show({ name: 'trash' }, { name: 'project' })).to.be.false
+      expect(show({ name: 'project' }, { name: 'trash' })).to.be.false
+
+      let removed = nav(state({ view: list }),
+        { type: LIST.REMOVE, payload: 3, meta: {} })
+      expect(isKept(removed)).to.be.true
+
+      let collapsed = nav(state({ view: list }),
+        { type: LIST.COLLAPSE, payload: 2, meta: { select: true } })
+      expect(isKept(collapsed)).to.be.false
+    })
+
     it('on sorting, also with an invalid query', () => {
       let query = Array.from({ length: 40 }, (_, i) => `w${i}`).join(' ')
       let s = nav(state({ query }), act.sort({ column: 'x', asc: true }))
@@ -175,7 +196,7 @@ describe('nav', () => {
 
       let dismissed = nav(s, dismiss('item.import'))
       expect(view(dismissed)).to.eql({ name: 'project' })
-      expect(isKept(dismissed)).to.be.false
+      expect(isKept(dismissed)).to.be.true
     })
 
     it('keeps the view of a busy activity that is cancelled', () => {

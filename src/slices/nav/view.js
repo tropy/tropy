@@ -40,6 +40,24 @@ export const isActivity = (view, type, id) => {
     return (view.id == null || view.id === id)
 }
 
+// Ids may be null or missing (e.g. a past activity, restored or not).
+const isSame = (a, b) =>
+  a.name === b.name && a.type === b.type && (a.id ?? null) === (b.id ?? null)
+
+// View containment rules:
+// The project contains everything, except the trash;
+// deleted items belong to no other view!
+export const contains = (outer, inner) => {
+  if (isSame(outer, inner))
+    return true
+
+  return outer.name === 'project' && (
+    inner.name === 'list' ||
+    inner.name === 'unlisted' ||
+    inner.name === 'activity'
+  )
+}
+
 export function restore (view) {
   switch (view?.name) {
     case 'activity':
