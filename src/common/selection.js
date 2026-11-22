@@ -197,6 +197,31 @@ export const clear = (state) => {
   return equal(state, next) ? state : next
 }
 
+// Returns new state without given elements, or `state` if unchanged.
+export const remove = (state, elements) => {
+  let { selected, anchor, cursor } = state
+
+  for (let it of elements) {
+    let id = toId(it)
+
+    if (Object.hasOwn(selected, id)) {
+      if (selected === state.selected)
+        selected = copy(selected)
+
+      delete selected[id]
+    }
+
+    if (id === anchor) anchor = null
+    if (id === cursor) cursor = null
+  }
+
+  return (
+    selected === state.selected &&
+    anchor === state.anchor &&
+    cursor === state.cursor
+  ) ? state : { ...state, selected, anchor, cursor }
+}
+
 // Applies fn to the ids of seq between positions a and b, inclusive.
 const each = (seq, [a, b], fn) => {
   for (let i = Math.min(a, b), j = Math.max(a, b); i <= j; ++i)

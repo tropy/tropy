@@ -55,9 +55,50 @@ describe('nav', () => {
     expect(s.selection.item).to.equal(item)
   })
 
-  it('resets the selection when selected items are deleted', () => {
-    let action = { type: ITEM.DELETE, payload: [1], meta: { cmd: 'project' } }
-    expect(nav(state(), action).selection.item.anchor).to.be.null
+  describe('drops removed items from the selection', () => {
+    // Items 1 and 2 selected, the cursor on 2, a photo shown.
+    let selected = (search) => {
+      let s = state(search)
+      return {
+        ...s,
+        selection: { ...s.selection, item: create([1, 2]), photo: 5 }
+      }
+    }
+
+    let request = (type, payload) =>
+      ({ type, payload, meta: { cmd: 'project' } })
+
+    it('when deleted, restored or removed', () => {
+      for (let action of [
+        request(ITEM.DELETE, [2]),
+        request(ITEM.RESTORE, [2]),
+        { type: ITEM.REMOVE, payload: [2], meta: {} }
+      ]) {
+        let { selection } = nav(selected(), action)
+
+        expect(isKept({ selection }), action.type).to.be.true
+        expect(has(selection.item, 2), action.type).to.be.false
+        expect(selection.item.cursor, action.type).to.be.null
+        expect(selection.photo, action.type).to.be.null
+      }
+    })
+
+    it('unless none of them is selected', () => {
+      let s = selected()
+      expect(nav(s, request(ITEM.DELETE, [3]))).to.equal(s)
+    })
+
+    it('when removed from the list shown only', () => {
+      let list = { name: 'list', id: 3 }
+      let remove = request(LIST.ITEM.REMOVE, { id: 3, items: [2] })
+
+      let shown = nav(selected({ view: list }), remove).selection
+      expect(has(shown.item, 2)).to.be.false
+      expect(has(shown.item, 1)).to.be.true
+
+      for (let other of [selected({ view: { name: 'list', id: 4 } }), selected()])
+        expect(nav(other, remove)).to.equal(other)
+    })
   })
 
   it('selects tags to filter by', () => {

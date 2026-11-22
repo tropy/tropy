@@ -1,9 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { create as createSelection, has, ids } from '../../common/selection.js'
+import {
+  create as createSelection,
+  has,
+  ids,
+  remove
+} from '../../common/selection.js'
 import { array } from '../../common/util.js'
 import { restore } from './actions.js'
 import { isDone, isPending } from '../cmd.js'
-import { ITEM, LIST, NOTE, PHOTO } from '../../constants/index.js'
+import { ITEM, NOTE, PHOTO } from '../../constants/index.js'
 
 const initialState = {
   item: createSelection(),
@@ -23,19 +28,29 @@ const setShown = (state, { item, photo, selection, note }) => {
   state.note = note
 }
 
-// Drops the selections when selected items are removed.
-const removeItems = (state, { payload }) => {
-  if (array(payload).some(id => has(state.item, id)))
-    return initialState
+// Shared with nav's cross-slice reducer: pure, so they work on
+// plain state there and as return values in the case reducers here.
+
+export const clearSelection = () => initialState
+
+// Drops removed items from the selection. The photo, selection
+// and note shown go too, as they may belong to a removed item.
+export const pruneSelection = (selection, ids) => {
+  let item = remove(selection.item, ids)
+
+  return (item === selection.item)
+    ? selection
+    : { item, photo: null, selection: null, note: null }
 }
+
+const prune = (state, { payload }) =>
+  pruneSelection(state, array(payload))
 
 export const selectionSlice = createSlice({
   name: 'nav/selection',
   initialState,
 
   reducers: {
-    clear: () => initialState,
-
     // The search moved the photo and note cursors to matching ones
     // (see narrow in sagas/search.js): { photo, selection, note }.
     narrow (state, { payload: { photo, selection, note } }) {
@@ -66,7 +81,7 @@ export const selectionSlice = createSlice({
         }
       })
 
-      .addCase(ITEM.REMOVE, removeItems)
+      .addCase(ITEM.REMOVE, prune)
 
       .addCase(ITEM.SELECT, (state, { payload }) => {
         setShown(state, payload)
@@ -105,9 +120,8 @@ export const selectionSlice = createSlice({
         }
       })
 
-      // Requests: the selections go before the items do.
-      .addMatcher(isPending(LIST.ITEM.REMOVE), () => initialState)
-      .addMatcher(isPending(ITEM.DELETE, ITEM.RESTORE), removeItems)
+      // Requests: the items leave the selection before the view.
+      .addMatcher(isPending(ITEM.DELETE, ITEM.RESTORE), prune)
 
       .addMatcher(isDone(ITEM.OPEN), (state, { payload }) => {
         if (payload != null)
