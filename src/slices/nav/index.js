@@ -1,44 +1,69 @@
-import { combineReducers } from '@reduxjs/toolkit'
 import { expands } from '../../common/search.js'
-import { contains } from './view.js'
+import { contains, isList } from './view.js'
+import { isPending } from '../cmd.js'
+import { LIST } from '../../constants/index.js'
 import { restore, show } from './actions.js'
 import { searchSlice } from './search.js'
-import { selectionSlice } from './selection.js'
+import {
+  clearSelection,
+  pruneSelection,
+  selectionSlice
+} from './selection.js'
 import { modeSlice } from './mode.js'
 
-const slices = combineReducers({
-  search: searchSlice.reducer,
-  selection: selectionSlice.reducer,
-  mode: modeSlice.reducer
-})
-
-const { clear } = selectionSlice.actions
-
-export default function nav (state, action) {
-  if (restore.match(action))
-    return slices(undefined, action)
-
-  let next = slices(state, action)
-
-  // Cross-slice Reducer
-  // Search changes that could narrow the results clear selections.
-  if (state && next.search !== state.search &&
-    !widens(state.search, next.search))
-    next = {
-      ...next,
-      selection: selectionSlice.reducer(next.selection, clear())
-    }
-
-  return next
+const initialState = {
+  search: searchSlice.getInitialState(),
+  selection: selectionSlice.getInitialState(),
+  mode: modeSlice.getInitialState()
 }
 
-// Whether a search can only widen the results: the new view
-// contains the old one, the new query expands the old one, and
-// no tag was added to the filter (AND). The sort does not count.
-const widens = (prev, next) =>
-  contains(next.view, prev.view) &&
-  (prev.query === next.query || expands(prev.query, next.query)) &&
-  next.tags.every(id => prev.tags.includes(id))
+const isListItemRemove = isPending(LIST.ITEM.REMOVE)
+
+const removeItemFromCurrentList = (action, view) =>
+  isListItemRemove(action) && isList(view, action.payload.id)
+
+export default function nav (state = initialState, action) {
+  let search = searchSlice.reducer(state.search, action)
+  let selection = state.selection
+
+  // If a search change isn't widening, we clear the selection.
+  if (!restore.match(action) && !widens(state.search, search))
+    selection = clearSelection()
+
+  selection = selectionSlice.reducer(selection, action)
+
+  // Items removed from the list shown leave the selection.
+  if (removeItemFromCurrentList(action, search.view))
+    selection = pruneSelection(selection, action.payload.items)
+
+  let mode = modeSlice.reducer(state.mode, action)
+
+  return (
+    search === state.search &&
+    selection === state.selection &&
+    mode === state.mode
+  ) ? state : { search, selection, mode }
+}
+
+// Whether a search change can only widen the results.
+function widens (prev, next) {
+  if (prev === next)
+    return true
+
+  // The new view must contain the old one.
+  if (!contains(next.view, prev.view))
+    return false
+
+  // The new query must expand on the old one.
+  if (prev.query !== next.query && !expands(prev.query, next.query))
+    return false
+
+  // No tag added to the filter (tags combine with AND).
+  if (next.tags.some(id => !prev.tags.includes(id)))
+    return false
+
+  return true
+}
 
 export { restore, show }
 export const { search, sort } = searchSlice.actions

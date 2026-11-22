@@ -8,6 +8,7 @@ import {
   has,
   ids as getIds,
   primary,
+  remove,
   select,
   Selection,
   size
@@ -74,6 +75,14 @@ describe('selection state', () => {
   it('keeps the selected elements when the sequence is re-sorted', () => {
     let state = run([[2], [4, 'extend']])
     expect(ids(state, [5, 4, 3, 2, 1])).to.eql([4, 3, 2])
+  })
+
+  it('removes elements, dropping a removed anchor or cursor', () => {
+    let state = create([2, 4, 6], { anchor: 2, cursor: 6 })
+
+    expect(getIds(remove(state, [6, 8]))).to.have.members([2, 4])
+    expect(remove(state, [6])).to.include({ anchor: 2, cursor: null })
+    expect(remove(state, [8])).to.equal(state)
   })
 
   it('lists selected ids as numbers', () => {
