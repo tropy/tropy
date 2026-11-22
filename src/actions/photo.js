@@ -1,5 +1,6 @@
 import { PHOTO } from '../constants/index.js'
 import { array } from '../common/util.js'
+import { warn } from '../common/log.js'
 
 function update (payload, meta = {}) {
   return {
@@ -144,10 +145,18 @@ export default {
     return (dispatch, getState) => {
       let { item, photo, selection, note } = payload
 
+      if (item == null && photo != null) {
+        item = getState().photos[photo]?.item
+      }
+
+      if (item == null) {
+        return warn({ photo }, 'cannot select photo without item')
+      }
+
       if (note == null && photo != null) {
-        note = (selection != null) ?
-          getState().selections[selection].notes[0] :
-          getState().photos[photo].notes[0]
+        note = (selection != null)
+          ? getState().selections[selection].notes[0]
+          : getState().photos[photo].notes[0]
       }
 
       dispatch({

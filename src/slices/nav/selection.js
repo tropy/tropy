@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {
   create as createSelection,
+  focus,
   has,
   ids,
   remove
@@ -89,7 +90,7 @@ export const selectionSlice = createSlice({
 
       .addCase(PHOTO.SELECT, (state, { payload }) => {
         if (payload) {
-          setShown(state, { ...payload, item: createSelection([payload.item]) })
+          setShown(state, { ...payload, item: focus(state.item, payload.item) })
         } else {
           state.photo = null
           state.selection = null
@@ -98,7 +99,7 @@ export const selectionSlice = createSlice({
 
       .addCase(NOTE.SELECT, (state, { payload }) => {
         if (payload)
-          setShown(state, { ...payload, item: createSelection([payload.item]) })
+          setShown(state, { ...payload, item: focus(state.item, payload.item) })
         else
           state.note = null
       })
@@ -125,11 +126,11 @@ export const selectionSlice = createSlice({
 
       .addMatcher(isDone(ITEM.OPEN), (state, { payload }) => {
         if (payload != null)
-          setShown(state, { ...payload, item: createSelection([payload.id]) })
+          setShown(state, { ...payload, item: focus(state.item, payload.id) })
       })
 
       .addMatcher(isDone(NOTE.OPEN), (state, { payload }) => {
-        setShown(state, { ...payload, item: createSelection([payload.item]) })
+        setShown(state, { ...payload, item: focus(state.item, payload.item) })
       })
   }
 })

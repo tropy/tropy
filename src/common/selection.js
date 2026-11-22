@@ -197,6 +197,16 @@ export const clear = (state) => {
   return equal(state, next) ? state : next
 }
 
+// Moves cursor/anchor within the selection if possible.
+export const focus = (state, id) => {
+  if (!has(state, id))
+    return create([id])
+  else
+    return (state.anchor === id && state.cursor === id)
+      ? state
+      : { ...state, anchor: id, cursor: id }
+}
+
 // Returns new state without given elements, or `state` if unchanged.
 export const remove = (state, elements) => {
   let { selected, anchor, cursor } = state
