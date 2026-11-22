@@ -476,7 +476,11 @@ export function *contribute (db, prev = {}) {
 // it no longer matches; see getVisiblePhotos, getVisibleNotes).
 export function *narrow () {
   let { current, filter } = yield select(state => ({
-    current: state.nav.selection,
+    current: {
+      photo: nav.selectPhotoCursor(state),
+      selection: nav.selectSelectionCursor(state),
+      note: state.nav.selection.note
+    },
     filter: selectMatchFilter(state)
   }))
 

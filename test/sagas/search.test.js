@@ -401,7 +401,7 @@ describe('contributors', () => {
   const state = ({ query = 'box', item = [1], photo = 11, note = null } = {}) => ({
     nav: {
       search: { query },
-      selection: { item: create(item), photo, selection: null, note }
+      selection: { item: create(item), photo: create([photo]), note }
     },
     qr: {
       items: [1, 2],

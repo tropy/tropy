@@ -10,6 +10,7 @@ import { move as reorder, pick, pluck } from '../../common/util.js'
 import { adjacent, indexOf } from '../../common/sequence.js'
 import { getExpandedPhotos, getVisiblePhotos } from '../../selectors/index.js'
 import { selectMatchFilter } from '../../slices/qr.js'
+import { selectPhotoCursor, selectSelectionCursor } from '../../slices/nav/index.js'
 import * as act from '../../actions/index.js'
 
 // The photo list container logic shared by list and grid:
@@ -29,8 +30,8 @@ export function usePhotoIterator ({
   let scroll = useRef()
 
   let photos = useSelector(getVisiblePhotos)
-  let current = useSelector(state => state.nav.selection.photo)
-  let selection = useSelector(state => state.nav.selection.selection)
+  let current = useSelector(selectPhotoCursor)
+  let selection = useSelector(selectSelectionCursor)
   let expandedPhotos = useSelector(getExpandedPhotos)
   let selections = useSelector(state => state.selections)
   let contributors = useSelector(state => state.qr.contributors)

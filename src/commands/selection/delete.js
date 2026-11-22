@@ -4,6 +4,7 @@ import { SELECTION } from '../../constants/index.js'
 import { get, splice } from '../../common/util.js'
 import mod from '../../models/selection.js'
 import * as act from '../../actions/index.js'
+import { selectSelectionCursor } from '../../slices/nav/index.js'
 
 
 export class Delete extends Command {
@@ -11,8 +12,8 @@ export class Delete extends Command {
     let { db } = this.options
     let { payload } = this.action
 
-    let [nav, photo] = yield select(state => ([
-      state.nav.selection,
+    let [cursor, photo] = yield select(state => ([
+      selectSelectionCursor(state),
       state.photos[payload.photo]
     ]))
 
@@ -24,8 +25,8 @@ export class Delete extends Command {
       await mod.order(tx, photo.id, order)
     })
 
-    if (nav.selection != null) {
-      let selected = payload.selections.indexOf(nav.selection)
+    if (cursor != null) {
+      let selected = payload.selections.indexOf(cursor)
       if (selected !== -1) {
         yield * this.select(
           photo.item,

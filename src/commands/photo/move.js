@@ -12,8 +12,10 @@ export class Move extends Command {
     let { photos, item } = this.action.payload
 
     let { idx } = this.action.meta
-    let { order, original } = yield select(state => ({
+    let { order, original, selections } = yield select(state => ({
       order: state.items[item].photos,
+      selections: photos.flatMap(({ id }) =>
+        state.photos[id]?.selections ?? []),
 
       // Assuming all photos being moved from the same item!
       original: state.items[photos[0].item]
@@ -31,7 +33,7 @@ export class Move extends Command {
 
     yield all([
       put(act.photo.bulk.update([ids, { item }])),
-      put(act.item.photos.remove({ id: original.id, photos: ids })),
+      put(act.item.photos.remove({ id: original.id, photos: ids, selections })),
       put(act.item.photos.add({ id: item, photos: ids }, { idx }))
     ])
 

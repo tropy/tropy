@@ -4,6 +4,7 @@ import { PHOTO } from '../../constants/index.js'
 import { get, splice } from '../../common/util.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
+import { selectPhotoCursor } from '../../slices/nav/index.js'
 
 
 export class Delete extends Command {
@@ -11,9 +12,10 @@ export class Delete extends Command {
     let { db } = this.options
     let { payload } = this.action
 
-    let [nav, item] = yield select(state => ([
-      state.nav.selection,
-      state.items[payload.item]
+    let [cursor, item, selections] = yield select(state => ([
+      selectPhotoCursor(state),
+      state.items[payload.item],
+      payload.photos.flatMap(id => state.photos[id]?.selections ?? [])
     ]))
 
     let idx = payload.photos.map(id => item.photos.indexOf(id))
@@ -24,8 +26,8 @@ export class Delete extends Command {
       await mod.photo.order(tx, item.id, order)
     })
 
-    if (nav.photo != null) {
-      let selected = payload.photos.indexOf(nav.photo)
+    if (cursor != null) {
+      let selected = payload.photos.indexOf(cursor)
       if (selected !== -1) {
         yield * this.select(item.id, order[idx[selected]] ?? order.at(-1))
       }
@@ -33,7 +35,8 @@ export class Delete extends Command {
 
     yield put(act.item.photos.remove({
       id: item.id,
-      photos: payload.photos
+      photos: payload.photos,
+      selections
     }))
 
     this.undo = act.photo.restore(payload, { idx })

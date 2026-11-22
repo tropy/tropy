@@ -1,6 +1,7 @@
 import { run } from '../../support/saga.js'
 import { Create } from '#tropy/commands/note/create.js'
 import * as act from '#tropy/actions/index.js'
+import { create } from '#tropy/common/selection.js'
 
 describe('Create note', () => {
   let db = { transaction () {} }
@@ -9,7 +10,7 @@ describe('Create note', () => {
     new Create(act.note.create({ html: '<p>Note</p>', ...payload }), { db })
       .exec(), {
       state: {
-        nav: { selection: { photo: 1, selection: null } },
+        nav: { selection: { photo: create([1]) } },
         photos: { 1: { id: 1 }, 3: { id: 3 } },
         selections: { 2: { id: 2, photo: 3 } }
       },

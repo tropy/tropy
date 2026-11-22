@@ -38,7 +38,7 @@ describe('Note Selectors', () => {
 
   describe('match filter', () => {
     let state = (filter) => ({
-      nav: { selection: { item: create([1]) } },
+      nav: { selection: { item: create([1]), photo: create() } },
       qr: {
         items: [1],
         contributors: { photos: { 2: true }, notes: { 12: true } }
@@ -64,7 +64,7 @@ describe('Note Selectors', () => {
 
     it('keeps the current photo and note visible', () => {
       let s = state(true)
-      s.nav = { selection: { ...s.nav.selection, photo: 1, note: 10 } }
+      s.nav = { selection: { ...s.nav.selection, photo: create([1]), note: 10 } }
 
       expect(getVisiblePhotos(s).map(p => p.id)).to.eql([1, 2])
       expect(getVisibleNotes(s).map(n => n.id)).to.eql([10, 12])
