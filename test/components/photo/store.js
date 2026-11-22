@@ -30,7 +30,11 @@ export const createPhotoStore = ({
     panel: { ...panel(undefined, {}), expand: expanded ? { 1: 1 } : {} },
     nav: {
       ...nav(undefined, {}),
-      selection: { ...nav(undefined, {}).selection, item: create([1]), photo: current }
+      selection: {
+        ...nav(undefined, {}).selection,
+        item: create([1]),
+        photo: create(current == null ? [] : [current])
+      }
     },
     keymap
   })

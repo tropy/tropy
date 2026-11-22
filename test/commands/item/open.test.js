@@ -1,10 +1,11 @@
 import { run } from '../../support/saga.js'
 import { Open } from '#tropy/commands/item/open.js'
 import * as act from '#tropy/actions/index.js'
+import { create } from '#tropy/common/selection.js'
 
 describe('Open item', () => {
   let state = (matches = { 1: true }) => ({
-    nav: { selection: {} },
+    nav: { selection: { photo: create() } },
     qr: { matches },
     items: { 1: { id: 1, photos: [2], deleted: true } },
     photos: { 2: { id: 2, notes: [] } },

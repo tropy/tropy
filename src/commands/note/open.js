@@ -3,7 +3,11 @@ import { put, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { NOTE } from '../../constants/index.js'
 import { selectViewOf } from '../../slices/qr.js'
-import { show } from '../../slices/nav/index.js'
+import {
+  selectPhotoCursor,
+  selectSelectionCursor,
+  show
+} from '../../slices/nav/index.js'
 import { getNoteParent, getPrimaryItemId } from '../../selectors/index.js'
 import { emit } from '../../dom.js'
 
@@ -17,8 +21,8 @@ export class Open extends Command {
     } else {
       [item, photo, selection] = yield select(state => ([
         getPrimaryItemId(state),
-        state.nav.selection.photo,
-        state.nav.selection.selection
+        selectPhotoCursor(state),
+        selectSelectionCursor(state)
       ]))
     }
 

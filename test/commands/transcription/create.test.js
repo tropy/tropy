@@ -1,6 +1,7 @@
 import { run } from '../../support/saga.js'
 import { Create } from '#tropy/commands/transcription/create.js'
 import * as slice from '#tropy/slices/transcriptions.js'
+import { create } from '#tropy/common/selection.js'
 
 describe('Create transcription', () => {
   let db = { transaction () {} }
@@ -8,7 +9,7 @@ describe('Create transcription', () => {
   let exec = (payload) => run(
     new Create(slice.create({ text: 'Text', ...payload }), { db }).exec(), {
       state: {
-        nav: { selection: { photo: 1, selection: null } },
+        nav: { selection: { photo: create([1]) } },
         photos: { 1: { id: 1 }, 3: { id: 3 } },
         selections: { 2: { id: 2, photo: 3 } }
       },

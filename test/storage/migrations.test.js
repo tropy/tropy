@@ -52,5 +52,19 @@ describe('Storage migrations', () => {
         }
       })
     })
+
+    it('#4 turns the photo and selection shown into a selection state', () => {
+      let nav = (photo, selection) =>
+        migrate({ nav: { selection: { item: {}, photo, selection, note: 7 } } }, 4)
+          .nav.selection
+
+      expect(nav(2, 3)).to.eql({
+        item: {},
+        photo: { selected: { 3: true }, anchor: 3, cursor: 3 },
+        note: 7
+      })
+      expect(nav(2).photo).to.include({ cursor: 2 })
+      expect(nav().photo).to.eql({ selected: {}, anchor: null, cursor: null })
+    })
   })
 })

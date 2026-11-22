@@ -23,7 +23,7 @@ export const createNoteStore = ({
     nav: {
       ...nav(undefined, {}),
       search: { ...nav(undefined, {}).search, query },
-      selection: { item: create([1]), photo: 1, selection: null, note }
+      selection: { item: create([1]), photo: create([1]), note }
     },
     keymap
   })

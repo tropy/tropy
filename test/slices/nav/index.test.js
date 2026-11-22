@@ -79,7 +79,7 @@ describe('nav', () => {
       }
 
       expect(nav(s, { type: PHOTO.SELECT, payload: { item: 1, photo: 5 }, meta: {} })
-        .selection.photo).to.equal(5)
+        .selection.photo.cursor).to.equal(5)
     })
 
     it('replaces the selection with an unselected parent', () => {
@@ -99,7 +99,7 @@ describe('nav', () => {
       let s = state(search)
       return {
         ...s,
-        selection: { ...s.selection, item: create([1, 2]), photo: 5 }
+        selection: { ...s.selection, item: create([1, 2]), photo: create([5]) }
       }
     }
 
@@ -117,7 +117,7 @@ describe('nav', () => {
         expect(isKept({ selection }), action.type).to.be.true
         expect(has(selection.item, 2), action.type).to.be.false
         expect(selection.item.cursor, action.type).to.be.null
-        expect(selection.photo, action.type).to.be.null
+        expect(selection.photo, action.type).to.eql(create())
       }
     })
 
@@ -136,6 +136,53 @@ describe('nav', () => {
 
       for (let other of [selected({ view: { name: 'list', id: 4 } }), selected()])
         expect(nav(other, remove)).to.equal(other)
+    })
+  })
+
+  describe('photo level', () => {
+    // Photo 5 of item 1 shown, with its selection 6 and note 7.
+    let s = {
+      ...init,
+      selection: { item: create([1]), photo: create([6]), note: 7 }
+    }
+
+    let photo = (action) => nav(s, action).selection.photo
+
+    it('holds the photo or the photo selection shown', () => {
+      let select = (payload) => ({ type: PHOTO.SELECT, payload, meta: {} })
+
+      expect(photo(select({ item: 1, photo: 5 }))).to.include({ cursor: 5 })
+      expect(photo(select({ item: 1, photo: 5, selection: 6 }))).to.include({ cursor: 6 })
+      expect(photo(select(null))).to.eql(create())
+    })
+
+    it('is empty without a photo shown', () => {
+      let { selection } = nav(s, {
+        type: ITEM.SELECT, payload: { item: create([1, 2]) }, meta: {}
+      })
+
+      expect(selection.photo).to.eql(create())
+      expect(selection.note).to.be.null
+    })
+
+    it('drops removed photos and photo selections, the note with the cursor', () => {
+      for (let action of [
+        { type: ITEM.PHOTO.REMOVE, payload: { id: 1, photos: [5], selections: [6] } },
+        { type: PHOTO.SELECTION.REMOVE, payload: { id: 5, selections: [6] } }
+      ]) {
+        let { selection } = nav(s, action)
+
+        expect(selection.photo.cursor, action.type).to.be.null
+        expect(selection.note, action.type).to.be.null
+      }
+
+      let other = { type: ITEM.PHOTO.REMOVE, payload: { id: 1, photos: [8] } }
+      expect(nav(s, other)).to.equal(s)
+    })
+
+    it('is restored', () => {
+      let restored = nav(undefined, act.restore({ selection: s.selection }))
+      expect(restored.selection.photo).to.include({ cursor: 6 })
     })
   })
 
@@ -390,6 +437,24 @@ describe('nav', () => {
       expect(act.selectList(root())).to.be.null
       expect(act.selectIsView(root({ view: { name: 'trash' } }), 'trash')).to.be.true
       expect(act.selectIsView(root(), 'trash')).to.be.false
+    })
+
+    it('select the photo or photo selection at the cursor', () => {
+      let at = (id) => ({
+        nav: { ...init, selection: { ...init.selection, photo: create([id]) } },
+        photos: { 5: { id: 5 } },
+        selections: { 6: { id: 6, photo: 5 } }
+      })
+
+      expect(act.selectPhotoCursor(at(6))).to.equal(5)
+      expect(act.selectSelectionCursor(at(6))).to.equal(6)
+
+      expect(act.selectPhotoCursor(at(5))).to.equal(5)
+      expect(act.selectSelectionCursor(at(5))).to.be.null
+
+      // Before the photos and selections are loaded.
+      expect(act.selectPhotoCursor({ ...at(6), photos: {}, selections: {} }))
+        .to.be.null
     })
   })
 })

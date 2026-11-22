@@ -1,5 +1,6 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
 import { getVisiblePhotos } from './photos.js'
+import { selectPhotoCursor, selectSelectionCursor } from '../slices/nav/index.js'
 import { pluck } from '../common/util.js'
 
 const NOTHING = []
@@ -7,19 +8,19 @@ const getSelections = ({ selections }) => selections
 
 export const getActiveSelection = memo(
   getSelections,
-  ({ nav }) => nav.selection.selection,
+  selectSelectionCursor,
   (selections, id) => (id != null) ? selections[id] : null
 )
 
 export const getActiveSelectionData = memo(
   ({ metadata }) => metadata,
-  ({ nav }) => nav.selection.selection,
+  selectSelectionCursor,
   (metadata, id) => (id != null) ? metadata[id] : null
 )
 
 
 export const getPhotoSelections = memo(
-  ({ nav, photos }) => photos[nav.selection.photo]?.selections,
+  (state) => state.photos[selectPhotoCursor(state)]?.selections,
   getSelections,
   (photoSelections, selections) =>
     (photoSelections != null) ?

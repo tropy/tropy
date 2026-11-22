@@ -1,6 +1,7 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
 import { getSelectedItems } from './items.js'
 import { selectMatchFilter } from '../slices/qr.js'
+import { selectPhotoCursor } from '../slices/nav/index.js'
 import { blank, pluck } from '../common/util.js'
 import { createSequence } from '../common/sequence.js'
 
@@ -19,7 +20,7 @@ const getPhotos = ({ photos }) => photos
 
 export const getSelectedPhoto = memo(
   getPhotos,
-  ({ nav }) => nav.selection.photo,
+  selectPhotoCursor,
   (photos, id) => (id != null) ? photos[id] : null
 )
 
@@ -49,7 +50,7 @@ export const getVisiblePhotos = memo(
   getPhotos,
   getSelectedItems,
   selectMatchFilter,
-  (state) => selectMatchFilter(state) && state.nav.selection.photo,
+  (state) => selectMatchFilter(state) && selectPhotoCursor(state),
 
   (photos, items, filter, current) => {
     let visible = expandItemPhotos(items, photos)

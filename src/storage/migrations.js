@@ -51,6 +51,32 @@ export const project = {
           }
         }
       }
+    },
+    {
+      number: 4,
+      // Use combined photo/selection selection
+      up: ({ nav, ...state }) => {
+        if (nav?.selection == null)
+          return { ...state, nav }
+
+        let { photo, selection, ...rest } = nav.selection
+        let id = selection ?? photo
+
+        return {
+          ...state,
+          nav: {
+            ...nav,
+            selection: {
+              ...rest,
+              photo: {
+                selected: (id == null) ? {} : { [id]: true },
+                anchor: id ?? null,
+                cursor: id ?? null
+              }
+            }
+          }
+        }
+      }
     }
   ]
 }

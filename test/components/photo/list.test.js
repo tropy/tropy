@@ -6,6 +6,7 @@ import { emit } from '#tropy/dom.js'
 import { KeyMap } from '#tropy/keymap.js'
 import { PhotoList } from '#tropy/components/photo/list.js'
 import { createPhotoStore } from './store.js'
+import { selectPhotoCursor, selectSelectionCursor } from '#tropy/slices/nav/index.js'
 import { PHOTO, SELECTION } from '#tropy/constants/index.js'
 
 describe('PhotoList', () => {
@@ -28,7 +29,7 @@ describe('PhotoList', () => {
     render(<PhotoList/>, withStore(store))
 
     emit(document, 'global:nextPhoto')
-    expect(store.getState().nav.selection.photo).to.equal(2)
+    expect(store.getState().nav.selection.photo.cursor).to.equal(2)
   })
 
   it('opens the context menu for photos', () => {
@@ -49,11 +50,16 @@ describe('PhotoList', () => {
     let down = () =>
       fireEvent.keyDown($('.scroll-container'), { key: 'ArrowDown' })
 
-    down()
-    expect(store.getState().nav.selection).to.include({ photo: 1, selection: 9 })
+    let shown = () => {
+      let state = store.getState()
+      return [selectPhotoCursor(state), selectSelectionCursor(state)]
+    }
 
     down()
-    expect(store.getState().nav.selection).to.include({ photo: 2, selection: undefined })
+    expect(shown()).to.eql([1, 9])
+
+    down()
+    expect(shown()).to.eql([2, null])
   })
 
   it('opens the context menu for expanded selections', () => {

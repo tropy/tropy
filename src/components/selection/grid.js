@@ -8,6 +8,7 @@ import { SelectionTile } from './tile.js'
 import { Cursor } from '../../common/sequence.js'
 import { TABS } from '../../constants/index.js'
 import { pluck } from '../../common/util.js'
+import { selectSelectionCursor } from '../../slices/nav/index.js'
 import cx from 'classnames'
 
 export const SelectionGrid = memo(({
@@ -23,7 +24,7 @@ export const SelectionGrid = memo(({
   photo,
   size
 }) => {
-  let active = useSelector(state => state.nav.selection.selection)
+  let active = useSelector(selectSelectionCursor)
   let selections = useSelector(state =>
     pluck(state.selections, photo.selections), shallowEqual)
 

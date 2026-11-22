@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { Cursor } from '../common/sequence.js'
+import { selectPhotoCursor, selectSelectionCursor } from '../slices/nav/index.js'
 
 export const getTranscriptionIds = (state, { id }) =>
   (state.photos[id] ?? state.selections[id])?.transcriptions
@@ -15,7 +16,7 @@ export const pickActiveTranscription = (transcriptions) =>
 
 export const getActiveTranscription = (state, props) =>
   pickActiveTranscription(getTranscriptions(state, {
-    id: props?.id ?? state.nav.selection.selection ?? state.nav.selection.photo
+    id: props?.id ?? selectSelectionCursor(state) ?? selectPhotoCursor(state)
   }))
 
 export function getTranscriptionSuccessor (state, ids) {
