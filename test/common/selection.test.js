@@ -4,6 +4,7 @@ import {
   create,
   elements,
   equal,
+  focus,
   growingEdge,
   has,
   ids as getIds,
@@ -75,6 +76,17 @@ describe('selection state', () => {
   it('keeps the selected elements when the sequence is re-sorted', () => {
     let state = run([[2], [4, 'extend']])
     expect(ids(state, [5, 4, 3, 2, 1])).to.eql([4, 3, 2])
+  })
+
+  it('focuses an element, keeping a selection that contains it', () => {
+    let state = create([2, 4], { anchor: 2, cursor: 4 })
+
+    let focused = focus(state, 2)
+
+    expect(getIds(focused)).to.have.members([2, 4])
+    expect(focused).to.include({ anchor: 2, cursor: 2 })
+    expect(focus(focused, 2)).to.equal(focused)
+    expect(focus(state, 6)).to.eql(create([6]))
   })
 
   it('removes elements, dropping a removed anchor or cursor', () => {

@@ -1,4 +1,4 @@
-import { EDIT, ITEM, LIST, NOTE, TAG } from '#tropy/constants/index.js'
+import { EDIT, ITEM, LIST, NOTE, PHOTO, TAG } from '#tropy/constants/index.js'
 import nav, * as act from '#tropy/slices/nav/index.js'
 import { create, has } from '#tropy/common/selection.js'
 import { cancel, dismiss } from '#tropy/slices/activities.js'
@@ -53,6 +53,44 @@ describe('nav', () => {
     let item = create([3])
     let s = nav(undefined, { type: ITEM.SELECT, payload: { item }, meta: {} })
     expect(s.selection.item).to.equal(item)
+  })
+
+  describe('shows the parent item of a photo or note', () => {
+    // Items 1 and 2 selected, the cursor on 2.
+    let s = {
+      ...init,
+      selection: { ...init.selection, item: create([1, 2]) }
+    }
+
+    let open = (type, payload) =>
+      done({ type, payload: {}, meta: { cmd: 'project', seq: 1 } }, payload)
+
+    let item = (action) => nav(s, action).selection.item
+
+    it('keeps the selection if the parent is selected', () => {
+      for (let action of [
+        { type: PHOTO.SELECT, payload: { item: 1, photo: 5 }, meta: {} },
+        { type: NOTE.SELECT, payload: { item: 1, photo: 5, note: 7 }, meta: {} },
+        open(ITEM.OPEN, { id: 1, photo: 5 }),
+        open(NOTE.OPEN, { item: 1, photo: 5, note: 7 })
+      ]) {
+        expect(has(item(action), 2), action.type).to.be.true
+        expect(item(action), action.type).to.include({ cursor: 1, anchor: 1 })
+      }
+
+      expect(nav(s, { type: PHOTO.SELECT, payload: { item: 1, photo: 5 }, meta: {} })
+        .selection.photo).to.equal(5)
+    })
+
+    it('replaces the selection with an unselected parent', () => {
+      for (let action of [
+        { type: PHOTO.SELECT, payload: { item: 3, photo: 5 }, meta: {} },
+        open(NOTE.OPEN, { item: 3, photo: 5, note: 7 })
+      ]) {
+        expect(has(item(action), 2), action.type).to.be.false
+        expect(item(action), action.type).to.include({ cursor: 3, anchor: 3 })
+      }
+    })
   })
 
   describe('drops removed items from the selection', () => {
