@@ -3,12 +3,9 @@ import { put, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { NOTE } from '../../constants/index.js'
 import { selectViewOf } from '../../slices/qr.js'
-import {
-  selectPhotoCursor,
-  selectSelectionCursor,
-  show
-} from '../../slices/nav/index.js'
-import { getNoteParent, getPrimaryItemId } from '../../selectors/index.js'
+import { show } from '../../slices/nav/index.js'
+import { selectNavCursor } from '../../slices/nav/cursor.js'
+import { getNoteParent } from '../../selectors/index.js'
 import { emit } from '../../dom.js'
 
 export class Open extends Command {
@@ -19,11 +16,7 @@ export class Open extends Command {
     if (id != null) {
       ({ item, photo, selection } = yield select(getNoteParent, { id }))
     } else {
-      [item, photo, selection] = yield select(state => ([
-        getPrimaryItemId(state),
-        selectPhotoCursor(state),
-        selectSelectionCursor(state)
-      ]))
+      ({ item, photo, selection } = yield select(selectNavCursor))
     }
 
     assert(photo || selection, 'cannot open note without active photo/selection')

@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { Cursor } from '../common/sequence.js'
-import { selectPhotoCursor, selectSelectionCursor } from '../slices/nav/index.js'
+import { selectPhotoCursor, selectSelectionCursor } from '../slices/nav/cursor.js'
 
 export const getTranscriptionIds = (state, { id }) =>
   (state.photos[id] ?? state.selections[id])?.transcriptions

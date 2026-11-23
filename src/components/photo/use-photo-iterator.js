@@ -10,7 +10,7 @@ import { move as reorder, pick, pluck } from '../../common/util.js'
 import { adjacent, indexOf } from '../../common/sequence.js'
 import { getExpandedPhotos, getVisiblePhotos } from '../../selectors/index.js'
 import { selectMatchFilter } from '../../slices/qr.js'
-import { selectPhotoCursor, selectSelectionCursor } from '../../slices/nav/index.js'
+import { selectPhotoCursor, selectSelectionCursor } from '../../slices/nav/cursor.js'
 import * as act from '../../actions/index.js'
 
 // The photo list container logic shared by list and grid:

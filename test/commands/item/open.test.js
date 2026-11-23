@@ -5,8 +5,10 @@ import { create } from '#tropy/common/selection.js'
 
 describe('Open item', () => {
   let state = (matches = { 1: true }) => ({
-    nav: { selection: { photo: create() } },
-    qr: { matches },
+    nav: { selection: { item: create(), photo: create(), note: null } },
+    qr: { matches, items: [] },
+    settings: { search: { filter: false } },
+    notes: {},
     items: { 1: { id: 1, photos: [2], deleted: true } },
     photos: { 2: { id: 2, notes: [] } },
     selections: { 3: { id: 3, photo: 2, notes: [] } }

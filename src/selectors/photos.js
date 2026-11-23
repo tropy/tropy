@@ -1,7 +1,8 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { getSelectedItems } from './items.js'
+import { getItemSelection } from './items.js'
+import { pluck as pluckItems } from './util.js'
 import { selectMatchFilter } from '../slices/qr.js'
-import { selectPhotoCursor } from '../slices/nav/index.js'
+import { selectKeptPhoto } from '../slices/nav/cursor.js'
 import { blank, pluck } from '../common/util.js'
 import { createSequence } from '../common/sequence.js'
 
@@ -17,12 +18,6 @@ const toPhoto = ([, photo]) => photo
 
 
 const getPhotos = ({ photos }) => photos
-
-export const getSelectedPhoto = memo(
-  getPhotos,
-  selectPhotoCursor,
-  (photos, id) => (id != null) ? photos[id] : null
-)
 
 const expandItemPhotos = (items, photos) => {
   let [lst, push] = createSequence()
@@ -42,15 +37,33 @@ export const getItemPhotos = (state, props) =>
     pluck(state.items, props.items),
     state.photos)
 
+// The selected items in the order of the results, then those
+// not among them (e.g. new ones): unlike getSelectedItems,
+// not the primary one first, so the photos keep their order
+// when the item cursor moves.
+const getItemsInOrder = memo(
+  ({ items }) => items,
+  getItemSelection,
+  (items, selection) => {
+    let ids = selection.elements()
+    let inResults = new Set(ids)
+
+    return pluckItems(items, [
+      ...ids,
+      ...selection.ids().filter(id => !inResults.has(id))
+    ])
+  }
+)
+
 // The photos of the selected items; with the match filter on,
 // only those that contributed to the search match (themselves,
-// their selections, or the notes of either), and the current photo:
-// what is selected stays visible.
+// their selections, or the notes of either), and the photo
+// selected since: what is selected stays visible.
 export const getVisiblePhotos = memo(
   getPhotos,
-  getSelectedItems,
+  getItemsInOrder,
   selectMatchFilter,
-  (state) => selectMatchFilter(state) && selectPhotoCursor(state),
+  selectKeptPhoto,
 
   (photos, items, filter, current) => {
     let visible = expandItemPhotos(items, photos)
@@ -62,6 +75,17 @@ export const getVisiblePhotos = memo(
 
     return lst
   }
+)
+
+export const getVisibleSelections = memo(
+  ({ selections }) => selections,
+  getVisiblePhotos,
+
+  (selections, photos) =>
+    photos
+      .flatMap(photo => photo.selections ?? [])
+      .map(id => selections[id])
+      .filter(selection => selection != null)
 )
 
 export const getPhotosWithErrors = memo(

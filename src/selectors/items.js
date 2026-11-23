@@ -20,7 +20,7 @@ export const getSelectedItems = memo(
 // The primary selected item represents the selection
 // (merge target, bulk editor values and template).
 // Selected items not in the results fall back to any one.
-export const getPrimaryItemId = memo(
+export const selectItemCursor = memo(
   getItemSelection,
   (selection) => selection.ids()[0] ?? null
 )
@@ -35,7 +35,7 @@ export const getListHoldIndex = memo(
 
 export const getSelectedItemTemplate = memo(
   getSelectedItems,
-  getPrimaryItemId,
+  selectItemCursor,
   (items, first) => {
     let item = items.find(it => it.id === first) ?? items[0]
 

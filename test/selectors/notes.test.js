@@ -62,12 +62,24 @@ describe('Note Selectors', () => {
       expect(getVisibleNotes(state(true)).map(n => n.id)).to.eql([12])
     })
 
-    it('keeps the current photo and note visible', () => {
+    it('keeps the photo and note selected since the snapshot visible', () => {
       let s = state(true)
       s.nav = { selection: { ...s.nav.selection, photo: create([1]), note: 10 } }
 
       expect(getVisiblePhotos(s).map(p => p.id)).to.eql([1, 2])
       expect(getVisibleNotes(s).map(n => n.id)).to.eql([10, 12])
+
+      // The cursors as of the snapshot are hidden unless they contribute.
+      s = {
+        ...s,
+        qr: {
+          ...s.qr,
+          contributors: { ...s.qr.contributors, cursor: { photo: 1, note: 10 } }
+        }
+      }
+
+      expect(getVisiblePhotos(s).map(p => p.id)).to.eql([2])
+      expect(getVisibleNotes(s).map(n => n.id)).to.eql([12])
     })
 
     it('shows all photos and notes when off', () => {

@@ -5,10 +5,8 @@ import { build, reverse, update } from '../common/order.js'
 import { createSequence, stable } from '../common/sequence.js'
 import { collator } from '../collate.js'
 import { parse } from '../common/search.js'
-import { getVisiblePhotos } from '../selectors/index.js'
 import { selectActivity } from '../slices/activities.js'
 import {
-  selectMatchFilter,
   selectQuery,
   selectSortKey,
   selectSubjects
@@ -421,9 +419,13 @@ const lookup = (ids) => {
 // Returns what it saw, for the next run to compare.
 export function *contribute (db, prev = {}) {
   try {
-    let { query, item } = yield select(state => ({
+    let { query, item, cursor } = yield select(state => ({
       query: state.nav.search.query,
-      item: state.nav.selection.item
+      item: state.nav.selection.item,
+      cursor: {
+        photo: state.nav.selection.photo.cursor,
+        note: state.nav.selection.note
+      }
     }))
 
     if (query === prev.query && item === prev.item)
@@ -451,14 +453,13 @@ export function *contribute (db, prev = {}) {
       let subjects = yield select(selectSubjects)
       let { photos, notes } = contributors(items, lists, subjects)
 
-      value = { photos: lookup(photos), notes: lookup(notes) }
+      // The cursors as of the snapshot: if they do not contribute,
+      // they are hidden (see getVisiblePhotos, getVisibleNotes).
+      value = { photos: lookup(photos), notes: lookup(notes), cursor }
     }
 
     if (value !== null || (yield select(state => state.qr.contributors)) !== null)
       yield put(act.qr.update({ contributors: value }))
-
-    // A new snapshot: the current photo and note may now be hidden.
-    yield call(narrow)
 
     return { query, item, items }
 
@@ -466,45 +467,6 @@ export function *contribute (db, prev = {}) {
     warn({ err }, '*contribute failed')
     return {}
   }
-}
-
-// With the match filter on, after a new snapshot of the contributors,
-// the current photo and note fall back to the first contributing ones
-// (e.g. selecting an item selects its first photo, which may not
-// match). The item selection stays. Only then: in between, what is
-// selected stays visible (a note created and selected, or edited so
-// it no longer matches; see getVisiblePhotos, getVisibleNotes).
-export function *narrow () {
-  let { current, filter } = yield select(state => ({
-    current: {
-      photo: nav.selectPhotoCursor(state),
-      selection: nav.selectSelectionCursor(state),
-      note: state.nav.selection.note
-    },
-    filter: selectMatchFilter(state)
-  }))
-
-  if (filter == null) return
-
-  let photo = current.photo
-  let selection = current.selection
-
-  if (photo != null && !filter.photos[photo]) {
-    photo = (yield select(getVisiblePhotos))
-      .find(p => filter.photos[p.id])?.id ?? null
-    selection = null
-  }
-
-  let note = current.note
-
-  if (photo !== current.photo || (note != null && !filter.notes[note])) {
-    let notes = (yield select(state =>
-      (state.selections[selection] ?? state.photos[photo])?.notes)) ?? []
-    note = notes.find(id => filter.notes[id]) ?? null
-  }
-
-  if (photo !== current.photo || note !== current.note)
-    yield put(nav.narrow({ photo, selection, note }))
 }
 
 // Keeps qr.order in sync with the sort and the sort keys in state,
