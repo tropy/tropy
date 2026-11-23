@@ -383,9 +383,11 @@ export function *search (db) {
 }
 
 // Keeps qr.contributors up to date with the selected items and the
-// query, after each action that changes either. A snapshot: edits
-// leave it as it is until the next selection or query change (the
-// visibility rule, selection.md), so rows do not vanish while edited.
+// query, after each action that changes either: the photos and notes
+// of the selected items that contributed to the match, as lookups
+// ({ photos, notes }: id → true) for highlighting, or null.
+// A snapshot: edits leave it as it is until the next selection
+// or query change, so highlights do not change while editing.
 // Actions taken while a run is busy leave one in the buffer.
 export function *contributing (db, prev = {}) {
   let chan = yield actionChannel('*', buffers.sliding(1))
@@ -419,13 +421,9 @@ const lookup = (ids) => {
 // Returns what it saw, for the next run to compare.
 export function *contribute (db, prev = {}) {
   try {
-    let { query, item, cursor } = yield select(state => ({
+    let { query, item } = yield select(state => ({
       query: state.nav.search.query,
-      item: state.nav.selection.item,
-      cursor: {
-        photo: state.nav.selection.photo.cursor,
-        note: state.nav.selection.note.cursor
-      }
+      item: state.nav.selection.item
     }))
 
     if (query === prev.query && item === prev.item)
@@ -453,9 +451,7 @@ export function *contribute (db, prev = {}) {
       let subjects = yield select(selectSubjects)
       let { photos, notes } = contributors(items, lists, subjects)
 
-      // The cursors as of the snapshot: if they do not contribute,
-      // they are hidden (see getVisiblePhotos, getVisibleNotes).
-      value = { photos: lookup(photos), notes: lookup(notes), cursor }
+      value = { photos: lookup(photos), notes: lookup(notes) }
     }
 
     if (value !== null || (yield select(state => state.qr.contributors)) !== null)

@@ -9,7 +9,6 @@ import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { move as reorder, pick, pluck } from '../../common/util.js'
 import { adjacent, indexOf } from '../../common/sequence.js'
 import { getExpandedPhotos, getVisiblePhotos } from '../../selectors/index.js'
-import { selectMatchFilter } from '../../slices/qr.js'
 import { selectPhotoCursor, selectSelectionCursor } from '../../slices/nav/cursor.js'
 import * as act from '../../actions/index.js'
 
@@ -36,11 +35,8 @@ export function usePhotoIterator ({
   let selections = useSelector(state => state.selections)
   let contributors = useSelector(state => state.qr.contributors)
 
-  // Sorting a filtered list would renumber only the visible photos;
-  // with several items, the photos of different items mix.
-  let isFiltered = useSelector(selectMatchFilter) != null
-  let isUnsortable = isFiltered ||
-    photos.some(photo => photo.item !== photos[0].item)
+  // With several items, the photos of different items mix.
+  let isUnsortable = photos.some(photo => photo.item !== photos[0].item)
 
   // Navigation: a Cursor with Scroll's layout.
   // The grid navigates the photos (the expansion row has its own

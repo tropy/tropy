@@ -115,14 +115,14 @@ describe('selection state', () => {
   })
 
   it('finds the primary element: the cursor, if selected', () => {
-    expect(primary(run([[2], [5, 'extend']]), seq)).to.equal(5)
-    expect(primary(run([[2], [4, 'toggle']]), seq)).to.equal(4)
+    expect(primary(run([[2], [5, 'extend']]))).to.equal(5)
+    expect(primary(run([[2], [4, 'toggle']]))).to.equal(4)
   })
 
-  it('falls back to the first selected element as primary', () => {
-    expect(primary(run([[2], [4, 'toggle'], [4, 'toggle']]), seq)).to.equal(2)
-    expect(primary(run([[2], [5, 'extend']]), [1, 2, 3])).to.equal(2)
-    expect(primary(create(), seq)).to.be.null
+  it('falls back to the first selected id as primary', () => {
+    expect(primary(run([[3], [2, 'toggle'], [2, 'toggle']]))).to.equal(3)
+    expect(primary({ ...create([4, 2]), cursor: 9 })).to.equal(2)
+    expect(primary(create())).to.be.null
   })
 
   it('compares states by ids, anchor and cursor', () => {

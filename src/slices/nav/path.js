@@ -24,7 +24,8 @@ export function checkCursorPath (state, {
   if (photo != null && !state.items[item]?.photos.includes(photo))
     throw new Error(`photo ${photo} is not in item ${item}`)
 
-  if (selection != null && state.selections[selection]?.photo !== photo)
+  if (selection != null &&
+    (photo == null || state.selections[selection]?.photo !== photo))
     throw new Error(`selection ${selection} is not in photo ${photo}`)
 
   if (note != null && !selectNoteIds(state, selection ?? photo)?.includes(note))

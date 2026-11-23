@@ -7,7 +7,6 @@ describe('Photo Selectors', () => {
       let state = (cursor) => ({
         nav: { selection: { item: create([1, 2, 3], { anchor: cursor }) } },
         qr: { items: [2, 1] },
-        settings: { search: { filter: false } },
         items: {
           1: { id: 1, photos: [11] },
           2: { id: 2, photos: [12] },

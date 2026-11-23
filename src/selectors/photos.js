@@ -1,8 +1,6 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
 import { getItemSelection } from './items.js'
 import { pluck as pluckItems } from './util.js'
-import { selectMatchFilter } from '../slices/qr.js'
-import { selectKeptPhoto } from '../slices/nav/cursor.js'
 import { blank, pluck } from '../common/util.js'
 import { createSequence } from '../common/sequence.js'
 
@@ -55,26 +53,11 @@ const getItemsInOrder = memo(
   }
 )
 
-// The photos of the selected items; with the match filter on,
-// only those that contributed to the search match (themselves,
-// their selections, or the notes of either), and the photo
-// selected since: what is selected stays visible.
+// The photos of the selected items.
 export const getVisiblePhotos = memo(
   getPhotos,
   getItemsInOrder,
-  selectMatchFilter,
-  selectKeptPhoto,
-
-  (photos, items, filter, current) => {
-    let visible = expandItemPhotos(items, photos)
-    if (filter == null) return visible
-
-    let [lst, push] = createSequence()
-    for (let photo of visible)
-      if (filter.photos[photo.id] || photo.id === current) push(photo)
-
-    return lst
-  }
+  (photos, items) => expandItemPhotos(items, photos)
 )
 
 export const getVisibleSelections = memo(

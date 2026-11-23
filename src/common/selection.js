@@ -79,20 +79,21 @@ const effective = (state, seq) =>
 
 export { effective as elements }
 
-// NB: Multi-selections are inherently unorderd,
-// but sometimes we need a representative element.
-// By default this 'primary' element is the cursor (if selected),
-// and otherwise the first selected element
-//
-// Primary element is used, e.g., as the merge target when merging items.
+// NB: Multi-selections are inherently unordered,
+// but sometimes we need a representative id.
+// This 'primary' id is the cursor (if selected),
+// and otherwise the first selected id (the lowest).
+// It depends on the selection state only, not on a sequence.
 
-// Returns the primary element, or null.
-export const primary = (state, seq) => {
-  let index = indexOf(seq, state.cursor)
+// Returns the primary id, or null.
+export const primary = (state) => {
+  if (has(state, state.cursor))
+    return state.cursor
 
-  return (index >= 0 && has(state, state.cursor)) ?
-    seq[index] :
-    seq.find(it => has(state, it)) ?? null
+  for (let id in state.selected)
+    return Number(id)
+
+  return null
 }
 
 // Selects `id` with `mode` and returns new state, or `state` if unchanged.
@@ -284,7 +285,6 @@ const toggle = (selected, id) => {
 // for a selection state and a sequence.
 export class Selection {
   #elements
-  #primary
   #ids
   #size
 
@@ -328,7 +328,7 @@ export class Selection {
   // All selected ids, with the primary one first, for easy access.
   ids () {
     if (this.#ids === undefined) {
-      let first = toId(this.primary())
+      let first = this.primary()
       let rest = ids(this.state)
 
       this.#ids = Object.freeze((first == null) ?
@@ -344,10 +344,7 @@ export class Selection {
   }
 
   primary () {
-    if (this.#primary === undefined)
-      this.#primary = primary(this.state, this.seq)
-
-    return this.#primary
+    return primary(this.state)
   }
 
   select (id, options) {

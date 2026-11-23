@@ -1,8 +1,4 @@
-import {
-  getNoteSuccessor,
-  getVisibleNotes,
-  getVisiblePhotos
-} from '#tropy/selectors/index.js'
+import { getNoteSuccessor } from '#tropy/selectors/index.js'
 import { create } from '#tropy/common/selection.js'
 
 describe('Note Selectors', () => {
@@ -10,7 +6,6 @@ describe('Note Selectors', () => {
     let state = (note, photos = { 1: [10, 11], 2: [12] }) => ({
       nav: { selection: { item: create([1]), note: create([note]) } },
       qr: { items: [1] },
-      settings: { search: { filter: false } },
       items: { 1: { id: 1, photos: Object.keys(photos).map(Number) } },
       photos: Object.fromEntries(Object.entries(photos).map(([id, notes]) =>
         [id, { id: Number(id), notes, selections: [] }])),
@@ -33,60 +28,6 @@ describe('Note Selectors', () => {
 
     it('returns nothing without other notes', () => {
       expect(getNoteSuccessor(state(10, { 1: [10] }))).to.be.null
-    })
-  })
-
-  describe('match filter', () => {
-    let state = (filter) => ({
-      nav: {
-        selection: { item: create([1]), photo: create(), note: create() }
-      },
-      qr: {
-        items: [1],
-        contributors: { photos: { 2: true }, notes: { 12: true } }
-      },
-      settings: { search: { filter } },
-      items: { 1: { id: 1, photos: [1, 2] } },
-      photos: {
-        1: { id: 1, notes: [10], selections: [] },
-        2: { id: 2, notes: [11, 12], selections: [] }
-      },
-      selections: {},
-      notes: {
-        10: { id: 10, photo: 1 },
-        11: { id: 11, photo: 2 },
-        12: { id: 12, photo: 2 }
-      }
-    })
-
-    it('shows only contributing photos and notes when on', () => {
-      expect(getVisiblePhotos(state(true)).map(p => p.id)).to.eql([2])
-      expect(getVisibleNotes(state(true)).map(n => n.id)).to.eql([12])
-    })
-
-    it('keeps the photo and note selected since the snapshot visible', () => {
-      let s = state(true)
-      s.nav = { selection: { ...s.nav.selection, photo: create([1]), note: create([10]) } }
-
-      expect(getVisiblePhotos(s).map(p => p.id)).to.eql([1, 2])
-      expect(getVisibleNotes(s).map(n => n.id)).to.eql([10, 12])
-
-      // The cursors as of the snapshot are hidden unless they contribute.
-      s = {
-        ...s,
-        qr: {
-          ...s.qr,
-          contributors: { ...s.qr.contributors, cursor: { photo: 1, note: 10 } }
-        }
-      }
-
-      expect(getVisiblePhotos(s).map(p => p.id)).to.eql([2])
-      expect(getVisibleNotes(s).map(n => n.id)).to.eql([12])
-    })
-
-    it('shows all photos and notes when off', () => {
-      expect(getVisiblePhotos(state(false)).map(p => p.id)).to.eql([1, 2])
-      expect(getVisibleNotes(state(false)).map(n => n.id)).to.eql([10, 11, 12])
     })
   })
 })
