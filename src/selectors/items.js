@@ -1,8 +1,8 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { pluck } from './util.js'
 import { BLANK } from '../common/util.js'
-import { Selection, primary } from '../common/selection.js'
+import { Selection } from '../common/selection.js'
 import { selectItemSequence } from '../slices/qr.js'
+import { selectActiveItems, selectItemCursor } from '../slices/nav/cursor.js'
 
 export const getItemSelection = memo(
   ({ nav }) => nav.selection.item,
@@ -10,20 +10,8 @@ export const getItemSelection = memo(
   (state, seq) => new Selection(state, seq)
 )
 
-// All selected items: primary first, the rest unordered.
-export const getSelectedItems = memo(
-  ({ items }) => items,
-  getItemSelection,
-  (items, selection) => pluck(items, selection.ids())
-)
-
-// The primary selected item represents the selection
-// (merge target, bulk editor values and template).
-export const selectItemCursor = (state) =>
-  primary(state.nav.selection.item)
-
 export const getListHoldIndex = memo(
-  getSelectedItems,
+  selectActiveItems,
   (items) => items.reduce((holdIndex, item) => {
     for (let list of item.lists) holdIndex[list] = true
     return holdIndex
@@ -31,7 +19,7 @@ export const getListHoldIndex = memo(
 )
 
 export const getSelectedItemTemplate = memo(
-  getSelectedItems,
+  selectActiveItems,
   selectItemCursor,
   (items, first) => {
     let item = items.find(it => it.id === first) ?? items[0]

@@ -1,5 +1,5 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { getSelectedItems } from './items.js'
+import { selectActiveItems } from '../slices/nav/cursor.js'
 import { by, equals } from '../collate.js'
 
 const byName = by('name')
@@ -29,7 +29,7 @@ export const findTagIds = ({ tags }, tx) =>
 
 export const getItemTags = memo(
   getTags,
-  getSelectedItems,
+  selectActiveItems,
 
   (tags, items) => {
     const counts = {}

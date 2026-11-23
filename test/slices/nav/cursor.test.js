@@ -1,5 +1,6 @@
 import { create } from '#tropy/common/selection.js'
 import {
+  selectActiveItems,
   selectNavCursor,
   selectPhotoCursor,
   selectSelectionCursor
@@ -7,7 +8,7 @@ import {
 
 describe('nav cursor', () => {
   // Item 1 with photos 2 (selection 3, notes 10, 11) and 4 (note 12);
-  // item 5 with photo 6.
+  // item 5 with photo 6; item 9, not among the results.
   let state = ({ item = [1], photo, note = null } = {}) => ({
     nav: {
       selection: {
@@ -17,7 +18,11 @@ describe('nav cursor', () => {
       }
     },
     qr: { items: [1, 5] },
-    items: { 1: { id: 1, photos: [2, 4] }, 5: { id: 5, photos: [6] } },
+    items: {
+      1: { id: 1, photos: [2, 4] },
+      5: { id: 5, photos: [6] },
+      9: { id: 9, photos: [] }
+    },
     photos: {
       2: { id: 2, item: 1, selections: [3], notes: [10, 11] },
       4: { id: 4, item: 1, selections: [], notes: [12] },
@@ -46,6 +51,13 @@ describe('nav cursor', () => {
     expect(path({ photo: 2 })).to.include({ photo: 2, note: null })
     expect(path()).to.include({ item: 1, photo: null, note: null })
     expect(path({ item: [] })).to.include({ item: null, photo: null })
+  })
+
+  it('lists the active items in display order, not primary first', () => {
+    let s = state({ item: [9, 1, 5] })
+
+    expect(selectActiveItems(s).map(it => it.id)).to.eql([1, 5, 9])
+    expect(path({ item: [9, 1, 5] })).to.include({ item: 5 })
   })
 
   it('reads the stored cursors as they are', () => {
