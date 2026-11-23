@@ -413,7 +413,7 @@ describe('nav', () => {
   })
 
   describe('mode', () => {
-    let itemMode = { ...init, mode: 'item' }
+    let itemMode = { ...state(), mode: 'item' }
     let mode = (s, action) => nav(s, action).mode
 
     let select = (payload) => ({ type: ITEM.SELECT, payload, meta: {} })
@@ -438,8 +438,19 @@ describe('nav', () => {
       expect(mode(itemMode, edit({ note: { id: 1 } }))).to.equal('item')
     })
 
+    it('goes back to the project without a selected item', () => {
+      let remove = { type: ITEM.REMOVE, payload: [1], meta: {} }
+
+      expect(mode(itemMode, remove)).to.equal('project')
+      expect(nav(undefined, act.restore({ mode: 'item' })).mode)
+        .to.equal('project')
+    })
+
     it('restores only known modes', () => {
-      expect(nav(undefined, act.restore({ mode: 'item' })).mode).to.equal('item')
+      let item = { item: create([1]) }
+
+      expect(nav(undefined, act.restore({ mode: 'item', selection: item })).mode)
+        .to.equal('item')
       expect(nav(undefined, act.restore({ mode: 'x' })).mode).to.equal('project')
       expect(nav(undefined, act.restore({ mode: 'constructor' })).mode)
         .to.equal('project')
