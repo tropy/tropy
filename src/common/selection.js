@@ -46,6 +46,10 @@ export const has = (state, it) =>
 export const size = (state) =>
   Object.keys(state.selected).length
 
+export const isBlank = (...states) =>
+  states.every(state =>
+    state.cursor == null && state.anchor == null && size(state) === 0)
+
 export const equal = (a, b) => {
   if (a === b)
     return true
@@ -207,12 +211,14 @@ export const clear = (state) => {
 
 // Moves cursor/anchor within the selection if possible.
 export const focus = (state, id) => {
+  if (id == null)
+    return isBlank(state) ? state : create()
   if (!has(state, id))
     return create([id])
+  if (state.anchor === id && state.cursor === id)
+    return state
   else
-    return (state.anchor === id && state.cursor === id)
-      ? state
-      : { ...state, anchor: id, cursor: id }
+    return { ...state, anchor: id, cursor: id }
 }
 
 // Returns new state without given elements, or `state` if unchanged.

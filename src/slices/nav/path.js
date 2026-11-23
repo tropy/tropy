@@ -38,6 +38,8 @@ export function selectCursorPaths (state, id) {
   let photos = state.items[id]?.photos ?? []
   let notes = {}
 
+  // NB: we create a notes entry for each photo/selection,
+  // so the reducer can use this to see all ids there!
   for (let photo of photos) {
     notes[photo] = state.photos[photo]?.notes ?? []
 

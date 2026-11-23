@@ -34,7 +34,7 @@ describe('select actions', () => {
 
   it('item.select leaves the photo and note to the reducer', () => {
     store.dispatch(act.item.select({ item: 1 }))
-    expect(selection()).to.nested.include({ 'photo.cursor': 5, note: 7 })
+    expect(selection()).to.nested.include({ 'photo.cursor': 5, 'note.cursor': 7 })
   })
 
   it('check their targets', () => {
@@ -56,7 +56,7 @@ describe('select actions', () => {
 
     expect(has(selection().item, 1)).to.be.true
     expect(selection()).to.nested.include({
-      'item.cursor': 2, 'photo.cursor': 8, note: 10
+      'item.cursor': 2, 'photo.cursor': 8, 'note.cursor': 10
     })
     expect(store.getState().nav.mode).to.equal('item')
   })

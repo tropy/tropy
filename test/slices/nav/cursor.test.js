@@ -14,7 +14,7 @@ describe('nav cursor', () => {
       selection: {
         item: create(item),
         photo: create(photo == null ? [] : [photo]),
-        note
+        note: create(note == null ? [] : [note])
       }
     },
     qr: {

@@ -20,7 +20,7 @@ const getStoredParent = (state) =>
   state.selections[getStoredPhoto(state)]?.photo ?? null
 
 const getStoredNote = (state) =>
-  state.nav.selection.note
+  state.nav.selection.note.cursor
 
 // The photo at the stored cursor, if selected since the snapshot
 // of the contributors: what is selected stays visible.

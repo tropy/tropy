@@ -4,6 +4,7 @@ import * as mod from '../../models/index.js'
 import * as act from '../../actions/index.js'
 import { PHOTO } from '../../constants/index.js'
 import { splice } from '../../common/util.js'
+import { selectPhotoCursor } from '../../slices/nav/cursor.js'
 
 
 export class Move extends Command {
@@ -12,7 +13,8 @@ export class Move extends Command {
     let { photos, item } = this.action.payload
 
     let { idx } = this.action.meta
-    let { order, original, selections } = yield select(state => ({
+    let { cursor, order, original, selections } = yield select(state => ({
+      cursor: selectPhotoCursor(state),
       order: state.items[item].photos,
       selections: photos.flatMap(({ id }) =>
         state.photos[id]?.selections ?? []),
@@ -30,6 +32,17 @@ export class Move extends Command {
       await mod.photo.move(tx, { item, ids })
       await mod.photo.order(tx, item, order)
     })
+
+    // The photo shown leaves its item: show its neighbor.
+    if (ids.includes(cursor)) {
+      let rest = original.photos.filter(id => !ids.includes(id))
+      let at = original.photos.indexOf(cursor)
+
+      yield put(act.photo.select({
+        item: original.id,
+        photo: rest[at] ?? rest.at(-1)
+      }))
+    }
 
     yield all([
       put(act.photo.bulk.update([ids, { item }])),

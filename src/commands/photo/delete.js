@@ -1,7 +1,7 @@
 import { Command } from '../command.js'
 import { call, put, select } from 'redux-saga/effects'
 import { PHOTO } from '../../constants/index.js'
-import { get, splice } from '../../common/util.js'
+import { splice } from '../../common/util.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
 import { selectPhotoCursor } from '../../slices/nav/cursor.js'
@@ -29,7 +29,10 @@ export class Delete extends Command {
     if (cursor != null) {
       let selected = payload.photos.indexOf(cursor)
       if (selected !== -1) {
-        yield * this.select(item.id, order[idx[selected]] ?? order.at(-1))
+        yield put(act.photo.select({
+          item: item.id,
+          photo: order[idx[selected]] ?? order.at(-1)
+        }))
       }
     }
 
@@ -40,19 +43,6 @@ export class Delete extends Command {
     }))
 
     this.undo = act.photo.restore(payload, { idx })
-  }
-
-  *select (item, photo) {
-    if (photo != null) {
-      var note = yield select(state =>
-        get(state.photos, [photo, 'notes', 0], null))
-    }
-
-    yield put(act.photo.select({
-      item,
-      photo,
-      note
-    }))
   }
 }
 
