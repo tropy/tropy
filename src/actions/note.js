@@ -1,6 +1,10 @@
 import { NOTE } from '../constants/index.js'
-import { warn } from '../common/log.js'
-import { get } from '../common/util.js'
+import { emit } from '../dom.js'
+import item from './item.js'
+import settings from './settings.js'
+import { checkCursorPath } from '../slices/nav/path.js'
+import { selectNavCursor } from '../slices/nav/cursor.js'
+import { getNoteParent } from '../selectors/notes.js'
 
 export default {
   create (payload, meta) {
@@ -41,17 +45,43 @@ export default {
     }
   },
 
-  open (payload = {}, meta) {
-    return {
-      type: NOTE.OPEN,
-      payload: payload,
-      meta: {
-        cmd: 'project',
-        ...meta
+  // Opens a note (id) in item mode, or without an id
+  // the blank notepad of the current photo, and focuses it.
+  open ({ id = null } = {}, meta) {
+    return (dispatch, getState) => {
+      let state = getState()
+
+      let { item: parent, photo, selection } = (id != null)
+        ? getNoteParent(state, { id })
+        : selectNavCursor(state)
+
+      if (photo == null)
+        throw new Error('cannot open note without photo')
+
+      let result = dispatch(item.open({
+        id: parent,
+        photo,
+        selection,
+        note: id
+      }, meta))
+
+      let delay = 25
+
+      if (state.nav.mode === 'project')
+        delay += 800
+
+      if (state.settings.maximize === 'esper') {
+        dispatch(settings.update({ maximize: 'none' }))
+        delay += 100
       }
+
+      setTimeout(() => {
+        emit(document, 'global:note-open')
+      }, delay)
+
+      return result
     }
   },
-
 
   load (payload, meta) {
     return {
@@ -70,23 +100,15 @@ export default {
       }
 
     return (dispatch, getState) => {
+      let state = getState()
       let { note, photo, item, selection } = payload
 
-      if (item == null) {
-        const { photos, selections } = getState()
+      photo ??= state.selections[selection]?.photo
+      item ??= state.photos[photo]?.item
 
-        if (photo == null) {
-          photo = get(selections, [selection, 'photo'])
-        }
+      checkCursorPath(state, { item, photo, selection, note })
 
-        item = get(photos, [photo, 'item'])
-
-        if (item == null) {
-          return warn({ note }, 'cannot select note without item')
-        }
-      }
-
-      dispatch({
+      return dispatch({
         type: NOTE.SELECT,
         payload: { note, photo, item, selection },
         meta: { log: 'trace', history: true, ...meta }

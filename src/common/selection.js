@@ -28,6 +28,14 @@ export const create = (ids = [], {
   cursor
 })
 
+export const isSelection = (state) =>
+  typeof state?.selected === 'object' && state.selected !== null
+
+export const from = (input) =>
+  isSelection(input)
+    ? input
+    : create((input == null) ? [] : [input].flat())
+
 const copy = (map) =>
   Object.assign(Object.create(null), map)
 

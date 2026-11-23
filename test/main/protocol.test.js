@@ -69,7 +69,9 @@ describe('ProtocolHandler', () => {
       expect(action.payload, url).to.deep.include(payload)
     }
 
-    app.wm.rsvp.mock.mockImplementation(async () => ({ payload: null }))
+    app.wm.rsvp.mock.mockImplementation(async () => {
+      throw new Error('photo 3 is not in item 41')
+    })
 
     let err = await proto.handle(base + '/items/41/3').catch(e => e)
     expect(err).to.have.property('status', 404)

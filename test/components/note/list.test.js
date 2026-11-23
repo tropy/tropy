@@ -11,7 +11,7 @@ describe('NoteList', () => {
     let dispatch = mock.method(store, 'dispatch')
     let dom = render(<NoteList {...props}/>, withStore(store))
 
-    // The project commands dispatched (open, delete).
+    // The project commands dispatched (delete).
     let commands = () => dispatch.mock.calls
       .map(call => call.arguments[0])
       .filter(action => action?.meta?.cmd === 'project')
@@ -20,15 +20,15 @@ describe('NoteList', () => {
   }
 
   it('selects and opens notes with the mouse', () => {
-    let { $, commands, store } = setup()
+    let { $, store } = setup()
 
     let note = $('.note-list li:last-child')
     fireEvent.mouseDown(note, { detail: 1 })
     fireEvent.doubleClick(note, { detail: 2 })
 
-    expect(store.getState().nav.selection.note).to.equal(2)
-    expect(commands()[0].payload).to.include({ id: 1, selection: undefined })
-    expect(commands()[0].payload.notes).to.eql([2])
+    expect(store.getState().nav).to.nested.include({
+      'selection.note': 2, mode: 'item'
+    })
   })
 
   it('previews the matches of the search query', () => {
@@ -41,14 +41,14 @@ describe('NoteList', () => {
   })
 
   it('does not open notes in item mode', () => {
-    let { $, commands } = setup({}, { isItemOpen: true })
+    let { $, store } = setup({}, { isItemOpen: true })
 
     fireEvent.doubleClick($('.note-list li'), { detail: 2 })
-    expect(commands()).to.be.empty
+    expect(store.getState().nav.mode).to.equal('project')
   })
 
   it('opens and removes the note at the cursor with keys', () => {
-    let { $, commands } = setup({
+    let { $, commands, store } = setup({
       note: 2,
       keymap: {
         NoteList: new KeyMap({ open: 'Enter', remove: 'Backspace' })
@@ -58,9 +58,8 @@ describe('NoteList', () => {
     fireEvent.keyDown($('.scroll-container'), { key: 'Enter' })
     fireEvent.keyDown($('.scroll-container'), { key: 'Backspace' })
 
-    let [open, remove] = commands()
-    expect(open.payload.notes).to.eql([2])
-    expect(remove.payload).to.eql([2])
+    expect(store.getState().nav.mode).to.equal('item')
+    expect(commands()[0].payload).to.eql([2])
   })
 
   it('leaves remove keys alone when read-only', () => {

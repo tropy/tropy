@@ -83,6 +83,26 @@ function *rsvp (action) {
   }
 }
 
+// Thunks (e.g. item.open) have no done action to respond with:
+// they respond with their result, or the error they throw.
+function *reply ({ name, type = name, meta }, thunk) {
+  try {
+    let payload = yield put(thunk)
+    yield call(rsvp, {
+      type,
+      payload,
+      meta: { rsvp: meta.rsvp, done: true }
+    })
+  } catch (err) {
+    yield call(rsvp, {
+      type,
+      payload: err,
+      error: true,
+      meta: { rsvp: meta.rsvp, done: true }
+    })
+  }
+}
+
 // Resolve dispatched actions arriving from main.
 // If the action has no `type`, calls corresponding action creator
 // by resolving `name`.
@@ -102,7 +122,12 @@ function *receive () {
   while (true) {
     let action = yield take(dispatches)
     try {
-      yield put(resolve(action))
+      let resolved = resolve(action)
+
+      if (typeof resolved === 'function' && action.meta?.rsvp != null)
+        yield fork(reply, action, resolved)
+      else
+        yield put(resolved)
     } catch (err) {
       warn({ err, action: action?.type }, 'failed to resolve dispatched action')
     }

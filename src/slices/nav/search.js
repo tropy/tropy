@@ -13,7 +13,7 @@ const initialState = {
   sort: {} // Sort column stored per list!
 }
 
-export const searchSlice = createSlice({
+const searchSlice = createSlice({
   name: 'nav/search',
   initialState,
 
@@ -126,3 +126,5 @@ function selectTag (tags, id, mod = 'replace') {
       throw new Error(`unknown selection mode: "${mod}"`)
   }
 }
+
+export default searchSlice

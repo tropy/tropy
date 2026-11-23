@@ -36,8 +36,11 @@ export function usePhotoIterator ({
   let selections = useSelector(state => state.selections)
   let contributors = useSelector(state => state.qr.contributors)
 
-  // Sorting a filtered list would renumber only the visible photos.
+  // Sorting a filtered list would renumber only the visible photos;
+  // with several items, the photos of different items mix.
   let isFiltered = useSelector(selectMatchFilter) != null
+  let isUnsortable = isFiltered ||
+    photos.some(photo => photo.item !== photos[0].item)
 
   // Navigation: a Cursor with Scroll's layout.
   // The grid navigates the photos (the expansion row has its own
@@ -136,7 +139,7 @@ export function usePhotoIterator ({
     else
       dispatch(act.item.open({
         id: photo.item,
-        photos: [photo.id],
+        photo: photo.id,
         selection
       }))
   })
@@ -210,7 +213,7 @@ export function usePhotoIterator ({
 
   let sortable = useSortableSequence({
     type: DND.PHOTO,
-    isDisabled: isDisabled || isFiltered,
+    isDisabled: isDisabled || isUnsortable,
     items: photos.map(photo => photo.id),
     onSort: (order) =>
       dispatch(act.photo.order({ item: photos[0].item, photos: order }))
@@ -237,7 +240,7 @@ export function usePhotoIterator ({
     isItemOpen,
     isMatch: !!contributors?.photos[photo.id],
     isSelected: isSelected(photo),
-    isSortable: !isFiltered,
+    isSortable: !isUnsortable,
     isVertical: !isGrid,
     getAdjacent: sortable.getAdjacent,
     onConsolidate: consolidate,

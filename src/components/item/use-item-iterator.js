@@ -66,7 +66,7 @@ export function useItemIterator ({
   }
 
   let clearSelection = () => {
-    dispatch(act.item.select({ items: [] }))
+    dispatch(act.item.select({ item: [] }))
   }
 
   let open = (id) => {
@@ -138,7 +138,7 @@ export function useItemIterator ({
         }
       },
       all () {
-        dispatch(act.item.select({ all: true }))
+        dispatch(act.item.select({ item: selection.all() }))
       },
       merge () {
         let ids = selection.ids()

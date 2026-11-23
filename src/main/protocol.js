@@ -1,5 +1,5 @@
 import { clipboard } from 'electron'
-import { HttpError, statusOf } from '../common/error.js'
+import { CodeError, HttpError, statusOf } from '../common/error.js'
 import { info, warn } from '../common/log.js'
 import { protocolURL } from '../common/project-file.js'
 import { SYNTAX } from '../common/search.js'
@@ -108,10 +108,14 @@ const ROUTES = Object.freeze([
     params: object({ urlId, item: id, photo: id, selection: id },
       ['urlId', 'item'])
   }, async ({ item, photo, selection }, win) => {
-    let opened = await win.rsvp(act.item.open({ id: item, photo, selection }))
-
-    if (opened == null)
+    // The window rejects unknown or mismatched ids (item.open throws);
+    // the window manager's own errors (timeout, closed) are CodeErrors.
+    try {
+      await win.rsvp(act.item.open({ id: item, photo, selection }))
+    } catch (err) {
+      if (err instanceof CodeError) throw err
       throw fail(404, `unknown item, photo or selection: ${item}`)
+    }
   }),
 
   projectRoute('/:urlId/lists/:list', {

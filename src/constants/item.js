@@ -10,7 +10,6 @@ export default {
   IMPLODE: 'item.implode',
   LOAD: 'item.load',
   MERGE: 'item.merge',
-  OPEN: 'item.open',
   REMOVE: 'item.remove',
   RESTORE: 'item.restore',
   SELECT: 'item.select',

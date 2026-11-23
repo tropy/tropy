@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { restore, show } from './actions.js'
-import { isDone } from '../cmd.js'
-import { EDIT, ITEM, NOTE } from '../../constants/index.js'
+import { EDIT, ITEM } from '../../constants/index.js'
 
 const mode = {
   __proto__: null,
@@ -9,7 +8,7 @@ const mode = {
   item: 'item'
 }
 
-export const modeSlice = createSlice({
+const modeSlice = createSlice({
   name: 'nav/mode',
   initialState: mode.project,
 
@@ -27,8 +26,10 @@ export const modeSlice = createSlice({
       .addCase(EDIT.START, (state, { payload }) =>
         (payload.tag || payload.list) ? mode.project : state)
 
-      // A missing item is not opened (no payload).
-      .addMatcher(isDone(ITEM.OPEN, NOTE.OPEN), (state, { payload }) =>
-        (payload != null) ? mode.item : state)
+      // The mode hint: 'item' from item.open.
+      .addCase(ITEM.SELECT, (state, { payload }) =>
+        mode[payload.mode] ?? state)
   }
 })
+
+export default modeSlice
