@@ -27,7 +27,7 @@ describe('select actions', () => {
       notes: {},
       nav: { ...init, selection: { ...init.selection, item: create([1, 2]) } },
       // Item 1 is not among the results.
-      qr: { ...qr(undefined, {}), matches: { 2: true } },
+      qr: { ...qr(undefined, {}), items: [2], matches: { 2: true } },
       intl: { messages: {} }
     })
   })
@@ -37,10 +37,17 @@ describe('select actions', () => {
     expect(selection()).to.nested.include({ 'photo.cursor': 5, 'note.cursor': 7 })
   })
 
+  it('item.select selects below the primary item', () => {
+    // Item 2 deselected, the cursor stays on it.
+    store.dispatch(act.item.select({ item: create([1], { anchor: 2 }) }))
+    expect(selection()).to.nested.include({ 'photo.cursor': 5 })
+  })
+
   it('check their targets', () => {
     for (let select of [
       () => act.item.select({ item: 1, photo: 8 }),
       () => act.item.select({ item: 1, photo: 5, selection: 9, note: 7 }),
+      () => act.item.select({ item: 1, selection: 99 }),
       () => act.photo.select({ item: 1, photo: 8 }),
       () => act.note.select({ note: 10, photo: 5 }),
       () => act.item.open({ id: 3 })

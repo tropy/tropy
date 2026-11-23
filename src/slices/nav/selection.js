@@ -100,10 +100,8 @@ const selectionSlice = createSlice({
       .addCase(ITEM.SELECT, (state, { payload }) => {
         state.item = payload.item
 
-        let id = (payload.item.cursor != null)
-          ? defaultPhoto(state, payload)
-          : null
-
+        // Without a primary item, there are no paths: no photo.
+        let id = defaultPhoto(state, payload)
         setPhoto(state, id, payload.note, payload.notes?.[id])
       })
 

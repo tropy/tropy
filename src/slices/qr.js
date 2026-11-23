@@ -73,13 +73,6 @@ export const selectMatcher = memo(
       null :
       createMatcher(terms))
 
-// The photos and notes of the selected items that contributed to
-// the search match, as lookups ({ photos, notes }: id → true), or
-// null without terms or selected items (see contributing in
-// sagas/search.js). Null too when the match filter is off.
-export const selectMatchFilter = (state) =>
-  state.settings.search.filter ? state.qr.contributors : null
-
 // Lookups for combining search terms (see common/matches.js):
 // itemOf[subject] the item of an item, photo or selection id,
 // photoOf[subject] the photo of a photo or selection id (0 otherwise),

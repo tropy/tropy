@@ -397,20 +397,15 @@ describe('search saga', () => {
 })
 
 describe('contributors', () => {
-  const state = ({ query = 'box', item = [1], photo = 11, note = null } = {}) => ({
+  const state = ({ query = 'box', item = [1] } = {}) => ({
     nav: {
       search: { query },
-      selection: {
-        item: create(item),
-        photo: create([photo]),
-        note: create(note == null ? [] : [note])
-      }
+      selection: { item: create(item) }
     },
     qr: {
       items: [1, 2],
       contributors: { photos: { 12: true }, notes: { 7: true } }
     },
-    settings: { search: { filter: true } },
     items: {
       1: { id: 1, photos: [11, 12] },
       2: { id: 2, photos: [] }
@@ -436,8 +431,7 @@ describe('contributors', () => {
 
     expect(puts[0].payload.contributors).to.eql({
       photos: { 12: true },
-      notes: { 7: true },
-      cursor: { photo: 11, note: null }
+      notes: { 7: true }
     })
 
     // Edits change the lists, not the snapshot.

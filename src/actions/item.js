@@ -1,12 +1,12 @@
 import { ITEM } from '../constants/index.js'
 import { array } from '../common/util.js'
-import { focus, from as toSelection } from '../common/selection.js'
+import { focus, primary, from as toSelection } from '../common/selection.js'
 import { show } from '../slices/nav/actions.js'
 import { checkCursorPath, selectCursorPaths } from '../slices/nav/path.js'
 import { selectViewOf } from '../slices/qr.js'
 
-// Selects items, and optionally a cursor path below the item
-// at the cursor: photo, photo selection, note (checked; see
+// Selects items, and optionally a cursor path below the primary
+// item: photo, photo selection, note (checked; see
 // slices/nav/path.js). The item selection is a state, an id or ids
 // (see from). The reducer completes the path from the item's paths
 // (the default cursor path). The mode is a hint ('item' from open).
@@ -15,9 +15,9 @@ function select ({ item, photo, selection, note, mode }, meta = {}) {
     let state = getState()
 
     item = toSelection(item)
+    let id = primary(item)
 
-    if (item.cursor != null)
-      checkCursorPath(state, { item: item.cursor, photo, selection, note })
+    checkCursorPath(state, { item: id, photo, selection, note })
 
     return dispatch({
       type: ITEM.SELECT,
@@ -27,7 +27,7 @@ function select ({ item, photo, selection, note, mode }, meta = {}) {
         selection,
         note,
         mode,
-        ...(item.cursor != null && selectCursorPaths(state, item.cursor))
+        ...(id != null && selectCursorPaths(state, id))
       },
       meta: { log: 'trace', history: true, ...meta }
     })

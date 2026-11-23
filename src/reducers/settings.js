@@ -29,8 +29,7 @@ const defaults = {
   localtime: true,
   createLists: false,
   search: {
-    highlight: true,
-    filter: false
+    highlight: true
   },
   maximize: 'none',
   ocr: {
