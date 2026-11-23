@@ -4,7 +4,7 @@ import { Command } from '../command.js'
 import { array } from '../../common/util.js'
 import { create } from '../../models/transcription.js'
 import * as slice from '../../slices/transcriptions.js'
-import { selectPhotoCursor, selectSelectionCursor } from '../../slices/nav/index.js'
+import { selectNavCursor } from '../../slices/nav/cursor.js'
 import { settings } from '../../actions/index.js'
 import { show } from '../../dialog.js'
 import win from '../../window.js'
@@ -24,10 +24,7 @@ export class Create extends Command {
     }
 
     if (photo == null && selection == null) {
-      [photo, selection] = yield select(state => ([
-        selectPhotoCursor(state),
-        selectSelectionCursor(state)
-      ]))
+      ({ photo, selection } = yield select(selectNavCursor))
     }
 
     let isValid = yield select(state => (selection != null) ?

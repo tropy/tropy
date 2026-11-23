@@ -7,11 +7,8 @@ import { selectMatcher } from '../../slices/qr.js'
 import { TABS, SASS } from '../../constants/index.js'
 import * as act from '../../actions/index.js'
 
-import {
-  getSelectedNote,
-  getSelectedPhoto,
-  getVisibleNotes
-} from '../../selectors/index.js'
+import { getVisibleNotes } from '../../selectors/index.js'
+import { selectActiveNote, selectActivePhoto } from '../../slices/nav/cursor.js'
 
 
 export const NoteList = ({
@@ -24,8 +21,8 @@ export const NoteList = ({
   let dispatch = useDispatch()
 
   let notes = useSelector(getVisibleNotes)
-  let selected = useSelector(getSelectedNote)
-  let photo = useSelector(getSelectedPhoto)
+  let selected = useSelector(selectActiveNote)
+  let photo = useSelector(selectActivePhoto)
   let matcher = useSelector(selectMatcher)
   let contributors = useSelector(state => state.qr.contributors)
 

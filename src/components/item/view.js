@@ -8,11 +8,10 @@ import { useActions } from '../../hooks/use-action.js'
 
 import {
   getSelectedItems,
-  getSelectedNote,
-  getSelectedPhoto,
   getVisibleNotes,
   getVisiblePhotos
 } from '../../selectors/index.js'
+import { selectActiveNote, selectActivePhoto } from '../../slices/nav/cursor.js'
 
 
 export const ItemView = ({
@@ -35,8 +34,8 @@ export const ItemView = ({
   // TODO these should be moved!
   // ------------------------------------------------------------
   let items = useSelector(getSelectedItems)
-  let note = useSelector(getSelectedNote)
-  let photo = useSelector(getSelectedPhoto)
+  let note = useSelector(selectActiveNote)
+  let photo = useSelector(selectActivePhoto)
   let photos = useSelector(getVisiblePhotos)
   let notes = useSelector(getVisibleNotes)
   let keymap = useSelector(state => state.keymap)

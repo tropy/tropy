@@ -66,14 +66,7 @@ export const selectionSlice = createSlice({
   name: 'nav/selection',
   initialState,
 
-  reducers: {
-    // The search moved the photo and note cursors to matching ones
-    // (see narrow in sagas/search.js): { photo, selection, note }.
-    narrow (state, { payload: { photo, selection, note } }) {
-      state.photo = focusPhoto(state.photo, selection ?? photo)
-      state.note = note
-    }
-  },
+  reducers: {},
 
   extraReducers: (builder) => {
     builder

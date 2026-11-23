@@ -9,9 +9,13 @@ describe('Create transcription', () => {
   let exec = (payload) => run(
     new Create(slice.create({ text: 'Text', ...payload }), { db }).exec(), {
       state: {
-        nav: { selection: { photo: create([1]) } },
-        photos: { 1: { id: 1 }, 3: { id: 3 } },
-        selections: { 2: { id: 2, photo: 3 } }
+        nav: { selection: { item: create([1]), photo: create([1]), note: null } },
+        qr: { items: [1] },
+        settings: { search: { filter: false } },
+        items: { 1: { id: 1, photos: [1] } },
+        photos: { 1: { id: 1, item: 1, selections: [] }, 3: { id: 3 } },
+        selections: { 2: { id: 2, photo: 3 } },
+        notes: {}
       },
       mocks: [[db.transaction, () => [{ id: 9, parent: 2 }]]]
     })

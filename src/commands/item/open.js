@@ -2,17 +2,17 @@ import { put, select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { ITEM } from '../../constants/index.js'
 import { selectViewOf } from '../../slices/qr.js'
-import { selectPhotoCursor, show } from '../../slices/nav/index.js'
+import { show } from '../../slices/nav/index.js'
+import { selectNavCursor } from '../../slices/nav/cursor.js'
 
 
 export class Open extends Command {
   *exec () {
     let { id, photo, selection, note } = this.action.payload
 
-    let [item, current, cursor, selections] = yield select(state => ([
+    let [item, cursor, selections] = yield select(state => ([
       state.items[id],
-      state.nav.selection.note,
-      selectPhotoCursor(state),
+      selectNavCursor(state),
       state.selections
     ]))
 
@@ -30,8 +30,8 @@ export class Open extends Command {
     if (view != null) yield put(show(view))
 
     if (!photo) {
-      photo = item.photos.includes(cursor) ?
-        cursor : item.photos[0]
+      photo = item.photos.includes(cursor.photo) ?
+        cursor.photo : item.photos[0]
     }
 
     if (!note) {
@@ -40,8 +40,8 @@ export class Open extends Command {
       ))
 
       if (obj?.notes)
-        note = obj.notes.includes(current) ?
-          current : obj.notes[0]
+        note = obj.notes.includes(cursor.note) ?
+          cursor.note : obj.notes[0]
     }
 
     return {

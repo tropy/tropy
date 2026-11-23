@@ -8,7 +8,7 @@ import { SelectionTile } from './tile.js'
 import { Cursor } from '../../common/sequence.js'
 import { TABS } from '../../constants/index.js'
 import { pluck } from '../../common/util.js'
-import { selectSelectionCursor } from '../../slices/nav/index.js'
+import { selectSelectionCursor } from '../../slices/nav/cursor.js'
 import cx from 'classnames'
 
 export const SelectionGrid = memo(({

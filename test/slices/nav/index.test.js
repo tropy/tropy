@@ -438,23 +438,5 @@ describe('nav', () => {
       expect(act.selectIsView(root({ view: { name: 'trash' } }), 'trash')).to.be.true
       expect(act.selectIsView(root(), 'trash')).to.be.false
     })
-
-    it('select the photo or photo selection at the cursor', () => {
-      let at = (id) => ({
-        nav: { ...init, selection: { ...init.selection, photo: create([id]) } },
-        photos: { 5: { id: 5 } },
-        selections: { 6: { id: 6, photo: 5 } }
-      })
-
-      expect(act.selectPhotoCursor(at(6))).to.equal(5)
-      expect(act.selectSelectionCursor(at(6))).to.equal(6)
-
-      expect(act.selectPhotoCursor(at(5))).to.equal(5)
-      expect(act.selectSelectionCursor(at(5))).to.be.null
-
-      // Before the photos and selections are loaded.
-      expect(act.selectPhotoCursor({ ...at(6), photos: {}, selections: {} }))
-        .to.be.null
-    })
   })
 })

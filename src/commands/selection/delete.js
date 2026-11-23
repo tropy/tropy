@@ -4,7 +4,7 @@ import { SELECTION } from '../../constants/index.js'
 import { get, splice } from '../../common/util.js'
 import mod from '../../models/selection.js'
 import * as act from '../../actions/index.js'
-import { selectSelectionCursor } from '../../slices/nav/index.js'
+import { selectSelectionCursor } from '../../slices/nav/cursor.js'
 
 
 export class Delete extends Command {

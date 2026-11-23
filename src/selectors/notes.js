@@ -1,15 +1,11 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { getVisiblePhotos } from './photos.js'
-import { getVisibleSelections } from './selections.js'
+import { getVisiblePhotos, getVisibleSelections } from './photos.js'
 import { Cursor } from '../common/sequence.js'
 import { selectMatchFilter } from '../slices/qr.js'
+import { selectKeptNote } from '../slices/nav/cursor.js'
 
 const getNotes = ({ notes }) => notes
 const getSelectedNoteId = ({ nav }) => nav.selection.note
-
-export const getSelectedNote = memo(
-  getNotes, getSelectedNoteId, (notes, id) => notes[id]
-)
 
 export const getNoteParent = ({ notes, photos, selections }, { id }) => {
   let { photo, selection } = notes[id]
@@ -25,13 +21,13 @@ export const getNoteParent = ({ notes, photos, selections }, { id }) => {
 
 // The notes of the visible photos and selections; with the match
 // filter on, only those that contributed to the search match,
-// and the current note: what is selected stays visible.
+// and the note selected since: what is selected stays visible.
 export const getVisibleNotes = memo(
   getNotes,
   getVisiblePhotos,
   getVisibleSelections,
   selectMatchFilter,
-  (state) => selectMatchFilter(state) && state.nav.selection.note,
+  selectKeptNote,
 
   (notes, photos, selections, filter, current) =>
     [...photos, ...selections]

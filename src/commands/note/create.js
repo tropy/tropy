@@ -6,7 +6,7 @@ import { NOTE } from '../../constants/index.js'
 import { getNoteSuccessor, getNotesMap } from '../../selectors/index.js'
 import { containsRTL } from '../../common/util.js'
 import { fromHTML } from '../../editor/serialize.js'
-import { selectPhotoCursor, selectSelectionCursor } from '../../slices/nav/index.js'
+import { selectNavCursor } from '../../slices/nav/cursor.js'
 
 
 export class Create extends Command {
@@ -15,10 +15,7 @@ export class Create extends Command {
     let { html, state, text, photo, selection } = this.action.payload
 
     if (photo == null && selection == null) {
-      [photo, selection] = yield select(state => ([
-        selectPhotoCursor(state),
-        selectSelectionCursor(state)
-      ]))
+      ({ photo, selection } = yield select(selectNavCursor))
     }
 
     let parent = yield select(state => (selection != null) ?

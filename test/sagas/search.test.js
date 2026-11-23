@@ -3,7 +3,6 @@ import { run } from '../support/saga.js'
 import {
   cachedLists,
   contribute,
-  narrow,
   search,
   sync,
   termLists
@@ -433,32 +432,17 @@ describe('contributors', () => {
 
     expect(puts[0].payload.contributors).to.eql({
       photos: { 12: true },
-      notes: { 7: true }
+      notes: { 7: true },
+      cursor: { photo: 11, note: null }
     })
 
     // Edits change the lists, not the snapshot.
     expect(contribute$(state(), result, []).puts).to.eql([])
   })
 
-  it('narrows after a new snapshot only', () => {
-    let { calls, result } = contribute$(state())
-    expect(calls(narrow).callCount()).to.equal(1)
-
-    expect(contribute$(state(), result).calls(narrow).callCount())
-      .to.equal(0)
-  })
-
   it('clears the contributors without terms', () => {
     let { puts } = contribute$(state({ query: '' }))
     expect(puts[0].payload.contributors).to.be.null
-  })
-
-  it('moves to the first visible photo and note when hidden', () => {
-    let { puts } = run(narrow(), { state: state() })
-    expect(puts[0].payload).to.eql({ photo: 12, selection: null, note: 7 })
-
-    expect(run(narrow(), { state: state({ photo: 12, note: 7 }) }).puts)
-      .to.eql([])
   })
 })
 

@@ -67,7 +67,6 @@ function widens (prev, next) {
 
 export { restore, show }
 export const { search, sort } = searchSlice.actions
-export const { narrow } = selectionSlice.actions
 export const mode = { back: modeSlice.actions.back }
 
 export const {
@@ -75,19 +74,3 @@ export const {
   selectList,
   selectSort
 } = searchSlice.getSelectors(state => state.nav.search)
-
-
-// Root-level selectors (to resolve photo/selection)
-
-export const selectPhotoCursor = (state) => {
-  let id = state.nav.selection.photo.cursor
-
-  return (state.photos[id] != null)
-    ? id
-    : state.selections[id]?.photo ?? null
-}
-
-export const selectSelectionCursor = (state) => {
-  let id = state.nav.selection.photo.cursor
-  return (state.selections[id] != null) ? id : null
-}
