@@ -11,7 +11,11 @@ import {
   getVisibleNotes,
   getVisiblePhotos
 } from '../../selectors/index.js'
-import { selectActiveNote, selectActivePhoto } from '../../slices/nav/cursor.js'
+import {
+  selectActiveNote,
+  selectActivePhoto,
+  selectItemCursor
+} from '../../slices/nav/cursor.js'
 
 
 export const ItemView = ({
@@ -34,6 +38,7 @@ export const ItemView = ({
   // TODO these should be moved!
   // ------------------------------------------------------------
   let items = useSelector(getSelectedItems)
+  let item = useSelector(selectItemCursor)
   let note = useSelector(selectActiveNote)
   let photo = useSelector(selectActivePhoto)
   let photos = useSelector(getVisiblePhotos)
@@ -72,6 +77,7 @@ export const ItemView = ({
           isDisabled={isProjectClosing}
           isItemMode={isItemMode}
           isReadOnly={isReadOnly}
+          item={item}
           items={items}
           keymap={keymap}
           note={note}

@@ -3,13 +3,9 @@ import { contains, isList } from './view.js'
 import { isPending } from '../cmd.js'
 import { LIST } from '../../constants/index.js'
 import { restore, show } from './actions.js'
-import { searchSlice } from './search.js'
-import {
-  clearSelection,
-  pruneSelection,
-  selectionSlice
-} from './selection.js'
-import { modeSlice } from './mode.js'
+import modeSlice from './mode.js'
+import searchSlice from './search.js'
+import selectionSlice, { clearSelection, pruneSelection } from './selection.js'
 
 const initialState = {
   search: searchSlice.getInitialState(),

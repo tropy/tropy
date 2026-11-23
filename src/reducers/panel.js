@@ -16,7 +16,7 @@ const expand = (state, photo) => ({
 })
 
 
-export function panel (state = INIT, { type, payload, meta, error }) {
+export function panel (state = INIT, { type, payload }) {
   switch (type) {
     case PANEL.RESTORE:
       return merge(INIT, payload)
@@ -31,10 +31,11 @@ export function panel (state = INIT, { type, payload, meta, error }) {
       return (payload?.selection == null) ?
         state :
         expand(state, payload.photo)
-    case ITEM.OPEN:
-      return (!meta.done || error || payload == null) ?
-        state :
-        expand(state, payload.photo)
+    case ITEM.SELECT:
+      return (payload.photo != null &&
+        (payload.mode === 'item' || payload.selection != null)) ?
+        expand(state, payload.photo) :
+        state
     default:
       return state
   }

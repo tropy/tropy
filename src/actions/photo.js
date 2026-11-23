@@ -1,6 +1,6 @@
 import { PHOTO } from '../constants/index.js'
 import { array } from '../common/util.js'
-import { warn } from '../common/log.js'
+import { checkCursorPath, selectNoteIds } from '../slices/nav/path.js'
 
 function update (payload, meta = {}) {
   return {
@@ -143,29 +143,24 @@ export default {
 
   select (payload, meta) {
     return (dispatch, getState) => {
-      let { item, photo, selection, note } = payload
+      let state = getState()
+      let { item, photo, selection, note } = payload ?? {}
+      let notes
 
-      if (item == null && photo != null) {
-        item = getState().photos[photo]?.item
+      if (photo != null) {
+        item ??= state.photos[photo]?.item
+        checkCursorPath(state, { item, photo, selection, note })
+        notes = selectNoteIds(state, selection ?? photo) ?? []
       }
 
-      if (item == null) {
-        return warn({ photo }, 'cannot select photo without item')
-      }
-
-      if (note == null && photo != null) {
-        note = (selection != null)
-          ? getState().selections[selection].notes[0]
-          : getState().photos[photo].notes[0]
-      }
-
-      dispatch({
+      return dispatch({
         type: PHOTO.SELECT,
         payload: {
+          item,
           photo,
           selection,
           note,
-          item
+          notes
         },
         meta: { log: 'trace', history: true, ...meta }
       })

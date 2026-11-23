@@ -36,7 +36,7 @@ export class Create extends Command {
     })
 
     yield put(act.item.insert(item))
-    yield put(act.item.select({ items: [item.id] }))
+    yield put(act.item.select({ item: item.id }))
 
     this.undo = act.item.delete([item.id])
     this.redo = act.item.restore([item.id])

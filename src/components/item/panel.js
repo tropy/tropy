@@ -69,7 +69,7 @@ export class ItemPanelGroup extends React.PureComponent {
 
   handlePhotoCreate = (data) => {
     this.props.onPhotoCreate({
-      item: this.props.items?.[0]?.id,
+      item: this.props.item,
       ...data
     })
   }
@@ -103,13 +103,12 @@ export class ItemPanelGroup extends React.PureComponent {
   }
 
   render () {
-    let { isDisabled, isReadOnly, photo, panel } = this.props
-    let hasMultipleItems = this.props.items.length > 1
-    let item = hasMultipleItems ? null : this.props.items[0]
+    let { isDisabled, isReadOnly, item, photo, panel } = this.props
 
-    let isPhotosDisabled =
-      isDisabled || isReadOnly || item == null || hasMultipleItems
-    let isNotesDisabled = isPhotosDisabled || isReadOnly || photo == null
+    // New photos go to the cursor item, notes to the cursor photo,
+    // also with several items.
+    let isPhotosDisabled = isDisabled || isReadOnly || item == null
+    let isNotesDisabled = isDisabled || isReadOnly || photo == null
 
 
     return (

@@ -42,9 +42,9 @@ export const NoteList = ({
     if (note != null && !isItemOpen)
       dispatch(act.item.open({
         id: photo.item,
-        photos: [photo.id],
-        notes: [note.id],
-        selection: note.selection
+        photo: photo.id,
+        selection: note.selection,
+        note: note.id
       }))
   }
 

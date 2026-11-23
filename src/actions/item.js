@@ -1,7 +1,64 @@
 import { ITEM } from '../constants/index.js'
-import { array, get } from '../common/util.js'
-import { create, ids } from '../common/selection.js'
-import { getItemSelection } from '../selectors/items.js'
+import { array } from '../common/util.js'
+import { focus, from as toSelection } from '../common/selection.js'
+import { show } from '../slices/nav/actions.js'
+import { checkCursorPath, selectCursorPaths } from '../slices/nav/path.js'
+import { selectViewOf } from '../slices/qr.js'
+
+// Selects items, and optionally a cursor path below the item
+// at the cursor: photo, photo selection, note (checked; see
+// slices/nav/path.js). The item selection is a state, an id or ids
+// (see from). The reducer completes the path from the item's paths
+// (the default cursor path). The mode is a hint ('item' from open).
+function select ({ item, photo, selection, note, mode }, meta = {}) {
+  return (dispatch, getState) => {
+    let state = getState()
+
+    item = toSelection(item)
+
+    if (item.cursor != null)
+      checkCursorPath(state, { item: item.cursor, photo, selection, note })
+
+    return dispatch({
+      type: ITEM.SELECT,
+      payload: {
+        item,
+        photo,
+        selection,
+        note,
+        mode,
+        ...(item.cursor != null && selectCursorPaths(state, item.cursor))
+      },
+      meta: { log: 'trace', history: true, ...meta }
+    })
+  }
+}
+
+// Opens an item: selects it in item mode. A selected item stays
+// in the selection (the cursor moves there), else it is selected
+// alone. An item not among the results is shown first (a new
+// search for a view that shows it): from the API or a link.
+function open ({ id, photo, selection, note } = {}, meta) {
+  return (dispatch, getState) => {
+    let state = getState()
+
+    if (state.items[id] == null)
+      throw new Error(`unknown item ${id}`)
+
+    checkCursorPath(state, { item: id, photo, selection, note })
+
+    let view = selectViewOf(state, id)
+    if (view != null) dispatch(show(view))
+
+    return dispatch(select({
+      item: focus(getState().nav.selection.item, id),
+      photo,
+      selection,
+      note,
+      mode: 'item'
+    }, meta))
+  }
+}
 
 export default {
   create (payload, meta) {
@@ -127,49 +184,9 @@ export default {
     }
   },
 
-  // Payload: the new selection state (item),
-  // the ids to select (items),
-  // or all to select all visible items.
-  // Selecting a single item selects its first photo and note.
-  select (payload, meta = {}) {
-    return (dispatch, getState) => {
-      let { photo, note } = payload
-      let state = getState()
+  select,
 
-      let item = payload.all
-        ? getItemSelection(state).all()
-        : payload.item ?? create(payload.items)
-
-      // Count all selected, not only the visible ones:
-      // new items are not in the results yet (until the rule
-      // "selected items are visible" applies them together).
-      let selected = ids(item)
-
-      if (selected.length === 1) {
-        if (photo === undefined) {
-          photo = get(state.items[selected[0]], ['photos', 0])
-        }
-
-        if (note === undefined && photo) {
-          note = get(state.photos[photo], ['notes', 0])
-        }
-      }
-
-      dispatch({
-        type: ITEM.SELECT,
-        payload: { item, photo, note },
-        meta: { log: 'trace', history: true, ...meta }
-      })
-    }
-  },
-
-  open (payload, meta) {
-    return {
-      type: ITEM.OPEN,
-      payload,
-      meta: { cmd: 'project', history: true, ...meta }
-    }
-  },
+  open,
 
   preview (payload, meta) {
     return {

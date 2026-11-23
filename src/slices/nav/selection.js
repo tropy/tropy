@@ -3,11 +3,12 @@ import {
   create as createSelection,
   focus,
   ids,
+  isSelection,
   remove
 } from '../../common/selection.js'
 import { array } from '../../common/util.js'
 import { restore } from './actions.js'
-import { isDone, isPending } from '../cmd.js'
+import { isPending } from '../cmd.js'
 import { ITEM, NOTE, PHOTO } from '../../constants/index.js'
 
 const initialState = {
@@ -16,21 +17,34 @@ const initialState = {
   note: null
 }
 
-const isSelection = (item) =>
-  typeof item?.selected === 'object' && item.selected !== null
-
 // The photo level holds photos and photo selections:
 // the cursor is the photo selection shown, if any, or the photo.
 // Without either, nothing is selected.
 const focusPhoto = (state, id) =>
   (id == null) ? createSelection() : focus(state, id)
 
-// Sets the item, photo, selection and note shown.
-const setShown = (state, { item, photo, selection, note }) => {
-  state.item = item
-  state.photo = focusPhoto(state.photo, selection ?? photo)
-  state.note = note ?? null
+// Completes the cursor path below the item: sets the photo level
+// and the note (see slices/nav/path.js). No photo, no note.
+// A note given (null is none) is set; else the note stays while the
+// photo level's cursor does, and is the first there when it moves.
+const setPhoto = (state, id, note, notes = []) => {
+  let prev = state.photo.cursor
+
+  state.photo = focusPhoto(state.photo, id)
+
+  if (id == null)
+    state.note = null
+  else if (note !== undefined)
+    state.note = note
+  else if (id !== prev || !(state.note == null || notes.includes(state.note)))
+    state.note = notes[0] ?? null
 }
+
+// The photo level of the cursor path: the one given, else the
+// cursor if it is on one of the item's paths, else the first photo.
+const defaultPhoto = (state, { photo, selection, photos = [], notes = {} }) =>
+  selection ?? photo ?? (
+    Object.hasOwn(notes, state.photo.cursor) ? state.photo.cursor : photos[0])
 
 // Drops removed photos or photo selections from the photo level.
 // The note goes with the cursor.
@@ -62,7 +76,7 @@ export const pruneSelection = (selection, ids) => {
 const prune = (state, { payload }) =>
   pruneSelection(state, array(payload))
 
-export const selectionSlice = createSlice({
+const selectionSlice = createSlice({
   name: 'nav/selection',
   initialState,
 
@@ -88,22 +102,33 @@ export const selectionSlice = createSlice({
       .addCase(ITEM.REMOVE, prune)
 
       .addCase(ITEM.SELECT, (state, { payload }) => {
-        setShown(state, payload)
+        state.item = payload.item
+
+        let id = (payload.item.cursor != null)
+          ? defaultPhoto(state, payload)
+          : null
+
+        setPhoto(state, id, payload.note, payload.notes?.[id])
       })
 
       .addCase(PHOTO.SELECT, (state, { payload }) => {
-        if (payload) {
-          setShown(state, { ...payload, item: focus(state.item, payload.item) })
-        } else {
-          state.photo = createSelection()
-        }
+        if (payload?.photo != null)
+          state.item = focus(state.item, payload.item)
+
+        setPhoto(state,
+          payload?.selection ?? payload?.photo,
+          payload?.note,
+          payload?.notes)
       })
 
       .addCase(NOTE.SELECT, (state, { payload }) => {
-        if (payload)
-          setShown(state, { ...payload, item: focus(state.item, payload.item) })
-        else
+        if (payload) {
+          state.item = focus(state.item, payload.item)
+          state.photo = focus(state.photo, payload.selection ?? payload.photo)
+          state.note = payload.note
+        } else {
           state.note = null
+        }
       })
 
       // The photos' selections are in the payload: the reducer
@@ -118,14 +143,7 @@ export const selectionSlice = createSlice({
 
       // Requests: the items leave the selection before the view.
       .addMatcher(isPending(ITEM.DELETE, ITEM.RESTORE), prune)
-
-      .addMatcher(isDone(ITEM.OPEN), (state, { payload }) => {
-        if (payload != null)
-          setShown(state, { ...payload, item: focus(state.item, payload.id) })
-      })
-
-      .addMatcher(isDone(NOTE.OPEN), (state, { payload }) => {
-        setShown(state, { ...payload, item: focus(state.item, payload.item) })
-      })
   }
 })
+
+export default selectionSlice
