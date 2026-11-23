@@ -168,7 +168,7 @@ img {
 }
 
 .metadata-heading,
-.notes-heading {
+.text-heading {
   display: flex;
   align-items: flex-end;
   font-size: inherit;
@@ -230,24 +230,22 @@ label {
 }
 
 .value,
-.note {
+.text-body {
   flex: 0 0 67%;
   padding-left: calc($print-page-margin / 16);
   overflow-wrap: anywhere;
 }
 
-.note-list {
-  .container:not(.overflow) & {
-    .note-container + .note-container {
-      margin-top: ($print-font-size * $print-line-height);
-    }
-  }
-
+.text-list {
   .overflow & {
-    margin-top: $print-page-margin - 3.7mm;
+    margin-top: ($print-font-size-large * $print-line-height-large);
     font-size: $print-font-size-large;
     line-height: $print-font-size-large * $print-line-height-large;
     letter-spacing: 0;
+
+    &:nth-child(1 of .text-list) {
+      margin-top: $print-page-margin - 3.7mm;
+    }
   }
 
   label {
@@ -261,22 +259,26 @@ label {
   }
 }
 
-.note-container {
+.text-container {
   display: flex;
 
   .overflow & {
     display: block;
+  }
 
-    & + .note-container {
+  & + & {
+    margin-top: ($print-font-size * $print-line-height);
+
+    .overflow & {
       margin-top: ($print-font-size-large * $print-line-height-large);
     }
   }
 }
 
-.notes-heading {
+.text-heading {
   height: calc($print-page-margin / 2 - $print-font-size / 2);
 
-  .container:not(.metadata) & {
+  .text-list:first-child > & {
     height: calc($print-page-margin / 2);
   }
 }

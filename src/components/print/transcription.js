@@ -1,19 +1,19 @@
 import { FormattedMessage } from 'react-intl'
 
 export const Transcription = ({ idx, text }) => (
-  <div className="transcription-container">
+  <div className="text-container">
     <label>
       <FormattedMessage id="print.transcription" values={{ idx }}/>
     </label>
-    <div className="transcription">{text}</div>
+    <div className="text-body transcription">{text}</div>
   </div>
 )
 
 export const TranscriptionList = ({ transcriptions, heading }) =>
   transcriptions.length === 0 ? null : (
-    <div className="transcription-list">
+    <div className="text-list transcription-list">
       {heading && (
-        <h5 className="transcriptions-heading">
+        <h5 className="text-heading">
           <FormattedMessage id={heading}/>
         </h5>
       )}
