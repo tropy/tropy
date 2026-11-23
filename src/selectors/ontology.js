@@ -4,8 +4,11 @@ import { blank, get, homogenize } from '../common/util.js'
 import { expand, tropy } from '../ontology/index.js'
 import { ITEM, PHOTO, SELECTION } from '../constants/index.js'
 import { value } from '../value.js'
-import { selectItemCursor } from './items.js'
-import { selectPhotoCursor, selectSelectionCursor } from '../slices/nav/cursor.js'
+import {
+  selectItemCursor,
+  selectPhotoCursor,
+  selectSelectionCursor
+} from '../slices/nav/cursor.js'
 
 const getResourceList =
   (res, vocab) =>

@@ -10,9 +10,9 @@ import { selectMatcher } from '../../slices/qr.js'
 import {
   getAllTags,
   getItemTags,
-  getSelectedItems,
   getTagCompletions
 } from '../../selectors/index.js'
+import { selectActiveItems } from '../../slices/nav/cursor.js'
 
 
 class TagPanel extends React.PureComponent {
@@ -95,7 +95,7 @@ const TagPanelContainer = connect(
     allTags: getAllTags(state),
     completions: getTagCompletions(state),
     edit: state.edit.tabTag,
-    items: getSelectedItems(state),
+    items: selectActiveItems(state),
     keymap: state.keymap.TagList,
     matcher: selectMatcher(state),
     tags: getItemTags(state)

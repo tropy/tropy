@@ -13,10 +13,12 @@ import {
   getItemFields,
   getPhotoFields,
   getSelectedItemTemplate,
-  getSelectedItems,
   getSelectionFields
 } from '../../selectors/index.js'
-import { selectActivePhoto } from '../../slices/nav/cursor.js'
+import {
+  selectActiveItems,
+  selectActivePhoto
+} from '../../slices/nav/cursor.js'
 
 
 class MetadataPanel extends React.PureComponent {
@@ -241,7 +243,7 @@ const MetadataPanelContainer = connect(
       photo: getPhotoFields(state),
       selection: getSelectionFields(state)
     },
-    items: getSelectedItems(state),
+    items: selectActiveItems(state),
     photo: selectActivePhoto(state),
     selection: getActiveSelection(state),
     template: getSelectedItemTemplate(state)

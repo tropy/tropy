@@ -1,6 +1,7 @@
 import { render, createStore, withStore } from '../support/react.js'
 import { Highlight, useSearchRanges } from '#tropy/components/highlight.js'
 import nav from '#tropy/slices/nav/index.js'
+import { create } from '#tropy/common/selection.js'
 
 describe('Highlight', () => {
   const marks = (text, ranges) => {
@@ -21,8 +22,15 @@ describe('Highlight', () => {
     const { settings } = createStore().getState()
 
     const search = (text, { query, mode = 'project', highlight = true }) => {
+      let init = nav(undefined, {})
       let store = createStore({
-        nav: { ...nav(undefined, {}), search: { ...nav(undefined, {}).search, query }, mode },
+        nav: {
+          ...init,
+          search: { ...init.search, query },
+          // Item mode needs a selected item.
+          selection: { ...init.selection, item: create([1]) },
+          mode
+        },
         settings: { ...settings, search: { highlight } }
       })
       let { container } = render(

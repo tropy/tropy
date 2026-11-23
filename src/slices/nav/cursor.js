@@ -1,12 +1,32 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { selectItemCursor } from '../../selectors/items.js'
+import { elements, ids, primary } from '../../common/selection.js'
+import { pluck } from '../../selectors/util.js'
+import { selectItemSequence } from '../qr.js'
 
 // Root-level selectors for the cursors of nav's levels:
 // plain reads of the stored cursors. The reducer and the
 // commands keep the cursor path valid; stale state (e.g.
 // restored after the project changed) is read as it is.
 
-export { selectItemCursor }
+// The primary selected item represents the selection
+// (merge target, bulk editor values and template).
+export const selectItemCursor = (state) =>
+  primary(state.nav.selection.item)
+
+export const selectActiveItems = createSelector(
+  (state) => state.items,
+  (state) => state.nav.selection.item,
+  selectItemSequence,
+  (items, selection, seq) => {
+    let visible = elements(selection, seq)
+    let inResults = new Set(visible)
+
+    return pluck(items, [
+      ...visible,
+      ...ids(selection).filter(id => !inResults.has(id))
+    ])
+  }
+)
 
 // The photo level's cursor: a photo or a photo selection.
 const getStoredPhoto = (state) =>

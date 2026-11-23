@@ -7,11 +7,11 @@ import { SASS } from '../../constants/index.js'
 import { useActions } from '../../hooks/use-action.js'
 
 import {
-  getSelectedItems,
   getVisibleNotes,
   getVisiblePhotos
 } from '../../selectors/index.js'
 import {
+  selectActiveItems,
   selectActiveNote,
   selectActivePhoto,
   selectItemCursor
@@ -37,7 +37,7 @@ export const ItemView = ({
 
   // TODO these should be moved!
   // ------------------------------------------------------------
-  let items = useSelector(getSelectedItems)
+  let items = useSelector(selectActiveItems)
   let item = useSelector(selectItemCursor)
   let note = useSelector(selectActiveNote)
   let photo = useSelector(selectActivePhoto)

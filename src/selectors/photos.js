@@ -1,6 +1,5 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { getItemSelection } from './items.js'
-import { pluck as pluckItems } from './util.js'
+import { selectActiveItems } from '../slices/nav/cursor.js'
 import { blank, pluck } from '../common/util.js'
 import { createSequence } from '../common/sequence.js'
 
@@ -35,28 +34,10 @@ export const getItemPhotos = (state, props) =>
     pluck(state.items, props.items),
     state.photos)
 
-// The selected items in the order of the results, then those
-// not among them (e.g. new ones): unlike getSelectedItems,
-// not the primary one first, so the photos keep their order
-// when the item cursor moves.
-const getItemsInOrder = memo(
-  ({ items }) => items,
-  getItemSelection,
-  (items, selection) => {
-    let ids = selection.elements()
-    let inResults = new Set(ids)
-
-    return pluckItems(items, [
-      ...ids,
-      ...selection.ids().filter(id => !inResults.has(id))
-    ])
-  }
-)
-
 // The photos of the selected items.
 export const getVisiblePhotos = memo(
   getPhotos,
-  getItemsInOrder,
+  selectActiveItems,
   (photos, items) => expandItemPhotos(items, photos)
 )
 
