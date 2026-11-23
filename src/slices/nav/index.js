@@ -6,6 +6,7 @@ import { restore, show } from './actions.js'
 import modeSlice from './mode.js'
 import searchSlice from './search.js'
 import selectionSlice, { clearSelection, pruneSelection } from './selection.js'
+import { size } from '../../common/selection.js'
 
 const initialState = {
   search: searchSlice.getInitialState(),
@@ -33,6 +34,9 @@ export default function nav (state = initialState, action) {
     selection = pruneSelection(selection, action.payload.items)
 
   let mode = modeSlice.reducer(state.mode, action)
+
+  if (mode === 'item' && size(selection.item) === 0)
+    mode = 'project'
 
   return (
     search === state.search &&
