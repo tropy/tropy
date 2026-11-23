@@ -24,7 +24,7 @@ export default function nav (state = initialState, action) {
 
   // If a search change isn't widening, we clear the selection.
   if (!restore.match(action) && !widens(state.search, search))
-    selection = clearSelection()
+    selection = clearSelection(selection)
 
   selection = selectionSlice.reducer(selection, action)
 

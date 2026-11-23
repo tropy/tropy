@@ -89,6 +89,13 @@ describe('selection state', () => {
     expect(focus(state, 6)).to.eql(create([6]))
   })
 
+  it('focuses nothing, selecting nothing', () => {
+    let empty = create()
+
+    expect(focus(create([2, 4]), null)).to.eql(empty)
+    expect(focus(empty, null)).to.equal(empty)
+  })
+
   it('removes elements, dropping a removed anchor or cursor', () => {
     let state = create([2, 4, 6], { anchor: 2, cursor: 6 })
 

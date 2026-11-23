@@ -9,7 +9,7 @@ describe('Create transcription', () => {
   let exec = (payload) => run(
     new Create(slice.create({ text: 'Text', ...payload }), { db }).exec(), {
       state: {
-        nav: { selection: { item: create([1]), photo: create([1]), note: null } },
+        nav: { selection: { item: create([1]), photo: create([1]), note: create() } },
         qr: { items: [1] },
         settings: { search: { filter: false } },
         items: { 1: { id: 1, photos: [1] } },

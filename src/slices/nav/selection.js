@@ -1,66 +1,74 @@
 import { createSlice } from '@reduxjs/toolkit'
-import {
-  create as createSelection,
-  focus,
-  ids,
-  isSelection,
-  remove
-} from '../../common/selection.js'
 import { array } from '../../common/util.js'
 import { restore } from './actions.js'
 import { isPending } from '../cmd.js'
 import { ITEM, NOTE, PHOTO } from '../../constants/index.js'
+import {
+  create as createSelection,
+  focus,
+  isBlank,
+  remove
+} from '../../common/selection.js'
 
 const initialState = {
   item: createSelection(),
   photo: createSelection(),
-  note: null
+  note: createSelection(),
+  last: {}
 }
 
-// The photo level holds photos and photo selections:
-// the cursor is the photo selection shown, if any, or the photo.
-// Without either, nothing is selected.
-const focusPhoto = (state, id) =>
-  (id == null) ? createSelection() : focus(state, id)
+// Selects the note and records it as last for current photo.
+const setNote = (state, id) => {
+  state.note = focus(state.note, id)
 
-// Completes the cursor path below the item: sets the photo level
-// and the note (see slices/nav/path.js). No photo, no note.
-// A note given (null is none) is set; else the note stays while the
-// photo level's cursor does, and is the first there when it moves.
+  if (id != null && state.photo.cursor != null)
+    state.last[state.photo.cursor] = id
+}
+
+// Selects the photo and note, resolving the default note if not given.
 const setPhoto = (state, id, note, notes = []) => {
   let prev = state.photo.cursor
+  let { cursor } = state.note
+  let { last } = state
 
-  state.photo = focusPhoto(state.photo, id)
+  state.photo = focus(state.photo, id)
 
   if (id == null)
-    state.note = null
+    setNote(state, null)
   else if (note !== undefined)
-    state.note = note
-  else if (id !== prev || !(state.note == null || notes.includes(state.note)))
-    state.note = notes[0] ?? null
+    setNote(state, note)
+  else if (id !== prev || !(cursor == null || notes.includes(cursor)))
+    setNote(
+      state,
+      notes.includes(last[id]) ? last[id] : notes[0]
+    )
 }
 
-// The photo level of the cursor path: the one given, else the
-// cursor if it is on one of the item's paths, else the first photo.
-const defaultPhoto = (state, { photo, selection, photos = [], notes = {} }) =>
-  selection ?? photo ?? (
-    Object.hasOwn(notes, state.photo.cursor) ? state.photo.cursor : photos[0])
-
-// Drops removed photos or photo selections from the photo level.
-// The note goes with the cursor.
-const prunePhotos = (state, elements) => {
-  let photo = remove(state.photo, elements)
-
-  if (photo !== state.photo) {
-    state.photo = photo
-    if (photo.cursor == null) state.note = null
-  }
+// Resolves the default photo for the select params.
+const defaultPhoto = (state, {
+  photo,
+  selection,
+  photos = [],
+  notes = {} // NB: carries all photo/selection ids of the item!
+}) => {
+  if (selection)
+    return selection
+  if (photo)
+    return photo
+  if (Object.hasOwn(notes, state.photo.cursor))
+    return state.photo.cursor
+  else
+    return photos[0]
 }
 
 // Shared with nav's cross-slice reducer: pure, so they work on
 // plain state there and as return values in the case reducers here.
 
-export const clearSelection = () => initialState
+// Clears the selection; the last notes stay.
+export const clearSelection = (selection) =>
+  isBlank(selection.item, selection.photo, selection.note)
+    ? selection
+    : { ...initialState, last: selection.last }
 
 // Drops removed items from the selection.
 // The photo level and note go too,
@@ -70,11 +78,8 @@ export const pruneSelection = (selection, ids) => {
 
   return (item === selection.item)
     ? selection
-    : { item, photo: createSelection(), note: null }
+    : { ...clearSelection(selection), item }
 }
-
-const prune = (state, { payload }) =>
-  pruneSelection(state, array(payload))
 
 const selectionSlice = createSlice({
   name: 'nav/selection',
@@ -84,22 +89,13 @@ const selectionSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(restore, (_, { payload }) => {
-        let { item, photo, note = null } = payload?.selection ?? {}
+      .addCase(restore, (_, { payload }) => ({
+        ...initialState,
+        ...payload?.selection
+      }))
 
-        if (!isSelection(item))
-          return initialState
-
-        return {
-          item: createSelection(ids(item), item),
-          photo: isSelection(photo)
-            ? createSelection(ids(photo), photo)
-            : createSelection(),
-          note
-        }
-      })
-
-      .addCase(ITEM.REMOVE, prune)
+      .addCase(ITEM.REMOVE, (state, { payload }) =>
+        pruneSelection(state, array(payload)))
 
       .addCase(ITEM.SELECT, (state, { payload }) => {
         state.item = payload.item
@@ -125,24 +121,16 @@ const selectionSlice = createSlice({
         if (payload) {
           state.item = focus(state.item, payload.item)
           state.photo = focus(state.photo, payload.selection ?? payload.photo)
-          state.note = payload.note
+          setNote(state, payload.note)
         } else {
-          state.note = null
+          setNote(state, null)
         }
       })
 
-      // The photos' selections are in the payload: the reducer
-      // cannot look them up.
-      .addCase(ITEM.PHOTO.REMOVE, (state, { payload }) => {
-        prunePhotos(state, [...payload.photos, ...(payload.selections ?? [])])
-      })
-
-      .addCase(PHOTO.SELECTION.REMOVE, (state, { payload }) => {
-        prunePhotos(state, payload.selections)
-      })
-
-      // Requests: the items leave the selection before the view.
-      .addMatcher(isPending(ITEM.DELETE, ITEM.RESTORE), prune)
+      .addMatcher(
+        isPending(ITEM.DELETE, ITEM.RESTORE),
+        (state, { payload }) => pruneSelection(state, array(payload))
+      )
   }
 })
 

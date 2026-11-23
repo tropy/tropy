@@ -5,7 +5,7 @@ import { selectMatchFilter } from '../slices/qr.js'
 import { selectKeptNote } from '../slices/nav/cursor.js'
 
 const getNotes = ({ notes }) => notes
-const getSelectedNoteId = ({ nav }) => nav.selection.note
+const getSelectedNoteId = ({ nav }) => nav.selection.note.cursor
 
 export const getNoteParent = ({ notes, photos, selections }, { id }) => {
   let { photo, selection } = notes[id]

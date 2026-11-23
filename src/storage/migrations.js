@@ -77,6 +77,33 @@ export const project = {
           }
         }
       }
+    },
+    {
+      number: 5,
+      // Use note selection state, with the last note per parent.
+      up: ({ nav, ...state }) => {
+        if (nav?.selection == null)
+          return { ...state, nav }
+
+        let { note, photo } = nav.selection
+        let parent = photo?.cursor
+
+        return {
+          ...state,
+          nav: {
+            ...nav,
+            selection: {
+              ...nav.selection,
+              note: {
+                selected: (note == null) ? {} : { [note]: true },
+                anchor: note ?? null,
+                cursor: note ?? null
+              },
+              last: (note == null || parent == null) ? {} : { [parent]: note }
+            }
+          }
+        }
+      }
     }
   ]
 }

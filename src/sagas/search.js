@@ -424,7 +424,7 @@ export function *contribute (db, prev = {}) {
       item: state.nav.selection.item,
       cursor: {
         photo: state.nav.selection.photo.cursor,
-        note: state.nav.selection.note
+        note: state.nav.selection.note.cursor
       }
     }))
 

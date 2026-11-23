@@ -66,5 +66,26 @@ describe('Storage migrations', () => {
       expect(nav(2).photo).to.include({ cursor: 2 })
       expect(nav().photo).to.eql({ selected: {}, anchor: null, cursor: null })
     })
+
+    it('#5 turns the note into a selection state and the last note', () => {
+      let selection = (id) => migrate({
+        nav: {
+          selection: {
+            item: {},
+            photo: { selected: { 3: true }, anchor: 3, cursor: 3 },
+            note: id
+          }
+        }
+      }, 5).nav.selection
+
+      expect(selection(7)).to.deep.include({
+        note: { selected: { 7: true }, anchor: 7, cursor: 7 },
+        last: { 3: 7 }
+      })
+      expect(selection(null)).to.deep.include({
+        note: { selected: {}, anchor: null, cursor: null },
+        last: {}
+      })
+    })
   })
 })
