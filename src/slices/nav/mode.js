@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { restore, show } from './actions.js'
-import { EDIT, ITEM } from '../../constants/index.js'
+import { itemOpened, restored, viewShown } from './actions.js'
+import { EDIT } from '../../constants/index.js'
 
 const mode = {
   __proto__: null,
@@ -13,22 +13,20 @@ const modeSlice = createSlice({
   initialState: mode.project,
 
   reducers: {
-    back: () => mode.project
+    itemClosed: () => mode.project
   },
 
   extraReducers: (builder) => {
     builder
-      .addCase(restore, (_, { payload }) =>
+      .addCase(restored, (_, { payload }) =>
         mode[payload?.mode] ?? mode.project)
 
-      .addCase(show, () => mode.project)
+      .addCase(viewShown, () => mode.project)
 
       .addCase(EDIT.START, (state, { payload }) =>
         (payload.tag || payload.list) ? mode.project : state)
 
-      // The mode hint: 'item' from open.item.
-      .addCase(ITEM.SELECT, (state, { payload }) =>
-        mode[payload.mode] ?? state)
+      .addCase(itemOpened, () => mode.item)
   }
 })
 

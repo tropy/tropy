@@ -1,4 +1,10 @@
-import { PANEL, ITEM, PHOTO, NOTE } from '../constants/index.js'
+import { PANEL, PHOTO } from '../constants/index.js'
+import {
+  itemOpened,
+  itemSelected,
+  noteSelected,
+  photoSelected
+} from '../slices/nav/actions.js'
 import { merge, omit } from '../common/util.js'
 
 const INIT = {
@@ -26,16 +32,16 @@ export function panel (state = INIT, { type, payload }) {
       return contract(state, payload)
     case PHOTO.EXPAND:
       return expand(state, payload)
-    case PHOTO.SELECT:
-    case NOTE.SELECT:
+    case photoSelected.type:
+    case noteSelected.type:
+    case itemSelected.type:
       return (payload?.selection == null) ?
         state :
         expand(state, payload.photo)
-    case ITEM.SELECT:
-      return (payload.photo != null &&
-        (payload.mode === 'item' || payload.selection != null)) ?
-        expand(state, payload.photo) :
-        state
+    case itemOpened.type:
+      return (payload.photo == null) ?
+        state :
+        expand(state, payload.photo)
     default:
       return state
   }

@@ -80,7 +80,7 @@ describe('ActivityPane', () => {
 
     act(() => {
       store.dispatch({
-        type: 'nav/show',
+        type: 'nav/viewShown',
         payload: { view: { name: 'activity', type: 'item.import' } }
       })
     })
@@ -101,7 +101,7 @@ describe('ActivityPane', () => {
 
     act(() => {
       store.dispatch({
-        type: 'nav/show',
+        type: 'nav/viewShown',
         payload: { view: { name: 'activity', type: 'item.import' } }
       })
     })
@@ -250,7 +250,7 @@ describe('ActivityPane', () => {
       }
     })
     store.dispatch({
-      type: 'nav/show',
+      type: 'nav/viewShown',
       payload: { view: { name: 'activity', type: 'item.import' } }
     })
 
@@ -261,7 +261,7 @@ describe('ActivityPane', () => {
       .to.have.class('active')
 
     // Leaving the view leaves the expired record.
-    store.dispatch({ type: 'nav/show', payload: { view: { name: 'trash' } } })
+    store.dispatch({ type: 'nav/viewShown', payload: { view: { name: 'trash' } } })
     await waitFor(() => {
       expect(container.querySelector('.activity.past')).to.be.null
     })
@@ -319,7 +319,7 @@ describe('ActivityPane', () => {
       }
     })
     store.dispatch({
-      type: 'nav/show',
+      type: 'nav/viewShown',
       payload: { view: { name: 'activity', type: 'test', id: 2 } }
     })
     let dispatch = mock.method(store, 'dispatch')

@@ -1,7 +1,13 @@
-import { EDIT, ITEM, LIST, NOTE, PHOTO, TAG } from '#tropy/constants/index.js'
+import { EDIT, ITEM, LIST, TAG } from '#tropy/constants/index.js'
 import nav, * as act from '#tropy/slices/nav/index.js'
 import { create, has } from '#tropy/common/selection.js'
 import { cancel, dismiss } from '#tropy/slices/activities.js'
+import {
+  itemOpened,
+  itemSelected,
+  noteSelected,
+  photoSelected
+} from '#tropy/slices/nav/actions.js'
 
 const init = nav(undefined, {})
 
@@ -44,7 +50,7 @@ describe('nav', () => {
 
   it('replaces the selection state on select', () => {
     let item = create([3])
-    let s = nav(undefined, { type: ITEM.SELECT, payload: { item }, meta: {} })
+    let s = nav(undefined, { type: itemSelected.type, payload: { item }, meta: {} })
     expect(s.select.item).to.equal(item)
   })
 
@@ -59,21 +65,21 @@ describe('nav', () => {
 
     it('keeps the selection if the parent is selected', () => {
       for (let action of [
-        { type: PHOTO.SELECT, payload: { item: 1, photo: 5 }, meta: {} },
-        { type: NOTE.SELECT, payload: { item: 1, photo: 5, note: 7 }, meta: {} }
+        { type: photoSelected.type, payload: { item: 1, photo: 5 }, meta: {} },
+        { type: noteSelected.type, payload: { item: 1, photo: 5, note: 7 }, meta: {} }
       ]) {
         expect(has(item(action), 2), action.type).to.be.true
         expect(item(action), action.type).to.include({ cursor: 1, anchor: 1 })
       }
 
-      expect(nav(s, { type: PHOTO.SELECT, payload: { item: 1, photo: 5 }, meta: {} })
+      expect(nav(s, { type: photoSelected.type, payload: { item: 1, photo: 5 }, meta: {} })
         .select.photo.cursor).to.equal(5)
     })
 
     it('replaces the selection with an unselected parent', () => {
       for (let action of [
-        { type: PHOTO.SELECT, payload: { item: 3, photo: 5 }, meta: {} },
-        { type: NOTE.SELECT, payload: { item: 3, photo: 5, note: 7 }, meta: {} }
+        { type: photoSelected.type, payload: { item: 3, photo: 5 }, meta: {} },
+        { type: noteSelected.type, payload: { item: 3, photo: 5, note: 7 }, meta: {} }
       ]) {
         expect(has(item(action), 2), action.type).to.be.false
         expect(item(action), action.type).to.include({ cursor: 3, anchor: 3 })
@@ -139,7 +145,7 @@ describe('nav', () => {
     let photo = (action) => nav(s, action).select.photo
 
     it('holds the photo or the photo selection shown', () => {
-      let select = (payload) => ({ type: PHOTO.SELECT, payload, meta: {} })
+      let select = (payload) => ({ type: photoSelected.type, payload, meta: {} })
 
       expect(photo(select({ item: 1, photo: 5 }))).to.include({ cursor: 5 })
       expect(photo(select({ item: 1, photo: 5, selection: 6 }))).to.include({ cursor: 6 })
@@ -151,7 +157,7 @@ describe('nav', () => {
     it('is decided from the facts when an item is selected', () => {
       // Item 2 (photos 8, 9) or item 1 (photo 5 with selection 6).
       let select = (item, payload) => nav(s, {
-        type: ITEM.SELECT,
+        type: itemSelected.type,
         payload: { item: create(item), ...payload },
         meta: {}
       }).select
@@ -193,8 +199,8 @@ describe('nav', () => {
     })
 
     let action = (type, payload) => ({ type, payload, meta: {} })
-    let note = (id) => action(NOTE.SELECT, { item: 1, photo: 5, note: id })
-    let photo = (id, notes) => action(PHOTO.SELECT, { item: 1, photo: id, notes })
+    let note = (id) => action(noteSelected.type, { item: 1, photo: 5, note: id })
+    let photo = (id, notes) => action(photoSelected.type, { item: 1, photo: id, notes })
 
     it('shows the last note of a photo again', () => {
       let s = reduce(note(8), photo(9, []), photo(5, [7, 8]))
@@ -416,11 +422,10 @@ describe('nav', () => {
     let itemMode = { ...state(), mode: 'item' }
     let mode = (s, action) => nav(s, action).mode
 
-    let select = (payload) => ({ type: ITEM.SELECT, payload, meta: {} })
+    let select = (payload) => ({ type: itemSelected.type, payload, meta: {} })
 
-    it('switches to the item with the mode hint', () => {
-      expect(mode(init, select({ item: create([1]), mode: 'item' })))
-        .to.equal('item')
+    it('switches to the item when opened', () => {
+      expect(mode(init, itemOpened({ item: create([1]) }))).to.equal('item')
       expect(mode(init, select({ item: create([1]) }))).to.equal('project')
       expect(mode(itemMode, select({ item: create([1]) }))).to.equal('item')
     })

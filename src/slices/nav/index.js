@@ -1,10 +1,9 @@
-import { expands } from '../../common/search.js'
-import { contains, isList } from './view.js'
+import { isList } from './view.js'
 import { isPending } from '../cmd.js'
 import { LIST } from '../../constants/index.js'
-import { open, restore, select, show } from './actions.js'
+import { open, restored, select, viewShown } from './actions.js'
 import modeSlice from './mode.js'
-import searchSlice from './search.js'
+import searchSlice, { widens } from './search.js'
 import selectSlice, { clearSelection, pruneSelection } from './select.js'
 import { size } from '../../common/selection.js'
 
@@ -19,12 +18,16 @@ const isListItemRemove = isPending(LIST.ITEM.REMOVE)
 const removeItemFromCurrentList = (action, view) =>
   isListItemRemove(action) && isList(view, action.payload.id)
 
+/*
+ * Cross-slice reducer:
+ * nav.mode, nav.search, nav.select.
+ */
 export default function nav (state = initialState, action) {
   let search = searchSlice.reducer(state.search, action)
   let selection = state.select
 
   // If a search change isn't widening, we clear the selection.
-  if (!restore.match(action) && !widens(state.search, search))
+  if (!restored.match(action) && !widens(state.search, search))
     selection = clearSelection(selection)
 
   selection = selectSlice.reducer(selection, action)
@@ -45,29 +48,14 @@ export default function nav (state = initialState, action) {
   ) ? state : { search, select: selection, mode }
 }
 
-// Whether a search change can only widen the results.
-function widens (prev, next) {
-  if (prev === next)
-    return true
-
-  // The new view must contain the old one.
-  if (!contains(next.view, prev.view))
-    return false
-
-  // The new query must expand on the old one.
-  if (prev.query !== next.query && !expands(prev.query, next.query))
-    return false
-
-  // No tag added to the filter (tags combine with AND).
-  if (next.tags.some(id => !prev.tags.includes(id)))
-    return false
-
-  return true
-}
-
-export { open, restore, select, show }
-export const { search, sort } = searchSlice.actions
-export const mode = { back: modeSlice.actions.back }
+export { open, select }
+export const restore = restored
+export const show = viewShown
+export const {
+  queryChanged: search,
+  sortChanged: sort
+} = searchSlice.actions
+export const mode = { back: modeSlice.actions.itemClosed }
 
 export const {
   selectIsView,

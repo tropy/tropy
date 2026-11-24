@@ -12,7 +12,6 @@ export default {
   MERGE: 'item.merge',
   REMOVE: 'item.remove',
   RESTORE: 'item.restore',
-  SELECT: 'item.select',
   SPLIT: 'item.split',
   UPDATE: 'item.update',
   PREVIEW: 'item.preview',

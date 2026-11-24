@@ -66,6 +66,9 @@ describe('select actions', () => {
       'item.cursor': 2, 'photo.cursor': 8, 'note.cursor': 10
     })
     expect(store.getState().nav.mode).to.equal('item')
+
+    // The panel expands the photo opened.
+    expect(store.getState().panel.expand[8]).to.be.above(0)
   })
 
   it('open.item shows an item not among the results first', () => {
