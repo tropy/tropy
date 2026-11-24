@@ -10,10 +10,10 @@ describe('useItemIterator', () => {
     let store = createItemStore(selected)
     let { result } = renderHook(() => useItemIterator({}, {}), withStore(store))
 
-    let before = store.getState().nav.selection.item
+    let before = store.getState().nav.select.item
     result.current.scrollProps.onTabFocus()
 
-    return [before, store.getState().nav.selection.item]
+    return [before, store.getState().nav.select.item]
   }
 
   it('keeps an existing selection on tab focus', () => {

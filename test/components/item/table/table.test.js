@@ -25,7 +25,7 @@ describe('ItemTable', () => {
     let { $ } = render(<ItemTable/>, withStore(store))
 
     fireEvent.keyDown($('.table-body .scroll-container'), { key: 'ArrowDown', shiftKey: true })
-    expect(store.getState().nav.selection.item).to.include({ anchor: 1, cursor: 2 })
+    expect(store.getState().nav.select.item).to.include({ anchor: 1, cursor: 2 })
   })
 
   describe('click-to-edit', () => {

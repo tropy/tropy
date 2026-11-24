@@ -156,7 +156,7 @@ describe('search saga', () => {
     intl: { locale: 'en' },
     nav: {
       search: { sort: {}, view: { name: 'project' }, tags: [], query },
-      selection: { item: create(item) }
+      select: { item: create(item) }
     },
     items: {
       1: { id: 1, photos: [11] },
@@ -191,7 +191,7 @@ describe('search saga', () => {
           tags: [],
           query: ''
         },
-        selection: { item: create() }
+        select: { item: create() }
       }
     }
     let { puts: [{ payload }] } = run(search(null), {
@@ -400,7 +400,7 @@ describe('contributors', () => {
   const state = ({ query = 'box', item = [1] } = {}) => ({
     nav: {
       search: { query },
-      selection: { item: create(item) }
+      select: { item: create(item) }
     },
     qr: {
       items: [1, 2],

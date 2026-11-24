@@ -11,7 +11,7 @@ describe('nav cursor', () => {
   // item 5 with photo 6; item 9, not among the results.
   let state = ({ item = [1], photo, note = null } = {}) => ({
     nav: {
-      selection: {
+      select: {
         item: create(item),
         photo: create(photo == null ? [] : [photo]),
         note: create(note == null ? [] : [note])

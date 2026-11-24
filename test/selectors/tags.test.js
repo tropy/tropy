@@ -15,7 +15,7 @@ describe('Tag Selectors', () => {
 
   describe('getItemTags', () => {
     const getState = (ids) =>
-      ({ tags, items, nav: { selection: { item: create(ids) } }, qr: { items: ids } })
+      ({ tags, items, nav: { select: { item: create(ids) } }, qr: { items: ids } })
 
     it('returns empty for no selection', () => {
       expect(getItemTags(getState([]))).to.eql([])

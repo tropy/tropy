@@ -30,8 +30,8 @@ export const createPhotoStore = ({
     panel: { ...panel(undefined, {}), expand: expanded ? { 1: 1 } : {} },
     nav: {
       ...nav(undefined, {}),
-      selection: {
-        ...nav(undefined, {}).selection,
+      select: {
+        ...nav(undefined, {}).select,
         item: create([1]),
         photo: create(current == null ? [] : [current])
       }

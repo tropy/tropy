@@ -9,7 +9,7 @@ describe('Metadata Selectors', () => {
   }
 
   const state = (items = []) =>
-    ({ nav: { selection: { item: create(items) } }, qr: { items }, metadata })
+    ({ nav: { select: { item: create(items) } }, qr: { items }, metadata })
 
   describe('getItemMetadata', () => {
     it('returns empty for no selection', () => {

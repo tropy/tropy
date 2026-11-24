@@ -8,7 +8,7 @@ describe('select actions', () => {
   // Items 1 (photos 5, 6; 5 with selection 9) and 2 (photo 8),
   // both selected, the cursor on 2.
   let store
-  let selection = () => store.getState().nav.selection
+  let selection = () => store.getState().nav.select
 
   beforeEach(() => {
     let init = nav(undefined, {})
@@ -25,7 +25,7 @@ describe('select actions', () => {
       },
       selections: { 9: { id: 9, photo: 5, notes: [11] } },
       notes: {},
-      nav: { ...init, selection: { ...init.selection, item: create([1, 2]) } },
+      nav: { ...init, select: { ...init.select, item: create([1, 2]) } },
       // Item 1 is not among the results.
       qr: { ...qr(undefined, {}), items: [2], matches: { 2: true } },
       intl: { messages: {} }
@@ -75,7 +75,7 @@ describe('select actions', () => {
 
     let { nav } = store.getState()
     expect(nav.search.view).to.eql({ name: 'project' })
-    expect(nav).to.nested.include({ 'selection.item.cursor': 1, mode: 'item' })
-    expect(has(nav.selection.item, 2)).to.be.false
+    expect(nav).to.nested.include({ 'select.item.cursor': 1, mode: 'item' })
+    expect(has(nav.select.item, 2)).to.be.false
   })
 })

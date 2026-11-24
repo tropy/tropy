@@ -12,11 +12,11 @@ import { selectItemSequence } from '../qr.js'
 // The primary selected item represents the selection
 // (merge target, bulk editor values and template).
 export const selectItemCursor = (state) =>
-  primary(state.nav.selection.item)
+  primary(state.nav.select.item)
 
 // Scans the results: kept apart from the items, which change often.
 const selectActiveItemIds = createSelector(
-  (state) => state.nav.selection.item,
+  (state) => state.nav.select.item,
   selectItemSequence,
   (selection, seq) => {
     let visible = elements(selection, seq)
@@ -43,7 +43,7 @@ export const selectActiveItems = createSelector(
 
 // The photo level's cursor: a photo or a photo selection.
 const getStoredPhoto = (state) =>
-  state.nav.selection.photo.cursor
+  state.nav.select.photo.cursor
 
 const getStoredParent = (state) =>
   state.selections[getStoredPhoto(state)]?.photo
@@ -57,7 +57,7 @@ export const selectSelectionCursor = (state) =>
   (getStoredParent(state) != null) ? getStoredPhoto(state) : null
 
 export const selectNoteCursor = (state) =>
-  state.nav.selection.note.cursor
+  state.nav.select.note.cursor
 
 export const selectNavCursor = createSelector(
   selectItemCursor,

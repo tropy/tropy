@@ -84,7 +84,7 @@ const belongs = (item, { name, id, items }) => {
 
 // The selected items that belong to the view (see belongs).
 const getSelectedIds = (view) => (state) =>
-  selected(state.nav.selection.item).filter(id => belongs(state.items[id], view))
+  selected(state.nav.select.item).filter(id => belongs(state.items[id], view))
 
 // The ids with those of extra appended that are not among them.
 const include = (ids, extra) => {
@@ -423,7 +423,7 @@ export function *contribute (db, prev = {}) {
   try {
     let { query, item } = yield select(state => ({
       query: state.nav.search.query,
-      item: state.nav.selection.item
+      item: state.nav.select.item
     }))
 
     if (query === prev.query && item === prev.item)

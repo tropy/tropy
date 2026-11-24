@@ -5,7 +5,7 @@ import { selectItemSequence } from '../slices/qr.js'
 import { selectActiveItems, selectItemCursor } from '../slices/nav/cursor.js'
 
 export const getItemSelection = memo(
-  ({ nav }) => nav.selection.item,
+  ({ nav }) => nav.select.item,
   selectItemSequence,
   (state, seq) => new Selection(state, seq)
 )

@@ -73,7 +73,7 @@ export class Delete extends Command {
       return null
 
     let [isSelected, map] = yield select(state => ([
-      payload.includes(state.nav.selection.note.cursor),
+      payload.includes(state.nav.select.note.cursor),
       getNotesMap(state, { notes: payload })
     ]))
 

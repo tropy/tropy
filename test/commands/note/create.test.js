@@ -10,7 +10,7 @@ describe('Create note', () => {
     new Create(act.note.create({ html: '<p>Note</p>', ...payload }), { db })
       .exec(), {
       state: {
-        nav: { selection: { item: create([1]), photo: create([1]), note: create() } },
+        nav: { select: { item: create([1]), photo: create([1]), note: create() } },
         qr: { items: [1] },
         items: { 1: { id: 1, photos: [1] } },
         photos: { 1: { id: 1, item: 1, selections: [] }, 3: { id: 3 } },

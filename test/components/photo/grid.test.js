@@ -29,7 +29,7 @@ describe('PhotoGrid', () => {
     // The grid layout is known once Scroll has measured itself.
     await waitFor(() => {
       fireEvent.keyDown($('.scroll-container'), { key: 'ArrowRight' })
-      expect(store.getState().nav.selection.photo.cursor).to.equal(2)
+      expect(store.getState().nav.select.photo.cursor).to.equal(2)
     })
 
     expect(store.getState().panel.expand[1]).to.be.undefined

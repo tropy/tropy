@@ -5,12 +5,12 @@ import { LIST } from '../../constants/index.js'
 import { open, restore, select, show } from './actions.js'
 import modeSlice from './mode.js'
 import searchSlice from './search.js'
-import selectionSlice, { clearSelection, pruneSelection } from './selection.js'
+import selectSlice, { clearSelection, pruneSelection } from './select.js'
 import { size } from '../../common/selection.js'
 
 const initialState = {
   search: searchSlice.getInitialState(),
-  selection: selectionSlice.getInitialState(),
+  select: selectSlice.getInitialState(),
   mode: modeSlice.getInitialState()
 }
 
@@ -21,13 +21,13 @@ const removeItemFromCurrentList = (action, view) =>
 
 export default function nav (state = initialState, action) {
   let search = searchSlice.reducer(state.search, action)
-  let selection = state.selection
+  let selection = state.select
 
   // If a search change isn't widening, we clear the selection.
   if (!restore.match(action) && !widens(state.search, search))
     selection = clearSelection(selection)
 
-  selection = selectionSlice.reducer(selection, action)
+  selection = selectSlice.reducer(selection, action)
 
   // Items removed from the list shown leave the selection.
   if (removeItemFromCurrentList(action, search.view))
@@ -40,9 +40,9 @@ export default function nav (state = initialState, action) {
 
   return (
     search === state.search &&
-    selection === state.selection &&
+    selection === state.select &&
     mode === state.mode
-  ) ? state : { search, selection, mode }
+  ) ? state : { search, select: selection, mode }
 }
 
 // Whether a search change can only widen the results.

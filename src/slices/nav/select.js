@@ -81,8 +81,8 @@ export const pruneSelection = (selection, ids) => {
     : { ...clearSelection(selection), item }
 }
 
-const selectionSlice = createSlice({
-  name: 'nav/selection',
+const selectSlice = createSlice({
+  name: 'nav/select',
   initialState,
 
   reducers: {},
@@ -91,7 +91,7 @@ const selectionSlice = createSlice({
     builder
       .addCase(restore, (_, { payload }) => ({
         ...initialState,
-        ...payload?.selection
+        ...payload?.select
       }))
 
       .addCase(ITEM.REMOVE, (state, { payload }) =>
@@ -132,4 +132,4 @@ const selectionSlice = createSlice({
   }
 })
 
-export default selectionSlice
+export default selectSlice

@@ -121,7 +121,7 @@ export const open = {
       if (view != null) dispatch(show(view))
 
       return dispatch(select.item({
-        item: focus(getState().nav.selection.item, id),
+        item: focus(getState().nav.select.item, id),
         photo,
         selection,
         note,
