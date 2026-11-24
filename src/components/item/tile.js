@@ -10,6 +10,7 @@ export const ItemTile = memo(({
   isReadOnly,
   isSelected,
   item,
+  onDragStart,
   onDropItems,
   onDropPhotos,
   size = 512
@@ -21,6 +22,7 @@ export const ItemTile = memo(({
       item,
       getSelection,
       isDisabled: isReadOnly,
+      onDragStart,
       onDropItems,
       onDropPhotos
     })

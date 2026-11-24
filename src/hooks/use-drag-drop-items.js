@@ -3,17 +3,25 @@ import { useEvent } from './use-event.js'
 import { useDropPhoto } from './use-drag-drop-photo.js'
 import { DND, getEmptyImage, useDrag, useDrop } from '../components/dnd.js'
 
-export function useDragItems (item, { getSelection, isDisabled = false }) {
+export function useDragItems (item, {
+  getSelection,
+  isDisabled = false,
+  onDragStart
+}) {
   let canDrag = useEvent(() => !(isDisabled || item.deleted))
 
-  let createDragItem = useEvent(() => ({
-    items: [
-      { ...item },
-      ...getSelection()
-        .filter(id => id !== item.id)
-        .map(id => ({ id }))
-    ]
-  }))
+  let createDragItem = useEvent(() => {
+    onDragStart?.(item.id)
+
+    return {
+      items: [
+        { ...item },
+        ...getSelection()
+          .filter(id => id !== item.id)
+          .map(id => ({ id }))
+      ]
+    }
+  })
 
   let [props, drag, preview] = useDrag(() => ({
     type: DND.ITEMS,
@@ -54,12 +62,14 @@ export function useDragDropItem (element, {
   item,
   getSelection,
   isDisabled = false,
+  onDragStart,
   onDropItems,
   onDropPhotos
 }) {
   let [{ isDragging }, drag] = useDragItems(item, {
     getSelection,
-    isDisabled
+    isDisabled,
+    onDragStart
   })
 
   let [items, dropItems] = useDropItems({

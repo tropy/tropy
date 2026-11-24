@@ -68,8 +68,10 @@ export function useSequence (seq, {
 
   let clicks = useSequenceClicks(cursor, {
     isDisabled,
-    onContextMenu: onContextMenu &&
-      ((event, element) => onContextMenu(event, element, context)),
+    onContextMenu: (event, element) => {
+      handleSelect(element, { mode: 'focus' })
+      onContextMenu?.(event, element, context)
+    },
     onDoubleClick: onOpen &&
       ((element) => onOpen(element, context)),
     onSelect: (element, keyState) => select(element, keyState),

@@ -159,6 +159,15 @@ describe('selection state', () => {
     expect(select(state, seq, 4, { mode: 'flip' })).to.equal(state)
   })
 
+  it('focuses selected elements, keeping the selection', () => {
+    let state = run([[2], [4, 'extend']])
+    let next = select(state, seq, 3, { mode: 'focus' })
+
+    expect(ids(next)).to.eql([2, 3, 4])
+    expect(next).to.include({ anchor: 3, cursor: 3 })
+    expect(ids(select(state, seq, 6, { mode: 'focus' }))).to.eql([6])
+  })
+
   it('ignores elements not in the sequence', () => {
     let state = run([[2]])
     expect(select(state, seq, 99)).to.equal(state)
