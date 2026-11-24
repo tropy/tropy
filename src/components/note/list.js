@@ -31,7 +31,7 @@ export const NoteList = ({
     if (note == null)
       return
 
-    dispatch(act.note.select({
+    dispatch(act.nav.select.note({
       note: note.id,
       photo: note.photo,
       selection: note.selection
@@ -40,7 +40,7 @@ export const NoteList = ({
 
   let handleOpen = (note) => {
     if (note != null && !isItemOpen)
-      dispatch(act.item.open({
+      dispatch(act.nav.open.item({
         id: photo.item,
         photo: photo.id,
         selection: note.selection,

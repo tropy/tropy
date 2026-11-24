@@ -61,7 +61,7 @@ export function usePhotoIterator ({
     { photo: el, selection: undefined }
 
   let onSelect = (payload, meta) => {
-    dispatch(act.photo.select(payload, meta))
+    dispatch(act.nav.select.photo(payload, meta))
   }
 
   let isSelected = (photo) =>
@@ -133,7 +133,7 @@ export function usePhotoIterator ({
     if (isItemOpen)
       expand(photo)
     else
-      dispatch(act.item.open({
+      dispatch(act.nav.open.item({
         id: photo.item,
         photo: photo.id,
         selection

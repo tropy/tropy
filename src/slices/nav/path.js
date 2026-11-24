@@ -4,14 +4,14 @@
  *
  * The nav cursor is the current cursor path,
  * based on current nav.selection's cursors.
- * An item has many cursor paths.
  *
- * Selecting proposes a path, often partial.
- * The select creators check the levels given against the data
- * and pass the item's paths, as the nav reducer does not see
- * the items, photos and notes. The reducer completes the path
- * to the default cursor path: the current photo and note
- * where they fit, else the first photo and its first note.
+ * On select we check the given path params
+ * and pass the item's paths, because the nav reducer
+ * does not see the items, photos and notes.
+ *
+ * The reducer completes the path using the defaults:
+ * the current photo and note where they fit,
+ * else the first photo and its first note.
  */
 
 // Checks a (partial) cursor path top-down.

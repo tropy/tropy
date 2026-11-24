@@ -38,7 +38,7 @@ export class Move extends Command {
       let rest = original.photos.filter(id => !ids.includes(id))
       let at = original.photos.indexOf(cursor)
 
-      yield put(act.photo.select({
+      yield put(act.nav.select.photo({
         item: original.id,
         photo: rest[at] ?? rest.at(-1)
       }))

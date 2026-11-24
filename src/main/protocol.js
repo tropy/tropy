@@ -108,10 +108,10 @@ const ROUTES = Object.freeze([
     params: object({ urlId, item: id, photo: id, selection: id },
       ['urlId', 'item'])
   }, async ({ item, photo, selection }, win) => {
-    // The window rejects unknown or mismatched ids (item.open throws);
+    // The window rejects unknown or mismatched ids (nav.open.item throws);
     // the window manager's own errors (timeout, closed) are CodeErrors.
     try {
-      await win.rsvp(act.item.open({ id: item, photo, selection }))
+      await win.rsvp(act.nav.open.item({ id: item, photo, selection }))
     } catch (err) {
       if (err instanceof CodeError) throw err
       throw fail(404, `unknown item, photo or selection: ${item}`)

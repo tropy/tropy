@@ -57,7 +57,7 @@ export const ItemView = ({
   ] = useActions([
     'edit.start', 'edit.cancel',
     'metadata.save',
-    'photo.create', 'photo.save', 'photo.select',
+    'photo.create', 'photo.save', 'nav.select.photo',
     'transcriptions.create',
     'ui.update'
   ])

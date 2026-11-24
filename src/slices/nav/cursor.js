@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { elements, ids, primary } from '../../common/selection.js'
+import { stable } from '../../common/sequence.js'
 import { pluck } from '../../selectors/util.js'
 import { selectItemSequence } from '../qr.js'
 
@@ -13,18 +14,30 @@ import { selectItemSequence } from '../qr.js'
 export const selectItemCursor = (state) =>
   primary(state.nav.selection.item)
 
-export const selectActiveItems = createSelector(
-  (state) => state.items,
+// Scans the results: kept apart from the items, which change often.
+const selectActiveItemIds = createSelector(
   (state) => state.nav.selection.item,
   selectItemSequence,
-  (items, selection, seq) => {
+  (selection, seq) => {
     let visible = elements(selection, seq)
     let inResults = new Set(visible)
 
-    return pluck(items, [
+    return [
       ...visible,
       ...ids(selection).filter(id => !inResults.has(id))
-    ])
+    ]
+  }
+)
+
+// Keeps its identity while the selected items stay the same.
+export const selectActiveItems = createSelector(
+  (state) => state.items,
+  selectActiveItemIds,
+  pluck,
+  {
+    memoizeOptions: {
+      resultEqualityCheck: (a, b) => stable(a, b) === b
+    }
   }
 )
 

@@ -28,7 +28,7 @@ export class Delete extends Command {
     if (cursor != null) {
       let selected = payload.selections.indexOf(cursor)
       if (selected !== -1) {
-        yield put(act.photo.select({
+        yield put(act.nav.select.photo({
           item: photo.item,
           photo: photo.id,
           selection: order[idx[selected]] ?? order.at(-1)

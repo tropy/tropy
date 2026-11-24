@@ -1,8 +1,7 @@
 import { NOTE } from '../constants/index.js'
 import { emit } from '../dom.js'
-import item from './item.js'
+import { open } from '../slices/nav/actions.js'
 import settings from './settings.js'
-import { checkCursorPath } from '../slices/nav/path.js'
 import { selectNavCursor } from '../slices/nav/cursor.js'
 import { getNoteParent } from '../selectors/notes.js'
 
@@ -58,7 +57,7 @@ export default {
       if (photo == null)
         throw new Error('cannot open note without photo')
 
-      let result = dispatch(item.open({
+      let result = dispatch(open.item({
         id: parent,
         photo,
         selection,
@@ -88,31 +87,6 @@ export default {
       type: NOTE.LOAD,
       payload,
       meta: { cmd: 'project', ...meta }
-    }
-  },
-
-  select (payload, meta) {
-    if (payload == null)
-      return {
-        type: NOTE.SELECT,
-        payload,
-        meta
-      }
-
-    return (dispatch, getState) => {
-      let state = getState()
-      let { note, photo, item, selection } = payload
-
-      photo ??= state.selections[selection]?.photo
-      item ??= state.photos[photo]?.item
-
-      checkCursorPath(state, { item, photo, selection, note })
-
-      return dispatch({
-        type: NOTE.SELECT,
-        payload: { note, photo, item, selection },
-        meta: { log: 'trace', history: true, ...meta }
-      })
     }
   },
 

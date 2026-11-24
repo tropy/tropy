@@ -29,7 +29,6 @@ export const item = {
   export: a('item.export'),
   import: a('item.import'),
   merge: a('item.merge'),
-  open: a('item.open'),
   print: a('item.print'),
   restore: a('item.restore'),
   tags: {
@@ -53,6 +52,9 @@ export const metadata = {
 }
 
 export const nav = {
+  open: {
+    item: a('nav.open.item')
+  },
   show: a('nav.show')
 }
 
