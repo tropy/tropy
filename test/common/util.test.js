@@ -225,6 +225,26 @@ describe('util', () => {
     })
   })
 
+  describe('select', () => {
+    it('selects in an array: replace, toggle, clear', () => {
+      let ids = [1, 2]
+
+      expect(util.select(ids, 3)).to.eql([3])
+      expect(util.select(ids, 3, { mode: 'toggle' })).to.eql([1, 2, 3])
+      expect(util.select(ids, 1, { mode: 'toggle' })).to.eql([2])
+      expect(util.select(ids, 1, { mode: 'clear' })).to.eql([])
+      expect(() => util.select(ids, 1, { mode: 'extend' })).to.throw()
+    })
+
+    it('returns the array if unchanged', () => {
+      let ids = [1]
+      let none = []
+
+      expect(util.select(ids, 1)).to.equal(ids)
+      expect(util.select(none, 1, { mode: 'clear' })).to.equal(none)
+    })
+  })
+
   describe('promote', () => {
     it('moves or adds items to the front', () => {
       expect(util.promote([1, 2, 3], 3)).to.eql([3, 1, 2])

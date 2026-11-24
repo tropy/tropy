@@ -29,7 +29,7 @@ export class TagList extends React.PureComponent {
 
   handleContextMenu = (event, tag) => {
     if (!this.isSelected(tag) || this.props.selection.length > 1) {
-      this.props.onSelect(tag.id, { mod: 'replace' })
+      this.props.onSelect(tag.id, { mode: 'replace' })
     }
 
     this.props.onContextMenu(event,
@@ -49,7 +49,7 @@ export class TagList extends React.PureComponent {
         this.props.onCommit(tag)
         break
       case 'clear':
-        this.props.onSelect(tag.id, { mod: 'clear' })
+        this.props.onSelect(tag.id, { mode: 'clear' })
         break
       default:
         return

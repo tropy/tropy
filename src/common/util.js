@@ -116,6 +116,27 @@ export function promote (array, ...items) {
   return [...items, ...remove(array, ...items)]
 }
 
+// Simple selection helper for id-arrays.
+// See common/selection.js for more.
+export function select (array, id, { mode = 'replace' } = {}) {
+  switch (mode) {
+    case 'replace':
+      return (array.length === 1 && array[0] === id)
+        ? array
+        : [id]
+    case 'toggle':
+      return array.includes(id)
+        ? remove(array, id)
+        : [...array, id]
+    case 'clear':
+      return (array.length === 0)
+        ? array
+        : []
+    default:
+      throw new Error(`unknown selection mode: "${mode}"`)
+  }
+}
+
 export function sample (array) {
   return array[Math.floor(Math.random() * array.length)]
 }
