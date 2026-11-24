@@ -8,8 +8,12 @@ import { useCursor } from '../../hooks/use-cursor.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { move as reorder, pick, pluck } from '../../common/util.js'
 import { adjacent, indexOf } from '../../common/sequence.js'
-import { getExpandedPhotos, getVisiblePhotos } from '../../selectors/index.js'
-import { selectCursorPhoto, selectCursorSelection } from '../../slices/nav/selectors.js'
+import { getExpandedPhotos } from '../../selectors/index.js'
+import {
+  selectActivePhotos,
+  selectCursorPhoto,
+  selectCursorSelection
+} from '../../slices/nav/selectors.js'
 import * as act from '../../actions/index.js'
 
 // The photo list container logic shared by list and grid:
@@ -28,7 +32,7 @@ export function usePhotoIterator ({
   let dispatch = useDispatch()
   let scroll = useRef()
 
-  let photos = useSelector(getVisiblePhotos)
+  let photos = useSelector(selectActivePhotos)
   let current = useSelector(state => selectCursorPhoto(state)?.id)
   let selection = useSelector(state => selectCursorSelection(state)?.id)
   let expandedPhotos = useSelector(getExpandedPhotos)

@@ -1,5 +1,6 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { getVisiblePhotos, getVisibleSelections } from './photos.js'
+import { getVisibleSelections } from './photos.js'
+import { selectActivePhotos } from '../slices/nav/selectors.js'
 import { Cursor } from '../common/sequence.js'
 
 const getNotes = ({ notes }) => notes
@@ -20,7 +21,7 @@ export const getNoteParent = ({ notes, photos, selections }, { id }) => {
 // The notes of the visible photos and selections.
 export const getVisibleNotes = memo(
   getNotes,
-  getVisiblePhotos,
+  selectActivePhotos,
   getVisibleSelections,
 
   (notes, photos, selections) =>

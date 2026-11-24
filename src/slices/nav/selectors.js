@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { Selection, primary } from '../../common/selection.js'
-import { resultEqualityCheck } from '../../common/sequence.js'
+import { Selection } from '../../common/selection.js'
+import { createSequence, resultEqualityCheck } from '../../common/sequence.js'
 import { selectItemSequence } from '../qr.js'
 
 // The itemSelection over itemSequence.
@@ -46,10 +46,78 @@ export const selectActiveItems = createSelector(
     memoizeOptions: { resultEqualityCheck }
   })
 
+// The photos of the active items, in display order (indexed):
+// the key sequence of the photo level.
+export const selectActivePhotoIds = createSelector(
+  selectActiveItems,
+  (items) => {
+    let [ids, push] = createSequence()
+
+    for (let item of items)
+      for (let id of item.photos) push(id)
+
+    return ids
+  }, {
+    memoizeOptions: { resultEqualityCheck }
+  })
+
+// The active photos (indexed: the photo iterators look them up),
+// for selectors reading fields of all of them.
+export const selectActivePhotos = createSelector(
+  (state) => state.photos,
+  selectActivePhotoIds,
+  (photos, ids) => {
+    let [activePhotos, push] = createSequence()
+
+    for (let id of ids) {
+      let photo = photos[id]
+      if (photo != null) push(photo)
+    }
+
+    return activePhotos
+  }, {
+    memoizeOptions: { resultEqualityCheck }
+  })
+
+// The photo level's navigation sequence (indexed), as displayed:
+// the grid has the photos only (its expansion row navigates
+// on its own), the list each photo with its expanded selections.
+export const selectPhotoSequence = createSelector(
+  (state) => state.ui.panel.zoom > 0,
+  (state) => state.panel.expand,
+  selectActivePhotoIds,
+  selectActivePhotos,
+  (isGrid, expand, ids, photos) => {
+    if (isGrid)
+      return ids
+
+    let [seq, push] = createSequence()
+
+    for (let photo of photos) {
+      push(photo.id)
+
+      if (expand[photo.id] > 0)
+        for (let id of photo.selections) push(id)
+    }
+
+    return seq
+  }, {
+    memoizeOptions: { resultEqualityCheck }
+  })
+
+// The photo Selection over the photo sequence (photo and selection ids).
+// The base of the photo level: changes with every selection change
+// and every change of the sequence (e.g. expanding a photo).
+export const selectPhotoSelection = createSelector(
+  (state) => state.nav.select.photo,
+  selectPhotoSequence,
+  (state, seq) => new Selection(state, seq)
+)
+
 // The photo level's cursor: a photo or a photo selection id.
-// The primary, as at the item level (to build on a photo Selection).
+// The primary, as at the item level.
 export const selectPhotoCursor = (state) =>
-  primary(state.nav.select.photo)
+  selectPhotoSelection(state).primary()
 
 // The photo selection at the cursor, if any.
 export const selectCursorSelection = (state) =>

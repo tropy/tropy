@@ -14,7 +14,9 @@ describe('Create transcription', () => {
         items: { 1: { id: 1, photos: [1] } },
         photos: { 1: { id: 1, item: 1, selections: [] }, 3: { id: 3 } },
         selections: { 2: { id: 2, photo: 3 } },
-        notes: {}
+        notes: {},
+        panel: { expand: {} },
+        ui: { panel: { zoom: 0 } }
       },
       mocks: [[db.transaction, () => [{ id: 9, parent: 2 }]]]
     })

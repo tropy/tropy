@@ -1,8 +1,8 @@
-import { getVisiblePhotos } from '#tropy/selectors/index.js'
+import { selectActivePhotos } from '#tropy/slices/nav/selectors.js'
 import { create } from '#tropy/common/selection.js'
 
 describe('Photo Selectors', () => {
-  describe('getVisiblePhotos', () => {
+  describe('selectActivePhotos', () => {
     it('keeps the order of the results when the item cursor moves', () => {
       let state = (cursor) => ({
         nav: { select: { item: create([1, 2, 3], { anchor: cursor }) } },
@@ -17,7 +17,7 @@ describe('Photo Selectors', () => {
 
       // Item 3 is not among the results (yet): left out.
       for (let cursor of [1, 2, 3])
-        expect(getVisiblePhotos(state(cursor)).map(p => p.id))
+        expect(selectActivePhotos(state(cursor)).map(p => p.id))
           .to.eql([12, 11])
     })
   })
