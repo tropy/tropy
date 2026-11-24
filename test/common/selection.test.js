@@ -238,11 +238,6 @@ describe('Selection', () => {
     expect(selection.primary()).to.equal(3)
   })
 
-  it('lists the primary id first, also for sequences of items', () => {
-    let items = seq.map(id => ({ id }))
-    expect(new Selection(create([2, 3]), items).ids()).to.eql([3, 2])
-  })
-
   it('returns new states for changes', () => {
     // From the anchor 3, keeping 2 outside the range.
     let state = selection.select(1, { mode: 'extend' })

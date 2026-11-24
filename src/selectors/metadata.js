@@ -1,8 +1,13 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
 import { pluck } from './util.js'
-import { selectItemSelection } from '../slices/nav/selectors.js'
 import { selectItemSequence } from '../slices/qr.js'
-import { selectPhotoCursor, selectSelectionCursor } from '../slices/nav/selectors.js'
+
+import {
+  selectItemCursor,
+  selectItemSelection,
+  selectPhotoCursor,
+  selectSelectionCursor
+} from '../slices/nav/selectors.js'
 import { equal } from '../value.js'
 import { compare } from '../collate.js'
 import { createSequence, getIndex } from '../common/sequence.js'
@@ -28,8 +33,9 @@ const collect = (data, [key, value]) => {
   return data
 }
 
-const collectMetadata = (metadata, ids) => {
-  let data = ids
+// The first id's values represent mixed fields.
+const collectMetadata = (metadata, ids, first = ids[0]) => {
+  let data = [first, ...ids.filter(id => id !== first)]
     .map(id => metadata[id])
     .filter(md => md != null)
     .flatMap(md => Object.entries(md))
@@ -48,6 +54,7 @@ const collectMetadata = (metadata, ids) => {
 export const getItemMetadata = memo(
   ({ metadata }) => metadata,
   (state) => selectItemSelection(state).ids(),
+  selectItemCursor,
   collectMetadata
 )
 

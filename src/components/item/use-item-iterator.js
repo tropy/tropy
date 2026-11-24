@@ -147,10 +147,14 @@ export function useItemIterator ({
         dispatch(act.nav.select.item({ item: selection.all() }))
       },
       merge () {
-        let ids = selection.ids()
+        if (!(isReadOnly || selection.size < 2)) {
+          let into = selection.primary()
 
-        if (!(isReadOnly || blank(ids)))
-          merge(ids)
+          merge([
+            into,
+            ...selection.ids().filter(it => it !== into)
+          ])
+        }
       },
       rotateLeft () {
         rotate(-90)
