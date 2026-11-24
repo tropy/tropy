@@ -1,5 +1,6 @@
 import { create } from '#tropy/common/selection.js'
 import {
+  selectActiveItemIds,
   selectActiveItems,
   selectNavCursor,
   selectPhotoCursor,
@@ -56,7 +57,8 @@ describe('nav cursor', () => {
   it('lists the active items in display order, not primary first', () => {
     let s = state({ item: [9, 1, 5] })
 
-    expect(selectActiveItems(s).map(it => it.id)).to.eql([1, 5, 9])
+    // Item 9 is not among the results.
+    expect(selectActiveItems(s).map(it => it.id)).to.eql([1, 5])
     expect(path({ item: [9, 1, 5] })).to.include({ item: 5 })
   })
 
@@ -69,6 +71,19 @@ describe('nav cursor', () => {
 
     let edited = { ...s, items: { ...s.items, 1: { id: 1, photos: [4] } } }
     expect(selectActiveItems(edited)).to.not.equal(first)
+  })
+
+  it('keeps the active item ids while the selected results stay', () => {
+    let s = state({ item: [1, 5] })
+    let first = selectActiveItemIds(s)
+
+    // The cursor moves, item 9 joins the results.
+    let moved = {
+      ...s,
+      nav: { ...s.nav, select: { ...s.nav.select, item: { ...s.nav.select.item, cursor: 1 } } },
+      qr: { items: [1, 5, 9] }
+    }
+    expect(selectActiveItemIds(moved)).to.equal(first)
   })
 
   it('reads the stored cursors as they are', () => {

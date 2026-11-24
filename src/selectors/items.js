@@ -1,6 +1,6 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
 import { BLANK } from '../common/util.js'
-import { selectActiveItems, selectItemCursor } from '../slices/nav/selectors.js'
+import { selectActiveItems, selectCursorItem } from '../slices/nav/selectors.js'
 
 export const getListHoldIndex = memo(
   selectActiveItems,
@@ -12,13 +12,10 @@ export const getListHoldIndex = memo(
 
 export const getSelectedItemTemplate = memo(
   selectActiveItems,
-  selectItemCursor,
-  (items, first) => {
-    let item = items.find(it => it.id === first) ?? items[0]
-
-    return (item == null) ? BLANK : {
+  selectCursorItem,
+  (items, item) =>
+    (item == null) ? BLANK : {
       id: item.template,
       mixed: items.some(it => it.template !== item.template)
     }
-  }
 )

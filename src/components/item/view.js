@@ -11,7 +11,7 @@ import {
   getVisiblePhotos
 } from '../../selectors/index.js'
 import {
-  selectActiveItems,
+  selectActiveItemIds,
   selectActiveNote,
   selectActivePhoto,
   selectItemCursor
@@ -37,7 +37,7 @@ export const ItemView = ({
 
   // TODO these should be moved!
   // ------------------------------------------------------------
-  let items = useSelector(selectActiveItems)
+  let items = useSelector(selectActiveItemIds)
   let item = useSelector(selectItemCursor)
   let note = useSelector(selectActiveNote)
   let photo = useSelector(selectActivePhoto)

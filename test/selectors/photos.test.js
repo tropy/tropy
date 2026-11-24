@@ -15,10 +15,10 @@ describe('Photo Selectors', () => {
         photos: { 11: { id: 11 }, 12: { id: 12 }, 13: { id: 13 } }
       })
 
-      // Item 3 is not among the results (yet): last.
+      // Item 3 is not among the results (yet): left out.
       for (let cursor of [1, 2, 3])
         expect(getVisiblePhotos(state(cursor)).map(p => p.id))
-          .to.eql([12, 11, 13])
+          .to.eql([12, 11])
     })
   })
 })
