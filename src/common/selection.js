@@ -70,8 +70,13 @@ export const equal = (a, b) => {
 // they may get returned sorted by value or in insertion order.
 //
 // Returns selected ids, in no particular order.
-export const ids = (state) =>
-  Object.keys(state.selected).map(Number)
+export const ids = (state) => {
+  let res = []
+  for (let id in state.selected)
+    res.push(Number(id))
+
+  return res
+}
 
 // Returns the selected elements of seq, in sequence order.
 const effective = (state, seq) =>
@@ -322,22 +327,14 @@ export class Selection {
     return has(this.state, id)
   }
 
-  // All selected ids, with the primary one first, for easy access.
   ids () {
-    if (this.#ids === undefined) {
-      let first = this.primary()
-      let rest = ids(this.state)
-
-      this.#ids = Object.freeze((first == null) ?
-        rest :
-        [first, ...rest.filter(id => id !== first)])
-    }
-
-    return this.#ids
+    return (this.#ids ??= Object.freeze(ids(this.state)))
   }
 
   elements () {
-    return (this.#elements ??= Object.freeze(effective(this.state, this.seq)))
+    return (
+      this.#elements ??= Object.freeze(effective(this.state, this.seq))
+    )
   }
 
   primary () {
