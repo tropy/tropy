@@ -1,6 +1,6 @@
 import { NOTE } from '../constants/index.js'
 import { emit } from '../dom.js'
-import { open } from '../slices/nav/actions.js'
+import { actions as nav } from '../slices/nav/index.js'
 import settings from './settings.js'
 import { selectNavCursor } from '../slices/nav/cursor.js'
 import { getNoteParent } from '../selectors/notes.js'
@@ -57,7 +57,7 @@ export default {
       if (photo == null)
         throw new Error('cannot open note without photo')
 
-      let result = dispatch(open.item({
+      let result = dispatch(nav.open.item({
         id: parent,
         photo,
         selection,

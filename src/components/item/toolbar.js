@@ -6,14 +6,14 @@ import { Button } from '../button.js'
 import { AccountStatus } from '../account/status.js'
 import { ActivityStatus } from '../activity/index.js'
 import { Fade } from '../fx.js'
-import { mode } from '../../slices/nav/index.js'
+import * as act from '../../actions/index.js'
 
 export const ItemToolbar = ({ isItemMode }) => {
   let dispatch = useDispatch()
   let nodeRef = useRef(null)
 
   let toggleProjectMode = useEvent(() => {
-    dispatch(mode.back())
+    dispatch(act.nav.mode.back())
   })
 
   return (

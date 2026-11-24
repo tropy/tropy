@@ -1,5 +1,10 @@
 import { EDIT, ITEM, LIST, TAG } from '#tropy/constants/index.js'
-import nav, * as act from '#tropy/slices/nav/index.js'
+import nav, {
+  actions as act,
+  selectIsView,
+  selectList,
+  selectSort
+} from '#tropy/slices/nav/index.js'
 import { create, has } from '#tropy/common/selection.js'
 import { cancel, dismiss } from '#tropy/slices/activities.js'
 import {
@@ -467,22 +472,22 @@ describe('nav', () => {
     let list = { name: 'list', id: 3 }
 
     it('sort the view shown, by default title or list position', () => {
-      expect(act.selectSort(root()).column).to.match(/title$/)
-      expect(act.selectSort(root({ view: list })).column).to.equal('added')
+      expect(selectSort(root()).column).to.match(/title$/)
+      expect(selectSort(root({ view: list })).column).to.equal('added')
 
       let s = nav(state({ view: list }), act.sort({ column: 'x', asc: false }))
       expect(s.search.sort).to.eql({ 3: { column: 'x', asc: false } })
-      expect(act.selectSort({ nav: s })).to.eql({ column: 'x', asc: false })
+      expect(selectSort({ nav: s })).to.eql({ column: 'x', asc: false })
 
       let trash = { ...s, search: { ...s.search, view: { name: 'trash' } } }
-      expect(act.selectSort({ nav: trash }).column).to.match(/title$/)
+      expect(selectSort({ nav: trash }).column).to.match(/title$/)
     })
 
     it('select the list shown and test the view', () => {
-      expect(act.selectList(root({ view: list }))).to.equal(3)
-      expect(act.selectList(root())).to.be.null
-      expect(act.selectIsView(root({ view: { name: 'trash' } }), 'trash')).to.be.true
-      expect(act.selectIsView(root(), 'trash')).to.be.false
+      expect(selectList(root({ view: list }))).to.equal(3)
+      expect(selectList(root())).to.be.null
+      expect(selectIsView(root({ view: { name: 'trash' } }), 'trash')).to.be.true
+      expect(selectIsView(root(), 'trash')).to.be.false
     })
   })
 })

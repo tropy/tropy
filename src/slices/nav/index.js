@@ -48,17 +48,29 @@ export default function nav (state = initialState, action) {
   ) ? state : { search, select: selection, mode }
 }
 
-export { open, select }
-export const restore = restored
-export const show = viewShown
-export const {
-  queryChanged: search,
-  sortChanged: sort
-} = searchSlice.actions
-export const mode = { back: modeSlice.actions.itemClosed }
+export {
+  itemOpened,
+  itemSelected,
+  noteSelected,
+  photoSelected
+} from './actions.js'
 
 export const {
   selectIsView,
   selectList,
   selectSort
 } = searchSlice.getSelectors(state => state.nav.search)
+
+export * from './cursor.js'
+
+export const actions = {
+  restore: restored,
+  show: viewShown,
+  search: searchSlice.actions.queryChanged,
+  sort: searchSlice.actions.sortChanged,
+  mode: {
+    back: modeSlice.actions.itemClosed
+  },
+  select,
+  open
+}

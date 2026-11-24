@@ -61,7 +61,7 @@ export const ProjectView = ({
   })
 
   let handleSearch = useEvent((query) => {
-    dispatch(nav.search({ query }))
+    dispatch(act.nav.search({ query }))
   })
 
   usePasteEvent('application/json', (data) => {

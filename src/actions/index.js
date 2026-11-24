@@ -1,6 +1,6 @@
 export * as activities from '../slices/activities.js'
 export * as columns from '../slices/columns/index.js'
-export * as nav from '../slices/nav/index.js'
+export { actions as nav } from '../slices/nav/index.js'
 export * as notepad from '../slices/notepad.js'
 export * as prefs from '../slices/prefs.js'
 export * as projectFiles from '../slices/project-files.js'
