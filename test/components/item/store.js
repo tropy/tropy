@@ -12,7 +12,7 @@ export const createItemStore = (selected = [1]) => {
     qr: { items: ids },
     nav: {
       ...nav(undefined, {}),
-      selection: { ...nav(undefined, {}).selection, item: create(selected) }
+      select: { ...nav(undefined, {}).select, item: create(selected) }
     },
     intl: { messages: {} }
   })

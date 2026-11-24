@@ -29,7 +29,7 @@ describe('PhotoList', () => {
     render(<PhotoList/>, withStore(store))
 
     emit(document, 'global:nextPhoto')
-    expect(store.getState().nav.selection.photo.cursor).to.equal(2)
+    expect(store.getState().nav.select.photo.cursor).to.equal(2)
   })
 
   it('opens the context menu for photos', () => {

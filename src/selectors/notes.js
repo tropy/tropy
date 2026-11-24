@@ -3,7 +3,7 @@ import { getVisiblePhotos, getVisibleSelections } from './photos.js'
 import { Cursor } from '../common/sequence.js'
 
 const getNotes = ({ notes }) => notes
-const getSelectedNoteId = ({ nav }) => nav.selection.note.cursor
+const getSelectedNoteId = ({ nav }) => nav.select.note.cursor
 
 export const getNoteParent = ({ notes, photos, selections }, { id }) => {
   let { photo, selection } = notes[id]

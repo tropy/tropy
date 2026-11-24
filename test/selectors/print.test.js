@@ -4,7 +4,7 @@ import { getPrintableItems } from '#tropy/selectors/index.js'
 describe('Print Selectors', () => {
   describe('getPrintableItems', () => {
     let state = {
-      nav: { selection: { item: create() } },
+      nav: { select: { item: create() } },
       qr: { items: [1] },
       items: { 1: { id: 1, photos: [2], tags: [] } },
       photos: {

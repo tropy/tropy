@@ -9,17 +9,17 @@ const init = nav(undefined, {})
 const state = (search) => ({
   ...init,
   search: { ...init.search, ...search },
-  selection: { ...init.selection, item: create([1]) }
+  select: { ...init.select, item: create([1]) }
 })
 
-const isKept = (s) => has(s.selection.item, 1)
+const isKept = (s) => has(s.select.item, 1)
 
 describe('nav', () => {
   it('restores the selection state, keeping anchor and cursor', () => {
     let payload = {
-      selection: { item: { selected: { 1: true, 3: true }, anchor: 1, cursor: 3 } }
+      select: { item: { selected: { 1: true, 3: true }, anchor: 1, cursor: 3 } }
     }
-    let { item } = nav(undefined, act.restore(payload)).selection
+    let { item } = nav(undefined, act.restore(payload)).select
 
     expect(item).to.include({ anchor: 1, cursor: 3 })
     expect(has(item, 1) && has(item, 3)).to.be.true
@@ -28,7 +28,7 @@ describe('nav', () => {
   it('restores the selection with another view (not a search change)', () => {
     let restored = nav(init, act.restore({
       search: { view: { name: 'list', id: 3 } },
-      selection: { item: create([1]) },
+      select: { item: create([1]) },
       mode: 'item'
     }))
 
@@ -45,17 +45,17 @@ describe('nav', () => {
   it('replaces the selection state on select', () => {
     let item = create([3])
     let s = nav(undefined, { type: ITEM.SELECT, payload: { item }, meta: {} })
-    expect(s.selection.item).to.equal(item)
+    expect(s.select.item).to.equal(item)
   })
 
   describe('shows the parent item of a photo or note', () => {
     // Items 1 and 2 selected, the cursor on 2.
     let s = {
       ...init,
-      selection: { ...init.selection, item: create([1, 2]) }
+      select: { ...init.select, item: create([1, 2]) }
     }
 
-    let item = (action) => nav(s, action).selection.item
+    let item = (action) => nav(s, action).select.item
 
     it('keeps the selection if the parent is selected', () => {
       for (let action of [
@@ -67,7 +67,7 @@ describe('nav', () => {
       }
 
       expect(nav(s, { type: PHOTO.SELECT, payload: { item: 1, photo: 5 }, meta: {} })
-        .selection.photo.cursor).to.equal(5)
+        .select.photo.cursor).to.equal(5)
     })
 
     it('replaces the selection with an unselected parent', () => {
@@ -87,7 +87,7 @@ describe('nav', () => {
       let s = state(search)
       return {
         ...s,
-        selection: { ...s.selection, item: create([1, 2]), photo: create([5]) }
+        select: { ...s.select, item: create([1, 2]), photo: create([5]) }
       }
     }
 
@@ -100,9 +100,9 @@ describe('nav', () => {
         request(ITEM.RESTORE, [2]),
         { type: ITEM.REMOVE, payload: [2], meta: {} }
       ]) {
-        let { selection } = nav(selected(), action)
+        let { select: selection } = nav(selected(), action)
 
-        expect(isKept({ selection }), action.type).to.be.true
+        expect(isKept({ select: selection }), action.type).to.be.true
         expect(has(selection.item, 2), action.type).to.be.false
         expect(selection.item.cursor, action.type).to.be.null
         expect(selection.photo, action.type).to.eql(create())
@@ -118,7 +118,7 @@ describe('nav', () => {
       let list = { name: 'list', id: 3 }
       let remove = request(LIST.ITEM.REMOVE, { id: 3, items: [2] })
 
-      let shown = nav(selected({ view: list }), remove).selection
+      let shown = nav(selected({ view: list }), remove).select
       expect(has(shown.item, 2)).to.be.false
       expect(has(shown.item, 1)).to.be.true
 
@@ -131,12 +131,12 @@ describe('nav', () => {
     // Photo 5 of item 1 shown, with its selection 6 and note 7.
     let s = {
       ...init,
-      selection: {
+      select: {
         item: create([1]), photo: create([6]), note: create([7]), last: {}
       }
     }
 
-    let photo = (action) => nav(s, action).selection.photo
+    let photo = (action) => nav(s, action).select.photo
 
     it('holds the photo or the photo selection shown', () => {
       let select = (payload) => ({ type: PHOTO.SELECT, payload, meta: {} })
@@ -144,7 +144,7 @@ describe('nav', () => {
       expect(photo(select({ item: 1, photo: 5 }))).to.include({ cursor: 5 })
       expect(photo(select({ item: 1, photo: 5, selection: 6 }))).to.include({ cursor: 6 })
       expect(photo(select(null))).to.eql(create())
-      expect(nav(s, select({ photo: null, note: 7 })).selection.note.cursor)
+      expect(nav(s, select({ photo: null, note: 7 })).select.note.cursor)
         .to.be.null
     })
 
@@ -154,7 +154,7 @@ describe('nav', () => {
         type: ITEM.SELECT,
         payload: { item: create(item), ...payload },
         meta: {}
-      }).selection
+      }).select
 
       let other = { photos: [8, 9], notes: { 8: [], 9: [10] } }
       let same = { photos: [5], notes: { 5: [], 6: [7, 4] } }
@@ -180,8 +180,8 @@ describe('nav', () => {
     })
 
     it('is restored', () => {
-      let restored = nav(undefined, act.restore({ selection: s.selection }))
-      expect(restored.selection.photo).to.include({ cursor: 6 })
+      let restored = nav(undefined, act.restore({ select: s.select }))
+      expect(restored.select.photo).to.include({ cursor: 6 })
     })
   })
 
@@ -189,7 +189,7 @@ describe('nav', () => {
     // Photo 5 of item 1 shown; it has notes 7 and 8, photo 9 has none.
     let reduce = (...actions) => actions.reduce(nav, {
       ...init,
-      selection: { ...init.selection, item: create([1]), photo: create([5]) }
+      select: { ...init.select, item: create([1]), photo: create([5]) }
     })
 
     let action = (type, payload) => ({ type, payload, meta: {} })
@@ -198,27 +198,27 @@ describe('nav', () => {
 
     it('shows the last note of a photo again', () => {
       let s = reduce(note(8), photo(9, []), photo(5, [7, 8]))
-      expect(s.selection.note.cursor).to.equal(8)
+      expect(s.select.note.cursor).to.equal(8)
     })
 
     it('keeps the last notes when the selection is cleared', () => {
       let s = reduce(note(8), act.show({ view: { name: 'trash' } }))
 
-      expect(s.selection.note.cursor).to.be.null
-      expect(s.selection.last).to.eql({ 5: 8 })
+      expect(s.select.note.cursor).to.be.null
+      expect(s.select.last).to.eql({ 5: 8 })
     })
 
     it('shows the first note if the last is gone', () => {
       let s = reduce(note(8), photo(9, []), photo(5, [7]))
-      expect(s.selection.note.cursor).to.equal(7)
+      expect(s.select.note.cursor).to.equal(7)
     })
 
     it('is restored', () => {
-      let { selection } = reduce(note(8))
-      let restored = nav(undefined, act.restore({ selection }))
+      let { select: selection } = reduce(note(8))
+      let restored = nav(undefined, act.restore({ select: selection }))
 
-      expect(restored.selection.note).to.include({ cursor: 8 })
-      expect(restored.selection.last).to.eql({ 5: 8 })
+      expect(restored.select.note).to.include({ cursor: 8 })
+      expect(restored.select.last).to.eql({ 5: 8 })
     })
   })
 
@@ -449,7 +449,7 @@ describe('nav', () => {
     it('restores only known modes', () => {
       let item = { item: create([1]) }
 
-      expect(nav(undefined, act.restore({ mode: 'item', selection: item })).mode)
+      expect(nav(undefined, act.restore({ mode: 'item', select: item })).mode)
         .to.equal('item')
       expect(nav(undefined, act.restore({ mode: 'x' })).mode).to.equal('project')
       expect(nav(undefined, act.restore({ mode: 'constructor' })).mode)

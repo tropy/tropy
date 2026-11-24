@@ -47,7 +47,7 @@ describe('Storage migrations', () => {
       }, 3)).to.eql({
         nav: {
           search: { view, sort: {} },
-          selection: { item, photo: 2, selection: undefined, note: undefined },
+          select: { item, photo: 2, selection: undefined, note: undefined },
           mode: 'item'
         }
       })
@@ -55,8 +55,8 @@ describe('Storage migrations', () => {
 
     it('#4 turns the photo and selection shown into a selection state', () => {
       let nav = (photo, selection) =>
-        migrate({ nav: { selection: { item: {}, photo, selection, note: 7 } } }, 4)
-          .nav.selection
+        migrate({ nav: { select: { item: {}, photo, selection, note: 7 } } }, 4)
+          .nav.select
 
       expect(nav(2, 3)).to.eql({
         item: {},
@@ -70,13 +70,13 @@ describe('Storage migrations', () => {
     it('#5 turns the note into a selection state and the last note', () => {
       let selection = (id) => migrate({
         nav: {
-          selection: {
+          select: {
             item: {},
             photo: { selected: { 3: true }, anchor: 3, cursor: 3 },
             note: id
           }
         }
-      }, 5).nav.selection
+      }, 5).nav.select
 
       expect(selection(7)).to.deep.include({
         note: { selected: { 7: true }, anchor: 7, cursor: 7 },

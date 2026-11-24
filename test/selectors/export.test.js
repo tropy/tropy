@@ -14,7 +14,7 @@ describe('Export Selectors', () => {
       it('selects the visibly selected items in list order', () => {
         expect(
           getExportItemIds({
-            nav: { selection: { item: create([4, 2, 1]) } },
+            nav: { select: { item: create([4, 2, 1]) } },
             qr: { items: [1, 3, 2] }
           })
         ).to.eql([1, 2])
@@ -22,7 +22,7 @@ describe('Export Selectors', () => {
 
       it('selects selected items when no id given', () => {
         expect(
-          getExportItemIds({ nav: { selection: { item: create([23]) } }, qr: { items: [23] } })
+          getExportItemIds({ nav: { select: { item: create([23]) } }, qr: { items: [23] } })
         ).to.eql([23])
       })
     })
@@ -31,7 +31,7 @@ describe('Export Selectors', () => {
       it('selects all visible items when no id given', () => {
         expect(
           getExportItemIds({
-            nav: { selection: { item: create() } },
+            nav: { select: { item: create() } },
             qr: { items: [7] }
           })
         ).to.eql([7])

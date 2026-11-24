@@ -28,7 +28,7 @@ describe('Highlight', () => {
           ...init,
           search: { ...init.search, query },
           // Item mode needs a selected item.
-          selection: { ...init.selection, item: create([1]) },
+          select: { ...init.select, item: create([1]) },
           mode
         },
         settings: { ...settings, search: { highlight } }

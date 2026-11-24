@@ -34,7 +34,7 @@ export const project = {
     },
     {
       number: 3,
-      // Nests nav by slice: search, selection, mode.
+      // Nests nav by slice: search, select, mode.
       // The query and tags are not restored.
       up: ({ nav, ...state }) => {
         if (nav == null)
@@ -46,7 +46,7 @@ export const project = {
           ...state,
           nav: {
             search: { view, sort },
-            selection: { item, photo, selection, note },
+            select: { item, photo, selection, note },
             mode
           }
         }
@@ -56,17 +56,17 @@ export const project = {
       number: 4,
       // Use combined photo/selection selection
       up: ({ nav, ...state }) => {
-        if (nav?.selection == null)
+        if (nav?.select == null)
           return { ...state, nav }
 
-        let { photo, selection, ...rest } = nav.selection
+        let { photo, selection, ...rest } = nav.select
         let id = selection ?? photo
 
         return {
           ...state,
           nav: {
             ...nav,
-            selection: {
+            select: {
               ...rest,
               photo: {
                 selected: (id == null) ? {} : { [id]: true },
@@ -82,18 +82,18 @@ export const project = {
       number: 5,
       // Use note selection state, with the last note per parent.
       up: ({ nav, ...state }) => {
-        if (nav?.selection == null)
+        if (nav?.select == null)
           return { ...state, nav }
 
-        let { note, photo } = nav.selection
+        let { note, photo } = nav.select
         let parent = photo?.cursor
 
         return {
           ...state,
           nav: {
             ...nav,
-            selection: {
-              ...nav.selection,
+            select: {
+              ...nav.select,
               note: {
                 selected: (note == null) ? {} : { [note]: true },
                 anchor: note ?? null,

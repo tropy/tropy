@@ -3,7 +3,7 @@
  * item > photo (or photo selection) > note.
  *
  * The nav cursor is the current cursor path,
- * based on current nav.selection's cursors.
+ * based on current nav.select's cursors.
  *
  * On select we check the given path params
  * and pass the item's paths, because the nav reducer

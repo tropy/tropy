@@ -5,7 +5,7 @@ describe('Photo Selectors', () => {
   describe('getVisiblePhotos', () => {
     it('keeps the order of the results when the item cursor moves', () => {
       let state = (cursor) => ({
-        nav: { selection: { item: create([1, 2, 3], { anchor: cursor }) } },
+        nav: { select: { item: create([1, 2, 3], { anchor: cursor }) } },
         qr: { items: [2, 1] },
         items: {
           1: { id: 1, photos: [11] },
