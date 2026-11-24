@@ -1,45 +1,50 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { Selection, elements, ids, primary } from '../../common/selection.js'
+import { Selection } from '../../common/selection.js'
 import { resultEqualityCheck } from '../../common/sequence.js'
-import { pluck } from '../../selectors/util.js'
 import { selectItemSequence } from '../qr.js'
 
-// The item selection over the results (a Selection).
+// The itemSelection over itemSequence.
+// This is the base selector for active items.
+// Changes frequently!
 export const selectItemSelection = createSelector(
   (state) => state.nav.select.item,
   selectItemSequence,
   (state, seq) => new Selection(state, seq)
 )
 
-// The primary selected item represents the selection
-// (merge target, bulk editor values and template).
 export const selectItemCursor = (state) =>
-  primary(state.nav.select.item)
+  selectItemSelection(state).primary()
 
-// Scans the results: kept apart from the items, which change often.
-const selectActiveItemIds = createSelector(
-  (state) => state.nav.select.item,
-  selectItemSequence,
-  (selection, seq) => {
-    let visible = elements(selection, seq)
-    let inResults = new Set(visible)
+export const selectCursorItem = (state) =>
+  state.items[selectItemCursor(state)] ?? null
 
-    return [
-      ...visible,
-      ...ids(selection).filter(id => !inResults.has(id))
-    ]
-  }
-)
+// The selected item ids in display order:
+// Memoized to keep them slightly more stable.
+export const selectActiveItemIds = createSelector(
+  selectItemSelection,
+  (itemSelection) => (
+    itemSelection.elements()
+  ), {
+    memoizeOptions: { resultEqualityCheck }
+  })
 
-// Keeps its identity while the selected items stay the same.
+// The full selected items in display order.
+// Visible photos (and notes) are derived from this.
 export const selectActiveItems = createSelector(
   (state) => state.items,
   selectActiveItemIds,
-  pluck,
-  {
+  (items, ids) => {
+    let activeItems = []
+
+    for (let id of ids) {
+      let item = items[id]
+      if (item != null) activeItems.push(item)
+    }
+
+    return activeItems
+  }, {
     memoizeOptions: { resultEqualityCheck }
-  }
-)
+  })
 
 // The photo level's cursor: a photo or a photo selection.
 const getStoredPhoto = (state) =>

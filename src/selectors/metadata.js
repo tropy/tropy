@@ -3,8 +3,8 @@ import { pluck } from './util.js'
 import { selectItemSequence } from '../slices/qr.js'
 
 import {
+  selectActiveItemIds,
   selectItemCursor,
-  selectItemSelection,
   selectPhotoCursor,
   selectSelectionCursor
 } from '../slices/nav/selectors.js'
@@ -53,9 +53,11 @@ const collectMetadata = (metadata, ids, first = ids[0]) => {
 
 export const getItemMetadata = memo(
   ({ metadata }) => metadata,
-  (state) => selectItemSelection(state).ids(),
+  selectActiveItemIds,
   selectItemCursor,
-  collectMetadata
+  // The primary only if active (it may be outside the results).
+  (metadata, ids, first) =>
+    collectMetadata(metadata, ids, ids.includes(first) ? first : ids[0])
 )
 
 export const getVisibleMetadata = memo(

@@ -5,7 +5,7 @@ import { expand, tropy } from '../ontology/index.js'
 import { ITEM, PHOTO, SELECTION } from '../constants/index.js'
 import { value } from '../value.js'
 import {
-  selectItemCursor,
+  selectCursorItem,
   selectPhotoCursor,
   selectSelectionCursor
 } from '../slices/nav/selectors.js'
@@ -156,10 +156,9 @@ export const getTemplateDefaultValues = memo(
 
 export const getActiveItemTemplate = memo(
   ({ ontology }) => ontology.template,
-  selectItemCursor,
-  ({ items }) => items,
-  (template, id, items) =>
-    (id != null && id in items) ? template[items[id].template] : null
+  selectCursorItem,
+  (template, item) =>
+    (item != null) ? template[item.template] : null
 )
 
 export const getActivePhotoTemplate = memo(

@@ -16,8 +16,9 @@ import {
   getSelectionFields
 } from '../../selectors/index.js'
 import {
-  selectActiveItems,
-  selectActivePhoto
+  selectActiveItemIds,
+  selectActivePhoto,
+  selectCursorItem
 } from '../../slices/nav/selectors.js'
 
 
@@ -25,11 +26,11 @@ class MetadataPanel extends React.PureComponent {
   fields = [null, null, null]
 
   get isEmpty () {
-    return this.props.items.length === 0
+    return this.props.ids.length === 0
   }
 
   get isBulk () {
-    return this.props.items.length > 1
+    return this.props.ids.length > 1
   }
 
   get hasPhotoFields () {
@@ -95,7 +96,7 @@ class MetadataPanel extends React.PureComponent {
   handleItemTemplateChange = (template, hasChanged) => {
     if (hasChanged || this.isBulk) {
       this.props.onTemplateChange('item', {
-        id: this.props.items.map(it => it.id),
+        id: this.props.ids,
         template: template.id
       })
     }
@@ -134,7 +135,7 @@ class MetadataPanel extends React.PureComponent {
   handleContextMenu (event, data = {}) {
     if (!this.props.isDisabled) {
       let id = (data.type === 'item')
-        ? this.props.items.map(it => it.id)
+        ? this.props.ids
         : [this.props?.[data.type]?.id]
 
       let context = data.property ?
@@ -147,7 +148,7 @@ class MetadataPanel extends React.PureComponent {
   renderItemFields () {
     return !this.isEmpty && (
       <MetadataSection
-        count={this.props.items.length}
+        count={this.props.ids.length}
         isDisabled={this.props.isDisabled}
         isMixed={this.props.template.mixed}
         template={this.props.template.id}
@@ -166,8 +167,8 @@ class MetadataPanel extends React.PureComponent {
           onAfter={this.handleAfterItemFields}
           onBefore={this.handleBeforeItemFields}
           onCreate={this.props.onMetadataAdd}/>
-        {!this.isBulk &&
-          <ItemInfo item={this.props.items[0]}/>}
+        {!this.isBulk && this.props.item != null &&
+          <ItemInfo item={this.props.item}/>}
       </MetadataSection>
     )
   }
@@ -243,7 +244,8 @@ const MetadataPanelContainer = connect(
       photo: getPhotoFields(state),
       selection: getSelectionFields(state)
     },
-    items: selectActiveItems(state),
+    item: selectCursorItem(state),
+    ids: selectActiveItemIds(state),
     photo: selectActivePhoto(state),
     selection: getActiveSelection(state),
     template: getSelectedItemTemplate(state)
