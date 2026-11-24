@@ -4,14 +4,18 @@ import {
   selectActiveItems,
   selectCursorPhoto,
   selectCursorSelection,
+  selectActivePhotoIds,
   selectNavCursor,
-  selectPhotoCursor
+  selectPhotoCursor,
+  selectPhotoSequence
 } from '#tropy/slices/nav/selectors.js'
 
 describe('nav cursor', () => {
   // Item 1 with photos 2 (selection 3, notes 10, 11) and 4 (note 12);
   // item 5 with photo 6; item 9, not among the results.
-  let state = ({ item = [1], photo, note = null } = {}) => ({
+  let state = ({
+    item = [1], photo, note = null, expand = {}, zoom = 0
+  } = {}) => ({
     nav: {
       select: {
         item: create(item),
@@ -35,7 +39,9 @@ describe('nav cursor', () => {
       10: { id: 10, photo: 2 },
       11: { id: 11, photo: 2 },
       12: { id: 12, photo: 4 }
-    }
+    },
+    panel: { expand },
+    ui: { panel: { zoom } }
   })
 
   let path = (options) => selectNavCursor(state(options))
@@ -100,5 +106,20 @@ describe('nav cursor', () => {
     // A note edited: the same nav cursor.
     let edited = { ...s, notes: { ...s.notes, 10: { id: 10, photo: 2 } } }
     expect(selectNavCursor(edited)).to.equal(first)
+  })
+
+  it('keeps the active photo ids while the photo lists stay', () => {
+    let s = state({ item: [1, 5] })
+    let first = selectActivePhotoIds(s)
+    expect(first).to.eql([2, 4, 6])
+
+    let tagged = { ...s, items: { ...s.items, 1: { id: 1, photos: [2, 4], tags: [7] } } }
+    expect(selectActivePhotoIds(tagged)).to.equal(first)
+  })
+
+  it('navigates the photos with their expanded selections in the list', () => {
+    let expand = { 2: 1 }
+    expect(selectPhotoSequence(state({ expand }))).to.eql([2, 3, 4])
+    expect(selectPhotoSequence(state({ expand, zoom: 1 }))).to.eql([2, 4])
   })
 })

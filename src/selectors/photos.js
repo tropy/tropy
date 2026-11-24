@@ -1,5 +1,5 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { selectActiveItems } from '../slices/nav/selectors.js'
+import { selectActivePhotos } from '../slices/nav/selectors.js'
 import { blank, pluck } from '../common/util.js'
 import { createSequence } from '../common/sequence.js'
 
@@ -34,16 +34,9 @@ export const getItemPhotos = (state, props) =>
     pluck(state.items, props.items),
     state.photos)
 
-// The photos of the selected items.
-export const getVisiblePhotos = memo(
-  getPhotos,
-  selectActiveItems,
-  (photos, items) => expandItemPhotos(items, photos)
-)
-
 export const getVisibleSelections = memo(
   ({ selections }) => selections,
-  getVisiblePhotos,
+  selectActivePhotos,
 
   (selections, photos) =>
     photos

@@ -6,12 +6,10 @@ import { Resizable } from '../resizable.js'
 import { SASS } from '../../constants/index.js'
 import { useActions } from '../../hooks/use-action.js'
 
-import {
-  getVisibleNotes,
-  getVisiblePhotos
-} from '../../selectors/index.js'
+import { getVisibleNotes } from '../../selectors/index.js'
 import {
   selectActiveItemIds,
+  selectActivePhotoIds,
   selectActiveNote,
   selectCursorPhoto,
   selectItemCursor
@@ -41,7 +39,7 @@ export const ItemView = ({
   let item = useSelector(selectItemCursor)
   let note = useSelector(selectActiveNote)
   let photo = useSelector(selectCursorPhoto)
-  let photos = useSelector(getVisiblePhotos)
+  let photos = useSelector(selectActivePhotoIds)
   let notes = useSelector(getVisibleNotes)
   let keymap = useSelector(state => state.keymap)
 
