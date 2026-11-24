@@ -18,7 +18,7 @@ import {
 import {
   selectActiveItems,
   selectActivePhoto
-} from '../../slices/nav/cursor.js'
+} from '../../slices/nav/selectors.js'
 
 
 class MetadataPanel extends React.PureComponent {

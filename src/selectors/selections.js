@@ -1,5 +1,5 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { selectPhotoCursor, selectSelectionCursor } from '../slices/nav/cursor.js'
+import { selectPhotoCursor, selectSelectionCursor } from '../slices/nav/selectors.js'
 import { pluck } from '../common/util.js'
 
 const NOTHING = []

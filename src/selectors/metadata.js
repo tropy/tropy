@@ -1,8 +1,8 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
 import { pluck } from './util.js'
-import { getItemSelection } from './items.js'
+import { selectItemSelection } from '../slices/nav/selectors.js'
 import { selectItemSequence } from '../slices/qr.js'
-import { selectPhotoCursor, selectSelectionCursor } from '../slices/nav/cursor.js'
+import { selectPhotoCursor, selectSelectionCursor } from '../slices/nav/selectors.js'
 import { equal } from '../value.js'
 import { compare } from '../collate.js'
 import { createSequence, getIndex } from '../common/sequence.js'
@@ -47,7 +47,7 @@ const collectMetadata = (metadata, ids) => {
 
 export const getItemMetadata = memo(
   ({ metadata }) => metadata,
-  (state) => getItemSelection(state).ids(),
+  (state) => selectItemSelection(state).ids(),
   collectMetadata
 )
 

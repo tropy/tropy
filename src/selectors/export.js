@@ -4,7 +4,7 @@ import { version } from '../common/release.js'
 import { compact, blank, URI, get, pick } from '../common/util.js'
 import { serialize } from '../editor/serialize.js'
 import { getListPath } from './lists.js'
-import { getItemSelection } from './items.js'
+import { selectItemSelection } from '../slices/nav/selectors.js'
 import { selectItemSequence } from '../slices/qr.js'
 
 const RESERVED = Object.fromEntries(properties.all.map(prop => ([prop, true])))
@@ -13,7 +13,7 @@ export const getExportItemIds = (state, { id } = {}) => {
   if (id?.length > 0)
     return id
 
-  let ids = getItemSelection(state).elements()
+  let ids = selectItemSelection(state).elements()
   return (ids.length > 0) ? ids : selectItemSequence(state)
 }
 

@@ -1,13 +1,15 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { elements, ids, primary } from '../../common/selection.js'
-import { stable } from '../../common/sequence.js'
+import { Selection, elements, ids, primary } from '../../common/selection.js'
+import { resultEqualityCheck } from '../../common/sequence.js'
 import { pluck } from '../../selectors/util.js'
 import { selectItemSequence } from '../qr.js'
 
-// Root-level selectors for the cursors of nav's levels:
-// plain reads of the stored cursors. The reducer and the
-// commands keep the cursor path valid; stale state (e.g.
-// restored after the project changed) is read as it is.
+// The item selection over the results (a Selection).
+export const selectItemSelection = createSelector(
+  (state) => state.nav.select.item,
+  selectItemSequence,
+  (state, seq) => new Selection(state, seq)
+)
 
 // The primary selected item represents the selection
 // (merge target, bulk editor values and template).
@@ -35,9 +37,7 @@ export const selectActiveItems = createSelector(
   selectActiveItemIds,
   pluck,
   {
-    memoizeOptions: {
-      resultEqualityCheck: (a, b) => stable(a, b) === b
-    }
+    memoizeOptions: { resultEqualityCheck }
   }
 )
 

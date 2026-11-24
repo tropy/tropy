@@ -2,7 +2,7 @@ import { NOTE } from '../constants/index.js'
 import { emit } from '../dom.js'
 import { actions as nav } from '../slices/nav/index.js'
 import settings from './settings.js'
-import { selectNavCursor } from '../slices/nav/cursor.js'
+import { selectNavCursor } from '../slices/nav/selectors.js'
 import { getNoteParent } from '../selectors/notes.js'
 
 export default {

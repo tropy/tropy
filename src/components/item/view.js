@@ -15,7 +15,7 @@ import {
   selectActiveNote,
   selectActivePhoto,
   selectItemCursor
-} from '../../slices/nav/cursor.js'
+} from '../../slices/nav/selectors.js'
 
 
 export const ItemView = ({

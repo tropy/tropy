@@ -12,7 +12,7 @@ import {
   getItemTags,
   getTagCompletions
 } from '../../selectors/index.js'
-import { selectActiveItems } from '../../slices/nav/cursor.js'
+import { selectActiveItems } from '../../slices/nav/selectors.js'
 
 
 class TagPanel extends React.PureComponent {

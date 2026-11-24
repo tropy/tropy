@@ -1,5 +1,5 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { selectActiveItems } from '../slices/nav/cursor.js'
+import { selectActiveItems } from '../slices/nav/selectors.js'
 import { blank, pluck } from '../common/util.js'
 import { createSequence } from '../common/sequence.js'
 

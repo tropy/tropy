@@ -61,7 +61,7 @@ export const {
   selectSort
 } = searchSlice.getSelectors(state => state.nav.search)
 
-export * from './cursor.js'
+export * from './selectors.js'
 
 export const actions = {
   restore: restored,
