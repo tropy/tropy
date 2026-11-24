@@ -9,7 +9,6 @@ import { SelectionInfo } from '../selection/info.js'
 import * as act from '../../actions/index.js'
 
 import {
-  getActiveSelection,
   getItemFields,
   getPhotoFields,
   getSelectedItemTemplate,
@@ -17,8 +16,9 @@ import {
 } from '../../selectors/index.js'
 import {
   selectActiveItemIds,
-  selectActivePhoto,
-  selectCursorItem
+  selectCursorItem,
+  selectCursorPhoto,
+  selectCursorSelection
 } from '../../slices/nav/selectors.js'
 
 
@@ -246,8 +246,8 @@ const MetadataPanelContainer = connect(
     },
     item: selectCursorItem(state),
     ids: selectActiveItemIds(state),
-    photo: selectActivePhoto(state),
-    selection: getActiveSelection(state),
+    photo: selectCursorPhoto(state),
+    selection: selectCursorSelection(state),
     template: getSelectedItemTemplate(state)
   }),
 

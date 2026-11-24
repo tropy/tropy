@@ -4,7 +4,7 @@ import { PHOTO } from '../../constants/index.js'
 import { splice } from '../../common/util.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
-import { selectPhotoCursor } from '../../slices/nav/selectors.js'
+import { selectCursorPhoto } from '../../slices/nav/selectors.js'
 
 
 export class Delete extends Command {
@@ -13,7 +13,7 @@ export class Delete extends Command {
     let { payload } = this.action
 
     let [cursor, item, selections] = yield select(state => ([
-      selectPhotoCursor(state),
+      selectCursorPhoto(state)?.id,
       state.items[payload.item],
       payload.photos.flatMap(id => state.photos[id]?.selections ?? [])
     ]))

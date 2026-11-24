@@ -6,8 +6,8 @@ import { ITEM, PHOTO, SELECTION } from '../constants/index.js'
 import { value } from '../value.js'
 import {
   selectCursorItem,
-  selectPhotoCursor,
-  selectSelectionCursor
+  selectCursorPhoto,
+  selectCursorSelection
 } from '../slices/nav/selectors.js'
 
 const getResourceList =
@@ -163,16 +163,14 @@ export const getActiveItemTemplate = memo(
 
 export const getActivePhotoTemplate = memo(
   ({ ontology }) => ontology.template,
-  selectPhotoCursor,
-  ({ photos }) => photos,
-  (template, id, photos) =>
-    (id != null && id in photos) ? template[photos[id].template] : null
+  selectCursorPhoto,
+  (template, photo) =>
+    (photo != null) ? template[photo.template] : null
 )
 
 export const getActiveSelectionTemplate = memo(
   ({ ontology }) => ontology.template,
-  selectSelectionCursor,
-  ({ selections }) => selections,
-  (template, id, selections) =>
-    (id != null && id in selections) ? template[selections[id].template] : null
+  selectCursorSelection,
+  (template, selection) =>
+    (selection != null) ? template[selection.template] : null
 )

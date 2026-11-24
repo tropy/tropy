@@ -11,10 +11,10 @@ import { SASS, ITEM } from '../../constants/index.js'
 import {
   selectCachePrefix,
   getEsperViewState,
-  getActiveSelection,
   getPhotoSelections,
   getActiveTranscription
 } from '../../selectors/index.js'
+import { selectCursorSelection } from '../../slices/nav/selectors.js'
 
 const { LAYOUT } = ITEM
 const { ESPER } = SASS
@@ -145,7 +145,7 @@ export const ItemContainer = connect(
     esper: state.ui.esper,
     view: getEsperViewState(state),
     keymap: state.keymap,
-    selection: getActiveSelection(state),
+    selection: selectCursorSelection(state),
     selections: getPhotoSelections(state),
     settings: state.settings,
     transcription: getActiveTranscription(state)

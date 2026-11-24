@@ -8,7 +8,7 @@ import { TABS, SASS } from '../../constants/index.js'
 import * as act from '../../actions/index.js'
 
 import { getVisibleNotes } from '../../selectors/index.js'
-import { selectActiveNote, selectActivePhoto } from '../../slices/nav/selectors.js'
+import { selectActiveNote, selectCursorPhoto } from '../../slices/nav/selectors.js'
 
 
 export const NoteList = ({
@@ -22,7 +22,7 @@ export const NoteList = ({
 
   let notes = useSelector(getVisibleNotes)
   let selected = useSelector(selectActiveNote)
-  let photo = useSelector(selectActivePhoto)
+  let photo = useSelector(selectCursorPhoto)
   let matcher = useSelector(selectMatcher)
   let contributors = useSelector(state => state.qr.contributors)
 
