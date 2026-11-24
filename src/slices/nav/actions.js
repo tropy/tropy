@@ -1,54 +1,108 @@
 import { createAction } from '@reduxjs/toolkit'
-import { ITEM, NOTE, PHOTO } from '../../constants/index.js'
 import { focus, primary, from as toSelection } from '../../common/selection.js'
-import { checkCursorPath, selectCursorPaths, selectNoteIds } from './path.js'
 import { selectViewOf } from '../qr.js'
 
-export const restore = createAction('nav/restore')
+export const restored = createAction('nav/restored')
 
-// Shows a view: { view, query, tags }.
-// This is basically a click in the project sidebar.
-export const show = createAction('nav/show', (payload, meta) => ({
+export const viewShown = createAction('nav/viewShown', (payload, meta) => ({
   payload,
-  meta: {
-    log: 'trace',
-    history: true,
-    search: true,
-    ...meta
-  }
+  meta: { log: 'trace', history: true, search: true, ...meta }
 }))
 
-// The select actions (thunks): each checks its input against the
-// data and passes the facts the reducer needs (see path.js);
-// a failed check throws.
+const prepareAction = (payload, meta) => ({
+  payload, meta: { log: 'trace', history: true, ...meta }
+})
+
+export const itemSelected =
+  createAction('nav/select/itemSelected', prepareAction)
+
+export const itemOpened =
+  createAction('nav/itemOpened', prepareAction)
+
+export const photoSelected =
+  createAction('nav/select/photoSelected', prepareAction)
+
+export const noteSelected =
+  createAction('nav/select/noteSelected', prepareAction)
+
+
+/*
+ * Nav cursor and cursor paths:
+ * item > photo (or photo selection) > note.
+ *
+ * The nav cursor is the current cursor path,
+ * based on current nav.select's cursors.
+ *
+ * On select we check the given path params
+ * and pass the item's paths, because the nav reducer
+ * does not see the items, photos and notes.
+ *
+ * The reducer completes the path using the defaults:
+ * the current photo and note where they fit,
+ * else the first photo and its first note.
+ */
+
+// Checks a (partial) cursor path top-down.
+function checkCursorPath (state, {
+  item,
+  photo,
+  selection,
+  note
+}) {
+  if (photo != null && !state.items[item]?.photos.includes(photo))
+    throw new Error(`photo ${photo} is not in item ${item}`)
+
+  if (selection != null &&
+    (photo == null || state.selections[selection]?.photo !== photo))
+    throw new Error(`selection ${selection} is not in photo ${photo}`)
+
+  if (note != null && !selectNoteIds(state, selection ?? photo)?.includes(note))
+    throw new Error(`note ${note} is not in ${selection ?? photo}`)
+}
+
+const selectNoteIds = (state, id) =>
+  (state.selections[id] ?? state.photos[id])?.notes
+
+// Returns an item's photos/selections and their notes.
+function selectCursorPaths (state, id) {
+  let photos = state.items[id]?.photos ?? []
+  let notes = {}
+
+  // NB: we create a notes entry for each photo/selection,
+  // so the reducer can use this to see all ids there!
+  for (let photo of photos) {
+    notes[photo] = state.photos[photo]?.notes ?? []
+
+    for (let selection of state.photos[photo]?.selections ?? [])
+      notes[selection] = state.selections[selection]?.notes ?? []
+  }
+
+  return { photos, notes }
+}
+
+function buildCursorPath (state, { item, photo, selection, note }) {
+  item = toSelection(item)
+  let id = primary(item)
+
+  checkCursorPath(state, { item: id, photo, selection, note })
+
+  return {
+    item,
+    photo,
+    selection,
+    note,
+    ...(id != null && selectCursorPaths(state, id))
+  }
+}
+
 export const select = {
-  // Selects items, and optionally a cursor path below the primary
-  // item: photo, photo selection, note. The item selection is a
-  // state, an id or ids (see from). The reducer completes the path
-  // from the item's paths (the default cursor path).
-  // The mode is a hint ('item' from open.item).
-  item ({ item, photo, selection, note, mode }, meta = {}) {
-    return (dispatch, getState) => {
-      let state = getState()
-
-      item = toSelection(item)
-      let id = primary(item)
-
-      checkCursorPath(state, { item: id, photo, selection, note })
-
-      return dispatch({
-        type: ITEM.SELECT,
-        payload: {
-          item,
-          photo,
-          selection,
-          note,
-          mode,
-          ...(id != null && selectCursorPaths(state, id))
-        },
-        meta: { log: 'trace', history: true, ...meta }
-      })
-    }
+  // These thunks handle item selection,
+  // as well as selecting photos and notes within an item.
+  // They add the necessary facts (photo, notes ids) to the payload,
+  // for the reducers to set valid cursor paths.
+  item (payload, meta) {
+    return (dispatch, getState) =>
+      dispatch(itemSelected(buildCursorPath(getState(), payload), meta))
   },
 
   photo (payload, meta) {
@@ -63,27 +117,19 @@ export const select = {
         notes = selectNoteIds(state, selection ?? photo) ?? []
       }
 
-      return dispatch({
-        type: PHOTO.SELECT,
-        payload: {
-          item,
-          photo,
-          selection,
-          note,
-          notes
-        },
-        meta: { log: 'trace', history: true, ...meta }
-      })
+      return dispatch(photoSelected({
+        item,
+        photo,
+        selection,
+        note,
+        notes
+      }, meta))
     }
   },
 
   note (payload, meta) {
     if (payload == null)
-      return {
-        type: NOTE.SELECT,
-        payload,
-        meta
-      }
+      return { type: noteSelected.type, payload, meta }
 
     return (dispatch, getState) => {
       let state = getState()
@@ -94,20 +140,15 @@ export const select = {
 
       checkCursorPath(state, { item, photo, selection, note })
 
-      return dispatch({
-        type: NOTE.SELECT,
-        payload: { note, photo, item, selection },
-        meta: { log: 'trace', history: true, ...meta }
-      })
+      return dispatch(noteSelected({ note, photo, item, selection }, meta))
     }
   }
 }
 
 export const open = {
-  // Opens an item: selects it in item mode. A selected item stays
-  // in the selection (the cursor moves there), else it is selected
-  // alone. An item not among the results is shown first (a new
-  // search for a view that shows it): from the API or a link.
+  // Opens an item by selecting it in item mode.
+  // Also switches to another view if the item is not visible,
+  // as open.item can get called from the API.
   item ({ id, photo, selection, note } = {}, meta) {
     return (dispatch, getState) => {
       let state = getState()
@@ -118,15 +159,16 @@ export const open = {
       checkCursorPath(state, { item: id, photo, selection, note })
 
       let view = selectViewOf(state, id)
-      if (view != null) dispatch(show(view))
+      if (view != null) dispatch(viewShown(view))
 
-      return dispatch(select.item({
-        item: focus(getState().nav.select.item, id),
+      state = getState()
+
+      return dispatch(itemOpened(buildCursorPath(state, {
+        item: focus(state.nav.select.item, id),
         photo,
         selection,
-        note,
-        mode: 'item'
-      }, meta))
+        note
+      }), meta))
     }
   }
 }
