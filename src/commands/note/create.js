@@ -6,7 +6,7 @@ import { NOTE } from '../../constants/index.js'
 import { getNoteSuccessor, getNotesMap } from '../../selectors/index.js'
 import { containsRTL } from '../../common/util.js'
 import { fromHTML } from '../../editor/serialize.js'
-import { selectNavCursor } from '../../slices/nav/cursor.js'
+import { selectNavCursor } from '../../slices/nav/selectors.js'
 
 
 export class Create extends Command {

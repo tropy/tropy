@@ -2,7 +2,7 @@ import { actionChannel, all, call, put, select, take } from 'redux-saga/effects'
 import { buffers } from 'redux-saga'
 import { warn } from '../common/log.js'
 import { build, reverse, update } from '../common/order.js'
-import { createSequence, stable } from '../common/sequence.js'
+import { createSequence, isSameSequence } from '../common/sequence.js'
 import { collator } from '../collate.js'
 import { parse } from '../common/search.js'
 import { selectActivity } from '../slices/activities.js'
@@ -626,9 +626,9 @@ function *commit ({ matches, order, items, sort }) {
 
   if (matches != null && matches !== qr.matches)
     payload.matches = matches
-  if (order != null && stable(order, qr.order) !== qr.order)
+  if (order != null && !isSameSequence(order, qr.order))
     payload.order = order
-  if (items != null && stable(items, qr.items) !== qr.items)
+  if (items != null && !isSameSequence(items, qr.items))
     payload.items = items
   if (sort != null && !isSameSort(sort, qr.sort))
     payload.sort = sort

@@ -9,7 +9,7 @@ import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { move as reorder, pick, pluck } from '../../common/util.js'
 import { adjacent, indexOf } from '../../common/sequence.js'
 import { getExpandedPhotos, getVisiblePhotos } from '../../selectors/index.js'
-import { selectPhotoCursor, selectSelectionCursor } from '../../slices/nav/cursor.js'
+import { selectPhotoCursor, selectSelectionCursor } from '../../slices/nav/selectors.js'
 import * as act from '../../actions/index.js'
 
 // The photo list container logic shared by list and grid:

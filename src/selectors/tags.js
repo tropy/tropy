@@ -1,5 +1,5 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { selectActiveItems } from '../slices/nav/cursor.js'
+import { selectActiveItems } from '../slices/nav/selectors.js'
 import { by, equals } from '../collate.js'
 
 const byName = by('name')

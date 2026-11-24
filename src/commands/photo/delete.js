@@ -4,7 +4,7 @@ import { PHOTO } from '../../constants/index.js'
 import { splice } from '../../common/util.js'
 import * as act from '../../actions/index.js'
 import * as mod from '../../models/index.js'
-import { selectPhotoCursor } from '../../slices/nav/cursor.js'
+import { selectPhotoCursor } from '../../slices/nav/selectors.js'
 
 
 export class Delete extends Command {

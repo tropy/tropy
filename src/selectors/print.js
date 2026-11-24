@@ -1,6 +1,6 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
 import { getMetadataFields } from './metadata.js'
-import { getItemSelection } from './items.js'
+import { selectItemSelection } from '../slices/nav/selectors.js'
 import { selectItemSequence } from '../slices/qr.js'
 import { pickActiveTranscription } from './transcriptions.js'
 import { serialize } from '../editor/serialize.js'
@@ -73,7 +73,7 @@ const getItemExpanded =
 export const getPrintableItems = memo(
   // The visibly selected items, in list order.
   (state) => {
-    let ids = getItemSelection(state).elements()
+    let ids = selectItemSelection(state).elements()
     return (ids.length > 0) ? ids : selectItemSequence(state)
   },
   ({ items }) => items,

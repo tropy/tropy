@@ -4,7 +4,7 @@ import {
   selectNavCursor,
   selectPhotoCursor,
   selectSelectionCursor
-} from '#tropy/slices/nav/cursor.js'
+} from '#tropy/slices/nav/selectors.js'
 
 describe('nav cursor', () => {
   // Item 1 with photos 2 (selection 3, notes 10, 11) and 4 (note 12);

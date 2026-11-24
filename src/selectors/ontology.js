@@ -8,7 +8,7 @@ import {
   selectItemCursor,
   selectPhotoCursor,
   selectSelectionCursor
-} from '../slices/nav/cursor.js'
+} from '../slices/nav/selectors.js'
 
 const getResourceList =
   (res, vocab) =>

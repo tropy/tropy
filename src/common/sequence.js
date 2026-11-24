@@ -30,17 +30,27 @@ export const createIndex = (seq) => {
 // Returns the index of seq.
 export const getIndex = (seq) => IDX.get(seq)
 
+// Whether a and b have the same elements in the same order.
+export const isSameSequence = (a, b) => {
+  if (a === b)
+    return true
+  if (a == null || b == null || a.length !== b.length)
+    return false
+
+  for (let i = 0; i < a.length; ++i)
+    if (a[i] !== b[i]) return false
+
+  return true
+}
+
+// For selectors whose sequences should keep their identity:
+// memoizeOptions: { resultEqualityCheck }
+export { isSameSequence as resultEqualityCheck }
+
 // Returns prev if seq has the same elements in the same order,
 // so that unchanged sequences keep their identity.
-export const stable = (seq, prev) => {
-  if (prev == null || seq.length !== prev.length)
-    return seq
-
-  for (let i = 0; i < seq.length; ++i)
-    if (seq[i] !== prev[i]) return seq
-
-  return prev
-}
+export const stable = (seq, prev) =>
+  isSameSequence(seq, prev) ? prev : seq
 
 // Sequence elements match by their `id` property,
 // or by identity if they have none.

@@ -6,7 +6,7 @@ import { emit } from '#tropy/dom.js'
 import { KeyMap } from '#tropy/keymap.js'
 import { PhotoList } from '#tropy/components/photo/list.js'
 import { createPhotoStore } from './store.js'
-import { selectPhotoCursor, selectSelectionCursor } from '#tropy/slices/nav/cursor.js'
+import { selectPhotoCursor, selectSelectionCursor } from '#tropy/slices/nav/selectors.js'
 import { PHOTO, SELECTION } from '#tropy/constants/index.js'
 
 describe('PhotoList', () => {

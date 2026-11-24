@@ -8,7 +8,7 @@ import { TABS, SASS } from '../../constants/index.js'
 import * as act from '../../actions/index.js'
 
 import { getVisibleNotes } from '../../selectors/index.js'
-import { selectActiveNote, selectActivePhoto } from '../../slices/nav/cursor.js'
+import { selectActiveNote, selectActivePhoto } from '../../slices/nav/selectors.js'
 
 
 export const NoteList = ({
