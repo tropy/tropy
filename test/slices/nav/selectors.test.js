@@ -2,9 +2,10 @@ import { create } from '#tropy/common/selection.js'
 import {
   selectActiveItemIds,
   selectActiveItems,
+  selectCursorPhoto,
+  selectCursorSelection,
   selectNavCursor,
-  selectPhotoCursor,
-  selectSelectionCursor
+  selectPhotoCursor
 } from '#tropy/slices/nav/selectors.js'
 
 describe('nav cursor', () => {
@@ -44,8 +45,9 @@ describe('nav cursor', () => {
       .to.eql({ item: 1, photo: 2, selection: null, note: 11 })
 
     let s = state({ photo: 3 })
-    expect(selectPhotoCursor(s)).to.equal(2)
-    expect(selectSelectionCursor(s)).to.equal(3)
+    expect(selectPhotoCursor(s)).to.equal(3)
+    expect(selectCursorPhoto(s).id).to.equal(2)
+    expect(selectCursorSelection(s).id).to.equal(3)
   })
 
   it('keeps none', () => {

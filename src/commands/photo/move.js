@@ -4,7 +4,7 @@ import * as mod from '../../models/index.js'
 import * as act from '../../actions/index.js'
 import { PHOTO } from '../../constants/index.js'
 import { splice } from '../../common/util.js'
-import { selectPhotoCursor } from '../../slices/nav/selectors.js'
+import { selectCursorPhoto } from '../../slices/nav/selectors.js'
 
 
 export class Move extends Command {
@@ -14,7 +14,7 @@ export class Move extends Command {
 
     let { idx } = this.action.meta
     let { cursor, order, original, selections } = yield select(state => ({
-      cursor: selectPhotoCursor(state),
+      cursor: selectCursorPhoto(state)?.id,
       order: state.items[item].photos,
       selections: photos.flatMap(({ id }) =>
         state.photos[id]?.selections ?? []),

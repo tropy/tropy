@@ -1,7 +1,5 @@
 import { BLANK, get } from '../common/util.js'
-import { selectPhotoCursor, selectSelectionCursor } from '../slices/nav/selectors.js'
+import { selectPhotoCursor } from '../slices/nav/selectors.js'
 
 export const getEsperViewState = (state) =>
-  get(state.esper.view, [
-    selectSelectionCursor(state) ?? selectPhotoCursor(state)
-  ], BLANK)
+  get(state.esper.view, [selectPhotoCursor(state)], BLANK)

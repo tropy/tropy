@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { Selection } from '../../common/selection.js'
+import { Selection, primary } from '../../common/selection.js'
 import { resultEqualityCheck } from '../../common/sequence.js'
 import { selectItemSequence } from '../qr.js'
 
@@ -46,28 +46,28 @@ export const selectActiveItems = createSelector(
     memoizeOptions: { resultEqualityCheck }
   })
 
-// The photo level's cursor: a photo or a photo selection.
-const getStoredPhoto = (state) =>
-  state.nav.select.photo.cursor
-
-const getStoredParent = (state) =>
-  state.selections[getStoredPhoto(state)]?.photo
-
-// The photo at the cursor: the photo selection's photo, or the photo.
+// The photo level's cursor: a photo or a photo selection id.
+// The primary, as at the item level (to build on a photo Selection).
 export const selectPhotoCursor = (state) =>
-  getStoredParent(state) ?? getStoredPhoto(state)
+  primary(state.nav.select.photo)
 
 // The photo selection at the cursor, if any.
-export const selectSelectionCursor = (state) =>
-  (getStoredParent(state) != null) ? getStoredPhoto(state) : null
+export const selectCursorSelection = (state) =>
+  state.selections[selectPhotoCursor(state)] ?? null
+
+// The photo at the cursor: the photo selection's photo, or the photo.
+export const selectCursorPhoto = (state) => {
+  let id = selectPhotoCursor(state)
+  return state.photos[state.selections[id]?.photo ?? id] ?? null
+}
 
 export const selectNoteCursor = (state) =>
   state.nav.select.note.cursor
 
 export const selectNavCursor = createSelector(
   selectItemCursor,
-  selectPhotoCursor,
-  selectSelectionCursor,
+  (state) => selectCursorPhoto(state)?.id ?? null,
+  (state) => selectCursorSelection(state)?.id ?? null,
   selectNoteCursor,
   (item, photo, selection, note) => ({
     item,
@@ -75,12 +75,6 @@ export const selectNavCursor = createSelector(
     selection,
     note
   })
-)
-
-export const selectActivePhoto = createSelector(
-  ({ photos }) => photos,
-  selectPhotoCursor,
-  (photos, id) => (id != null) ? photos[id] : null
 )
 
 export const selectActiveNote = createSelector(

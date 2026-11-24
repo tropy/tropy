@@ -5,8 +5,8 @@ import { selectItemSequence } from '../slices/qr.js'
 import {
   selectActiveItemIds,
   selectItemCursor,
-  selectPhotoCursor,
-  selectSelectionCursor
+  selectCursorPhoto,
+  selectCursorSelection
 } from '../slices/nav/selectors.js'
 import { equal } from '../value.js'
 import { compare } from '../collate.js'
@@ -125,13 +125,13 @@ export const getItemFields = memo(
 
 const getPhotoMetadata = memo(
   ({ metadata }) => metadata,
-  selectPhotoCursor,
+  (state) => selectCursorPhoto(state)?.id,
   (metadata, id) => id ? collectMetadata(metadata, [id]) : null
 )
 
 const getSelectionMetadata = memo(
   ({ metadata }) => metadata,
-  selectSelectionCursor,
+  (state) => selectCursorSelection(state)?.id,
   (metadata, id) => id ? collectMetadata(metadata, [id]) : null
 )
 

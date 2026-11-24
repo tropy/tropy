@@ -6,7 +6,7 @@ import { emit } from '#tropy/dom.js'
 import { KeyMap } from '#tropy/keymap.js'
 import { PhotoList } from '#tropy/components/photo/list.js'
 import { createPhotoStore } from './store.js'
-import { selectPhotoCursor, selectSelectionCursor } from '#tropy/slices/nav/selectors.js'
+import { selectNavCursor } from '#tropy/slices/nav/selectors.js'
 import { PHOTO, SELECTION } from '#tropy/constants/index.js'
 
 describe('PhotoList', () => {
@@ -51,8 +51,8 @@ describe('PhotoList', () => {
       fireEvent.keyDown($('.scroll-container'), { key: 'ArrowDown' })
 
     let shown = () => {
-      let state = store.getState()
-      return [selectPhotoCursor(state), selectSelectionCursor(state)]
+      let { photo, selection } = selectNavCursor(store.getState())
+      return [photo, selection]
     }
 
     down()

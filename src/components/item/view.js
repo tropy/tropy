@@ -13,7 +13,7 @@ import {
 import {
   selectActiveItemIds,
   selectActiveNote,
-  selectActivePhoto,
+  selectCursorPhoto,
   selectItemCursor
 } from '../../slices/nav/selectors.js'
 
@@ -40,7 +40,7 @@ export const ItemView = ({
   let items = useSelector(selectActiveItemIds)
   let item = useSelector(selectItemCursor)
   let note = useSelector(selectActiveNote)
-  let photo = useSelector(selectActivePhoto)
+  let photo = useSelector(selectCursorPhoto)
   let photos = useSelector(getVisiblePhotos)
   let notes = useSelector(getVisibleNotes)
   let keymap = useSelector(state => state.keymap)
