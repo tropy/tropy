@@ -160,7 +160,6 @@ const change = (state, seq, id, at, mode) => {
         cursor: id
       }
     }
-
     // Keyboard steps in grids, as in macOS Finder:
     // add the range from the cursor to id, or,
     // if fully selected (moving back), removed except for id.
@@ -189,6 +188,8 @@ const change = (state, seq, id, at, mode) => {
         cursor: id
       }
     }
+    case 'focus':
+      return focus(state, id)
     default:
       throw new Error(`unknown selection mode: "${mode}"`)
   }

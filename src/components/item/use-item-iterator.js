@@ -51,6 +51,11 @@ export function useItemIterator ({
 
   let getSelection = useEvent(() => selection.ids())
 
+  // Dragging focuses the item (it becomes the primary).
+  let focusItem = useEvent((id) => {
+    select(id, { mode: 'focus' })
+  })
+
   let getSelectedPhotos = () =>
     selection.ids().flatMap(id =>
       (indexOf(items, id) === -1) ? [] : data[id]?.photos ?? [])
@@ -94,9 +99,10 @@ export function useItemIterator ({
 
     // Items select on mouse-down (useSequenceClicks),
     // so the right-clicked item is already selected.
+    // It is also focused (the primary), first as merge target.
     if (selection.size > 1) {
       context.push('bulk')
-      target.id = selection.ids()
+      target.id = [id, ...selection.ids().filter(it => it !== id)]
       target.photos = getSelectedPhotos()
     }
 
@@ -207,6 +213,7 @@ export function useItemIterator ({
     isSelected: selection.has(id),
     isReadOnly,
     getSelection,
+    onDragStart: focusItem,
     onDropItems: merge,
     onDropPhotos: movePhotos
   })

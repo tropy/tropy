@@ -26,6 +26,7 @@ export const TableRow = memo(({
   item,
   onCancel,
   onChange,
+  onDragStart,
   onDropItems,
   onDropPhotos,
   onEdit,
@@ -40,6 +41,7 @@ export const TableRow = memo(({
       item,
       getSelection,
       isDisabled: isReadOnly,
+      onDragStart,
       onDropItems,
       onDropPhotos
     })
