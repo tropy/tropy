@@ -46,7 +46,7 @@ export const ItemTable = (props) => {
   })
 
   let handleSort = useEvent((opts) => {
-    dispatch(nav.sort(opts))
+    dispatch(act.nav.sort(opts))
   })
 
   let table = useRef()

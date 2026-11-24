@@ -57,7 +57,7 @@ export const Project = ({
 
   useGlobalEvent('back', () => {
     if (isItemMode)
-      dispatch(nav.mode.back())
+      dispatch(act.nav.mode.back())
   })
 
   // TODO use event propagation instead of passing down callback!

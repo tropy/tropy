@@ -4,7 +4,7 @@ import {
   itemSelected,
   noteSelected,
   photoSelected
-} from '../slices/nav/actions.js'
+} from '../slices/nav/index.js'
 import { merge, omit } from '../common/util.js'
 
 const INIT = {
