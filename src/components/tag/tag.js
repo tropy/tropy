@@ -75,11 +75,11 @@ export const Tag = React.memo(({
 
     if (event.button > 0) return
 
-    let mod = isSelected ?
-        (cmdOrCtrlKey(event) ? 'remove' : 'clear') :
-        (cmdOrCtrlKey(event) ? 'merge' : 'replace')
+    let mode = cmdOrCtrlKey(event)
+      ? 'toggle'
+      : isSelected ? 'clear' : 'replace'
 
-    onSelect(tag.id, { mod })
+    onSelect(tag.id, { mode })
   }
 
   let handleContextMenu = (event) => {

@@ -118,7 +118,6 @@ const change = (state, seq, id, at, mode) => {
         anchor: id,
         cursor: id
       }
-
     case 'toggle': {
       let selected = copy(state.selected)
       toggle(selected, id)
@@ -129,7 +128,6 @@ const change = (state, seq, id, at, mode) => {
         cursor: id
       }
     }
-
     case 'extend': {
       let { anchor, prev, next } = ranges(state, seq, id, at)
       let selected = copy(state.selected)
@@ -146,7 +144,6 @@ const change = (state, seq, id, at, mode) => {
         cursor: id
       }
     }
-
     case 'flip': {
       let { anchor, prev, next } = ranges(state, seq, id, at)
       let selected = copy(state.selected)
@@ -192,7 +189,6 @@ const change = (state, seq, id, at, mode) => {
         cursor: id
       }
     }
-
     default:
       throw new Error(`unknown selection mode: "${mode}"`)
   }

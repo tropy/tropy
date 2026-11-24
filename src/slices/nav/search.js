@@ -3,6 +3,7 @@ import { dismiss } from '../activities.js'
 import { restored, viewShown } from './actions.js'
 import { isDone } from '../cmd.js'
 import { expands } from '../../common/search.js'
+import { select } from '../../common/util.js'
 import * as views from './view.js'
 import * as COLUMN from '../columns/builtin.js'
 import { LIST, TAG } from '../../constants/index.js'
@@ -92,7 +93,7 @@ const searchSlice = createSlice({
       })
 
       .addCase(TAG.SELECT, (state, { payload, meta }) => {
-        state.tags = selectTag(state.tags, payload, meta.mod)
+        state.tags = select(state.tags, payload, { mode: meta.mode })
       })
 
       .addCase(dismiss, (state, { payload }) => {
@@ -102,27 +103,10 @@ const searchSlice = createSlice({
 
       .addMatcher(isDone(TAG.DELETE), (state, { payload }) => {
         if (state.tags.includes(payload))
-          state.tags = state.tags.filter(id => id !== payload)
+          state.tags = select(state.tags, payload, { mode: 'toggle' })
       })
   }
 })
-
-// TODO remove when tag list uses new selections
-// The tag filter: replace, add (merge), remove or clear.
-function selectTag (tags, id, mod = 'replace') {
-  switch (mod) {
-    case 'replace':
-      return [id]
-    case 'merge':
-      return [...tags.filter(t => t !== id), id]
-    case 'remove':
-      return tags.filter(t => t !== id)
-    case 'clear':
-      return []
-    default:
-      throw new Error(`unknown selection mode: "${mod}"`)
-  }
-}
 
 export default searchSlice
 

@@ -229,13 +229,13 @@ describe('nav', () => {
   })
 
   it('selects tags to filter by', () => {
-    let tags = (s, id, mod) =>
-      nav(s, { type: TAG.SELECT, payload: id, meta: { mod } }).search.tags
+    let tags = (s, id, mode) =>
+      nav(s, { type: TAG.SELECT, payload: id, meta: { mode } }).search.tags
 
     let s = state({ tags: [1, 2] })
     expect(tags(s, 3)).to.eql([3])
-    expect(tags(s, 3, 'merge')).to.eql([1, 2, 3])
-    expect(tags(s, 1, 'remove')).to.eql([2])
+    expect(tags(s, 3, 'toggle')).to.eql([1, 2, 3])
+    expect(tags(s, 1, 'toggle')).to.eql([2])
     expect(tags(s, 1, 'clear')).to.eql([])
   })
 
@@ -250,11 +250,11 @@ describe('nav', () => {
     })
 
     it('on tag filter changes', () => {
-      let select = (mod, id = 5) =>
-        nav(state({ tags: [5] }), { type: TAG.SELECT, payload: id, meta: { mod } })
+      let select = (mode, id = 5) =>
+        nav(state({ tags: [5] }), { type: TAG.SELECT, payload: id, meta: { mode } })
 
-      expect(isKept(select('remove'))).to.be.true
-      expect(isKept(select('merge', 6))).to.be.false
+      expect(isKept(select('toggle'))).to.be.true
+      expect(isKept(select('toggle', 6))).to.be.false
       expect(isKept(select('replace', 6))).to.be.false
 
       let deleted = nav(state({ tags: [5] }),
