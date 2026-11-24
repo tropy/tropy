@@ -44,7 +44,7 @@ export class Create extends Command {
     note.state = state
 
     yield put(act[type].notes.add({ id, notes: [note.id] }))
-    yield put(act.note.select({ note: note.id, photo, selection }))
+    yield put(act.nav.select.note({ note: note.id, photo, selection }))
 
     if (text && containsRTL(text))
       yield put(act.notepad.update({
@@ -79,7 +79,7 @@ export class Delete extends Command {
 
     if (isSelected) {
       let next = yield select(getNoteSuccessor)
-      yield put(act.note.select(next && {
+      yield put(act.nav.select.note(next && {
         note: next.id,
         photo: next.photo,
         selection: next.selection

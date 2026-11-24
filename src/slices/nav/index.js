@@ -2,7 +2,7 @@ import { expands } from '../../common/search.js'
 import { contains, isList } from './view.js'
 import { isPending } from '../cmd.js'
 import { LIST } from '../../constants/index.js'
-import { restore, show } from './actions.js'
+import { open, restore, select, show } from './actions.js'
 import modeSlice from './mode.js'
 import searchSlice from './search.js'
 import selectionSlice, { clearSelection, pruneSelection } from './selection.js'
@@ -65,7 +65,7 @@ function widens (prev, next) {
   return true
 }
 
-export { restore, show }
+export { open, restore, select, show }
 export const { search, sort } = searchSlice.actions
 export const mode = { back: modeSlice.actions.back }
 

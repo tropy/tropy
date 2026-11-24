@@ -65,7 +65,7 @@ describe('ProtocolHandler', () => {
 
       let [target, action] = app.wm.rsvp.mock.calls.at(-1).arguments
       expect(target).to.equal(win)
-      expect(action.name, url).to.equal('item.open')
+      expect(action.name, url).to.equal('nav.open.item')
       expect(action.payload, url).to.deep.include(payload)
     }
 

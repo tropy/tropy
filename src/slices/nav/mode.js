@@ -26,7 +26,7 @@ const modeSlice = createSlice({
       .addCase(EDIT.START, (state, { payload }) =>
         (payload.tag || payload.list) ? mode.project : state)
 
-      // The mode hint: 'item' from item.open.
+      // The mode hint: 'item' from open.item.
       .addCase(ITEM.SELECT, (state, { payload }) =>
         mode[payload.mode] ?? state)
   }

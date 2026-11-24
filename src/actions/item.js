@@ -1,64 +1,5 @@
 import { ITEM } from '../constants/index.js'
 import { array } from '../common/util.js'
-import { focus, primary, from as toSelection } from '../common/selection.js'
-import { show } from '../slices/nav/actions.js'
-import { checkCursorPath, selectCursorPaths } from '../slices/nav/path.js'
-import { selectViewOf } from '../slices/qr.js'
-
-// Selects items, and optionally a cursor path below the primary
-// item: photo, photo selection, note (checked; see
-// slices/nav/path.js). The item selection is a state, an id or ids
-// (see from). The reducer completes the path from the item's paths
-// (the default cursor path). The mode is a hint ('item' from open).
-function select ({ item, photo, selection, note, mode }, meta = {}) {
-  return (dispatch, getState) => {
-    let state = getState()
-
-    item = toSelection(item)
-    let id = primary(item)
-
-    checkCursorPath(state, { item: id, photo, selection, note })
-
-    return dispatch({
-      type: ITEM.SELECT,
-      payload: {
-        item,
-        photo,
-        selection,
-        note,
-        mode,
-        ...(id != null && selectCursorPaths(state, id))
-      },
-      meta: { log: 'trace', history: true, ...meta }
-    })
-  }
-}
-
-// Opens an item: selects it in item mode. A selected item stays
-// in the selection (the cursor moves there), else it is selected
-// alone. An item not among the results is shown first (a new
-// search for a view that shows it): from the API or a link.
-function open ({ id, photo, selection, note } = {}, meta) {
-  return (dispatch, getState) => {
-    let state = getState()
-
-    if (state.items[id] == null)
-      throw new Error(`unknown item ${id}`)
-
-    checkCursorPath(state, { item: id, photo, selection, note })
-
-    let view = selectViewOf(state, id)
-    if (view != null) dispatch(show(view))
-
-    return dispatch(select({
-      item: focus(getState().nav.selection.item, id),
-      photo,
-      selection,
-      note,
-      mode: 'item'
-    }, meta))
-  }
-}
 
 export default {
   create (payload, meta) {
@@ -183,10 +124,6 @@ export default {
       meta: meta
     }
   },
-
-  select,
-
-  open,
 
   preview (payload, meta) {
     return {

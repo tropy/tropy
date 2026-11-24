@@ -60,6 +60,17 @@ describe('nav cursor', () => {
     expect(path({ item: [9, 1, 5] })).to.include({ item: 5 })
   })
 
+  it('keeps the active items while the selected items stay', () => {
+    let s = state({ item: [1, 5] })
+    let first = selectActiveItems(s)
+
+    let other = { ...s, items: { ...s.items, 9: { id: 9, photos: [6] } } }
+    expect(selectActiveItems(other)).to.equal(first)
+
+    let edited = { ...s, items: { ...s.items, 1: { id: 1, photos: [4] } } }
+    expect(selectActiveItems(edited)).to.not.equal(first)
+  })
+
   it('reads the stored cursors as they are', () => {
     // A photo of another item, a note of another photo.
     expect(path({ photo: 6, note: 12 })).to.include({ photo: 6, note: 12 })

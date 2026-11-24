@@ -46,7 +46,7 @@ export function useItemIterator ({
     let next = selection.select(id, { mode })
 
     if (next !== selection.state)
-      dispatch(act.item.select({ item: next }, { throttle }))
+      dispatch(act.nav.select.item({ item: next }, { throttle }))
   }
 
   let getSelection = useEvent(() => selection.ids())
@@ -66,11 +66,11 @@ export function useItemIterator ({
   }
 
   let clearSelection = () => {
-    dispatch(act.item.select({ item: [] }))
+    dispatch(act.nav.select.item({ item: [] }))
   }
 
   let open = (id) => {
-    if (id != null) dispatch(act.item.open({ id }))
+    if (id != null) dispatch(act.nav.open.item({ id }))
   }
 
   // Handlers for the leaves (memoized tiles and rows).
@@ -138,7 +138,7 @@ export function useItemIterator ({
         }
       },
       all () {
-        dispatch(act.item.select({ item: selection.all() }))
+        dispatch(act.nav.select.item({ item: selection.all() }))
       },
       merge () {
         let ids = selection.ids()
@@ -163,7 +163,7 @@ export function useItemIterator ({
       if (move != null && (ctrlKey || metaKey))
         return false
 
-      dispatch(act.item.select({ item: next }, { throttle }))
+      dispatch(act.nav.select.item({ item: next }, { throttle }))
     },
     onSelectedClick
   })

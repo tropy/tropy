@@ -83,7 +83,7 @@ function *rsvp (action) {
   }
 }
 
-// Thunks (e.g. item.open) have no done action to respond with:
+// Thunks (e.g. nav.open.item) have no done action to respond with:
 // they respond with their result, or the error they throw.
 function *reply ({ name, type = name, meta }, thunk) {
   try {
