@@ -176,10 +176,10 @@ describe('Scroll', () => {
 
     fakeResizeObserver.resize(container, { height: '400px' })
     scroll(container, 600)
-    expect($('#item-66')).not.to.exist
+    expect($('#item-73')).not.to.exist
 
     scroll(container, 650)
-    expect($('#item-66')).to.exist
+    expect($('#item-73')).to.exist
   })
 
   it('renders the overscan ahead of the scroll direction', () => {

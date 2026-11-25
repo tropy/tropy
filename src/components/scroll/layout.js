@@ -33,7 +33,9 @@ export const getLayout = ({
 
   let rows = Math.ceil(items.length / columns)
   let visibleRows = Math.ceil(height / itemHeight)
-  let overscanRows = Math.max(2, Math.ceil(visibleRows * overscan))
+  // The overscan: `overscan` views ahead in either direction,
+  // plus the row behind the view and the row in part view.
+  let overscanRows = Math.ceil(visibleRows * overscan) + 2
   let rowsPerPage = visibleRows + overscanRows
 
   // The cursor's page size (PageUp/PageDown):
