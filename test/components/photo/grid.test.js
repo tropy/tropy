@@ -7,7 +7,7 @@ import { createPhotoStore } from './store.js'
 describe('PhotoGrid', () => {
   it('renders photos', () => {
     expect(
-      render(<PhotoGrid size={128}/>, withStore(createPhotoStore()))
+      render(<PhotoGrid size={128}/>, withStore(createPhotoStore({ zoom: 1 })))
         .element())
       .to.have.class('photo-grid')
       .and.have.descendants('li.photo').with.length(2)
@@ -18,6 +18,7 @@ describe('PhotoGrid', () => {
     let store = createPhotoStore({
       current: 1,
       expandable: true,
+      zoom: 1,
       keymap: {
         PhotoIterator: new KeyMap({ expand: 'Ctrl+ArrowRight' }),
         PhotoList: new KeyMap({ expand: 'ArrowRight', contract: 'ArrowLeft' })

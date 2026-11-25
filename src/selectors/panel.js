@@ -1,11 +1,11 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { selectActivePhotos } from '../slices/nav/selectors.js'
+import { selectActivePhotos, selectIsPhotoGrid } from '../slices/nav/selectors.js'
 
 const rev = (a, b) => a < b ? 1 : b < a ? -1 : 0
 
 export const getExpandedPhotos = memo(
   ({ panel }) => panel.expand,
-  ({ ui }) => ui.panel.zoom > 0,
+  selectIsPhotoGrid,
   selectActivePhotos,
   (expand, isGrid, photos) => {
     let expandedPhotos = photos.filter(({ id, selections }) =>
