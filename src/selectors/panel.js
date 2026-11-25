@@ -1,24 +1,29 @@
-import { createSelector as memo } from '@reduxjs/toolkit'
-import { selectActivePhotos, selectIsPhotoGrid } from '../slices/nav/selectors.js'
+import { createSelector } from '@reduxjs/toolkit'
+import { shallowEqual } from 'react-redux'
+import { selectActivePhotos } from '../slices/nav/selectors.js'
 
-const rev = (a, b) => a < b ? 1 : b < a ? -1 : 0
+const isExpanded = (exp, photo) =>
+  exp[photo.id] > 0 && photo.selections.length > 0
 
-export const getExpandedPhotos = memo(
+const isMoreRecentlyExpanded = (exp, photo, cur) =>
+  isExpanded(exp, photo) && (cur == null || exp[photo.id] > exp[cur.id])
+
+// The grid's expansion; the most recently expanded active photo.
+export const selectPhotoExpansion = createSelector(
   ({ panel }) => panel.expand,
-  selectIsPhotoGrid,
   selectActivePhotos,
-  (expand, isGrid, photos) => {
-    let expandedPhotos = photos.filter(({ id, selections }) =>
-      expand[id] > 0 && selections.length > 0)
+  (expand, photos) => {
+    let expansion = null
 
-    if (isGrid) {
-      expandedPhotos = expandedPhotos
-        .sort((a, b) => rev(expand[a.id], expand[b.id]))
-        .slice(0, 1)
+    for (let photo of photos) {
+      if (isMoreRecentlyExpanded(expand, photo, expansion))
+        expansion = {
+          id: photo.id,
+          length: photo.selections.length
+        }
     }
 
-    return expandedPhotos.reduce((exp, { id, selections }) => (
-      exp[id] = selections, exp
-    ), {})
-  }
-)
+    return expansion
+  }, {
+    memoizeOptions: { resultEqualityCheck: shallowEqual }
+  })
