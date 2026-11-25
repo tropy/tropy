@@ -24,7 +24,12 @@ describe('select actions', () => {
         8: { id: 8, item: 2, notes: [10], selections: [] }
       },
       selections: { 9: { id: 9, photo: 5, notes: [11] } },
-      notes: {},
+      // Note 11 is a selection's note: it has no photo.
+      notes: {
+        7: { id: 7, photo: 5 },
+        10: { id: 10, photo: 8 },
+        11: { id: 11, selection: 9 }
+      },
       nav: { ...init, select: { ...init.select, item: create([1, 2]) } },
       // Item 1 is not among the results.
       qr: { ...qr(undefined, {}), items: [2], matches: { 2: true } },
@@ -69,6 +74,19 @@ describe('select actions', () => {
 
     // The panel expands the photo opened.
     expect(store.getState().panel.expand[8]).to.be.above(0)
+  })
+
+  it('select.note and open.item complete the path from a note', () => {
+    store.dispatch(act.nav.select.note({ note: 10 }))
+    expect(selection()).to.nested.include({
+      'item.cursor': 2, 'photo.cursor': 8, 'note.cursor': 10
+    })
+
+    store.dispatch(act.nav.open.item({ note: 11 }))
+    expect(selection()).to.nested.include({
+      'item.cursor': 1, 'photo.cursor': 9, 'note.cursor': 11
+    })
+    expect(store.getState().nav.mode).to.equal('item')
   })
 
   it('open.item shows an item not among the results first', () => {

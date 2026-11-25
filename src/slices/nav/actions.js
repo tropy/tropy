@@ -42,6 +42,17 @@ export const noteSelected =
  * else the first photo and its first note.
  */
 
+// Resolves a (partial) cursor path bottom-up.
+function resolveCursorPath (state, { item, photo, selection, note }) {
+  let n = state.notes[note]
+
+  selection ??= n?.selection
+  photo ??= n?.photo ?? state.selections[selection]?.photo
+  item ??= state.photos[photo]?.item
+
+  return { item, photo, selection, note }
+}
+
 // Checks a (partial) cursor path top-down.
 function checkCursorPath (state, {
   item,
@@ -80,6 +91,7 @@ function selectCursorPaths (state, id) {
   return { photos, notes }
 }
 
+// Builts a cursor path top-down.
 function buildCursorPath (state, { item, photo, selection, note }) {
   item = toSelection(item)
   let id = primary(item)
@@ -108,22 +120,15 @@ export const select = {
   photo (payload, meta) {
     return (dispatch, getState) => {
       let state = getState()
-      let { item, photo, selection, note } = payload ?? {}
+      let path = resolveCursorPath(state, payload ?? {})
       let notes
 
-      if (photo != null) {
-        item ??= state.photos[photo]?.item
-        checkCursorPath(state, { item, photo, selection, note })
-        notes = selectNoteIds(state, selection ?? photo) ?? []
+      if (path.photo != null) {
+        checkCursorPath(state, path)
+        notes = selectNoteIds(state, path.selection ?? path.photo) ?? []
       }
 
-      return dispatch(photoSelected({
-        item,
-        photo,
-        selection,
-        note,
-        notes
-      }, meta))
+      return dispatch(photoSelected({ ...path, notes }, meta))
     }
   },
 
@@ -133,14 +138,11 @@ export const select = {
 
     return (dispatch, getState) => {
       let state = getState()
-      let { note, photo, item, selection } = payload
+      let path = resolveCursorPath(state, payload)
 
-      photo ??= state.selections[selection]?.photo
-      item ??= state.photos[photo]?.item
+      checkCursorPath(state, path)
 
-      checkCursorPath(state, { item, photo, selection, note })
-
-      return dispatch(noteSelected({ note, photo, item, selection }, meta))
+      return dispatch(noteSelected(path, meta))
     }
   }
 }
@@ -149,25 +151,27 @@ export const open = {
   // Opens an item by selecting it in item mode.
   // Also switches to another view if the item is not visible,
   // as open.item can get called from the API.
+  // Without an id it opens the item of the photo, selection or note.
   item ({ id, photo, selection, note } = {}, meta) {
     return (dispatch, getState) => {
       let state = getState()
+      let path = resolveCursorPath(state, {
+        item: id, photo, selection, note
+      })
 
-      if (state.items[id] == null)
-        throw new Error(`unknown item ${id}`)
+      if (state.items[path.item] == null)
+        throw new Error(`unknown item ${path.item}`)
 
-      checkCursorPath(state, { item: id, photo, selection, note })
+      checkCursorPath(state, path)
 
-      let view = selectViewOf(state, id)
+      let view = selectViewOf(state, path.item)
       if (view != null) dispatch(viewShown(view))
 
       state = getState()
 
       return dispatch(itemOpened(buildCursorPath(state, {
-        item: focus(state.nav.select.item, id),
-        photo,
-        selection,
-        note
+        ...path,
+        item: focus(state.nav.select.item, path.item)
       }), meta))
     }
   }
