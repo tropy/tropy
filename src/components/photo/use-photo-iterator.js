@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { DND } from '../dnd.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
@@ -6,13 +6,15 @@ import { useEvent } from '../../hooks/use-event.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useCursor } from '../../hooks/use-cursor.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
-import { move as reorder, pick, pluck } from '../../common/util.js'
-import { adjacent, indexOf } from '../../common/sequence.js'
+import { move as reorder, pick } from '../../common/util.js'
+import { adjacent, indexOf, toId } from '../../common/sequence.js'
 import { getExpandedPhotos } from '../../selectors/index.js'
 import {
-  selectActivePhotos,
+  selectActivePhotoIds,
   selectCursorPhoto,
-  selectCursorSelection
+  selectCursorSelection,
+  selectIsPhotoGrid,
+  selectPhotoSequence
 } from '../../slices/nav/selectors.js'
 import * as act from '../../actions/index.js'
 
@@ -20,37 +22,39 @@ import * as act from '../../actions/index.js'
 // selects the photos, the current photo and selection,
 // and the expansions; dispatches the photo actions;
 // hands the leaves (tiles, list items) stable handlers.
-// Commands take sequence elements: photos or selections
-// (a selection has a photo field).
+// The sequence holds photo and (in the list) expanded selection ids;
+// handlers take ids (from the cursor) or records (from the leaves).
 export function usePhotoIterator ({
   canCreate,
   isDisabled,
   isItemOpen,
   onContextMenu,
   onCreate
-}, { isGrid = false } = {}) {
+}) {
   let dispatch = useDispatch()
   let scroll = useRef()
 
-  let photos = useSelector(selectActivePhotos)
-  let current = useSelector(state => selectCursorPhoto(state)?.id)
-  let selection = useSelector(state => selectCursorSelection(state)?.id)
-  let expandedPhotos = useSelector(getExpandedPhotos)
-  let selections = useSelector(state => state.selections)
-  let contributors = useSelector(state => state.qr.contributors)
-
-  // With several items, the photos of different items mix.
-  let isUnsortable = photos.some(photo => photo.item !== photos[0].item)
-
-  // Navigation: a Cursor with Scroll's layout.
+  // Navigation: a Cursor with Scroll's layout over the ids.
   // The grid navigates the photos (the expansion row has its own
   // keys, in SelectionGrid); the list also steps into the expanded
   // selections, one row each, as Scroll renders them.
   // Photo and selection ids are unique (subjects), so both mix.
-  let sequence = useMemo(() => isGrid ? photos : photos.flatMap(photo => [
-    photo,
-    ...pluck(selections, expandedPhotos[photo.id] ?? [])
-  ]), [isGrid, photos, expandedPhotos, selections])
+  let isGrid = useSelector(selectIsPhotoGrid)
+  let sequence = useSelector(selectPhotoSequence)
+  let photoIds = useSelector(selectActivePhotoIds)
+
+  // Records by id: the leaves get them (memoized per record).
+  let photos = useSelector(state => state.photos)
+  let selections = useSelector(state => state.selections)
+
+  let current = useSelector(state => selectCursorPhoto(state)?.id)
+  let selection = useSelector(state => selectCursorSelection(state)?.id)
+  let expandedPhotos = useSelector(getExpandedPhotos)
+  let contributors = useSelector(state => state.qr.contributors)
+
+  // With several items, the photos of different items mix.
+  let first = photos[photoIds[0]]
+  let isUnsortable = photoIds.some(id => photos[id]?.item !== first?.item)
 
   // The active selection's row, or the photo's if not expanded.
   let at = (selection != null && indexOf(sequence, selection) >= 0) ?
@@ -59,10 +63,16 @@ export function usePhotoIterator ({
 
   let [cursor, onLayoutChange] = useCursor(sequence, at)
 
-  // The photo of an element, and the selection id for selections.
-  let resolve = (el) => (el?.photo != null) ?
-    { photo: photos[indexOf(photos, el.photo)], selection: el.id } :
-    { photo: el, selection: undefined }
+  // The photo of an element (an id or a record),
+  // and the selection id for selections.
+  let resolve = (el) => {
+    let id = toId(el)
+    let sel = selections[id]
+
+    return (sel != null) ?
+      { photo: photos[sel.photo], selection: id } :
+      { photo: photos[id], selection: undefined }
+  }
 
   let onSelect = (payload, meta) => {
     dispatch(act.nav.select.photo(payload, meta))
@@ -98,7 +108,7 @@ export function usePhotoIterator ({
     if (!(isExpandable(photo) && isExpanded(photo)))
       return false
 
-    dispatch(act.photo.contract(isGrid ? photos.map(p => p.id) : [photo.id]))
+    dispatch(act.photo.contract(isGrid ? photoIds : [photo.id]))
 
     if (isSelected(photo)) {
       onSelect({
@@ -214,9 +224,9 @@ export function usePhotoIterator ({
   let sortable = useSortableSequence({
     type: DND.PHOTO,
     isDisabled: isDisabled || isUnsortable,
-    items: photos.map(photo => photo.id),
+    items: photoIds,
     onSort: (order) =>
-      dispatch(act.photo.order({ item: photos[0].item, photos: order }))
+      dispatch(act.photo.order({ item: first.item, photos: order }))
   })
 
   let [file, dropFile] = useDropPhotoFiles({
@@ -232,24 +242,32 @@ export function usePhotoIterator ({
     'over-file': file.isOver && file.canDrop
   }
 
-  let getIterableProps = (photo) => ({
-    photo,
-    isActive: isSelected(photo) && selection == null,
-    isDisabled,
-    isExpandable: isExpandable(photo),
-    isItemOpen,
-    isMatch: !!contributors?.photos[photo.id],
-    isSelected: isSelected(photo),
-    isSortable: !isUnsortable,
-    isVertical: !isGrid,
-    getAdjacent: sortable.getAdjacent,
-    onConsolidate: consolidate,
-    onContextMenu: contextMenu,
-    onDropPhoto: sortable.onDrop,
-    onItemOpen: open,
-    onSelect: select,
-    onToggle: toggle
-  })
+  // Null for ids without a record (briefly possible after a delete).
+  let getIterableProps = (id) => {
+    let photo = photos[id]
+
+    if (photo == null)
+      return null
+
+    return {
+      photo,
+      isActive: isSelected(photo) && selection == null,
+      isDisabled,
+      isExpandable: isExpandable(photo),
+      isItemOpen,
+      isMatch: !!contributors?.photos[photo.id],
+      isSelected: isSelected(photo),
+      isSortable: !isUnsortable,
+      isVertical: !isGrid,
+      getAdjacent: sortable.getAdjacent,
+      onConsolidate: consolidate,
+      onContextMenu: contextMenu,
+      onDropPhoto: sortable.onDrop,
+      onItemOpen: open,
+      onSelect: select,
+      onToggle: toggle
+    }
+  }
 
   // Sorting the selections of a photo (selection grid and list rows).
   let sortSelections = useEvent((payload) => {
@@ -261,7 +279,7 @@ export function usePhotoIterator ({
     adjacent(resolve(value).photo.selections, value.id))
 
   let dropSelection = useEvent(({ id, to, offset }) => {
-    let { photo } = resolve(selections[id])
+    let { photo } = resolve(id)
 
     sortSelections({
       photo: photo.id,
@@ -269,8 +287,13 @@ export function usePhotoIterator ({
     })
   })
 
-  let getSelectionProps = (value) => {
-    let { photo } = resolve(value)
+  // Null for ids without a record (as getIterableProps).
+  let getSelectionProps = (id) => {
+    let value = selections[id]
+    let { photo } = resolve(id)
+
+    if (value == null || photo == null)
+      return null
 
     return {
       photo,
@@ -303,12 +326,13 @@ export function usePhotoIterator ({
     move,
     onLayoutChange,
     open,
-    photos,
     preview,
     remove,
+    resolve,
     rotate,
     scroll,
     select,
+    sequence,
     sortSelections
   }
 }

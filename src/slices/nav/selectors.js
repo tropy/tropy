@@ -9,8 +9,7 @@ import { selectItemSequence } from '../qr.js'
 export const selectItemSelection = createSelector(
   (state) => state.nav.select.item,
   selectItemSequence,
-  (state, seq) => new Selection(state, seq)
-)
+  (state, seq) => new Selection(state, seq))
 
 export const selectItemCursor = (state) =>
   selectItemSelection(state).primary()
@@ -46,8 +45,8 @@ export const selectActiveItems = createSelector(
     memoizeOptions: { resultEqualityCheck }
   })
 
-// The photos of the active items, in display order (indexed):
-// the key sequence of the photo level.
+// The photos of the active items, in display order (indexed).
+// Active photos, selections, notes all derive from this!
 export const selectActivePhotoIds = createSelector(
   selectActiveItems,
   (activeItems) => {
@@ -61,13 +60,11 @@ export const selectActivePhotoIds = createSelector(
     memoizeOptions: { resultEqualityCheck }
   })
 
-// The active photos (indexed: the photo iterators look them up),
-// for selectors reading fields of all of them.
 export const selectActivePhotos = createSelector(
   (state) => state.photos,
   selectActivePhotoIds,
   (photos, activePhotoIds) => {
-    let activePhotos = createSequence()
+    let activePhotos = []
 
     for (let id of activePhotoIds) {
       let photo = photos[id]
@@ -79,24 +76,27 @@ export const selectActivePhotos = createSelector(
     memoizeOptions: { resultEqualityCheck }
   })
 
-// The photo level's navigation sequence (indexed), as displayed:
-// the grid has the photos only (its expansion row navigates
-// on its own), the list each photo with its expanded selections.
+export const selectIsPhotoGrid = (state) =>
+  state.ui.panel.zoom > 0
+
+// The nav sequence at the photo level.
+// Includes all active photos and their expanded selections.
+// NB: photo grid still uses ONLY activePhotoIds sequence!
 export const selectPhotoSequence = createSelector(
-  (state) => state.ui.panel.zoom > 0,
+  selectIsPhotoGrid,
   (state) => state.panel.expand,
   selectActivePhotoIds,
   selectActivePhotos,
-  (isGrid, expand, ids, photos) => {
-    if (isGrid)
-      return ids
+  (isPhotoGrid, isExpanded, activePhotoIds, photos) => {
+    if (isPhotoGrid)
+      return activePhotoIds
 
     let seq = createSequence()
 
     for (let photo of photos) {
       seq.push(photo.id)
 
-      if (expand[photo.id] > 0)
+      if (isExpanded[photo.id] > 0)
         seq.push(...photo.selections)
     }
 
@@ -105,25 +105,18 @@ export const selectPhotoSequence = createSelector(
     memoizeOptions: { resultEqualityCheck }
   })
 
-// The photo Selection over the photo sequence (photo and selection ids).
-// The base of the photo level: changes with every selection change
-// and every change of the sequence (e.g. expanding a photo).
+// The photoSelection over the photoSequence.
 export const selectPhotoSelection = createSelector(
   (state) => state.nav.select.photo,
   selectPhotoSequence,
-  (state, seq) => new Selection(state, seq)
-)
+  (state, seq) => new Selection(state, seq))
 
-// The photo level's cursor: a photo or a photo selection id.
-// The primary, as at the item level.
 export const selectPhotoCursor = (state) =>
   selectPhotoSelection(state).primary()
 
-// The photo selection at the cursor, if any.
 export const selectCursorSelection = (state) =>
   state.selections[selectPhotoCursor(state)] ?? null
 
-// The photo at the cursor: the photo selection's photo, or the photo.
 export const selectCursorPhoto = (state) => {
   let id = selectPhotoCursor(state)
   return state.photos[state.selections[id]?.photo ?? id] ?? null

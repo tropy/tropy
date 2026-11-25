@@ -1,3 +1,5 @@
+import { toId } from '../../common/sequence.js'
+
 export const Page = ({
   columns = 1,
   items,
@@ -15,7 +17,7 @@ export const Page = ({
 
     output.splice((gap.row + 1) * columns - from, 0, (
       <li
-        key={`expansion-${item.id}`}
+        key={`expansion-${toId(item)}`}
         className="tile-expansion"
         style={{ gridColumnEnd: columns + 1 }}>
         {renderExpansion(item, columns)}

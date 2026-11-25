@@ -27,10 +27,14 @@ export const PhotoList = (props) => {
     if (el == null || isDisabled)
       return
 
-    if (el.photo == null)
-      dispatch(act.edit.start({ photo: el.id }))
+    let { photo, selection } = iterator.resolve(el)
+
+    if (photo == null)
+      return
+    if (selection == null)
+      dispatch(act.edit.start({ photo: photo.id }))
     else
-      dispatch(act.edit.start({ selection: el.id }))
+      dispatch(act.edit.start({ selection }))
   })
 
   let handleEditCancel = useEvent((...args) => {
@@ -92,26 +96,36 @@ export const PhotoList = (props) => {
         tabIndex={TABS.PhotoList}
         onKeyDown={onKeyDown}
         onLayoutChange={iterator.onLayoutChange}>
-        {(el) => (el.photo == null) ? (
-          <PhotoListItem
-            {...iterator.getIterableProps(el)}
-            key={el.id}
-            title={dc.title}
-            isExpanded={!!iterator.expandedPhotos[el.id]}
-            isEditing={editing === el.id}
-            onChange={handleChange}
-            onEdit={handleEdit}
-            onEditCancel={handleEditCancel}/>
-        ) : (
-          <SelectionListItem
-            {...iterator.getSelectionProps(el)}
-            key={el.id}
-            title={dc.title}
-            isEditing={editingSelection === el.id}
-            onChange={handleChange}
-            onEdit={handleEdit}
-            onEditCancel={handleEditCancel}/>
-        )}
+        {(id) => {
+          if (iterator.resolve(id).selection != null) {
+            let props = iterator.getSelectionProps(id)
+
+            return props && (
+              <SelectionListItem
+                {...props}
+                key={id}
+                title={dc.title}
+                isEditing={editingSelection === id}
+                onChange={handleChange}
+                onEdit={handleEdit}
+                onEditCancel={handleEditCancel}/>
+            )
+          }
+
+          let props = iterator.getIterableProps(id)
+
+          return props && (
+            <PhotoListItem
+              {...props}
+              key={id}
+              title={dc.title}
+              isExpanded={!!iterator.expandedPhotos[id]}
+              isEditing={editing === id}
+              onChange={handleChange}
+              onEdit={handleEdit}
+              onEditCancel={handleEditCancel}/>
+          )
+        }}
       </Scroll>
     </div>
   )

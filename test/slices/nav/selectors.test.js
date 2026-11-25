@@ -122,4 +122,13 @@ describe('nav cursor', () => {
     expect(selectPhotoSequence(state({ expand }))).to.eql([2, 3, 4])
     expect(selectPhotoSequence(state({ expand, zoom: 1 }))).to.eql([2, 4])
   })
+
+  it('keeps the photo sequence while the displayed ids stay', () => {
+    let s = state({ expand: { 2: 1 } })
+    let first = selectPhotoSequence(s)
+
+    // An active photo is edited (same selections).
+    let edited = { ...s, photos: { ...s.photos, 2: { ...s.photos[2], title: 'x' } } }
+    expect(selectPhotoSequence(edited)).to.equal(first)
+  })
 })

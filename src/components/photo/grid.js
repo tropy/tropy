@@ -11,8 +11,8 @@ import { SASS, TABS } from '../../constants/index.js'
 export const PhotoGrid = (props) => {
   let { isDisabled, size } = props
 
-  let iterator = usePhotoIterator(props, { isGrid: true })
-  let { photos, scroll } = iterator
+  let iterator = usePhotoIterator(props)
+  let { scroll, sequence } = iterator
 
   let commands = useKeyMap('PhotoIterator', {
     contract () {
@@ -52,7 +52,7 @@ export const PhotoGrid = (props) => {
     onKeyDown: commands
   })
 
-  let renderSelectionGrid = (photo, columns) => (
+  let renderSelectionGrid = (id, columns) => (
     <SelectionGrid
       cols={columns}
       isDisabled={isDisabled}
@@ -62,7 +62,7 @@ export const PhotoGrid = (props) => {
       onRotate={iterator.rotate}
       onSelect={iterator.select}
       onSort={iterator.sortSelections}
-      photo={photo}
+      photo={iterator.resolve(id).photo}
       size={size}/>
   )
 
@@ -89,13 +89,17 @@ export const PhotoGrid = (props) => {
         tabIndex={TABS.PhotoGrid}
         onKeyDown={onKeyDown}
         onLayoutChange={iterator.onLayoutChange}>
-        {(photo, index) => (
-          <PhotoTile
-            {...iterator.getIterableProps(photo)}
-            key={photo.id}
-            isExpanded={!!iterator.expandedPhotos[photo.id]}
-            isLast={index >= photos.length - 1}/>
-        )}
+        {(id, index) => {
+          let props = iterator.getIterableProps(id)
+
+          return props && (
+            <PhotoTile
+              {...props}
+              key={id}
+              isExpanded={!!iterator.expandedPhotos[id]}
+              isLast={index >= sequence.length - 1}/>
+          )
+        }}
       </Scroll>
     </div>
   )

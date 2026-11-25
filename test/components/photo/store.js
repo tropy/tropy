@@ -4,7 +4,7 @@ import nav from '#tropy/slices/nav/index.js'
 import { panel } from '#tropy/reducers/panel.js'
 
 // A store with item 1 selected, its photos visible
-// and `current` the current photo.
+// and `current` the current photo (`zoom` > 0 for the grid).
 // With `expandable`, photo 1 has `selections` (9);
 // with `expanded`, it is also expanded.
 export const createPhotoStore = ({
@@ -13,6 +13,7 @@ export const createPhotoStore = ({
   expanded = false,
   expandable = expanded,
   selections = [9],
+  zoom = 0,
   keymap = {}
 } = {}) =>
   createStore({
@@ -28,6 +29,7 @@ export const createPhotoStore = ({
       {},
     qr: { items: [1] },
     panel: { ...panel(undefined, {}), expand: expanded ? { 1: 1 } : {} },
+    ui: { panel: { zoom } },
     nav: {
       ...nav(undefined, {}),
       select: {
