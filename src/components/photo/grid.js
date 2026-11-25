@@ -68,9 +68,6 @@ export const PhotoGrid = (props) => {
 
   let tileSize = Math.round(size * SASS.TILE.FACTOR)
 
-  // The grid expands one photo at most.
-  let [expanded] = Object.keys(iterator.expandedPhotos)
-
   return iterator.connect(
     <div
       className={cx('photo-grid', iterator.classes)}
@@ -80,9 +77,8 @@ export const PhotoGrid = (props) => {
         cursor={iterator.cursor}
         itemHeight={tileSize}
         itemWidth={tileSize}
-        expansion={expanded && {
-          id: Number(expanded),
-          length: iterator.expandedPhotos[expanded].length,
+        expansion={iterator.expansion && {
+          ...iterator.expansion,
           padding: SASS.GRID.PADDING * 4
         }}
         renderExpansion={renderSelectionGrid}
@@ -96,7 +92,7 @@ export const PhotoGrid = (props) => {
             <PhotoTile
               {...props}
               key={id}
-              isExpanded={!!iterator.expandedPhotos[id]}
+              isExpanded={iterator.isExpanded(id)}
               isLast={index >= sequence.length - 1}/>
           )
         }}

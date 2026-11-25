@@ -8,7 +8,7 @@ import { useCursor } from '../../hooks/use-cursor.js'
 import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
 import { move as reorder, pick } from '../../common/util.js'
 import { adjacent, indexOf, toId } from '../../common/sequence.js'
-import { getExpandedPhotos } from '../../selectors/index.js'
+import { selectPhotoExpansion } from '../../selectors/index.js'
 import {
   selectActivePhotoIds,
   selectCursorPhoto,
@@ -49,7 +49,9 @@ export function usePhotoIterator ({
 
   let current = useSelector(state => selectCursorPhoto(state)?.id)
   let selection = useSelector(state => selectCursorSelection(state)?.id)
-  let expandedPhotos = useSelector(getExpandedPhotos)
+  // Photo id => when it was expanded (list), and the grid's expansion.
+  let expandedPhotos = useSelector(state => state.panel.expand)
+  let expansion = useSelector(selectPhotoExpansion)
   let contributors = useSelector(state => state.qr.contributors)
 
   // With several items, the photos of different items mix.
@@ -84,8 +86,15 @@ export function usePhotoIterator ({
   let isExpandable = (photo) =>
     photo?.selections?.length > 0
 
-  let isExpanded = (photo) =>
-    photo != null && !!expandedPhotos[photo.id]
+  // An element (id or record) is expanded: in the grid only the
+  // photo expanded last, in the list every expanded photo.
+  let isExpanded = (el) => {
+    let photo = photos[toId(el)]
+
+    return isExpandable(photo) && (isGrid
+      ? photo.id === expansion?.id
+      : expandedPhotos[photo.id] > 0)
+  }
 
   let select = useEvent((el, keyState) => {
     let { photo, selection: target } = resolve(el)
@@ -319,10 +328,11 @@ export function usePhotoIterator ({
     current: () => cursor.current(),
     cursor,
     expand,
-    expandedPhotos,
+    expansion,
     extract,
     getIterableProps,
     getSelectionProps,
+    isExpanded,
     move,
     onLayoutChange,
     open,

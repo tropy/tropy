@@ -119,7 +119,7 @@ export const PhotoList = (props) => {
               {...props}
               key={id}
               title={dc.title}
-              isExpanded={!!iterator.expandedPhotos[id]}
+              isExpanded={iterator.isExpanded(id)}
               isEditing={editing === id}
               onChange={handleChange}
               onEdit={handleEdit}
