@@ -6,7 +6,7 @@ import { serialize, toHTML, toMarkdown } from '../../editor/serialize.js'
 import { Command } from '../command.js'
 import { save } from '../../dialog.js'
 import { pluck } from '../../common/util.js'
-import { getVisibleNotes } from '../../selectors/index.js'
+import { selectActiveNotes } from '../../slices/nav/selectors.js'
 import { NOTE } from '../../constants/index.js'
 
 
@@ -22,7 +22,7 @@ export class Export extends Command {
 
     let [settings, notes] = yield select(state => ([
       state.settings,
-      id ? pluck(state.notes, id) : getVisibleNotes(state)
+      id ? pluck(state.notes, id) : selectActiveNotes(state)
     ]))
 
     if (!format)

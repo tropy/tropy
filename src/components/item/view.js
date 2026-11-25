@@ -6,11 +6,11 @@ import { Resizable } from '../resizable.js'
 import { SASS } from '../../constants/index.js'
 import { useActions } from '../../hooks/use-action.js'
 
-import { getVisibleNotes } from '../../selectors/index.js'
 import {
   selectActiveItemIds,
+  selectActiveNoteIds,
   selectActivePhotoIds,
-  selectActiveNote,
+  selectCursorNote,
   selectCursorPhoto,
   selectItemCursor
 } from '../../slices/nav/selectors.js'
@@ -37,10 +37,10 @@ export const ItemView = ({
   // ------------------------------------------------------------
   let items = useSelector(selectActiveItemIds)
   let item = useSelector(selectItemCursor)
-  let note = useSelector(selectActiveNote)
+  let note = useSelector(selectCursorNote)
   let photo = useSelector(selectCursorPhoto)
   let photos = useSelector(selectActivePhotoIds)
-  let notes = useSelector(getVisibleNotes)
+  let notes = useSelector(selectActiveNoteIds)
   let keymap = useSelector(state => state.keymap)
 
   let [

@@ -3,10 +3,14 @@ import { Command } from '../command.js'
 import * as mod from '../../models/index.js'
 import * as act from '../../actions/index.js'
 import { NOTE } from '../../constants/index.js'
-import { getNoteSuccessor, getNotesMap } from '../../selectors/index.js'
+import { getNotesMap } from '../../selectors/index.js'
 import { containsRTL } from '../../common/util.js'
 import { fromHTML } from '../../editor/serialize.js'
-import { selectNavCursor } from '../../slices/nav/selectors.js'
+import {
+  selectNavCursor,
+  selectNoteCursor,
+  selectNoteSuccessor
+} from '../../slices/nav/selectors.js'
 
 
 export class Create extends Command {
@@ -73,12 +77,12 @@ export class Delete extends Command {
       return null
 
     let [isSelected, map] = yield select(state => ([
-      payload.includes(state.nav.select.note.cursor),
+      payload.includes(selectNoteCursor(state)),
       getNotesMap(state, { notes: payload })
     ]))
 
     if (isSelected) {
-      let next = yield select(getNoteSuccessor)
+      let next = yield select(selectNoteSuccessor)
       yield put(act.nav.select.note(next && {
         note: next.id,
         photo: next.photo,
