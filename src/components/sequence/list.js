@@ -2,6 +2,7 @@ import { memo } from 'react'
 import cx from 'classnames'
 import { Scroll } from '../scroll/index.js'
 import { useSequence } from '../../hooks/use-sequence.js'
+import { toId } from '../../common/sequence.js'
 
 export const List = ({
   className,
@@ -49,7 +50,7 @@ export const List = ({
         {(element, index) => (
           <RenderItem
             {...getElementProps(element, index)}
-            key={element.id ?? element}
+            key={toId(element)}
             element={element}
             renderItem={renderItem}/>
         )}

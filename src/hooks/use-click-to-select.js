@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { getKeyState } from '../keymap.js'
+import { toId } from '../common/sequence.js'
 
 // Click to select fires on mouse-down when unselected,
 // before drag start and context-menu,
@@ -30,7 +31,7 @@ export const clickToSelect = {
     if (isDisabled || value == null || event.button > 2) return
 
     if (isSelected)
-      wasSelected.current = { id: value.id ?? value }
+      wasSelected.current = { id: toId(value) }
     else
       onSelect(value, getKeyState(event))
   },
@@ -38,7 +39,7 @@ export const clickToSelect = {
   onClick (wasSelected, { isDisabled, onSelect, value }, event) {
     // Only the first click of a series (not by keyboard).
     if (!isDisabled && event.detail === 1 && wasSelected.current != null &&
-      wasSelected.current.id === (value?.id ?? value))
+      wasSelected.current.id === toId(value))
       onSelect(value, getKeyState(event))
   }
 }

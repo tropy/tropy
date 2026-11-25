@@ -1,6 +1,4 @@
-import { indexOf } from './sequence.js'
-
-const toId = (it) => it?.id ?? it
+import { indexOf, toId } from './sequence.js'
 
 // Maps the ids of elements (or ids) to true.
 const toMap = (elements = []) => {

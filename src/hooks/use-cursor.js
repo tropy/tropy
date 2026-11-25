@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { Cursor } from '../common/sequence.js'
+import { Cursor, toId } from '../common/sequence.js'
 
 export function useCursor (seq, element) {
   let [layout, setLayout] = useState()
-  let id = element?.id ?? element
-
-  return [new Cursor(seq, id, layout), setLayout]
+  return [new Cursor(seq, toId(element), layout), setLayout]
 }

@@ -59,7 +59,7 @@ export class Completions extends React.Component {
       toId,
       toText
     ) => {
-      let [options, push] = createSequence()
+      let options = createSequence()
 
       completions.forEach((value, pos) => {
         let id = toId(value)
@@ -70,7 +70,7 @@ export class Completions extends React.Component {
         if (!isHidden) {
           let m = !query.length || match(value, query)
           if (m != null && m !== false) {
-            push({
+            options.push({
               id, idx: pos, value, text: toText(value, { isSelected, matchData: m })
             })
           }

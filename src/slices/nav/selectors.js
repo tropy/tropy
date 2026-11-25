@@ -33,10 +33,10 @@ export const selectActiveItemIds = createSelector(
 export const selectActiveItems = createSelector(
   (state) => state.items,
   selectActiveItemIds,
-  (items, ids) => {
+  (items, activeItemIds) => {
     let activeItems = []
 
-    for (let id of ids) {
+    for (let id of activeItemIds) {
       let item = items[id]
       if (item != null) activeItems.push(item)
     }
@@ -50,13 +50,13 @@ export const selectActiveItems = createSelector(
 // the key sequence of the photo level.
 export const selectActivePhotoIds = createSelector(
   selectActiveItems,
-  (items) => {
-    let [ids, push] = createSequence()
+  (activeItems) => {
+    let activePhotoIds = createSequence()
 
-    for (let item of items)
-      for (let id of item.photos) push(id)
+    for (let item of activeItems)
+      activePhotoIds.push(...item.photos)
 
-    return ids
+    return activePhotoIds
   }, {
     memoizeOptions: { resultEqualityCheck }
   })
@@ -66,12 +66,12 @@ export const selectActivePhotoIds = createSelector(
 export const selectActivePhotos = createSelector(
   (state) => state.photos,
   selectActivePhotoIds,
-  (photos, ids) => {
-    let [activePhotos, push] = createSequence()
+  (photos, activePhotoIds) => {
+    let activePhotos = createSequence()
 
-    for (let id of ids) {
+    for (let id of activePhotoIds) {
       let photo = photos[id]
-      if (photo != null) push(photo)
+      if (photo != null) activePhotos.push(photo)
     }
 
     return activePhotos
@@ -91,13 +91,13 @@ export const selectPhotoSequence = createSelector(
     if (isGrid)
       return ids
 
-    let [seq, push] = createSequence()
+    let seq = createSequence()
 
     for (let photo of photos) {
-      push(photo.id)
+      seq.push(photo.id)
 
       if (expand[photo.id] > 0)
-        for (let id of photo.selections) push(id)
+        seq.push(...photo.selections)
     }
 
     return seq

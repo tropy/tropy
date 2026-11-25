@@ -3,6 +3,7 @@ import { useEvent } from './use-event.js'
 import { useFocusClick } from './use-focus-click.js'
 import { useSingleClick } from './use-single-click.js'
 import { anyModifierKey } from '../keymap.js'
+import { toId } from '../common/sequence.js'
 
 // Click-to-edit fires when an item:
 //  - was already selected
@@ -48,7 +49,7 @@ export const clickToEdit = {
   onMouseDown ({ focus, single, wasSelected }, { isSelected, value }, event) {
     // Subtle: selection usually happens on mouse-down!
     wasSelected.current = (isSelected && value != null)
-      ? { id: value.id ?? value }
+      ? { id: toId(value) }
       : null
 
     focus.onMouseDown(event)
@@ -59,7 +60,7 @@ export const clickToEdit = {
     if (isDisabled || anyModifierKey(event))
       return
     if (wasSelected.current == null ||
-      wasSelected.current.id !== (value?.id ?? value))
+      wasSelected.current.id !== toId(value))
       return
 
     pending.current = value

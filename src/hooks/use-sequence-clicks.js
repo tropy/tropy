@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { clickToEdit, useClickToEditState } from './use-click-to-edit.js'
 import { clickToSelect } from './use-click-to-select.js'
+import { toId } from '../common/sequence.js'
 
 function rowIndexOf (event) {
   let row = event.target.closest('[data-index]')
@@ -24,7 +25,7 @@ export function useSequenceClicks (cursor, {
   let selectState = useRef(null)
 
   let isElementSelected = (element) => {
-    let id = element.id ?? element
+    let id = toId(element)
 
     return (selection != null)
       ? selection.has(id)
