@@ -93,7 +93,7 @@ jobs:
           echo "SHARP_FORCE_GLOBAL_LIBVIPS=true" >> $GITHUB_ENV
 
       - name: Install patchelf
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && matrix.tag != 'libvips'
         env:
           PATCHELF_VERSION: 0.19.3
         run: |
