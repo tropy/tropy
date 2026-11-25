@@ -6,7 +6,7 @@ import fs from 'node:fs'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { coerce } from 'semver'
-import { download, run, say, setLogSymbol, untar, ROOT } from './util.js'
+import { check, download, run, say, setLogSymbol, untar, ROOT } from './util.js'
 import { program } from 'commander'
 import { family } from 'detect-libc'
 
@@ -60,6 +60,7 @@ function libvips (task) {
   let platformId = `${task.platform}-${task.arch}`
   let release = `v${LIBVIPS_VERSION}-tropy`
   let tar = `sharp-libvips-${platformId}${task.arch === 'arm64' ? 'v8' : ''}.tar.gz`
+  let runtime = task.modulePath('src', `sharp-libvips-${platformId}`)
 
   return {
     platformId,
@@ -67,8 +68,50 @@ function libvips (task) {
     tar: task.vendorPath(release, tar),
     nodePath: task.vendorPath(release, 'node_modules'),
     dev: task.vendorPath(release, 'node_modules', '@img', `sharp-libvips-dev-${platformId}`),
-    runtime: task.modulePath('src', `sharp-libvips-${platformId}`)
+    runtime,
+    so: join(runtime, 'lib', `libvips-cpp.so.${LIBVIPS_VERSION}`)
   }
+}
+
+const GLIB_SYMBOL = /^_*g(lib)?_/
+
+const dynamicSymbols = (file, ...args) =>
+  execFileSync('nm', [
+    '-D', '-j', '--without-symbol-versions', ...args, file
+  ], { encoding: 'utf-8' }).split('\n').filter(Boolean)
+
+// Our libvips links glib statically and exports its symbols for sharp.
+// Electron links the system glib, which comes first in the global
+// symbol scope: sharp (and libvips itself, for glib's data symbols)
+// would bind to the system glib and mix two GObject implementations.
+// Renaming the exported glib symbols in both keeps them apart.
+async function renameGlibSymbols (task) {
+  let { platformId, so } = libvips(task)
+  let sharp = task.modulePath(
+    'src',
+    'build',
+    'Release',
+    `sharp-${platformId}-${task.package.version}.node`)
+
+  let map = dynamicSymbols(so, '--defined-only')
+    .filter(name => GLIB_SYMBOL.test(name))
+    .map(name => `${name} vips__${name}\n`)
+    .join('')
+
+  let mapFile = task.modulePath('src', 'build', 'glib-rename.map')
+  await fs.promises.writeFile(mapFile, map)
+
+  say('renaming glib symbols ...')
+  for (let file of [so, sharp])
+    await run('patchelf', ['--rename-dynamic-symbols', mapFile, file], {
+      silent: task.silent
+    })
+
+  // Any glib symbol sharp still imports would bind to the system glib.
+  let missed = dynamicSymbols(sharp, '--undefined-only')
+    .filter(name => GLIB_SYMBOL.test(name))
+
+  check(!missed.length, `sharp imports unrenamed glib symbols: ${missed}`)
 }
 
 class Rebuilder {
@@ -116,9 +159,9 @@ class Rebuilder {
       version: this.package.version,
       target: this.target,
       arch: this.arch,
-      deps: (this.name === 'sharp') ?
-        (env.SHARP_FORCE_GLOBAL_LIBVIPS === 'true' ? 'global' : LIBVIPS_VERSION) :
-        SQLITE_URL
+      deps: (this.name === 'sharp')
+        ? (env.SHARP_FORCE_GLOBAL_LIBVIPS === 'true' ? 'global' : LIBVIPS_VERSION)
+        : SQLITE_URL
     })
   }
 
@@ -194,6 +237,9 @@ class Rebuilder {
           await fs.promises.cp(
             join(dev, 'THIRD-PARTY-NOTICES.json'),
             join(runtime, 'THIRD-PARTY-NOTICES.json'))
+
+          if (task.platform === 'linux')
+            await renameGlibSymbols(task)
         }
 
         // Outside the bundle, sharp falls back to npm's prebuilt
