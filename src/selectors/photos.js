@@ -17,12 +17,12 @@ const toPhoto = ([, photo]) => photo
 const getPhotos = ({ photos }) => photos
 
 const expandItemPhotos = (items, photos) => {
-  let [lst, push] = createSequence()
+  let lst = createSequence()
 
   for (let item of items) {
     for (let id of item.photos) {
       let photo = photos[id]
-      if (photo != null) push(photo)
+      if (photo != null) lst.push(photo)
     }
   }
 

@@ -1,7 +1,6 @@
 import {
   Cursor,
   adjacent,
-  createIndex,
   createSequence,
   indexOf,
   range,
@@ -14,16 +13,6 @@ describe('sequence', () => {
     it('does not match missing ids', () => {
       expect(indexOf(['a', 'b'], undefined)).to.equal(-1)
       expect(indexOf(['a', 'b'], null)).to.equal(-1)
-    })
-
-    it('matches ids and elements in indexed sequences', () => {
-      let seq = [{ id: 7 }, { id: 9 }]
-      let idx = createIndex(seq)
-      idx.set(7, 0)
-      idx.set(9, 1)
-
-      expect(indexOf(seq, 9)).to.equal(1)
-      expect(indexOf(seq, seq[1])).to.equal(1)
     })
 
     it('matches elements by id', () => {
@@ -42,15 +31,28 @@ describe('sequence', () => {
   })
 
   describe('createSequence', () => {
-    it('indexes elements by id or explicit key', () => {
-      let [seq, push] = createSequence()
-      push(7)
-      push({ id: 9 })
-      push({}, 'x')
+    // n ids: 3 are scanned, 100 indexed on the first lookup.
+    let ids = (n, from = 0) =>
+      Array.from({ length: n }, (_, i) => from + i)
 
-      expect(indexOf(seq, 7)).to.equal(0)
-      expect(indexOf(seq, 9)).to.equal(1)
-      expect(indexOf(seq, 'x')).to.equal(2)
+    it('matches ids and elements, short or long', () => {
+      for (let n of [3, 100]) {
+        let seq = createSequence(ids(n).map(id => ({ id })))
+
+        expect(indexOf(seq, 2)).to.equal(2)
+        expect(indexOf(seq, seq[1])).to.equal(1)
+        expect(indexOf(seq, n)).to.equal(-1)
+      }
+    })
+
+    it('finds elements appended after a lookup', () => {
+      for (let n of [3, 100]) {
+        let seq = createSequence(ids(n))
+        expect(indexOf(seq, n)).to.equal(-1)
+
+        seq.push(n)
+        expect(indexOf(seq, n)).to.equal(n)
+      }
     })
   })
 

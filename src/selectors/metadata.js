@@ -10,7 +10,7 @@ import {
 } from '../slices/nav/selectors.js'
 import { equal } from '../value.js'
 import { compare } from '../collate.js'
-import { createSequence, getIndex } from '../common/sequence.js'
+import { createSequence, indexOf } from '../common/sequence.js'
 
 import {
   getActiveItemTemplate,
@@ -75,7 +75,8 @@ export const getMetadataFields = memo(
   (_, { props }) => props,
   (_, { compact }) => compact,
   (data, template, props, compact) => {
-    let [fld, push] = createSequence()
+    // Fields are identified by their property.
+    let fld = createSequence()
 
     if (template != null) {
       for (let f of template.fields) {
@@ -83,7 +84,8 @@ export const getMetadataFields = memo(
           continue
         }
 
-        push({
+        fld.push({
+          id: f.property,
           isExtra: false,
           isRequired: f.isRequired,
           isReadOnly: f.isConstant,
@@ -92,20 +94,19 @@ export const getMetadataFields = memo(
           property: getProperty(f.property, props, compact),
           type: f.datatype,
           value: (data != null && data[f.property]) || {}
-        }, f.property)
+        })
       }
     }
 
     if (data != null) {
-      let idx = getIndex(fld)
-
       for (let id in data) {
-        if (id === 'id' || idx.has(id)) continue
-        push({
+        if (id === 'id' || indexOf(fld, id) >= 0) continue
+        fld.push({
+          id,
           isExtra: true,
           property: props[id] || { id },
           value: data[id]
-        }, id)
+        })
       }
 
       fld.id = data.id

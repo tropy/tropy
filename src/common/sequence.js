@@ -1,34 +1,47 @@
 /*
  * Sequences are plain arrays.
- * Each element of a sequence is either an `id` or of form `{ id }`.
+ * Potentially stored in Redux state!
+ * Each element of a sequence is either an `id` or of form `{ id }`;
+ * elements without an id match by identity (see `toId`).
  *
- * To make indexOf O(1) a sequence creator registers an index.
- * Indexed sequences are not supposed to change afterwards!
+ * Arrays registered by `createSequence` are indexed on demand,
+ * on their first lookup, to make `indexOf` O(1).
+ *
+ * Registered sequences may only be appended to
+ * (the index catches up on the next lookup)
+ * and their ids must be unique.
  */
-
-// Returns a new, indexed sequence and its push() function.
-export const createSequence = () => {
-  let seq = []
-  let idx = createIndex(seq)
-
-  return [seq, (element, id = element.id ?? element) => {
-    idx.set(id, seq.length)
-    seq.push(element)
-  }]
-}
 
 const IDX = new WeakMap()
 
-// Creates the index of seq, to be filled by the sequence creator
-// with idx.set(key, position) as it adds each element.
-export const createIndex = (seq) => {
-  let idx = new Map()
-  IDX.set(seq, idx)
+// Arrays below this size are never indexed!
+const MIN_SIZE = 32
+
+// Returns the element's identifier.
+export const toId = (element) =>
+  element?.id ?? element
+
+// Registers seq (by default a new array) as a sequence and returns it.
+export const createSequence = (seq = []) => (
+  IDX.set(seq, true), seq
+)
+
+const getIndex = (seq) => {
+  let idx = IDX.get(seq)
+
+  if (!idx || seq.length < MIN_SIZE)
+    return null
+  if (idx === true) {
+    idx = new Map()
+    IDX.set(seq, idx)
+  }
+
+  // Update index as necessary!
+  for (let i = idx.size; i < seq.length; ++i)
+    idx.set(toId(seq[i]), i)
+
   return idx
 }
-
-// Returns the index of seq.
-export const getIndex = (seq) => IDX.get(seq)
 
 // Whether a and b have the same elements in the same order.
 export const isSameSequence = (a, b) => {
@@ -43,8 +56,7 @@ export const isSameSequence = (a, b) => {
   return true
 }
 
-// For selectors whose sequences should keep their identity:
-// memoizeOptions: { resultEqualityCheck }
+// Also exported for selectors memoizeOptions
 export { isSameSequence as resultEqualityCheck }
 
 // Returns prev if seq has the same elements in the same order,
@@ -52,19 +64,22 @@ export { isSameSequence as resultEqualityCheck }
 export const stable = (seq, prev) =>
   isSameSequence(seq, prev) ? prev : seq
 
-// Sequence elements match by their `id` property,
-// or by identity if they have none.
-// NB: Uses index if available!
+// Sequence elements match by id (see toId).
+// NB: Uses the index for registered sequences!
 export const indexOf = (seq, element) => {
   if (element == null)
     return -1
 
-  let id = element.id ?? element
-  let idx = IDX.get(seq)
+  let id = toId(element)
+  let idx = getIndex(seq)
 
-  return (idx != null)
-    ? idx.get(id) ?? -1
-    : seq.findIndex(it => it === id || it.id === id)
+  if (idx != null)
+    return idx.get(id) ?? -1
+
+  for (let i = 0; i < seq.length; ++i)
+    if (toId(seq[i]) === id) return i
+
+  return -1
 }
 
 // Returns all elements `from` `to` inclusive, in order.
@@ -185,7 +200,7 @@ export class Cursor {
 
   constructor (seq, element, options) {
     this.seq = seq
-    this.id = element?.id ?? element
+    this.id = toId(element)
     this.options = options
   }
 

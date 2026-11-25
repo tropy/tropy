@@ -1,5 +1,6 @@
 import { getSelectionMode } from '../keymap.js'
 import { Selection } from '../common/selection.js'
+import { toId } from '../common/sequence.js'
 import { useCursor } from './use-cursor.js'
 import { useCursorKeys } from './use-cursor-keys.js'
 import { useKeyMap } from './use-keymap.js'
@@ -25,14 +26,14 @@ export function useSequence (seq, {
     let next
 
     if (Selection.is(s)) {
-      next = selection.select(target?.id ?? target, { mode: info.mode })
+      next = selection.select(toId(target), { mode: info.mode })
 
       if (next === selection.state)
         return
     } else {
       next = target
 
-      if ((next?.id ?? next) === selection.cursor)
+      if (toId(next) === selection.cursor)
         return
     }
 
@@ -97,7 +98,7 @@ export function useSequence (seq, {
 
   let getElementProps = (element, index) => ({
     index,
-    isSelected: selection.has(element.id ?? element)
+    isSelected: selection.has(toId(element))
   })
 
   return [scrollProps, { ...clicks, onKeyDown }, getElementProps]

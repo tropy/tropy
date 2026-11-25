@@ -40,27 +40,20 @@ const isDate = (sort) =>
   sort.column === COLUMN.MODIFIED.id
 
 // Returns the ids of order in matches, as an indexed sequence.
+// An indexed loop: filter is slow on frozen arrays (from state).
 const filter = (order, matches) => {
-  let [seq, push] = createSequence()
+  let seq = createSequence()
 
   for (let i = 0; i < order.length; ++i)
-    if (matches[order[i]]) push(order[i])
+    if (matches[order[i]]) seq.push(order[i])
 
   return seq
 }
 
 // Returns ids in list order (from find) by position,
 // as an indexed sequence: reversed when descending.
-const byPosition = (ids, sort) => {
-  let [seq, push] = createSequence()
-
-  if (sort.asc)
-    for (let i = 0; i < ids.length; ++i) push(ids[i])
-  else
-    for (let i = ids.length - 1; i >= 0; --i) push(ids[i])
-
-  return seq
-}
+const byPosition = (ids, sort) =>
+  createSequence(sort.asc ? ids.slice() : ids.toReversed())
 
 // Whether an item belongs to a view, regardless of its query and
 // tags: in its list (or in none, for unlisted), in the trash or not,
