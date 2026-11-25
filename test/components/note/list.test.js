@@ -1,7 +1,8 @@
 import { mock } from 'node:test'
-import { fireEvent, waitFor } from '@testing-library/react'
+import { act, fireEvent, waitFor } from '@testing-library/react'
 import { render, withStore } from '../../support/react.js'
 import { KeyMap } from '#tropy/keymap.js'
+import { NOTE } from '#tropy/constants/index.js'
 import { NoteList } from '#tropy/components/note/list.js'
 import { createNoteStore } from './store.js'
 
@@ -29,6 +30,20 @@ describe('NoteList', () => {
     expect(store.getState().nav).to.nested.include({
       'select.note.cursor': 2, mode: 'item'
     })
+  })
+
+  it('updates the row of an edited note', () => {
+    let { $, store } = setup()
+
+    act(() => {
+      store.dispatch({
+        type: NOTE.UPDATE,
+        payload: { id: 2, text: 'edited' },
+        meta: { done: true }
+      })
+    })
+
+    expect($('.note-list li:last-child').textContent).to.equal('edited')
   })
 
   it('previews the matches of the search query', () => {
