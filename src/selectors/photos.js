@@ -1,7 +1,6 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
 import { selectActivePhotos } from '../slices/nav/selectors.js'
-import { blank, pluck } from '../common/util.js'
-import { createSequence } from '../common/sequence.js'
+import { blank } from '../common/util.js'
 
 
 const withErrors = ([, photo]) =>
@@ -15,24 +14,6 @@ const toPhoto = ([, photo]) => photo
 
 
 const getPhotos = ({ photos }) => photos
-
-const expandItemPhotos = (items, photos) => {
-  let lst = createSequence()
-
-  for (let item of items) {
-    for (let id of item.photos) {
-      let photo = photos[id]
-      if (photo != null) lst.push(photo)
-    }
-  }
-
-  return lst
-}
-
-export const getItemPhotos = (state, props) =>
-  expandItemPhotos(
-    pluck(state.items, props.items),
-    state.photos)
 
 export const getVisibleSelections = memo(
   ({ selections }) => selections,
