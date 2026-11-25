@@ -1,6 +1,4 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { pluck } from './util.js'
-import { selectItemSequence } from '../slices/qr.js'
 
 import {
   selectActiveItemIds,
@@ -58,10 +56,6 @@ export const getItemMetadata = memo(
   // The primary only if active (it may be outside the results).
   (metadata, ids, first) =>
     collectMetadata(metadata, ids, ids.includes(first) ? first : ids[0])
-)
-
-export const getVisibleMetadata = memo(
-  ({ items }) => items, selectItemSequence, pluck
 )
 
 const getProperty = (id, props, compact) =>
