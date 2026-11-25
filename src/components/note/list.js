@@ -8,9 +8,8 @@ import { TABS, SASS } from '../../constants/index.js'
 import * as act from '../../actions/index.js'
 
 import {
-  selectActiveNotes,
-  selectCursorNote,
-  selectCursorPhoto
+  selectActiveNoteIds,
+  selectNoteCursor
 } from '../../slices/nav/selectors.js'
 
 
@@ -23,41 +22,22 @@ export const NoteList = ({
 }) => {
   let dispatch = useDispatch()
 
-  let notes = useSelector(selectActiveNotes)
-  let selected = useSelector(selectCursorNote)
-  let photo = useSelector(selectCursorPhoto)
-  let matcher = useSelector(selectMatcher)
-  let contributors = useSelector(state => state.qr.contributors)
+  let noteIds = useSelector(selectActiveNoteIds)
+  let selection = useSelector(selectNoteCursor)
 
   // Notes are not cleared.
-  let handleSelect = (note, { throttle }) => {
-    if (note == null)
-      return
-
-    dispatch(act.nav.select.note({
-      note: note.id,
-      photo: note.photo,
-      selection: note.selection
-    }, { throttle }))
+  let handleSelect = (id, { throttle }) => {
+    if (id != null)
+      dispatch(act.nav.select.note({ note: id }, { throttle }))
   }
 
-  let handleOpen = (note) => {
-    if (note != null && !isItemOpen)
-      dispatch(act.nav.open.item({
-        id: photo.item,
-        photo: photo.id,
-        selection: note.selection,
-        note: note.id
-      }))
+  let handleOpen = (id) => {
+    if (id != null && !isItemOpen)
+      dispatch(act.nav.open.item({ note: id }))
   }
 
-  let handleContextMenu = (event, note) => {
-    onContextMenu?.(event, 'note', {
-      notes: [note.id],
-      item: note.item,
-      photo: note.photo,
-      selection: note.selection
-    })
+  let handleContextMenu = (event, id) => {
+    onContextMenu?.(event, 'note', { notes: [id] })
   }
 
   return (
@@ -66,8 +46,8 @@ export const NoteList = ({
       keymap="NoteList"
       rowHeight={rowHeight}
       scrollKeys="select"
-      selection={selected}
-      sequence={notes}
+      selection={selection}
+      sequence={noteIds}
       tabAutoFocus={false}
       tabIndex={tabIndex}
       commands={{
@@ -75,26 +55,36 @@ export const NoteList = ({
           handleOpen(cursor.current())
         },
         remove: !isReadOnly && (({ cursor }) => {
-          let note = cursor.current()
+          let id = cursor.current()
 
-          if (note == null)
+          if (id == null)
             return false
 
-          dispatch(act.note.delete([note.id]))
+          dispatch(act.note.delete([id]))
         })
       }}
       onContextMenu={handleContextMenu}
       onOpen={handleOpen}
       onSelect={handleSelect}
-      renderItem={(note, state) => (
-        <ListItem
-          {...state}
-          className={cx({ match: contributors?.notes[note.id] })}>
-          <div className="css-multiline-truncate">
-            <Preview text={note.text} matcher={matcher}/>
-          </div>
-        </ListItem>
+      renderItem={(id, state) => (
+        <NoteListItem {...state} id={id}/>
       )}/>
+  )
+}
+
+const NoteListItem = ({ id, ...state }) => {
+  let note = useSelector(s => s.notes[id])
+  let isMatch = useSelector(s => !!s.qr.contributors?.notes[id])
+  let matcher = useSelector(selectMatcher)
+
+  return (
+    <ListItem {...state} className={cx({ match: isMatch })}>
+      {note != null && (
+        <div className="css-multiline-truncate">
+          <Preview text={note.text} matcher={matcher}/>
+        </div>
+      )}
+    </ListItem>
   )
 }
 
