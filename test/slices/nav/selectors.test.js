@@ -4,6 +4,7 @@ import {
   selectActiveItems,
   selectCursorPhoto,
   selectCursorSelection,
+  selectActiveNoteIds,
   selectActivePhotoIds,
   selectNavCursor,
   selectPhotoCursor,
@@ -11,7 +12,7 @@ import {
 } from '#tropy/slices/nav/selectors.js'
 
 describe('nav cursor', () => {
-  // Item 1 with photos 2 (selection 3, notes 10, 11) and 4 (note 12);
+  // Item 1 with photos 2 (selection 3 with note 13; notes 10, 11) and 4 (note 12);
   // item 5 with photo 6; item 9, not among the results.
   let state = ({
     item = [1], photo, note = null, expand = {}, zoom = 0
@@ -34,11 +35,12 @@ describe('nav cursor', () => {
       4: { id: 4, item: 1, selections: [], notes: [12] },
       6: { id: 6, item: 5, selections: [], notes: [] }
     },
-    selections: { 3: { id: 3, photo: 2, notes: [] } },
+    selections: { 3: { id: 3, photo: 2, notes: [13] } },
     notes: {
       10: { id: 10, photo: 2 },
       11: { id: 11, photo: 2 },
-      12: { id: 12, photo: 4 }
+      12: { id: 12, photo: 4 },
+      13: { id: 13, photo: 2, selection: 3 }
     },
     panel: { expand },
     ui: { panel: { zoom } }
@@ -130,5 +132,9 @@ describe('nav cursor', () => {
     // An active photo is edited (same selections).
     let edited = { ...s, photos: { ...s.photos, 2: { ...s.photos[2], title: 'x' } } }
     expect(selectPhotoSequence(edited)).to.equal(first)
+  })
+
+  it('lists the active notes interleaved, collapsed selections too', () => {
+    expect(selectActiveNoteIds(state())).to.eql([10, 11, 13, 12])
   })
 })

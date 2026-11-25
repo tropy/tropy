@@ -1,8 +1,8 @@
-import { getNoteSuccessor } from '#tropy/selectors/index.js'
+import { selectNoteSuccessor } from '#tropy/slices/nav/selectors.js'
 import { create } from '#tropy/common/selection.js'
 
 describe('Note Selectors', () => {
-  describe('getNoteSuccessor', () => {
+  describe('selectNoteSuccessor', () => {
     let state = (note, photos = { 1: [10, 11], 2: [12] }) => ({
       nav: { select: { item: create([1]), note: create([note]) } },
       qr: { items: [1] },
@@ -18,16 +18,16 @@ describe('Note Selectors', () => {
     })
 
     it('prefers adjacent notes of the same photo', () => {
-      expect(getNoteSuccessor(state(10))).to.have.property('id', 11)
-      expect(getNoteSuccessor(state(11))).to.have.property('id', 10)
+      expect(selectNoteSuccessor(state(10))).to.have.property('id', 11)
+      expect(selectNoteSuccessor(state(11))).to.have.property('id', 10)
     })
 
     it('falls back to the adjacent note', () => {
-      expect(getNoteSuccessor(state(12))).to.have.property('id', 11)
+      expect(selectNoteSuccessor(state(12))).to.have.property('id', 11)
     })
 
     it('returns nothing without other notes', () => {
-      expect(getNoteSuccessor(state(10, { 1: [10] }))).to.be.null
+      expect(selectNoteSuccessor(state(10, { 1: [10] }))).to.be.null
     })
   })
 })

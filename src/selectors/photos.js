@@ -1,5 +1,4 @@
 import { createSelector as memo } from '@reduxjs/toolkit'
-import { selectActivePhotos } from '../slices/nav/selectors.js'
 import { blank } from '../common/util.js'
 
 
@@ -14,17 +13,6 @@ const toPhoto = ([, photo]) => photo
 
 
 const getPhotos = ({ photos }) => photos
-
-export const getVisibleSelections = memo(
-  ({ selections }) => selections,
-  selectActivePhotos,
-
-  (selections, photos) =>
-    photos
-      .flatMap(photo => photo.selections ?? [])
-      .map(id => selections[id])
-      .filter(selection => selection != null)
-)
 
 export const getPhotosWithErrors = memo(
   getPhotos,

@@ -1,7 +1,11 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { Selection } from '../../common/selection.js'
-import { createSequence, resultEqualityCheck } from '../../common/sequence.js'
 import { selectItemSequence } from '../qr.js'
+import { Selection } from '../../common/selection.js'
+import {
+  Cursor,
+  createSequence,
+  resultEqualityCheck
+} from '../../common/sequence.js'
 
 // The itemSelection over itemSequence.
 // This is the base selector for active items.
@@ -122,8 +126,83 @@ export const selectCursorPhoto = (state) => {
   return state.photos[state.selections[id]?.photo ?? id] ?? null
 }
 
+// All notes underneath active items.
+export const selectActiveNoteIds = createSelector(
+  (state) => state.selections,
+  selectActivePhotos,
+  (selections, activePhotos) => {
+    let activeNoteIds = createSequence()
+
+    for (let photo of activePhotos) {
+      activeNoteIds.push(...photo.notes)
+
+      for (let id of photo.selections) {
+        let selection = selections[id]
+        if (selection != null)
+          activeNoteIds.push(...selection.notes)
+      }
+    }
+
+    return activeNoteIds
+  }, {
+    memoizeOptions: { resultEqualityCheck }
+  })
+
+export const selectActiveNotes = createSelector(
+  (state) => state.notes,
+  selectActiveNoteIds,
+  (notes, activeNoteIds) => {
+    let activeNotes = []
+
+    for (let id of activeNoteIds) {
+      let note = notes[id]
+      if (note != null) activeNotes.push(note)
+    }
+
+    return activeNotes
+  }, {
+    memoizeOptions: { resultEqualityCheck }
+  })
+
+// The noteSelection over the activeNotes.
+export const selectNoteSelection = createSelector(
+  (state) => state.nav.select.note,
+  selectActiveNoteIds,
+  (state, seq) => new Selection(state, seq))
+
 export const selectNoteCursor = (state) =>
-  state.nav.select.note.cursor
+  selectNoteSelection(state).primary()
+
+export const selectCursorNote = (state) =>
+  state.notes[selectNoteCursor(state)] ?? null
+
+const isSibling = (note, other) =>
+  other != null &&
+  other.photo === note.photo &&
+  other.selection === note.selection
+
+// The note to select when the cursor note is removed:
+// an adjacent note of the same parent, else an adjacent note.
+export const selectNoteSuccessor = (state) => {
+  let cursor = new Cursor(
+    selectActiveNoteIds(state),
+    selectNoteCursor(state))
+
+  let note = state.notes[cursor.current()]
+
+  let [prev, next] = cursor
+    .adjacent()
+    .map(id => state.notes[id] ?? null)
+
+  if (note == null)
+    return next ?? prev
+  if (isSibling(note, next))
+    return next
+  if (isSibling(note, prev))
+    return prev
+
+  return next ?? prev
+}
 
 export const selectNavCursor = createSelector(
   selectItemCursor,
@@ -135,11 +214,4 @@ export const selectNavCursor = createSelector(
     photo,
     selection,
     note
-  })
-)
-
-export const selectActiveNote = createSelector(
-  ({ notes }) => notes,
-  selectNoteCursor,
-  (notes, id) => notes[id]
-)
+  }))
