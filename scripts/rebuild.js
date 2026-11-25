@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path'
 import fs from 'node:fs'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { coerce } from 'semver'
+import { coerce, gte } from 'semver'
 import { check, download, run, say, setLogSymbol, untar, ROOT } from './util.js'
 import { program } from 'commander'
 import { family } from 'detect-libc'
@@ -75,6 +75,10 @@ function libvips (task) {
 
 const GLIB_SYMBOL = /^_*g(lib)?_/
 
+// Older versions break libvips-cpp.so when renaming: 0.18.0 moves
+// the .init section without updating DT_INIT (and 0.14 can't rename).
+const PATCHELF_VERSION = '0.19.3'
+
 const dynamicSymbols = (file, ...args) =>
   execFileSync('nm', [
     '-D', '-j', '--without-symbol-versions', ...args, file
@@ -100,6 +104,12 @@ async function renameGlibSymbols (task) {
 
   let mapFile = task.modulePath('src', 'build', 'glib-rename.map')
   await fs.promises.writeFile(mapFile, map)
+
+  let patchelf = coerce(execFileSync('patchelf', ['--version'], {
+    encoding: 'utf-8'
+  }))
+  check(gte(patchelf, PATCHELF_VERSION),
+    `patchelf ${PATCHELF_VERSION} or later required (found ${patchelf})`)
 
   say('renaming glib symbols ...')
   for (let file of [so, sharp])

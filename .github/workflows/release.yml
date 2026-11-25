@@ -102,7 +102,19 @@ jobs:
 
       - name: Install patchelf
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y patchelf
+        env:
+          PATCHELF_VERSION: 0.19.3
+        run: |
+          case $(uname -m) in
+            x86_64) SHA=38861b171079e440b25ac86483284f690d0ee7921dba98b0c8fe04a9b0a11667 ;;
+            aarch64) SHA=2281dd071995b449b9ce7c53c71d6d56ec3a280ae1cc66b779442abf624f7c10 ;;
+          esac
+          curl -sSfL --retry 3 -o $RUNNER_TEMP/patchelf.tar.gz \
+            https://github.com/NixOS/patchelf/releases/download/${PATCHELF_VERSION}/patchelf-${PATCHELF_VERSION}-$(uname -m).tar.gz
+          echo "$SHA  $RUNNER_TEMP/patchelf.tar.gz" | sha256sum -c
+          mkdir $RUNNER_TEMP/patchelf
+          tar xzf $RUNNER_TEMP/patchelf.tar.gz -C $RUNNER_TEMP/patchelf
+          echo "$RUNNER_TEMP/patchelf/bin" >> $GITHUB_PATH
 
       - name: Rebuild native modules
         run: node scripts/rebuild.js --force --verbose --arch ${{ matrix.arch }}
