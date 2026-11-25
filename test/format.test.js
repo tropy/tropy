@@ -64,6 +64,16 @@ describe('format', () => {
         .to.equal('Feb 23, 2019, 11:09:00 AM GMT-3')
     })
 
+    it('shows time at the given offset', () => {
+      expect(datetime('2026-10-14T16:18:49+12:00'))
+        .to.equal('Oct 14, 2026, 4:18:49 PM GMT+12')
+    })
+
+    it('shows no seconds if not give', () => {
+      expect(datetime('2026-10-14T16:18Z'))
+        .to.equal('Oct 14, 2026, 4:18 PM GMT')
+    })
+
     it('shows no time zone if not given', () => {
       expect(datetime('2019-02-23T11:09:00'))
         .to.equal('Feb 23, 2019, 11:09:00 AM')
