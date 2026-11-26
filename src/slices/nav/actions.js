@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
-import { focus, primary, from as toSelection } from '../../common/selection.js'
+import { focus, head, from as toSelection } from '../../common/selection.js'
 import { selectViewOf } from '../qr.js'
 
 export const restored = createAction('nav/restored')
@@ -94,7 +94,7 @@ function selectCursorPaths (state, id) {
 // Builts a cursor path top-down.
 function buildCursorPath (state, { item, photo, selection, note }) {
   item = toSelection(item)
-  let id = primary(item)
+  let id = head(item)
 
   checkCursorPath(state, { item: id, photo, selection, note })
 

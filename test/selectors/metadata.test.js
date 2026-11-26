@@ -20,8 +20,8 @@ describe('Metadata Selectors', () => {
       expect(getItemMetadata(state([23]))).to.eql({ id: [23] })
     })
 
-    it('returns combined metadata, with the primary item\'s values', () => {
-      // The cursor (the last selected item) is the primary item.
+    it('returns combined metadata, with the cursor item\'s values', () => {
+      // The cursor is the last selected item.
       let result = getItemMetadata(state([1, 2]))
       expect(result.id).to.have.members([1, 2])
       expect(result).to.have.nested.property('title.text', 'bar')

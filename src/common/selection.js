@@ -99,12 +99,12 @@ export { effective as elements }
 
 // NB: Multi-selections are inherently unordered,
 // but sometimes we need a representative id.
-// This 'primary' id is the cursor (if selected),
+// This 'head' id is the cursor (if selected),
 // and otherwise the first selected id (the lowest).
 // It depends on the selection state only, not on a sequence.
 
-// Returns the primary id, or null.
-export const primary = (state) => {
+// Returns the head id, or null.
+export const head = (state) => {
   if (has(state, state.cursor))
     return state.cursor
 
@@ -350,8 +350,8 @@ export class Selection {
     )
   }
 
-  primary () {
-    return primary(this.state)
+  head () {
+    return head(this.state)
   }
 
   select (id, options) {
@@ -369,10 +369,10 @@ export class Selection {
 
 // Returns the edge of the range which has grown,
 // compared to the previous range:
-// -1 for head, 1 for tail, 0 for neither or both.
-export function growingEdge ([head, tail] = [], [prevHead, prevTail] = []) {
-  if (head == null) return 0
-  if (prevHead == null) return 1
+// -1 for start, 1 for end, 0 for neither or both.
+export function growingEdge ([start, end] = [], [prevStart, prevEnd] = []) {
+  if (start == null) return 0
+  if (prevStart == null) return 1
 
-  return (tail > prevTail ? 1 : 0) - (head < prevHead ? 1 : 0)
+  return (end > prevEnd ? 1 : 0) - (start < prevStart ? 1 : 0)
 }
