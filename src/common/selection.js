@@ -17,7 +17,8 @@ const toMap = (elements = []) => {
  * Anchor and cursor may be deselected, past never is.
  *
  * Selection state is plain and may live in Redux.
- * Selection class is a thin wrapper on top of it.
+ * Selection class is a thin wrapper on top of it,
+ * which binds a selection to a sequence.
  */
 
 export const create = (ids = [], {
@@ -34,13 +35,15 @@ export const create = (ids = [], {
   }
 }
 
-export const isSelection = (state) =>
+const isSelectionState = (state) =>
   typeof state?.selected === 'object' && state.selected !== null
 
 export const from = (input) =>
-  isSelection(input)
-    ? input
-    : create((input == null) ? [] : [input].flat())
+  (input instanceof Selection)
+    ? input.state
+    : isSelectionState(input)
+      ? input
+      : create((input == null) ? [] : [input].flat())
 
 const copy = (map) =>
   Object.assign(Object.create(null), map)
@@ -367,18 +370,14 @@ export class Selection {
   #size
 
   static is (selection) {
-    return selection instanceof Selection || selection?.selected != null
+    return selection instanceof Selection || isSelectionState(selection)
   }
 
   static from (selection, seq) {
-    if (selection instanceof Selection)
+    if (selection instanceof Selection && selection.seq === seq)
       return selection
 
-    let state = Selection.is(selection)
-      ? selection
-      : create(selection == null ? [] : [toId(selection)])
-
-    return new Selection(state, seq)
+    return new Selection(from(selection), seq)
   }
 
   constructor (state, seq) {
