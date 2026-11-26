@@ -4,7 +4,7 @@ import { isPending } from '../cmd.js'
 import { ITEM } from '../../constants/index.js'
 
 import {
-  create as createSelection, focus, isBlank, remove
+  create as createSelection, focus, head, isBlank, remove
 } from '../../common/selection.js'
 
 import {
@@ -15,7 +15,7 @@ const initialState = {
   item: createSelection(),
   photo: createSelection(),
   note: createSelection(),
-  last: {} // Tracks last selected note for each photo.
+  last: {} // Tracks last note per photo, last photo per item.
 }
 
 // Sets item selection and updates photo/note selections.
@@ -28,17 +28,26 @@ const setItemSelection = (state, { payload }) => {
 
 // Sets photo and note selection, resolving the default note if not given.
 const setPhotoSelection = (state, id, note, notes) => {
-  note = resolveNote(state, id, note, notes)
+  note = resolveNote(state, id, note, notes) // resolve first!
+
+  focusPhotoSelection(state, id)
+  focusNoteSelection(state, note)
+}
+
+// Sets the photo cursor and records it as last for the current item.
+const focusPhotoSelection = (state, id) => {
   state.photo = focus(state.photo, id)
-  setNoteSelection(state, note)
+  remember(state, head(state.item), id)
 }
 
 // Sets the note selection and records cursor as last for current photo.
-const setNoteSelection = (state, id) => {
+const focusNoteSelection = (state, id) => {
   state.note = focus(state.note, id)
+  remember(state, head(state.photo), id)
+}
 
-  if (id != null && state.photo.cursor != null)
-    state.last[state.photo.cursor] = id
+const remember = ({ last }, parent, id) => {
+  if (parent != null && id != null) last[parent] = id
 }
 
 const resolveNote = (state, id, note, notes = []) => {
@@ -72,6 +81,11 @@ const resolvePhoto = (state, {
     return photo
   if (Object.hasOwn(notes, state.photo.cursor))
     return state.photo.cursor
+
+  let last = state.last[head(state.item)]
+
+  if (Object.hasOwn(notes, last))
+    return last
   else
     return photos[0]
 }
@@ -109,10 +123,10 @@ const selectSlice = createSlice({
       .addCase(noteSelected, (state, { payload }) => {
         if (payload) {
           state.item = focus(state.item, payload.item)
-          state.photo = focus(state.photo, payload.selection ?? payload.photo)
-          setNoteSelection(state, payload.note)
+          focusPhotoSelection(state, payload.selection ?? payload.photo)
+          focusNoteSelection(state, payload.note)
         } else {
-          setNoteSelection(state, null)
+          focusNoteSelection(state, null)
         }
       })
 

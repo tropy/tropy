@@ -190,6 +190,26 @@ describe('nav', () => {
         .to.nested.include({ 'photo.cursor': null, 'note.cursor': null })
     })
 
+    it('shows the last photo of an item again', () => {
+      let select = (state, item, payload) => nav(state, {
+        type: itemSelected.type,
+        payload: { item: create(item), ...payload },
+        meta: {}
+      })
+
+      let other = { photos: [8, 9], notes: { 8: [], 9: [10] } }
+      let same = { photos: [5], notes: { 5: [], 6: [7, 4] } }
+
+      let back = select(select(select(s, [2], { ...other, photo: 9 }), [1], same), [2], other)
+      expect(back.select.photo.cursor).to.equal(9)
+
+      // The first photo if the last is gone.
+      back = select(select(select(s, [2], { ...other, photo: 9 }), [1], same), [2], {
+        photos: [8], notes: { 8: [] }
+      })
+      expect(back.select.photo.cursor).to.equal(8)
+    })
+
     it('is restored', () => {
       let restored = nav(undefined, act.restore({ select: s.select }))
       expect(restored.select.photo).to.include({ cursor: 6 })
@@ -216,7 +236,7 @@ describe('nav', () => {
       let s = reduce(note(8), act.show({ view: { name: 'trash' } }))
 
       expect(s.select.note.cursor).to.be.null
-      expect(s.select.last).to.eql({ 5: 8 })
+      expect(s.select.last).to.eql({ 1: 5, 5: 8 })
     })
 
     it('shows the first note if the last is gone', () => {
@@ -229,7 +249,7 @@ describe('nav', () => {
       let restored = nav(undefined, act.restore({ select: selection }))
 
       expect(restored.select.note).to.include({ cursor: 8 })
-      expect(restored.select.last).to.eql({ 5: 8 })
+      expect(restored.select.last).to.eql({ 1: 5, 5: 8 })
     })
   })
 
