@@ -3,7 +3,6 @@ import {
   clear,
   create,
   elements,
-  equal,
   focus,
   growingEdge,
   has,
@@ -126,12 +125,6 @@ describe('selection state', () => {
     expect(head(create())).to.be.null
   })
 
-  it('compares states by ids, anchor and cursor', () => {
-    expect(equal(create([1, 2]), create([1, 2]))).to.be.true
-    expect(equal(create([1, 2]), create([2, 1]))).to.be.false
-    expect(equal(create([1, 2]), create([1, 3, 2]))).to.be.false
-  })
-
   // Grid with 4 columns: A = 5, B = 6, X = 2 (above B).
   it('steps from the cursor, as in Finder', () => {
     let state = run([[5], [6, 'step']])
@@ -180,6 +173,14 @@ describe('selection state', () => {
 
     state = clear(state)
     expect(clear(state)).to.equal(state)
+  })
+
+  it('selects all, keeping a cursor in the sequence, else from the first', () => {
+    expect(all(run([[3], [5, 'extend']]), seq))
+      .to.include({ anchor: 3, cursor: 5 })
+    expect(all({ ...create([2]), cursor: 99 }, seq))
+      .to.include({ anchor: 1, cursor: 1 })
+    expect(all(create(), seq)).to.include({ anchor: 1, cursor: 1 })
   })
 
   it('selects all and clears', () => {

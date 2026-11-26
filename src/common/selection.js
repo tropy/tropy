@@ -37,6 +37,46 @@ export const from = (input) =>
 const copy = (map) =>
   Object.assign(Object.create(null), map)
 
+// This is the handler for ALL state changes.
+// Applies the requested changes and returns new state,
+// or `state` if unchanged.
+const update = (state, {
+  selected = state.selected,
+  anchor = state.anchor,
+  cursor = state.cursor
+}) => {
+  let next = {
+    ...state,
+    selected,
+    anchor,
+    cursor
+  }
+
+  return equal(state, next) ? state : next
+}
+
+// Whether an update changed anything observable.
+// Compares selected ids, anchor and cursor.
+const equal = (a, b) => {
+  if (a === b)
+    return true
+  if (a.anchor !== b.anchor || a.cursor !== b.cursor)
+    return false
+  if (a.selected === b.selected)
+    return true
+
+  // Object.keys is faster than for...in (no size to compare otherwise).
+  let ids = Object.keys(a.selected)
+
+  if (ids.length !== Object.keys(b.selected).length)
+    return false
+
+  for (let id of ids)
+    if (!Object.hasOwn(b.selected, id)) return false
+
+  return true
+}
+
 // Accepts an element or an id.
 export const has = (state, it) =>
   Object.hasOwn(state.selected, toId(it))
@@ -48,30 +88,16 @@ export const isBlank = (...states) =>
   states.every(state =>
     state.cursor == null && state.anchor == null && size(state) === 0)
 
-export const equal = (a, b) => {
-  if (a === b)
-    return true
-  if (a.anchor !== b.anchor || a.cursor !== b.cursor)
-    return false
-
-  for (let id in a.selected)
-    if (!Object.hasOwn(b.selected, id)) return false
-
-  for (let id in b.selected)
-    if (!Object.hasOwn(a.selected, id)) return false
-
-  return true
-}
-
 // NB: selections have no inherent order!
 // Because we use numeric keys in a plain object,
 // they may get returned sorted by value or in insertion order.
 //
 // Returns selected ids, in no particular order.
 export const ids = (state) => {
-  let res = []
-  for (let id in state.selected)
-    res.push(Number(id))
+  let res = Object.keys(state.selected)
+
+  for (let i = 0; i < res.length; ++i)
+    res[i] = Number(res[i])
 
   return res
 }
@@ -124,10 +150,10 @@ export function select (state, seq, id, { mode = 'replace' } = {}) {
   if (at < 0)
     return state
 
-  let next = change(state, seq, id, at, mode)
-  return equal(state, next) ? state : next
+  return update(state, change(state, seq, id, at, mode))
 }
 
+// Returns the changes of selecting `id` (at position `at`) with `mode`.
 const change = (state, seq, id, at, mode) => {
   switch (mode) {
     case 'replace':
@@ -207,34 +233,41 @@ const change = (state, seq, id, at, mode) => {
       }
     }
     case 'focus':
-      return focus(state, id)
+      return focusChange(state, id)
     default:
       throw new Error(`unknown selection mode: "${mode}"`)
   }
 }
 
-// Returns new state with all elements of seq selected, or `state` if unchanged.
-export const all = (state, seq) =>
-  (seq.every(it => has(state, it)) && size(state) === seq.length)
-    ? state
-    : { ...state, selected: toMap(seq) }
+// Returns new state with all elements of seq selected,
+// or `state` if unchanged.
+export const all = (state, seq) => {
+  let first = toId(seq[0]) ?? null
+  let keepCursor = indexOf(seq, state.cursor) >= 0
 
-// Returns new state with nothing selected, or `state` if unchanged.
-export const clear = (state) => {
-  let next = { ...state, selected: toMap() }
-  return equal(state, next) ? state : next
+  return update(state, {
+    selected: toMap(seq),
+    anchor: keepCursor ? state.anchor : first,
+    cursor: keepCursor ? state.cursor : first
+  })
 }
 
+// Returns new state with nothing selected, or `state` if unchanged.
+export const clear = (state) =>
+  update(state, { selected: toMap() })
+
 // Moves cursor/anchor within the selection if possible.
-export const focus = (state, id) => {
+export const focus = (state, id) =>
+  update(state, focusChange(state, id))
+
+// Returns the changes of focusing `id`.
+const focusChange = (state, id) => {
   if (id == null)
-    return isBlank(state) ? state : create()
+    return { selected: toMap(), anchor: null, cursor: null }
   if (!has(state, id))
-    return create([id])
-  if (state.anchor === id && state.cursor === id)
-    return state
+    return { selected: toMap([id]), anchor: id, cursor: id }
   else
-    return { ...state, anchor: id, cursor: id }
+    return { anchor: id, cursor: id }
 }
 
 // Returns new state without given elements, or `state` if unchanged.
@@ -255,11 +288,7 @@ export const remove = (state, elements) => {
     if (id === cursor) cursor = null
   }
 
-  return (
-    selected === state.selected &&
-    anchor === state.anchor &&
-    cursor === state.cursor
-  ) ? state : { ...state, selected, anchor, cursor }
+  return update(state, { selected, anchor, cursor })
 }
 
 // Applies fn to the ids of seq between positions a and b, inclusive.
