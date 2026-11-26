@@ -89,6 +89,28 @@ export const tropy = {
     }
   },
 
+  async mcp (name, args = {}) {
+    let res = await fetch(`http://127.0.0.1:${PORT}/mcp`, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json, text/event-stream',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'tools/call',
+        params: { name, arguments: args }
+      })
+    })
+
+    // Responses are sent as server-sent events.
+    let text = await res.text()
+    let { result } = JSON.parse(text.match(/^data: (.*)$/m)?.[1] ?? text)
+
+    return result
+  },
+
   // The log entries (JSON lines) of the main and renderer processes.
   async log () {
     let text = await readFile(join(this.logs, 'tropy.log'), 'utf-8')

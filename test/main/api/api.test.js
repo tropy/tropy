@@ -451,6 +451,16 @@ describe('api', () => {
     })
   })
 
+  describe('view', () => {
+    it('shows what the user sees', async () => {
+      api.respond({ mode: 'project' })
+      let res = await api.get('/projects/foo/view')
+
+      expect(res.json()).to.eql({ mode: 'project' })
+      expect(api.action.type).to.equal(API.VIEW.SHOW)
+    })
+  })
+
   describe('tags', () => {
     it('creates tags', async () => {
       api.respond({ id: 3 })
