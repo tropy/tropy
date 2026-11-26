@@ -1,9 +1,24 @@
 import edtf, { format as edtfFormat } from 'edtf'
 import ARGS from './args.js'
 import { classify } from './common/datatype.js'
-import { blank } from './common/util.js'
+import { blank, cache } from './common/util.js'
+
+const DTC = cache(5000)
+DTC.locale = null
 
 export function datetime (value, options = DTF) {
+  if (options !== DTF || typeof value !== 'string' || blank(value))
+    return formatDatetime(value, options)
+
+  if (DTC.locale !== ARGS.locale) {
+    DTC.clear()
+    DTC.locale = ARGS.locale
+  }
+
+  return DTC.get(value, () => formatDatetime(value, options))
+}
+
+function formatDatetime (value, options) {
   try {
     if (blank(value))
       return value

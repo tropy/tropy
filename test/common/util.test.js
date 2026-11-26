@@ -41,6 +41,28 @@ describe('util', () => {
     })
   })
 
+  describe('cache', () => {
+    it('keeps the entries in use as it evicts', () => {
+      let c = util.cache(4)
+
+      c.set('a', 1)
+      c.set('b', 2)
+      c.set('c', 3) // a, b become old
+      expect(c.get('a')).to.equal(1) // moves back
+
+      c.set('d', 4) // c, a become old; b is dropped
+      expect(c.get('a')).to.equal(1)
+      expect(c.get('c')).to.equal(3)
+      expect(c.get('b')).to.be.undefined
+    })
+
+    it('computes missing values', () => {
+      let c = util.cache(4)
+      expect(c.get('a', () => 1)).to.equal(1)
+      expect(c.get('a', () => 2)).to.equal(1)
+    })
+  })
+
   describe('omit', () => {
     it('picks the given properties', () =>
       expect(util.omit({ foo: 1, bar: 2 }, ['bar'])).to.eql({ foo: 1 }))
