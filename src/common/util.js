@@ -551,6 +551,43 @@ export function memoize (fn) {
   }
 }
 
+// A bounded cache with gradual eviction.
+export function cache (size) {
+  let cur = new Map()
+  let old = new Map()
+
+  let set = (key, value) => {
+    if (cur.size * 2 >= size) {
+      old = cur
+      cur = new Map()
+    }
+
+    cur.set(key, value)
+    return value
+  }
+
+  return {
+    get (key, compute) {
+      let value = cur.get(key)
+
+      if (value === undefined) {
+        value = old.get(key) ?? compute?.(key)
+        if (value !== undefined)
+          set(key, value)
+      }
+
+      return value
+    },
+
+    set,
+
+    clear () {
+      cur = new Map()
+      old = new Map()
+    }
+  }
+}
+
 export function debounce (fn, ms) {
   let id, args, ctx
 
