@@ -4,6 +4,7 @@ import {
   create,
   elements,
   focus,
+  from,
   growingEdge,
   has,
   ids as getIds,
@@ -302,5 +303,14 @@ describe('Selection.from', () => {
 
     expect(selection.size).to.equal(2)
     expect(Selection.from(selection, seq)).to.equal(selection)
+  })
+
+  it('rewraps a Selection of another sequence', () => {
+    let selection = Selection.from(create([1, 2]), seq)
+    let other = Selection.from(selection, [{ id: 2 }])
+
+    expect(other).to.not.equal(selection)
+    expect(other.elements()).to.eql([{ id: 2 }])
+    expect(from(selection)).to.equal(selection.state)
   })
 })
