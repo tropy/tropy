@@ -2,15 +2,17 @@ import { select } from 'redux-saga/effects'
 import { Command } from '../command.js'
 import { API } from '../../constants/index.js'
 
-import { getItemTranscriptions } from '../../selectors/transcriptions.js'
+import { selectItemTranscriptions } from '../../slices/transcriptions.js'
 
 
 export class TranscriptionFind extends Command {
   *exec () {
     let { id, format, separator = '\n' } = this.action.payload
 
-    let transcriptions = yield select(state =>
-      getItemTranscriptions(state, { id }))
+    let transcriptions = yield select(selectItemTranscriptions, id)
+
+    if (transcriptions == null)
+      return null
 
     switch (format) {
       case 'text':

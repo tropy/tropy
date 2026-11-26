@@ -126,23 +126,6 @@ export const selectCursorPhoto = (state) => {
   return state.photos[state.selections[id]?.photo ?? id] ?? null
 }
 
-// The cursor photo's selections.
-export const selectCursorPhotoSelections = createSelector(
-  (state) => state.selections,
-  (state) => selectCursorPhoto(state)?.selections,
-  (selections, selectionIds = []) => {
-    let photoSelections = []
-
-    for (let id of selectionIds) {
-      let selection = selections[id]
-      if (selection != null) photoSelections.push(selection)
-    }
-
-    return photoSelections
-  }, {
-    memoizeOptions: { resultEqualityCheck }
-  })
-
 // All notes underneath active items.
 export const selectActiveNoteIds = createSelector(
   (state) => state.selections,

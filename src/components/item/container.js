@@ -10,13 +10,10 @@ import { SASS, ITEM } from '../../constants/index.js'
 
 import {
   selectCachePrefix,
-  getEsperViewState,
-  getActiveTranscription
+  selectEsperSelections,
+  selectEsperView
 } from '../../selectors/index.js'
-import {
-  selectCursorPhotoSelections,
-  selectCursorSelection
-} from '../../slices/nav/selectors.js'
+import { selectActiveTranscription } from '../../slices/transcriptions.js'
 
 const { LAYOUT } = ITEM
 const { ESPER } = SASS
@@ -142,15 +139,17 @@ class Item extends React.PureComponent {
 }
 
 export const ItemContainer = connect(
-  state => ({
+  // Cursor-bound props follow the `photoCursor` and `photo` props,
+  // not the store's cursor: off screen, the item view defers them.
+  (state, { photoCursor, photo }) => ({
     cache: selectCachePrefix(state),
     esper: state.ui.esper,
-    view: getEsperViewState(state),
+    view: selectEsperView(state, photoCursor),
     keymap: state.keymap,
-    selection: selectCursorSelection(state),
-    selections: selectCursorPhotoSelections(state),
+    selection: state.selections[photoCursor] ?? null,
+    selections: selectEsperSelections(state, photo?.id),
     settings: state.settings,
-    transcription: getActiveTranscription(state)
+    transcription: selectActiveTranscription(state, photoCursor)
   }),
 
   dispatch => ({

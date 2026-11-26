@@ -7,8 +7,11 @@ import { useEvent } from '../../hooks/use-event.js'
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
 import { useElementClicks } from '../../hooks/use-element-clicks.js'
 import { Cursor } from '../../common/sequence.js'
-import { getTranscriptions } from '../../selectors/index.js'
-import { activate, remove } from '../../slices/transcriptions.js'
+import {
+  activate,
+  remove,
+  selectTranscriptions
+} from '../../slices/transcriptions.js'
 import * as act from '../../actions/index.js'
 import cx from 'classnames'
 
@@ -19,7 +22,7 @@ export const TranscriptionPanel = ({
 }) => {
   let dispatch = useDispatch()
   let transcriptions = useSelector(
-    state => getTranscriptions(state, { id }),
+    state => selectTranscriptions(state, id),
     shallowEqual)
   let cursor = new Cursor(transcriptions, active)
 
