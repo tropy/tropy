@@ -51,7 +51,7 @@ export function useItemIterator ({
 
   let getSelection = useEvent(() => selection.ids())
 
-  // Dragging focuses the item (it becomes the primary).
+  // Dragging focuses the item (it becomes the head).
   let focusItem = useEvent((id) => {
     select(id, { mode: 'focus' })
   })
@@ -99,7 +99,7 @@ export function useItemIterator ({
 
     // Items select on mouse-down (useSequenceClicks),
     // so the right-clicked item is already selected.
-    // It is also focused (the primary), first as merge target.
+    // It is also focused (the head), first as merge target.
     if (selection.size > 1) {
       context.push('bulk')
       target.id = [id, ...selection.ids().filter(it => it !== id)]
@@ -148,7 +148,7 @@ export function useItemIterator ({
       },
       merge () {
         if (!(isReadOnly || selection.size < 2)) {
-          let into = selection.primary()
+          let into = selection.head()
 
           merge([
             into,

@@ -42,7 +42,7 @@ describe('select actions', () => {
     expect(selection()).to.nested.include({ 'photo.cursor': 5, 'note.cursor': 7 })
   })
 
-  it('select.item selects below the primary item', () => {
+  it('select.item selects below the item cursor', () => {
     // Item 2 deselected, the cursor stays on it.
     store.dispatch(act.nav.select.item({ item: create([1], { anchor: 2 }) }))
     expect(selection()).to.nested.include({ 'photo.cursor': 5 })

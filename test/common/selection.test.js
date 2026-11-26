@@ -8,7 +8,7 @@ import {
   growingEdge,
   has,
   ids as getIds,
-  primary,
+  head,
   remove,
   select,
   Selection,
@@ -115,15 +115,15 @@ describe('selection state', () => {
     expect(has(create(), 'constructor')).to.be.false
   })
 
-  it('finds the primary element: the cursor, if selected', () => {
-    expect(primary(run([[2], [5, 'extend']]))).to.equal(5)
-    expect(primary(run([[2], [4, 'toggle']]))).to.equal(4)
+  it('finds the head: the cursor, if selected', () => {
+    expect(head(run([[2], [5, 'extend']]))).to.equal(5)
+    expect(head(run([[2], [4, 'toggle']]))).to.equal(4)
   })
 
-  it('falls back to the first selected id as primary', () => {
-    expect(primary(run([[3], [2, 'toggle'], [2, 'toggle']]))).to.equal(3)
-    expect(primary({ ...create([4, 2]), cursor: 9 })).to.equal(2)
-    expect(primary(create())).to.be.null
+  it('falls back to the first selected id as head', () => {
+    expect(head(run([[3], [2, 'toggle'], [2, 'toggle']]))).to.equal(3)
+    expect(head({ ...create([4, 2]), cursor: 9 })).to.equal(2)
+    expect(head(create())).to.be.null
   })
 
   it('compares states by ids, anchor and cursor', () => {
@@ -216,7 +216,7 @@ describe('selection state', () => {
 
 describe('selection', () => {
   describe('growingEdge', () => {
-    it('grows at the tail without a previous range', () => {
+    it('grows at the end without a previous range', () => {
       expect(growingEdge([3, 5])).to.equal(1)
       expect(growingEdge([3, 5], [])).to.equal(1)
     })
@@ -227,11 +227,11 @@ describe('selection', () => {
       expect(growingEdge([], [3, 5])).to.equal(0)
     })
 
-    it('grows at the head', () => {
+    it('grows at the start', () => {
       expect(growingEdge([1, 5], [3, 5])).to.equal(-1)
     })
 
-    it('grows at the tail', () => {
+    it('grows at the end', () => {
       expect(growingEdge([3, 7], [3, 5])).to.equal(1)
     })
 
@@ -254,7 +254,7 @@ describe('Selection', () => {
     expect(selection.elements()).to.eql([3, 2])
     expect(selection.size).to.equal(2)
     expect(selection.has(1)).to.be.false
-    expect(selection.primary()).to.equal(3)
+    expect(selection.head()).to.equal(3)
   })
 
   it('returns new states for changes', () => {

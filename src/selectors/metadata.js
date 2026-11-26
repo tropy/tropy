@@ -53,7 +53,7 @@ export const getItemMetadata = memo(
   ({ metadata }) => metadata,
   selectActiveItemIds,
   selectItemCursor,
-  // The primary only if active (it may be outside the results).
+  // The cursor only if active (it may be outside the results).
   (metadata, ids, first) =>
     collectMetadata(metadata, ids, ids.includes(first) ? first : ids[0])
 )

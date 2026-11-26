@@ -16,7 +16,7 @@ export const selectItemSelection = createSelector(
   (state, seq) => new Selection(state, seq))
 
 export const selectItemCursor = (state) =>
-  selectItemSelection(state).primary()
+  selectItemSelection(state).head()
 
 export const selectCursorItem = (state) =>
   state.items[selectItemCursor(state)] ?? null
@@ -116,7 +116,7 @@ export const selectPhotoSelection = createSelector(
   (state, seq) => new Selection(state, seq))
 
 export const selectPhotoCursor = (state) =>
-  selectPhotoSelection(state).primary()
+  selectPhotoSelection(state).head()
 
 export const selectCursorSelection = (state) =>
   state.selections[selectPhotoCursor(state)] ?? null
@@ -171,7 +171,7 @@ export const selectNoteSelection = createSelector(
   (state, seq) => new Selection(state, seq))
 
 export const selectNoteCursor = (state) =>
-  selectNoteSelection(state).primary()
+  selectNoteSelection(state).head()
 
 export const selectCursorNote = (state) =>
   state.notes[selectNoteCursor(state)] ?? null

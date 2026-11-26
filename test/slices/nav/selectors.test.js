@@ -48,7 +48,7 @@ describe('nav cursor', () => {
 
   let path = (options) => selectNavCursor(state(options))
 
-  it('resolves the cursors from the primary item down', () => {
+  it('resolves the cursors from the item cursor down', () => {
     expect(path({ photo: 2, note: 11 }))
       .to.eql({ item: 1, photo: 2, selection: null, note: 11 })
 
@@ -64,7 +64,7 @@ describe('nav cursor', () => {
     expect(path({ item: [] })).to.include({ item: null, photo: null })
   })
 
-  it('lists the active items in display order, not primary first', () => {
+  it('lists the active items in display order, not the cursor first', () => {
     let s = state({ item: [9, 1, 5] })
 
     // Item 9 is not among the results.
