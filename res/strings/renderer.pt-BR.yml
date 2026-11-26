@@ -2,7 +2,6 @@ pt-BR:
   sidebar:
     lists: Listas
     tags: Etiquetas
-    imports: Última Importação
     trash: Itens Apagados
     unlisted: Itens não listados
   toolbar:
@@ -187,7 +186,6 @@ pt-BR:
       search:
         label: Pesquisar
         highlight: Highlight matches
-        filter: Show only matching photos and notes
       export:
         label: Exportar
         note:
@@ -600,6 +598,30 @@ pt-BR:
       {count, plural,
         one {1 activity in progress …}
         other {# activities in progress …}}
+    agent: Recent activity by {agent}
+    cancel: Cancel
+    dismiss: Dismiss
+    past:
+      item:
+        import: |-
+          {count, plural,
+            =0 {{errors, plural, =0 {No items imported} other {Import failed}}}
+            one {1 item imported}
+            other {# items imported}}{count, plural,
+            =0 {}
+            other {{errors, plural, =0 {} other {, # failed}}}}{cancelled, select,
+            true {, cancelled}
+            other {}}
+      transcription:
+        process: |-
+          {count, plural,
+            =0 {{errors, plural, =0 {No transcriptions} other {Transcription failed}}}
+            one {Transcription of 1 item}
+            other {Transcription of # items}}{count, plural,
+            =0 {}
+            other {{errors, plural, =0 {} other {, # failed}}}}{cancelled, select,
+            true {, cancelled}
+            other {}}
     cache:
       prune: Otimizar cache do projeto...
       purge: Limpar caches antigos...
@@ -851,6 +873,56 @@ pt-BR:
       create: Falha ao criar etiqueta. Nomes das etiquetas devem ser únicos.
     db:
       SQLITE_CANTOPEN: Não é possível encontrar ou abrir o arquivo da base de dados.
+    partial:
+      default: |-
+        {count, plural,
+          one {One part}
+          other {# parts}
+        } could not be completed.
+      item:
+        import: |-
+          {count, plural,
+            one {One file}
+            other {# files}
+          } could not be imported.
+      photo:
+        consolidate: |-
+          {count, plural,
+            one {One photo}
+            other {# photos}
+          } could not be consolidated.
+        create: |-
+          {count, plural,
+            one {One file}
+            other {# files}
+          } could not be imported.
+        duplicate: |-
+          {count, plural,
+            one {One photo}
+            other {# photos}
+          } could not be duplicated.
+        transcribe: |-
+          {count, plural,
+            one {One transcription}
+            other {# transcriptions}
+          } failed.
+      ontology:
+        import: |-
+          {count, plural,
+            one {One vocabulary or file}
+            other {# vocabularies or files}
+          } could not be imported.
+        template:
+          create: |-
+            {count, plural,
+              one {One template}
+              other {# templates}
+            } could not be created.
+          import: |-
+            {count, plural,
+              one {One template file}
+              other {# template files}
+            } could not be imported.
   flash:
     update:
       ready:
