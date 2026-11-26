@@ -12,6 +12,9 @@ const toMap = (elements = []) => {
  *   - selected: maps (numeric!) id -> true
  *   - anchor: id where current range starts
  *   - cursor: id of current position in sequence
+ *   - past: past cursors still selected, most recent first
+ *
+ * Anchor and cursor may be deselected, past never is.
  *
  * Selection state is plain and may live in Redux.
  * Selection class is a thin wrapper on top of it.
@@ -20,11 +23,16 @@ const toMap = (elements = []) => {
 export const create = (ids = [], {
   anchor = toId(ids.at(-1)) ?? null,
   cursor = anchor
-} = {}) => ({
-  selected: toMap(ids),
-  anchor,
-  cursor
-})
+} = {}) => {
+  let selected = toMap(ids)
+
+  return {
+    selected,
+    anchor,
+    cursor,
+    past: Object.hasOwn(selected, cursor) ? [cursor] : []
+  }
+}
 
 export const isSelection = (state) =>
   typeof state?.selected === 'object' && state.selected !== null
@@ -52,11 +60,32 @@ const update = (state, {
     cursor
   }
 
-  return equal(state, next) ? state : next
+  if (equal(state, next))
+    return state
+
+  next.past = remember(state.past, selected, cursor)
+  return next
+}
+
+// Remembers past cursors (that are still selected).
+const remember = (past = [], selected, cursor, max = 32) => {
+  let next = []
+
+  if (Object.hasOwn(selected, cursor))
+    next.push(cursor)
+
+  for (let pastCursor of past) {
+    if (next.length >= max)
+      break
+    if (pastCursor !== cursor && Object.hasOwn(selected, pastCursor))
+      next.push(pastCursor)
+  }
+
+  return next
 }
 
 // Whether an update changed anything observable.
-// Compares selected ids, anchor and cursor.
+// Ignores past cursors!
 const equal = (a, b) => {
   if (a === b)
     return true
@@ -125,14 +154,19 @@ export { effective as elements }
 
 // NB: Multi-selections are inherently unordered,
 // but sometimes we need a representative id.
-// This 'head' id is the cursor (if selected),
-// and otherwise the first selected id (the lowest).
+// This 'head' id is the most recent cursor still selected,
+// and falls back to the first selected id otherwise.
 // It depends on the selection state only, not on a sequence.
 
 // Returns the head id, or null.
 export const head = (state) => {
   if (has(state, state.cursor))
     return state.cursor
+
+  if (state.past) {
+    for (let id of state.past)
+      if (has(state, id)) return id
+  }
 
   for (let id in state.selected)
     return Number(id)
