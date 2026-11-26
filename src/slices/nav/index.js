@@ -18,10 +18,9 @@ const isListItemRemove = isPending(LIST.ITEM.REMOVE)
 const removeItemFromCurrentList = (action, view) =>
   isListItemRemove(action) && isList(view, action.payload.id)
 
-/*
- * Cross-slice reducer:
- * nav.mode, nav.search, nav.select.
- */
+// Cross-slice reducer:
+// nav.mode, nav.search, nav.select.
+
 export default function nav (state = initialState, action) {
   let search = searchSlice.reducer(state.search, action)
   let selection = state.select

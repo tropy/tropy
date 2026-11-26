@@ -32,5 +32,9 @@ export default {
   TAG: {
     FIND: 'api.tag.find',
     SHOW: 'api.tag.show'
+  },
+
+  VIEW: {
+    SHOW: 'api.view.show'
   }
 }

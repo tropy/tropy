@@ -18,6 +18,7 @@ import notes from './routes/notes.js'
 import photos from './routes/photos.js'
 import tags from './routes/tags.js'
 import transcriptions from './routes/transcriptions.js'
+import view from './routes/view.js'
 
 export function create ({
   locale,
@@ -66,6 +67,7 @@ export function create ({
     fastify.register(notes)
     fastify.register(transcriptions)
     fastify.register(photos)
+    fastify.register(view)
   }, { prefix: '/projects/:urlId' })
 
   return app

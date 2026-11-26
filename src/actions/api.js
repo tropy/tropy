@@ -354,5 +354,19 @@ export default {
         }
       }
     }
+  },
+
+  view: {
+    show (payload, meta) {
+      return {
+        type: API.VIEW.SHOW,
+        payload,
+        meta: {
+          cmd: 'project',
+          hidden: true,
+          ...meta
+        }
+      }
+    }
   }
 }
