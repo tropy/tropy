@@ -1,11 +1,11 @@
 import {
-  create, insert, load, collect, remove, restore, update
+  create, insert, load, collect, remove, restore, update,
+  selectPendingTranscriptions
 } from '../slices/transcriptions.js'
 import * as activity from '../slices/activities.js'
 import { putActivityUpdate } from './activity.js'
 import { done } from '../slices/cmd.js'
 import { OnlineChannel } from './online.js'
-import { getPendingTranscriptions } from '../selectors/transcriptions.js'
 import { SETTINGS } from '../constants/index.js'
 import { isLinked } from '../account.js'
 import act from '../actions/photo.js'
@@ -122,7 +122,7 @@ function *poll () {
 
   try {
     while (true) {
-      let pending = yield select(getPendingTranscriptions)
+      let pending = yield select(selectPendingTranscriptions)
       batch = yield call(track, batch, pending)
 
       let ready = canPoll() && pending.length > 0

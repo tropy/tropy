@@ -2,7 +2,7 @@ import { createSelector as memo } from '@reduxjs/toolkit'
 import { getMetadataFields } from './metadata.js'
 import { selectActiveItemIds } from '../slices/nav/selectors.js'
 import { selectItemSequence } from '../slices/qr.js'
-import { pickActiveTranscription } from './transcriptions.js'
+import { activeTranscription } from '../slices/transcriptions.js'
 import { serialize } from '../editor/serialize.js'
 
 const getPhotoExpanded = (
@@ -30,7 +30,7 @@ const getPhotoExpanded = (
       ...notepad[id]
     })),
     transcriptions: [photo, ...photo.selections.map(id => selections?.[id])]
-      .map(subject => pickActiveTranscription(
+      .map(subject => activeTranscription(
         subject?.transcriptions.map(id => transcriptions[id])))
       .filter(tr => tr?.text)
       .map(({ id, text }) => ({ id, text }))
