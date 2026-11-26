@@ -1,4 +1,5 @@
-import { useLayoutEffect, useMemo, useRef } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { shallowEqual } from 'react-redux'
 import { useEvent } from './use-event.js'
 import { debounce, throttle } from '../common/util.js'
 
@@ -29,4 +30,25 @@ export function useDebounce (fn, opts) {
 
 export function useThrottle (fn, opts) {
   return useLodash(throttle, fn, opts)
+}
+
+export function useDebouncedValue (value, {
+  wait = 250,
+  shallow = false
+} = {}) {
+  let [current, setCurrent] = useState(value)
+  let [debounced, setDebounced] = useState(value)
+
+  if (!(shallow ? shallowEqual : Object.is)(current, value))
+    setCurrent(value)
+
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      setDebounced(current)
+    }, wait)
+
+    return () => clearTimeout(timer)
+  }, [current, wait])
+
+  return (wait > 0) ? debounced : value
 }
