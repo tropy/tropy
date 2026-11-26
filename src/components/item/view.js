@@ -5,6 +5,7 @@ import { ItemContainer } from './container.js'
 import { Resizable } from '../resizable.js'
 import { SASS } from '../../constants/index.js'
 import { useActions } from '../../hooks/use-action.js'
+import { useDebouncedValue } from '../../hooks/use-debounce.js'
 
 import {
   selectActiveItemIds,
@@ -12,7 +13,8 @@ import {
   selectActivePhotoIds,
   selectCursorNote,
   selectCursorPhoto,
-  selectItemCursor
+  selectItemCursor,
+  selectPhotoCursor
 } from '../../slices/nav/selectors.js'
 
 
@@ -33,12 +35,20 @@ export const ItemView = ({
     }, 0, 0)`
   }), [isItemMode, offset])
 
+  // In project mode debounce updating Esper and notepad.
+  let note = useSelector(selectCursorNote)
+  let photoCursor = useSelector(selectPhotoCursor)
+  let photo = useSelector(selectCursorPhoto)
+
+  let settled = useDebouncedValue({ photoCursor, note, photo }, {
+    wait: isItemMode ? 0 : 500,
+    shallow: true
+  })
+
   // TODO these should be moved!
   // ------------------------------------------------------------
   let items = useSelector(selectActiveItemIds)
   let item = useSelector(selectItemCursor)
-  let note = useSelector(selectCursorNote)
-  let photo = useSelector(selectCursorPhoto)
   let photos = useSelector(selectActivePhotoIds)
   let notes = useSelector(selectActiveNoteIds)
   let keymap = useSelector(state => state.keymap)
@@ -94,8 +104,9 @@ export const ItemView = ({
           photos={photos}/>
       </Resizable>
       <ItemContainer
-        note={note}
-        photo={photo}
+        photoCursor={settled.photoCursor}
+        note={settled.note}
+        photo={settled.photo}
         isDisabled={!isItemMode || isProjectClosing}
         isReadOnly={isReadOnly}
         onContextMenu={onContextMenu}
