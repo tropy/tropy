@@ -119,9 +119,27 @@ describe('selection state', () => {
     expect(head(run([[2], [4, 'toggle']]))).to.equal(4)
   })
 
-  it('falls back to the first selected id as head', () => {
-    expect(head(run([[3], [2, 'toggle'], [2, 'toggle']]))).to.equal(3)
-    expect(head({ ...create([4, 2]), cursor: 9 })).to.equal(2)
+  it('falls back to the most recent cursor still selected', () => {
+    // Deselecting the cursor: toggle, flip (selects 1, 5), remove.
+    expect(head(run([[2], [4, 'toggle'], [6, 'toggle'], [6, 'toggle']])))
+      .to.equal(4)
+    expect(head(run([[1], [5, 'extend'], [2, 'toggle'], [4, 'flip']])))
+      .to.equal(5)
+    expect(head(remove(run([[2], [4, 'toggle'], [6, 'toggle']]), [6])))
+      .to.equal(4)
+
+    // Select all keeps a deselected cursor, selecting it again.
+    expect(head(all(run([[2], [4, 'toggle'], [4, 'toggle']]), seq)))
+      .to.equal(4)
+
+    // Replace starts anew, clear forgets.
+    expect(run([[2], [4, 'toggle'], [6]]).past).to.eql([6])
+    expect(clear(run([[2], [4, 'toggle']])).past).to.eql([])
+  })
+
+  it('falls back to the lowest id without past (older states)', () => {
+    let older = { ...create([4, 2], { cursor: 4 }), cursor: 9, past: undefined }
+    expect(head(older)).to.equal(2)
     expect(head(create())).to.be.null
   })
 
