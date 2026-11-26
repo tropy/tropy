@@ -14,6 +14,7 @@ import {
   Selection,
   size
 } from '#tropy/common/selection.js'
+import { createSequence } from '#tropy/common/sequence.js'
 
 describe('selection state', () => {
   let seq = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -192,6 +193,24 @@ describe('selection state', () => {
     let items = seq.map(id => ({ id }))
     let state = run([[2], [4, 'extend']], none, items)
     expect(elements(state, items).map(it => it.id)).to.eql([2, 3, 4])
+  })
+
+  it('returns the selected elements in sequence order, few or many', () => {
+    // A long sequence, not in id order; 999 is not in it.
+    let long = Array.from({ length: 200 }, (_, i) => 200 - i)
+    let items = long.map(id => ({ id }))
+
+    for (let selected of [
+      [7, 150, 999, 42],
+      long.filter(id => id % 4 !== 0)
+    ]) {
+      let state = create(selected)
+      let expected = long.filter(id => selected.includes(id))
+
+      expect(elements(state, long)).to.eql(expected)
+      expect(elements(state, createSequence(long.slice()))).to.eql(expected)
+      expect(elements(state, items).map(it => it.id)).to.eql(expected)
+    }
   })
 })
 

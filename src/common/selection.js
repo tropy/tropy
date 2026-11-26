@@ -77,8 +77,23 @@ export const ids = (state) => {
 }
 
 // Returns the selected elements of seq, in sequence order.
-const effective = (state, seq) =>
-  seq.filter(it => has(state, it))
+const effective = (state, seq) => {
+  // For big selections we filter the full sequence.
+  if (size(state) * 16 >= seq.length)
+    return seq.filter(it => has(state, it))
+
+  // For small selections we lookup and sort the selected elemnts.
+  let positions = []
+
+  for (let id in state.selected) {
+    let at = indexOf(seq, Number(id))
+    if (at >= 0) positions.push(at)
+  }
+
+  return positions
+    .sort((a, b) => a - b)
+    .map(at => seq[at])
+}
 
 export { effective as elements }
 
