@@ -6,7 +6,7 @@ import { Editable } from '../editable.js'
 
 
 export function ProjectName (props) {
-  let [{ canDrop, isOver }, drop] = useDropPhotoFiles({
+  let [{ isOver }, drop] = useDropPhotoFiles({
     onDrop: props.onDrop,
     isDisabled: props.isReadOnly
   })
@@ -17,7 +17,7 @@ export function ProjectName (props) {
       className={cx('project-name', {
         active: props.isSelected,
         'read-only': props.isReadOnly,
-        over: isOver && canDrop
+        over: isOver
       })}
       onClick={props.onClick}>
       <NodeContainer icon={<IconMaze seed={props.id}/>}>

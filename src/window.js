@@ -321,10 +321,10 @@ export class Window extends EventEmitter {
 
   handleDragEvents () {
     on(window, 'dragstart', () => {
-      this.state.isDragging = true
+      this.toggle('drag-start')
     }, { passive: true, capture: true })
     on(window, 'dragend', () => {
-      this.state.isDragging = false
+      this.toggle('drag-end')
     }, { passive: true, capture: true })
     on(window, 'dragenter', () => {
       this.toggle('focus')
@@ -334,6 +334,16 @@ export class Window extends EventEmitter {
         this.toggle('blur')
       }
     }, { passive: true, capture: true })
+    on(window, 'dragover', this.handleDragOver)
+  }
+
+  handleDragOver = (event) => {
+    if (event.defaultPrevented || isLiveInput(event.target))
+      return
+
+    // Refuse unhandled drag/drop on the window.
+    event.preventDefault()
+    event.dataTransfer.dropEffect = 'none'
   }
 
   handleMouseButtons () {
@@ -443,6 +453,14 @@ export class Window extends EventEmitter {
         break
       case 'menu':
         toggle(this.html, 'window-controls-menu-open', ...args)
+        break
+      case 'drag-start':
+        this.state.isDragging = true
+        toggle(this.html, 'dragging', true)
+        break
+      case 'drag-end':
+        this.state.isDragging = false
+        toggle(this.html, 'dragging', false)
         break
     }
 

@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react'
+import { memo } from 'react'
 import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import { Editable } from '../editable.js'
@@ -7,29 +7,28 @@ import { Thumbnail } from './thumbnail.js'
 import { Icon } from '../icons.js'
 import { Button } from '../button.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
-import { DND } from '../dnd.js'
-import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
 import { useElementClicks } from '../../hooks/use-element-clicks.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { pick } from '../../common/util.js'
 import * as datatype from '../../common/datatype.js'
 
 export const PhotoListItem = memo(({
-  getAdjacent,
+  canDrop,
+  direction,
+  index,
   isActive,
   isDisabled,
+  isDragging,
   isEditing,
   isExpandable,
   isExpanded,
   isItemOpen,
   isMatch,
+  isOver,
   isSelected,
-  isSortable,
-  isVertical,
   onChange,
   onConsolidate,
   onContextMenu,
-  onDropPhoto,
   onEdit,
   onEditCancel,
   onItemOpen,
@@ -39,23 +38,10 @@ export const PhotoListItem = memo(({
   size = 48,
   title
 }) => {
-  let container = useRef()
-
   let titleText = useSelector(state =>
     state.metadata[photo.id]?.[title]?.text)
   let titleRanges = useSearchRanges(titleText, datatype.text)
 
-  let [{ canDrop, direction, dragType, isDragging, isOver }, dnd] =
-    useDragDropPhoto(container, {
-      photo,
-      getAdjacent,
-      isSortable,
-      isDisabled: isDisabled || isEditing,
-      isVertical,
-      onDrop: onDropPhoto
-    })
-
-  // Read-only (isDisabled here) blocks editing, not selection.
   let elementClicks = useElementClicks({
     isSelected: isActive,
     onDoubleClick: isItemOpen ? (!isDisabled && onEdit) : onItemOpen,
@@ -92,15 +78,15 @@ export const PhotoListItem = memo(({
 
   return (
     <li
-      ref={dnd}
+      data-index={index}
       className={cx('photo', {
         active: isActive,
-        'no-drop-target': dragType === DND.SELECTION,
+        'no-drop-target': !canDrop,
         dragging: isDragging,
         expandable: isExpandable,
         match: isMatch,
         expanded: isExpanded,
-        over: isOver && canDrop,
+        over: isOver,
         [direction]: direction
       })}>
       <div

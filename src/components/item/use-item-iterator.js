@@ -1,10 +1,11 @@
-import { useImperativeHandle, useRef } from 'react'
+import { cloneElement, useImperativeHandle, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useEventHandler } from '../../hooks/use-event-handler.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useSequence } from '../../hooks/use-sequence.js'
-import { useItemDragDrop } from './use-item-drag-drop.js'
+import { useSequenceDragDrop } from '../../hooks/use-sequence-drag-drop.js'
+import { ItemDragPreview } from './drag-preview.js'
 import { indexOf } from '../../common/sequence.js'
 import { blank } from '../../common/util.js'
 import { selectItemSelection } from '../../slices/nav/selectors.js'
@@ -23,6 +24,7 @@ export function useItemIterator ({
   isReadOnly,
   list,
   ref,
+  size,
   onContextMenu,
   onItemImport
 }, { edit, onSelectedClick, tabIndex }) {
@@ -78,10 +80,6 @@ export function useItemIterator ({
 
   let merge = (ids) => {
     dispatch(act.item.merge(ids))
-  }
-
-  let movePhotos = (payload) => {
-    dispatch(act.photo.move(payload))
   }
 
   let contextMenu = (event, id) => {
@@ -205,18 +203,60 @@ export function useItemIterator ({
     onDrop: onItemImport
   })
 
-  let dnd = useItemDragDrop({
-    items,
-    data,
-    selection,
-    isReadOnly,
-    onDragStart: focusItem,
-    onDropItems: merge,
-    onDropPhotos: movePhotos
+  let dnd = useSequenceDragDrop(items, {
+    isDisabled: isReadOnly,
+
+    // The pressed item first, then the rest of the selection.
+    getData: (id) => {
+      let item = data[id]
+
+      return (item == null || item.deleted)
+        ? null
+        : {
+          type: 'items',
+          items: [
+            { ...item },
+            ...selection.ids()
+              .filter(it => it !== id)
+              .map(it => ({ id: it }))
+          ]
+        }
+    },
+
+    // The covers' thumbnail variant, already loaded.
+    preview: (data) => <ItemDragPreview item={data} size={size}/>,
+
+    onDragStart: ({ items }) => {
+      focusItem(items[0].id)
+    },
+
+    // Items onto another item merge; photos move to it.
+    accept: ['items', 'photo'],
+
+    canDrop: (source, id) =>
+      data[id] != null &&
+      !data[id].deleted &&
+      ((source.type === 'items')
+        ? !source.items.some(it => it.id === id)
+        : source.item !== id),
+
+    onDrop: (source, id) => {
+      if (source.type === 'items')
+        merge([id, ...source.items.map(it => it.id)])
+      else
+        dispatch(act.photo.move({ item: id, photos: [source] }))
+    }
   })
 
   let connect = (element) =>
-    isReadOnly ? element : dnd.connect(dropFile(element))
+    isReadOnly
+      ? element
+      : cloneElement(element, {
+        ref: (node) => {
+          dnd.setContainer(node)
+          dropFile(node)
+        }
+      })
 
   let getIterableProps = (id, index) => ({
     ...dnd.getLeafProps(id),
@@ -231,8 +271,7 @@ export function useItemIterator ({
     getIterableProps,
     handlers: {
       ...handlers,
-      onDragOver: dnd.handleDragOver,
-      onDragStart: dnd.handleDragStart
+      onPointerDown: dnd.onPointerDown
     },
     isOver: file.canDrop,
     items,

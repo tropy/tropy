@@ -6,7 +6,7 @@ import { IconPlusCircles } from '../icons.js'
 import { TagColor } from '../colors.js'
 import { cmdOrCtrlKey } from '../../keymap.js'
 import { noop, toId } from '../../common/util.js'
-import { useDropItems } from '../../hooks/use-drag-drop-items.js'
+import { useDropTarget } from '../../hooks/use-drop-target.js'
 import { useFocusClick } from '../../hooks/use-focus-click.js'
 
 
@@ -49,9 +49,10 @@ export const Tag = React.memo(({
 
   let isDropDisabled = isReadOnly || isSelected || onDropItems == null
 
-  let [{ canDrop, isOver }, drop] = useDropItems({
+  let [{ isOver }, drop] = useDropTarget({
+    accept: 'items',
     isDisabled: isDropDisabled,
-    onDrop: (items) => {
+    onDrop: ({ items }) => {
       onDropItems({
         id: items.map(toId),
         tags: [tag.id]
@@ -96,7 +97,7 @@ export const Tag = React.memo(({
       className={cx('tag', {
         active: isSelected,
         mixed: !!tag.mixed,
-        over: isOver && canDrop
+        over: isOver
       })}
       tabIndex={-1}
       onContextMenu={isEditing ? null : handleContextMenu}

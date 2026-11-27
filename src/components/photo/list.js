@@ -96,9 +96,9 @@ export const PhotoList = (props) => {
         tabIndex={TABS.PhotoList}
         onKeyDown={onKeyDown}
         onLayoutChange={iterator.onLayoutChange}>
-        {(id) => {
+        {(id, index) => {
           if (iterator.resolve(id).selection != null) {
-            let props = iterator.getSelectionProps(id)
+            let props = iterator.getSelectionProps(id, index)
 
             return props && (
               <SelectionListItem
@@ -112,7 +112,7 @@ export const PhotoList = (props) => {
             )
           }
 
-          let props = iterator.getIterableProps(id)
+          let props = iterator.getIterableProps(id, index)
 
           return props && (
             <PhotoListItem

@@ -3,8 +3,6 @@ import { render as testRender, queries } from '@testing-library/react'
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
 import { IntlProvider } from 'react-intl'
-import { DndProvider } from 'react-dnd'
-import { TestBackend } from 'react-dnd-test-backend'
 import WIN, { createWindowInstance } from '#tropy/window.js'
 import { WindowContext } from '#tropy/components/window.js'
 import { Strings } from '#tropy/res.js'
@@ -80,16 +78,14 @@ export function withStore (store) {
     wrapper ({ children }) {
       return (
         <WindowContext.Provider value={win}>
-          <DndProvider backend={TestBackend}>
-            <Provider store={store}>
-              <IntlProvider
-                locale="en"
-                messages={messages}
-                onError={onIntlError}>
-                {children}
-              </IntlProvider>
-            </Provider>
-          </DndProvider>
+          <Provider store={store}>
+            <IntlProvider
+              locale="en"
+              messages={messages}
+              onError={onIntlError}>
+              {children}
+            </IntlProvider>
+          </Provider>
         </WindowContext.Provider>
       )
     }

@@ -86,7 +86,7 @@ export const PhotoGrid = (props) => {
         onKeyDown={onKeyDown}
         onLayoutChange={iterator.onLayoutChange}>
         {(id, index) => {
-          let props = iterator.getIterableProps(id)
+          let props = iterator.getIterableProps(id, index)
 
           return props && (
             <PhotoTile

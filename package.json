@@ -26,6 +26,7 @@
       "renderer": "./src/sqlite/renderer.js",
       "default": "./src/sqlite/node.js"
     },
+    "#pdnd/*.js": "@atlaskit/pragmatic-drag-and-drop/dist/es2019/*.js",
     "#tropy/*.js": "./src/*.js",
     "#vendor/*.js": "./vendor/*.js"
   },
@@ -118,7 +119,6 @@
     "node-addon-api": "^8.5.0",
     "node-gyp": "^13.0.0",
     "prosemirror-test-builder": "^1.0.3",
-    "react-dnd-test-backend": "^16.0.1",
     "rollup": "^4.34.8",
     "sass": "^1.64.2",
     "source-map-js": "^1.2.1",
@@ -130,6 +130,7 @@
     "stylelint-scss": "^7.0.0"
   },
   "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^4.0.0",
     "@fastify/send": "^4.2.0",
     "@inukshuk/exif": "^3.0.0",
     "@modelcontextprotocol/server": "^2.4.0",
@@ -165,8 +166,6 @@
     "prosemirror-view": "^1.29.0",
     "rdjpgcom": "^1.0.0",
     "react": "^19.2.0",
-    "react-dnd": "^16.0.1",
-    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.2.0",
     "react-intl": "^12.1.4",
     "react-redux": "^9.1.0",

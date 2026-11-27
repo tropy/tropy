@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import { Editable } from '../editable.js'
 import { Highlight, useSearchRanges } from '../highlight.js'
-import { useDropText } from '../../hooks/use-drop-text.js'
+import { useExternalDrop } from '../../hooks/use-external-drop.js'
+import { hasText } from '../dnd.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { IconLock, IconWarningSm } from '../icons.js'
 import { auto } from '../../format.js'
@@ -28,7 +29,11 @@ export const MetadataValue = forwardRef(({
   let onDropText = useEvent(value =>
     onChange?.(value, value !== text, true))
 
-  let [{ isOver }, drop] = useDropText(({ onDrop: onDropText }))
+  let [{ isOver }, drop] = useExternalDrop({
+    accept: hasText,
+    isDisabled: isReadOnly,
+    onDrop: ({ urls, text }) => onDropText(urls[0] || text)
+  })
 
   let isInvalid = isRequired && blank(text)
   let display = format(text, type)
@@ -44,7 +49,8 @@ export const MetadataValue = forwardRef(({
   return (
     <div
       ref={node => {
-        drag ? drag(drop(node)) : drop(node)
+        drag?.(node)
+        drop(node)
       }}
       className={cx('value', { over: isOver })}
       onClick={onClick}>

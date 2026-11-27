@@ -5,7 +5,8 @@ import { PlusMinusControls } from '../button.js'
 import { FormElement, FormField, FormToggle } from '../form.js'
 import { IconGrip } from '../icons.js'
 import { bounds } from '../../dom.js'
-import { DND, useDrag, useDrop } from '../dnd.js'
+import { useDragSource } from '../../hooks/use-drag-source.js'
+import { useDropTarget } from '../../hooks/use-drop-target.js'
 
 
 export const TemplateField = ({
@@ -28,41 +29,31 @@ export const TemplateField = ({
   let isDragAndDropEnabled = !isDisabled && !isSingle
   let isEditable = !(isDisabled || isTransient)
 
-  let [{ isDragging }, drag] = useDrag({
-    type: DND.TEMPLATE.FIELD,
-
-    item: () => {
+  let [{ isDragging }, drag] = useDragSource({
+    isDisabled: !isDragAndDropEnabled,
+    getData: () => ({ type: 'template.field', field }),
+    onDragStart: () => {
       onSortStart(field)
-      return field
     },
-
-    end: (item, monitor) => {
-      if (monitor.didDrop())
-        onSort(item)
+    onDrop: (data, dropTargets) => {
+      if (dropTargets.length > 0)
+        onSort(data.field)
       else
-        onSortReset(item)
-    },
-
-    canDrag: () => (isDragAndDropEnabled),
-
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging()
-    })
+        onSortReset(data.field)
+    }
   })
 
-  let [, drop] = useDrop({
-    accept: [DND.TEMPLATE.FIELD],
-
-    drop: (item) => (item),
-
-    hover: (item, monitor) => {
-      if (item === field || !container.current)
+  let [, drop] = useDropTarget({
+    accept: 'template.field',
+    isDisabled: !isDragAndDropEnabled,
+    onDrag: (data, { input: { clientY } }) => {
+      if (data.field === field || !container.current)
         return
 
       let { top, height } = bounds(container.current)
-      let offset = Math.round((monitor.getClientOffset().y - top) / height)
+      let offset = Math.round((clientY - top) / height)
 
-      onSortPreview(item, field, offset)
+      onSortPreview(data.field, field, offset)
     }
   })
 
@@ -85,7 +76,7 @@ export const TemplateField = ({
     <li
       ref={(node) => {
         container.current = node
-        if (isDragAndDropEnabled) drop(node)
+        drop(node)
       }}
       className={cx('template-field', {
         dragging: isDragging

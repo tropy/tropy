@@ -2,7 +2,7 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import cx from 'classnames'
 import { NodeContainer } from '../tree/node-container.js'
-import { useDropItems } from '../../hooks/use-drag-drop-items.js'
+import { useDropTarget } from '../../hooks/use-drop-target.js'
 
 
 export const TrashListNode = React.memo(({
@@ -12,8 +12,9 @@ export const TrashListNode = React.memo(({
   onDropItems
 }) => {
 
-  let [{ isOver }, drop] = useDropItems({
-    onDrop: onDropItems
+  let [{ isOver }, drop] = useDropTarget({
+    accept: 'items',
+    onDrop: ({ items }) => onDropItems(items)
   })
 
   return (

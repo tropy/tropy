@@ -1,6 +1,5 @@
-import { memo, useMemo, useRef, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
-import { useDropItems } from '../../hooks/use-drag-drop-items.js'
 import { useDragDropNode } from '../../hooks/use-drag-drop-node.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { Node } from '../tree/node.js'
@@ -38,8 +37,6 @@ export const ListNode = memo(({
   onSave,
   position
 }) => {
-  let node = useRef(null)
-
   let [halloween] = useState(mdd(10, 31))
   let [random] = useState(Math.random)
 
@@ -61,7 +58,7 @@ export const ListNode = memo(({
     onDropFiles({ list: list.id, ...files })
   })
 
-  let [{ canDrop, dropIndicator, isDragging, isOver }, dnd] = useDragDropNode(node, {
+  let [{ dropIndicator, isDragging, isOver }, dnd] = useDragDropNode({
     depth,
     icon,
     indent: INDENT,
@@ -72,14 +69,10 @@ export const ListNode = memo(({
     minDropDepth,
     node: list,
     onDrop,
+    onDropItems: handleDropItems,
     onDropOutside,
     padding: PADDING,
     position
-  })
-
-  let [di, dropItems] = useDropItems({
-    isDisabled: isReadOnly,
-    onDrop: handleDropItems
   })
 
   let [df, dropFiles] = useDropPhotoFiles({
@@ -87,8 +80,10 @@ export const ListNode = memo(({
     onDrop: handleDropFiles
   })
 
-  canDrop = canDrop || df.canDrop || di.canDrop
-  isOver = isOver || df.isOver || di.isOver
+  let connect = (element) => {
+    dnd(element)
+    dropFiles(element)
+  }
 
   let handleContextMenu = useEvent((event) => {
     if (!isEditing) {
@@ -110,9 +105,9 @@ export const ListNode = memo(({
     })}>
       <Node
         className={[dropIndicator, {
-          over: isOver && canDrop
+          over: isOver || df.isOver
         }]}
-        ref={dropItems(dropFiles(dnd))}
+        ref={connect}
         icon={icon}
         id={list.id}
         isDisabled={isReadOnly || isDragging}

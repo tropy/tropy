@@ -1,5 +1,4 @@
 import { memo, useRef } from 'react'
-import { useDragDropSelection } from '../../hooks/use-drag-drop-selection.js'
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view.js'
 import { useElementClicks } from '../../hooks/use-element-clicks.js'
 import { Thumbnail } from '../photo/thumbnail.js'
@@ -7,14 +6,13 @@ import { pick } from '../../common/util.js'
 import cx from 'classnames'
 
 export const SelectionTile = memo(({
-  getAdjacent,
+  direction,
+  index,
   isActive,
-  isDisabled,
+  isDragging,
   isLast,
-  isSortable,
-  isVertical,
+  isOver,
   onContextMenu,
-  onDrop,
   onItemOpen,
   onSelect,
   photo,
@@ -23,20 +21,8 @@ export const SelectionTile = memo(({
 }) => {
   let container = useRef()
 
-  let [{ canDrop, isDragging, isOver, direction }, dnd] =
-    useDragDropSelection(container, {
-      selection,
-      photo,
-      getAdjacent,
-      isDisabled,
-      isSortable,
-      isVertical,
-      onDrop
-    })
-
   useScrollIntoView(container, { when: isActive })
 
-  // Read-only (isDisabled here) does not block selection.
   let elementClicks = useElementClicks({
     isSelected: isActive,
     onDoubleClick: onItemOpen,
@@ -46,12 +32,13 @@ export const SelectionTile = memo(({
 
   return (
     <li
-      ref={dnd}
+      ref={container}
+      data-index={index}
       className={cx({
         active: isActive,
         dragging: isDragging,
         last: isLast,
-        over: isOver && canDrop,
+        over: isOver,
         selection: true,
         tile: true,
         [direction]: direction

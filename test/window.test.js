@@ -134,4 +134,35 @@ describe('Window', () => {
       expect(has(win.html, 'full-screen-menu')).to.be.false
     })
   })
+  describe('handleDragOver', () => {
+    let dragOver = (target, defaultPrevented = false) => {
+      let event = {
+        target,
+        defaultPrevented,
+        dataTransfer: { dropEffect: 'copy' },
+        preventDefault: mock.fn()
+      }
+      win.handleDragOver(event)
+      return event
+    }
+
+    it('refuses drags no target took', () => {
+      let event = dragOver(document.body)
+      expect(event.preventDefault.mock.callCount()).to.equal(1)
+      expect(event.dataTransfer.dropEffect).to.equal('none')
+    })
+
+    it('leaves taken drags and live inputs alone', () => {
+      expect(dragOver(document.body, true).dataTransfer.dropEffect)
+        .to.equal('copy')
+      expect(dragOver(document.createElement('textarea')).dataTransfer.dropEffect)
+        .to.equal('copy')
+    })
+
+    it('refuses drags over read-only inputs', () => {
+      let input = document.createElement('input')
+      input.readOnly = true
+      expect(dragOver(input).dataTransfer.dropEffect).to.equal('none')
+    })
+  })
 })

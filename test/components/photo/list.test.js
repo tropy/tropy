@@ -1,6 +1,5 @@
 import { mock } from 'node:test'
 import { act, fireEvent, waitFor } from '@testing-library/react'
-import { TestBackendImpl } from 'react-dnd-test-backend'
 import { render, withStore } from '../../support/react.js'
 import { emit } from '#tropy/dom.js'
 import { KeyMap } from '#tropy/keymap.js'
@@ -91,36 +90,61 @@ describe('PhotoList', () => {
   })
 
   describe('when dragging photos', () => {
-    let backend
-    let sources
-    let targets
-    let { connectDragSource, connectDropTarget } = TestBackendImpl.prototype
+    let dataTransfer
 
-    // The test backend does not know the DOM:
-    // records the handler ids of each node.
-    let record = (handlers) => function (id, node) {
-      backend = this
-      handlers.set(node, [...new Set([...(handlers.get(node) ?? []), id])])
-      return () => {}
+    let frame = () =>
+      act(() => new Promise(resolve => requestAnimationFrame(resolve)))
+
+    // Native drag events at f of the node's height.
+    let fire = (type, node, f = 0.5) => {
+      let { x, y, width, height } = node.getBoundingClientRect()
+      act(() => {
+        node.dispatchEvent(new DragEvent(type, {
+          bubbles: true,
+          cancelable: true,
+          clientX: x + width / 2,
+          clientY: y + height * f,
+          dataTransfer
+        }))
+      })
     }
 
-    beforeEach(() => {
-      sources = new Map()
-      targets = new Map()
-      TestBackendImpl.prototype.connectDragSource = record(sources)
-      TestBackendImpl.prototype.connectDropTarget = record(targets)
-    })
+    let drag = async (node) => {
+      dataTransfer = new DataTransfer()
+      fireEvent.pointerDown(node)
+      fire('dragstart', node)
+      await frame()
+    }
 
-    afterEach(() => {
-      Object.assign(TestBackendImpl.prototype, {
-        connectDragSource,
-        connectDropTarget
+    let hover = async (node, f) => {
+      fire('dragenter', node, f)
+      fire('dragover', node, f)
+      await frame()
+    }
+
+    let end = async (node) => {
+      act(() => {
+        node.dispatchEvent(new DragEvent('dragend', { bubbles: true }))
       })
-    })
+      await frame()
+    }
 
-    // Without the selection row taking the drop,
-    // the list would move the photo to the end.
-    it('ignores photos dropped on selections', () => {
+    let drop = async (node, f) => {
+      fire('drop', node, f)
+      await end(node)
+    }
+
+    // Measured: all rows are rendered, with space after them.
+    let renderAll = async (store, rows) => {
+      let result = render(<PhotoList/>, withStore(store))
+      result.$('.scroll-container').style.height = '200px'
+      await waitFor(() => {
+        expect(result.$$('li.photo, li.selection')).to.have.length(rows)
+      })
+      return result
+    }
+
+    it('ignores photos dropped on selections', async () => {
       let store = createPhotoStore({
         photos: [1, 2, 3],
         current: 1,
@@ -128,29 +152,24 @@ describe('PhotoList', () => {
       })
 
       let dispatch = mock.method(store, 'dispatch')
-      let { $ } = render(<PhotoList/>, withStore(store))
+      let { $ } = await renderAll(store, 4)
 
-      backend.simulateBeginDrag(sources.get($('li.photo')))
-      backend.simulateHover([
-        ...targets.get($('.photo-list')),
-        ...targets.get($('li.selection'))
-      ])
-      backend.simulateDrop()
-      backend.simulateEndDrag()
+      await drag($('li.photo'))
+      await hover($('li.selection'))
+      await drop($('li.selection'))
 
       expect(dispatch.mock.calls.map(call => call.arguments[0].type))
         .not.to.include(PHOTO.ORDER)
     })
 
-    it('moves photos dropped outside the rows to the end', () => {
+    it('moves photos dropped outside the rows to the end', async () => {
       let store = createPhotoStore({ photos: [1, 2, 3] })
       let dispatch = mock.method(store, 'dispatch')
-      let { $ } = render(<PhotoList/>, withStore(store))
+      let { $ } = await renderAll(store, 3)
 
-      backend.simulateBeginDrag(sources.get($('li.photo')))
-      backend.simulateHover(targets.get($('.photo-list')))
-      backend.simulateDrop()
-      backend.simulateEndDrag()
+      await drag($('li.photo'))
+      await hover($('.scroll-container'), 0.95)
+      await drop($('.scroll-container'), 0.95)
 
       expect(dispatch.mock.calls.map(call => call.arguments[0].payload))
         .to.deep.include({ item: 1, photos: [2, 3, 1] })
@@ -164,27 +183,14 @@ describe('PhotoList', () => {
       })
 
       let dispatch = mock.method(store, 'dispatch')
-      let { $, $$ } = render(<PhotoList/>, withStore(store))
-
-      // Measured: all rows are rendered.
-      $('.scroll-container').style.height = '200px'
-      await waitFor(() => {
-        expect($$('li.selection')).to.have.length(2)
-      })
+      let { $$ } = await renderAll(store, 4)
 
       // The lower half of the second selection: after it.
-      // (Hover handlers see the offset passed when the drag begins.)
       let [first, second] = $$('li.selection')
-      let { left, bottom } = second.getBoundingClientRect()
-      let clientOffset = { x: left + 1, y: bottom - 1 }
 
-      backend.simulateBeginDrag(sources.get(first), {
-        clientOffset,
-        getSourceClientOffset: () => clientOffset
-      })
-      act(() => backend.simulateHover(targets.get(second), { clientOffset }))
-      backend.simulateDrop()
-      backend.simulateEndDrag()
+      await drag(first)
+      await hover(second, 0.9)
+      await drop(second, 0.9)
 
       expect(dispatch.mock.calls.map(call => call.arguments[0]))
         .to.deep.include({
@@ -194,23 +200,24 @@ describe('PhotoList', () => {
         })
     })
 
-    it('marks the rows a photo or selection cannot be dropped on', () => {
+    it('marks the rows a photo or selection cannot be dropped on', async () => {
       let store = createPhotoStore({
         current: 1,
         expanded: true,
         selections: [9, 10]
       })
 
-      let { $, $$ } = render(<PhotoList/>, withStore(store))
-      let noDropTarget = () => [...$$('li.no-drop-target')].map(li => li.className.split(' ')[0])
+      let { $, $$ } = await renderAll(store, 4)
+      let noDropTarget = () =>
+        [...$$('li.no-drop-target')].map(li => li.className.split(' ')[0])
 
-      act(() => backend.simulateBeginDrag(sources.get($('li.photo'))))
-      expect(noDropTarget()).to.eql(['selection'])
-      act(() => backend.simulateEndDrag())
+      await drag($('li.photo'))
+      expect(noDropTarget()).to.eql(['selection', 'selection'])
+      await end($('li.photo'))
 
-      act(() => backend.simulateBeginDrag(sources.get($('li.selection'))))
-      expect(noDropTarget()).to.eql(['photo'])
-      act(() => backend.simulateEndDrag())
+      await drag($('li.selection'))
+      expect(noDropTarget()).to.eql(['photo', 'photo'])
+      await end($('li.selection'))
 
       expect(noDropTarget()).to.be.empty
     })

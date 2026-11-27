@@ -9,7 +9,7 @@ export const PhotoDragPreview = ({
   let photo = item
 
   return (
-    <div className={cx('photo', 'drag-preview', 'center', {
+    <div className={cx('photo', 'drag-preview', {
       multiple: count > 1
     })}>
       <Thumbnail

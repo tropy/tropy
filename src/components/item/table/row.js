@@ -109,7 +109,6 @@ export const TableRow = memo(({
   return (
     <div
       data-index={index}
-      draggable={!isReadOnly}
       className={cx('tr', 'item', {
         active: isSelected,
         dragging: isDragging,

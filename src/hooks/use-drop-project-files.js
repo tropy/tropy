@@ -1,44 +1,44 @@
-import { webUtils } from 'electron'
-import { useDrop } from 'react-dnd'
-import { NativeTypes } from 'react-dnd-html5-backend'
-import { hasProjectFiles } from '../components/dnd.js'
-import { getProjectType } from '../common/project-file.js'
+import { useDispatch, useSelector } from 'react-redux'
+import { useExternalDrop } from './use-external-drop.js'
+import { useIpcSend } from './use-ipc.js'
+import { hasProjectFiles, hasProjectPaths } from '../components/dnd.js'
+import { isProjectFile, isTemplateFile } from '../common/project-file.js'
+import * as act from '../actions/index.js'
+import * as nav from '../slices/nav/index.js'
 
-function isProjectFile (path) {
-  try {
-    return getProjectType(path) != null
-  } catch {
-    return false
-  }
-}
+export function useDropProjectFiles () {
+  let dispatch = useDispatch()
+  let openProject = useIpcSend(['cmd', 'app:open-project'])
 
-export function useDropProjectFiles ({ onDrop }) {
-  return useDrop(() => ({
-    accept: [NativeTypes.FILE],
+  let project = useSelector(state => state.project)
+  let list = useSelector(nav.selectList)
+  let isTrash = useSelector(state => nav.selectIsView(state, 'trash'))
 
-    drop (item) {
-      let projects = []
-      let templates = []
+  let canImport = project.path != null && !project.isReadOnly && !isTrash
 
-      for (let file of item.files) {
-        let path = webUtils.getPathForFile(file)
+  return useExternalDrop({
+    accept: hasProjectFiles,
 
-        if (isProjectFile(path))
-          projects.push(path)
-        else if (path.endsWith('.ttp'))
-          templates.push(path)
+    canDrop: (data) =>
+      hasProjectPaths(data) || (canImport && data.files.length > 0),
+
+    onDrop: ({ files }) => {
+      let projects = files.filter(isProjectFile)
+      let templates = files.filter(isTemplateFile)
+
+      if (!(projects.length || templates.length)) {
+        dispatch(act.item.import({ list, files }))
+        return
       }
 
-      if (projects.length || templates.length) {
-        onDrop({ projects, templates })
-        return { projects, templates }
+      if (templates.length) {
+        dispatch(act.ontology.template.import({
+          files: templates
+        }, { prompt: true }))
       }
-    },
 
-    canDrop: (item) => hasProjectFiles(item),
-
-    collect: (monitor) => ({
-      isOver: monitor.isOver() && monitor.canDrop()
-    })
-  }), [onDrop])
+      for (let path of projects)
+        openProject({ path })
+    }
+  })
 }

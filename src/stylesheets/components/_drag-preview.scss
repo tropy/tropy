@@ -1,23 +1,11 @@
 @use "../abstracts/config" as *;
 
 //
-// Drag Layer
+// Drag Previews
 // --------------------------------------------------
 
-.drag-layer {
-  position: fixed;
-  pointer-events: none;
-  z-index: $zindex-drag-layer;
-  inset: 0;
-}
-
+// Rendered for a native drag image (DragImagePortal).
 .drag-preview {
-  position: absolute; // Collapse width
-
-  &.center {
-    transform: translate(-50%, -50%);
-  }
-
   .drag-preview-container {
     opacity: $drag-preview-opacity;
 

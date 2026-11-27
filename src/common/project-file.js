@@ -14,16 +14,31 @@ export const MANAGED_STORE_NAME = 'assets'
 
 export const TYPES = [MANAGED, TPY]
 
-export function getProjectType (path) {
+const typeOf = (path) => {
   switch (extname(path).toLowerCase()) {
     case '.tpy':
       return TPY
     case '.tropy':
       return MANAGED
     default:
-      throw new Error(`unknown project file extension ${path}`)
+      return null
   }
 }
+
+export function getProjectType (path) {
+  let type = typeOf(path)
+
+  if (type == null)
+    throw new Error(`unknown project file extension ${path}`)
+
+  return type
+}
+
+export const isProjectFile = (path) =>
+  typeOf(path) != null
+
+export const isTemplateFile = (path) =>
+  extname(path).toLowerCase() === '.ttp'
 
 export const pext = (type) => {
   switch (type) {

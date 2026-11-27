@@ -25,7 +25,20 @@ if (process.type === 'renderer') {
       sourceMaps: 'inline'
     }).code
 
+  // Pragmatic drag and drop's es2019 build (#pdnd)
+  // imports its modules without extensions.
+  let pdnd = '/node_modules/@atlaskit/pragmatic-drag-and-drop/dist/es2019/'
+
   registerHooks({
+    resolve (specifier, context, nextResolve) {
+      if (specifier.startsWith('.') &&
+        !specifier.endsWith('.js') &&
+        context.parentURL?.includes(pdnd))
+        specifier += '.js'
+
+      return nextResolve(specifier, context)
+    },
+
     load (url, context, nextLoad) {
       if (context.format === 'electron') {
         // Returning '' instead null to pass Node's hook validation!

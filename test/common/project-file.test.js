@@ -1,7 +1,24 @@
 import { join, resolve } from 'node:path'
-import { dbPath, projectPath, protocolURL, urlId } from '#tropy/common/project-file.js'
+import {
+  dbPath,
+  isProjectFile,
+  isTemplateFile,
+  projectPath,
+  protocolURL,
+  urlId
+} from '#tropy/common/project-file.js'
 
 describe('project-file', () => {
+  describe('isProjectFile and isTemplateFile', () => {
+    it('tell project files and templates by extension', () => {
+      expect(isProjectFile('/x/A.TROPY')).to.be.true
+      expect(isProjectFile('/x/b.tpy')).to.be.true
+      expect(isProjectFile('/x/c.ttp')).to.be.false
+      expect(isTemplateFile('/x/c.ttp')).to.be.true
+      expect(isTemplateFile('/x/photos')).to.be.false
+    })
+  })
+
   describe('dbPath', () => {
     it('maps a managed project folder to its database', () => {
       expect(dbPath('/x/A.tropy')).to.equal(join('/x/A.tropy', 'project.tpy'))

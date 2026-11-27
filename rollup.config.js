@@ -13,7 +13,6 @@ import nodeResolve from '@rollup/plugin-node-resolve'
 
 import scss from './scripts/rollup-plugin-scss.js'
 import emit from './scripts/rollup-plugin-emit.js'
-import reactDnd from './scripts/rollup-plugin-react-dnd.js'
 import sharpRequire from './scripts/rollup-plugin-sharp.js'
 import betterSqlite3 from './scripts/rollup-plugin-better-sqlite3.js'
 import { clean } from './scripts/clean.js'
@@ -216,20 +215,11 @@ export default [
           'cssChecked.has(view)': 'true'
         }
       }),
-      replace({
-        include: '**/@react-dnd/invariant/**',
-        preventAssignment: true,
-        delimiters: ['', ''],
-        values: {
-          'process.env[\'NODE_ENV\']': JSON.stringify(NODE_ENV)
-        }
-      }),
       nodeResolve({
         exportConditions: ['node', 'renderer'],
         preferBuiltins: true
       }),
       json(),
-      reactDnd(),
       babel({
         include: 'src/{components,views,hooks}/**/*.js',
         babelHelpers: 'bundled',

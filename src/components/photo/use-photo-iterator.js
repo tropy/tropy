@@ -1,13 +1,15 @@
-import { useRef } from 'react'
+import { cloneElement, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { DND } from '../dnd.js'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
 import { useEvent } from '../../hooks/use-event.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useCursor } from '../../hooks/use-cursor.js'
-import { useSortableSequence } from '../../hooks/use-sortable-sequence.js'
-import { move as reorder, pick } from '../../common/util.js'
-import { adjacent, indexOf, toId } from '../../common/sequence.js'
+import { useSequenceDragDrop } from '../../hooks/use-sequence-drag-drop.js'
+import { PhotoDragPreview } from './drag-preview.js'
+import { Thumbnail } from './thumbnail.js'
+import { pick } from '../../common/util.js'
+import { SASS } from '../../constants/index.js'
+import { indexOf, toId } from '../../common/sequence.js'
 import { selectPhotoExpansion } from '../../selectors/index.js'
 import {
   selectActivePhotoIds,
@@ -29,7 +31,8 @@ export function usePhotoIterator ({
   isDisabled,
   isItemOpen,
   onContextMenu,
-  onCreate
+  onCreate,
+  size
 }) {
   let dispatch = useDispatch()
   let scroll = useRef()
@@ -230,35 +233,99 @@ export function usePhotoIterator ({
     select(cursor.prev(), event)
   })
 
-  let sortable = useSortableSequence({
-    type: DND.PHOTO,
-    isDisabled: isDisabled || isUnsortable,
-    items: photoIds,
-    onSort: (order) =>
-      dispatch(act.photo.order({ item: first.item, photos: order }))
+  // Sorting the selections of a photo (selection grid and list rows).
+  let sortSelections = useEvent((payload) => {
+    dispatch(act.selection.order(payload))
+  })
+
+  // Photos drag (onto items, or to sort them); the list's
+  // selection rows drag to sort within their photo.
+  let dnd = useSequenceDragDrop(sequence, {
+    isDisabled,
+    isGrid,
+
+    getData: (id) => {
+      let { photo, selection: sel } = resolve(id)
+
+      if (photo == null)
+        return null
+
+      if (sel == null)
+        return {
+          ...pick(photo, Thumbnail.keys),
+          type: 'photo',
+          id: photo.id,
+          item: photo.item
+        }
+
+      return (photo.selections.length > 1)
+        ? {
+          ...pick(selections[sel], Thumbnail.keys),
+          type: 'selection',
+          id: sel,
+          photo: photo.id,
+          color: photo.color,
+          mimetype: photo.mimetype,
+          orientation: photo.orientation
+        }
+        : null
+    },
+
+    // The thumbnail variant the leaves show (the list's rows: 48),
+    // already loaded: the browser snapshots the image at once.
+    preview: (data) =>
+      <PhotoDragPreview item={data} size={isGrid ? size : SASS.ICON.SIZE}/>,
+
+    sort: {
+      accept: isGrid ? 'photo' : ['photo', 'selection'],
+
+      canSort: (data, id) =>
+        (data.type === 'photo')
+          ? !isUnsortable && photos[id] != null
+          : selections[id]?.photo === data.photo,
+
+      getOrder: (data) =>
+        (data.type === 'photo')
+          ? photoIds
+          : photos[data.photo].selections,
+
+      onSort: (order, data) => {
+        if (data.type === 'photo')
+          dispatch(act.photo.order({ item: first.item, photos: order }))
+        else
+          sortSelections({ photo: data.photo, selections: order })
+      }
+    }
   })
 
   let [file, dropFile] = useDropPhotoFiles({
-    isDisabled: !canCreate,
+    isDisabled: isDisabled || !canCreate,
     onDrop: onCreate
   })
 
   let connect = (element) =>
-    isDisabled ? element : sortable.drop(dropFile(element))
+    cloneElement(element, {
+      onPointerDown: dnd.onPointerDown,
+      ref: (node) => {
+        dnd.setContainer(node)
+        dropFile(node)
+      }
+    })
 
   let classes = {
-    over: sortable.isOver && sortable.canDrop,
-    'over-file': file.isOver && file.canDrop
+    'over-file': file.isOver
   }
 
   // Null for ids without a record (briefly possible after a delete).
-  let getIterableProps = (id) => {
+  let getIterableProps = (id, index) => {
     let photo = photos[id]
 
     if (photo == null)
       return null
 
     return {
+      ...dnd.getLeafProps(id),
+      index,
       photo,
       isActive: isSelected(photo) && selection == null,
       isDisabled,
@@ -266,38 +333,16 @@ export function usePhotoIterator ({
       isItemOpen,
       isMatch: !!contributors?.photos[photo.id],
       isSelected: isSelected(photo),
-      isSortable: !isUnsortable,
-      isVertical: !isGrid,
-      getAdjacent: sortable.getAdjacent,
       onConsolidate: consolidate,
       onContextMenu: contextMenu,
-      onDropPhoto: sortable.onDrop,
       onItemOpen: open,
       onSelect: select,
       onToggle: toggle
     }
   }
 
-  // Sorting the selections of a photo (selection grid and list rows).
-  let sortSelections = useEvent((payload) => {
-    dispatch(act.selection.order(payload))
-  })
-
-  // The list's selection rows sort within their photo.
-  let getSelectionAdjacent = useEvent((value) =>
-    adjacent(resolve(value).photo.selections, value.id))
-
-  let dropSelection = useEvent(({ id, to, offset }) => {
-    let { photo } = resolve(id)
-
-    sortSelections({
-      photo: photo.id,
-      selections: reorder(photo.selections, id, to, offset)
-    })
-  })
-
   // Null for ids without a record (as getIterableProps).
-  let getSelectionProps = (id) => {
+  let getSelectionProps = (id, index) => {
     let value = selections[id]
     let { photo } = resolve(id)
 
@@ -305,16 +350,15 @@ export function usePhotoIterator ({
       return null
 
     return {
+      ...dnd.getLeafProps(id),
+      index,
       photo,
       selection: value,
-      getAdjacent: getSelectionAdjacent,
       isActive: selection === value.id,
       isDisabled,
       isItemOpen,
       isLast: photo.selections.at(-1) === value.id,
-      isSortable: !isDisabled && photo.selections.length > 1,
       onContextMenu: contextMenu,
-      onDrop: dropSelection,
       onItemOpen: open,
       onSelect: select
     }

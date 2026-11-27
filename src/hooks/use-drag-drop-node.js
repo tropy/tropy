@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
-import { useEvent } from './use-event.js'
-import { DND, getEmptyImage, useDrag, useDrop } from '../components/dnd.js'
+import { useRef, useState } from 'react'
+import { useDragSource } from './use-drag-source.js'
+import { useDropTarget } from './use-drop-target.js'
+import { getDropDepth, getDropPosition } from '../components/dnd.js'
+import { NodeDragPreview } from '../components/tree/node-drag-preview.js'
 import { bounds } from '../dom.js'
 import { restrict } from '../common/util.js'
 
@@ -14,16 +16,21 @@ const getDropIndicator = (current, {
     return null
   if (current.offset < 1)
     return 'before'
+  // A string, so equal indicators do not change the state
+  // (set once per frame while hovering).
   if (isLastChild && !isExpanded && current.depth < depth)
-    return [
-      'after',
-      `depth-${depth - restrict(current.depth, minDropDepth, depth)}`
-    ]
+    return `after depth-${depth - restrict(current.depth, minDropDepth, depth)}`
   else
     return 'after'
 }
 
-export function useDragDropNode (dom, {
+// A tree node that drags (to move it in the tree)
+// and takes drops of nodes (before, inside, after; the depth
+// from the pointer's x after the last child) and of items
+// (onDropItems): one drop target for both (Pragmatic keeps
+// one per element). Returns its state and a ref for the node's
+// element (a callback).
+export function useDragDropNode ({
   depth = 0,
   icon,
   indent = 0,
@@ -34,14 +41,16 @@ export function useDragDropNode (dom, {
   minDropDepth = 0,
   node,
   onDrop,
+  onDropItems,
   onDropOutside,
   padding = 0,
   position = 0
 }) {
+  let elementRef = useRef(null)
   let dragging = useRef({ offset: null, depth: null })
   let [indicator, setDropIndicator] = useState(null)
 
-  let handleDrop = useEvent((item) => {
+  let handleDropNode = (item) => {
     let { offset, depth: dropDepth } = dragging.current
 
     setDropIndicator(null)
@@ -75,16 +84,16 @@ export function useDragDropNode (dom, {
       id: item.id,
       parent: node.parent
     }, { idx })
-  })
+  }
 
-  let handleHover = useEvent((item, monitor) => {
-    let { left, top, height } = bounds(dom.current)
-    let { x, y } = monitor.getClientOffset()
-    let offset = (y - top) / height
+  let handleHoverNode = ({ clientX, clientY }) => {
+    let point = { x: clientX, y: clientY }
+    let rect = bounds(elementRef.current)
+    let at = getDropPosition(point, rect, { on: true })
 
     Object.assign(dragging.current, {
-      depth: restrict(Math.round((x - left - padding) / indent), 0, depth),
-      offset: (offset < 0.33) ? 0 : (offset > 0.67) ? 1 : null
+      depth: getDropDepth(point, rect, { depth, indent, padding }),
+      offset: (at === 'before') ? 0 : (at === 'after') ? 1 : null
     })
 
     setDropIndicator(getDropIndicator(dragging.current, {
@@ -93,54 +102,52 @@ export function useDragDropNode (dom, {
       isLastChild,
       minDropDepth
     }))
+  }
+
+  let [{ isDragging }, drag] = useDragSource({
+    isDisabled,
+    getData: () => ({
+      type: 'node',
+      icon,
+      id: node.id,
+      idx: position,
+      name: node.name,
+      padding: padding + indent * depth,
+      parent: node.parent
+    }),
+    preview: (data) => <NodeDragPreview item={data}/>,
+    previewOffset: 'grab'
   })
 
-  let canDragNode = useEvent(() => {
-    return !isDisabled
+  let [{ isOver }, drop] = useDropTarget({
+    accept: ['node', 'items'],
+    isDisabled,
+    canDrop: (data) =>
+      data.type !== 'node' || !(isDraggingParent || isDragging),
+    onDrag: (data, { input }) => {
+      if (data.type === 'node') handleHoverNode(input)
+    },
+    onDrop: (data) => {
+      if (data.type === 'node')
+        handleDropNode(data)
+      else
+        onDropItems(data.items)
+    }
   })
 
-  let canDropNode = useEvent(() => {
-    return !(isDisabled || isDraggingParent || isDragging)
-  })
+  // No indicator left behind when the drag leaves.
+  if (!isOver && indicator != null)
+    setDropIndicator(null)
 
-  let createDragItem = useEvent(() => ({
-    icon,
-    id: node.id,
-    idx: position,
-    name: node.name,
-    padding: padding + indent * depth,
-    parent: node.parent,
-    position: 'relative'
-  }))
-
-  let [{ isDragging }, drag, preview] = useDrag({
-    type: DND.NODE,
-    canDrag: canDragNode,
-    item: createDragItem,
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging()
-    })
-  }, [])
-
-  let [{ canDrop, isOver }, drop] = useDrop(() => ({
-    accept: DND.NODE,
-    drop: handleDrop,
-    hover: handleHover,
-    canDrop: canDropNode,
-    collect: (monitor) => ({
-      canDrop: monitor.canDrop(),
-      isOver: monitor.isOver()
-    })
-  }), [])
-
-  useEffect(() => {
-    preview(getEmptyImage())
-  }, [preview])
+  let connect = (element) => {
+    elementRef.current = element
+    drag(element)
+    drop(element)
+  }
 
   return [{
-    canDrop,
-    dropIndicator: (canDrop && isOver) ? indicator : null,
+    dropIndicator: isOver ? indicator : null,
     isDragging,
     isOver
-  }, drag(drop(dom))]
+  }, connect]
 }

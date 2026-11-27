@@ -1,8 +1,8 @@
 import React from 'react'
 import { Provider, connect } from 'react-redux'
 import { IntlProvider as ReactIntlProvider } from 'react-intl'
-import { DndProvider, ElectronBackend } from './dnd.js'
 import { Flash } from './flash.js'
+import { DragImagePortal } from './drag-image-portal.js'
 import { WindowContext } from './window.js'
 
 const IntlProvider = connect(
@@ -18,16 +18,15 @@ export class Main extends React.Component {
   render () {
     return (
       <WindowContext.Provider value={this.props.window}>
-        <DndProvider backend={ElectronBackend}>
-          <Provider store={this.props.store}>
-            <IntlProvider>
-              <>
-                {this.props.children}
-                <Flash/>
-              </>
-            </IntlProvider>
-          </Provider>
-        </DndProvider>
+        <Provider store={this.props.store}>
+          <IntlProvider>
+            <>
+              {this.props.children}
+              <Flash/>
+              <DragImagePortal/>
+            </>
+          </IntlProvider>
+        </Provider>
       </WindowContext.Provider>
     )
   }

@@ -128,7 +128,7 @@
         @extend %drop-target;
       }
 
-      .over :is(&) {
+      .metadata-field.over :is(&) {
         @extend %drop-target;
       }
 

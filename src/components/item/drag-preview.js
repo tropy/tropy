@@ -8,7 +8,7 @@ export function ItemDragPreview ({ item, size = 64 }) {
   let { cover, photos, tags } = items[0]
 
   return (
-    <div className={cx('item', 'drag-preview', 'center', {
+    <div className={cx('item', 'drag-preview', {
       multiple: count > 1
     })}>
       <CoverImage

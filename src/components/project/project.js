@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import { useDraftState } from '../../hooks/use-draft-state.js'
@@ -11,7 +11,6 @@ import { ItemView } from '../item/view.js'
 import { ModalLayer } from '../modal-layer.js'
 import { MessageBox } from '../message-box.js'
 import { TranscriptionConfig } from '../transcription/config.js'
-import { DragLayer } from '../drag-layer.js'
 import * as act from '../../actions/index.js'
 import * as nav from '../../slices/nav/index.js'
 import { IconTropyLarge } from '../icons.js'
@@ -37,10 +36,12 @@ export const Project = ({
 }) => {
   let dispatch = useDispatch()
 
+  let dom = useRef(null)
+
   let navMode = useSelector(state => state.nav.mode)
   let isTrash = useSelector(state => nav.selectIsView(state, 'trash'))
 
-  let mode = useTransitionState(ref, navMode, {
+  let mode = useTransitionState(dom, navMode, {
     timeout,
     toString: modeToString,
     skipTransition: !project.isReady
@@ -84,16 +85,19 @@ export const Project = ({
   // with the component's fade transition classes
   // which are overwritten by changing the className prop!
   useLayoutEffect(() => {
-    ref?.current?.classList.toggle('closing', !!project.isClosing)
-    ref?.current?.classList.toggle('opening', !project.isReady)
-  }, [ref, project.isReady, project.isClosing])
+    dom.current?.classList.toggle('closing', !!project.isClosing)
+    dom.current?.classList.toggle('opening', !project.isReady)
+  }, [project.isReady, project.isClosing])
 
   if (project.closed)
     return <ProjectClosed/>
 
   return (
     <div
-      ref={ref}
+      ref={(node) => {
+        dom.current = node
+        ref?.(node)
+      }}
       className={cx('project', mode.className, {
         over: isOver
       })}
@@ -117,7 +121,6 @@ export const Project = ({
         onPanelDragStop={handlePanelDragStop}
         onPanelResize={handlePanelResize}/>
 
-      <DragLayer/>
       <ModalLayer modals={MODALS}/>
       <div className="cover">
         <IconTropyLarge/>

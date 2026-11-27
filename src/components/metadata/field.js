@@ -1,11 +1,15 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { useDragDropMetadata } from '../../hooks/use-drag-drop-metadata.js'
+import { useDragSource } from '../../hooks/use-drag-source.js'
+import { useDropTarget } from '../../hooks/use-drop-target.js'
 import { useEvent } from '../../hooks/use-event.js'
 import cx from 'classnames'
 import { MetadataLabel } from './label.js'
 import { MetadataValue } from './value.js'
+import { FieldDragPreview } from './drag-preview.js'
 import actions from '../../actions/metadata.js'
+import { auto } from '../../format.js'
+import { blank } from '../../common/util.js'
 
 
 export const MetadataField = React.memo(({
@@ -30,24 +34,35 @@ export const MetadataField = React.memo(({
   let dispatch = useDispatch()
   let isStatic = onChange == null
 
-  let onDragEnd = useEvent(({ property: to, dropEffect }) => {
-    // TODO handle copy/move across different items
-    dispatch(actions.copy({
+  // A value drags onto another field of the same subjects:
+  // moved, or copied with Alt.
+  let isDragDisabled = isDisabled || isStatic || isEditing
+
+  let [, drag] = useDragSource({
+    isDisabled: isDragDisabled || blank(text) || id == null,
+    getData: () => ({
+      type: 'field',
       id,
-      from: property,
-      to
-    }, { cut: dropEffect === 'move' }))
+      isMixed,
+      property,
+      value: auto(text, type)
+    }),
+    preview: (data) => <FieldDragPreview item={data}/>
   })
 
-  let [{ canDrop, isOver }, dnd] = useDragDropMetadata({
-    id,
-    isDisabled: isDisabled || isStatic || isEditing,
-    isMixed,
-    isReadOnly,
-    property,
-    text,
-    type,
-    onDragEnd
+  let [{ isOver }, drop] = useDropTarget({
+    accept: 'field',
+    isDisabled: isDragDisabled || isReadOnly,
+    canDrop: (data) => data.id === id && data.property !== property,
+    getDropEffect: (data, { altKey }) => altKey ? 'copy' : 'move',
+    onDrop: (data, { dropEffect }) => {
+      // TODO handle copy/move across different items
+      dispatch(actions.copy({
+        id,
+        from: data.property,
+        to: property
+      }, { cut: dropEffect === 'move' }))
+    }
   })
 
   let handleChange = useEvent((value, hasChanged, hasBeenForced) => {
@@ -85,7 +100,7 @@ export const MetadataField = React.memo(({
       className={cx('metadata-field', {
         extra: isExtra,
         mixed: isMixed,
-        over: isOver && canDrop,
+        over: isOver,
         static: isStatic,
         clickable: onClick != null
       })}
@@ -97,7 +112,10 @@ export const MetadataField = React.memo(({
 
       <MetadataValue
         {...props}
-        ref={dnd}
+        ref={(node) => {
+          drag(node)
+          drop(node)
+        }}
         onClick={onClick || handleClick}
         property={property}
         text={text}

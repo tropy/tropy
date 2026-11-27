@@ -1,46 +1,31 @@
-import { memo, useRef } from 'react'
+import { memo } from 'react'
 import cx from 'classnames'
 import { Thumbnail } from './thumbnail.js'
 import { Icon } from '../icons.js'
 import { TranscriptionIcon } from '../transcription/icon.js'
 import { Button } from '../button.js'
-import { useDragDropPhoto } from '../../hooks/use-drag-drop-photo.js'
 import { useElementClicks } from '../../hooks/use-element-clicks.js'
 import { pick } from '../../common/util.js'
 
 export const PhotoTile = memo(({
-  getAdjacent,
+  direction,
+  index,
   isActive,
-  isDisabled,
+  isDragging,
   isExpandable,
   isExpanded,
   isLast,
   isMatch,
+  isOver,
   isSelected,
-  isSortable,
-  isVertical,
   onConsolidate,
   onContextMenu,
-  onDropPhoto,
   onItemOpen,
   onSelect,
   onToggle,
   photo,
   size = 512
 }) => {
-  let container = useRef()
-
-  let [{ canDrop, direction, isDragging, isOver }, dnd] =
-    useDragDropPhoto(container, {
-      photo,
-      getAdjacent,
-      isSortable,
-      isDisabled,
-      isVertical,
-      onDrop: onDropPhoto
-    })
-
-  // Read-only (isDisabled here) does not block selection.
   let elementClicks = useElementClicks({
     isSelected: isActive,
     onDoubleClick: onItemOpen,
@@ -50,7 +35,7 @@ export const PhotoTile = memo(({
 
   return (
     <li
-      ref={dnd}
+      data-index={index}
       className={cx('photo', 'tile', {
         active: isSelected,
         dragging: isDragging,
@@ -58,7 +43,7 @@ export const PhotoTile = memo(({
         match: isMatch,
         expanded: isExpanded,
         last: isLast,
-        over: isOver && canDrop,
+        over: isOver,
         [direction]: direction
       })}>
       <div className="tile-state">
