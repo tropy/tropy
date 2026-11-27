@@ -2,6 +2,7 @@ import { webUtils } from 'electron'
 
 import {
   DndProvider,
+  useDragDropManager,
   useDragLayer,
   useDrag,
   useDrop
@@ -63,6 +64,7 @@ const getDroppedFiles = (item) => {
 export {
   DND,
   DndProvider,
+  useDragDropManager,
   useDragLayer,
   useDrag,
   useDrop,

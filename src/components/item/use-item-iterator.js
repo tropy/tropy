@@ -1,10 +1,10 @@
 import { useImperativeHandle, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDropPhotoFiles } from '../../hooks/use-drop-photo-files.js'
-import { useEvent } from '../../hooks/use-event.js'
 import { useEventHandler } from '../../hooks/use-event-handler.js'
 import { useGlobalEvent } from '../../hooks/use-global-event.js'
 import { useSequence } from '../../hooks/use-sequence.js'
+import { useItemDragDrop } from './use-item-drag-drop.js'
 import { indexOf } from '../../common/sequence.js'
 import { blank } from '../../common/util.js'
 import { selectItemSelection } from '../../slices/nav/selectors.js'
@@ -16,8 +16,8 @@ import * as act from '../../actions/index.js'
 // selects the items and the selection, navigates them
 // (the sequence is qr.items, the ids; items are looked up by id)
 // (a Cursor with Scroll's layout), dispatches the item actions,
-// handles the clicks on the leaves (tiles, rows) by delegation,
-// and hands the leaves stable handlers for drag and drop.
+// and handles the clicks on the leaves (tiles, rows)
+// and their drag and drop by delegation.
 export function useItemIterator ({
   isDisabled,
   isReadOnly,
@@ -49,12 +49,10 @@ export function useItemIterator ({
       dispatch(act.nav.select.item({ item: next }, { throttle }))
   }
 
-  let getSelection = useEvent(() => selection.ids())
-
   // Dragging focuses the item (it becomes the head).
-  let focusItem = useEvent((id) => {
+  let focusItem = (id) => {
     select(id, { mode: 'focus' })
-  })
+  }
 
   let getSelectedPhotos = () =>
     selection.ids().flatMap(id =>
@@ -78,14 +76,13 @@ export function useItemIterator ({
     if (id != null) dispatch(act.nav.open.item({ id }))
   }
 
-  // Handlers for the leaves (memoized tiles and rows).
-  let merge = useEvent((ids) => {
+  let merge = (ids) => {
     dispatch(act.item.merge(ids))
-  })
+  }
 
-  let movePhotos = useEvent((payload) => {
+  let movePhotos = (payload) => {
     dispatch(act.photo.move(payload))
-  })
+  }
 
   let contextMenu = (event, id) => {
     let item = data[id]
@@ -208,24 +205,35 @@ export function useItemIterator ({
     onDrop: onItemImport
   })
 
-  let connect = (element) =>
-    isReadOnly ? element : dropFile(element)
-
-  let getIterableProps = (id, index) => ({
-    item: data[id],
-    index,
-    isSelected: selection.has(id),
+  let dnd = useItemDragDrop({
+    items,
+    data,
+    selection,
     isReadOnly,
-    getSelection,
     onDragStart: focusItem,
     onDropItems: merge,
     onDropPhotos: movePhotos
   })
 
+  let connect = (element) =>
+    isReadOnly ? element : dnd.connect(dropFile(element))
+
+  let getIterableProps = (id, index) => ({
+    ...dnd.getLeafProps(id),
+    item: data[id],
+    index,
+    isSelected: selection.has(id),
+    isReadOnly
+  })
+
   return {
     connect,
     getIterableProps,
-    handlers,
+    handlers: {
+      ...handlers,
+      onDragOver: dnd.handleDragOver,
+      onDragStart: dnd.handleDragStart
+    },
     isOver: file.canDrop,
     items,
     scrollProps,

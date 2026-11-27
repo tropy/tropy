@@ -1,7 +1,6 @@
-import { memo, useRef } from 'react'
+import { memo } from 'react'
 import cx from 'classnames'
 import { TableCell } from './cell.js'
-import { useDragDropItem } from '../../../hooks/use-drag-drop-items.js'
 import { useEvent } from '../../../hooks/use-event.js'
 import * as datatype from '../../../common/datatype.js'
 import * as COLUMN from '../../../slices/columns/builtin.js'
@@ -17,35 +16,21 @@ export const TableRow = memo(({
   drag,
   drop,
   editing,
-  getSelection,
   hasPositionColumn,
   index,
   isDisabled,
+  isDragging,
+  isOver,
   isReadOnly,
   isSelected,
   item,
   onCancel,
   onChange,
-  onDragStart,
-  onDropItems,
-  onDropPhotos,
   onEdit,
   position,
   size,
   template
 }) => {
-  let container = useRef()
-
-  let [{ canDrop, isDragging, isOver }, dnd] =
-    useDragDropItem(container, {
-      item,
-      getSelection,
-      isDisabled: isReadOnly,
-      onDragStart,
-      onDropItems,
-      onDropPhotos
-    })
-
   let getNextColumn = useEvent((at = 0, dir = 1) => {
     for (let k = 1, N = columns.length; k < N; ++k) {
       let column = columns[(N + at + k * dir) % N]
@@ -123,12 +108,12 @@ export const TableRow = memo(({
 
   return (
     <div
-      ref={dnd}
       data-index={index}
+      draggable={!isReadOnly}
       className={cx('tr', 'item', {
         active: isSelected,
         dragging: isDragging,
-        over: isOver && canDrop
+        over: isOver
       })}>
       {hasPositionColumn && (
         <TableCell
