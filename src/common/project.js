@@ -11,6 +11,7 @@ import { empty, pMap } from './util.js'
 import { CodeError, IntegrityError } from './error.js'
 import { info, warn } from './log.js'
 import { dbPath, getProjectType, projectPath, MANAGED, MANAGED_STORE_NAME } from './project-file.js'
+import PROJECT from '../constants/project.js'
 
 import * as access from '../models/access.js'
 import { Asset } from '../asset/asset.js'
@@ -429,7 +430,7 @@ export async function optimizeAssets (src, dest, appDir, {
   concurrency = 4,
   density = 72,
   overwrite = false,
-  quality = 0.8,
+  quality = PROJECT.OPTIMIZE_QUALITY,
   processAsset
 } = {}) {
   try {

@@ -236,6 +236,7 @@ export const FormSlider = ({
   isDisabled,
   name,
   onChange,
+  resetValue,
   tabIndex = 0,
   value
 }) => {
@@ -252,6 +253,7 @@ export const FormSlider = ({
         tabIndex={tabIndex}
         value={value}
         format={`${id}.value`}
+        resetValue={resetValue}
         onChange={handleChange}/>
     </FormElement>
   )
