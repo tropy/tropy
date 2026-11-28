@@ -171,7 +171,7 @@ describe('Scroll', () => {
   })
 
   it('renders new rows a few at a time', () => {
-    let { $ } = render(renderScroll())
+    let { $ } = render(renderScroll({ overscan: 1 }))
     let container = $('.scroll-container')
 
     fakeResizeObserver.resize(container, { height: '400px' })
@@ -183,7 +183,7 @@ describe('Scroll', () => {
   })
 
   it('renders the overscan ahead of the scroll direction', () => {
-    let { $ } = render(renderScroll())
+    let { $ } = render(renderScroll({ overscan: 1 }))
     let container = $('.scroll-container')
 
     fakeResizeObserver.resize(container, { height: '400px' })

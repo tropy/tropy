@@ -20,7 +20,7 @@ export const Scroll = ({
   onKeyDown,
   onLayoutChange,
   onTabFocus,
-  overscan = 1,
+  overscan = 0.8,
   ref,
   renderExpansion,
   tabIndex,
