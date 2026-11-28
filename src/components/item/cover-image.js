@@ -25,7 +25,7 @@ export const CoverImage = React.memo(({ cover, photos, tags, ...props }) => {
         {...pick(photo, Thumbnail.keys)}
         id={id}/>
 
-      <TagColors tags={tags}/>
+      {tags?.length > 0 && <TagColors tags={tags}/>}
     </div>
   )
 })
