@@ -3,6 +3,7 @@ import { Provider, connect } from 'react-redux'
 import { IntlProvider as ReactIntlProvider } from 'react-intl'
 import { Flash } from './flash.js'
 import { DragImagePortal } from './drag-image-portal.js'
+import { ThumbnailProvider } from './photo/thumbnail.js'
 import { WindowContext } from './window.js'
 
 const IntlProvider = connect(
@@ -20,11 +21,11 @@ export class Main extends React.Component {
       <WindowContext.Provider value={this.props.window}>
         <Provider store={this.props.store}>
           <IntlProvider>
-            <>
+            <ThumbnailProvider>
               {this.props.children}
               <Flash/>
               <DragImagePortal/>
-            </>
+            </ThumbnailProvider>
           </IntlProvider>
         </Provider>
       </WindowContext.Provider>
